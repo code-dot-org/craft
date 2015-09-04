@@ -3,7 +3,7 @@
  * More details in ./README.md.
  */
 
-var devBuildConfig = require('./src/js/game/dev-build-config.js');
+var devBuildConfig = require('./dev-build-config.js');
 
 module.exports = function (grunt) {
   // Bundles up `require`s in javascript
