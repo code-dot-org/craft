@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style/index.css">
+  <script src="<%= appBundle %>"></script>
+  <title>Phaser App Playground</title>
+</head>
+<body>
+
+<div id="phaser-game"></div>
+
+<script>
+  document.write(
+    '<script src="//'
+    + window.location.hostname
+    + ':<%= liveReloadPort %>/livereload.js"><\/script>'
+  );
+</script>
+
+</body>
+</html>
