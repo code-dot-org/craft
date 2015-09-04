@@ -24,6 +24,10 @@ Next, inside the project, you need to install the project's various NPM dependen
 And you should now be ready to spin up a development build of your new project:
 
     grunt
+    
+A browser should open with a logo displayed:
+
+![](http://i.imgur.com/YvfoE8C.png)
 
 ## Developing
 
