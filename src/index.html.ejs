@@ -12,12 +12,19 @@
 <div id="phaser-game"></div>
 
 <script>
-  window.phaserGame = new PhaserApp({});
-  document.write(
-    '<script src="//'
-    + window.location.hostname
-    + ':<%= liveReloadPort %>/livereload.js"><\/script>'
-  );
+  // Initialize test instance of game, exposed to window for debugging.
+
+  window.phaserGame = new PhaserApp({
+    containerId: 'phaser-game'
+  });
+</script>
+
+<script>
+document.write(
+  '<script src="//'
+  + window.location.hostname
+  + ':<%= liveReloadPort %>/livereload.js"><\/script>'
+);
 </script>
 
 </body>
