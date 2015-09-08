@@ -1,4 +1,4 @@
-var Phaser = require('Phaser');
+import Phaser from "Phaser";
 var _ = require('lodash');
 
 var GAME_WIDTH = 400;
@@ -83,7 +83,9 @@ var PhaserApp = function (phaserAppConfig) {
 
   this.gameEvents.onEnemyAdd.add(function () {
     console.log("Enemy added!");
-  })
+  });
+
+  console.log("Just testing ES6ify");
 };
 
 PhaserApp.prototype.preload = function () {

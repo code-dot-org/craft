@@ -75,7 +75,10 @@ module.exports = function (grunt) {
         src: ['<%= project.src %>/game/PhaserApp.js'],
         dest: '<%= project.bundle %>',
         options: {
-          transform: ['browserify-shim'],
+          transform: [
+            'browserify-shim',
+            ['babelify', { only: /game/}] // transform ES6 -> ES5 for game/ code
+          ],
           watch: true,
           browserifyOptions: {
             // Adds inline source map to bundled package
