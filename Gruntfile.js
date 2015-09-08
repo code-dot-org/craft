@@ -72,7 +72,7 @@ module.exports = function (grunt) {
     },
     browserify: {
       app: {
-        src: ['<%= project.src %>/game/app.js'],
+        src: ['<%= project.src %>/game/PhaserApp.js'],
         dest: '<%= project.bundle %>',
         options: {
           transform: ['browserify-shim'],
