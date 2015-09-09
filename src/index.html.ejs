@@ -11,12 +11,42 @@
 
 <div id="phaser-game"></div>
 
+<button id="runButton" style="display: none">Run</button>
+<button id="resetButton" style="display: none">Reset</button>
+
 <script>
   // Initialize test instance of game, exposed to window for debugging.
-
-  window.phaserApp = new PhaserApp({
+  var phaserApp = new PhaserApp({
     containerId: 'phaser-game'
   });
+  phaserApp.loadLevel({
+    groundMap: [
+      ["treeA", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt"],
+      ["dirt", "grass", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt"],
+      ["dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt"],
+      ["dirt", "sand", "grass", "sand", "sand", "sand", "sand", "dirt", "dirt", "dirt"],
+      ["dirt", "dirt", "grass", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt"],
+      ["dirt", "dirt", "grass", "sand", "sand", "sand", "dirt", "dirt", "dirt", "dirt"],
+      ["dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt"],
+      ["dirt", "sand", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"],
+      ["dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt"],
+      ["dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt"]
+    ],
+    objectMap: [
+      ["treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA"],
+      ["treeA", "treeB", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA"],
+      ["treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA"],
+      ["treeA", "treeC", "treeB", "treeC", "treeC", "treeC", "treeC", "treeA", "treeA", "treeA"],
+      ["treeA", "treeA", "treeB", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA"],
+      ["treeA", "treeA", "treeB", "treeC", "treeC", "treeC", "treeA", "treeA", "treeA", "treeA"],
+      ["treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA"],
+      ["treeA", "treeC", "treeB", "treeB", "treeB", "treeB", "treeB", "treeB", "treeB", "treeB"],
+      ["treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA"],
+      ["treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA", "treeA"]
+    ]
+  });
+  window.phaserApp = phaserApp;
+
 </script>
 
 <script>

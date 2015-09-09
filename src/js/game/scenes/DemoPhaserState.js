@@ -1,12 +1,10 @@
 import Phaser from 'Phaser';
-import States from './States';
-import PhaserAppState from './PhaserAppState';
 import _ from 'lodash';
 
 /**
  * Sets Run button to visible and waits for press.
  */
-class DemoState extends Phaser.State {
+class DemoPhaserState extends Phaser.State {
   constructor(...args) {
     super(...args);
     this.debouncedEnemyAdd = _.debounce(this.addEnemyAtMouse.bind(this), 100,
@@ -24,6 +22,15 @@ class DemoState extends Phaser.State {
   }
 
   create() {
+    this.cursors = this.game.input.keyboard.createCursorKeys();
+    this.numberKeys = {
+      ONE: this.game.input.keyboard.addKey(Phaser.Keyboard.ONE),
+      TWO: this.game.input.keyboard.addKey(Phaser.Keyboard.TWO),
+      THREE: this.game.input.keyboard.addKey(Phaser.Keyboard.THREE),
+      FOUR: this.game.input.keyboard.addKey(Phaser.Keyboard.FOUR),
+      FIVE: this.game.input.keyboard.addKey(Phaser.Keyboard.FIVE),
+      SIX: this.game.input.keyboard.addKey(Phaser.Keyboard.SIX)
+    };
     this.initializeGroundTiles();
     this.obstacleLayer = this.game.add.group();
     this.initializeObstacleObjects();
@@ -33,18 +40,8 @@ class DemoState extends Phaser.State {
 
   update() {
     this.obstacleLayer.sort('y', Phaser.Group.SORT_ASCENDING);
-    if (this.game.renderType !== Phaser.CANVAS) {
-      this.shadowTexture.context.fillStyle = 'rgb(100, 100, 100)';
-      this.shadowTexture.context.fillRect(0, 0, this.game.width, this.game.height);
-      this.shadowTexture.context.beginPath();
-      this.shadowTexture.context.fillStyle = 'rgb(255, 255, 255)';
-      this.shadowTexture.context.arc(150, 150,
-          100, 0, Math.PI * 2);
-      this.shadowTexture.context.arc(250, 250,
-          100, 0, Math.PI * 2);
-      this.shadowTexture.context.fill();
-      this.shadowTexture.dirty = true;
-    }
+
+    this.updateShadowObject();
 
     if (this.game.input.activePointer.isDown) {
       this.debouncedEnemyAdd();
@@ -82,6 +79,21 @@ class DemoState extends Phaser.State {
       this.shadowTexture = this.game.add.bitmapData(this.game.width, this.game.height);
       this.lightSprite = this.game.add.image(0, 0, this.shadowTexture);
       this.lightSprite.blendMode = Phaser.blendModes.MULTIPLY;
+    }
+  }
+
+  updateShadowObject() {
+    if (this.game.renderType !== Phaser.CANVAS) {
+      this.shadowTexture.context.fillStyle = 'rgb(100, 100, 100)';
+      this.shadowTexture.context.fillRect(0, 0, this.game.width, this.game.height);
+      this.shadowTexture.context.beginPath();
+      this.shadowTexture.context.fillStyle = 'rgb(255, 255, 255)';
+      this.shadowTexture.context.arc(150, 150,
+          100, 0, Math.PI * 2);
+      this.shadowTexture.context.arc(250, 250,
+          100, 0, Math.PI * 2);
+      this.shadowTexture.context.fill();
+      this.shadowTexture.dirty = true;
     }
   }
 
@@ -123,4 +135,4 @@ class DemoState extends Phaser.State {
   }
 }
 
-export default DemoState;
+export default DemoPhaserState;

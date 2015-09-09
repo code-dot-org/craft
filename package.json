@@ -21,7 +21,8 @@
     },
     "lodash": {
       "exports": "_"
-    }
+    },
+    "jquery": "$"
   },
   "dependencies": {
     "babelify": "^6.3.0",
@@ -37,6 +38,7 @@
     "grunt-contrib-watch": "*",
     "grunt-ejs": "^0.3.0",
     "grunt-open": "*",
+    "jquery": "2.1.4",
     "lodash": "*"
   }
 }

@@ -1,6 +1,12 @@
 import Phaser from 'Phaser';
 import _ from 'lodash';
-import DemoState from './scene_states/DemoState';
+import DemoPhaserState from './scenes/DemoPhaserState';
+import DebugState from './states/DebugState';
+import StateManager from './states/managed/StateManager';
+import WaitingState from './states/app/WaitingState.js';
+import RunningState from './states/app/RunningState.js';
+import ResettingState from './states/app/ResettingState.js';
+import AppStates from './states/app/AppStates.js';
 
 var GAME_WIDTH = 400;
 var GAME_HEIGHT = 400;
@@ -8,6 +14,16 @@ var GAME_HEIGHT = 400;
 /**
  * @typedef {Object} PhaserAppConfig
  * @property {String} containerId - ID of container for Phaser to mount app in
+ */
+
+/**
+ * @typedef {String} TileID
+ */
+
+/**
+ * @typedef {Object} LevelConfig
+ * @property {Array.<Array.<TileID>>} groundMap - map of level tile IDs
+ * @property {Array.<Array.<TileID>>} objectMap - map of level tile IDs
  */
 
 /**
@@ -25,6 +41,11 @@ class PhaserApp {
     this.initialConfig = phaserAppConfig;
 
     /**
+     * @property {LevelConfig}
+     */
+    this.levelConfig = null;
+
+    /**
      * Main Phaser game instance.
      * @property {Phaser.Game}
      */
@@ -39,35 +60,15 @@ class PhaserApp {
     );
 
     /**
-     * For triggering display of graphics demo.
-     */
-    this.game.state.add("Demo", new DemoState());
-
-    /**
-     * Provides key objects for up/down/left/right
-     * @property {Object<string, Phaser.Key>}
-     */
-    this.cursors = null;
-
-    /**
-     * Provides key objects for numbers
-     * @property {Object<string, Phaser.Key>}
-     */
-    this.numberKeys = null;
-
-    /**
-     * Used to display a layer of lit area.
-     * @type {Phaser.Sprite}
-     */
-    this.lightSprite = null;
-
-    /**
      * Global game events.
-     * TODO(bjordan): Better way to annotate that still gives completion?
-     * @type {{
-     *    onEnemyAdd: Phaser.Signal,
-      *   onGameStarted: Phaser.Signal
-      * }}
+     *
+     * Sample usage:
+     *
+     * this.gameEvents.onEnemyAdd.add(function () {
+     *   console.log("Enemy added!")
+     * });
+     *
+     * @type {Object.<String, Phaser.Signal>}
      */
     this.gameEvents = {
       // Fired when an enemy is added to the screen.
@@ -75,38 +76,59 @@ class PhaserApp {
       onGameStarted: new Phaser.Signal()
     };
 
-    this.gameEvents.onEnemyAdd.add(function () {
-      console.log("Enemy added!");
-    });
+    this.stateMachine = new StateManager(new Map([
+      [AppStates.LOADING, new DebugState(this, "loading")],
+      [AppStates.RESETTING, new ResettingState(this)],
+      [AppStates.WAITING, new WaitingState(this)],
+      [AppStates.RUNNING, new RunningState(this)]
+    ]));
+    this.stateMachine.enterState(AppStates.LOADING);
+  }
 
-    console.log("Just testing ES6ify");
+  /**
+   * @param {LevelConfig} levelConfig
+   */
+  loadLevel(levelConfig) {
+    this.levelConfig = levelConfig;
+    switch (this.stateMachine.currentStateID()) {
+      case AppStates.LOADING:
+        // Still loading game and assets, wait until done.
+        break;
+      default:
+        this.stateMachine.enterState(AppStates.RESETTING);
+        break;
+    }
   }
 
   preload() {
     this.game.time.advancedTiming = true;
-
-    this.cursors = this.game.input.keyboard.createCursorKeys();
-    this.numberKeys = {
-      ONE: this.game.input.keyboard.addKey(Phaser.Keyboard.ONE),
-      TWO: this.game.input.keyboard.addKey(Phaser.Keyboard.TWO),
-      THREE: this.game.input.keyboard.addKey(Phaser.Keyboard.THREE),
-      FOUR: this.game.input.keyboard.addKey(Phaser.Keyboard.FOUR),
-      FIVE: this.game.input.keyboard.addKey(Phaser.Keyboard.FIVE),
-      SIX: this.game.input.keyboard.addKey(Phaser.Keyboard.SIX)
-    }
+    this.game.load.spritesheet('tiles',
+        'assets/images/spritesheet_tiles.png', 130, 130);
   }
 
   create() {
+    this.initializeDemoPhaserState();
+
+    // Once loaded, go to resetting state.
+    this.stateMachine.enterState(AppStates.RESETTING);
+    // Waiting on level config for state change.
+  }
+
+  initializeDemoPhaserState() {
+    var demoSceneId = "Demo";
+    this.game.state.add(demoSceneId, new DemoPhaserState());
+    this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onDown.add(() => {
+      this.game.state.start(demoSceneId);
+    });
   }
 
   update() {
-    console.log("Updating");
+    this.stateMachine.currentState.update();
   }
 
   render() {
-    console.log("Test Render!");
     this.game.debug.text(this.game.time.fps || '--', 2, 14, "#00ff00");
-    this.game.debug.text("TESTING!", 2, 14, "#00FF00");
+    this.stateMachine.currentState.render();
   }
 }
 
