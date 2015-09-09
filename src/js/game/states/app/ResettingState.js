@@ -67,15 +67,21 @@ export default class ResettingState extends GameState {
     });
     this.allObjectTileSprites.length = 0;
 
-    var objectsMap = this.phaserApp.levelConfig;
+    var objectsMap = this.phaserApp.levelConfig.objectMap;
     for (var row = 0; row < objectsMap.length; row++) {
       var columns = objectsMap[row];
       for (var column = 0; column < columns.length; column++) {
         var tileType = columns[column];
+        if (tileType === "") {
+          continue;
+        }
         var tileTypeToSpriteFrame = {
-          "treeA": 19,
-          "treeB": 26,
-          "treeC": 33
+          "rail": 1,
+          "mushroom": 10,
+          "mushroomB": 17,
+          "grass": 18,
+          "grassB": 25,
+          "fence": 25 + 56
         };
         var tile = this.game.add.sprite(column * 40, row * 40,
             'tiles', tileTypeToSpriteFrame[tileType]);
