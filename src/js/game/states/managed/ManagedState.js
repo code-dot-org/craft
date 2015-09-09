@@ -18,6 +18,7 @@ export default class ManagedState extends State {
 
   timeEnter() {
     this.enterTime = new Date();
+    console.log(`State ${this.stateID} entered`);
   }
 
   timeExit() {

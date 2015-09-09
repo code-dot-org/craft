@@ -1,6 +1,6 @@
 import Phaser from 'Phaser';
 import _ from 'lodash';
-import DemoPhaserState from './scenes/DemoPhaserState';
+import DemoState from './states/app/DemoState';
 import DebugState from './states/DebugState';
 import StateManager from './states/managed/StateManager';
 import WaitingState from './states/app/WaitingState.js';
@@ -77,10 +77,11 @@ class PhaserApp {
     };
 
     this.stateMachine = new StateManager(new Map([
-      [AppStates.LOADING, new DebugState(this, "loading")],
+      [AppStates.LOADING, new DebugState(this)],
       [AppStates.RESETTING, new ResettingState(this)],
       [AppStates.WAITING, new WaitingState(this)],
-      [AppStates.RUNNING, new RunningState(this)]
+      [AppStates.RUNNING, new RunningState(this)],
+      [AppStates.DEMO, new DemoState(this)]
     ]));
     this.stateMachine.enterState(AppStates.LOADING);
   }
@@ -107,19 +108,12 @@ class PhaserApp {
   }
 
   create() {
-    this.initializeDemoPhaserState();
+    this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onDown.add(() => {
+      this.stateMachine.enterState(AppStates.DEMO);
+    });
 
     // Once loaded, go to resetting state.
     this.stateMachine.enterState(AppStates.RESETTING);
-    // Waiting on level config for state change.
-  }
-
-  initializeDemoPhaserState() {
-    var demoSceneId = "Demo";
-    this.game.state.add(demoSceneId, new DemoPhaserState());
-    this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onDown.add(() => {
-      this.game.state.start(demoSceneId);
-    });
   }
 
   update() {

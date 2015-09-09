@@ -1,18 +1,8 @@
 import GameState from "./GameState";
 
 export default class DebugState extends GameState {
-  constructor(phaserApp, name, ...everything) {
-    super(phaserApp, ...everything);
-    this.name = name;
-    this.phaserApp = phaserApp;
-  }
-
   onEnter() {
-    console.log(`Entering state ${this.name}`);
-  }
-
-  update() {
-
+    this.timeEnter();
   }
 
   render() {
@@ -20,8 +10,7 @@ export default class DebugState extends GameState {
   }
 
   onExit() {
-
-    console.log(`Exiting state ${this.name}`);
+    this.timeExit();
   }
 }
 
