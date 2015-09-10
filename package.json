@@ -21,9 +21,11 @@
     },
     "lodash": {
       "exports": "_"
-    }
+    },
+    "jquery": "$"
   },
   "dependencies": {
+    "babelify": "^6.3.0",
     "browserify": "^10.2.4",
     "browserify-shim": "^3.8.9",
     "grunt": "^0.4.5",
@@ -36,6 +38,7 @@
     "grunt-contrib-watch": "*",
     "grunt-ejs": "^0.3.0",
     "grunt-open": "*",
+    "jquery": "2.1.4",
     "lodash": "*"
   }
 }

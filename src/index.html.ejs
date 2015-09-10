@@ -11,12 +11,42 @@
 
 <div id="phaser-game"></div>
 
+<button id="runButton" style="display: none">Run</button>
+<button id="resetButton" style="display: none">Reset</button>
+
 <script>
   // Initialize test instance of game, exposed to window for debugging.
-
-  window.phaserGame = new PhaserApp({
+  var phaserApp = new PhaserApp({
     containerId: 'phaser-game'
   });
+  phaserApp.loadLevel({
+    groundMap: [
+      ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"],
+      ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"],
+      ["grass", "sand", "sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass"],
+      ["grass", "sand", "sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass"],
+      ["grass", "grass", "grass", "sand", "sand", "sand", "sand", "grass", "grass", "grass"],
+      ["grass", "grass", "grass", "sand", "sand", "sand", "sand", "grass", "grass", "grass"],
+      ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"],
+      ["grass", "sand", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"],
+      ["grass", "grass", "grass", "grass", "grass", "grass", "dirt", "dirt", "dirt", "dirt"],
+      ["grass", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt"]
+    ],
+    objectMap: [
+      ["", "", "", "", "", "", "", "", "", ""],
+      ["mushroom", "mushroomB", "", "", "", "", "", "mushroom", "mushroom", "mushroom"],
+      ["rail", "mushroom", "", "", "", "", "", "", "", ""],
+      ["rail", "", "mushroomB", "", "", "", "grass", "mushroom", "mushroom", "mushroom"],
+      ["rail", "mushroom", "mushroomB", "grass", "grassB", "grass", "grass", "grassB", "grass", "mushroom"],
+      ["rail", "mushroom", "mushroomB", "grassB", "grassB", "grassB", "mushroom", "mushroom", "mushroom", "mushroom"],
+      ["rail", "", "", "", "", "", "", "", "", "mushroom"],
+      ["rail", "grassB", "mushroomB", "mushroomB", "mushroomB", "mushroomB", "mushroomB", "mushroomB", "mushroomB", "mushroomB"],
+      ["rail", "fence", "fence", "fence", "fence", "fence", "fence", "fence", "fence", "fence"],
+      ["rail", "", "", "", "", "", "mushroom", "mushroom", "mushroom", "mushroom"]
+    ]
+  });
+  window.phaserApp = phaserApp;
+
 </script>
 
 <script>
