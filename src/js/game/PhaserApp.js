@@ -14,6 +14,7 @@ var GAME_HEIGHT = 400;
 /**
  * @typedef {Object} PhaserAppConfig
  * @property {String} containerId - ID of container for Phaser to mount app in
+ * @property {String} assetRoot - location of folder containing assets (with trailing slash)
  */
 
 /**
@@ -36,9 +37,10 @@ var GAME_HEIGHT = 400;
 class PhaserApp {
   constructor(phaserAppConfig) {
     /**
-     * @property {PhaserAppConfig}
+     * Game asset file URL path
+     * @property {String}
      */
-    this.initialConfig = phaserAppConfig;
+    this.assetRoot = phaserAppConfig.assetRoot;
 
     /**
      * @property {LevelConfig}
@@ -50,7 +52,7 @@ class PhaserApp {
      * @property {Phaser.Game}
      */
     this.game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO,
-        this.initialConfig.containerId,
+        phaserAppConfig.containerId,
         {
           preload: this.preload.bind(this),
           create: this.create.bind(this),
@@ -104,7 +106,7 @@ class PhaserApp {
   preload() {
     this.game.time.advancedTiming = true;
     this.game.load.spritesheet('tiles',
-        'assets/images/spritesheet_tiles.png', 130, 130);
+        `${this.assetRoot}images/spritesheet_tiles.png`, 130, 130);
   }
 
   create() {

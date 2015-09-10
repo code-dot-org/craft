@@ -17,7 +17,8 @@
 <script>
   // Initialize test instance of game, exposed to window for debugging.
   var phaserApp = new PhaserApp({
-    containerId: 'phaser-game'
+    containerId: 'phaser-game',
+    assetRoot: '/assets/'
   });
   phaserApp.loadLevel({
     groundMap: [
