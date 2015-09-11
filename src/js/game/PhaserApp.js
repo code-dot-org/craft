@@ -37,6 +37,45 @@ var GAME_HEIGHT = 400;
 class PhaserApp {
   constructor(phaserAppConfig) {
     /**
+     * @public {Object} codeOrgAPI - API with externally-callable methods for
+     * starting an attempt, issuing commands, etc.
+     */
+    this.codeOrgAPI = {
+      /**
+       * Called before a list of user commands will be issued.
+       */
+      startCommandCollection() {
+        console.log("Collecting commands.");
+      },
+      /**
+       * Called when an attempt should be started, and the entire set of
+       * command-queue API calls have been issued.
+       *
+       * @param {Function} onAttemptComplete - callback with a single parameter,
+       * "success", i.e., true if attempt was successful (level completed),
+       * false if unsuccessful (level not completed).
+       */
+      startAttempt(onAttemptComplete) {
+        console.log("Starting new attempt.");
+      },
+      resetAttempt() {
+        console.log("Resetting game.")
+      },
+      moveForward(highlightCallback) {
+        console.log("Adding move forward command.");
+      },
+      turnRight(highlightCallback) {
+        console.log("Adding turn right command.");
+      },
+      turnLeft(highlightCallback) {
+        console.log("Adding turn left command.");
+      },
+      destroyBlock(highlightCallback) {
+        console.log("Adding destroy block command.");
+      }
+    };
+
+    /**
      * Game asset file URL path
      * @property {String}
      */
