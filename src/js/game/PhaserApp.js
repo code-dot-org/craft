@@ -72,6 +72,13 @@ class PhaserApp {
       },
       destroyBlock(highlightCallback) {
         console.log("Adding destroy block command.");
+      },
+      getObject: function (highlightCallback) {
+        console.log("Adding 'get' command.");
+      },
+      whilePathAhead: function (highlightCallback, callback) {
+        console.log(`Adding repeat while path ahead command. Callback (with API calls):`);
+        console.log(callback);
       }
     };
 
