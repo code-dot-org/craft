@@ -8,6 +8,14 @@ import RunningState from './states/app/RunningState.js';
 import ResettingState from './states/app/ResettingState.js';
 import AppStates from './states/app/AppStates.js';
 
+import CommandQueue from "./CommandQueue/CommandQueue.js";
+import BaseCommand from "./CommandQueue/BaseCommand.js";
+import DestroyBlockCommand from "./CommandQueue/DestroyBlockCommand.js";
+import MoveForwardCommand from "./CommandQueue/MoveForwardCommand.js";
+import TurnCommand from "./CommandQueue/TurnCommand.js";
+import WhileCommand from "./CommandQueue/WhileCommand.js";
+
+
 var GAME_WIDTH = 400;
 var GAME_HEIGHT = 400;
 
@@ -36,53 +44,54 @@ var GAME_HEIGHT = 400;
  */
 class PhaserApp {
     constructor(phaserAppConfig) {
-        /**
+        var self = this;
+
+    /**
      * @public {Object} codeOrgAPI - API with externally-callable methods for
      * starting an attempt, issuing commands, etc.
      */
     this.codeOrgAPI = {
-      /**
-       * Called before a list of user commands will be issued.
-       */
-      startCommandCollection() {
-        console.log("Collecting commands.");
-      },
-      /**
-       * Called when an attempt should be started, and the entire set of
-       * command-queue API calls have been issued.
-       *
-       * @param {Function} onAttemptComplete - callback with a single parameter,
-       * "success", i.e., true if attempt was successful (level completed),
-       * false if unsuccessful (level not completed).
-       */
-      startAttempt(onAttemptComplete) {
-        console.log("Starting new attempt.");
-      },
-      resetAttempt() {
-        console.log("Resetting game.")
-      },
-      moveForward(highlightCallback) {
-        console.log("Adding move forward command.");
-      },
-      turnRight(highlightCallback) {
-        console.log("Adding turn right command.");
-      },
-      turnLeft(highlightCallback) {
-        console.log("Adding turn left command.");
-      },
-      destroyBlock(highlightCallback) {
-        console.log("Adding destroy block command.");
-      },
-      getObject: function (highlightCallback) {
-        console.log("Adding 'get' command.");
-      },
-      whilePathAhead: function (highlightCallback, callback) {
-        console.log(`Adding repeat while path ahead command. Callback (with API calls):`);
-        console.log(callback);
-      }
+        /**
+        * Called before a list of user commands will be issued.
+        */
+        startCommandCollection() {
+            console.log("Collecting commands.");
+        },
+        /**
+        * Called when an attempt should be started, and the entire set of
+        * command-queue API calls have been issued.
+        *
+        * @param {Function} onAttemptComplete - callback with a single parameter,
+        * "success", i.e., true if attempt was successful (level completed),
+        * false if unsuccessful (level not completed).
+        */
+        startAttempt(onAttemptComplete) {
+            console.log("Starting new attempt.");
+        },
+        resetAttempt() {
+            console.log("Resetting game.");
+        },
+        moveForward(highlightCallback) {
+            self.queue.addCommand(new MoveForwardCommand(self, function() { console.log("highlight move forward command."); } ) );
+        },
+        turnRight(highlightCallback) {
+            self.queue.addCommand(new TurnCommand(self, function() { console.log("highlight turn right command."); }, "RIGHT" ) );
+        },
+        turnLeft(highlightCallback) {
+            self.queue.addCommand(new TurnCommand(self, function() { console.log("highlight turn left command."); }, "LEFT" ) );
+        },
+        destroyBlock(highlightCallback) {
+            self.queue.addCommand(new DestroyBlockCommand(self, function() { console.log("highlight destroy block command."); } ) );
+        },
+        placeBlock: function (highlightCallback, blockType) {
+            self.queue.addCommand(new BaseCommand(self, function() { console.log("highlight placeBlock command."); } ) );
+        },
+        whilePathAhead: function (highlightCallback, blockType, callback) {
+            self.queue.addCommand(new BaseCommand(self, function() { console.log("highlight repeat while path ahead command."); } ) );
+        }
     };
 
-    /**
+         /**
          * Game asset file URL path
          * @property {String}
          */
@@ -145,6 +154,9 @@ class PhaserApp {
                 render: this.render.bind(this)
             }
         );
+
+        this.queue = new CommandQueue(this);
+
     }
 
     /**
@@ -155,10 +167,10 @@ class PhaserApp {
     }
 
     preload() {
-        this.game.time.advancedTiming = true;
-        this.game.load.spritesheet('tiles', `${this.assetRoot}images/spritesheet_tiles.png`, 130, 130);
+    this.game.time.advancedTiming = true;
+    this.game.load.spritesheet('tiles', `${this.assetRoot}images/spritesheet_tiles.png`, 130, 130);
 
-        this.game.load.image('actionOutline', `${this.assetRoot}images/actionOutline.png`);
+    this.game.load.image('actionOutline', `${this.assetRoot}images/actionOutline.png`);
 
     this.game.load.image('grass', `${this.assetRoot}images/Block_0000_Grass.png`);
     this.game.load.image('coarseDirt', `${this.assetRoot}images/Block_0002_coarse_dirt.png`);
@@ -191,6 +203,7 @@ class PhaserApp {
   }
 
   update() {
+        this.queue.tick();
   }
 
   render() {
@@ -485,7 +498,6 @@ class PhaserApp {
           '_0135_CDO_Mockup_136.png'], 10, true);
 
       this.playerSprite.animations.add('crouch_left', [
-          '_0136_CDO_Mockup_137.png',
           '_0137_CDO_Mockup_138.png',
           '_0138_CDO_Mockup_139.png',
           '_0139_CDO_Mockup_140.png'], 10, true);

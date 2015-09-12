@@ -25,7 +25,8 @@ export default class WaitingState extends GameState {
     // Show run button
     this.$runButton.show();
     this.$runButton.click(() => {
-      this.stateManager.enterState(AppStates.RUNNING);
+        this.stateManager.enterState(AppStates.RUNNING);
+        this.phaserApp.queue.begin();
     });
   }
 
