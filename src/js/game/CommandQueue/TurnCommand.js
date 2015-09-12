@@ -10,20 +10,13 @@ export default class TurnCommand extends BaseCommand {
     }
 
     tick() {
-        // do stuff
-
-        this.counter--;
-        console.log(`TURN command: TICK   ${this.counter} `);
-
-        if (this.counter <= 0) {
-            this.state = CommandState.SUCCESS;
-            console.log(`TURN command: TICK   ${this.counter} `);
-        }
+        // do stuff??
     }
     
     begin() {
         super.begin();
         console.log(`TURN command: BEGIN turning ${this.Direction}  `);
+        this.PhaserApp.turn(this, this.Direction);
     }
 
 }

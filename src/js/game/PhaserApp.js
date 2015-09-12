@@ -75,10 +75,10 @@ class PhaserApp {
             self.queue.addCommand(new MoveForwardCommand(self, function() { console.log("highlight move forward command."); } ) );
         },
         turnRight(highlightCallback) {
-            self.queue.addCommand(new TurnCommand(self, function() { console.log("highlight turn right command."); }, "RIGHT" ) );
+            self.queue.addCommand(new TurnCommand(self, function() { console.log("highlight turn right command."); }, 'right' ) );
         },
         turnLeft(highlightCallback) {
-            self.queue.addCommand(new TurnCommand(self, function() { console.log("highlight turn left command."); }, "LEFT" ) );
+            self.queue.addCommand(new TurnCommand(self, function() { console.log("highlight turn left command."); }, 'left' ) );
         },
         destroyBlock(highlightCallback) {
             self.queue.addCommand(new DestroyBlockCommand(self, function() { console.log("highlight destroy block command."); } ) );
@@ -106,6 +106,7 @@ class PhaserApp {
         this.actionOutline = null;
 
         this.playerPosition = [2, 4];
+        this.playerFacing = 0;
 
         this.groundPlane = null;
         this.shadingPlane = null;
@@ -190,6 +191,7 @@ class PhaserApp {
     });
   }
 
+// command processors
   moveForward(commandQueueItem) {
       var tween;
       this.playerSprite.animations.play('walk_right');
@@ -201,9 +203,87 @@ class PhaserApp {
       });
       tween.start();
   }
+    
+  turn(commandQueueItem, direction) {
+      var tween;
+
+      this.rotateFacing(direction);
+
+      this.playerSprite.animations.play(this.getIdleSprite());
+      tween = this.game.add.tween(this.playerSprite).to({value: 100}, 1000, Phaser.Easing.Linear.None);
+      tween.onComplete.add(() => {
+          this.playerSprite.animations.play(this.getIdleSprite());
+          commandQueueItem.succeeded();
+      });
+      tween.start();
+  }
+    
+  destroyBlock(commandQueueItem) {
+      var tween;
+      
+      var spriteName = 'pick_'+ this.getFacing(); 
+      this.playerSprite.animations.play(spriteName);
+      tween = this.game.add.tween(this.playerSprite).to({value: 1000}, 1000, Phaser.Easing.Linear.None);
+      tween.onComplete.add(() => {
+          this.playerSprite.animations.play(this.getIdleSprite());
+          commandQueueItem.succeeded();
+      });
+      tween.start();
+  }
+    
+        
+  placeBlock(commandQueueItem) {
+      var tween;
+      
+      var spriteName = 'place_'+ this.getFacing(); 
+      this.playerSprite.animations.play(spriteName);
+      tween = this.game.add.tween(this.playerSprite).to({value: 100}, 1000, Phaser.Easing.Linear.None);
+      tween.onComplete.add(() => {
+          this.playerSprite.animations.play(this.getIdleSprite());
+          commandQueueItem.succeeded();
+      });
+      tween.start();
+  }
 
   update() {
         this.queue.tick();
+  }
+
+  rotateFacing(direction) {
+
+      if (direction === 'left') {
+          this.playerFacing -=90;
+      } else {
+          this.playerFacing +=90;
+      }
+      if (this.playerFacing <0) {
+          this.playerFacing += 360;
+      }
+  }
+
+  getFacing(){
+      var facing = 'right';
+      switch (this.playerFacing) {
+          case 0:
+              facing = 'right'; 
+              break;
+          case 90:
+              facing = 'down'; 
+              break;
+          case 180:
+              facing = 'left'; 
+              break;
+          case 270:
+              facing = 'up'; 
+              break;
+          default:
+              break;
+      }
+      return facing;
+  }
+
+  getIdleSprite(){
+      return 'idle_'+ this.getFacing(); 
   }
 
   render() {
