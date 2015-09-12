@@ -11,13 +11,6 @@ export default class CommandQueue {
         this.currentCommand = null;
 
         this.commandList_ = [];
-        
-        var foo = function() { console.log("highlight Base command."); };
-
-        this.addCommand(new BaseCommand(phaserApp,foo));
-        this.addCommand(new BaseCommand(phaserApp,foo));
-
-        console.log("Debug Queue: CTOR");
     }
 
     addCommand(command) {
@@ -35,6 +28,11 @@ export default class CommandQueue {
     begin() {
         this.state = CommandState.WORKING;
         console.log("Debug Queue: BEGIN");
+    }
+
+    reset() {
+        this.state = CommandState.NOT_STARTED;
+        this.commandList_ = [];
     }
 
     tick() {

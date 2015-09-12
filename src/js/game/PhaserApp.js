@@ -69,7 +69,7 @@ class PhaserApp {
             self.queue.begin();
         },
         resetAttempt() {
-            console.log("Resetting game.");
+            self.queue.reset();
         },
         moveForward(highlightCallback) {
             self.queue.addCommand(new MoveForwardCommand(self, function() { console.log("highlight move forward command."); } ) );
