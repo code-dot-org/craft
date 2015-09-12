@@ -72,22 +72,22 @@ class PhaserApp {
             self.queue.reset();
         },
         moveForward(highlightCallback) {
-            self.queue.addCommand(new MoveForwardCommand(self, function() { console.log("highlight move forward command."); } ) );
+            self.queue.addCommand(new MoveForwardCommand(self, highlightCallback ) );
         },
         turnRight(highlightCallback) {
-            self.queue.addCommand(new TurnCommand(self, function() { console.log("highlight turn right command."); }, 'right' ) );
+            self.queue.addCommand(new TurnCommand(self, highlightCallback, 'right' ) );
         },
         turnLeft(highlightCallback) {
-            self.queue.addCommand(new TurnCommand(self, function() { console.log("highlight turn left command."); }, 'left' ) );
+            self.queue.addCommand(new TurnCommand(self, highlightCallback, 'left' ) );
         },
         destroyBlock(highlightCallback) {
-            self.queue.addCommand(new DestroyBlockCommand(self, function() { console.log("highlight destroy block command."); } ) );
+            self.queue.addCommand(new DestroyBlockCommand(self, highlightCallback ) );
         },
         placeBlock: function (highlightCallback, blockType) {
-            self.queue.addCommand(new BaseCommand(self, function() { console.log("highlight placeBlock command."); } ) );
+            self.queue.addCommand(new BaseCommand(self, highlightCallback ) );
         },
         whilePathAhead: function (highlightCallback, blockType, callback) {
-            self.queue.addCommand(new BaseCommand(self, function() { console.log("highlight repeat while path ahead command."); } ) );
+            self.queue.addCommand(new BaseCommand(self, highlightCallback ) );
         }
     };
 
@@ -203,7 +203,7 @@ class PhaserApp {
       });
       tween.start();
   }
-    
+
   turn(commandQueueItem, direction) {
       var tween;
 
@@ -217,11 +217,11 @@ class PhaserApp {
       });
       tween.start();
   }
-    
+
   destroyBlock(commandQueueItem) {
       var tween;
-      
-      var spriteName = 'pick_'+ this.getFacing(); 
+
+      var spriteName = 'pick_'+ this.getFacing();
       this.playerSprite.animations.play(spriteName);
       tween = this.game.add.tween(this.playerSprite).to({value: 1000}, 1000, Phaser.Easing.Linear.None);
       tween.onComplete.add(() => {
@@ -230,12 +230,12 @@ class PhaserApp {
       });
       tween.start();
   }
-    
-        
+
+
   placeBlock(commandQueueItem) {
       var tween;
-      
-      var spriteName = 'place_'+ this.getFacing(); 
+
+      var spriteName = 'place_'+ this.getFacing();
       this.playerSprite.animations.play(spriteName);
       tween = this.game.add.tween(this.playerSprite).to({value: 100}, 1000, Phaser.Easing.Linear.None);
       tween.onComplete.add(() => {
@@ -265,16 +265,16 @@ class PhaserApp {
       var facing = 'right';
       switch (this.playerFacing) {
           case 0:
-              facing = 'right'; 
+              facing = 'right';
               break;
           case 90:
-              facing = 'down'; 
+              facing = 'down';
               break;
           case 180:
-              facing = 'left'; 
+              facing = 'left';
               break;
           case 270:
-              facing = 'up'; 
+              facing = 'up';
               break;
           default:
               break;
@@ -283,7 +283,7 @@ class PhaserApp {
   }
 
   getIdleSprite(){
-      return 'idle_'+ this.getFacing(); 
+      return 'idle_'+ this.getFacing();
   }
 
   render() {
