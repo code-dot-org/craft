@@ -66,7 +66,7 @@ class PhaserApp {
         * false if unsuccessful (level not completed).
         */
         startAttempt(onAttemptComplete) {
-            console.log("Starting new attempt.");
+            self.queue.begin();
         },
         resetAttempt() {
             console.log("Resetting game.");
@@ -114,27 +114,27 @@ class PhaserApp {
 
         this.levelData = [
             // Ground layer
-            ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", 
-             "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", 
-             "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", 
-             "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", 
-             "coarseDirt",  "coarseDirt",  "coarseDirt",  "grass", "grass", "grass", "grass", "grass", "grass", "grass", 
-             "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", 
-             "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", 
-             "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", 
-             "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", 
+            ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+             "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+             "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+             "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+             "coarseDirt",  "coarseDirt",  "coarseDirt",  "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+             "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+             "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+             "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+             "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
              "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"],
 
             // Action layer
             ["", "", "", "", "", "", "", "", "grass", "grass",
-             "", "", "", "", "", "", "", "", "", "grass", 
-             "", "", "", "", "", "", "", "", "", "", 
-             "", "", "", "", "", "", "", "", "", "", 
-             "", "", "", "", "", "", "", "", "", "", 
-             "", "", "", "", "", "", "", "", "", "", 
-             "", "", "", "", "", "", "", "", "", "", 
-             "", "", "", "", "", "", "", "", "", "", 
-             "", "", "", "", "", "", "", "", "", "", 
+             "", "", "", "", "", "", "", "", "", "grass",
+             "", "", "", "", "", "", "", "", "", "",
+             "", "", "", "", "", "", "", "", "", "",
+             "", "", "", "", "", "", "", "", "", "",
+             "", "", "", "", "", "", "", "", "", "",
+             "", "", "", "", "", "", "", "", "", "",
+             "", "", "", "", "", "", "", "", "", "",
+             "", "", "", "", "", "", "", "", "", "",
              "", "", "", "", "", "", "", "", "", ""],
 
             // Fluff layer
@@ -512,7 +512,7 @@ class PhaserApp {
   computeShadingPlane() {
       this.shadingPlane.removeAll();
 
-      // TODO: For each object 
+      // TODO: For each object
   }
 }
 
