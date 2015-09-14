@@ -52,6 +52,8 @@ export default class LevelView {
   }
 
   update() {
+
+    this.actionPlane.sort('y', Phaser.Group.SORT_ASCENDING);
     this.playerGhost.frame = this.playerSprite.frame;
   }
 
@@ -91,9 +93,9 @@ export default class LevelView {
   }
 
   playMoveForwardAnimation(position, facing, completionHandler) {
-    var walkAnimName,
-        idleAnimName,
-        tween;
+    var tween,
+        walkAnimName,
+        idleAnimName;
 
     let direction = this.getDirectionName(facing);
 
@@ -117,9 +119,29 @@ export default class LevelView {
   }
 
   playPlaceBlockAnimation(position, facing, blockType, completionHandler) {
-    this.actionPlane.create(-12 + 40 * position[0], -22 + 40 * position[1], blockType);
+    var tween,
+        jumpAnimName,
+        idleAnimName;
 
-    completionHandler();
+    let direction = this.getDirectionName(facing);
+    this.setSelectionIndicatorPosition(position[0], position[1]);
+
+    jumpAnimName = "jump" + direction;
+    idleAnimName = "idle" + direction;
+
+    this.playerSprite.animations.play(jumpAnimName);
+    tween = this.game.add.tween(this.playerSprite).to({
+      y: (-95 + 40 * position[1])
+    }, 250, Phaser.Easing.Cubic.EaseOut);
+
+    tween.onComplete.add(() => {
+      this.actionPlane.create(-12 + 40 * position[0], -22 + 40 * position[1], blockType);
+
+      this.playerSprite.animations.play(idleAnimName);
+      completionHandler();
+    });
+
+    tween.start();
   }
 
   playDestroyBlockAnimation(playerPosition, facing, blockType, completionHandler) {
@@ -130,6 +152,7 @@ export default class LevelView {
   setPlayerPosition(x, y) {
     this.playerSprite.x = -35 + 40 * x;
     this.playerSprite.y = -55 + 40 * y;
+    this.playerSprite.sortY = this.playerSprite.y + 55;
   }
 
   setSelectionIndicatorPosition(x, y) {
@@ -138,7 +161,7 @@ export default class LevelView {
   }
 
   preparePlanes(levelData) {
-    var tileName;
+    var sprite;
 
     this.groundPlane = this.game.add.group();
     this.shadingPlane = this.game.add.group();
@@ -156,7 +179,8 @@ export default class LevelView {
     for (var y = 0; y < 10; ++y) {
       for (var x = 0; x < 10; ++x) {
         if (levelData[1][(y * 10) + x] !== "") {
-          this.actionPlane.create(-12 + 40 * x, -22 + 40 * y, (levelData[1])[(y * 10) + x]);
+          sprite = this.actionPlane.create(-12 + 40 * x, -22 + 40 * y, (levelData[1])[(y * 10) + x]);
+          sprite.sortY = -22 + 40 * y + 40;
         }
       }
     }
