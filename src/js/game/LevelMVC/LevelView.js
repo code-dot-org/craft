@@ -1,3 +1,5 @@
+import FacingDirection from "./FacingDirection.js"
+
 export default class LevelView {
   constructor(controller) {
     this.controller = controller;
@@ -8,6 +10,7 @@ export default class LevelView {
     this.baseShading = null;
 
     this.playerSprite = null;
+    this.playerGhost = null;        // The ghost is a copy of the player sprite that sits on top of everything at 20% opacity, so the player can go under trees and still be seen.
     this.playerShadow = null;
     this.selectionIndicator = null;
 
@@ -36,6 +39,7 @@ export default class LevelView {
 
     this.game.load.image('grass', `${this.assetRoot}images/Block_0000_Grass.png`);
     this.game.load.image('coarseDirt', `${this.assetRoot}images/Block_0002_coarse_dirt.png`);
+    this.game.load.image('logOak', `${this.assetRoot}images/Block_0008_log_oak.png`);
   }
 
   create() {
@@ -48,30 +52,79 @@ export default class LevelView {
   }
 
   update() {
-
+    this.playerGhost.frame = this.playerSprite.frame;
   }
 
   render() {
 
   }
 
-  playWalkForwardAnimation(completionHandler) {
-    var tween;
+  getDirectionName(facing) {
+    var direction;
 
-    this.setSelectionIndicatorPosition(this.playerPosition[0] + 1, this.playerPosition[1]);
+    switch (facing) {
+      case FacingDirection.Up:
+        direction = "_up";
+        break;
 
-    this.playerSprite.animations.play('walk_right');
+      case FacingDirection.Right:
+        direction = "_right";
+        break;
+
+      case FacingDirection.Down:
+        direction = "_down";
+        break;
+
+      case FacingDirection.Left:
+        direction = "_left";
+        break;
+    }
+
+    return direction;
+  }
+
+  updatePlayerDirection(position, facing) {
+    let direction = this.getDirectionName(facing);
+
+    this.setSelectionIndicatorPosition(position[0], position[1]);
+    this.playerSprite.animations.play("idle" + direction);
+  }
+
+  playMoveForwardAnimation(position, facing, completionHandler) {
+    var walkAnimName,
+        idleAnimName,
+        tween;
+
+    let direction = this.getDirectionName(facing);
+
+    this.setSelectionIndicatorPosition(position[0], position[1]);
+
+    walkAnimName = "walk" + direction;
+    idleAnimName = "idle" + direction;
+
+    this.playerSprite.animations.play(walkAnimName);
     tween = this.game.add.tween(this.playerSprite).to({
-      x: (-35 + 40 * (this.playerPosition[0] + 1))
+      x: (-35 + 40 * position[0]),
+      y: (-55 + 40 * position[1])
     }, 1000, Phaser.Easing.Linear.None);
 
     tween.onComplete.add(() => {
-      this.playerSprite.animations.play('idle_right');
-      ++this.playerPosition[0];
+      this.playerSprite.animations.play(idleAnimName);
       completionHandler();
     });
 
     tween.start();
+  }
+
+  playPlaceBlockAnimation(position, facing, blockType, completionHandler) {
+    this.actionPlane.create(-12 + 40 * position[0], -22 + 40 * position[1], blockType);
+
+    completionHandler();
+  }
+
+  playDestroyBlockAnimation(playerPosition, facing, blockType, completionHandler) {
+    // TODO:
+    completionHandler();
   }
 
   setPlayerPosition(x, y) {
@@ -150,7 +203,7 @@ export default class LevelView {
           break;
 
         case "AOeffect_TopLeft":
-          sx -= 10;
+          sx -= 12;
           break;
 
         case "AOeffect_TopRight":
@@ -164,6 +217,9 @@ export default class LevelView {
 
   preparePlayerSprite() {
     this.playerSprite = this.actionPlane.create(0, 0, 'player', '_0000_CDO_Mockup_001.png');
+    this.playerGhost = this.fluffPlane.create(0, 0, 'player', '_0000_CDO_Mockup_001.png');
+    this.playerGhost.parent = this.playerSprite;
+    this.playerGhost.alpha = 0.2;
 
     this.selectionIndicator = this.shadingPlane.create(24, 44, 'selectionIndicator');
 

@@ -79,14 +79,14 @@ class PhaserApp {
       // Action layer
       ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
         "", "grass", "", "", "", "", "", "", "", "grass",
+        "", "", "", "logOak", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "logOak", "", "",
         "", "", "", "", "", "", "", "", "", "",
         "", "", "", "", "", "", "", "", "", "",
         "", "", "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "grass", "", "", "", "",
-        "", "", "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "", "", ""
+        "", "", "logOak", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "logOak", "", "", ""
       ],
 
       // Fluff layer
@@ -105,9 +105,24 @@ class PhaserApp {
   create() {
     this.levelView.create();
 
-    this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onDown.add(() => {
+    this.game.input.keyboard.addKey(Phaser.Keyboard.UP).onUp.add(() => {
       var dummy = { succeeded: function() {} }
       this.moveForward(dummy);
+    });
+
+    this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onUp.add(() => {
+      var dummy = { succeeded: function() {} }
+      this.turn(dummy, 1);
+    });
+
+    this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT).onUp.add(() => {
+      var dummy = { succeeded: function() {} }
+      this.turn(dummy, -1);
+    });
+
+    this.game.input.keyboard.addKey(Phaser.Keyboard.P).onUp.add(() => {
+      var dummy = { succeeded: function() {} }
+      this.placeBlock("logOak", dummy);
     });
 
     this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
@@ -125,93 +140,56 @@ class PhaserApp {
 
   // command processors
   moveForward(commandQueueItem) {
-    this.levelView.playWalkForwardAnimation(() => {
+    if (this.levelModel.canMoveForward()) {
+      this.levelModel.moveForward();
+      this.levelView.playMoveForwardAnimation(this.levelModel.player.position, this.levelModel.player.facing, () => {
+        commandQueueItem.succeeded();
+      });
+    } else {
+      // TODO: Decide when you can't move is a failure? Walking into Lava, for example.
       commandQueueItem.succeeded();
-    });
+    }
   }
 
   turn(commandQueueItem, direction) {
-    var tween;
+    if (direction == -1) {
+      this.levelModel.turnLeft();
+    }
 
-    this.rotateFacing(direction);
+    if (direction == 1) {
+      this.levelModel.turnRight();
+    }
 
-    this.playerSprite.animations.play(this.getIdleSprite());
-    tween = this.game.add.tween(this.playerSprite).to({
-      value: 100
-    }, 1000, Phaser.Easing.Linear.None);
-    tween.onComplete.add(() => {
-      this.playerSprite.animations.play(this.getIdleSprite());
-      commandQueueItem.succeeded();
-    });
-    tween.start();
+    this.levelView.updatePlayerDirection(this.levelModel.player.position, this.levelModel.player.facing);
+    commandQueueItem.succeeded();
   }
 
   destroyBlock(commandQueueItem) {
-    var tween;
+    if (this.levelModel.canDestroyBlockForward()) {
+      let blockType = this.levelModel.getBlockTypeForward();
 
-    var spriteName = 'pick_' + this.getFacing();
-    this.playerSprite.animations.play(spriteName);
-    tween = this.game.add.tween(this.playerSprite).to({
-      value: 1000
-    }, 1000, Phaser.Easing.Linear.None);
-    tween.onComplete.add(() => {
-      this.playerSprite.animations.play(this.getIdleSprite());
-      commandQueueItem.succeeded();
-    });
-    tween.start();
-  }
-
-
-  placeBlock(commandQueueItem) {
-    var tween;
-
-    var spriteName = 'place_' + this.getFacing();
-    this.playerSprite.animations.play(spriteName);
-    tween = this.game.add.tween(this.playerSprite).to({
-      value: 100
-    }, 1000, Phaser.Easing.Linear.None);
-    tween.onComplete.add(() => {
-      this.playerSprite.animations.play(this.getIdleSprite());
-      commandQueueItem.succeeded();
-    });
-    tween.start();
-  }
-
-  rotateFacing(direction) {
-
-    if (direction === 'left') {
-      this.playerFacing -= 90;
+      this.levelModel.destroyBlockForward();
+      this.levelView.playDestroyBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, () => {
+        this.levelModel.computeShadingPlane();
+        this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
+        commandQueueItem.succeeded();
+      });
     } else {
-      this.playerFacing += 90;
-    }
-    if (this.playerFacing < 0) {
-      this.playerFacing += 360;
+      //commandQueueItem.failed();
     }
   }
 
-  getFacing() {
-    var facing = 'right';
-    switch (this.playerFacing) {
-      case 0:
-        facing = 'right';
-        break;
-      case 90:
-        facing = 'down';
-        break;
-      case 180:
-        facing = 'left';
-        break;
-      case 270:
-        facing = 'up';
-        break;
-      default:
-        break;
+  placeBlock(blockType, commandQueueItem) {
+    if (this.levelModel.canPlaceBlock()) {
+      this.levelModel.placeBlock(blockType);
+      this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, () => {
+        this.levelModel.computeShadingPlane();
+        this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
+        commandQueueItem.succeeded();
+      });
+    } else {
+      //commandQueueItem.failed();
     }
-    return facing;
-  }
-
-  getIdleSprite() {
-    return 'idle_' + this.getFacing();
   }
 }
 
