@@ -105,24 +105,35 @@ class PhaserApp {
   create() {
     this.levelView.create();
 
+// debugging keyboard cheats for debugging
     this.game.input.keyboard.addKey(Phaser.Keyboard.UP).onUp.add(() => {
-      var dummy = { succeeded: function() {} }
-      this.moveForward(dummy);
+        var dummyFunc = function() { console.log("highlight move forward command.");};
+        this.codeOrgAPI.moveForward(dummyFunc);
     });
 
     this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onUp.add(() => {
-      var dummy = { succeeded: function() {} }
-      this.turn(dummy, 1);
+        var dummyFunc = function() { console.log("highlight turn right command.");};
+        this.codeOrgAPI.turnRight(dummyFunc);
     });
 
     this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT).onUp.add(() => {
-      var dummy = { succeeded: function() {} }
-      this.turn(dummy, -1);
+        var dummyFunc = function() { console.log("highlight turn left command.");};
+        this.codeOrgAPI.turnLeft(dummyFunc);
     });
 
     this.game.input.keyboard.addKey(Phaser.Keyboard.P).onUp.add(() => {
-      var dummy = { succeeded: function() {} }
-      this.placeBlock("logOak", dummy);
+        var dummyFunc = function() { console.log("highlight placeBlock command.");};
+        this.codeOrgAPI.placeBlock(dummyFunc,"logOak");
+    });
+
+    this.game.input.keyboard.addKey(Phaser.Keyboard.D).onUp.add(() => {
+        var dummyFunc = function() { console.log("highlight destroy block command.");};
+        this.codeOrgAPI.destroyBlock(dummyFunc);
+    });
+
+    this.game.input.keyboard.addKey(Phaser.Keyboard.E).onUp.add(() => {
+        var dummyFunc = function() { console.log("Execute command list");};
+        this.codeOrgAPI.startAttempt(dummyFunc);
     });
 
     this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
@@ -179,7 +190,7 @@ class PhaserApp {
     }
   }
 
-  placeBlock(blockType, commandQueueItem) {
+  placeBlock(commandQueueItem, blockType) {
     if (this.levelModel.canPlaceBlock()) {
       this.levelModel.placeBlock(blockType);
       this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, () => {

@@ -1,3 +1,11 @@
+import CommandQueue from "../CommandQueue/CommandQueue.js";
+import BaseCommand from "../CommandQueue/BaseCommand.js";
+import DestroyBlockCommand from "../CommandQueue/DestroyBlockCommand.js";
+import PlaceBlockCommand from "../CommandQueue/PlaceBlockCommand.js";
+import MoveForwardCommand from "../CommandQueue/MoveForwardCommand.js";
+import TurnCommand from "../CommandQueue/TurnCommand.js";
+import WhileCommand from "../CommandQueue/WhileCommand.js";
+
 export function get(controller) {
   return {
     /**
@@ -24,39 +32,27 @@ export function get(controller) {
     },
 
     moveForward: function(highlightCallback) {
-      controller.queue.addCommand(new MoveForwardCommand(self, function() {
-        console.log("highlight move forward command.");
-      }));
+        controller.queue.addCommand(new MoveForwardCommand(controller, highlightCallback));
     },
 
     turnRight: function(highlightCallback) {
-      controller.queue.addCommand(new TurnCommand(self, function() {
-        console.log("highlight turn right command.");
-      }, 'right'));
+        controller.queue.addCommand(new TurnCommand(controller, highlightCallback, 1));
     },
 
     turnLeft: function(highlightCallback) {
-      controller.queue.addCommand(new TurnCommand(self, function() {
-        console.log("highlight turn left command.");
-      }, 'left'));
+        controller.queue.addCommand(new TurnCommand(controller, highlightCallback, -1));
     },
 
     destroyBlock: function(highlightCallback) {
-      controller.queue.addCommand(new DestroyBlockCommand(self, function() {
-        console.log("highlight destroy block command.");
-      }));
+        controller.queue.addCommand(new DestroyBlockCommand(controller, highlightCallback));
     },
 
     placeBlock: function(highlightCallback, blockType) {
-      controller.queue.addCommand(new BaseCommand(self, function() {
-        console.log("highlight placeBlock command.");
-      }));
+        controller.queue.addCommand(new PlaceBlockCommand(controller, highlightCallback, blockType));
     },
 
     whilePathAhead: function(highlightCallback, blockType, callback) {
-      controller.queue.addCommand(new BaseCommand(self, function() {
-        console.log("highlight repeat while path ahead command.");
-      }));
+        controller.queue.addCommand(new BaseCommand(controller, highlightCallback));
     }
   }
 }
