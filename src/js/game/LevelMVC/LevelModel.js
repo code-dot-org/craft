@@ -69,13 +69,32 @@ export default class LevelModel {
     return [cx, cy];    
   }
 
+  isForwardBlockOfType(blockType) {
+      var result = false;
+
+      let blockForwardPosition = this.getMoveForwardPosition();
+      let blockIndex = (blockForwardPosition[1] * 10) + blockForwardPosition[0];
+
+      if (blockIndex >= 0 && blockIndex < 100) {
+
+          if (blockType == "empty") {
+              result =  this.actionPlane[blockIndex].isEmpty;
+          }
+          else {
+              result = (blockType == this.actionPlane[blockIndex].blockType);
+          }
+      }
+
+      return result;
+  }
+
   canMoveForward() {
     var result = false;
 
     let blockForwardPosition = this.getMoveForwardPosition();
     let blockIndex = (blockForwardPosition[1] * 10) + blockForwardPosition[0];
 
-    if (blockIndex >= 0 || blockIndex < 100) {
+    if (blockIndex >= 0 && blockIndex < 100) {
       result = this.actionPlane[blockIndex].isWalkable;
     }
 

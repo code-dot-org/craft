@@ -136,6 +136,17 @@ class PhaserApp {
         this.codeOrgAPI.startAttempt(dummyFunc);
     });
 
+    this.game.input.keyboard.addKey(Phaser.Keyboard.W).onUp.add(() => {
+        var dummyFunc = function() { console.log("Execute While command list"); };
+        var blockType = "empty";
+        var codeBlock = function() { 
+            this.PhaserApp.codeOrgAPI.moveForward( function() { console.log("Execute While command move block");}); 
+            this.PhaserApp.codeOrgAPI.moveForward( function() { console.log("Execute While command move block2");}); 
+            this.PhaserApp.codeOrgAPI.turnLeft( function() { console.log("Execute While command turn");}); 
+        };
+        this.codeOrgAPI.whilePathAhead(dummyFunc, blockType, codeBlock);
+    });
+
     this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
   }
 
@@ -202,6 +213,11 @@ class PhaserApp {
       //commandQueueItem.failed();
     }
   }
+
+  isPathAhead(blockType)  {
+      return this.levelModel.isForwardBlockOfType(blockType);
+  }
+
 }
 
 window.PhaserApp = PhaserApp;

@@ -1,6 +1,5 @@
 import BaseCommand from "./BaseCommand";
 import CommandState from "./CommandState.js";
-//import DebugCommand from "./DebugCommand";
 
 
 export default class CommandQueue {
@@ -11,18 +10,20 @@ export default class CommandQueue {
         this.currentCommand = null;
 
         this.commandList_ = [];
+        this.whileCommandQueue = null;
     }
 
     addCommand(command) {
-        this.commandList_.push(command);
+        // if we're handling a while command, add to the while command's queue instead of this queue
+        if (this.whileCommandQueue != null) {
+            this.whileCommandQueue.addCommand(command);
+        } else {
+            this.commandList_.push(command);
+        }
     }
 
-    pushBackCommand(command) {
-        this.commandList_.push(command);
-    }
-
-    pushFrontCommand(command) {
-        this.commandList_.unshift(command);
+    setWhileCommandInsertState(queue)  {
+        this.whileCommandQueue = queue;
     }
 
     begin() {
@@ -36,10 +37,7 @@ export default class CommandQueue {
     }
 
     tick() {
-        // do stuff
-        
         if (this.state === CommandState.WORKING ) {
-
             if (this.currentCommand == null) {
                 if(this.commandList_.length === 0) {
                     this.state = CommandState.SUCCESS;
@@ -60,7 +58,6 @@ export default class CommandQueue {
             } else if (this.currentCommand.isFailed()) {
                 this.state = CommandState.FAILURE;
             } 
-
         }
     };
 

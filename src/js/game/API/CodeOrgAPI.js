@@ -51,8 +51,8 @@ export function get(controller) {
         controller.queue.addCommand(new PlaceBlockCommand(controller, highlightCallback, blockType));
     },
 
-    whilePathAhead: function(highlightCallback, blockType, callback) {
-        controller.queue.addCommand(new BaseCommand(controller, highlightCallback));
+    whilePathAhead: function(highlightCallback, blockType, codeBlock) {
+        controller.queue.addCommand(new WhileCommand(controller, highlightCallback, blockType, codeBlock));
     }
   }
 }

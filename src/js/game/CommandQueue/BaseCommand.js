@@ -7,24 +7,14 @@ export default class BaseCommand {
         this.Game = phaserApp.game;
         this.HighlightCallback = highlightCallback;
         this.state = CommandState.NOT_STARTED;
-
-        this.counter = 10;
     }
 
     tick() {
-        // do stuff
-        this.counter--;
-
-        if (this.counter <= 0) {
-            this.state = CommandState.SUCCESS;
-            console.log(`Debug command: TICK   ${this.counter} `);
-        }
     }
     
     begin() {
         this.HighlightCallback();
         this.state = CommandState.WORKING;
-        //console.log("base command: BEGIN");
     }
 
     /**
