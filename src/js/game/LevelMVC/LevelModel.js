@@ -54,8 +54,8 @@ export default class LevelModel {
       var result = false;
 
       // above
-      position = [ this.player.position[0], --this.player.position[1] ];
-      isBlockOfType(position, blockType)
+      //position = [ this.player.position[0], --this.player.position[1] ];
+      //this.isBlockOfType(position, blockType)
       // below
 
       // left
