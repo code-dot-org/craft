@@ -5,57 +5,269 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style/index.css">
   <script src="<%= appBundle %>"></script>
+  <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
   <title>Phaser App Playground</title>
 </head>
 <body>
 
-<div id="phaser-game"></div>
+<div id="phaser-game" style="float:left;"></div>
 
-<button id="runButton" style="display: none">Run</button>
-<button id="resetButton" style="display: none">Reset</button>
+<textarea id="test-code-area" style="float:left; width:300px; height:300px;"></textarea>
+<div style="clear:both;"></div>
+<button id="run-button">Run</button>
+<button id="reset-button">Reset</button>
+<div style="clear:both;"></div>
+<button id="previous-level">Previous level</button>
+<button id="next-level">Next level</button>
 
 <script>
+  var moveForwardBlock = "codeOrgAPI.moveForward(function(){});\n";
+  var turnLeftBlock = "codeOrgAPI.turn(function(){}, 'left');\n";
+  var turnRightBlock = "codeOrgAPI.turn(function(){}, 'right');\n";
+
+  var demoLevels = {
+    1: {
+      groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+        "coarseDirt", "coarseDirt", "coarseDirt", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
+      ],
+
+      groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "tallGrass", "", "", "", "", "", "", "", "", ""],
+
+      actionPlane: ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
+        "", "grass", "", "", "", "", "", "", "", "grass",
+        "", "", "", "logOak", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "logOak", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "logOak", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "logOak", "", "", ""
+      ],
+
+      fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "leavesOak", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "leavesOak", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "leavesOak", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "leavesOak", "", "", ""
+      ],
+
+      solutionData: [],
+
+      solutionVerificationType: 0,
+
+      solutionCode:
+        moveForwardBlock +
+        moveForwardBlock +
+        moveForwardBlock
+
+    },
+    2: {
+      groundPlane: ["coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
+        "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
+        "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
+        "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
+        "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
+        "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
+        "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
+        "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
+        "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
+        "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt"
+      ],
+
+      groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "tallGrass", "", "", "", "", "", "", "", "", ""],
+
+      actionPlane: ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
+        "", "grass", "", "", "", "", "", "", "", "grass",
+        "", "", "", "logOak", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "logOak", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "logOak", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "logOak", "", "", ""
+      ],
+
+      fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "leavesOak", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "leavesOak", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "leavesOak", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "leavesOak", "", "", ""
+      ],
+
+      solutionData: [],
+
+      solutionVerificationType: 0,
+
+      solutionCode:
+        moveForwardBlock +
+        turnLeftBlock +
+        turnRightBlock
+
+    },
+    3: {
+      groundPlane: ["grass", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
+        "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
+        "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
+        "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
+        "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
+        "coarseDirt", "coarseDirt", "grass", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
+        "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
+        "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
+        "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
+        "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt"
+      ],
+
+      groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "tallGrass", "", "", "", "", "", "", "", "", ""],
+
+      actionPlane: ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
+        "", "grass", "", "", "", "", "", "", "", "grass",
+        "", "", "", "logOak", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "logOak", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "logOak", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "logOak", "", "", ""
+      ],
+
+      fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "leavesOak", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "leavesOak", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "leavesOak", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "leavesOak", "", "", ""
+      ],
+
+      solutionData: [],
+
+      solutionVerificationType: 0
+    }
+
+  };
+
+  function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+      results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+  }
+
   // Initialize test instance of game, exposed to window for debugging.
   var phaserApp = new PhaserApp({
     containerId: 'phaser-game',
     assetRoot: '/assets/'
   });
-  phaserApp.loadLevel({
-    groundMap: [
-      ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"],
-      ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"],
-      ["grass", "sand", "sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass"],
-      ["grass", "sand", "sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass"],
-      ["grass", "grass", "grass", "sand", "sand", "sand", "sand", "grass", "grass", "grass"],
-      ["grass", "grass", "grass", "sand", "sand", "sand", "sand", "grass", "grass", "grass"],
-      ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"],
-      ["grass", "sand", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"],
-      ["grass", "grass", "grass", "grass", "grass", "grass", "dirt", "dirt", "dirt", "dirt"],
-      ["grass", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt"]
-    ],
-    objectMap: [
-      ["", "", "", "", "", "", "", "", "", ""],
-      ["mushroom", "mushroomB", "", "", "", "", "", "mushroom", "mushroom", "mushroom"],
-      ["rail", "mushroom", "", "", "", "", "", "", "", ""],
-      ["rail", "", "mushroomB", "", "", "", "grass", "mushroom", "mushroom", "mushroom"],
-      ["rail", "mushroom", "mushroomB", "grass", "grassB", "grass", "grass", "grassB", "grass", "mushroom"],
-      ["rail", "mushroom", "mushroomB", "grassB", "grassB", "grassB", "mushroom", "mushroom", "mushroom", "mushroom"],
-      ["rail", "", "", "", "", "", "", "", "", "mushroom"],
-      ["rail", "grassB", "mushroomB", "mushroomB", "mushroomB", "mushroomB", "mushroomB", "mushroomB", "mushroomB", "mushroomB"],
-      ["rail", "fence", "fence", "fence", "fence", "fence", "fence", "fence", "fence", "fence"],
-      ["rail", "", "", "", "", "", "mushroom", "mushroom", "mushroom", "mushroom"]
-    ]
-  });
-  window.phaserApp = phaserApp;
+  var levelNumber = parseInt(getParameterByName('level') || 1, 10);
+  var testLevelToLoad = demoLevels[levelNumber];
+  phaserApp.loadLevel(testLevelToLoad);
 
+  $('#test-code-area').val(testLevelToLoad.solutionCode);
+
+  function runCodeWithParams(code, options) {
+    // execute JS code "natively"
+    var params = [];
+    var args = [];
+    for (var k in options) {
+      params.push(k);
+      args.push(options[k]);
+    }
+    params.push(code);
+    var ctor = function() {
+      return Function.apply(this, params);
+    };
+    ctor.prototype = Function.prototype;
+    return new ctor().apply(null, args);
+  }
+
+  $('#run-button').click(function () {
+    var code = $('#test-code-area').val();
+    var codeOrgAPI = phaserApp.codeOrgAPI;
+    codeOrgAPI.startCommandCollection();
+    runCodeWithParams(code, {
+      codeOrgAPI: phaserApp.codeOrgAPI
+    });
+    codeOrgAPI.startAttempt(function (result) {
+      alert(result ? "Success" : "Failure");
+    });
+  });
+
+  if (!demoLevels[levelNumber - 1]) {
+    $('#previous-level').hide();
+  }
+
+  if (!demoLevels[levelNumber + 1]) {
+    $('#next-level').hide();
+  }
+
+  $('#next-level').click(function() {
+    window.location.href = "/?level=" + (levelNumber + 1);
+  });
+
+  $('#previous-level').click(function() {
+    window.location.href = "/?level=" + (levelNumber - 1);
+  });
+
+  window.phaserApp = phaserApp;
 </script>
 
 <script>
-document.write(
-  '<script src="//'
-  + window.location.hostname
-  + ':<%= liveReloadPort %>/livereload.js"><\/script>'
-);
+  document.write(
+    '<script src="//'
+    + window.location.hostname
+    + ':<%= liveReloadPort %>/livereload.js"><\/script>'
+  );
 </script>
 
 </body>

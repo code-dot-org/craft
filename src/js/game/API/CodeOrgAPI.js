@@ -39,6 +39,10 @@ export function get(controller) {
         controller.queue.addCommand(new MoveForwardCommand(controller, highlightCallback));
     },
 
+    turn: function(highlightCallback, direction) {
+        controller.queue.addCommand(new TurnCommand(controller, highlightCallback, direction === 'right' ? 1 : -1));
+    },
+
     turnRight: function(highlightCallback) {
         controller.queue.addCommand(new TurnCommand(controller, highlightCallback, 1));
     },
