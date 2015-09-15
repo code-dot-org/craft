@@ -32,13 +32,7 @@ export default class LevelView {
     this.game.load.image('selectionIndicator', `${this.assetRoot}images/Selection_Indicator.png`);
 
     this.game.load.image('shadeLayer', `${this.assetRoot}images/Shade_Layer.png`);
-    this.game.load.image('AOeffect_Left', `${this.assetRoot}images/AOeffect_Left.png`);
-    this.game.load.image('AOeffect_Right', `${this.assetRoot}images/AOeffect_Right.png`);
-    this.game.load.image('AOeffect_Bottom', `${this.assetRoot}images/AOeffect_Bottom.png`);
-    this.game.load.image('AOeffect_BottomLeft', `${this.assetRoot}images/AOeffect_BottomLeft.png`);
-    this.game.load.image('AOeffect_BottomRight', `${this.assetRoot}images/AOeffect_BottomRight.png`);
-    this.game.load.image('AOeffect_TopLeft', `${this.assetRoot}images/AOeffect_TopLeft.png`);
-    this.game.load.image('AOeffect_TopRight', `${this.assetRoot}images/AOeffect_TopRight.png`);
+    this.game.load.atlasJSONHash('AO', `${this.assetRoot}images/AO.png`, `${this.assetRoot}images/AO.json`);
 
     this.game.load.atlasJSONHash('leavesOak', `${this.assetRoot}images/Leaves_Oak_decay.png`, `${this.assetRoot}images/Leaves_Oak_decay.json`);
     this.game.load.atlasJSONHash('destroyOverlay', `${this.assetRoot}images/Destroy_Overlay.png`, `${this.assetRoot}images/Destroy_Overlay.json`);
@@ -47,6 +41,7 @@ export default class LevelView {
     this.game.load.image('coarseDirt', `${this.assetRoot}images/Block_0002_coarse_dirt.png`);
     this.game.load.image('tallGrass', `${this.assetRoot}images/TallGrass.png`);
     this.game.load.image('logOak', `${this.assetRoot}images/Block_0008_log_oak.png`);
+    this.game.load.image('planksOak', `${this.assetRoot}images/Block_0020_planks_oak.png`);
   }
 
   create() {
@@ -299,38 +294,42 @@ export default class LevelView {
 
       switch (shadowItem.type) {
         case "AOeffect_Left":
-          sx -= 22;
+          sx += 25;
+          sy += 22;
           break;
 
         case "AOeffect_Right":
-          sx -= 2;
+          sx += 0;
+          sy += 22;
           break;
 
         case "AOeffect_Bottom":
-          sx -= 12;
-          sy += 20;
+          sx += 0;
+          sy += 22;
           break;
 
         case "AOeffect_BottomLeft":
-          sx -= 12;
-          sy += 20;
+          sx += 25;
+          sy += 22;
           break;
 
         case "AOeffect_BottomRight":
-          sx -= 12;
-          sy += 20;
+          sx += 0;
+          sy += 22;
           break;
 
         case "AOeffect_TopLeft":
-          sx -= 12;
+          sx += 25;
+          sy += 47;
           break;
 
         case "AOeffect_TopRight":
-          sx -= 12;
+          sx += 0;
+          sy += 47;
           break;
       }
 
-      this.shadingPlane.create(sx, sy, shadowItem.type);
+      this.shadingPlane.create(sx, sy, "AO", shadowItem.type);
     }
   }
 

@@ -1,6 +1,5 @@
 {"frames": {
-
-"AO_0.png":
+"AOeffect_TopLeft":
 {
 	"frame": {"x":15,"y":15,"w":15,"h":15},
 	"rotated": false,
@@ -8,7 +7,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":15},
 	"sourceSize": {"w":15,"h":15}
 },
-"AO_1.png":
+"AOeffect_TopRight":
 {
 	"frame": {"x":15,"y":30,"w":15,"h":15},
 	"rotated": false,
@@ -16,7 +15,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":15},
 	"sourceSize": {"w":15,"h":15}
 },
-"AO_2.png":
+"AOeffect_Left":
 {
 	"frame": {"x":40,"y":0,"w":15,"h":40},
 	"rotated": false,
@@ -24,7 +23,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":40},
 	"sourceSize": {"w":15,"h":40}
 },
-"AO_3.png":
+"AOeffect_Right":
 {
 	"frame": {"x":0,"y":15,"w":15,"h":40},
 	"rotated": false,
@@ -32,7 +31,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":40},
 	"sourceSize": {"w":15,"h":40}
 },
-"AO_4.png":
+"AOeffect_BottomLeft":
 {
 	"frame": {"x":30,"y":40,"w":15,"h":15},
 	"rotated": false,
@@ -40,7 +39,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":15},
 	"sourceSize": {"w":15,"h":15}
 },
-"AO_5.png":
+"AOeffect_Bottom":
 {
 	"frame": {"x":0,"y":0,"w":40,"h":15},
 	"rotated": false,
@@ -48,7 +47,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":15},
 	"sourceSize": {"w":40,"h":15}
 },
-"AO_6.png":
+"AOeffect_BottomRight":
 {
 	"frame": {"x":45,"y":40,"w":15,"h":15},
 	"rotated": false,
