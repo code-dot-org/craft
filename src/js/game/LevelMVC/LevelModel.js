@@ -100,7 +100,7 @@ export default class LevelModel {
 
       let blockForwardPosition = this.getMoveForwardPosition();
       let blockIndex = (blockForwardPosition[1] * 10) + blockForwardPosition[0];
-      return isBlockOfType(blockForwardPosition, blockType);
+      return this.isBlockOfType(blockForwardPosition, blockType);
   }
 
   isBlockOfType(position, blockType)
