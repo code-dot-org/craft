@@ -17,16 +17,15 @@ var GAME_WIDTH = 400;
 var GAME_HEIGHT = 400;
 
 /**
- * Initializes a new instance of a Phaser game, and includes game-specific logic
- * and rendering.
- *
- * @param {PhaserAppConfig} phaserAppConfig
- * @constructor
+ * Initializes a new instance of a mini-game visualization
  */
 class PhaserApp {
+  /**
+   * @param {Object} phaserAppConfig
+   * @param {String} phaserAppConfig.containerId DOM ID to mount this app
+   * @constructor
+   */
   constructor(phaserAppConfig) {
-    var self = this;
-
     /**
      * @public {Object} codeOrgAPI - API with externally-callable methods for
      * starting an attempt, issuing commands, etc.
@@ -58,68 +57,10 @@ class PhaserApp {
   }
 
   /**
-   * @param {LevelConfig} levelConfig
+   * @param {Object} levelConfig
    */
   loadLevel(levelConfig) {
-    this.levelConfig = levelConfig;
-
-    this.levelData = {
-      groundPlane:
-        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-         "coarseDirt", "coarseDirt", "coarseDirt", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
-        ],
-
-      groundDecorationPlane:
-        ["", "", "", "", "", "", "", "", "", "",
-         "", "", "", "", "", "", "", "", "", "",
-         "", "", "", "", "", "", "", "", "", "",
-         "", "", "", "", "", "", "", "", "", "",
-         "", "", "", "", "", "", "", "", "", "",
-         "", "", "", "", "", "", "", "", "", "",
-         "", "", "", "", "", "", "", "", "", "",
-         "", "", "", "", "", "", "", "", "", "",
-         "", "", "", "", "", "", "", "", "", "",
-         "tallGrass", "", "", "", "", "", "", "", "", ""],
-
-      actionPlane:
-        ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
-         "", "grass", "", "", "", "", "", "", "", "grass",
-         "", "", "", "logOak", "", "", "", "", "", "",
-         "", "", "", "", "", "", "", "", "", "",
-         "", "", "", "", "", "", "", "logOak", "", "",
-         "", "", "", "", "", "", "", "", "", "",
-         "", "", "", "", "", "", "", "", "", "",
-         "", "", "", "", "", "", "", "", "", "",
-         "", "", "logOak", "", "", "", "", "", "", "",
-         "", "", "", "", "", "", "logOak", "", "", ""
-        ],
-
-      fluffPlane:
-        ["", "", "", "", "", "", "", "", "", "",
-         "", "", "", "", "", "", "", "", "", "",
-         "", "", "", "leavesOak", "", "", "", "", "", "",
-         "", "", "", "", "", "", "", "", "", "",
-         "", "", "", "", "", "", "", "leavesOak", "", "",
-         "", "", "", "", "", "", "", "", "", "",
-         "", "", "", "", "", "", "", "", "", "",
-         "", "", "", "", "", "", "", "", "", "",
-         "", "", "leavesOak", "", "", "", "", "", "", "",
-         "", "", "", "", "", "", "leavesOak", "", "", ""
-        ],
-
-      solutionData:
-        [],
-
-      solutionVerificationType: 0
-    };
+    this.levelData = Object.freeze(levelConfig);
 
     this.levelModel = new LevelModel(this.levelData);
     this.levelView = new LevelView(this);
