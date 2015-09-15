@@ -73,48 +73,7 @@ class PhaserApp {
 
   create() {
     this.levelView.create();
-
-// keyboard cheats for debugging
-    this.game.input.keyboard.addKey(Phaser.Keyboard.UP).onUp.add(() => {
-        var dummyFunc = function() { console.log("highlight move forward command.");};
-        this.codeOrgAPI.moveForward(dummyFunc);
-    });
-
-    this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onUp.add(() => {
-        var dummyFunc = function() { console.log("highlight turn right command.");};
-        this.codeOrgAPI.turnRight(dummyFunc);
-    });
-
-    this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT).onUp.add(() => {
-        var dummyFunc = function() { console.log("highlight turn left command.");};
-        this.codeOrgAPI.turnLeft(dummyFunc);
-    });
-
-    this.game.input.keyboard.addKey(Phaser.Keyboard.P).onUp.add(() => {
-        var dummyFunc = function() { console.log("highlight placeBlock command.");};
-        this.codeOrgAPI.placeBlock(dummyFunc,"logOak");
-    });
-
-    this.game.input.keyboard.addKey(Phaser.Keyboard.D).onUp.add(() => {
-        var dummyFunc = function() { console.log("highlight destroy block command.");};
-        this.codeOrgAPI.destroyBlock(dummyFunc);
-    });
-
-    this.game.input.keyboard.addKey(Phaser.Keyboard.E).onUp.add(() => {
-        var dummyFunc = function(result) { console.log(`Execute command list done: ${result} `); };
-        this.codeOrgAPI.startAttempt(dummyFunc);
-    });
-
-    this.game.input.keyboard.addKey(Phaser.Keyboard.W).onUp.add(() => {
-        var dummyFunc = function() { console.log("Execute While command list"); };
-        var blockType = "empty";
-        var codeBlock = function() { 
-            this.PhaserApp.codeOrgAPI.moveForward( function() { console.log("Execute While command move block");}); 
-            this.PhaserApp.codeOrgAPI.moveForward( function() { console.log("Execute While command move block2");}); 
-            this.PhaserApp.codeOrgAPI.turnLeft( function() { console.log("Execute While command turn");}); 
-        };
-        this.codeOrgAPI.whilePathAhead(dummyFunc, blockType, codeBlock);
-    });
+    this.addCheatKeys();
 
     this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
   }
@@ -126,6 +85,71 @@ class PhaserApp {
       if (this.queue.isFinished()) {
           this.handleEndState();
       } 
+  }
+
+  addCheatKeys() {
+    this.game.input.keyboard.addKey(Phaser.Keyboard.TILDE).onUp.add(() => {
+      this.game.input.keyboard.addKey(Phaser.Keyboard.UP).onUp.add(() => {
+        var dummyFunc = function () {
+          console.log("highlight move forward command.");
+        };
+        this.codeOrgAPI.moveForward(dummyFunc);
+      });
+
+      this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onUp.add(() => {
+        var dummyFunc = function () {
+          console.log("highlight turn right command.");
+        };
+        this.codeOrgAPI.turnRight(dummyFunc);
+      });
+
+      this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT).onUp.add(() => {
+        var dummyFunc = function () {
+          console.log("highlight turn left command.");
+        };
+        this.codeOrgAPI.turnLeft(dummyFunc);
+      });
+
+      this.game.input.keyboard.addKey(Phaser.Keyboard.P).onUp.add(() => {
+        var dummyFunc = function () {
+          console.log("highlight placeBlock command.");
+        };
+        this.codeOrgAPI.placeBlock(dummyFunc, "logOak");
+      });
+
+      this.game.input.keyboard.addKey(Phaser.Keyboard.D).onUp.add(() => {
+        var dummyFunc = function () {
+          console.log("highlight destroy block command.");
+        };
+        this.codeOrgAPI.destroyBlock(dummyFunc);
+      });
+
+      this.game.input.keyboard.addKey(Phaser.Keyboard.E).onUp.add(() => {
+        var dummyFunc = function (result) {
+          console.log(`Execute command list done: ${result} `);
+        };
+        this.codeOrgAPI.startAttempt(dummyFunc);
+      });
+
+      this.game.input.keyboard.addKey(Phaser.Keyboard.W).onUp.add(() => {
+        var dummyFunc = function () {
+          console.log("Execute While command list");
+        };
+        var blockType = "empty";
+        var codeBlock = function () {
+          this.PhaserApp.codeOrgAPI.moveForward(function () {
+            console.log("Execute While command move block");
+          });
+          this.PhaserApp.codeOrgAPI.moveForward(function () {
+            console.log("Execute While command move block2");
+          });
+          this.PhaserApp.codeOrgAPI.turnLeft(function () {
+            console.log("Execute While command turn");
+          });
+        };
+        this.codeOrgAPI.whilePathAhead(dummyFunc, blockType, codeBlock);
+      });
+    });
   }
 
   handleEndState() {
