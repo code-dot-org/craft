@@ -1,0 +1,68 @@
+{"frames": {
+
+"Leaves_Oak0.png":
+{
+	"frame": {"x":0,"y":0,"w":146,"h":150},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":58,"y":60,"w":146,"h":150},
+	"sourceSize": {"w":240,"h":240}
+},
+"Leaves_Oak1.png":
+{
+	"frame": {"x":146,"y":0,"w":146,"h":150},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":58,"y":60,"w":146,"h":150},
+	"sourceSize": {"w":240,"h":240}
+},
+"Leaves_Oak2.png":
+{
+	"frame": {"x":292,"y":0,"w":146,"h":130},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":57,"y":80,"w":146,"h":130},
+	"sourceSize": {"w":240,"h":240}
+},
+"Leaves_Oak3.png":
+{
+	"frame": {"x":438,"y":0,"w":146,"h":130},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":57,"y":80,"w":146,"h":130},
+	"sourceSize": {"w":240,"h":240}
+},
+"Leaves_Oak4.png":
+{
+	"frame": {"x":584,"y":0,"w":146,"h":130},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":57,"y":80,"w":146,"h":130},
+	"sourceSize": {"w":240,"h":240}
+},
+"Leaves_Oak5.png":
+{
+	"frame": {"x":730,"y":0,"w":106,"h":110},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":97,"y":100,"w":106,"h":110},
+	"sourceSize": {"w":240,"h":240}
+},
+"Leaves_Oak6.png":
+{
+	"frame": {"x":836,"y":0,"w":64,"h":89},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":98,"y":100,"w":64,"h":89},
+	"sourceSize": {"w":240,"h":240}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "Leaves_Oak_Decay.png",
+	"format": "RGBA8888",
+	"size": {"w":900,"h":150},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:933a473eef0ab18866dccfca653152dc:93aef6f907546030313175ea9232b8bc:a17d2d48a2645ff7da7bafa35b8edb19$"
+}
+}

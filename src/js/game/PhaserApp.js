@@ -63,36 +63,63 @@ class PhaserApp {
   loadLevel(levelConfig) {
     this.levelConfig = levelConfig;
 
-    this.levelData = [
-      // Ground layer
-      ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-        "coarseDirt", "coarseDirt", "coarseDirt", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
-      ],
+    this.levelData = {
+      groundPlane:
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+         "coarseDirt", "coarseDirt", "coarseDirt", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
+        ],
 
-      // Action layer
-      ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
-        "", "grass", "", "", "", "", "", "", "", "grass",
-        "", "", "", "logOak", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "logOak", "", "",
-        "", "", "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "", "", "",
-        "", "", "logOak", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "logOak", "", "", ""
-      ],
+      groundDecorationPlane:
+        ["", "", "", "", "", "", "", "", "", "",
+         "", "", "", "", "", "", "", "", "", "",
+         "", "", "", "", "", "", "", "", "", "",
+         "", "", "", "", "", "", "", "", "", "",
+         "", "", "", "", "", "", "", "", "", "",
+         "", "", "", "", "", "", "", "", "", "",
+         "", "", "", "", "", "", "", "", "", "",
+         "", "", "", "", "", "", "", "", "", "",
+         "", "", "", "", "", "", "", "", "", "",
+         "tallGrass", "", "", "", "", "", "", "", "", ""],
 
-      // Fluff layer
-      []
-    ];
+      actionPlane:
+        ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
+         "", "grass", "", "", "", "", "", "", "", "grass",
+         "", "", "", "logOak", "", "", "", "", "", "",
+         "", "", "", "", "", "", "", "", "", "",
+         "", "", "", "", "", "", "", "logOak", "", "",
+         "", "", "", "", "", "", "", "", "", "",
+         "", "", "", "", "", "", "", "", "", "",
+         "", "", "", "", "", "", "", "", "", "",
+         "", "", "logOak", "", "", "", "", "", "", "",
+         "", "", "", "", "", "", "logOak", "", "", ""
+        ],
+
+      fluffPlane:
+        ["", "", "", "", "", "", "", "", "", "",
+         "", "", "", "", "", "", "", "", "", "",
+         "", "", "", "leavesOak", "", "", "", "", "", "",
+         "", "", "", "", "", "", "", "", "", "",
+         "", "", "", "", "", "", "", "leavesOak", "", "",
+         "", "", "", "", "", "", "", "", "", "",
+         "", "", "", "", "", "", "", "", "", "",
+         "", "", "", "", "", "", "", "", "", "",
+         "", "", "leavesOak", "", "", "", "", "", "", "",
+         "", "", "", "", "", "", "leavesOak", "", "", ""
+        ],
+
+      solutionData:
+        [],
+
+      solutionVerificationType: 0
+    };
 
     this.levelModel = new LevelModel(this.levelData);
     this.levelView = new LevelView(this);
@@ -185,7 +212,7 @@ class PhaserApp {
   moveForward(commandQueueItem) {
     if (this.levelModel.canMoveForward()) {
       this.levelModel.moveForward();
-      this.levelView.playMoveForwardAnimation(this.levelModel.player.position, this.levelModel.player.facing, () => {
+      this.levelView.playMoveForwardAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock, () => {
         commandQueueItem.succeeded();
       });
     } else {
@@ -209,10 +236,12 @@ class PhaserApp {
 
   destroyBlock(commandQueueItem) {
     if (this.levelModel.canDestroyBlockForward()) {
-      let blockType = this.levelModel.getBlockTypeForward();
+      //let blockType = this.levelModel.getBlockTypeForward();
+      let destroyPosition = this.levelModel.getMoveForwardPosition();
+      let blockType = this.levelModel.actionPlane[(destroyPosition[1] * 10) + destroyPosition[0]].blockType;
 
       this.levelModel.destroyBlockForward();
-      this.levelView.playDestroyBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, () => {
+      this.levelView.playDestroyBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, destroyPosition, blockType, () => {
         this.levelModel.computeShadingPlane();
         this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
         commandQueueItem.succeeded();

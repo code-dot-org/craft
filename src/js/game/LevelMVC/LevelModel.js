@@ -20,10 +20,10 @@ export default class LevelModel {
     this.initialPlayerState = Object.create(this.player);
     this.initialLevelData = Object.create(levelData);
 
-    this.groundPlane = this.constructPlane(levelData[0], false);
+    this.groundPlane = this.constructPlane(levelData.groundPlane, false);
     this.shadingPlane = [];
-    this.actionPlane = this.constructPlane(levelData[1], true);
-    this.fluffPlane = this.constructPlane(levelData[2], false);
+    this.actionPlane = this.constructPlane(levelData.actionPlane, true);
+    this.fluffPlane = this.constructPlane(levelData.fluffPlane, false);
 
     this.computeShadingPlane();
   }
@@ -97,9 +97,11 @@ export default class LevelModel {
 
     let blockForwardPosition = this.getMoveForwardPosition();
     let blockIndex = (blockForwardPosition[1] * 10) + blockForwardPosition[0];
+    let [x, y] = [blockForwardPosition[0], blockForwardPosition[1]];
 
-    if (blockIndex >= 0 && blockIndex < 100) {
-      result = this.actionPlane[blockIndex].isWalkable;
+    if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+      result = this.actionPlane[blockIndex].isWalkable ||
+               (this.player.isOnBlock && !this.actionPlane[blockIndex].isEmpty);
     }
 
     return result;
@@ -113,19 +115,27 @@ export default class LevelModel {
   canDestroyBlockForward() {
     var result = false;
 
-    let blockForwardPosition = this.getMoveForwardPosition();
-    let blockIndex = (blockForwardPosition[1] * 10) + blockForwardPosition[0];
+    if (!this.player.isOnBlock) {
+      let blockForwardPosition = this.getMoveForwardPosition();
+      let blockIndex = (blockForwardPosition[1] * 10) + blockForwardPosition[0];
+      let [x, y] = [blockForwardPosition[0], blockForwardPosition[1]];
 
-    if (blockIndex >= 0 && blockIndex < 100) {
-      result = !this.actionPlane[blockIndex].isEmpty && this.actionPlane[blockIndex].isDestroyable;
+      if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+        result = !this.actionPlane[blockIndex].isEmpty && this.actionPlane[blockIndex].isDestroyable;
+      }
     }
 
     return result;
   }
 
   moveForward() {
-    this.player.position = this.getMoveForwardPosition();
-    this.player.isOnBlock = false;
+    let blockForwardPosition = this.getMoveForwardPosition();
+    let blockIndex = (blockForwardPosition[1] * 10) + blockForwardPosition[0];
+
+    this.player.position = blockForwardPosition;
+    if (this.actionPlane[blockIndex].isEmpty) {
+      this.player.isOnBlock = false;
+    }
   }
 
   turnLeft() {
@@ -173,6 +183,7 @@ export default class LevelModel {
     let blockIndex = (blockPosition[1] * 10) + blockPosition[0];
 
     var block = new LevelBlock(blockType);
+    block.isEmpty = false;
     block.isWalkable = false;
     block.isPlacable = false;
     block.isUsable = true;
@@ -182,7 +193,13 @@ export default class LevelModel {
   }
 
   destroyBlockForward() {
+    let blockForwardPosition = this.getMoveForwardPosition();
+    let blockIndex = (blockForwardPosition[1] * 10) + blockForwardPosition[0];
+    let [x, y] = [blockForwardPosition[0], blockForwardPosition[1]];
 
+    if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+      this.actionPlane[blockIndex] = new LevelBlock("");
+    }
   }
 
   computeShadingPlane() {
