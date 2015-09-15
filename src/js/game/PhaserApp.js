@@ -52,6 +52,7 @@ class PhaserApp {
     );
 
     this.queue = new CommandQueue(this);
+    this.OnCompleteCallback = null;
 
     this.assetRoot = phaserAppConfig.assetRoot;
   }
@@ -105,7 +106,7 @@ class PhaserApp {
   create() {
     this.levelView.create();
 
-// debugging keyboard cheats for debugging
+// keyboard cheats for debugging
     this.game.input.keyboard.addKey(Phaser.Keyboard.UP).onUp.add(() => {
         var dummyFunc = function() { console.log("highlight move forward command.");};
         this.codeOrgAPI.moveForward(dummyFunc);
@@ -132,7 +133,7 @@ class PhaserApp {
     });
 
     this.game.input.keyboard.addKey(Phaser.Keyboard.E).onUp.add(() => {
-        var dummyFunc = function() { console.log("Execute command list");};
+        var dummyFunc = function(result) { console.log(`Execute command list done: ${result} `); };
         this.codeOrgAPI.startAttempt(dummyFunc);
     });
 
@@ -151,8 +152,28 @@ class PhaserApp {
   }
 
   update() {
-    this.queue.tick();
-    this.levelView.update();
+      this.queue.tick();
+      this.levelView.update();
+
+      if (this.queue.isFinished()) {
+          this.handleEndState();
+      } 
+  }
+
+  handleEndState() {
+      // TODO: go into success/failure animation? (or are we called by CodeOrg for that?)
+
+      // report back to the code.org side the pass/fail result 
+      //     then clear the callback so we dont keep calling it
+      if (this.OnCompleteCallback != null) {
+          if (this.queue.isSucceeded()) {
+              this.OnCompleteCallback(true);
+          }
+          else {
+              this.OnCompleteCallback(false);
+          }
+          this.OnCompleteCallback = null;
+      }
   }
 
   render() {
@@ -212,6 +233,15 @@ class PhaserApp {
     } else {
       //commandQueueItem.failed();
     }
+  }
+
+  checkSolution(commandQueueItem) {
+      // check the final state to see if its solved
+      if (this.levelModel.isSolved()) {
+          commandQueueItem.succeeded();
+      } else {
+          commandQueueItem.failed();
+      }
   }
 
   isPathAhead(blockType)  {

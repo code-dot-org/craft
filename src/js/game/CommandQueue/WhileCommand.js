@@ -39,8 +39,7 @@ export default class WhileCommand extends BaseCommand {
         this.handleWhileCheck();
     }
 
-    handleWhileCheck()
-    {
+    handleWhileCheck() {
         if (this.iterationsLeft <= 0) {
             this.state = CommandState.FAILURE;
         }

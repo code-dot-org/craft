@@ -5,6 +5,7 @@ import PlaceBlockCommand from "../CommandQueue/PlaceBlockCommand.js";
 import MoveForwardCommand from "../CommandQueue/MoveForwardCommand.js";
 import TurnCommand from "../CommandQueue/TurnCommand.js";
 import WhileCommand from "../CommandQueue/WhileCommand.js";
+import CheckSolutionCommand from "../CommandQueue/CheckSolutionCommand.js";
 
 export function get(controller) {
   return {
@@ -24,11 +25,14 @@ export function get(controller) {
      * false if unsuccessful (level not completed).
      */
     startAttempt: function(onAttemptComplete) {
-      controller.queue.begin();
+        controller.OnCompleteCallback = onAttemptComplete;
+        controller.queue.addCommand(new CheckSolutionCommand(controller));
+        controller.queue.begin();
     },
 
     resetAttempt: function() {
-      controller.queue.reset();
+        controller.queue.reset();
+        controller.OnCompleteCallback = null;
     },
 
     moveForward: function(highlightCallback) {

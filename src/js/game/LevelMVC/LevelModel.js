@@ -44,6 +44,10 @@ export default class LevelModel {
     return result;
   }
 
+  isSolved()  {
+      return true;
+  }
+
   getMoveForwardPosition() {
     var cx = this.player.position[0],
         cy = this.player.position[1];
@@ -239,4 +243,5 @@ export default class LevelModel {
       }
     }
   }
+
 }

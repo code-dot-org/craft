@@ -75,7 +75,7 @@ export default class CommandQueue {
      * @returns {boolean}
      */
     isFinished() {
-        return this.isSucceeded() || this.failed();
+        return this.isSucceeded() || this.isFailed();
     }
     
     /**
