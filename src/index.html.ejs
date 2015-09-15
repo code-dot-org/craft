@@ -13,20 +13,25 @@
 <div id="phaser-game" style="float:left;"></div>
 
 <textarea id="test-code-area" style="float:left; width:300px; height:300px;"></textarea>
-<div style="clear:both;"></div>
+<div style="margin:10px; clear:both;"></div>
 <button id="run-button">Run</button>
 <button id="reset-button">Reset</button>
-<div style="clear:both;"></div>
+<div style="margin:10px; clear:both;"></div>
 <button id="previous-level">Previous level</button>
 <button id="next-level">Next level</button>
+<div style="margin:10px; clear:both;"></div>
+<div>Level instructions: <span id="level-instructions" style="font-weight:bold;"></span></div>
 
 <script>
   var moveForwardBlock = "codeOrgAPI.moveForward(function(){});\n";
   var turnLeftBlock = "codeOrgAPI.turn(function(){}, 'left');\n";
   var turnRightBlock = "codeOrgAPI.turn(function(){}, 'right');\n";
+  var destroyBlock = "codeOrgAPI.destroyBlock(function(){}, 'right');\n";
 
   var demoLevels = {
     1: {
+      instructions: "Move to the sheep!",
+
       groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -80,11 +85,12 @@
 
       solutionCode:
         moveForwardBlock +
-        moveForwardBlock +
         moveForwardBlock
 
     },
     2: {
+      instructions: "Now I need to start chopping trees! Move me to the tree and let’s harvest it multiple times.",
+
       groundPlane: ["coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
         "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
         "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
@@ -137,12 +143,16 @@
       solutionVerificationType: 0,
 
       solutionCode:
+        turnRightBlock +
         moveForwardBlock +
-        turnLeftBlock +
-        turnRightBlock
+        moveForwardBlock +
+        moveForwardBlock +
+        destroyBlock
 
     },
     3: {
+      instructions: "Now I need to start chopping trees! Chop at least 3 Trees out of the 4. Nightfall is coming, chop down 3 trees as fast as you can.",
+
       groundPlane: ["grass", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
         "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
         "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
@@ -214,6 +224,7 @@
   phaserApp.loadLevel(testLevelToLoad);
 
   $('#test-code-area').val(testLevelToLoad.solutionCode);
+  $('#level-instructions').html(testLevelToLoad.instructions);
 
   function runCodeWithParams(code, options) {
     // execute JS code "natively"
@@ -239,7 +250,7 @@
       codeOrgAPI: phaserApp.codeOrgAPI
     });
     codeOrgAPI.startAttempt(function (result) {
-      alert(result ? "Success" : "Failure");
+      console.log(result ? "Success" : "Failure");
     });
   });
 
