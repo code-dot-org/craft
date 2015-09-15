@@ -230,6 +230,9 @@ class PhaserApp {
   }
 
   checkSolution(commandQueueItem) {
+      // switch to idle animation while we verify
+      this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing );
+ 
       // check the final state to see if its solved
       if (this.levelModel.isSolved()) {
           commandQueueItem.succeeded();

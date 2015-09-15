@@ -105,6 +105,21 @@ export default class LevelView {
     this.playerSprite.animations.play("idle" + direction);
   }
 
+  playIdleAnimation(position, facing, isOnBlock) {
+      var tween,
+          idleAnimName;
+
+      let direction = this.getDirectionName(facing);
+
+      this.setSelectionIndicatorPosition(position[0], position[1]);
+      this.playerSprite.z = position[1] * 10 + 5;
+
+      idleAnimName = "idle" + direction;
+
+      this.playerSprite.animations.play(idleAnimName);
+  }
+
+
   playMoveForwardAnimation(position, facing, isOnBlock, completionHandler) {
     var tween,
         walkAnimName;

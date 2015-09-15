@@ -18,7 +18,6 @@ export default class CheckSolutionCommand extends BaseCommand {
         super.begin();
         console.log("Solve command: BEGIN");
         var result = this.PhaserApp.checkSolution(this);
-        this.state = result ? CommandState.SUCCESS : CommandState.FAILURE;
     }
 
 }

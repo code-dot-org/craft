@@ -48,6 +48,28 @@ export default class LevelModel {
       return true;
   }
 
+    // Verifications
+  isPlayerNextTo(blockType){
+      var position;
+      var result = false;
+
+      // above
+      position = [ this.player.position[0], --this.player.position[1] ];
+      isBlockOfType(position, blockType)
+      // below
+
+      // left
+
+      // Right
+
+
+      return false;
+  }
+
+  solutionMapMatchesResultMap()  {
+
+  }
+
   getMoveForwardPosition() {
     var cx = this.player.position[0],
         cy = this.player.position[1];
@@ -78,7 +100,14 @@ export default class LevelModel {
 
       let blockForwardPosition = this.getMoveForwardPosition();
       let blockIndex = (blockForwardPosition[1] * 10) + blockForwardPosition[0];
+      return isBlockOfType(blockForwardPosition, blockType);
+  }
 
+  isBlockOfType(position, blockType)
+  {
+      var result = false;
+
+      let blockIndex = (position[1] * 10) + position[0];
       if (blockIndex >= 0 && blockIndex < 100) {
 
           if (blockType == "empty") {
