@@ -84,9 +84,9 @@
         "", "", "", "", "", "", "leavesOak", "", "", ""
       ],
 
-      solutionData: ["logOak"],
-
-      solutionVerificationType: "NextTo",
+	  verificationFunction: function(verificationAPI) {
+		return verificationAPI.isPlayerAt([6,4]);
+	  },
 
       solutionCode:
         whileBlockAhead("", moveForwardBlock) +
@@ -149,8 +149,6 @@
         "", "", "leavesOak", "", "", "", "", "", "", "",
         "", "", "", "", "", "", "leavesOak", "", "", ""
       ],
-
-      solutionData: ["this.isPlayerNextTo('logOak');"],
 
 	  verificationFunction: function(verificationAPI) {
 		return verificationAPI.playerNextToType("logOak");

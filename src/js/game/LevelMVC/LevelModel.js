@@ -1,5 +1,6 @@
 import LevelBlock from "./LevelBlock.js"
 import FacingDirection from "./FacingDirection.js"
+import _ from "lodash"
 
 // for blocks on the action plane, we need an actual "block" object, so we can model
 
@@ -91,6 +92,12 @@ export default class LevelModel {
       }
       return count;
   }
+
+  isPlayerAt(position)
+  {
+      return _.isEqual(this.player.position, position );
+  }
+
 
   solutionMapMatchesResultMap()  {
 
