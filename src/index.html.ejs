@@ -21,14 +21,85 @@
 <button id="next-level">Next level</button>
 <div style="margin:10px; clear:both;"></div>
 <div>Level instructions: <span id="level-instructions" style="font-weight:bold;"></span></div>
+<div>Level feedback: <span id="level-feedback" style="font-weight:bold;"></span></div>
 
 <script>
   var moveForwardBlock = "codeOrgAPI.moveForward(function(){});\n";
   var turnLeftBlock = "codeOrgAPI.turn(function(){}, 'left');\n";
   var turnRightBlock = "codeOrgAPI.turn(function(){}, 'right');\n";
   var destroyBlock = "codeOrgAPI.destroyBlock(function(){}, 'right');\n";
+  var whileBlockAhead = function (type, blockCode) {
+    return "codeOrgAPI.whilePathAhead(function(){}, '" +
+      type + "', function () {" + blockCode + "});\n"
+  };
 
   var demoLevels = {
+    0: {
+      instructions: "Cut down the trees!",
+
+      groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+        "coarseDirt", "coarseDirt", "coarseDirt", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+        "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
+      ],
+
+      groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "tallGrass", "", "", "", "", "", "", "", "", ""],
+
+      actionPlane: ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
+        "", "grass", "", "", "", "", "", "", "", "grass",
+        "", "", "", "logOak", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "logOak", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "logOak", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "logOak", "", "", ""
+      ],
+
+      fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "leavesOak", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "leavesOak", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "leavesOak", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "leavesOak", "", "", ""
+      ],
+
+      solutionData: ["logOak"],
+
+      solutionVerificationType: "NextTo",
+
+      solutionCode:
+        whileBlockAhead("", moveForwardBlock) +
+          destroyBlock +
+          turnRightBlock +
+          whileBlockAhead("", moveForwardBlock) +
+          destroyBlock +
+          turnRightBlock +
+          whileBlockAhead("", moveForwardBlock) +
+          destroyBlock +
+          turnRightBlock
+    },
+
     1: {
       instructions: "Move to the sheep!",
 
@@ -71,7 +142,7 @@
         "", "", "", "", "", "", "", "", "", "",
         "", "", "", "leavesOak", "", "", "", "", "", "",
         "", "", "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "leavesOak", "", "",
+        "", "", "", "", "", "", "", "", "", "",
         "", "", "", "", "", "", "", "", "", "",
         "", "", "", "", "", "", "", "", "", "",
         "", "", "", "", "", "", "", "", "", "",
@@ -253,10 +324,10 @@
     var codeOrgAPI = phaserApp.codeOrgAPI;
     codeOrgAPI.startCommandCollection();
     runCodeWithParams(code, {
-      codeOrgAPI: phaserApp.codeOrgAPI
+      codeOrgAPI: codeOrgAPI
     });
     codeOrgAPI.startAttempt(function (result) {
-      console.log(result ? "Success" : "Failure");
+      $('#level-feedback').html(result ? "Success!" : "Failure").css("color", result ? "green" : "red");
     });
   });
 
