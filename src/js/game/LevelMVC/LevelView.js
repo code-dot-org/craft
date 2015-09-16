@@ -14,7 +14,7 @@ export default class LevelView {
     this.playerShadow = null;
     this.selectionIndicator = null;
 
-    this.playerPosition = [2, 4];
+    this.playerPosition = controller.levelModel.player.position;
     this.playerFacing = 0;
 
     this.groundPlane = null;

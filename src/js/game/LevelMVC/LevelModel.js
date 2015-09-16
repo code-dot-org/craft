@@ -9,7 +9,7 @@ export default class LevelModel {
     this.player = {
       name: "steve",
 
-      position: [2, 4],
+      position: levelData.playerStartPosition,
 
       isOnBlock: false,
 
