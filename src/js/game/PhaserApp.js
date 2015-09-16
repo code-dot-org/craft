@@ -54,6 +54,8 @@ class PhaserApp {
     this.OnCompleteCallback = null;
 
     this.assetRoot = phaserAppConfig.assetRoot;
+
+    this.audioPlayer = phaserAppConfig.audioPlayer;
   }
 
   /**

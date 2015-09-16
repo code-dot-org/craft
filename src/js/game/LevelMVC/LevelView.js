@@ -3,6 +3,7 @@ import FacingDirection from "./FacingDirection.js"
 export default class LevelView {
   constructor(controller) {
     this.controller = controller;
+    this.audioPlayer = controller.audioPlayer;
     this.game = controller.game;
     this.assetRoot = controller.assetRoot;
     this.levelData = controller.levelData;
@@ -42,6 +43,8 @@ export default class LevelView {
     this.game.load.image('tallGrass', `${this.assetRoot}images/TallGrass.png`);
     this.game.load.image('logOak', `${this.assetRoot}images/Block_0008_log_oak.png`);
     this.game.load.image('planksOak', `${this.assetRoot}images/Block_0020_planks_oak.png`);
+
+    this.audioPlayer.register({id: 'beep', mp3: `${this.assetRoot}audio/beep.mp3`, ogg: 'TODO'});
   }
 
   create() {
@@ -118,6 +121,8 @@ export default class LevelView {
   playMoveForwardAnimation(position, facing, isOnBlock, completionHandler) {
     var tween,
         walkAnimName;
+
+    this.audioPlayer.play("beep");
 
     let direction = this.getDirectionName(facing);
 

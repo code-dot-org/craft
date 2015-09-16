@@ -100,6 +100,14 @@ module.exports = function (grunt) {
           dest: 'build/assets/'
         }]
       },
+      testBuildOnly: {
+        files: [{
+          expand: true,
+          cwd: 'src/test-build-only/',
+          src: ['**'],
+          dest: 'build/test-build-only/'
+        }]
+      },
       style: {
         files: [{
           expand: true,
