@@ -26,6 +26,7 @@ export default class LevelModel {
     this.fluffPlane = this.constructPlane(levelData.fluffPlane, false);
 
     this.computeShadingPlane();
+
   }
 
   constructPlane(planeData, isActionPlane) {
@@ -45,6 +46,13 @@ export default class LevelModel {
   }
 
   isSolved()  {
+
+      if(this.initialLevelData.solutionVerificationType == "NextTo")
+      {
+          var blockType = this.initialLevelData.solutionData[0]
+          return this.isPlayerNextTo(blockType)
+      }
+
       return true;
   }
 
@@ -54,13 +62,28 @@ export default class LevelModel {
       var result = false;
 
       // above
-      //position = [ this.player.position[0], --this.player.position[1] ];
-      //this.isBlockOfType(position, blockType)
+      position = [ this.player.position[0], this.player.position[1] -1 ];
+      if(this.isBlockOfType(position, blockType)) {
+          return true;
+      }
+
       // below
+      position = [ this.player.position[0], this.player.position[1] +1 ];
+      if(this.isBlockOfType(position, blockType)) {
+          return true;
+      }
 
       // left
+      position = [ this.player.position[0] +1, this.player.position[1] ];
+      if(this.isBlockOfType(position, blockType)) {
+          return true;
+      }
 
       // Right
+      position = [ this.player.position[0] -1, this.player.position[1] ];
+      if(this.isBlockOfType(position, blockType)) {
+          return true;
+      }
 
 
       return false;
@@ -96,10 +119,7 @@ export default class LevelModel {
   }
 
   isForwardBlockOfType(blockType) {
-      var result = false;
-
       let blockForwardPosition = this.getMoveForwardPosition();
-      let blockIndex = (blockForwardPosition[1] * 10) + blockForwardPosition[0];
       return this.isBlockOfType(blockForwardPosition, blockType);
   }
 

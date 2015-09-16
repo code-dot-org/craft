@@ -212,7 +212,8 @@ class PhaserApp {
         commandQueueItem.succeeded();
       });
     } else {
-      //commandQueueItem.failed();
+    // TODO: should we fail when there's no pblock to destroy??
+        commandQueueItem.succeeded();
     }
   }
 
