@@ -46,14 +46,7 @@ export default class LevelModel {
   }
 
   isSolved()  {
-
-      if(this.initialLevelData.solutionVerificationType == "NextTo")
-      {
-          var blockType = this.initialLevelData.solutionData[0]
-          return this.isPlayerNextTo(blockType)
-      }
-
-      return true;
+      return this.initialLevelData.verificationFunction(this);
   }
 
     // Verifications
@@ -85,8 +78,18 @@ export default class LevelModel {
           return true;
       }
 
-
       return false;
+  }
+
+  countOfTypeOnMap(blockType) {
+
+      var count=0;
+      for (var i = 0; i < 100; i++) {
+          if (blockType == this.actionPlane[i].blockType) {
+              ++count;
+          }
+      }
+      return count;
   }
 
   solutionMapMatchesResultMap()  {

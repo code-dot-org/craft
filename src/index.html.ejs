@@ -79,9 +79,11 @@
         "", "", "", "", "", "", "leavesOak", "", "", ""
       ],
 
-      solutionData: ["logOak"],
+      solutionData: ["this.isPlayerNextTo('logOak');"],
 
-      solutionVerificationType: "NextTo",
+	  verificationFunction: function(verificationAPI) {
+		return verificationAPI.playerNextToType("logOak");
+	  },
 
       solutionCode:
         moveForwardBlock +
@@ -146,8 +148,6 @@
 
       solutionData: [],
 
-      solutionVerificationType: 0,
-
       solutionCode:
         turnRightBlock +
         moveForwardBlock +
@@ -206,9 +206,25 @@
         "", "", "", "", "", "", "leavesOak", "", "", ""
       ],
 
-      solutionData: [],
+      solutionData: {
+		map: ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
+        "", "grass", "", "", "", "", "", "", "", "grass",
+        "", "", "", "logOak", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", "", "",
+        "", "", "logOak", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "logOak", "", "", ""
+      ],
+	  
+	  },
 
-      solutionVerificationType: 0
+	  verificationFunction: function(verificationAPI) {
+		return (verificationAPI.countOfTypeOnMap("logOak") < 4 );
+	  },
+
     }
 
   };
