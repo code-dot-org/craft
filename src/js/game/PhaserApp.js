@@ -176,9 +176,10 @@ class PhaserApp {
   // command processors
   moveForward(commandQueueItem) {
     if (this.levelModel.canMoveForward()) {
-      this.levelModel.moveForward();
-      this.levelView.playMoveForwardAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock, () => {
-        commandQueueItem.succeeded();
+        this.levelModel.moveForward();
+        // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
+        this.levelView.playMoveForwardAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock, () => {
+            commandQueueItem.succeeded();
       });
     } else {
       // TODO: Decide when you can't move is a failure? Walking into Lava, for example.
