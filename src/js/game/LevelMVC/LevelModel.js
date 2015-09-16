@@ -99,8 +99,21 @@ export default class LevelModel {
   }
 
 
-  solutionMapMatchesResultMap()  {
-
+  solutionMapMatchesResultMap(solutionMap)  {
+      for (var i = 0; i < 100; i++) {
+          // "" on the solution map means we dont care what's at that spot
+          if (solutionMap[i] != "") {
+              if (solutionMap[i] == "empty") {
+                  if (!this.actionPlane[i].isEmpty) { 
+                      return false; 
+                  }
+              }
+              else if (this.actionPlane[i].blockType != solutionMap[i]) {
+                  return false;
+              }
+          }
+      }
+      return true;
   }
 
   getMoveForwardPosition() {

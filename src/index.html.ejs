@@ -35,7 +35,7 @@
 
   var demoLevels = {
     0: {
-      instructions: "Cut down the trees!",
+      instructions: "0:: Cut down the trees!",
 
       groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -101,7 +101,7 @@
     },
 
     1: {
-      instructions: "Move to the sheep!",
+      instructions: "1:: Move to the sheep!",
 
       groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -163,7 +163,7 @@
     },
 
     2: {
-      instructions: "Now I need to start chopping trees! Move me to the tree and let’s harvest it multiple times.",
+      instructions: "2:: Now I need to start chopping trees! Move me to the tree and let’s harvest it multiple times.",
 
       groundPlane: [
         "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -215,7 +215,9 @@
         "", "", "", "", "", "", "", "", "", "",
       ],
 
-      solutionData: [],
+	  verificationFunction: function(verificationAPI) {
+		return (verificationAPI.countOfTypeOnMap("logOak") < 4 );
+	  },
 
       solutionCode:
         turnRightBlock +
@@ -226,7 +228,7 @@
 
     },
     3: {
-      instructions: "Now I need to start chopping trees! Chop at least 3 Trees out of the 4. Nightfall is coming, chop down 3 trees as fast as you can.",
+      instructions: "3:: Now I need to start chopping trees! Chop at least 3 Trees out of the 4. Nightfall is coming, chop down 3 trees as fast as you can.",
 
       groundPlane: ["grass", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
         "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt",
@@ -275,26 +277,24 @@
         "", "", "", "", "", "", "leavesOak", "", "", ""
       ],
 
-      solutionData: {
-		map: ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
-        "", "grass", "", "", "", "", "", "", "", "grass",
-        "", "", "", "logOak", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "", "", "",
-        "", "", "logOak", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "logOak", "", "", ""
-      ],
-	  
-	  },
-
 	  verificationFunction: function(verificationAPI) {
-		return (verificationAPI.countOfTypeOnMap("logOak") < 4 );
+		return verificationAPI.solutionMapMatchesResultMap(
+			  [
+				"", "", "", "", "", "", "", "", "", "",
+				"", "", "", "", "", "", "", "", "", "",
+				"", "", "", "logOak", "", "", "", "", "", "",
+				"", "", "", "", "", "", "", "", "", "",
+				"", "", "", "", "", "", "", "empty", "", "",
+				"", "", "", "", "", "", "", "", "", "",
+				"", "", "", "", "", "", "", "", "", "",
+				"", "", "", "", "", "", "", "", "", "",
+				"", "", "logOak", "", "", "", "", "", "", "",
+				"", "", "", "", "", "", "logOak", "", "", ""
+			  ]
+		);
 	  },
 
-    }
+	}
 
   };
 
