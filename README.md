@@ -14,8 +14,8 @@ You will need to first install [Node.js](http://nodejs.org/download/) and the gr
 
 Check this project out from source:
 
-    git clone git@github.com:bcjordan/phaser-grunt-boilerplate.git
-    cd phaser-grunt-boilerplate
+    git clone git@github.com:code-dot-org/craft-private.git
+    cd craft-private
 
 Next, inside the project, you need to install the project's various NPM dependencies:
 
