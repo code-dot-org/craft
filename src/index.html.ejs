@@ -6,8 +6,8 @@
   <link rel="stylesheet" href="style/index.css">
   <script src="<%= appBundle %>"></script>
   <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-  <script src="/test-build-only/soundEffects.js"></script>
-  <script src="/test-build-only/levels.js?<%= getFingerprint() %>"></script>
+  <script src="test-build-only/soundEffects.js"></script>
+  <script src="test-build-only/levels.js?<%= getFingerprint() %>"></script>
   <title>Phaser App Playground</title>
 </head>
 <body>
@@ -39,7 +39,7 @@
   // Initialize test instance of game, exposed to window for debugging.
   var phaserApp = new PhaserApp({
     containerId: 'phaser-game',
-    assetRoot: '/assets/',
+    assetRoot: 'assets/',
     audioPlayer: new Sounds()
   });
   var levelNumber = parseInt(getParameterByName('level') || 1, 10);
@@ -94,11 +94,11 @@
   }
 
   $('#next-level').click(function() {
-    window.location.href = "/?level=" + (levelNumber + 1);
+    window.location.href = window.location.href.split("?")[0] + "?level=" + (levelNumber + 1);
   });
 
   $('#previous-level').click(function() {
-    window.location.href = "/?level=" + (levelNumber - 1);
+    window.location.href = window.location.href.split("?")[0] + "?level=" + (levelNumber - 1);
   });
 
   window.phaserApp = phaserApp;
