@@ -45,6 +45,16 @@ export default class LevelView {
     this.game.load.image('planksOak', `${this.assetRoot}images/Block_0020_planks_oak.png`);
 
     this.audioPlayer.register({id: 'beep', mp3: `${this.assetRoot}audio/beep.mp3`, ogg: 'TODO'});
+    this.audioPlayer.register({
+      id: 'dig_wood1',
+      mp3: `${this.assetRoot}audio/dig_wood1.mp3`,
+      ogg: `${this.assetRoot}audio/dig_wood1.ogg`
+    });
+    this.audioPlayer.register({
+      id: 'step_grass1',
+      mp3: `${this.assetRoot}audio/step_grass1.mp3`,
+      ogg: `${this.assetRoot}audio/step_grass1.ogg`
+    });
   }
 
   create() {
@@ -122,7 +132,7 @@ export default class LevelView {
     var tween,
         walkAnimName;
 
-    this.audioPlayer.play("beep");
+    this.audioPlayer.play("step_grass1");
 
     let direction = this.getDirectionName(facing);
 

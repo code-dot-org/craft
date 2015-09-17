@@ -55,6 +55,7 @@ module.exports = function (grunt) {
       js: {files: '<%= project.dest %>/**/*.js', tasks: []},
       assets: {files: 'src/assets/**/*', tasks: ['copy:assets']},
       style: {files: 'src/style/**/*', tasks: ['copy:style']},
+      testBuildOnly: {files: 'src/test-build-only/**/*', tasks: ['copy:testBuildOnly']},
       ejs: {files: 'src/**/*.ejs', tasks: ['ejs']}
     },
     ejs: {
