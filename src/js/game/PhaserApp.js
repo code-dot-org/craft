@@ -180,12 +180,38 @@ class PhaserApp {
     if (this.levelModel.canMoveForward()) {
         this.levelModel.moveForward();
         // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
-        this.levelView.playMoveForwardAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock, () => {
-            commandQueueItem.succeeded();
-      });
+
+        if (this.levelModel.isPlayerStandingInWater()) {
+            //this.levelView.playDrownFailureAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock, () => {
+                commandQueueItem.failed();
+            //} );
+        } 
+        else if(this.levelModel.isPlayerStandingInLava()) {
+            //this.levelView.playBurnInLavaAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock, () => {
+                commandQueueItem.failed();
+            //} );
+        } 
+        else if(this.levelModel.isPlayerStandingNearCreeper()) {
+            //this.levelView.playCreeperExplodeAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock, () => {
+                commandQueueItem.failed();
+            //} );
+        } 
+        else  {
+            this.levelView.playMoveForwardAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock, () => {
+                commandQueueItem.succeeded();
+            });
+        }
+        
     } else {
-      // TODO: Decide when you can't move is a failure? Walking into Lava, for example.
-      commandQueueItem.succeeded();
+        // check if moveFwd failed due to walking off the board
+        let blockForwardPosition =  this.levelModel.getMoveForwardPosition();
+
+        if (blockForwardPosition[0] >= 0 && blockForwardPosition[0] < 10 && blockForwardPosition[1] >= 0 && blockForwardPosition[1] < 10) {
+            commandQueueItem.succeeded();
+        }
+        // stop the walking animation and fail
+        this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing );
+        commandQueueItem.failed();
     }
   }
 
