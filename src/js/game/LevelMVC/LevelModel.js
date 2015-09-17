@@ -94,7 +94,8 @@ export default class LevelModel {
   }
 
   isPlayerAt(position) {
-      return _.isEqual(this.player.position, position );
+      return this.player.position[0] === position[0] &&
+          this.player.position[1] === position[1];
   }
 
 

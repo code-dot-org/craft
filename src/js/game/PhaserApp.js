@@ -1,5 +1,4 @@
 import Phaser from 'Phaser';
-import _ from 'lodash';
 
 import CommandQueue from "./CommandQueue/CommandQueue.js";
 import BaseCommand from "./CommandQueue/BaseCommand.js";

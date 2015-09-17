@@ -6,6 +6,16 @@
 var devBuildConfig = require('./dev-build-config.js');
 
 module.exports = function (grunt) {
+  var deployBuild = !!(grunt.cli.tasks.length && grunt.cli.tasks[0] === 'deploy');
+  var liveReloadPort = deployBuild ? false : devBuildConfig.liveReloadPort;
+
+  var deployName;
+  if (deployBuild) {
+    deployName = grunt.option("name");
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-aws-s3');
+  }
+
   // Bundles up `require`s in javascript
   grunt.loadNpmTasks('grunt-browserify');
 
@@ -51,11 +61,14 @@ module.exports = function (grunt) {
       options: {jshintrc: '.jshintrc'}
     },
     watch: {
-      options: {livereload: devBuildConfig.liveReloadPort},
+      options: {livereload: liveReloadPort},
       js: {files: '<%= project.dest %>/**/*.js', tasks: []},
       assets: {files: 'src/assets/**/*', tasks: ['copy:assets']},
       style: {files: 'src/style/**/*', tasks: ['copy:style']},
-      testBuildOnly: {files: 'src/test-build-only/**/*', tasks: ['copy:testBuildOnly']},
+      testBuildOnly: {
+        files: 'src/test-build-only/**/*',
+        tasks: ['copy:testBuildOnly']
+      },
       ejs: {files: 'src/**/*.ejs', tasks: ['ejs']}
     },
     ejs: {
@@ -66,9 +79,11 @@ module.exports = function (grunt) {
         expand: true,
         ext: '.html',
         options: {
-          liveReloadPort: devBuildConfig.liveReloadPort,
+          liveReloadPort: liveReloadPort,
           appBundle: '<%= project.bundleURL %>',
-          getFingerprint: function() { return +(new Date()); }
+          getFingerprint: function () {
+            return +(new Date());
+          }
         }
       }
     },
@@ -79,18 +94,20 @@ module.exports = function (grunt) {
         options: {
           transform: [
             'browserify-shim',
-            ['babelify', { only: /game/}] // transform ES6 -> ES5 for game/ code
+            ['babelify', {only: /game/}] // transform ES6 -> ES5 for game/ code
           ],
           watch: true,
           browserifyOptions: {
             // Adds inline source map to bundled package
-            debug: true
+            debug: !deployBuild
           }
         }
       }
     },
     open: {
-      server: {path: 'http://localhost:<%= project.port %>'}
+      server: {path: 'http://localhost:<%= project.port %>'},
+      deployed: {path: 'https://s3-us-west-1.amazonaws.com/cdo-mc-test/'
+        + deployName + '/index.html'}
     },
     clean: ['./build/'],
     copy: {
@@ -118,6 +135,35 @@ module.exports = function (grunt) {
           dest: 'build/style/'
         }]
       }
+    },
+    aws: deployBuild ? grunt.file.readJSON('../../.secrets/aws-keys.json') : {},
+    aws_s3: {
+      options: {
+        accessKeyId: '<%= aws.AWSAccessKeyId %>',
+        secretAccessKey: '<%= aws.AWSSecretKey %>',
+        uploadConcurrency: 20,
+        downloadConcurrency: 20,
+        region: 'us-west-1',
+        gzip: true
+      },
+      test: {
+        options: {
+          bucket: 'cdo-mc-test',
+          differential: true
+        },
+        files: [{
+          expand: true,
+          cwd: 'build/',
+          src: ['**'],
+          dest: deployName + '/'
+        }]
+      }
+    },
+    uglify: {
+      build: {
+        src: '<%= project.bundle %>',
+        dest: '<%= project.bundle %>'
+      }
     }
   });
 
@@ -127,7 +173,17 @@ module.exports = function (grunt) {
     'ejs',
     'copy',
     'connect',
-    'open',
+    'open:server',
     'watch'
+  ]);
+
+  grunt.registerTask('deploy', [
+    'clean',
+    'browserify',
+    'uglify',
+    'ejs',
+    'copy',
+    'aws_s3:test',
+    'open:deployed'
   ]);
 };

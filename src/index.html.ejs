@@ -104,6 +104,7 @@
   window.phaserApp = phaserApp;
 </script>
 
+<% if (liveReloadPort) { %>
 <script>
   document.write(
     '<script src="//'
@@ -111,6 +112,7 @@
     + ':<%= liveReloadPort %>/livereload.js"><\/script>'
   );
 </script>
+<% } %>
 
 </body>
 </html>

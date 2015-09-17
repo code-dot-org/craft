@@ -1,5 +1,4 @@
 import Phaser from 'Phaser';
-import _ from 'lodash';
 
 /**
  * Sets Run button to visible and waits for press.
@@ -7,8 +6,6 @@ import _ from 'lodash';
 class DemoPhaserState extends Phaser.State {
   constructor(...args) {
     super(...args);
-    this.debouncedEnemyAdd = _.debounce(this.addEnemyAtMouse.bind(this), 100,
-        {leading: true, maxWait: 100});
   }
 
   preload() {
@@ -44,7 +41,7 @@ class DemoPhaserState extends Phaser.State {
     this.updateShadowObject();
 
     if (this.game.input.activePointer.isDown) {
-      this.debouncedEnemyAdd();
+      this.addEnemyAtMouse();
     }
   }
 
