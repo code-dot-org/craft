@@ -93,8 +93,7 @@ export default class LevelModel {
       return count;
   }
 
-  isPlayerAt(position)
-  {
+  isPlayerAt(position) {
       return _.isEqual(this.player.position, position );
   }
 
@@ -146,8 +145,7 @@ export default class LevelModel {
       return this.isBlockOfType(blockForwardPosition, blockType);
   }
 
-  isBlockOfType(position, blockType)
-  {
+  isBlockOfType(position, blockType)  {
       var result = false;
 
       let blockIndex = (position[1] * 10) + position[0];
@@ -162,6 +160,21 @@ export default class LevelModel {
       }
 
       return result;
+  }
+
+  isPlayerStandingInWater(){
+    let blockIndex = (this.player.position[1] * 10) + this.player.position[0];
+    return this.actionPlane[blockIndex].blockType == "water";
+  }
+
+  isPlayerStandingInLava() {
+    // TODO: handle lava
+    return false;
+  }
+
+  isPlayerStandingNearCreeper() {
+    // TODO: handle creepers
+    return false;
   }
 
   canMoveForward() {
