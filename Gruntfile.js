@@ -11,7 +11,7 @@ module.exports = function (grunt) {
 
   var deployName;
   if (deployBuild) {
-    deployName = grunt.option("name");
+    deployName = grunt.option("name") || "unnamed";
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-aws-s3');
   }
