@@ -35,7 +35,7 @@ export default class LevelView {
     this.game.load.image('shadeLayer', `${this.assetRoot}images/Shade_Layer.png`);
     this.game.load.atlasJSONHash('AO', `${this.assetRoot}images/AO.png`, `${this.assetRoot}images/AO.json`);
 
-    this.game.load.atlasJSONHash('leavesOak', `${this.assetRoot}images/Leaves_Oak_decay.png`, `${this.assetRoot}images/Leaves_Oak_decay.json`);
+    this.game.load.atlasJSONHash('leavesOak', `${this.assetRoot}images/Leaves_Oak_Decay.png`, `${this.assetRoot}images/Leaves_Oak_Decay.json`);
     this.game.load.atlasJSONHash('destroyOverlay', `${this.assetRoot}images/Destroy_Overlay.png`, `${this.assetRoot}images/Destroy_Overlay.json`);
 
     this.game.load.image('grass', `${this.assetRoot}images/Block_0000_Grass.png`);
