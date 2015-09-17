@@ -48,11 +48,13 @@ export default class LevelView {
     this.audioPlayer.register({
       id: 'dig_wood1',
       mp3: `${this.assetRoot}audio/dig_wood1.mp3`,
+      wav: `${this.assetRoot}audio/dig_wood1.wav`,
       ogg: `${this.assetRoot}audio/dig_wood1.ogg`
     });
     this.audioPlayer.register({
       id: 'step_grass1',
       mp3: `${this.assetRoot}audio/step_grass1.mp3`,
+      wav: `${this.assetRoot}audio/step_grass1.wav`,
       ogg: `${this.assetRoot}audio/step_grass1.ogg`
     });
   }
@@ -223,6 +225,7 @@ export default class LevelView {
         this.toDestroy.push(sprite);
       }
 
+      this.audioPlayer.play('dig_wood1');
       completionHandler();
     });
 

@@ -26,6 +26,11 @@ class PhaserApp {
    * @constructor
    */
   constructor(phaserAppConfig) {
+    // Phaser pre-initialization config
+    window.PhaserGlobal = {
+      disableAudio: true
+    };
+
     /**
      * @public {Object} codeOrgAPI - API with externally-callable methods for
      * starting an attempt, issuing commands, etc.
