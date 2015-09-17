@@ -67,7 +67,8 @@ module.exports = function (grunt) {
         ext: '.html',
         options: {
           liveReloadPort: devBuildConfig.liveReloadPort,
-          appBundle: '<%= project.bundleURL %>'
+          appBundle: '<%= project.bundleURL %>',
+          getFingerprint: function() { return +(new Date()); }
         }
       }
     },

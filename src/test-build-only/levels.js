@@ -339,34 +339,51 @@ window.demoLevels = {
     ],
 
     solutionCode: placeBlock("logOak") +
-    moveForwardBlock +
-    placeBlock("logOak") +
-    moveForwardBlock +
-    placeBlock("logOak") +
-    moveForwardBlock +
-    placeBlock("logOak") +
-    turnLeftBlock +
-    placeBlock("logOak") +
-    moveForwardBlock +
-    placeBlock("logOak") +
-    moveForwardBlock +
-    placeBlock("logOak") +
-    moveForwardBlock +
-    placeBlock("logOak") +
-    turnLeftBlock +
-    placeBlock("logOak") +
-    moveForwardBlock +
-    placeBlock("logOak") +
-    moveForwardBlock +
-    placeBlock("logOak") +
-    moveForwardBlock +
-    placeBlock("logOak") +
-    turnLeftBlock +
-    placeBlock("logOak") +
-    moveForwardBlock +
-    placeBlock("logOak") +
-    moveForwardBlock +
-    placeBlock("logOak") +
-    moveForwardBlock
-  },
+      moveForwardBlock +
+      placeBlock("logOak") +
+      moveForwardBlock +
+      placeBlock("logOak") +
+      moveForwardBlock +
+      placeBlock("logOak") +
+      turnLeftBlock +
+      placeBlock("logOak") +
+      moveForwardBlock +
+      placeBlock("logOak") +
+      moveForwardBlock +
+      placeBlock("logOak") +
+      moveForwardBlock +
+      placeBlock("logOak") +
+      turnLeftBlock +
+      placeBlock("logOak") +
+      moveForwardBlock +
+      placeBlock("logOak") +
+      moveForwardBlock +
+      placeBlock("logOak") +
+      moveForwardBlock +
+      placeBlock("logOak") +
+      turnLeftBlock +
+      placeBlock("logOak") +
+      moveForwardBlock +
+      placeBlock("logOak") +
+      moveForwardBlock +
+      placeBlock("logOak") +
+      moveForwardBlock,
+
+    verificationFunction: function (verificationAPI) {
+      return verificationAPI.solutionMapMatchesResultMap(
+          [
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "logOak", "logOak", "logOak", "logOak", "", "", "",
+            "", "", "", "logOak", "", "", "logOak", "", "", "",
+            "", "", "", "logOak", "", "", "logOak", "", "", "",
+            "", "", "", "logOak", "logOak", "logOak", "logOak", "", "", "",
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", ""
+          ]);
+    }
+  }
+
 };
