@@ -8,6 +8,16 @@
   <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
   <script src="test-build-only/soundEffects.js"></script>
   <script src="test-build-only/levels.js?<%= getFingerprint() %>"></script>
+  <style>
+    .description {
+      font-size: small;
+      color: gray;
+      margin-left: 15px;
+    }
+    pre {
+      margin: 0;
+    }
+  </style>
   <title>Phaser App Playground</title>
 </head>
 <body>
@@ -25,6 +35,26 @@
 <div style="margin:10px; clear:both;"></div>
 <div>Level instructions: <span id="level-instructions" style="font-weight:bold;"></span></div>
 <div>Level feedback: <span id="level-feedback" style="font-weight:bold;"></span></div>
+<div>
+  <h2>Using test commands:</h2>
+  <ul>
+    <tt><pre>placeBlock('logOak');</pre></tt> <span class="description">places logOak block at player's feet</span>
+    <tt><pre>moveForward();</pre></tt> <span class="description">moves player forward </span>
+    <tt><pre>turnLeft();</pre></tt> <span class="description">turns player left</span>
+    <tt><pre>turnRight();</pre></tt> <span class="description">turns player right</span>
+    <tt><pre>destroyBlock();</pre></tt> <span class="description">destroys targeted block</span>
+    <tt><pre>whileAhead('', do{<br>  moveForward();<br>  moveForward();<br>});</pre></tt> <span class="description">moves forward while block ahead is <tt>''</tt> (air)</span>
+    <tt><pre>for (var i = 0; i < 99; i++) {<br>  moveForward();<br>  moveForward();<br>}</pre></tt> <span class="description">repeat loop: change 99 to # of times to repeat</span>
+  </ul>
+  <h2>Implemented block types:</h2>
+  <ul>
+    <li><tt>logOak</tt></li>
+    <li><tt>tallGrass</tt></li>
+    <li><tt>grass</tt></li>
+    <li><tt>coarseDirt</tt></li>
+    <li><tt>planksOak</tt></li>
+  </ul>
+</div>
 
 <script>
   var demoLevels = window.demoLevels;
@@ -49,6 +79,22 @@
   $('#test-code-area').val(testLevelToLoad.solutionCode);
   $('#level-instructions').html(testLevelToLoad.instructions);
 
+  var replacements = {
+    "do{": "function(){"
+  };
+
+  function isFunction(functionToCheck) {
+     var getType = {};
+     return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
+  }
+
+  function shortHandToApiCalls(shortHandCode) {
+    $.each(replacements, function(key, value) {
+      shortHandCode = shortHandCode.split(key).join(value);
+    });
+    return shortHandCode;
+  }
+
   function runCodeWithParams(code, options) {
     // execute JS code "natively"
     var params = [];
@@ -66,11 +112,19 @@
   }
 
   $('#run-button').click(function () {
-    var code = $('#test-code-area').val();
+    var shortHandCode = $('#test-code-area').val();
+    var code = shortHandToApiCalls(shortHandCode);
+
     var codeOrgAPI = phaserApp.codeOrgAPI;
     codeOrgAPI.startCommandCollection();
     runCodeWithParams(code, {
-      codeOrgAPI: codeOrgAPI
+      codeOrgAPI: codeOrgAPI,
+      placeBlock: codeOrgAPI.placeBlock.bind(null, function(){}),
+      moveForward: codeOrgAPI.moveForward.bind(null, function(){}),
+      turnLeft: codeOrgAPI.turnLeft.bind(null, function(){}),
+      turnRight: codeOrgAPI.turnRight.bind(null, function(){}),
+      destroyBlock: codeOrgAPI.destroyBlock.bind(null, function(){}),
+      whileAhead: codeOrgAPI.whilePathAhead.bind(null, function(){})
     });
     codeOrgAPI.startAttempt(function (result) {
       $('#level-feedback').html(result ? "Success!" : "Failure").css("color", result ? "green" : "red");

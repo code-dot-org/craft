@@ -1,23 +1,14 @@
-var moveForwardBlock = "codeOrgAPI.moveForward(function(){});\n";
-var turnLeftBlock = "codeOrgAPI.turn(function(){}, 'left');\n";
-var turnRightBlock = "codeOrgAPI.turn(function(){}, 'right');\n";
-var destroyBlock = "codeOrgAPI.destroyBlock(function(){}, 'right');\n";
+var moveForwardBlock = "moveForward();\n";
+var turnLeftBlock = "turnLeft();\n";
+var turnRightBlock = "turnRight();\n";
+var destroyBlock = "destroyBlock();\n";
 var whileBlockAhead = function (type, blockCode) {
-  return "codeOrgAPI.whilePathAhead(function(){}, '" +
-      type + "', function () {" + blockCode + "});\n"
+  return "whileAhead('" + type + "', do{\n" + blockCode + "});\n"
 };
 var placeBlock = function (type) {
-  return "codeOrgAPI.placeBlock(function(){}, '" +
-      type + "');\n"
+  return "placeBlock('" + type + "');\n"
 };
 
-var buildWall =
-    moveForwardBlock +
-    placeBlock('logOak') +
-    moveForwardBlock +
-    placeBlock('logOak') +
-    moveForwardBlock +
-    placeBlock('logOak');
 
 window.demoLevels = {
   1: {
