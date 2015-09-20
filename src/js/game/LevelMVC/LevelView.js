@@ -35,7 +35,9 @@ export default class LevelView {
   }
 
   preload() {
-    this.game.load.atlasJSONHash('player', `${this.assetRoot}images/Steve.png`, `${this.assetRoot}images/Steve.json`);
+    var playerAtlas = "Alex";
+
+    this.game.load.atlasJSONHash('player', `${this.assetRoot}images/${playerAtlas}.png`, `${this.assetRoot}images/${playerAtlas}.json`);
     this.game.load.image('characterShadow', `${this.assetRoot}images/Character_Shadow.png`);
     this.game.load.image('selectionIndicator', `${this.assetRoot}images/Selection_Indicator.png`);
 
