@@ -26,10 +26,12 @@ export default class LevelModel {
     this.player.facing = levelData.playerStartDirection;
     this.player.inventory = ["logOak"];
 
-    this.groundPlane = this.constructPlane(levelData.groundPlane, false);
+  reset() {
+    this.player = Object.create(this.initialPlayerState);
+    this.groundPlane = this.constructPlane(this.initialLevelData.groundPlane, false);
     this.shadingPlane = [];
-    this.actionPlane = this.constructPlane(levelData.actionPlane, true);
-    this.fluffPlane = this.constructPlane(levelData.fluffPlane, false);
+    this.actionPlane = this.constructPlane(this.initialLevelData.actionPlane, true);
+    this.fluffPlane = this.constructPlane(this.initialLevelData.fluffPlane, false);
   }
 
   constructPlane(planeData, isActionPlane) {
@@ -85,9 +87,10 @@ export default class LevelModel {
   }
 
   countOfTypeOnMap(blockType) {
+      var count = 0,
+          i;
 
-      var count=0;
-      for (var i = 0; i < 100; i++) {
+      for (i = 0; i < 100; ++i) {
           if (blockType == this.actionPlane[i].blockType) {
               ++count;
           }
@@ -292,10 +295,10 @@ export default class LevelModel {
 
   computeShadingPlane() {
     var x,
-      y,
-      index,
-      hasLeft,
-      hasRight;
+        y,
+        index,
+        hasLeft,
+        hasRight;
 
     this.shadingPlane = [];
 
@@ -348,5 +351,4 @@ export default class LevelModel {
       }
     }
   }
-
 }

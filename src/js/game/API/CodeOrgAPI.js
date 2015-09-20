@@ -31,6 +31,7 @@ export function get(controller) {
     },
 
     resetAttempt: function() {
+        controller.reset();
         controller.queue.reset();
         controller.resetBoard();
         controller.OnCompleteCallback = null;

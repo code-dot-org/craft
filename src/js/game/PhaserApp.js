@@ -80,6 +80,11 @@ class PhaserApp {
     this.levelView.reset();
   }
 
+  reset() {
+    this.levelModel.reset();
+    this.levelView.reset();
+  }
+
   preload() {
     this.game.time.advancedTiming = true;
     this.levelView.preload();

@@ -26,6 +26,14 @@ export default class LevelView {
     this.toDestroy = [];
   }
 
+  reset(levelModel) {
+    // TODO: Figure out how to completely erase all sprites from the scene graph
+
+    this.levelData = levelModel.levelData;
+
+    this.create();
+  }
+
   preload() {
     this.game.load.atlasJSONHash('player', `${this.assetRoot}images/Steve_Square.png`, `${this.assetRoot}images/Steve_Square.json`);
     this.game.load.image('characterShadow', `${this.assetRoot}images/Character_Shadow.png`);
@@ -88,11 +96,10 @@ export default class LevelView {
     this.toDestroy = [];
 
     this.playerGhost.frame = this.playerSprite.frame;
-    this.actionPlane.sort('z', Phaser.Group.SORT_ASCENDING);
   }
 
   render() {
-
+    this.actionPlane.sort('sortOrder'); 
   }
 
   getDirectionName(facing) {
@@ -133,7 +140,7 @@ export default class LevelView {
       let direction = this.getDirectionName(facing);
 
       this.setSelectionIndicatorPosition(position[0], position[1]);
-      this.playerSprite.z = position[1] * 10 + 5;
+      this.playerSprite.sortOrder = position[1] * 10 + 5;
 
       idleAnimName = "idle" + direction;
 
@@ -150,7 +157,7 @@ export default class LevelView {
     let direction = this.getDirectionName(facing);
 
     this.setSelectionIndicatorPosition(position[0], position[1]);
-    this.playerSprite.z = position[1] * 10 + 5;
+    this.playerSprite.sortOrder = position[1] * 10 + 5;
 
     walkAnimName = "walk" + direction;
 
@@ -185,7 +192,8 @@ export default class LevelView {
       let blockIndex = (position[1] * 10) + position[0];
 
       var sprite = this.actionPlane.create(-12 + 40 * position[0], -22 + 40 * position[1], blockType);
-      sprite.z = position[1];
+      sprite.sortOrder = position[1] * 10;
+
       this.actionPlaneBlocks[blockIndex] = sprite;
       completionHandler();
     });
@@ -206,7 +214,7 @@ export default class LevelView {
 
     this.playerSprite.animations.play(destroyAnimName);
     destroyOverlay = this.actionPlane.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
-    destroyOverlay.z = destroyPosition[1] * 10 + 2;
+    destroyOverlay.sortOrder = destroyPosition[1] * 10 + 2;
     destroyOverlay.animations.add("destroy", [
       "destroy1",
       "destroy2",
@@ -250,7 +258,7 @@ export default class LevelView {
   setPlayerPosition(x, y) {
     this.playerSprite.x = -35 + 40 * x;
     this.playerSprite.y = -55 + 40 * y;
-    this.playerSprite.z = y * 10 + 5;
+    this.playerSprite.sortOrder = y * 10 + 5;
   }
 
   setSelectionIndicatorPosition(x, y) {
@@ -259,6 +267,9 @@ export default class LevelView {
   }
 
   createPlanes() {
+    var sprite,
+        x,
+        y;
     this.groundPlane = this.game.add.group();
     this.shadingPlane = this.game.add.group();
     this.actionPlane = this.game.add.group();
@@ -273,40 +284,43 @@ export default class LevelView {
 
     this.baseShading = this.shadingPlane.create(0, 0, 'shadeLayer');
 
-    var sprite;
-    for (var y = 0; y < 10; ++y) {
-      for (var x = 0; x < 10; ++x) {
+    for (y = 0; y < 10; ++y) {
+      for (x = 0; x < 10; ++x) {
         let blockIndex = (y * 10) + x;
         this.groundPlane.create(-12 + 40 * x, -2 + 40 * y, levelData.groundPlane[blockIndex]);
       }
     }
 
-    for (var y = 0; y < 10; ++y) {
-      for (var x = 0; x < 10; ++x) {
+    this.actionPlaneBlocks = [];
+    for (y = 0; y < 10; ++y) {
+      for (x = 0; x < 10; ++x) {
         let blockIndex = (y * 10) + x;
         sprite = null;
 
         if (levelData.groundDecorationPlane[blockIndex] !== "") {
           sprite = this.actionPlane.create(-12 + 40 * x, -22 + 40 * y, levelData.groundDecorationPlane[blockIndex]);
-          sprite.z = y * 10;
+          sprite.sortOrder = y * 10;
         }
 
+        sprite = null;
         if (levelData.actionPlane[blockIndex] !== "") {
           sprite = this.actionPlane.create(-12 + 40 * x, -22 + 40 * y, levelData.actionPlane[blockIndex]);
-          sprite.z = y * 10;
+          sprite.sortOrder = y * 10;
         }
 
-        this.actionPlaneBlocks[blockIndex] = sprite;
+        this.actionPlaneBlocks.push(sprite);
       }
     }
 
-    for (var y = 0; y < 10; ++y) {
-      for (var x = 0; x < 10; ++x) {
+    for (y = 0; y < 10; ++y) {
+      for (x = 0; x < 10; ++x) {
         let blockIndex = (y * 10) + x;
         if (levelData.fluffPlane[blockIndex] !== "") {
           sprite = this.fluffPlane.create(-104 + 40 * x, -160 + 40 * y, levelData.fluffPlane[blockIndex], "Leaves_Oak0.png");
-          this.actionPlaneBlocks[blockIndex].fluff = sprite;
-          this.actionPlaneBlocks[blockIndex].fluffType = "leavesOak";
+          if (this.actionPlaneBlocks[blockIndex] !== null) {
+            this.actionPlaneBlocks[blockIndex].fluff = sprite;
+            this.actionPlaneBlocks[blockIndex].fluffType = "leavesOak";
+          }
         }
       }
     }
