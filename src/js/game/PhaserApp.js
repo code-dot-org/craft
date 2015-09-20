@@ -82,7 +82,7 @@ class PhaserApp {
 
   reset() {
     this.levelModel.reset();
-    this.levelView.reset();
+    this.levelView.reset(this.levelModel);
   }
 
   preload() {

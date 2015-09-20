@@ -38,7 +38,7 @@ export default class LevelView {
     var playerAtlas = "Alex";
 
     this.game.load.atlasJSONHash('player', `${this.assetRoot}images/${playerAtlas}.png`, `${this.assetRoot}images/${playerAtlas}.json`);
-    this.game.load.image('characterShadow', `${this.assetRoot}images/Character_Shadow.png`);
+    this.game.load.image('entityShadow', `${this.assetRoot}images/Character_Shadow.png`);
     this.game.load.image('selectionIndicator', `${this.assetRoot}images/Selection_Indicator.png`);
 
     this.game.load.image('shadeLayer', `${this.assetRoot}images/Shade_Layer.png`);
@@ -52,6 +52,8 @@ export default class LevelView {
     this.game.load.image('tallGrass', `${this.assetRoot}images/TallGrass.png`);
     this.game.load.image('logOak', `${this.assetRoot}images/Block_0008_log_oak.png`);
     this.game.load.image('planksOak', `${this.assetRoot}images/Block_0020_planks_oak.png`);
+
+    this.game.load.atlasJSONHash('sheep', `${this.assetRoot}images/Sheep.png`, `${this.assetRoot}images/Sheep.json`);
 
     this.audioPlayer.register({id: 'beep', mp3: `${this.assetRoot}audio/beep.mp3`, ogg: 'TODO'});
     this.audioPlayer.register({
@@ -217,34 +219,18 @@ export default class LevelView {
     this.playerSprite.animations.play(destroyAnimName);
     destroyOverlay = this.actionPlane.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
     destroyOverlay.sortOrder = destroyPosition[1] * 10 + 2;
-    destroyOverlay.animations.add("destroy", [
-      "destroy1",
-      "destroy2",
-      "destroy3",
-      "destroy4",
-      "destroy5",
-      "destroy6",
-      "destroy7",
-      "destroy8",
-      "destroy9",
-      "destroy10",
-      "destroy11",
-      "destroy12"], 30, false).onComplete.add(() =>
+    destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false).onComplete.add(() =>
     {
-      var sprite;
+      if (blockToDestroy.hasOwnProperty("onBlockDestroy")) {
+        blockToDestroy.onBlockDestroy(blockToDestroy);
+      }
 
       blockToDestroy.kill();
       destroyOverlay.kill();
       this.toDestroy.push(blockToDestroy);
       this.toDestroy.push(destroyOverlay);
-      this.setSelectionIndicatorPosition(playerPosition[0], playerPosition[1]);
 
-      if (blockToDestroy.hasOwnProperty('fluff')) {
-        // TODO: Property destroy the fluff (likely a tree top)
-        sprite = blockToDestroy.fluff;
-        sprite.kill();
-        this.toDestroy.push(sprite);
-      }
+      this.setSelectionIndicatorPosition(playerPosition[0], playerPosition[1]);
 
       this.audioPlayer.play('dig_wood1');
       completionHandler();
@@ -271,7 +257,8 @@ export default class LevelView {
   createPlanes() {
     var sprite,
         x,
-        y;
+        y,
+        blockType;
     this.groundPlane = this.game.add.group();
     this.shadingPlane = this.game.add.group();
     this.actionPlane = this.game.add.group();
@@ -306,8 +293,39 @@ export default class LevelView {
 
         sprite = null;
         if (levelData.actionPlane[blockIndex] !== "") {
-          sprite = this.actionPlane.create(-12 + 40 * x, -22 + 40 * y, levelData.actionPlane[blockIndex]);
-          sprite.sortOrder = y * 10;
+          blockType = levelData.actionPlane[blockIndex];
+
+          switch (blockType) {
+            case "treeOak":
+              sprite = this.actionPlane.create(-12 + 40 * x, -22 + 40 * y, "logOak");
+              sprite.fluff = this.fluffPlane.create(-104 + 40 * x, -160 + 40 * y, "leavesOak", "Leaves_Oak0");
+              sprite.fluffType = "leavesOak";
+
+              sprite.onBlockDestroy = (logSprite) => {
+                logSprite.fluff.animations.add("despawn", Phaser.Animation.generateFrameNames("Leaves_Oak", 0, 6, "", 0), 20, false).onComplete.add(() => {
+                  this.toDestroy.push(logSprite.fluff);
+                  logSprite.fluff.kill();
+                });
+                logSprite.fluff.animations.play("despawn");
+              };
+              break;
+
+            case "sheep":
+              // Facing Left
+              // Look Right: 181-189
+              // Look Left: 190-198
+              // Eat Grass: 199-216
+              // Kick Back Legs: 217-234
+              // Look Down: 235-240
+              sprite = this.actionPlane.create(-12 + 40 * x, -12 + 40 * y, "sheep", "Sheep_190");
+              break;              
+
+            default:
+              sprite = this.actionPlane.create(-12 + 40 * x, -22 + 40 * y, blockType);
+              break;
+          }
+
+          sprite.sortOrder = y * 10;          
         }
 
         this.actionPlaneBlocks.push(sprite);
@@ -318,11 +336,7 @@ export default class LevelView {
       for (x = 0; x < 10; ++x) {
         let blockIndex = (y * 10) + x;
         if (levelData.fluffPlane[blockIndex] !== "") {
-          sprite = this.fluffPlane.create(-104 + 40 * x, -160 + 40 * y, levelData.fluffPlane[blockIndex], "Leaves_Oak0.png");
-          if (this.actionPlaneBlocks[blockIndex] !== null) {
-            this.actionPlaneBlocks[blockIndex].fluff = sprite;
-            this.actionPlaneBlocks[blockIndex].fluffType = "leavesOak";
-          }
+          sprite = this.fluffPlane.create(-104 + 40 * x, -160 + 40 * y, levelData.fluffPlane[blockIndex]);
         }
       }
     }
@@ -397,7 +411,7 @@ export default class LevelView {
 
     this.selectionIndicator = this.shadingPlane.create(24, 44, 'selectionIndicator');
 
-    this.playerShadow = this.shadingPlane.create(6, 30, "characterShadow");
+    this.playerShadow = this.shadingPlane.create(6, 30, "entityShadow");
     this.playerShadow.parent = this.playerSprite;
 
     frameList = [];
