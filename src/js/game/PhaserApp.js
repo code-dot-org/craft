@@ -195,6 +195,7 @@ class PhaserApp {
   // command processors
   moveForward(commandQueueItem) {
     if (this.levelModel.canMoveForward()) {
+        let wasOnBlock = this.levelModel.player.isOnBlock;
         this.levelModel.moveForward();
         // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
 
@@ -214,7 +215,7 @@ class PhaserApp {
             //} );
         } 
         else  {
-            this.levelView.playMoveForwardAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock, () => {
+            this.levelView.playMoveForwardAnimation(this.levelModel.player.position, this.levelModel.player.facing, wasOnBlock && wasOnBlock != this.levelModel.player.isOnBlock, () => {
                 commandQueueItem.succeeded();
             });
         }

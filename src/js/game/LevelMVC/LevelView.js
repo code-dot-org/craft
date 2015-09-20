@@ -152,9 +152,9 @@ export default class LevelView {
   }
 
 
-  playMoveForwardAnimation(position, facing, isOnBlock, completionHandler) {
+  playMoveForwardAnimation(position, facing, shouldJumpDown, completionHandler) {
     var tween,
-        walkAnimName;
+        animName;
 
     this.audioPlayer.play("step_grass1");
 
@@ -163,13 +163,18 @@ export default class LevelView {
     this.setSelectionIndicatorPosition(position[0], position[1]);
     this.playerSprite.sortOrder = position[1] * 10 + 5;
 
-    walkAnimName = "walk" + direction;
+    if (!shouldJumpDown) {
+      animName = "walk" + direction;
+      this.playerSprite.animations.play(animName);
+    } else {
+      animName = "jumpDown" + direction;
+      this.playerSprite.animations.play(animName);
+    }
 
-    this.playerSprite.animations.play(walkAnimName);
     tween = this.game.add.tween(this.playerSprite).to({
       x: (-18 + 40 * position[0]),
-      y: (-32 + 40 * position[1] - 40 * (isOnBlock ? 1 : 0))
-    }, 500, Phaser.Easing.Linear.None);
+      y: (-32 + 40 * position[1])
+    }, 200, Phaser.Easing.Linear.EaseOut);
 
     tween.onComplete.add(() => {
       completionHandler();
@@ -185,7 +190,7 @@ export default class LevelView {
     let direction = this.getDirectionName(facing);
     this.setSelectionIndicatorPosition(position[0], position[1]);
 
-    jumpAnimName = "jump" + direction;
+    jumpAnimName = "jumpUp" + direction;
 
     this.playerSprite.animations.play(jumpAnimName);
     tween = this.game.add.tween(this.playerSprite).to({
