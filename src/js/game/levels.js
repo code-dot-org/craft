@@ -378,3 +378,5 @@ window.demoLevels = {
   }
 
 };
+
+export default demoLevels;

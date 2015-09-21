@@ -12,13 +12,7 @@
   },
   "author": "Code.org Contributors",
   "license": "MIT",
-  "browser": {
-    "Phaser": "./src/js/lib/phaser.arcade.js"
-  },
   "browserify-shim": {
-    "Phaser": {
-      "exports": "Phaser"
-    }
   },
   "dependencies": {
     "babelify": "^6.3.0",

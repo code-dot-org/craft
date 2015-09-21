@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style/index.css">
+  <script src="test-build-only/phaser.js"></script>
   <script src="<%= appBundle %>"></script>
   <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
   <script src="test-build-only/soundEffects.js"></script>
-  <script src="test-build-only/levels.js?<%= getFingerprint() %>"></script>
   <style>
     .description {
       font-size: small;
@@ -68,6 +68,7 @@
 
   // Initialize test instance of game, exposed to window for debugging.
   var phaserApp = new PhaserApp({
+    Phaser: window.Phaser,
     containerId: 'phaser-game',
     assetRoot: 'assets/',
     audioPlayer: new Sounds()

@@ -1,5 +1,3 @@
-import Phaser from 'Phaser';
-
 import CommandQueue from "./CommandQueue/CommandQueue.js";
 import BaseCommand from "./CommandQueue/BaseCommand.js";
 import DestroyBlockCommand from "./CommandQueue/DestroyBlockCommand.js";
@@ -9,6 +7,8 @@ import WhileCommand from "./CommandQueue/WhileCommand.js";
 
 import LevelModel from "./LevelMVC/LevelModel.js"
 import LevelView from "./LevelMVC/LevelView.js"
+
+import DemoLevels from "./Levels.js"
 
 import * as CodeOrgAPI from "./API/CodeOrgAPI.js"
 
@@ -22,6 +22,7 @@ class PhaserApp {
   /**
    * @param {Object} phaserAppConfig
    * @param {String} phaserAppConfig.containerId DOM ID to mount this app
+   * @param {Phaser} phaserAppConfig.Phaser Phaser package
    * @constructor
    */
   constructor(phaserAppConfig) {
@@ -40,6 +41,8 @@ class PhaserApp {
      * @property {LevelConfig}
      */
     this.levelConfig = null;
+
+    var Phaser = phaserAppConfig.Phaser;
 
     /**
      * Main Phaser game instance.
