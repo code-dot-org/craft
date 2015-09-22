@@ -70,8 +70,6 @@ window.demoLevels = {
     },
 
     solutionCode: moveForwardBlock +
-    moveForwardBlock +
-    moveForwardBlock +
     moveForwardBlock
 
   },
@@ -79,7 +77,7 @@ window.demoLevels = {
   2: {
     instructions: "We're gonna need some wood. Move me to the tree and let’s chop it down.",
 
-    playerStartPosition: [2, 4],
+    playerStartPosition: [6, 7],
 
     playerStartDirection: 1,
 
@@ -87,9 +85,9 @@ window.demoLevels = {
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "coarseDirt", "coarseDirt", "coarseDirt", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "coarseDirt", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "coarseDirt", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
@@ -132,7 +130,7 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
     ],
 
-    solutionCode: moveForwardBlock +
+    solutionCode: turnLeftBlock +
     moveForwardBlock +
     moveForwardBlock +
     destroyBlock
@@ -144,7 +142,73 @@ window.demoLevels = {
   },
 
   3: {
-    instructions: "We're gonna need more wood. Look, more trees! Chop down at least 3 more trees.",
+    instructions: "Time to shear some sheep! Walk to both of the sheep and get their wool.",
+
+    playerStartPosition: [4, 3],
+
+    playerStartDirection: 1,
+
+    groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "coarseDirt", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "coarseDirt", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
+    ],
+
+    groundDecorationPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "tallGrass", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "tallGrass", "", "", "", "", "", "", "", "", ""],
+
+    actionPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "logOak", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "logOak", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "leavesOak", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    solutionCode: turnRightBlock +
+    moveForwardBlock +
+    moveForwardBlock
+    ,
+
+    verificationFunction: function (verificationAPI) {
+      return verificationAPI.countOfTypeOnMap("logOak") === 0;
+    }
+  },
+
+  4: {
+    instructions: "Now I need to start chopping trees! Chop at least 3 Trees out of the 4. Nightfall is coming, so hurry up!",
 
     playerStartPosition: [2, 4],
 
@@ -157,6 +221,80 @@ window.demoLevels = {
       "coarseDirt", "coarseDirt", "coarseDirt", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
+    ],
+
+    groundDecorationPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "tallGrass", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "tallGrass", "", "", "", "", "", "", "", "", ""],
+
+    actionPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "logOak", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "logOak", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "logOak", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "leavesOak", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "leavesOak", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "leavesOak", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    solutionCode: moveForwardBlock +
+    moveForwardBlock +
+    moveForwardBlock +
+    turnRightBlock +
+    moveForwardBlock +
+    moveForwardBlock +
+    moveForwardBlock +
+    turnRightBlock +
+    moveForwardBlock +
+    moveForwardBlock +
+    moveForwardBlock
+    ,
+
+    verificationFunction: function (verificationAPI) {
+      return verificationAPI.countOfTypeOnMap("logOak") === 0;
+    }
+  },
+
+  5: {
+    instructions: "Make one wall of your house by placing three blocks.",
+
+    playerStartPosition: [5, 6],
+
+    playerStartDirection: 3,
+
+    groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "coarseDirt", "coarseDirt", "coarseDirt", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
@@ -181,8 +319,8 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "logOak", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "logOak", "", "", ""
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", ""
     ],
 
     fluffPlane: ["", "", "", "", "", "", "", "", "", "",
@@ -193,101 +331,27 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "leavesOak", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "leavesOak", "", "", ""
-    ],
-
-    verificationFunction: function (verificationAPI) {
-      return (verificationAPI.countOfTypeOnMap("logOak") <= 1 );
-    },
-
-    solutionCode: whileBlockAhead("", moveForwardBlock) +
-    destroyBlock +
-    turnRightBlock +
-    whileBlockAhead("", moveForwardBlock) +
-    destroyBlock +
-    turnRightBlock +
-    whileBlockAhead("", moveForwardBlock) +
-    destroyBlock +
-    turnRightBlock
-  },
-  4: {
-    instructions: "Make one wall of your house by placing three blocks.",
-
-    playerStartPosition: [3, 5],
-
-    playerStartDirection: 1,
-
-    groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "coarseDirt", "coarseDirt", "coarseDirt", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
-    ],
-
-    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "tallGrass", "", "", "", "", "", "", "", "", ""],
-
-    actionPlane: ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
-      "", "grass", "", "", "", "", "", "", "", "grass",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", ""
-    ],
-
-    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", ""
     ],
 
     verificationFunction: function (verificationAPI) {
-      return verificationAPI.solutionMapMatchesResultMap(
-          ["", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "logOak", "logOak", "logOak", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", ""]
-      );
+      return (verificationAPI.countOfTypeOnMap("logOak") == 3 );
     },
 
-    solutionCode: placeBlock("logOak") + moveForwardBlock + placeBlock("logOak") + moveForwardBlock + placeBlock("logOak")
+    solutionCode: placeBlock('logOak') +
+    moveForwardBlock +
+    placeBlock('logOak') +
+    moveForwardBlock +
+    placeBlock('logOak')
   },
-  5: {
+
+  6: {
     instructions: "Let's make our own house! This spot looks good. Build a frame on the dirt blocks.",
 
     playerStartPosition: [3, 6],
 
-    playerStartDirection: 1,
+    playerStartDirection: 0,
 
     groundPlane: [
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -321,7 +385,7 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "logOak", "logOak", "logOak", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
@@ -339,22 +403,13 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
     ],
 
-    solutionCode: placeBlock("logOak") +
-      moveForwardBlock +
+    solutionCode: moveForwardBlock +
       placeBlock("logOak") +
       moveForwardBlock +
       placeBlock("logOak") +
       moveForwardBlock +
       placeBlock("logOak") +
-      turnLeftBlock +
-      placeBlock("logOak") +
-      moveForwardBlock +
-      placeBlock("logOak") +
-      moveForwardBlock +
-      placeBlock("logOak") +
-      moveForwardBlock +
-      placeBlock("logOak") +
-      turnLeftBlock +
+      turnRightBlock +
       placeBlock("logOak") +
       moveForwardBlock +
       placeBlock("logOak") +
@@ -362,13 +417,14 @@ window.demoLevels = {
       placeBlock("logOak") +
       moveForwardBlock +
       placeBlock("logOak") +
-      turnLeftBlock +
+      turnRightBlock +
       placeBlock("logOak") +
       moveForwardBlock +
       placeBlock("logOak") +
       moveForwardBlock +
       placeBlock("logOak") +
-      moveForwardBlock,
+      moveForwardBlock +
+      placeBlock("logOak"),
 
     verificationFunction: function (verificationAPI) {
       return verificationAPI.solutionMapMatchesResultMap(
@@ -379,13 +435,172 @@ window.demoLevels = {
             "", "", "", "logOak", "logOak", "logOak", "logOak", "", "", "",
             "", "", "", "logOak", "", "", "logOak", "", "", "",
             "", "", "", "logOak", "", "", "logOak", "", "", "",
-            "", "", "", "logOak", "logOak", "logOak", "logOak", "", "", "",
+            "", "", "", "", "", "", "logOak", "", "", "",
             "", "", "", "", "", "", "", "", "", "",
             "", "", "", "", "", "", "", "", "", "",
             "", "", "", "", "", "", "", "", "", ""
           ]);
     }
-  }
+  },
+
+  7: {
+    instructions: "During the night monsters appear! These monsters explode when you get near them. Avoid the monsters and reach your house in the least possible number of commands.",
+
+    playerStartPosition: [2, 7],
+
+    // up: 0, right: 1, down: 2, left: 3
+    playerStartDirection: 1,
+
+    groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "coarseDirt", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "coarseDirt", "coarseDirt", "coarseDirt", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "coarseDirt", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "coarseDirt", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "coarseDirt", "grass", "grass", "grass",
+      "grass", "grass", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "coarseDirt", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
+    ],
+
+    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "tallGrass", "", "", "", "", "", "", "", "", ""],
+
+    actionPlane: ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
+      "", "grass", "", "logOak", "logOak", "logOak", "", "", "", "grass",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", ""
+    ],
+
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", ""
+    ],
+
+    verificationFunction: function (verificationAPI) {
+      return verificationAPI.isPlayerNextTo("logOak");
+    },
+
+    solutionCode: "for (var i = 0; i < 4; i++) {" +
+    moveForwardBlock +
+    "}" +
+    turnLeftBlock +
+    "for (var i = 0; i < 4; i++) {" +
+    moveForwardBlock +
+    "}" +
+    turnLeftBlock +
+    moveForwardBlock +
+    moveForwardBlock +
+    turnRightBlock +
+    moveForwardBlock
+  },
+
+  8: {
+    instructions: "All this running around has made you hungry! Grow some food! Code is great for doing repetitive tasks quickly. Let’s plant some crops by making a 4x3 block field.",
+
+    playerStartPosition: [4, 7],
+
+    playerStartDirection: 0,
+
+    groundPlane: [
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "coarseDirt", "coarseDirt", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "coarseDirt", "coarseDirt", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "coarseDirt", "coarseDirt", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "coarseDirt", "coarseDirt", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "coarseDirt", "coarseDirt", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "coarseDirt", "coarseDirt", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
+    ],
+
+    groundDecorationPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "tallGrass", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "tallGrass", "", "", "", "", "", "", "", "", ""],
+
+    actionPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "logOak", "", "", "", "", "", "", "", "",
+      "logOak", "", "", "", "", "", "", "", "", "",
+      "logOak", "", "", "", "", "", "", "", "", "",
+      "logOak", "", "", "", "", "", "", "", "", "",
+      "logOak", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "leavesOak", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    solutionCode: "for (var i = 0; i < 6; i++) {" +
+    moveForwardBlock +
+    "}" +
+    turnRightBlock +
+    moveForwardBlock +
+    turnRightBlock +
+    "for (var i = 0; i < 6; i++) {" +
+    moveForwardBlock +
+    "}"
+
+      ,
+
+    verificationFunction: function (verificationAPI) {
+      return verificationAPI.solutionMapMatchesResultMap(
+          [
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "logOak", "logOak", "logOak", "logOak", "", "", "",
+            "", "", "", "logOak", "", "", "logOak", "", "", "",
+            "", "", "", "logOak", "", "", "logOak", "", "", "",
+            "", "", "", "", "", "", "logOak", "", "", "",
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", ""
+          ]);
+    }
+  },
 
 };
 
