@@ -9,12 +9,14 @@ var placeBlock = function (type) {
   return "placeBlock('" + type + "');\n"
 };
 
-
 window.demoLevels = {
   1: {
     instructions: "Move to the sheep [temporarily a stump]!",
 
     playerStartPosition: [3, 4],
+
+    // up: 0, right: 1, down: 2, left: 3
+    playerStartDirection: 1,
 
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -78,6 +80,8 @@ window.demoLevels = {
     instructions: "We're gonna need some wood. Move me to the tree and let’s chop it down.",
 
     playerStartPosition: [2, 4],
+
+    playerStartDirection: 1,
 
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -144,6 +148,8 @@ window.demoLevels = {
 
     playerStartPosition: [2, 4],
 
+    playerStartDirection: 1,
+
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -209,6 +215,8 @@ window.demoLevels = {
     instructions: "Make one wall of your house by placing three blocks.",
 
     playerStartPosition: [3, 5],
+
+    playerStartDirection: 1,
 
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -278,6 +286,8 @@ window.demoLevels = {
     instructions: "Let's make our own house! This spot looks good. Build a frame on the dirt blocks.",
 
     playerStartPosition: [3, 6],
+
+    playerStartDirection: 1,
 
     groundPlane: [
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",

@@ -12,7 +12,7 @@ export default class LevelModel {
 
       isOnBlock: false,
 
-      facing: FacingDirection.Right,
+      facing: levelData.playerStartDirection,
 
       inventory: ["logOak"]
     };

@@ -15,8 +15,7 @@ export default class LevelView {
     this.playerShadow = null;
     this.selectionIndicator = null;
 
-    this.playerPosition = controller.levelModel.player.position;
-    this.playerFacing = 0;
+    this.playerModel = controller.levelModel.player;
 
     this.groundPlane = null;
     this.shadingPlane = null;
@@ -63,9 +62,9 @@ export default class LevelView {
     this.preparePlanes(this.levelData);
 
     this.preparePlayerSprite();
-    this.setPlayerPosition(this.playerPosition[0], this.playerPosition[1]);
-    this.setSelectionIndicatorPosition(this.playerPosition[0], this.playerPosition[1]);
-    this.playerSprite.animations.play('idle_right');
+    this.setPlayerPosition(this.playerModel.position[0], this.playerModel.position[1]);
+    this.setSelectionIndicatorPosition(this.playerModel.position[0], this.playerModel.position[1]);
+    this.playIdleAnimation(this.playerModel.position, this.playerModel.facing);
   }
 
   update() {
