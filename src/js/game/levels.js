@@ -199,7 +199,8 @@ window.demoLevels = {
 
     solutionCode: turnRightBlock +
     moveForwardBlock +
-    moveForwardBlock
+    moveForwardBlock +
+    destroyBlock
     ,
 
     verificationFunction: function (verificationAPI) {
