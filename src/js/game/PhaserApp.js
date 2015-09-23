@@ -8,7 +8,7 @@ import WhileCommand from "./CommandQueue/WhileCommand.js";
 import LevelModel from "./LevelMVC/LevelModel.js"
 import LevelView from "./LevelMVC/LevelView.js"
 
-import DemoLevels from "./Levels.js"
+import DemoLevels from "./levels.js"
 
 import * as CodeOrgAPI from "./API/CodeOrgAPI.js"
 
