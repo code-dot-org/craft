@@ -59,9 +59,14 @@ export default class LevelView {
   }
 
   create() {
-    this.preparePlanes(this.levelData);
+    this.createPlanes();
+    this.reset();
+  }
 
+  reset() {
+    this.resetPlanes(this.levelData);
     this.preparePlayerSprite();
+    this.updateShadingPlane(this.controller.levelModel.shadingPlane);
     this.setPlayerPosition(this.playerModel.position[0], this.playerModel.position[1]);
     this.setSelectionIndicatorPosition(this.playerModel.position[0], this.playerModel.position[1]);
     this.playIdleAnimation(this.playerModel.position, this.playerModel.facing);
@@ -246,15 +251,22 @@ export default class LevelView {
     this.selectionIndicator.y = -55 + 43 + 40 * y;
   }
 
-  preparePlanes(levelData) {
-    var sprite;
-
+  createPlanes() {
     this.groundPlane = this.game.add.group();
     this.shadingPlane = this.game.add.group();
     this.actionPlane = this.game.add.group();
     this.fluffPlane = this.game.add.group();
+  }
+
+  resetPlanes(levelData) {
+    this.groundPlane.removeAll(true);
+    this.actionPlane.removeAll(true);
+    this.fluffPlane.removeAll(true);
+    this.shadingPlane.removeAll(true);
+
     this.baseShading = this.shadingPlane.create(0, 0, 'shadeLayer');
 
+    var sprite;
     for (var y = 0; y < 10; ++y) {
       for (var x = 0; x < 10; ++x) {
         let blockIndex = (y * 10) + x;
@@ -359,7 +371,7 @@ export default class LevelView {
     this.selectionIndicator = this.shadingPlane.create(24, 44, 'selectionIndicator');
 
     this.playerShadow = this.shadingPlane.create(22, 55, "characterShadow");
-    this.playerShadow.parent = this.playerSprite
+    this.playerShadow.parent = this.playerSprite;
 
     this.playerSprite.animations.add('idle_down', [
       '_0000_CDO_Mockup_001.png',

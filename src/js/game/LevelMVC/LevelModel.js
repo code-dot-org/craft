@@ -5,28 +5,31 @@ import FacingDirection from "./FacingDirection.js"
 
 export default class LevelModel {
   constructor(levelData) {
-    this.player = {
-      name: "steve",
+    this.player = {};
 
-      position: levelData.playerStartPosition,
+    this.initialLevelData = Object.create(levelData);
 
-      isOnBlock: false,
-
-      facing: levelData.playerStartDirection,
-
-      inventory: ["logOak"]
-    };
+    this.reset();
 
     this.initialPlayerState = Object.create(this.player);
-    this.initialLevelData = Object.create(levelData);
+  }
+
+  reset() {
+    this.initializeFromLevelData(this.initialLevelData);
+    this.computeShadingPlane();
+  }
+
+  initializeFromLevelData(levelData) {
+    this.player.name = "steve";
+    this.player.position = levelData.playerStartPosition;
+    this.player.isOnBlock = false;
+    this.player.facing = levelData.playerStartDirection;
+    this.player.inventory = ["logOak"];
 
     this.groundPlane = this.constructPlane(levelData.groundPlane, false);
     this.shadingPlane = [];
     this.actionPlane = this.constructPlane(levelData.actionPlane, true);
     this.fluffPlane = this.constructPlane(levelData.fluffPlane, false);
-
-    this.computeShadingPlane();
-
   }
 
   constructPlane(planeData, isActionPlane) {

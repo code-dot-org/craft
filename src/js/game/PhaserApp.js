@@ -75,6 +75,11 @@ class PhaserApp {
     this.levelView = new LevelView(this);
   }
 
+  resetBoard() {
+    this.levelModel.reset();
+    this.levelView.reset();
+  }
+
   preload() {
     this.game.time.advancedTiming = true;
     this.levelView.preload();
