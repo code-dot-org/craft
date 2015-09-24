@@ -63,7 +63,14 @@ export default class LevelView {
     this.reset();
   }
 
+  isCreated() {
+    return !!this.groundPlane;
+  }
+
   reset() {
+    if (!this.isCreated()) {
+      return;
+    }
     this.resetPlanes(this.levelData);
     this.preparePlayerSprite();
     this.updateShadingPlane(this.controller.levelModel.shadingPlane);
