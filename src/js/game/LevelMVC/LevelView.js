@@ -38,6 +38,7 @@ export default class LevelView {
 
     this.game.load.atlasJSONHash('leavesOak', `${this.assetRoot}images/Leaves_Oak_Decay.png`, `${this.assetRoot}images/Leaves_Oak_Decay.json`);
     this.game.load.atlasJSONHash('destroyOverlay', `${this.assetRoot}images/Destroy_Overlay.png`, `${this.assetRoot}images/Destroy_Overlay.json`);
+    this.game.load.atlasJSONHash('blockExplode', `${this.assetRoot}images/BlockExplode.png`, `${this.assetRoot}images/BlockExplode.json`);
 
     this.game.load.image('grass', `${this.assetRoot}images/Block_0000_Grass.png`);
     this.game.load.image('coarseDirt', `${this.assetRoot}images/Block_0002_coarse_dirt.png`);
@@ -210,7 +211,8 @@ export default class LevelView {
     var tween,
         destroyAnimName,
         destroyOverlay,
-        blockToDestroy;
+        blockToDestroy,
+        explodeAnim;
 
     let direction = this.getDirectionName(facing);
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
@@ -225,6 +227,15 @@ export default class LevelView {
       if (blockToDestroy.hasOwnProperty("onBlockDestroy")) {
         blockToDestroy.onBlockDestroy(blockToDestroy);
       }
+
+      explodeAnim = this.actionPlane.create(-30 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
+      explodeAnim.sortOrder = destroyPosition[1] * 10 + 2;
+      explodeAnim.animations.add("explode", Phaser.Animation.generateFrameNames("BlockBreakParticle", 0, 7, "", 0), 30, false).onComplete.add(() =>
+      {
+        explodeAnim.kill();
+        this.toDestroy.push(explodeAnim);
+      });
+      explodeAnim.animations.play("explode");
 
       blockToDestroy.kill();
       destroyOverlay.kill();
