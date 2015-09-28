@@ -1,0 +1,45 @@
+Facing Down
+	Idle: 001-012, 12f
+	Walk: 013-020, 8f
+	Punch: 021-024, 4f
+	Get Hit: 025-028, 4f
+	Crouch: 029-032, 4f
+	Jump Up: 033-036, 4f
+	Celebration Frolick: 037-044, 8f, *Always facing forward*
+	Bump Into Something: 049-054, 6f
+	Jump Down: 055-060, 6f
+	Mine w/ Pickaxe: 241-244, 4f
+
+Facing Right
+	Idle: 061-072
+	Walk: 073-080
+	Punch: 081-084
+	Get Hit: 085-088
+	Crouch: 089-092
+	Jump Up: 093-096
+	Failure Slouch: 105-108, 4f, *Always facing right*
+	Bump Into Something: 109-114
+	Jump Down: 115-120
+	Mine w/ Pickaxe: 245-248
+
+Facing Up
+	Idle: 121-132
+	Walk: 133-140
+	Punch: 141-144
+	Get Hit: 145-148
+	Crouch: 149-152
+	Jump Up: 153-156
+	Bump Into Something: 169-174
+	Jump Down: 175-180
+	Mine w/ Pickaxe: 249-252
+
+Facing Up
+	Idle: 181-192
+	Walk: 193-200
+	Punch: 201-204
+	Get Hit: 205-208
+	Crouch: 209-212
+	Jump Up: 213-216
+	Bump Into Something: 229-234
+	Jump Down: 235-240
+	Mine w/ Pickaxe: 253-256

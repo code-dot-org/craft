@@ -26,14 +26,6 @@ export default class LevelView {
     this.toDestroy = [];
   }
 
-  reset(levelModel) {
-    // TODO: Figure out how to completely erase all sprites from the scene graph
-
-    this.levelData = levelModel.levelData;
-
-    this.create();
-  }
-
   preload() {
     var playerAtlas = "Alex";
 
@@ -62,6 +54,7 @@ export default class LevelView {
       wav: `${this.assetRoot}audio/dig_wood1.wav`,
       ogg: `${this.assetRoot}audio/dig_wood1.ogg`
     });
+
     this.audioPlayer.register({
       id: 'step_grass1',
       mp3: `${this.assetRoot}audio/step_grass1.mp3`,
@@ -79,10 +72,11 @@ export default class LevelView {
     return !!this.groundPlane;
   }
 
-  reset() {
+  reset(levelModel) {
     if (!this.isCreated()) {
       return;
     }
+
     this.resetPlanes(this.levelData);
     this.preparePlayerSprite();
     this.updateShadingPlane(this.controller.levelModel.shadingPlane);
@@ -99,7 +93,9 @@ export default class LevelView {
     }
     this.toDestroy = [];
 
-    this.playerGhost.frame = this.playerSprite.frame;
+    if (this.playerGhost) {
+      this.playerGhost.frame = this.playerSprite.frame;
+    }
   }
 
   render() {
@@ -260,10 +256,6 @@ export default class LevelView {
   }
 
   createPlanes() {
-    var sprite,
-        x,
-        y,
-        blockType;
     this.groundPlane = this.game.add.group();
     this.shadingPlane = this.game.add.group();
     this.actionPlane = this.game.add.group();
@@ -271,6 +263,11 @@ export default class LevelView {
   }
 
   resetPlanes(levelData) {
+    var sprite,
+        x,
+        y,
+        blockType;
+
     this.groundPlane.removeAll(true);
     this.actionPlane.removeAll(true);
     this.fluffPlane.removeAll(true);
@@ -409,6 +406,8 @@ export default class LevelView {
         genFrames,
         i;
 
+    let frameRate = 20;
+
     this.playerSprite = this.actionPlane.create(0, 0, 'player', 'Player_121');
     this.playerGhost = this.fluffPlane.create(0, 0, 'player', 'Player_121');
     this.playerGhost.parent = this.playerSprite;
@@ -425,17 +424,17 @@ export default class LevelView {
     }
     genFrames = Phaser.Animation.generateFrameNames("Player_", 1, 12, "", 3);
     frameList = frameList.concat(genFrames);
-    this.playerSprite.animations.add('idle_down', frameList, 10, true);
-    this.playerSprite.animations.add('walk_down', Phaser.Animation.generateFrameNames("Player_", 13, 20, "", 3), 10, true);
-    this.playerSprite.animations.add('punch_down', Phaser.Animation.generateFrameNames("Player_", 21, 24, "", 3), 10, true);
-    this.playerSprite.animations.add('hurt_down', Phaser.Animation.generateFrameNames("Player_", 25, 28, "", 3), 10, true);
-    this.playerSprite.animations.add('crouch_down', Phaser.Animation.generateFrameNames("Player_", 29, 32, "", 3), 10, true);
-    this.playerSprite.animations.add('jumpUp_down', Phaser.Animation.generateFrameNames("Player_", 33, 36, "", 3), 10, true);
-    this.playerSprite.animations.add('fail_down', Phaser.Animation.generateFrameNames("Player_", 105, 108, "", 3), 10, true);
-    this.playerSprite.animations.add('celebrate_down', Phaser.Animation.generateFrameNames("Player_", 37, 44, "", 3), 10, true);
-    this.playerSprite.animations.add('bump_down', Phaser.Animation.generateFrameNames("Player_", 49, 54, "", 3), 10, true);
-    this.playerSprite.animations.add('jumpDown_down', Phaser.Animation.generateFrameNames("Player_", 55, 60, "", 3), 10, true);
-    this.playerSprite.animations.add('mine_down', Phaser.Animation.generateFrameNames("Player_", 241, 244, "", 3), 10, true);
+    this.playerSprite.animations.add('idle_down', frameList, frameRate, true);
+    this.playerSprite.animations.add('walk_down', Phaser.Animation.generateFrameNames("Player_", 13, frameRate, "", 3), frameRate, true);
+    this.playerSprite.animations.add('punch_down', Phaser.Animation.generateFrameNames("Player_", 21, 24, "", 3), frameRate, true);
+    this.playerSprite.animations.add('hurt_down', Phaser.Animation.generateFrameNames("Player_", 25, 28, "", 3), frameRate, true);
+    this.playerSprite.animations.add('crouch_down', Phaser.Animation.generateFrameNames("Player_", 29, 32, "", 3), frameRate, true);
+    this.playerSprite.animations.add('jumpUp_down', Phaser.Animation.generateFrameNames("Player_", 33, 36, "", 3), frameRate, true);
+    this.playerSprite.animations.add('fail_down', Phaser.Animation.generateFrameNames("Player_", 105, 108, "", 3), frameRate, true);
+    this.playerSprite.animations.add('celebrate_down', Phaser.Animation.generateFrameNames("Player_", 37, 44, "", 3), frameRate, true);
+    this.playerSprite.animations.add('bump_down', Phaser.Animation.generateFrameNames("Player_", 49, 54, "", 3), frameRate, true);
+    this.playerSprite.animations.add('jumpDown_down', Phaser.Animation.generateFrameNames("Player_", 55, 60, "", 3), frameRate, true);
+    this.playerSprite.animations.add('mine_down', Phaser.Animation.generateFrameNames("Player_", 241, 244, "", 3), frameRate, true);
 
     frameList = [];
     for (i = 0; i < 19; ++i) {
@@ -443,17 +442,17 @@ export default class LevelView {
     }
     genFrames = Phaser.Animation.generateFrameNames("Player_", 61, 72, "", 3);
     frameList = frameList.concat(genFrames);
-    this.playerSprite.animations.add('idle_right', frameList, 10, true);
-    this.playerSprite.animations.add('walk_right', Phaser.Animation.generateFrameNames("Player_", 73, 80, "", 3), 10, true);
-    this.playerSprite.animations.add('punch_right', Phaser.Animation.generateFrameNames("Player_", 81, 84, "", 3), 10, true);
-    this.playerSprite.animations.add('hurt_right', Phaser.Animation.generateFrameNames("Player_", 85, 88, "", 3), 10, true);
-    this.playerSprite.animations.add('crouch_right', Phaser.Animation.generateFrameNames("Player_", 89, 92, "", 3), 10, true);
-    this.playerSprite.animations.add('jumpUp_right', Phaser.Animation.generateFrameNames("Player_", 93, 96, "", 3), 10, true);
-    this.playerSprite.animations.add('fail_right', Phaser.Animation.generateFrameNames("Player_", 105, 108, "", 3), 10, true);
-    this.playerSprite.animations.add('celebrate_right', Phaser.Animation.generateFrameNames("Player_", 37, 44, "", 3), 10, true);
-    this.playerSprite.animations.add('bump_right', Phaser.Animation.generateFrameNames("Player_", 109, 114, "", 3), 10, true);
-    this.playerSprite.animations.add('jumpDown_right', Phaser.Animation.generateFrameNames("Player_", 115, 120, "", 3), 10, true);
-    this.playerSprite.animations.add('mine_right', Phaser.Animation.generateFrameNames("Player_", 245, 248, "", 3), 10, true);
+    this.playerSprite.animations.add('idle_right', frameList, frameRate, true);
+    this.playerSprite.animations.add('walk_right', Phaser.Animation.generateFrameNames("Player_", 73, 80, "", 3), frameRate, true);
+    this.playerSprite.animations.add('punch_right', Phaser.Animation.generateFrameNames("Player_", 81, 84, "", 3), frameRate, true);
+    this.playerSprite.animations.add('hurt_right', Phaser.Animation.generateFrameNames("Player_", 85, 88, "", 3), frameRate, true);
+    this.playerSprite.animations.add('crouch_right', Phaser.Animation.generateFrameNames("Player_", 89, 92, "", 3), frameRate, true);
+    this.playerSprite.animations.add('jumpUp_right', Phaser.Animation.generateFrameNames("Player_", 93, 96, "", 3), frameRate, true);
+    this.playerSprite.animations.add('fail_right', Phaser.Animation.generateFrameNames("Player_", 105, 108, "", 3), frameRate, true);
+    this.playerSprite.animations.add('celebrate_right', Phaser.Animation.generateFrameNames("Player_", 37, 44, "", 3), frameRate, true);
+    this.playerSprite.animations.add('bump_right', Phaser.Animation.generateFrameNames("Player_", 109, 114, "", 3), frameRate, true);
+    this.playerSprite.animations.add('jumpDown_right', Phaser.Animation.generateFrameNames("Player_", 115, 120, "", 3), frameRate, true);
+    this.playerSprite.animations.add('mine_right', Phaser.Animation.generateFrameNames("Player_", 245, 248, "", 3), frameRate, true);
 
     frameList = [];
     for (i = 0; i < 19; ++i) {
@@ -461,17 +460,17 @@ export default class LevelView {
     }
     genFrames = Phaser.Animation.generateFrameNames("Player_", 181, 192, "", 3);
     frameList = frameList.concat(genFrames);
-    this.playerSprite.animations.add('idle_left', frameList, 10, true);
-    this.playerSprite.animations.add('walk_left', Phaser.Animation.generateFrameNames("Player_", 193, 200, "", 3), 10, true);
-    this.playerSprite.animations.add('punch_left', Phaser.Animation.generateFrameNames("Player_", 201, 204, "", 3), 10, true);
-    this.playerSprite.animations.add('hurt_left', Phaser.Animation.generateFrameNames("Player_", 205, 208, "", 3), 10, true);
-    this.playerSprite.animations.add('crouch_left', Phaser.Animation.generateFrameNames("Player_", 209, 212, "", 3), 10, true);
-    this.playerSprite.animations.add('jumpUp_left', Phaser.Animation.generateFrameNames("Player_", 213, 216, "", 3), 10, true);
-    this.playerSprite.animations.add('fail_left', Phaser.Animation.generateFrameNames("Player_", 105, 108, "", 3), 10, true);
-    this.playerSprite.animations.add('celebrate_left', Phaser.Animation.generateFrameNames("Player_", 37, 44, "", 3), 10, true);
-    this.playerSprite.animations.add('bump_left', Phaser.Animation.generateFrameNames("Player_", 229, 234, "", 3), 10, true);
-    this.playerSprite.animations.add('jumpDown_left', Phaser.Animation.generateFrameNames("Player_", 235, 240, "", 3), 10, true);
-    this.playerSprite.animations.add('mine_left', Phaser.Animation.generateFrameNames("Player_", 253, 256, "", 3), 10, true);
+    this.playerSprite.animations.add('idle_left', frameList, frameRate, true);
+    this.playerSprite.animations.add('walk_left', Phaser.Animation.generateFrameNames("Player_", 193, 200, "", 3), frameRate, true);
+    this.playerSprite.animations.add('punch_left', Phaser.Animation.generateFrameNames("Player_", 201, 204, "", 3), frameRate, true);
+    this.playerSprite.animations.add('hurt_left', Phaser.Animation.generateFrameNames("Player_", 205, 208, "", 3), frameRate, true);
+    this.playerSprite.animations.add('crouch_left', Phaser.Animation.generateFrameNames("Player_", 209, 212, "", 3), frameRate, true);
+    this.playerSprite.animations.add('jumpUp_left', Phaser.Animation.generateFrameNames("Player_", 213, 216, "", 3), frameRate, true);
+    this.playerSprite.animations.add('fail_left', Phaser.Animation.generateFrameNames("Player_", 105, 108, "", 3), frameRate, true);
+    this.playerSprite.animations.add('celebrate_left', Phaser.Animation.generateFrameNames("Player_", 37, 44, "", 3), frameRate, true);
+    this.playerSprite.animations.add('bump_left', Phaser.Animation.generateFrameNames("Player_", 229, 234, "", 3), frameRate, true);
+    this.playerSprite.animations.add('jumpDown_left', Phaser.Animation.generateFrameNames("Player_", 235, 240, "", 3), frameRate, true);
+    this.playerSprite.animations.add('mine_left', Phaser.Animation.generateFrameNames("Player_", 253, 256, "", 3), frameRate, true);
 
     frameList = [];
     for (i = 0; i < 19; ++i) {
@@ -479,16 +478,16 @@ export default class LevelView {
     }
     genFrames = Phaser.Animation.generateFrameNames("Player_", 121, 132, "", 3);
     frameList = frameList.concat(genFrames);
-    this.playerSprite.animations.add('idle_up', frameList, 10, true);
-    this.playerSprite.animations.add('walk_up', Phaser.Animation.generateFrameNames("Player_", 133, 1400, "", 3), 10, true);
-    this.playerSprite.animations.add('punch_up', Phaser.Animation.generateFrameNames("Player_", 141, 144, "", 3), 10, true);
-    this.playerSprite.animations.add('hurt_up', Phaser.Animation.generateFrameNames("Player_", 145, 148, "", 3), 10, true);
-    this.playerSprite.animations.add('crouch_up', Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3), 10, true);
-    this.playerSprite.animations.add('jumpUp_up', Phaser.Animation.generateFrameNames("Player_", 153, 156, "", 3), 10, true);
-    this.playerSprite.animations.add('fail_up', Phaser.Animation.generateFrameNames("Player_", 105, 108, "", 3), 10, true);
-    this.playerSprite.animations.add('celebrate_up', Phaser.Animation.generateFrameNames("Player_", 37, 44, "", 3), 10, true);
-    this.playerSprite.animations.add('bump_up', Phaser.Animation.generateFrameNames("Player_", 169, 174, "", 3), 10, true);
-    this.playerSprite.animations.add('jumpDown_up', Phaser.Animation.generateFrameNames("Player_", 175, 180, "", 3), 10, true);
-    this.playerSprite.animations.add('mine_up', Phaser.Animation.generateFrameNames("Player_", 249, 252, "", 3), 10, true);
+    this.playerSprite.animations.add('idle_up', frameList, frameRate, true);
+    this.playerSprite.animations.add('walk_up', Phaser.Animation.generateFrameNames("Player_", 133, 1400, "", 3), frameRate, true);
+    this.playerSprite.animations.add('punch_up', Phaser.Animation.generateFrameNames("Player_", 141, 144, "", 3), frameRate, true);
+    this.playerSprite.animations.add('hurt_up', Phaser.Animation.generateFrameNames("Player_", 145, 148, "", 3), frameRate, true);
+    this.playerSprite.animations.add('crouch_up', Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3), frameRate, true);
+    this.playerSprite.animations.add('jumpUp_up', Phaser.Animation.generateFrameNames("Player_", 153, 156, "", 3), frameRate, true);
+    this.playerSprite.animations.add('fail_up', Phaser.Animation.generateFrameNames("Player_", 105, 108, "", 3), frameRate, true);
+    this.playerSprite.animations.add('celebrate_up', Phaser.Animation.generateFrameNames("Player_", 37, 44, "", 3), frameRate, true);
+    this.playerSprite.animations.add('bump_up', Phaser.Animation.generateFrameNames("Player_", 169, 174, "", 3), frameRate, true);
+    this.playerSprite.animations.add('jumpDown_up', Phaser.Animation.generateFrameNames("Player_", 175, 180, "", 3), frameRate, true);
+    this.playerSprite.animations.add('mine_up', Phaser.Animation.generateFrameNames("Player_", 249, 252, "", 3), frameRate, true);
   }
 }

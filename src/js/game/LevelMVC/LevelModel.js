@@ -14,24 +14,23 @@ export default class LevelModel {
     this.initialPlayerState = Object.create(this.player);
   }
 
-  reset() {
-    this.initializeFromLevelData(this.initialLevelData);
-    this.computeShadingPlane();
-  }
-
   initializeFromLevelData(levelData) {
     this.player.name = "steve";
     this.player.position = levelData.playerStartPosition;
     this.player.isOnBlock = false;
     this.player.facing = levelData.playerStartDirection;
     this.player.inventory = ["logOak"];
+  }
 
   reset() {
-    this.player = Object.create(this.initialPlayerState);
+    this.initializeFromLevelData(this.initialLevelData);
+
     this.groundPlane = this.constructPlane(this.initialLevelData.groundPlane, false);
     this.shadingPlane = [];
     this.actionPlane = this.constructPlane(this.initialLevelData.actionPlane, true);
     this.fluffPlane = this.constructPlane(this.initialLevelData.fluffPlane, false);
+
+    this.computeShadingPlane();
   }
 
   constructPlane(planeData, isActionPlane) {
