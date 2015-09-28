@@ -386,6 +386,11 @@ export default class LevelView {
           sy += 22;
           break;
 
+        case "AOeffect_Top":
+          sx += 0;
+          sy += 47;
+          break;
+
         case "AOeffect_TopLeft":
           sx += 25;
           sy += 47;

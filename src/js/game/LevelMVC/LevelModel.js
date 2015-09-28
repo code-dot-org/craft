@@ -308,6 +308,23 @@ export default class LevelModel {
       hasRight = false;
 
       if (this.actionPlane[index].isEmpty) {
+        if (y == 0) {
+          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Bottom' })
+        }
+
+        if (y == 9) {
+          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Top' })
+        }
+
+        if (x == 0) {
+          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Right' })
+        }
+
+        if (x == 9) {
+          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Left' })
+        }
+
+
         if (x < 9 && !this.actionPlane[(y * 10) + x + 1].getIsEmptyOrEntity()) {
           // needs a left side AO shadow
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Left' })

@@ -1,75 +1,107 @@
 {"frames": {
 
-"FogOfWar0.png":
+"FogOfWar_Bottom.png":
 {
-	"frame": {"x":0,"y":0,"w":35,"h":35},
+	"frame": {"x":0,"y":0,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":5,"y":5,"w":35,"h":35},
+	"spriteSourceSize": {"x":40,"y":80,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
 },
-"FogOfWar1.png":
+"FogOfWar_Bottom_Left.png":
 {
-	"frame": {"x":35,"y":0,"w":40,"h":35},
+	"frame": {"x":0,"y":40,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":40,"y":5,"w":40,"h":35},
+	"spriteSourceSize": {"x":0,"y":80,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
 },
-"FogOfWar2.png":
+"FogOfWar_Bottom_Right.png":
 {
-	"frame": {"x":75,"y":0,"w":35,"h":35},
+	"frame": {"x":0,"y":80,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":80,"y":5,"w":35,"h":35},
+	"spriteSourceSize": {"x":80,"y":80,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
 },
-"FogOfWar3.png":
+"FogOfWar_Center.png":
 {
-	"frame": {"x":0,"y":35,"w":35,"h":40},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":5,"y":40,"w":35,"h":40},
-	"sourceSize": {"w":120,"h":120}
-},
-"FogOfWar4.png":
-{
-	"frame": {"x":35,"y":35,"w":40,"h":40},
+	"frame": {"x":40,"y":0,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":40,"y":40,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
 },
-"FogOfWar5.png":
+"FogOfWar_InCorner_BottomLeft.png":
 {
-	"frame": {"x":75,"y":35,"w":35,"h":40},
+	"frame": {"x":40,"y":40,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":80,"y":40,"w":35,"h":40},
+	"spriteSourceSize": {"x":20,"y":60,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
 },
-"FogOfWar6.png":
+"FogOfWar_InCorner_BottomRight.png":
 {
-	"frame": {"x":0,"y":75,"w":35,"h":35},
+	"frame": {"x":40,"y":80,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":5,"y":80,"w":35,"h":35},
+	"spriteSourceSize": {"x":60,"y":60,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
 },
-"FogOfWar7.png":
+"FogOfWar_InCorner_TopLeft.png":
 {
-	"frame": {"x":35,"y":75,"w":40,"h":35},
+	"frame": {"x":80,"y":0,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":40,"y":80,"w":40,"h":35},
+	"spriteSourceSize": {"x":20,"y":20,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
 },
-"FogOfWar8.png":
+"FogOfWar_InCorner_TopRight.png":
 {
-	"frame": {"x":75,"y":75,"w":35,"h":35},
+	"frame": {"x":80,"y":40,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":80,"y":80,"w":35,"h":35},
+	"spriteSourceSize": {"x":60,"y":20,"w":40,"h":40},
+	"sourceSize": {"w":120,"h":120}
+},
+"FogOfWar_Left.png":
+{
+	"frame": {"x":80,"y":80,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":40,"w":40,"h":40},
+	"sourceSize": {"w":120,"h":120}
+},
+"FogOfWar_Right.png":
+{
+	"frame": {"x":120,"y":0,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":80,"y":40,"w":40,"h":40},
+	"sourceSize": {"w":120,"h":120}
+},
+"FogOfWar_Top.png":
+{
+	"frame": {"x":160,"y":0,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":40,"y":0,"w":40,"h":40},
+	"sourceSize": {"w":120,"h":120}
+},
+"FogOfWar_Top_Left.png":
+{
+	"frame": {"x":120,"y":40,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":40},
+	"sourceSize": {"w":120,"h":120}
+},
+"FogOfWar_Top_Right.png":
+{
+	"frame": {"x":120,"y":80,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":80,"y":0,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
 }},
 "meta": {
@@ -77,8 +109,8 @@
 	"version": "1.0",
 	"image": "UndergroundFoW.png",
 	"format": "RGBA8888",
-	"size": {"w":110,"h":110},
+	"size": {"w":200,"h":120},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:0a8a5761a695c944647f2e096735ceb4:252e08d4a3746dba2c5c758fbe14d166:b49bb0b9f915554ccc3c945df6b441e4$"
+	"smartupdate": "$TexturePacker:SmartUpdate:5c95462892d74efba4567458bc68af95:00f0a0aa28dd467a5fc9d274037aa5c3:b49bb0b9f915554ccc3c945df6b441e4$"
 }
 }
