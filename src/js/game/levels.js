@@ -67,7 +67,7 @@ window.demoLevels = {
     ],
 
     verificationFunction: function (verificationAPI) {
-      return verificationAPI.isPlayerNextTo("logOak");
+      return verificationAPI.isPlayerNextTo("sheep");
     },
 
     solutionCode: moveForwardBlock +
@@ -268,14 +268,17 @@ window.demoLevels = {
     solutionCode: moveForwardBlock +
     moveForwardBlock +
     moveForwardBlock +
+    destroyBlock +
     turnRightBlock +
     moveForwardBlock +
     moveForwardBlock +
     moveForwardBlock +
+    destroyBlock +
     turnRightBlock +
     moveForwardBlock +
     moveForwardBlock +
-    moveForwardBlock
+    moveForwardBlock +
+    destroyBlock
     ,
 
     verificationFunction: function (verificationAPI) {
@@ -315,9 +318,9 @@ window.demoLevels = {
 
     actionPlane: ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
       "", "grass", "", "", "", "", "", "", "", "grass",
-      "", "", "", "logOak", "", "", "", "", "", "",
+      "", "", "", "treeOak", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "logOak", "", "",
+      "", "", "", "", "", "", "", "treeOak", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
@@ -327,9 +330,9 @@ window.demoLevels = {
 
     fluffPlane: ["", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "leavesOak", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "leavesOak", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
