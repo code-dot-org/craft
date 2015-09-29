@@ -13,7 +13,9 @@ export function get(controller) {
      * Called before a list of user commands will be issued.
      */
     startCommandCollection: function() {
-      console.log("Collecting commands.");
+      if (controller.DEBUG) {
+        console.log("Collecting commands.");
+      }
     },
 
     /**

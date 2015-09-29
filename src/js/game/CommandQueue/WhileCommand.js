@@ -33,7 +33,9 @@ export default class WhileCommand extends BaseCommand {
     
     begin() {
         super.begin();
-        console.log("WHILE command: BEGIN");
+        if (this.PhaserApp.DEBUG) {
+            console.log("WHILE command: BEGIN");
+        }
 
         // setup the while check the first time
         this.handleWhileCheck();
@@ -56,7 +58,9 @@ export default class WhileCommand extends BaseCommand {
         }
 
         this.iterationsLeft--;
-        console.log(`While command: Iterationsleft   ${this.iterationsLeft} `);
+        if (this.PhaserApp.DEBUG) {
+            console.log(`While command: Iterationsleft   ${this.iterationsLeft} `);
+        }
     }
 
 }
