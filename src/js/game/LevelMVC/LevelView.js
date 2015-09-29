@@ -22,6 +22,85 @@ export default class LevelView {
     this.actionPlane = null;
     this.fluffPlane = null;
 
+    this.miniBlocks = {
+      "dirt": ["Miniblocks", 0, 5],
+      "coarseDirt": ["Miniblocks", 6, 11],
+      "sand": ["Miniblocks", 12, 17],
+      "gravel": ["Miniblocks", 18, 23],
+      "brick": ["Miniblocks", 24, 29],
+      "logAcacia": ["Miniblocks", 30, 35],
+      "logBirch": ["Miniblocks", 36, 41],
+      "logJungle": ["Miniblocks", 42, 47],
+      "logOak": ["Miniblocks", 48, 53],
+      "logSpruce": ["Miniblocks", 54, 59],
+      "planksAcacia": ["Miniblocks", 60, 65],
+      "planksBirch": ["Miniblocks", 66, 71],
+      "planksJungle": ["Miniblocks", 72, 77],
+      "planksOak": ["Miniblocks", 78, 83],
+      "planksSpruce": ["Miniblocks", 84, 89],
+      "cobblestone": ["Miniblocks", 90, 95],
+      "sandstone": ["Miniblocks", 96, 101],
+      "wool": ["Miniblocks", 102, 107],
+      "redstoneDust": ["Miniblocks", 108, 113],
+      "lapisLazuli": ["Miniblocks", 114, 119],
+      "ingotIron": ["Miniblocks", 120, 125],
+      "ingotGold": ["Miniblocks", 126, 131],
+      "emerald": ["Miniblocks", 132, 137],
+      "diamond": ["Miniblocks", 138, 143],
+      "coal": ["Miniblocks", 144, 149],
+      "bucketWater": ["Miniblocks", 150, 155],
+      "bucketLava": ["Miniblocks", 156, 161],
+      "gunPowder": ["Miniblocks", 162, 167],
+      "wheat": ["Miniblocks", 168, 173],
+      "potato": ["Miniblocks", 174, 179],
+      "carrots": ["Miniblocks", 180, 185]
+    };
+
+    this.blocks = {
+      "": [""],
+      "bedrock": ["Bedrock"],
+      "bricks": ["Bricks"],
+      "clay": ["Clay"],
+      "oreCoal": ["Coal_Ore"],
+      "dirtCoarse": ["Coarse_Dirt"],
+      "cobblestone": ["Cobblestone"],
+      "oreDiamond": ["Diamond_Ore"],
+      "dirt": ["Dirt"],
+      "oreEmerald": ["Emerald_Ore"],
+      "farmlandWet": ["Farmland_Wet"],
+      "glass": ["Glass"],
+      "oreGold": ["Gold_Ore"],
+      "grass": ["Grass"],
+      "gravel": ["Gravel"],
+      "clayHardened": ["Hardened_Clay"],
+      "oreIron": ["Iron_Ore"],
+      "oreLapis": ["Lapis_Ore"],
+      "lava": ["Lava"],
+      "leavesAcacia": ["Leaves_Acacia"],
+      "leavesBirch": ["Leaves_Birch"],
+      "leavesJungle": ["Leaves_Jungle"],
+      "leavesOak": ["Leaves_Oak"],
+      "leavesSpruce": ["Leaves_Spruce"],
+      "logAcacia": ["Log_Acacia"],
+      "logBirch": ["Log_Birch"],
+      "logJungle": ["Log_Jungle"],
+      "logOak": ["Log_Oak"],
+      "logSpruce": ["Log_Spruce"],
+      "obsidian": ["Obsidian"],
+      "planksAcacia": ["Planks_Acacia"],
+      "planksBirch": ["Planks_Birch"],
+      "planksJungle": ["Planks_Jungle"],
+      "planksOak": ["Planks_Oak"],
+      "planksSpruce": ["Planks_Spruce"],
+      "oreRedstone": ["Redstone_Ore"],
+      "sand": ["Sand"],
+      "sandstone": ["Sandstone"],
+      "stone": ["Stone"],
+      "tnt": ["Tnt"],
+      "water": ["Water"],
+      "wool": ["Wool_White"],
+    };
+
     this.actionPlaneBlocks = [];
     this.toDestroy = [];
   }
@@ -40,12 +119,14 @@ export default class LevelView {
     this.game.load.atlasJSONHash('destroyOverlay', `${this.assetRoot}images/Destroy_Overlay.png`, `${this.assetRoot}images/Destroy_Overlay.json`);
     this.game.load.atlasJSONHash('blockExplode', `${this.assetRoot}images/BlockExplode.png`, `${this.assetRoot}images/BlockExplode.json`);
     this.game.load.atlasJSONHash('miningParticles', `${this.assetRoot}images/MiningParticles.png`, `${this.assetRoot}images/MiningParticles.json`);
+    this.game.load.atlasJSONHash('miniBlocks', `${this.assetRoot}images/Miniblocks.png`, `${this.assetRoot}images/Miniblocks.json`);
+    this.game.load.atlasJSONHash('blocks', `${this.assetRoot}images/Blocks.png`, `${this.assetRoot}images/Blocks.json`);
 
-    this.game.load.image('grass', `${this.assetRoot}images/Block_0000_Grass.png`);
-    this.game.load.image('coarseDirt', `${this.assetRoot}images/Block_0002_coarse_dirt.png`);
+    //this.game.load.image('grass', `${this.assetRoot}images/Block_0000_Grass.png`);
+    //this.game.load.image('coarseDirt', `${this.assetRoot}images/Block_0002_coarse_dirt.png`);
     this.game.load.image('tallGrass', `${this.assetRoot}images/TallGrass.png`);
-    this.game.load.image('logOak', `${this.assetRoot}images/Block_0008_log_oak.png`);
-    this.game.load.image('planksOak', `${this.assetRoot}images/Block_0020_planks_oak.png`);
+    //this.game.load.image('logOak', `${this.assetRoot}images/Block_0008_log_oak.png`);
+    //this.game.load.image('planksOak', `${this.assetRoot}images/Block_0020_planks_oak.png`);
 
     this.game.load.atlasJSONHash('sheep', `${this.assetRoot}images/Sheep.png`, `${this.assetRoot}images/Sheep.json`);
 
@@ -247,7 +328,7 @@ export default class LevelView {
     destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false).onComplete.add(() =>
     {
       var explodeAnim;
-      
+
       if (blockToDestroy.hasOwnProperty("onBlockDestroy")) {
         blockToDestroy.onBlockDestroy(blockToDestroy);
       }
@@ -313,7 +394,7 @@ export default class LevelView {
     for (y = 0; y < 10; ++y) {
       for (x = 0; x < 10; ++x) {
         let blockIndex = (y * 10) + x;
-        this.groundPlane.create(-12 + 40 * x, -2 + 40 * y, levelData.groundPlane[blockIndex]);
+        this.groundPlane.create(-12 + 40 * x, -2 + 40 * y, "blocks", this.blocks[levelData.groundPlane[blockIndex]][0]);
       }
     }
 
@@ -334,8 +415,8 @@ export default class LevelView {
 
           switch (blockType) {
             case "treeOak":
-              sprite = this.actionPlane.create(-12 + 40 * x, -22 + 40 * y, "logOak");
-              sprite.fluff = this.fluffPlane.create(-104 + 40 * x, -160 + 40 * y, "leavesOak", "Leaves_Oak0");
+              sprite = this.actionPlane.create(-12 + 40 * x, -22 + 40 * y, "blocks", this.blocks["logOak"][0]);
+              sprite.fluff = this.fluffPlane.create(-100 + 40 * x, -160 + 40 * y, "leavesOak", "Leaves_Oak0");
               sprite.fluffType = "leavesOak";
 
               sprite.onBlockDestroy = (logSprite) => {
@@ -358,7 +439,7 @@ export default class LevelView {
               break;              
 
             default:
-              sprite = this.actionPlane.create(-12 + 40 * x, -22 + 40 * y, blockType);
+              sprite = this.actionPlane.create(-12 + 40 * x, -22 + 40 * y, "blocks", this.blocks[blockType][0]);
               break;
           }
 
@@ -397,7 +478,7 @@ export default class LevelView {
 
       switch (shadowItem.type) {
         case "AOeffect_Left":
-          sx += 25;
+          sx += 26;
           sy += 22;
           break;
 
@@ -464,7 +545,7 @@ export default class LevelView {
     }
     genFrames = Phaser.Animation.generateFrameNames("Player_", 1, 12, "", 3);
     frameList = frameList.concat(genFrames);
-    this.playerSprite.animations.add('idle_down', frameList, frameRate, true);
+    this.playerSprite.animations.add('idle_down', frameList, frameRate / 2, true);
     this.playerSprite.animations.add('walk_down', Phaser.Animation.generateFrameNames("Player_", 13, frameRate, "", 3), frameRate, true);
     this.playerSprite.animations.add('punch_down', Phaser.Animation.generateFrameNames("Player_", 21, 24, "", 3), frameRate, true);
     this.playerSprite.animations.add('hurt_down', Phaser.Animation.generateFrameNames("Player_", 25, 28, "", 3), frameRate, true);
@@ -482,7 +563,7 @@ export default class LevelView {
     }
     genFrames = Phaser.Animation.generateFrameNames("Player_", 61, 72, "", 3);
     frameList = frameList.concat(genFrames);
-    this.playerSprite.animations.add('idle_right', frameList, frameRate, true);
+    this.playerSprite.animations.add('idle_right', frameList, frameRate / 2, true);
     this.playerSprite.animations.add('walk_right', Phaser.Animation.generateFrameNames("Player_", 73, 80, "", 3), frameRate, true);
     this.playerSprite.animations.add('punch_right', Phaser.Animation.generateFrameNames("Player_", 81, 84, "", 3), frameRate, true);
     this.playerSprite.animations.add('hurt_right', Phaser.Animation.generateFrameNames("Player_", 85, 88, "", 3), frameRate, true);
@@ -500,7 +581,7 @@ export default class LevelView {
     }
     genFrames = Phaser.Animation.generateFrameNames("Player_", 181, 192, "", 3);
     frameList = frameList.concat(genFrames);
-    this.playerSprite.animations.add('idle_left', frameList, frameRate, true);
+    this.playerSprite.animations.add('idle_left', frameList, frameRate / 2, true);
     this.playerSprite.animations.add('walk_left', Phaser.Animation.generateFrameNames("Player_", 193, 200, "", 3), frameRate, true);
     this.playerSprite.animations.add('punch_left', Phaser.Animation.generateFrameNames("Player_", 201, 204, "", 3), frameRate, true);
     this.playerSprite.animations.add('hurt_left', Phaser.Animation.generateFrameNames("Player_", 205, 208, "", 3), frameRate, true);
@@ -518,7 +599,7 @@ export default class LevelView {
     }
     genFrames = Phaser.Animation.generateFrameNames("Player_", 121, 132, "", 3);
     frameList = frameList.concat(genFrames);
-    this.playerSprite.animations.add('idle_up', frameList, frameRate, true);
+    this.playerSprite.animations.add('idle_up', frameList, frameRate / 2, true);
     this.playerSprite.animations.add('walk_up', Phaser.Animation.generateFrameNames("Player_", 133, 140, "", 3), frameRate, true);
     this.playerSprite.animations.add('punch_up', Phaser.Animation.generateFrameNames("Player_", 141, 144, "", 3), frameRate, true);
     this.playerSprite.animations.add('hurt_up', Phaser.Animation.generateFrameNames("Player_", 145, 148, "", 3), frameRate, true);
