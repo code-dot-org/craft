@@ -15,7 +15,9 @@ export default class TurnCommand extends BaseCommand {
     
     begin() {
         super.begin();
-        console.log(`TURN command: BEGIN turning ${this.Direction}  `);
+        if (this.PhaserApp.DEBUG) {
+            console.log(`TURN command: BEGIN turning ${this.Direction}  `);
+        }
         this.PhaserApp.turn(this, this.Direction);
     }
 

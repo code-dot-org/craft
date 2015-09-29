@@ -26,9 +26,12 @@ class PhaserApp {
    * @constructor
    */
   constructor(phaserAppConfig) {
+    this.DEBUG = phaserAppConfig.debug;
+
     // Phaser pre-initialization config
     window.PhaserGlobal = {
-      disableAudio: true
+      disableAudio: true,
+      hideBanner: !this.DEBUG
     };
 
     /**

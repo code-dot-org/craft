@@ -71,7 +71,8 @@
     Phaser: window.Phaser,
     containerId: 'phaser-game',
     assetRoot: 'assets/',
-    audioPlayer: new Sounds()
+    audioPlayer: new Sounds(),
+    debug: true
   });
   var levelNumber = parseInt(getParameterByName('level') || 1, 10);
   var testLevelToLoad = demoLevels[levelNumber];

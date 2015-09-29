@@ -24,7 +24,9 @@ export default class CommandQueue {
 
   begin() {
     this.state = CommandState.WORKING;
-    console.log("Debug Queue: BEGIN");
+    if (this.phaserApp.DEBUG) {
+      console.log("Debug Queue: BEGIN");
+    }
   }
 
   reset() {

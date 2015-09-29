@@ -5,7 +5,11 @@ import BaseCommand from "./BaseCommand.js";
 
 export default class CheckSolutionCommand extends BaseCommand {
     constructor(phaserApp) {
-        var dummyFunc = function() { console.log("Execute solve command");};
+        var dummyFunc = function() {
+            if (phaserApp.DEBUG) {
+                console.log("Execute solve command");
+            }
+        };
 
         super(phaserApp, dummyFunc);
     }
@@ -16,7 +20,9 @@ export default class CheckSolutionCommand extends BaseCommand {
     
     begin() {
         super.begin();
-        console.log("Solve command: BEGIN");
+        if (this.PhaserApp.DEBUG) {
+            console.log("Solve command: BEGIN");
+        }
         var result = this.PhaserApp.checkSolution(this);
     }
 
