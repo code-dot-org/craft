@@ -214,8 +214,7 @@ export default class LevelView {
         destroyOverlay,
         blockToDestroy,
         miningParticles,
-        miningParticlesIndex,
-        explodeAnim;
+        miningParticlesIndex;
 
     let miningParticlesData = [
       [24, -100, -80],   // left
@@ -247,6 +246,8 @@ export default class LevelView {
     destroyOverlay.sortOrder = destroyPosition[1] * 10 + 2;
     destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false).onComplete.add(() =>
     {
+      var explodeAnim;
+      
       if (blockToDestroy.hasOwnProperty("onBlockDestroy")) {
         blockToDestroy.onBlockDestroy(blockToDestroy);
       }
