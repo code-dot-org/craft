@@ -12,7 +12,6 @@ export default class LevelView {
 
     this.playerSprite = null;
     this.playerGhost = null;        // The ghost is a copy of the player sprite that sits on top of everything at 20% opacity, so the player can go under trees and still be seen.
-    this.playerShadow = null;
     this.selectionIndicator = null;
 
     this.playerModel = controller.levelModel.player;
@@ -122,11 +121,7 @@ export default class LevelView {
     this.game.load.atlasJSONHash('miniBlocks', `${this.assetRoot}images/Miniblocks.png`, `${this.assetRoot}images/Miniblocks.json`);
     this.game.load.atlasJSONHash('blocks', `${this.assetRoot}images/Blocks.png`, `${this.assetRoot}images/Blocks.json`);
 
-    //this.game.load.image('grass', `${this.assetRoot}images/Block_0000_Grass.png`);
-    //this.game.load.image('coarseDirt', `${this.assetRoot}images/Block_0002_coarse_dirt.png`);
     this.game.load.image('tallGrass', `${this.assetRoot}images/TallGrass.png`);
-    //this.game.load.image('logOak', `${this.assetRoot}images/Block_0008_log_oak.png`);
-    //this.game.load.image('planksOak', `${this.assetRoot}images/Block_0020_planks_oak.png`);
 
     this.game.load.atlasJSONHash('sheep', `${this.assetRoot}images/Sheep.png`, `${this.assetRoot}images/Sheep.json`);
 
@@ -279,7 +274,7 @@ export default class LevelView {
     tween.onComplete.add(() => {
       let blockIndex = (position[1] * 10) + position[0];
 
-      var sprite = this.actionPlane.create(-12 + 40 * position[0], -22 + 40 * position[1], blockType);
+      var sprite = this.actionPlane.create(-12 + 40 * position[0], -22 + 40 * position[1], "blocks", this.blocks[blockType][0]);
       sprite.sortOrder = position[1] * 10;
 
       this.actionPlaneBlocks[blockIndex] = sprite;
@@ -287,6 +282,24 @@ export default class LevelView {
     });
 
     tween.start();
+  }
+
+  playShearSheepAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
+    var tween,
+        useAnimName;
+
+    let direction = this.getDirectionName(facing);
+    this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
+
+    useAnimName = "punch" + direction;
+    this.playerSprite.animations.play(useAnimName).onComplete.add(() => {
+      let blockIndex = (destroyPosition[1] * 10) + destroyPosition[0];
+      let blockToSheer = this.actionPlaneBlocks[blockIndex];
+      blockToSheer.animations.stop(null, true);
+      blockToSheer.frameName = "Sheep_430";
+      completionHandler();
+    });
+
   }
 
   playDestroyBlockAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
@@ -382,7 +395,9 @@ export default class LevelView {
     var sprite,
         x,
         y,
-        blockType;
+        i,
+        blockType,
+        frameList;
 
     this.groundPlane.removeAll(true);
     this.actionPlane.removeAll(true);
@@ -415,12 +430,12 @@ export default class LevelView {
 
           switch (blockType) {
             case "treeOak":
-              sprite = this.actionPlane.create(-12 + 40 * x, -22 + 40 * y, "blocks", this.blocks["logOak"][0]);
-              sprite.fluff = this.fluffPlane.create(-100 + 40 * x, -160 + 40 * y, "leavesOak", "Leaves_Oak0");
+              sprite = this.actionPlane.create(-13 + 40 * x, -22 + 40 * y, "blocks", this.blocks["logOak"][0]);
+              sprite.fluff = this.fluffPlane.create(-100 + 40 * x, -160 + 40 * y, "leavesOak", "Leaves0");
               sprite.fluffType = "leavesOak";
 
               sprite.onBlockDestroy = (logSprite) => {
-                logSprite.fluff.animations.add("despawn", Phaser.Animation.generateFrameNames("Leaves_Oak", 0, 6, "", 0), 20, false).onComplete.add(() => {
+                logSprite.fluff.animations.add("despawn", Phaser.Animation.generateFrameNames("Leaves", 0, 6, "", 0), 15, false).onComplete.add(() => {
                   this.toDestroy.push(logSprite.fluff);
                   logSprite.fluff.kill();
                 });
@@ -435,8 +450,14 @@ export default class LevelView {
               // Eat Grass: 199-216
               // Kick Back Legs: 217-234
               // Look Down: 235-240
-              sprite = this.actionPlane.create(-12 + 40 * x, -12 + 40 * y, "sheep", "Sheep_190");
-              break;              
+              sprite = this.actionPlane.create(-12 + 40 * x, -12 + 40 * y, "sheep", "Sheep_199");
+              frameList = Phaser.Animation.generateFrameNames("Sheep_", 199, 216, "", 0);
+              for (i = 0; i < 30; ++i) {
+                frameList.push("Sheep_190");
+              }
+              sprite.animations.add("idle", frameList, 15, true);
+              sprite.animations.play("idle");
+              break;
 
             default:
               sprite = this.actionPlane.create(-12 + 40 * x, -22 + 40 * y, "blocks", this.blocks[blockType][0]);
@@ -467,8 +488,6 @@ export default class LevelView {
 
     this.shadingPlane.add(this.baseShading);
     this.shadingPlane.add(this.selectionIndicator);
-    this.shadingPlane.add(this.playerShadow);
-    this.playerShadow.parent = this.playerSprite;
 
     for (index = 0; index < shadingData.length; ++index) {
       shadowItem = shadingData[index];
@@ -536,9 +555,6 @@ export default class LevelView {
 
     this.selectionIndicator = this.shadingPlane.create(24, 44, 'selectionIndicator');
 
-    this.playerShadow = this.shadingPlane.create(6, 30, "entityShadow");
-    this.playerShadow.parent = this.playerSprite;
-
     frameList = [];
     for (i = 0; i < 19; ++i) {
       frameList.push("Player_001");
@@ -547,7 +563,7 @@ export default class LevelView {
     frameList = frameList.concat(genFrames);
     this.playerSprite.animations.add('idle_down', frameList, frameRate / 2, true);
     this.playerSprite.animations.add('walk_down', Phaser.Animation.generateFrameNames("Player_", 13, frameRate, "", 3), frameRate, true);
-    this.playerSprite.animations.add('punch_down', Phaser.Animation.generateFrameNames("Player_", 21, 24, "", 3), frameRate, true);
+    this.playerSprite.animations.add('punch_down', Phaser.Animation.generateFrameNames("Player_", 21, 24, "", 3), frameRate, false);
     this.playerSprite.animations.add('hurt_down', Phaser.Animation.generateFrameNames("Player_", 25, 28, "", 3), frameRate, true);
     this.playerSprite.animations.add('crouch_down', Phaser.Animation.generateFrameNames("Player_", 29, 32, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpUp_down', Phaser.Animation.generateFrameNames("Player_", 33, 36, "", 3), frameRate / 2, true);
@@ -565,7 +581,7 @@ export default class LevelView {
     frameList = frameList.concat(genFrames);
     this.playerSprite.animations.add('idle_right', frameList, frameRate / 2, true);
     this.playerSprite.animations.add('walk_right', Phaser.Animation.generateFrameNames("Player_", 73, 80, "", 3), frameRate, true);
-    this.playerSprite.animations.add('punch_right', Phaser.Animation.generateFrameNames("Player_", 81, 84, "", 3), frameRate, true);
+    this.playerSprite.animations.add('punch_right', Phaser.Animation.generateFrameNames("Player_", 81, 84, "", 3), frameRate, false);
     this.playerSprite.animations.add('hurt_right', Phaser.Animation.generateFrameNames("Player_", 85, 88, "", 3), frameRate, true);
     this.playerSprite.animations.add('crouch_right', Phaser.Animation.generateFrameNames("Player_", 89, 92, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpUp_right', Phaser.Animation.generateFrameNames("Player_", 93, 96, "", 3), frameRate / 2, true);
@@ -583,7 +599,7 @@ export default class LevelView {
     frameList = frameList.concat(genFrames);
     this.playerSprite.animations.add('idle_left', frameList, frameRate / 2, true);
     this.playerSprite.animations.add('walk_left', Phaser.Animation.generateFrameNames("Player_", 193, 200, "", 3), frameRate, true);
-    this.playerSprite.animations.add('punch_left', Phaser.Animation.generateFrameNames("Player_", 201, 204, "", 3), frameRate, true);
+    this.playerSprite.animations.add('punch_left', Phaser.Animation.generateFrameNames("Player_", 201, 204, "", 3), frameRate, false);
     this.playerSprite.animations.add('hurt_left', Phaser.Animation.generateFrameNames("Player_", 205, 208, "", 3), frameRate, true);
     this.playerSprite.animations.add('crouch_left', Phaser.Animation.generateFrameNames("Player_", 209, 212, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpUp_left', Phaser.Animation.generateFrameNames("Player_", 213, 216, "", 3), frameRate / 2, true);
@@ -601,7 +617,7 @@ export default class LevelView {
     frameList = frameList.concat(genFrames);
     this.playerSprite.animations.add('idle_up', frameList, frameRate / 2, true);
     this.playerSprite.animations.add('walk_up', Phaser.Animation.generateFrameNames("Player_", 133, 140, "", 3), frameRate, true);
-    this.playerSprite.animations.add('punch_up', Phaser.Animation.generateFrameNames("Player_", 141, 144, "", 3), frameRate, true);
+    this.playerSprite.animations.add('punch_up', Phaser.Animation.generateFrameNames("Player_", 141, 144, "", 3), frameRate, false);
     this.playerSprite.animations.add('hurt_up', Phaser.Animation.generateFrameNames("Player_", 145, 148, "", 3), frameRate, true);
     this.playerSprite.animations.add('crouch_up', Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpUp_up', Phaser.Animation.generateFrameNames("Player_", 153, 156, "", 3), frameRate / 2, true);

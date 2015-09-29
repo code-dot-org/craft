@@ -9,6 +9,11 @@ export default class LevelBlock {
     this.isDestroyable = blockType !== "";
     this.isUsable = isUsable || false;
     this.isEmpty = blockType === "";
+
+    if (blockType == "sheep") {
+      this.isDestroyable = false;
+      this.isUsable = true;
+    }
   }
 
   getIsEmptyOrEntity() {

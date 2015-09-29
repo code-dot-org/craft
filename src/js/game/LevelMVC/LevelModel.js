@@ -210,7 +210,8 @@ export default class LevelModel {
       let [x, y] = [blockForwardPosition[0], blockForwardPosition[1]];
 
       if (x >= 0 && x < 10 && y >= 0 && y < 10) {
-        result = !this.actionPlane[blockIndex].isEmpty && this.actionPlane[blockIndex].isDestroyable;
+        let block = this.actionPlane[blockIndex];
+        result = !block.isEmpty && (block.isDestroyable || block.isUsable);
       }
     }
 

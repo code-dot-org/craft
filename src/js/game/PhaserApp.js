@@ -251,16 +251,27 @@ class PhaserApp {
 
   destroyBlock(commandQueueItem) {
     if (this.levelModel.canDestroyBlockForward()) {
-      //let blockType = this.levelModel.getBlockTypeForward();
       let destroyPosition = this.levelModel.getMoveForwardPosition();
-      let blockType = this.levelModel.actionPlane[(destroyPosition[1] * 10) + destroyPosition[0]].blockType;
+      let block = this.levelModel.actionPlane[(destroyPosition[1] * 10) + destroyPosition[0]];
+      let blockType = block.blockType;
 
-      this.levelModel.destroyBlockForward();
-      this.levelView.playDestroyBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, destroyPosition, blockType, () => {
-        this.levelModel.computeShadingPlane();
-        this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
-        commandQueueItem.succeeded();
-      });
+      if (block.isDestroyable) {
+        this.levelModel.destroyBlockForward();
+        this.levelView.playDestroyBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, destroyPosition, blockType, () => {
+          this.levelModel.computeShadingPlane();
+          this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
+          commandQueueItem.succeeded();
+        });
+      } else if (block.isUsable) {
+        switch (blockType) {
+          case "sheep":
+            // TODO: What to do with already sheered sheep?
+            this.levelView.playShearSheepAnimation(this.levelModel.player.position, this.levelModel.player.facing, destroyPosition, blockType, () => {
+              commandQueueItem.succeeded();
+            });
+            break;
+        }
+      }
     } else {
     // TODO: should we fail when there's no pblock to destroy??
         commandQueueItem.succeeded();
