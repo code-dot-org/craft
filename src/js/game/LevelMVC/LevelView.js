@@ -39,6 +39,7 @@ export default class LevelView {
     this.game.load.atlasJSONHash('leavesOak', `${this.assetRoot}images/Leaves_Oak_Decay.png`, `${this.assetRoot}images/Leaves_Oak_Decay.json`);
     this.game.load.atlasJSONHash('destroyOverlay', `${this.assetRoot}images/Destroy_Overlay.png`, `${this.assetRoot}images/Destroy_Overlay.json`);
     this.game.load.atlasJSONHash('blockExplode', `${this.assetRoot}images/BlockExplode.png`, `${this.assetRoot}images/BlockExplode.json`);
+    this.game.load.atlasJSONHash('miningParticles', `${this.assetRoot}images/MiningParticles.png`, `${this.assetRoot}images/MiningParticles.json`);
 
     this.game.load.image('grass', `${this.assetRoot}images/Block_0000_Grass.png`);
     this.game.load.image('coarseDirt', `${this.assetRoot}images/Block_0002_coarse_dirt.png`);
@@ -212,10 +213,32 @@ export default class LevelView {
         destroyAnimName,
         destroyOverlay,
         blockToDestroy,
+        miningParticles,
+        miningParticlesIndex,
         explodeAnim;
+
+    let miningParticlesData = [
+      [24, -100, -80],   // left
+      [12, -120, -80],   // bottom
+      [0, -60, -80],   // right
+      [36, -80, -60],   // top
+    ];
 
     let direction = this.getDirectionName(facing);
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
+
+    miningParticlesIndex = (direction === "_left" ? 0 : direction === "_bottom" ? 1 : direction === "_right" ? 2 : 3);
+    let miningParticlesFirstFrame = miningParticlesData[miningParticlesIndex][0];
+    let miningParticlesOffsetX = miningParticlesData[miningParticlesIndex][1];
+    let miningParticlesOffsetY = miningParticlesData[miningParticlesIndex][2];
+    miningParticles = this.actionPlane.create(miningParticlesOffsetX + 40 * destroyPosition[0], miningParticlesOffsetY + 40 * destroyPosition[1], "miningParticles", "MiningParticles" + miningParticlesFirstFrame);
+    miningParticles.sortOrder = destroyPosition[1] * 10 + 2;
+    miningParticles.animations.add("miningParticles", Phaser.Animation.generateFrameNames("MiningParticles", miningParticlesFirstFrame, miningParticlesFirstFrame + 11, "", 0), 30, false).onComplete.add(() =>
+    {
+      miningParticles.kill();
+      this.toDestroy.push(miningParticles);
+    });
+    miningParticles.animations.play("miningParticles");
 
     destroyAnimName = "mine" + direction;
 
@@ -228,7 +251,7 @@ export default class LevelView {
         blockToDestroy.onBlockDestroy(blockToDestroy);
       }
 
-      explodeAnim = this.actionPlane.create(-30 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
+      explodeAnim = this.actionPlane.create(-36 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
       explodeAnim.sortOrder = destroyPosition[1] * 10 + 2;
       explodeAnim.animations.add("explode", Phaser.Animation.generateFrameNames("BlockBreakParticle", 0, 7, "", 0), 30, false).onComplete.add(() =>
       {
