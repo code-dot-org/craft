@@ -56,47 +56,47 @@ export default class LevelModel {
   }
 
     // Verifications
-  isPlayerNextTo(blockType){
-      var position;
-      var result = false;
+  isPlayerNextTo(blockType) {
+    var position;
+    var result = false;
 
-      // above
-      position = [ this.player.position[0], this.player.position[1] -1 ];
-      if(this.isBlockOfType(position, blockType)) {
-          return true;
-      }
+    // above
+    position = [this.player.position[0], this.player.position[1] - 1];
+    if (this.isBlockOfType(position, blockType)) {
+      return true;
+    }
 
-      // below
-      position = [ this.player.position[0], this.player.position[1] +1 ];
-      if(this.isBlockOfType(position, blockType)) {
-          return true;
-      }
+    // below
+    position = [this.player.position[0], this.player.position[1] + 1];
+    if (this.isBlockOfType(position, blockType)) {
+      return true;
+    }
 
-      // left
-      position = [ this.player.position[0] +1, this.player.position[1] ];
-      if(this.isBlockOfType(position, blockType)) {
-          return true;
-      }
+    // left
+    position = [this.player.position[0] + 1, this.player.position[1]];
+    if (this.isBlockOfType(position, blockType)) {
+      return true;
+    }
 
-      // Right
-      position = [ this.player.position[0] -1, this.player.position[1] ];
-      if(this.isBlockOfType(position, blockType)) {
-          return true;
-      }
+    // Right
+    position = [this.player.position[0] - 1, this.player.position[1]];
+    if (this.isBlockOfType(position, blockType)) {
+      return true;
+    }
 
-      return false;
+    return false;
   }
 
   countOfTypeOnMap(blockType) {
-      var count = 0,
-          i;
+    var count = 0,
+        i;
 
-      for (i = 0; i < 100; ++i) {
-          if (blockType == this.actionPlane[i].blockType) {
-              ++count;
-          }
+    for (i = 0; i < 100; ++i) {
+      if (blockType == this.actionPlane[i].blockType) {
+        ++count;
       }
-      return count;
+    }
+    return count;
   }
 
   isPlayerAt(position) {
@@ -104,22 +104,26 @@ export default class LevelModel {
           this.player.position[1] === position[1];
   }
 
+  solutionMapMatchesResultMap(solutionMap) {
+    for (var i = 0; i < 100; i++) {
+      var solutionItemType = solutionMap[i];
 
-  solutionMapMatchesResultMap(solutionMap)  {
-      for (var i = 0; i < 100; i++) {
-          // "" on the solution map means we dont care what's at that spot
-          if (solutionMap[i] != "") {
-              if (solutionMap[i] == "empty") {
-                  if (!this.actionPlane[i].isEmpty) { 
-                      return false; 
-                  }
-              }
-              else if (this.actionPlane[i].blockType != solutionMap[i]) {
-                  return false;
-              }
+      // "" on the solution map means we dont care what's at that spot
+      if (solutionItemType != "") {
+        if (solutionItemType === "empty") {
+          if (!this.actionPlane[i].isEmpty) {
+            return false;
           }
+        } else if (solutionItemType === "any") {
+          if (this.actionPlane[i].isEmpty) {
+            return false;
+        }
+        } else if (this.actionPlane[i].blockType !== solutionItemType) {
+          return false;
+        }
       }
-      return true;
+    }
+    return true;
   }
 
   getMoveForwardPosition() {
