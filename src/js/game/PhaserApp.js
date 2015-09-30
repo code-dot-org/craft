@@ -90,7 +90,7 @@ class PhaserApp {
 
   preload() {
     this.game.time.advancedTiming = true;
-    this.levelView.preload();
+    this.levelView.preload(this.levelModel.player.name);
   }
 
   create() {

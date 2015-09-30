@@ -15,20 +15,22 @@ export default class LevelModel {
   }
 
   initializeFromLevelData(levelData) {
-    this.player.name = "steve";
+    let [x, y] = [levelData.playerStartPosition[0], levelData.playerStartPosition[1]];
+
+    this.player.name = "Steve";
     this.player.position = levelData.playerStartPosition;
-    this.player.isOnBlock = false;
+    this.player.isOnBlock = !this.actionPlane[(y * 10) + x].getIsEmptyOrEntity();
     this.player.facing = levelData.playerStartDirection;
     this.player.inventory = ["logOak"];
   }
 
   reset() {
-    this.initializeFromLevelData(this.initialLevelData);
-
     this.groundPlane = this.constructPlane(this.initialLevelData.groundPlane, false);
     this.shadingPlane = [];
     this.actionPlane = this.constructPlane(this.initialLevelData.actionPlane, true);
     this.fluffPlane = this.constructPlane(this.initialLevelData.fluffPlane, false);
+
+    this.initializeFromLevelData(this.initialLevelData);
 
     this.computeShadingPlane();
   }
@@ -310,58 +312,64 @@ export default class LevelModel {
 
       if (this.actionPlane[index].isEmpty) {
         if (y == 0) {
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Bottom' })
+          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Bottom' });
         }
 
         if (y == 9) {
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Top' })
+          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Top' });
         }
 
         if (x == 0) {
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Right' })
+          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Right' });
         }
 
         if (x == 9) {
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Left' })
+          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Left' });
         }
 
 
         if (x < 9 && !this.actionPlane[(y * 10) + x + 1].getIsEmptyOrEntity()) {
           // needs a left side AO shadow
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Left' })
+          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Left' });
           hasLeft = true;
         }
 
         if (x > 0 && !this.actionPlane[(y * 10) + x - 1].getIsEmptyOrEntity()) {
           // needs a right side AO shadow
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Right' })
+          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Right' });
+          this.shadingPlane.push({ x: x, y: y, type: 'Shadow_Parts_Fade_base.png' });
+
+          if (y > 0 && x > 0 && this.actionPlane[((y - 1) * 10) + x - 1].getIsEmptyOrEntity()) {
+            this.shadingPlane.push({ x: x, y: y, type: 'Shadow_Parts_Fade_top.png' });
+          }
+
           hasRight = true;
         }
 
         if (y > 0 && !this.actionPlane[((y - 1) * 10) + x].getIsEmptyOrEntity()) {
           // needs a bottom side AO shadow
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Bottom' })
+          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Bottom' });
         } else if (y > 0) {
           if (x < 9 && !this.actionPlane[((y - 1) * 10) + x + 1].getIsEmptyOrEntity()) {
             // needs a bottom left side AO shadow
-            this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_BottomLeft' })
+            this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_BottomLeft' });
           }
 
           if (!hasRight && x > 0 && !this.actionPlane[((y - 1) * 10) + x - 1].getIsEmptyOrEntity()) {
             // needs a bottom right side AO shadow
-            this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_BottomRight' })
+            this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_BottomRight' });
           }
         }
 
         if (y < 9) {
           if (x < 9 && !this.actionPlane[((y + 1) * 10) + x + 1].getIsEmptyOrEntity()) {
             // needs a bottom left side AO shadow
-            this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_TopLeft' })
+            this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_TopLeft' });
           }
 
           if (!hasRight && x > 0 && !this.actionPlane[((y + 1) * 10) + x - 1].getIsEmptyOrEntity()) {
             // needs a bottom right side AO shadow
-            this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_TopRight' })
+            this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_TopRight' });
           }
         }
       }

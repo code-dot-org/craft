@@ -104,8 +104,8 @@ export default class LevelView {
     this.toDestroy = [];
   }
 
-  preload() {
-    var playerAtlas = "Alex";
+  preload(playerName) {
+    var playerAtlas = playerName;
 
     this.game.load.atlasJSONHash('player', `${this.assetRoot}images/${playerAtlas}.png`, `${this.assetRoot}images/${playerAtlas}.json`);
     this.game.load.image('entityShadow', `${this.assetRoot}images/Character_Shadow.png`);
@@ -113,6 +113,7 @@ export default class LevelView {
 
     this.game.load.image('shadeLayer', `${this.assetRoot}images/Shade_Layer.png`);
     this.game.load.atlasJSONHash('AO', `${this.assetRoot}images/AO.png`, `${this.assetRoot}images/AO.json`);
+    this.game.load.atlasJSONHash('blockShadows', `${this.assetRoot}images/Block_Shadows.png`, `${this.assetRoot}images/Block_Shadows.json`);
 
     this.game.load.atlasJSONHash('leavesOak', `${this.assetRoot}images/Leaves_Oak_Decay.png`, `${this.assetRoot}images/Leaves_Oak_Decay.json`);
     this.game.load.atlasJSONHash('destroyOverlay', `${this.assetRoot}images/Destroy_Overlay.png`, `${this.assetRoot}images/Destroy_Overlay.json`);
@@ -482,7 +483,7 @@ export default class LevelView {
   }
 
   updateShadingPlane(shadingData) {
-    var index, shadowItem, sx, sy;
+    var index, shadowItem, sx, sy, atlas;
 
     this.shadingPlane.removeAll();
 
@@ -492,6 +493,7 @@ export default class LevelView {
     for (index = 0; index < shadingData.length; ++index) {
       shadowItem = shadingData[index];
 
+      atlas = "AO";
       sx = 40 * shadowItem.x;
       sy = -22 + 40 * shadowItem.y;
 
@@ -535,9 +537,21 @@ export default class LevelView {
           sx += 0;
           sy += 47;
           break;
+
+        case "Shadow_Parts_Fade_base.png":
+          atlas = "blockShadows";
+          sx -= 52;
+          sy += 0;
+          break;
+
+        case "Shadow_Parts_Fade_top.png":
+          atlas = "blockShadows";
+          sx -= 52;
+          sy += 0;
+          break;
       }
 
-      this.shadingPlane.create(sx, sy, "AO", shadowItem.type);
+      this.shadingPlane.create(sx, sy, atlas, shadowItem.type);
     }
   }
 
