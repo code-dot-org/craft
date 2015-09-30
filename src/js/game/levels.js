@@ -282,7 +282,7 @@ window.demoLevels = {
     ,
 
     verificationFunction: function (verificationAPI) {
-      return verificationAPI.countOfTypeOnMap("logOak") === 0;
+      return verificationAPI.countOfTypeOnMap("treeOak") === 0;
     }
   },
 
