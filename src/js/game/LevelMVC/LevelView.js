@@ -103,6 +103,8 @@ export default class LevelView {
       "leavesJungle": ["leavesJungle", "Leaves0", -69, 43],
       "leavesOak": ["leavesOak", "Leaves0", -100, 0],
       "leavesSpruce": ["leavesSpruce", "Leaves0", -76, 60],
+
+      "tallGrass": ["tallGrass", "", -13, 0],
     };
 
     this.actionPlaneBlocks = [];
@@ -121,18 +123,18 @@ export default class LevelView {
     this.game.load.atlasJSONHash('blockShadows', `${this.assetRoot}images/Block_Shadows.png`, `${this.assetRoot}images/Block_Shadows.json`);
 
     this.game.load.image('tallGrass', `${this.assetRoot}images/TallGrass.png`);
+    this.game.load.atlasJSONHash('blocks', `${this.assetRoot}images/Blocks.png`, `${this.assetRoot}images/Blocks.json`);
     this.game.load.atlasJSONHash('leavesAcacia', `${this.assetRoot}images/Leaves_Acacia_Decay.png`, `${this.assetRoot}images/Leaves_Acacia_Decay.json`);
     this.game.load.atlasJSONHash('leavesBirch', `${this.assetRoot}images/Leaves_Birch_Decay.png`, `${this.assetRoot}images/Leaves_Birch_Decay.json`);
     this.game.load.atlasJSONHash('leavesJungle', `${this.assetRoot}images/Leaves_Jungle_Decay.png`, `${this.assetRoot}images/Leaves_Jungle_Decay.json`);
     this.game.load.atlasJSONHash('leavesOak', `${this.assetRoot}images/Leaves_Oak_Decay.png`, `${this.assetRoot}images/Leaves_Oak_Decay.json`);
     this.game.load.atlasJSONHash('leavesSpruce', `${this.assetRoot}images/Leaves_Spruce_Decay.png`, `${this.assetRoot}images/Leaves_Spruce_Decay.json`);
+    this.game.load.atlasJSONHash('sheep', `${this.assetRoot}images/Sheep.png`, `${this.assetRoot}images/Sheep.json`);
 
     this.game.load.atlasJSONHash('destroyOverlay', `${this.assetRoot}images/Destroy_Overlay.png`, `${this.assetRoot}images/Destroy_Overlay.json`);
     this.game.load.atlasJSONHash('blockExplode', `${this.assetRoot}images/BlockExplode.png`, `${this.assetRoot}images/BlockExplode.json`);
     this.game.load.atlasJSONHash('miningParticles', `${this.assetRoot}images/MiningParticles.png`, `${this.assetRoot}images/MiningParticles.json`);
     this.game.load.atlasJSONHash('miniBlocks', `${this.assetRoot}images/Miniblocks.png`, `${this.assetRoot}images/Miniblocks.json`);
-    this.game.load.atlasJSONHash('blocks', `${this.assetRoot}images/Blocks.png`, `${this.assetRoot}images/Blocks.json`);
-    this.game.load.atlasJSONHash('sheep', `${this.assetRoot}images/Sheep.png`, `${this.assetRoot}images/Sheep.json`);
 
     this.audioPlayer.register({id: 'beep', mp3: `${this.assetRoot}audio/beep.mp3`, ogg: 'TODO'});
     this.audioPlayer.register({
@@ -299,7 +301,8 @@ export default class LevelView {
 
   playShearSheepAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
     var tween,
-        useAnimName;
+        useAnimName,
+        explodeAnim;
 
     let direction = this.getDirectionName(facing);
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
@@ -308,11 +311,21 @@ export default class LevelView {
     this.playerSprite.animations.play(useAnimName).onComplete.add(() => {
       let blockIndex = (destroyPosition[1] * 10) + destroyPosition[0];
       let blockToSheer = this.actionPlaneBlocks[blockIndex];
+
+      explodeAnim = this.actionPlane.create(-36 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
+      explodeAnim.sortOrder = destroyPosition[1] * 10 + 2;
+      explodeAnim.animations.add("explode", Phaser.Animation.generateFrameNames("BlockBreakParticle", 0, 7, "", 0), 30, false).onComplete.add(() =>
+      {
+        explodeAnim.kill();
+        this.toDestroy.push(explodeAnim);
+      });
+      explodeAnim.animations.play("explode");
+
       blockToSheer.animations.stop(null, true);
       blockToSheer.frameName = "Sheep_430";
+
       completionHandler();
     });
-
   }
 
   playDestroyBlockAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
@@ -664,10 +677,6 @@ export default class LevelView {
 
         sprite.animations.add("idle", frameList, 15, true);
         sprite.animations.play("idle");
-        break;
-
-      case "tallGrass":
-        sprite = plane.create(-12 + 40 * x, plane.yOffset + 40 * y, "tallGrass");
         break;
 
       default:
