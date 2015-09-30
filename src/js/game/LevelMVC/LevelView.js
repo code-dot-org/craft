@@ -313,15 +313,15 @@ export default class LevelView {
     });
   }
 
-  playDestroyBlockAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
+  playDestroyBlockAnimation(playerPosition, facing, destroyPosition, blockType, newShadingPlaneData, completionHandler) {
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
 
     this.playPlayerAnimation("mine", playerPosition, facing, false);
     this.playMiningParticlesAnimation(facing, destroyPosition);
-    this.playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler);
+    this.playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, newShadingPlaneData, completionHandler);
   }
 
-  playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
+  playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, newShadingPlaneData, completionHandler) {
     let blockIndex = (destroyPosition[1] * 10) + destroyPosition[0];
     let blockToDestroy = this.actionPlaneBlocks[blockIndex];
     let direction = this.getDirectionName(facing);
@@ -340,6 +340,7 @@ export default class LevelView {
       destroyOverlay.kill();
       this.toDestroy.push(blockToDestroy);
       this.toDestroy.push(destroyOverlay);
+      this.updateShadingPlane(newShadingPlaneData);
 
       this.setSelectionIndicatorPosition(playerPosition[0], playerPosition[1]);
 
@@ -380,13 +381,19 @@ export default class LevelView {
     {
       explodeAnim.kill();
       this.toDestroy.push(explodeAnim);
+
+      this.playPlayerAnimation("idle", playerPosition, facing, false);
       this.playItemDropAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler);
     });
     explodeAnim.animations.play("explode");
   }
 
   playItemDropAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
-    completionHandler();
+    var sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
+    sprite.sortOrder = destroyPosition[1] * 10 + 2;
+    sprite.animations.play("animate").onComplete.add(() => {
+      completionHandler();
+    });
   }
 
   setPlayerPosition(x, y) {
@@ -632,6 +639,44 @@ export default class LevelView {
     this.playerSprite.animations.add('mine_up', Phaser.Animation.generateFrameNames("Player_", 249, 252, "", 3), frameRate, true);
   }
 
+  createMiniBlock(x, y, blockType) {
+    var frame = "",
+        sprite = null,
+        frameList,
+        i, len;
+
+    switch (blockType) {
+      case "treeAcacia":
+      case "treeBirch":
+      case "treeJungle":
+      case "treeOak":
+      case "treeSpruce":
+        frame = "log" + blockType.substring(4);
+        break;
+
+      default:
+        frame = blockType;
+        break;
+    }
+
+    let atlas = "miniBlocks";
+    let framePrefix = this.miniBlocks[frame][0];
+    let frameStart = this.miniBlocks[frame][1];
+    let frameEnd = this.miniBlocks[frame][2];
+    let xOffset = -10;
+    let yOffset = 0;
+
+    frameList = Phaser.Animation.generateFrameNames(framePrefix, frameStart, frameEnd, "", 3);
+    len = frameList.length;
+    for (i = 0; i < len; ++i) {
+      frameList.push(frameList[i]);
+    }
+
+    sprite = this.actionPlane.create(xOffset + 40 * x, yOffset + this.actionPlane.yOffset + 40 * y, atlas, "");
+    sprite.animations.add("animate", frameList, 5, false);
+    return sprite;
+  }
+
   createBlock(plane, x, y, blockType) {
     var i,
         sprite = null,
@@ -647,7 +692,7 @@ export default class LevelView {
         sprite.fluff = this.createBlock(this.fluffPlane, x, y, "leaves" + blockType.substring(4));
 
         sprite.onBlockDestroy = (logSprite) => {
-          logSprite.fluff.animations.add("despawn", Phaser.Animation.generateFrameNames("Leaves", 0, 6, "", 0), 15, false).onComplete.add(() => {
+          logSprite.fluff.animations.add("despawn", Phaser.Animation.generateFrameNames("Leaves", 0, 6, "", 0), 10, false).onComplete.add(() => {
             this.toDestroy.push(logSprite.fluff);
             logSprite.fluff.kill();
           });

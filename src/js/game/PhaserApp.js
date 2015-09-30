@@ -255,9 +255,8 @@ class PhaserApp {
 
       if (block.isDestroyable) {
         this.levelModel.destroyBlockForward();
-        this.levelView.playDestroyBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, destroyPosition, blockType, () => {
-          this.levelModel.computeShadingPlane();
-          this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
+        this.levelModel.computeShadingPlane();
+        this.levelView.playDestroyBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, destroyPosition, blockType, this.levelModel.shadingPlane, () => {
           commandQueueItem.succeeded();
         });
       } else if (block.isUsable) {
