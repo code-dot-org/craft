@@ -230,7 +230,7 @@ export default class LevelView {
     this.playerSprite.sortOrder = position[1] * 10 + 5;
 
     let animName = animationName + direction;
-    this.playerSprite.animations.play(animName);    
+    return this.playerSprite.animations.play(animName);    
   }
 
   playIdleAnimation(position, facing, isOnBlock) {
@@ -306,85 +306,42 @@ export default class LevelView {
   }
 
   playShearSheepAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
-    var tween,
-        useAnimName,
-        explodeAnim;
-
     let direction = this.getDirectionName(facing);
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
 
-    useAnimName = "punch" + direction;
-    this.playerSprite.animations.play(useAnimName).onComplete.add(() => {
+    this.playPlayerAnimation("punch", playerPosition, facing, false).onComplete.add(() => {
       let blockIndex = (destroyPosition[1] * 10) + destroyPosition[0];
       let blockToShear = this.actionPlaneBlocks[blockIndex];
 
-      explodeAnim = this.actionPlane.create(-36 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
-      explodeAnim.sortOrder = destroyPosition[1] * 10 + 2;
-      explodeAnim.animations.add("explode", Phaser.Animation.generateFrameNames("BlockBreakParticle", 0, 7, "", 0), 30, false).onComplete.add(() =>
-      {
-        explodeAnim.kill();
-        this.toDestroy.push(explodeAnim);
-      });
-      explodeAnim.animations.play("explode");
-
       blockToShear.animations.stop(null, true);
       blockToShear.animations.play("used");
-      completionHandler();
+
+      this.playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler);
     });
   }
 
   playDestroyBlockAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
-    var tween,
-        destroyAnimName,
-        destroyOverlay,
-        blockToDestroy,
-        miningParticles,
-        miningParticlesIndex;
-
-    let miningParticlesData = [
-      [24, -100, -80],   // left
-      [12, -120, -80],   // bottom
-      [0, -60, -80],   // right
-      [36, -80, -60],   // top
-    ];
-
-    let direction = this.getDirectionName(facing);
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
 
-    miningParticlesIndex = (direction === "_left" ? 0 : direction === "_bottom" ? 1 : direction === "_right" ? 2 : 3);
-    let miningParticlesFirstFrame = miningParticlesData[miningParticlesIndex][0];
-    let miningParticlesOffsetX = miningParticlesData[miningParticlesIndex][1];
-    let miningParticlesOffsetY = miningParticlesData[miningParticlesIndex][2];
-    miningParticles = this.actionPlane.create(miningParticlesOffsetX + 40 * destroyPosition[0], miningParticlesOffsetY + 40 * destroyPosition[1], "miningParticles", "MiningParticles" + miningParticlesFirstFrame);
-    miningParticles.sortOrder = destroyPosition[1] * 10 + 2;
-    miningParticles.animations.add("miningParticles", Phaser.Animation.generateFrameNames("MiningParticles", miningParticlesFirstFrame, miningParticlesFirstFrame + 11, "", 0), 30, false).onComplete.add(() =>
-    {
-      miningParticles.kill();
-      this.toDestroy.push(miningParticles);
-    });
-    miningParticles.animations.play("miningParticles");
+    this.playPlayerAnimation("mine", playerPosition, facing, false);
+    this.playMiningParticlesAnimation(facing, destroyPosition);
+    this.playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler);
+  }
 
-    destroyAnimName = "mine" + direction;
+  playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
+    let blockIndex = (destroyPosition[1] * 10) + destroyPosition[0];
+    let blockToDestroy = this.actionPlaneBlocks[blockIndex];
+    let direction = this.getDirectionName(facing);
 
-    this.playerSprite.animations.play(destroyAnimName);
-    destroyOverlay = this.actionPlane.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
+    let destroyOverlay = this.actionPlane.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
     destroyOverlay.sortOrder = destroyPosition[1] * 10 + 2;
     destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false).onComplete.add(() =>
     {
-      var explodeAnim;
+      this.actionPlaneBlocks[blockIndex] = null;
 
       if (blockToDestroy.hasOwnProperty("onBlockDestroy")) {
         blockToDestroy.onBlockDestroy(blockToDestroy);
       }
-
-      explodeAnim = this.actionPlane.create(-36 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
-      explodeAnim.sortOrder = destroyPosition[1] * 10 + 2;
-      explodeAnim.animations.add("explode", Phaser.Animation.generateFrameNames("BlockBreakParticle", 0, 7, "", 0), 30, false).onComplete.add(() =>
-      {
-        explodeAnim.kill();
-        this.toDestroy.push(explodeAnim);
-      });
-      explodeAnim.animations.play("explode");
 
       blockToDestroy.kill();
       destroyOverlay.kill();
@@ -394,14 +351,49 @@ export default class LevelView {
       this.setSelectionIndicatorPosition(playerPosition[0], playerPosition[1]);
 
       this.audioPlayer.play('dig_wood1');
-      completionHandler();
+      this.playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler);
     });
 
-    let blockIndex = (destroyPosition[1] * 10) + destroyPosition[0];
-    blockToDestroy = this.actionPlaneBlocks[blockIndex];
-    this.actionPlaneBlocks[blockIndex] = null;
-
     destroyOverlay.animations.play("destroy");
+  }
+
+  playMiningParticlesAnimation(facing, destroyPosition) {
+    let miningParticlesData = [
+      [24, -100, -80],   // left
+      [12, -120, -80],   // bottom
+      [0, -60, -80],   // right
+      [36, -80, -60],   // top
+    ];
+
+    let direction = this.getDirectionName(facing);
+    let miningParticlesIndex = (direction === "_left" ? 0 : direction === "_bottom" ? 1 : direction === "_right" ? 2 : 3);
+    let miningParticlesFirstFrame = miningParticlesData[miningParticlesIndex][0];
+    let miningParticlesOffsetX = miningParticlesData[miningParticlesIndex][1];
+    let miningParticlesOffsetY = miningParticlesData[miningParticlesIndex][2];
+    let miningParticles = this.actionPlane.create(miningParticlesOffsetX + 40 * destroyPosition[0], miningParticlesOffsetY + 40 * destroyPosition[1], "miningParticles", "MiningParticles" + miningParticlesFirstFrame);
+    miningParticles.sortOrder = destroyPosition[1] * 10 + 2;
+    miningParticles.animations.add("miningParticles", Phaser.Animation.generateFrameNames("MiningParticles", miningParticlesFirstFrame, miningParticlesFirstFrame + 11, "", 0), 30, false).onComplete.add(() =>
+    {
+      miningParticles.kill();
+      this.toDestroy.push(miningParticles);
+    });
+    miningParticles.animations.play("miningParticles");
+  }
+
+  playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
+    var explodeAnim = this.actionPlane.create(-36 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
+    explodeAnim.sortOrder = destroyPosition[1] * 10 + 2;
+    explodeAnim.animations.add("explode", Phaser.Animation.generateFrameNames("BlockBreakParticle", 0, 7, "", 0), 30, false).onComplete.add(() =>
+    {
+      explodeAnim.kill();
+      this.toDestroy.push(explodeAnim);
+      this.playItemDropAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler);
+    });
+    explodeAnim.animations.play("explode");
+  }
+
+  playItemDropAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
+    completionHandler();
   }
 
   setPlayerPosition(x, y) {
