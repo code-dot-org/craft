@@ -26,6 +26,7 @@ class PhaserApp {
    * @constructor
    */
   constructor(phaserAppConfig) {
+    console.log("PhaserApp::constructor");
     this.DEBUG = phaserAppConfig.debug;
 
     // Phaser pre-initialization config
@@ -72,32 +73,29 @@ class PhaserApp {
    * @param {Object} levelConfig
    */
   loadLevel(levelConfig) {
+    console.log("PhaserApp::loadLevel");
     this.levelData = Object.freeze(levelConfig);
 
     this.levelModel = new LevelModel(this.levelData);
     this.levelView = new LevelView(this);
   }
 
-  resetBoard() {
-    this.levelModel.reset();
-    this.levelView.reset();
-  }
-
   reset() {
+    console.log("PhaserApp::reset");
     this.levelModel.reset();
     this.levelView.reset(this.levelModel);
   }
 
   preload() {
+    console.log("PhaserApp::preload");
     this.game.time.advancedTiming = true;
     this.levelView.preload(this.levelModel.player.name);
   }
 
   create() {
-    this.levelView.create();
+    console.log("PhaserApp::create");
+    this.levelView.create(this.levelModel);
     this.addCheatKeys();
-
-    this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
   }
 
   update() {

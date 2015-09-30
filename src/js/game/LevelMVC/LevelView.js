@@ -2,19 +2,17 @@ import FacingDirection from "./FacingDirection.js"
 
 export default class LevelView {
   constructor(controller) {
+    console.log("LevelView::constructor");
     this.controller = controller;
     this.audioPlayer = controller.audioPlayer;
     this.game = controller.game;
     this.assetRoot = controller.assetRoot;
-    this.levelData = controller.levelData;
 
     this.baseShading = null;
 
     this.playerSprite = null;
     this.playerGhost = null;        // The ghost is a copy of the player sprite that sits on top of everything at 20% opacity, so the player can go under trees and still be seen.
     this.selectionIndicator = null;
-
-    this.playerModel = controller.levelModel.player;
 
     this.groundPlane = null;
     this.shadingPlane = null;
@@ -111,9 +109,8 @@ export default class LevelView {
     this.toDestroy = [];
   }
 
-  preload(playerName) {
-    var playerAtlas = playerName;
-
+  preload(playerAtlas) {
+    console.log("LevelView::preload");
     this.game.load.atlasJSONHash('player', `${this.assetRoot}images/${playerAtlas}.png`, `${this.assetRoot}images/${playerAtlas}.json`);
     this.game.load.image('entityShadow', `${this.assetRoot}images/Character_Shadow.png`);
     this.game.load.image('selectionIndicator', `${this.assetRoot}images/Selection_Indicator.png`);
@@ -152,26 +149,22 @@ export default class LevelView {
     });
   }
 
-  create() {
+  create(levelModel) {
+    console.log("LevelView::create");
     this.createPlanes();
-    this.reset();
-  }
-
-  isCreated() {
-    return !!this.groundPlane;
+    this.reset(levelModel);
   }
 
   reset(levelModel) {
-    if (!this.isCreated()) {
-      return;
-    }
-
-    this.resetPlanes(this.levelData);
+    console.log("LevelView::reset");
+    let player = levelModel.player;
+    
+    this.resetPlanes(levelModel);
     this.preparePlayerSprite();
-    this.updateShadingPlane(this.controller.levelModel.shadingPlane);
-    this.setPlayerPosition(this.playerModel.position[0], this.playerModel.position[1]);
-    this.setSelectionIndicatorPosition(this.playerModel.position[0], this.playerModel.position[1]);
-    this.playIdleAnimation(this.playerModel.position, this.playerModel.facing);
+    this.updateShadingPlane(levelModel.shadingPlane);
+    this.setPlayerPosition(player.position[0], player.position[1]);
+    this.setSelectionIndicatorPosition(player.position[0], player.position[1]);
+    this.playPlayerAnimation("idle", player.position, player.facing);
   }
 
   update() {
@@ -408,6 +401,7 @@ export default class LevelView {
   }
 
   createPlanes() {
+    console.log("LevelView::createPlanes");
     this.groundPlane = this.game.add.group();
     this.groundPlane.yOffset = -2;
     this.shadingPlane = this.game.add.group();
@@ -426,6 +420,8 @@ export default class LevelView {
         blockType,
         frameList;
 
+    console.log("LevelView::resetPlanes");
+
     this.groundPlane.removeAll(true);
     this.actionPlane.removeAll(true);
     this.fluffPlane.removeAll(true);
@@ -436,7 +432,7 @@ export default class LevelView {
     for (y = 0; y < 10; ++y) {
       for (x = 0; x < 10; ++x) {
         let blockIndex = (y * 10) + x;
-        this.createBlock(this.groundPlane, x, y, levelData.groundPlane[blockIndex]);
+        this.createBlock(this.groundPlane, x, y, levelData.groundPlane[blockIndex].blockType);
       }
     }
 
@@ -446,21 +442,22 @@ export default class LevelView {
         let blockIndex = (y * 10) + x;
         sprite = null;
 
-        if (levelData.groundDecorationPlane[blockIndex] !== "") {
-          sprite = this.createBlock(this.actionPlane, x, y, levelData.groundDecorationPlane[blockIndex]);
+        if (!levelData.groundDecorationPlane[blockIndex].isEmpty) {
+          sprite = this.createBlock(this.actionPlane, x, y, levelData.groundDecorationPlane[blockIndex].blockType);
           if (sprite) {
             sprite.sortOrder = y * 10;
           }
         }
 
         sprite = null;
-        if (levelData.actionPlane[blockIndex] !== "") {
-          blockType = levelData.actionPlane[blockIndex];
+        if (!levelData.actionPlane[blockIndex].isEmpty) {
+          blockType = levelData.actionPlane[blockIndex].blockType;
           sprite = this.createBlock(this.actionPlane, x, y, blockType);
           if (sprite !== null) {
             sprite.sortOrder = y * 10;
           }
         }
+
         this.actionPlaneBlocks.push(sprite);
       }
     }
@@ -468,8 +465,8 @@ export default class LevelView {
     for (y = 0; y < 10; ++y) {
       for (x = 0; x < 10; ++x) {
         let blockIndex = (y * 10) + x;
-        if (levelData.fluffPlane[blockIndex] !== "") {
-          sprite = this.createBlock(this.fluffPlane, -104 + 40 * x, -160 + 40 * y, levelData.fluffPlane[blockIndex]);
+        if (!levelData.fluffPlane[blockIndex].isEmpty) {
+          sprite = this.createBlock(this.fluffPlane, x, y, levelData.fluffPlane[blockIndex].blockType);
         }
       }
     }
@@ -660,12 +657,7 @@ export default class LevelView {
         break;
 
       case "sheep":
-        // Facing Left
-        // Look Right: 181-189
-        // Look Left: 190-198
-        // Eat Grass: 199-216
-        // Kick Back Legs: 217-234
-        // Look Down: 235-240
+        // Facing Left: Eat Grass: 199-216
         sprite = plane.create(-12 + 40 * x, -12 + 40 * y, "sheep", "Sheep_199");
         frameList = Phaser.Animation.generateFrameNames("Sheep_", 199, 216, "", 0);
         for (i = 0; i < 30; ++i) {

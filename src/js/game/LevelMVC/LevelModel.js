@@ -5,6 +5,7 @@ import FacingDirection from "./FacingDirection.js"
 
 export default class LevelModel {
   constructor(levelData) {
+    console.log("LevelModel::constructor");
     this.player = {};
 
     this.initialLevelData = Object.create(levelData);
@@ -14,7 +15,15 @@ export default class LevelModel {
     this.initialPlayerState = Object.create(this.player);
   }
 
-  initializeFromLevelData(levelData) {
+  reset() {
+    console.log("LevelModel::reset");
+    this.groundPlane = this.constructPlane(this.initialLevelData.groundPlane, false);
+    this.groundDecorationPlane = this.constructPlane(this.initialLevelData.groundDecorationPlane, false);
+    this.shadingPlane = [];
+    this.actionPlane = this.constructPlane(this.initialLevelData.actionPlane, true);
+    this.fluffPlane = this.constructPlane(this.initialLevelData.fluffPlane, false);
+
+    let levelData = Object.create(this.initialLevelData);
     let [x, y] = [levelData.playerStartPosition[0], levelData.playerStartPosition[1]];
 
     this.player.name = "Steve";
@@ -22,15 +31,6 @@ export default class LevelModel {
     this.player.isOnBlock = !this.actionPlane[(y * 10) + x].getIsEmptyOrEntity();
     this.player.facing = levelData.playerStartDirection;
     this.player.inventory = ["logOak"];
-  }
-
-  reset() {
-    this.groundPlane = this.constructPlane(this.initialLevelData.groundPlane, false);
-    this.shadingPlane = [];
-    this.actionPlane = this.constructPlane(this.initialLevelData.actionPlane, true);
-    this.fluffPlane = this.constructPlane(this.initialLevelData.fluffPlane, false);
-
-    this.initializeFromLevelData(this.initialLevelData);
 
     this.computeShadingPlane();
   }
