@@ -38,6 +38,7 @@ export default class LevelView {
       "cobblestone": ["Miniblocks", 90, 95],
       "sandstone": ["Miniblocks", 96, 101],
       "wool": ["Miniblocks", 102, 107],
+      "sheep": ["Miniblocks", 102, 107],
       "redstoneDust": ["Miniblocks", 108, 113],
       "lapisLazuli": ["Miniblocks", 114, 119],
       "ingotIron": ["Miniblocks", 120, 125],
@@ -72,11 +73,6 @@ export default class LevelView {
       "oreIron": ["blocks", "Iron_Ore", -13, 0],
       "oreLapis": ["blocks", "Lapis_Ore", -13, 0],
       "lava": ["blocks", "Lava", -13, 0],
-      "leavesAcacia": ["blocks", "Leaves_Acacia", -13, 0],
-      "leavesBirch": ["blocks", "Leaves_Birch", -13, 0],
-      "leavesJungle": ["blocks", "Leaves_Jungle", -13, 0],
-      "leavesOak": ["blocks", "Leaves_Oak", -13, 0],
-      "leavesSpruce": ["blocks", "Leaves_Spruce", -13, 0],
       "logAcacia": ["blocks", "Log_Acacia", -13, 0],
       "logBirch": ["blocks", "Log_Birch", -13, 0],
       "logJungle": ["blocks", "Log_Jungle", -13, 0],
@@ -673,7 +669,7 @@ export default class LevelView {
     }
 
     sprite = this.actionPlane.create(xOffset + 40 * x, yOffset + this.actionPlane.yOffset + 40 * y, atlas, "");
-    sprite.animations.add("animate", frameList, 5, false);
+    sprite.animations.add("animate", frameList, 10, false);
     return sprite;
   }
 
