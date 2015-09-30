@@ -292,15 +292,16 @@ class PhaserApp {
   }
 
   checkSolution(commandQueueItem) {
-      // switch to idle animation while we verify
-      this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing );
- 
-      // check the final state to see if its solved
-      if (this.levelModel.isSolved()) {
-          commandQueueItem.succeeded();
-      } else {
-          commandQueueItem.failed();
-      }
+    let player = this.levelModel.player;
+
+    // check the final state to see if its solved
+    if (this.levelModel.isSolved()) {
+      this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock);
+      commandQueueItem.succeeded();
+    } else {
+      this.levelView.playFailureAnimation(player.position, player.facing, player.isOnBlock);
+      commandQueueItem.failed();
+    }
   }
 
   isPathAhead(blockType)  {
