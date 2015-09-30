@@ -1,6 +1,6 @@
 {"frames": {
 
-"Leaves_Birch0.png":
+"Leaves0":
 {
 	"frame": {"x":0,"y":0,"w":146,"h":150},
 	"rotated": false,
@@ -8,7 +8,7 @@
 	"spriteSourceSize": {"x":58,"y":70,"w":146,"h":150},
 	"sourceSize": {"w":240,"h":280}
 },
-"Leaves_Birch1.png":
+"Leaves1":
 {
 	"frame": {"x":146,"y":0,"w":146,"h":150},
 	"rotated": false,
@@ -16,7 +16,7 @@
 	"spriteSourceSize": {"x":58,"y":70,"w":146,"h":150},
 	"sourceSize": {"w":240,"h":280}
 },
-"Leaves_Birch2.png":
+"Leaves2":
 {
 	"frame": {"x":292,"y":0,"w":146,"h":130},
 	"rotated": false,
@@ -24,7 +24,7 @@
 	"spriteSourceSize": {"x":58,"y":90,"w":146,"h":130},
 	"sourceSize": {"w":240,"h":280}
 },
-"Leaves_Birch3.png":
+"Leaves3":
 {
 	"frame": {"x":438,"y":0,"w":146,"h":130},
 	"rotated": false,
@@ -32,7 +32,7 @@
 	"spriteSourceSize": {"x":58,"y":90,"w":146,"h":130},
 	"sourceSize": {"w":240,"h":280}
 },
-"Leaves_Birch4.png":
+"Leaves4":
 {
 	"frame": {"x":584,"y":0,"w":106,"h":130},
 	"rotated": false,
@@ -40,7 +40,7 @@
 	"spriteSourceSize": {"x":98,"y":90,"w":106,"h":130},
 	"sourceSize": {"w":240,"h":280}
 },
-"Leaves_Birch5.png":
+"Leaves5":
 {
 	"frame": {"x":690,"y":0,"w":106,"h":130},
 	"rotated": false,
@@ -48,7 +48,7 @@
 	"spriteSourceSize": {"x":98,"y":90,"w":106,"h":130},
 	"sourceSize": {"w":240,"h":280}
 },
-"Leaves_Birch6.png":
+"Leaves6":
 {
 	"frame": {"x":796,"y":0,"w":104,"h":109},
 	"rotated": false,
@@ -56,7 +56,7 @@
 	"spriteSourceSize": {"x":99,"y":110,"w":104,"h":109},
 	"sourceSize": {"w":240,"h":280}
 },
-"Leaves_Birch7.png":
+"Leaves7":
 {
 	"frame": {"x":900,"y":0,"w":64,"h":89},
 	"rotated": false,
@@ -67,7 +67,7 @@
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",
 	"version": "1.0",
-	"image": "Leaves_Birch_Decay.png",
+	"image": "Leaves_Decay",
 	"format": "RGBA8888",
 	"size": {"w":964,"h":150},
 	"scale": "1",

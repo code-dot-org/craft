@@ -1,6 +1,6 @@
 {"frames": {
 
-"Leaves_Acacia0.png":
+"Leaves0":
 {
 	"frame": {"x":0,"y":0,"w":146,"h":130},
 	"rotated": false,
@@ -8,7 +8,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":146,"h":130},
 	"sourceSize": {"w":146,"h":130}
 },
-"Leaves_Acacia1.png":
+"Leaves1":
 {
 	"frame": {"x":146,"y":0,"w":146,"h":130},
 	"rotated": false,
@@ -16,7 +16,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":146,"h":130},
 	"sourceSize": {"w":146,"h":130}
 },
-"Leaves_Acacia2.png":
+"Leaves2":
 {
 	"frame": {"x":292,"y":0,"w":146,"h":130},
 	"rotated": false,
@@ -24,7 +24,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":146,"h":130},
 	"sourceSize": {"w":146,"h":130}
 },
-"Leaves_Acacia3.png":
+"Leaves3":
 {
 	"frame": {"x":438,"y":0,"w":144,"h":129},
 	"rotated": false,
@@ -32,7 +32,7 @@
 	"spriteSourceSize": {"x":1,"y":0,"w":144,"h":129},
 	"sourceSize": {"w":146,"h":130}
 },
-"Leaves_Acacia4.png":
+"Leaves4":
 {
 	"frame": {"x":582,"y":0,"w":144,"h":129},
 	"rotated": false,
@@ -40,7 +40,7 @@
 	"spriteSourceSize": {"x":1,"y":0,"w":144,"h":129},
 	"sourceSize": {"w":146,"h":130}
 },
-"Leaves_Acacia5.png":
+"Leaves5":
 {
 	"frame": {"x":726,"y":0,"w":61,"h":87},
 	"rotated": false,
@@ -51,7 +51,7 @@
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",
 	"version": "1.0",
-	"image": "Leaves_Acacia_Decay.png",
+	"image": "Leaves_Decay",
 	"format": "RGBA8888",
 	"size": {"w":787,"h":130},
 	"scale": "1",

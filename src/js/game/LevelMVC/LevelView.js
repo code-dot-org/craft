@@ -56,47 +56,53 @@ export default class LevelView {
     };
 
     this.blocks = {
-      "bedrock": ["Bedrock"],
-      "bricks": ["Bricks"],
-      "clay": ["Clay"],
-      "oreCoal": ["Coal_Ore"],
-      "dirtCoarse": ["Coarse_Dirt"],
-      "cobblestone": ["Cobblestone"],
-      "oreDiamond": ["Diamond_Ore"],
-      "dirt": ["Dirt"],
-      "oreEmerald": ["Emerald_Ore"],
-      "farmlandWet": ["Farmland_Wet"],
-      "glass": ["Glass"],
-      "oreGold": ["Gold_Ore"],
-      "grass": ["Grass"],
-      "gravel": ["Gravel"],
-      "clayHardened": ["Hardened_Clay"],
-      "oreIron": ["Iron_Ore"],
-      "oreLapis": ["Lapis_Ore"],
-      "lava": ["Lava"],
-      "leavesAcacia": ["Leaves_Acacia"],
-      "leavesBirch": ["Leaves_Birch"],
-      "leavesJungle": ["Leaves_Jungle"],
-      "leavesOak": ["Leaves_Oak"],
-      "leavesSpruce": ["Leaves_Spruce"],
-      "logAcacia": ["Log_Acacia"],
-      "logBirch": ["Log_Birch"],
-      "logJungle": ["Log_Jungle"],
-      "logOak": ["Log_Oak"],
-      "logSpruce": ["Log_Spruce"],
-      "obsidian": ["Obsidian"],
-      "planksAcacia": ["Planks_Acacia"],
-      "planksBirch": ["Planks_Birch"],
-      "planksJungle": ["Planks_Jungle"],
-      "planksOak": ["Planks_Oak"],
-      "planksSpruce": ["Planks_Spruce"],
-      "oreRedstone": ["Redstone_Ore"],
-      "sand": ["Sand"],
-      "sandstone": ["Sandstone"],
-      "stone": ["Stone"],
-      "tnt": ["Tnt"],
-      "water": ["Water"],
-      "wool": ["Wool_White"],
+      "bedrock": ["blocks", "Bedrock", -13, 0],
+      "bricks": ["blocks", "Bricks", -13, 0],
+      "clay": ["blocks", "Clay", -13, 0],
+      "oreCoal": ["blocks", "Coal_Ore", -13, 0],
+      "dirtCoarse": ["blocks", "Coarse_Dirt", -13, 0],
+      "cobblestone": ["blocks", "Cobblestone", -13, 0],
+      "oreDiamond": ["blocks", "Diamond_Ore", -13, 0],
+      "dirt": ["blocks", "Dirt", -13, 0],
+      "oreEmerald": ["blocks", "Emerald_Ore", -13, 0],
+      "farmlandWet": ["blocks", "Farmland_Wet", -13, 0],
+      "glass": ["blocks", "Glass", -13, 0],
+      "oreGold": ["blocks", "Gold_Ore", -13, 0],
+      "grass": ["blocks", "Grass", -13, 0],
+      "gravel": ["blocks", "Gravel", -13, 0],
+      "clayHardened": ["blocks", "Hardened_Clay", -13, 0],
+      "oreIron": ["blocks", "Iron_Ore", -13, 0],
+      "oreLapis": ["blocks", "Lapis_Ore", -13, 0],
+      "lava": ["blocks", "Lava", -13, 0],
+      "leavesAcacia": ["blocks", "Leaves_Acacia", -13, 0],
+      "leavesBirch": ["blocks", "Leaves_Birch", -13, 0],
+      "leavesJungle": ["blocks", "Leaves_Jungle", -13, 0],
+      "leavesOak": ["blocks", "Leaves_Oak", -13, 0],
+      "leavesSpruce": ["blocks", "Leaves_Spruce", -13, 0],
+      "logAcacia": ["blocks", "Log_Acacia", -13, 0],
+      "logBirch": ["blocks", "Log_Birch", -13, 0],
+      "logJungle": ["blocks", "Log_Jungle", -13, 0],
+      "logOak": ["blocks", "Log_Oak", -13, 0],
+      "logSpruce": ["blocks", "Log_Spruce", -13, 0],
+      "obsidian": ["blocks", "Obsidian", -13, 0],
+      "planksAcacia": ["blocks", "Planks_Acacia", -13, 0],
+      "planksBirch": ["blocks", "Planks_Birch", -13, 0],
+      "planksJungle": ["blocks", "Planks_Jungle", -13, 0],
+      "planksOak": ["blocks", "Planks_Oak", -13, 0],
+      "planksSpruce": ["blocks", "Planks_Spruce", -13, 0],
+      "oreRedstone": ["blocks", "Redstone_Ore", -13, 0],
+      "sand": ["blocks", "Sand", -13, 0],
+      "sandstone": ["blocks", "Sandstone", -13, 0],
+      "stone": ["blocks", "Stone", -13, 0],
+      "tnt": ["blocks", "Tnt", -13, 0],
+      "water": ["blocks", "Water", -13, 0],
+      "wool": ["blocks", "Wool_White", -13, 0],
+
+      "leavesAcacia": ["leavesAcacia", "Leaves0", -42, 80],
+      "leavesBirch": ["leavesBirch", "Leaves0", -100, -10],
+      "leavesJungle": ["leavesJungle", "Leaves0", -69, 43],
+      "leavesOak": ["leavesOak", "Leaves0", -100, 0],
+      "leavesSpruce": ["leavesSpruce", "Leaves0", -76, 60],
     };
 
     this.actionPlaneBlocks = [];
@@ -114,15 +120,18 @@ export default class LevelView {
     this.game.load.atlasJSONHash('AO', `${this.assetRoot}images/AO.png`, `${this.assetRoot}images/AO.json`);
     this.game.load.atlasJSONHash('blockShadows', `${this.assetRoot}images/Block_Shadows.png`, `${this.assetRoot}images/Block_Shadows.json`);
 
+    this.game.load.image('tallGrass', `${this.assetRoot}images/TallGrass.png`);
+    this.game.load.atlasJSONHash('leavesAcacia', `${this.assetRoot}images/Leaves_Acacia_Decay.png`, `${this.assetRoot}images/Leaves_Acacia_Decay.json`);
+    this.game.load.atlasJSONHash('leavesBirch', `${this.assetRoot}images/Leaves_Birch_Decay.png`, `${this.assetRoot}images/Leaves_Birch_Decay.json`);
+    this.game.load.atlasJSONHash('leavesJungle', `${this.assetRoot}images/Leaves_Jungle_Decay.png`, `${this.assetRoot}images/Leaves_Jungle_Decay.json`);
     this.game.load.atlasJSONHash('leavesOak', `${this.assetRoot}images/Leaves_Oak_Decay.png`, `${this.assetRoot}images/Leaves_Oak_Decay.json`);
+    this.game.load.atlasJSONHash('leavesSpruce', `${this.assetRoot}images/Leaves_Spruce_Decay.png`, `${this.assetRoot}images/Leaves_Spruce_Decay.json`);
+
     this.game.load.atlasJSONHash('destroyOverlay', `${this.assetRoot}images/Destroy_Overlay.png`, `${this.assetRoot}images/Destroy_Overlay.json`);
     this.game.load.atlasJSONHash('blockExplode', `${this.assetRoot}images/BlockExplode.png`, `${this.assetRoot}images/BlockExplode.json`);
     this.game.load.atlasJSONHash('miningParticles', `${this.assetRoot}images/MiningParticles.png`, `${this.assetRoot}images/MiningParticles.json`);
     this.game.load.atlasJSONHash('miniBlocks', `${this.assetRoot}images/Miniblocks.png`, `${this.assetRoot}images/Miniblocks.json`);
     this.game.load.atlasJSONHash('blocks', `${this.assetRoot}images/Blocks.png`, `${this.assetRoot}images/Blocks.json`);
-
-    this.game.load.image('tallGrass', `${this.assetRoot}images/TallGrass.png`);
-
     this.game.load.atlasJSONHash('sheep', `${this.assetRoot}images/Sheep.png`, `${this.assetRoot}images/Sheep.json`);
 
     this.audioPlayer.register({id: 'beep', mp3: `${this.assetRoot}audio/beep.mp3`, ogg: 'TODO'});
@@ -173,11 +182,13 @@ export default class LevelView {
 
     if (this.playerGhost) {
       this.playerGhost.frame = this.playerSprite.frame;
+      this.playerGhost.z = 1000;
     }
   }
 
   render() {
-    this.actionPlane.sort('sortOrder'); 
+    this.actionPlane.sort('sortOrder');
+    this.fluffPlane.sort('z'); 
   }
 
   getDirectionName(facing) {
@@ -273,9 +284,11 @@ export default class LevelView {
 
     tween.onComplete.add(() => {
       let blockIndex = (position[1] * 10) + position[0];
-
-      var sprite = this.actionPlane.create(-12 + 40 * position[0], -22 + 40 * position[1], "blocks", this.blocks[blockType][0]);
-      sprite.sortOrder = position[1] * 10;
+      var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
+      
+      if (sprite) {
+        sprite.sortOrder = position[1] * 10;
+      }
 
       this.actionPlaneBlocks[blockIndex] = sprite;
       completionHandler();
@@ -618,9 +631,13 @@ export default class LevelView {
         frameList;
 
     switch (blockType) {
+      case "treeAcacia":
+      case "treeBirch":
+      case "treeJungle":
       case "treeOak":
-        sprite = this.createBlock(plane, x, y, "logOak");
-        sprite.fluff = this.createBlock(this.fluffPlane, x, y, "leavesOak");
+      case "treeSpruce":
+        sprite = this.createBlock(plane, x, y, "log" + blockType.substring(4));
+        sprite.fluff = this.createBlock(this.fluffPlane, x, y, "leaves" + blockType.substring(4));
 
         sprite.onBlockDestroy = (logSprite) => {
           logSprite.fluff.animations.add("despawn", Phaser.Animation.generateFrameNames("Leaves", 0, 6, "", 0), 15, false).onComplete.add(() => {
@@ -630,10 +647,6 @@ export default class LevelView {
 
           logSprite.fluff.animations.play("despawn");
         };
-        break;
-
-      case "leavesOak":
-        sprite = plane.create(-100 + 40 * x, plane.yOffset + 40 * y, "leavesOak", "Leaves0");
         break;
 
       case "sheep":
@@ -658,7 +671,11 @@ export default class LevelView {
         break;
 
       default:
-        sprite = plane.create(-13 + 40 * x, plane.yOffset + 40 * y, "blocks", this.blocks[blockType][0]);
+        let atlas = this.blocks[blockType][0];
+        let frame = this.blocks[blockType][1];
+        let xOffset = this.blocks[blockType][2];
+        let yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         break;
     }
 
