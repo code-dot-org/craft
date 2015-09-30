@@ -56,7 +56,6 @@ export default class LevelView {
     };
 
     this.blocks = {
-      "": [""],
       "bedrock": ["Bedrock"],
       "bricks": ["Bricks"],
       "clay": ["Clay"],
@@ -387,9 +386,13 @@ export default class LevelView {
 
   createPlanes() {
     this.groundPlane = this.game.add.group();
+    this.groundPlane.yOffset = -2;
     this.shadingPlane = this.game.add.group();
+    this.shadingPlane.yOffset = -2;
     this.actionPlane = this.game.add.group();
+    this.actionPlane.yOffset = -22;
     this.fluffPlane = this.game.add.group();
+    this.fluffPlane.yOffset = -160;
   }
 
   resetPlanes(levelData) {
@@ -410,7 +413,7 @@ export default class LevelView {
     for (y = 0; y < 10; ++y) {
       for (x = 0; x < 10; ++x) {
         let blockIndex = (y * 10) + x;
-        this.groundPlane.create(-12 + 40 * x, -2 + 40 * y, "blocks", this.blocks[levelData.groundPlane[blockIndex]][0]);
+        this.createBlock(this.groundPlane, x, y, levelData.groundPlane[blockIndex]);
       }
     }
 
@@ -421,53 +424,20 @@ export default class LevelView {
         sprite = null;
 
         if (levelData.groundDecorationPlane[blockIndex] !== "") {
-          sprite = this.actionPlane.create(-12 + 40 * x, -22 + 40 * y, levelData.groundDecorationPlane[blockIndex]);
-          sprite.sortOrder = y * 10;
+          sprite = this.createBlock(this.actionPlane, x, y, levelData.groundDecorationPlane[blockIndex]);
+          if (sprite) {
+            sprite.sortOrder = y * 10;
+          }
         }
 
         sprite = null;
         if (levelData.actionPlane[blockIndex] !== "") {
           blockType = levelData.actionPlane[blockIndex];
-
-          switch (blockType) {
-            case "treeOak":
-              sprite = this.actionPlane.create(-13 + 40 * x, -22 + 40 * y, "blocks", this.blocks["logOak"][0]);
-              sprite.fluff = this.fluffPlane.create(-100 + 40 * x, -160 + 40 * y, "leavesOak", "Leaves0");
-              sprite.fluffType = "leavesOak";
-
-              sprite.onBlockDestroy = (logSprite) => {
-                logSprite.fluff.animations.add("despawn", Phaser.Animation.generateFrameNames("Leaves", 0, 6, "", 0), 15, false).onComplete.add(() => {
-                  this.toDestroy.push(logSprite.fluff);
-                  logSprite.fluff.kill();
-                });
-                logSprite.fluff.animations.play("despawn");
-              };
-              break;
-
-            case "sheep":
-              // Facing Left
-              // Look Right: 181-189
-              // Look Left: 190-198
-              // Eat Grass: 199-216
-              // Kick Back Legs: 217-234
-              // Look Down: 235-240
-              sprite = this.actionPlane.create(-12 + 40 * x, -12 + 40 * y, "sheep", "Sheep_199");
-              frameList = Phaser.Animation.generateFrameNames("Sheep_", 199, 216, "", 0);
-              for (i = 0; i < 30; ++i) {
-                frameList.push("Sheep_190");
-              }
-              sprite.animations.add("idle", frameList, 15, true);
-              sprite.animations.play("idle");
-              break;
-
-            default:
-              sprite = this.actionPlane.create(-12 + 40 * x, -22 + 40 * y, "blocks", this.blocks[blockType][0]);
-              break;
+          sprite = this.createBlock(this.actionPlane, x, y, blockType);
+          if (sprite !== null) {
+            sprite.sortOrder = y * 10;
           }
-
-          sprite.sortOrder = y * 10;          
         }
-
         this.actionPlaneBlocks.push(sprite);
       }
     }
@@ -476,7 +446,7 @@ export default class LevelView {
       for (x = 0; x < 10; ++x) {
         let blockIndex = (y * 10) + x;
         if (levelData.fluffPlane[blockIndex] !== "") {
-          sprite = this.fluffPlane.create(-104 + 40 * x, -160 + 40 * y, levelData.fluffPlane[blockIndex]);
+          sprite = this.createBlock(this.fluffPlane, -104 + 40 * x, -160 + 40 * y, levelData.fluffPlane[blockIndex]);
         }
       }
     }
@@ -640,5 +610,58 @@ export default class LevelView {
     this.playerSprite.animations.add('bump_up', Phaser.Animation.generateFrameNames("Player_", 169, 174, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpDown_up', Phaser.Animation.generateFrameNames("Player_", 175, 180, "", 3), frameRate, true);
     this.playerSprite.animations.add('mine_up', Phaser.Animation.generateFrameNames("Player_", 249, 252, "", 3), frameRate, true);
+  }
+
+  createBlock(plane, x, y, blockType) {
+    var i,
+        sprite = null,
+        frameList;
+
+    switch (blockType) {
+      case "treeOak":
+        sprite = this.createBlock(plane, x, y, "logOak");
+        sprite.fluff = this.createBlock(this.fluffPlane, x, y, "leavesOak");
+
+        sprite.onBlockDestroy = (logSprite) => {
+          logSprite.fluff.animations.add("despawn", Phaser.Animation.generateFrameNames("Leaves", 0, 6, "", 0), 15, false).onComplete.add(() => {
+            this.toDestroy.push(logSprite.fluff);
+            logSprite.fluff.kill();
+          });
+
+          logSprite.fluff.animations.play("despawn");
+        };
+        break;
+
+      case "leavesOak":
+        sprite = plane.create(-100 + 40 * x, plane.yOffset + 40 * y, "leavesOak", "Leaves0");
+        break;
+
+      case "sheep":
+        // Facing Left
+        // Look Right: 181-189
+        // Look Left: 190-198
+        // Eat Grass: 199-216
+        // Kick Back Legs: 217-234
+        // Look Down: 235-240
+        sprite = plane.create(-12 + 40 * x, -12 + 40 * y, "sheep", "Sheep_199");
+        frameList = Phaser.Animation.generateFrameNames("Sheep_", 199, 216, "", 0);
+        for (i = 0; i < 30; ++i) {
+          frameList.push("Sheep_190");
+        }
+
+        sprite.animations.add("idle", frameList, 15, true);
+        sprite.animations.play("idle");
+        break;
+
+      case "tallGrass":
+        sprite = plane.create(-12 + 40 * x, plane.yOffset + 40 * y, "tallGrass");
+        break;
+
+      default:
+        sprite = plane.create(-13 + 40 * x, plane.yOffset + 40 * y, "blocks", this.blocks[blockType][0]);
+        break;
+    }
+
+    return sprite;
   }
 }
