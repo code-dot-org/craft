@@ -19,6 +19,15 @@ export default class LevelView {
     this.actionPlane = null;
     this.fluffPlane = null;
 
+    this.blocksToMiniBlocks = {
+      "stone": "gravel", // TODO: update with stone miniblock
+      "oreCoal": "coal",
+      "oreDiamond": "diamond",
+      "oreIron": "ingotIron",
+      "oreGold": "ingotGold",
+      "oreEmerald": "emerald"
+    };
+
     this.miniBlocks = {
       "dirt": ["Miniblocks", 0, 5],
       "coarseDirt": ["Miniblocks", 6, 11],
@@ -649,11 +658,12 @@ export default class LevelView {
       case "treeSpruce":
         frame = "log" + blockType.substring(4);
         break;
-
       default:
         frame = blockType;
         break;
     }
+
+    frame = this.blocksToMiniBlocks[blockType] || frame;
 
     let atlas = "miniBlocks";
     let framePrefix = this.miniBlocks[frame][0];

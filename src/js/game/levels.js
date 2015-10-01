@@ -618,6 +618,85 @@ window.demoLevels = {
           ]);
     }
   },
+  9: {
+    instructions: "Underground test!",
+
+    playerStartPosition: [1, 5],
+
+    playerStartDirection: 1,
+
+    groundPlane: [
+      "stone", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "lava", "obsidian", "lava", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "stone"
+    ],
+
+    groundDecorationPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", ""],
+
+    actionPlane: [
+      "stone", "", "", "", "", "", "", "stone", "stone", "stone",
+      "", "", "", "", "", "", "", "", "", "stone",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "stone", "oreIron", "oreDiamond", "oreGold", "oreEmerald", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "stone", "", "", "", "", "", "", "", "", "",
+      "oreCoal", "stone", "", "", "", "", "", "", "", "",
+    ],
+
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    solutionCode: "for (var i = 0; i < 5; i++) {" +
+    moveForwardBlock + destroyBlock +
+    "}"
+
+      ,
+
+    verificationFunction: function (verificationAPI) {
+      return verificationAPI.solutionMapMatchesResultMap(
+          [
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "logOak", "logOak", "logOak", "logOak", "", "", "",
+            "", "", "", "logOak", "", "", "logOak", "", "", "",
+            "", "", "", "logOak", "", "", "logOak", "", "", "",
+            "", "", "", "", "", "", "logOak", "", "", "",
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", ""
+          ]);
+    }
+  },
 
 };
 
