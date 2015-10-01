@@ -95,6 +95,7 @@ class PhaserApp {
   create() {
     console.log("PhaserApp::create");
     this.levelView.create(this.levelModel);
+    this.game.time.slowMotion = 1.5;
     this.addCheatKeys();
   }
 
