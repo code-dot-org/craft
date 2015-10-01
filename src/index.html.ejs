@@ -28,6 +28,8 @@
 <div style="margin:10px; clear:both;"></div>
 <button id="run-button">Run</button>
 <button id="reset-button">Reset</button>
+<button id="set-steve">Set to Steve</button>
+<button id="set-alex">Set to Alex</button>
 <div style="margin:10px; clear:both;"></div>
 <button id="previous-level">Previous level</button>
 <button id="refresh-button">Refresh</button>
@@ -135,6 +137,14 @@
 
   $('#reset-button').click(function () {
     phaserApp.codeOrgAPI.resetAttempt();
+  });
+
+  $('#set-steve').click(function () {
+    phaserApp.codeOrgAPI.switchPlayer("Steve");
+  });
+
+  $('#set-alex').click(function () {
+    phaserApp.codeOrgAPI.switchPlayer("Alex");
   });
 
   $("#refresh-button").click(function() {

@@ -107,6 +107,11 @@ class PhaserApp {
       } 
   }
 
+  switchPlayer(newPlayer) {
+    this.levelModel.player.name = newPlayer;
+    this.levelView.switchPlayer(newPlayer);
+  }
+
   addCheatKeys() {
     this.game.input.keyboard.addKey(Phaser.Keyboard.TILDE).onUp.add(() => {
       this.game.input.keyboard.addKey(Phaser.Keyboard.UP).onUp.add(() => {

@@ -114,9 +114,9 @@ export default class LevelView {
     this.toDestroy = [];
   }
 
-  preload(playerAtlas) {
+  preload(playerName) {
     console.log("LevelView::preload");
-    this.game.load.atlasJSONHash('player', `${this.assetRoot}images/${playerAtlas}.png`, `${this.assetRoot}images/${playerAtlas}.json`);
+    this.loadPlayerAtlas(playerName);
     this.game.load.image('entityShadow', `${this.assetRoot}images/Character_Shadow.png`);
     this.game.load.image('selectionIndicator', `${this.assetRoot}images/Selection_Indicator.png`);
 
@@ -154,6 +154,17 @@ export default class LevelView {
     });
   }
 
+  loadPlayerAtlas(playerName) {
+    return this.game.load.atlasJSONHash(
+        this.playerAtlasKey(playerName),
+        `${this.assetRoot}images/${playerName}.png`,
+        `${this.assetRoot}images/${playerName}.json`);
+  }
+
+  playerAtlasKey(playerName) {
+    return `player${playerName}`;
+  }
+
   create(levelModel) {
     console.log("LevelView::create");
     this.createPlanes();
@@ -165,7 +176,7 @@ export default class LevelView {
     let player = levelModel.player;
     
     this.resetPlanes(levelModel);
-    this.preparePlayerSprite();
+    this.preparePlayerSprite(player.name);
     this.updateShadingPlane(levelModel.shadingPlane);
     this.setPlayerPosition(player.position[0], player.position[1]);
     this.setSelectionIndicatorPosition(player.position[0], player.position[1]);
@@ -189,6 +200,14 @@ export default class LevelView {
   render() {
     this.actionPlane.sort('sortOrder');
     this.fluffPlane.sort('z'); 
+  }
+
+  switchPlayer(playerAtlas) {
+    var atlasLoader = this.loadPlayerAtlas(playerAtlas);
+    atlasLoader.onLoadComplete.addOnce(() => {
+      this.reset(this.controller.levelModel);
+    });
+    this.game.load.start();
   }
 
   getDirectionName(facing) {
@@ -557,15 +576,15 @@ export default class LevelView {
     }
   }
 
-  preparePlayerSprite() {
+  preparePlayerSprite(playerName) {
     var frameList,
         genFrames,
         i;
 
     let frameRate = 20;
 
-    this.playerSprite = this.actionPlane.create(0, 0, 'player', 'Player_121');
-    this.playerGhost = this.fluffPlane.create(0, 0, 'player', 'Player_121');
+    this.playerSprite = this.actionPlane.create(0, 0, this.playerAtlasKey(playerName), 'Player_121');
+    this.playerGhost = this.fluffPlane.create(0, 0, this.playerAtlasKey(playerName), 'Player_121');
     this.playerGhost.parent = this.playerSprite;
     this.playerGhost.alpha = 0.2;
 

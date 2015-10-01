@@ -26,7 +26,7 @@ export default class LevelModel {
     let levelData = Object.create(this.initialLevelData);
     let [x, y] = [levelData.playerStartPosition[0], levelData.playerStartPosition[1]];
 
-    this.player.name = "Steve";
+    this.player.name = this.player.name || this.initialLevelData.playerName || "Steve";
     this.player.position = levelData.playerStartPosition;
     this.player.isOnBlock = !this.actionPlane[(y * 10) + x].getIsEmptyOrEntity();
     this.player.facing = levelData.playerStartDirection;

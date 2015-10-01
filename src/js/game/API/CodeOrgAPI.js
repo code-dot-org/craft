@@ -64,6 +64,10 @@ export function get(controller) {
 
     whilePathAhead: function(highlightCallback, blockType, codeBlock) {
         controller.queue.addCommand(new WhileCommand(controller, highlightCallback, blockType, codeBlock));
+    },
+
+    switchPlayer: function(playerName) {
+      controller.switchPlayer(playerName);
     }
   }
 }
