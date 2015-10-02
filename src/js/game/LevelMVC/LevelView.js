@@ -309,18 +309,33 @@ export default class LevelView {
     }, 125, Phaser.Easing.Cubic.EaseOut);
 
     tween.onComplete.add(() => {
-      let blockIndex = (position[1] * 10) + position[0];
-      var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
-      
-      if (sprite) {
-        sprite.sortOrder = position[1] * 10;
-      }
-
-      this.actionPlaneBlocks[blockIndex] = sprite;
+      this.createActionPlaneBlock(position, blockType);
       completionHandler();
     });
 
     tween.start();
+  }
+
+  playPlaceBlockInFrontAnimation(blockPosition, plane, blockType, completionHandler) {
+    if (plane === this.controller.levelModel.actionPlane) {
+      this.createActionPlaneBlock(blockPosition, blockType);
+    } else {
+      // re-lay ground tiles based on model
+      this.refreshGroundPlane();
+    }
+
+    completionHandler();
+  }
+
+  createActionPlaneBlock(position, blockType) {
+    let blockIndex = (position[1] * 10) + position[0];
+    var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
+
+    if (sprite) {
+      sprite.sortOrder = position[1] * 10;
+    }
+
+    this.actionPlaneBlocks[blockIndex] = sprite;
   }
 
   playShearSheepAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
@@ -461,12 +476,7 @@ export default class LevelView {
 
     this.baseShading = this.shadingPlane.create(0, 0, 'shadeLayer');
 
-    for (y = 0; y < 10; ++y) {
-      for (x = 0; x < 10; ++x) {
-        let blockIndex = (y * 10) + x;
-        this.createBlock(this.groundPlane, x, y, levelData.groundPlane[blockIndex].blockType);
-      }
-    }
+    this.refreshGroundPlane();
 
     this.actionPlaneBlocks = [];
     for (y = 0; y < 10; ++y) {
@@ -499,6 +509,19 @@ export default class LevelView {
         let blockIndex = (y * 10) + x;
         if (!levelData.fluffPlane[blockIndex].isEmpty) {
           sprite = this.createBlock(this.fluffPlane, x, y, levelData.fluffPlane[blockIndex].blockType);
+        }
+      }
+    }
+  }
+
+  refreshGroundPlane() {
+    this.groundPlane.removeAll(true);
+    for (var y = 0; y < 10; ++y) {
+      for (var x = 0; x < 10; ++x) {
+        let blockIndex = (y * 10) + x;
+        var sprite = this.createBlock(this.groundPlane, x, y, this.controller.levelModel.groundPlane[blockIndex].blockType);
+        if (sprite) {
+          sprite.sortOrder = y * 10;
         }
       }
     }

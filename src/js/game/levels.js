@@ -5,8 +5,17 @@ var destroyBlock = "destroyBlock();\n";
 var whileBlockAhead = function (type, blockCode) {
   return "whileAhead('" + type + "', do{\n" + blockCode + "});\n"
 };
+var ifBlockAhead = function (type, blockCode) {
+  return "ifBlockAhead('" + type + "', do{\n" + blockCode + "});\n"
+};
+var ifLavaAhead = function (blockCode) {
+  return "ifLavaAhead(do{\n" + blockCode + "});\n"
+};
 var placeBlock = function (type) {
   return "placeBlock('" + type + "');\n"
+};
+var placeInFront = function (type) {
+  return "placeInFront('" + type + "');\n"
 };
 
 window.demoLevels = {
@@ -675,8 +684,8 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
     ],
 
-    solutionCode: "for (var i = 0; i < 5; i++) {" +
-    moveForwardBlock + destroyBlock +
+    solutionCode: "for (var i = 0; i < 6; i++) {" +
+        destroyBlock + ifLavaAhead(placeInFront("stone")) + moveForwardBlock +
     "}"
 
       ,

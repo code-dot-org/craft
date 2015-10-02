@@ -130,7 +130,8 @@
       destroyBlock: codeOrgAPI.destroyBlock.bind(null, function(){}),
       ifBlockAhead: codeOrgAPI.ifBlockAhead.bind(null, function(){}),
       ifLavaAhead: codeOrgAPI.ifBlockAhead.bind(null, function(){}, "lava"),
-      whileAhead: codeOrgAPI.whilePathAhead.bind(null, function(){})
+      whileAhead: codeOrgAPI.whilePathAhead.bind(null, function(){}),
+      placeInFront: codeOrgAPI.placeInFront.bind(null, function(){})
     });
     codeOrgAPI.startAttempt(function (result) {
       $('#level-feedback').html(result ? "Success!" : "Failure").css("color", result ? "green" : "red");

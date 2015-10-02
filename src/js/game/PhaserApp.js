@@ -214,6 +214,7 @@ class PhaserApp {
         } 
         else if(this.levelModel.isPlayerStandingInLava()) {
             //this.levelView.playBurnInLavaAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock, () => {
+                this.levelView.playFailureAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock);
                 commandQueueItem.failed();
             //} );
         } 
@@ -293,6 +294,20 @@ class PhaserApp {
     } else {
       //commandQueueItem.failed();
     }
+  }
+
+  placeBlockForward(commandQueueItem, blockType) {
+    if (!this.levelModel.canPlaceBlockForward()) {
+      commandQueueItem.succeeded();
+    }
+
+    var placementPlane = this.levelModel.getPlaneToPlaceOn(this.levelModel.getMoveForwardPosition());
+    this.levelModel.placeBlockForward(blockType, placementPlane);
+    this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.getMoveForwardPosition(), placementPlane, blockType, () => {
+      this.levelModel.computeShadingPlane();
+      this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
+      commandQueueItem.succeeded();
+    });
   }
 
   checkSolution(commandQueueItem) {

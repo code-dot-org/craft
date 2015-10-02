@@ -43,7 +43,8 @@ export default class LevelModel {
     for (index = 0; index < planeData.length; ++index) {
       block = new LevelBlock(planeData[index]);
       block.isWalkable = !isActionPlane || planeData[index] === "";
-      block.isPlacable = isActionPlane && block.isEmpty;
+      block.isPlacable = (isActionPlane && block.isEmpty) ||
+          (block.blockType === "lava" || block.blockType === "water");
       block.isUsable = isActionPlane && !block.isEmpty;
       result.push(block);
     }
@@ -188,8 +189,8 @@ export default class LevelModel {
   }
 
   isPlayerStandingInLava() {
-    // TODO: handle lava
-    return false;
+    let blockIndex = (this.player.position[1] * 10) + this.player.position[0];
+    return this.groundPlane[blockIndex].blockType == "lava";
   }
 
   isPlayerStandingNearCreeper() {
@@ -214,6 +215,32 @@ export default class LevelModel {
 
   canPlaceBlock() {
     return true;
+  }
+
+  canPlaceBlockForward() {
+    if (this.player.isOnBlock) {
+      return false;
+    }
+
+    return this.getPlaneToPlaceOn(this.getMoveForwardPosition()) != null;
+  }
+
+  getPlaneToPlaceOn(coordinates) {
+    let blockIndex = (coordinates[1] * 10) + coordinates[0];
+    let [x, y] = [coordinates[0], coordinates[1]];
+
+    if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+      let actionBlock = this.actionPlane[blockIndex];
+      if (actionBlock.isPlacable) {
+        let groundBlock = this.groundPlane[blockIndex];
+        if (groundBlock.isPlacable) {
+          return this.groundPlane;
+        }
+        return this.actionPlane;
+      }
+    }
+
+    return null;
   }
 
   canDestroyBlockForward() {
@@ -295,6 +322,19 @@ export default class LevelModel {
 
     this.actionPlane[blockIndex] = block;
     this.player.isOnBlock = true;
+  }
+
+  placeBlockForward(blockType, targetPlane) {
+    let blockPosition = this.getMoveForwardPosition();
+    let blockIndex = (blockPosition[1] * 10) + blockPosition[0];
+
+    var block = new LevelBlock(blockType);
+    block.isEmpty = false;
+    block.isWalkable = false;
+    block.isPlacable = false;
+    block.isUsable = true;
+
+    targetPlane[blockIndex] = block;
   }
 
   destroyBlockForward() {
