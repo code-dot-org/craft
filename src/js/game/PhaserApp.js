@@ -4,6 +4,7 @@ import DestroyBlockCommand from "./CommandQueue/DestroyBlockCommand.js";
 import MoveForwardCommand from "./CommandQueue/MoveForwardCommand.js";
 import TurnCommand from "./CommandQueue/TurnCommand.js";
 import WhileCommand from "./CommandQueue/WhileCommand.js";
+import IfBlockAheadCommand from "./CommandQueue/IfBlockAheadCommand.js";
 
 import LevelModel from "./LevelMVC/LevelModel.js"
 import LevelView from "./LevelMVC/LevelView.js"

@@ -152,21 +152,30 @@ export default class LevelModel {
   }
 
   isForwardBlockOfType(blockType) {
-      let blockForwardPosition = this.getMoveForwardPosition();
-      return this.isBlockOfType(blockForwardPosition, blockType);
+    let blockForwardPosition = this.getMoveForwardPosition();
+
+    let actionIsEmpty = this.isBlockOfTypeOnPlane(blockForwardPosition, "empty", this.actionPlane);
+
+    return actionIsEmpty ?
+        this.isBlockOfTypeOnPlane(blockForwardPosition, blockType, this.groundPlane) :
+        this.isBlockOfTypeOnPlane(blockForwardPosition, blockType, this.actionPlane)
   }
 
   isBlockOfType(position, blockType)  {
+      return this.isBlockOfTypeOnPlane(position, blockType, this.actionPlane);
+  }
+
+  isBlockOfTypeOnPlane(position, blockType, plane)  {
       var result = false;
 
       let blockIndex = (position[1] * 10) + position[0];
       if (blockIndex >= 0 && blockIndex < 100) {
 
           if (blockType == "empty") {
-              result =  this.actionPlane[blockIndex].isEmpty;
+              result =  plane[blockIndex].isEmpty;
           }
           else {
-              result = (blockType == this.actionPlane[blockIndex].blockType);
+              result = (blockType == plane[blockIndex].blockType);
           }
       }
 

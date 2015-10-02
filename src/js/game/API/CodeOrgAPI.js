@@ -5,6 +5,7 @@ import PlaceBlockCommand from "../CommandQueue/PlaceBlockCommand.js";
 import MoveForwardCommand from "../CommandQueue/MoveForwardCommand.js";
 import TurnCommand from "../CommandQueue/TurnCommand.js";
 import WhileCommand from "../CommandQueue/WhileCommand.js";
+import IfBlockAheadCommand from "../CommandQueue/IfBlockAheadCommand.js";
 import CheckSolutionCommand from "../CommandQueue/CheckSolutionCommand.js";
 
 export function get(controller) {
@@ -64,6 +65,10 @@ export function get(controller) {
 
     whilePathAhead: function(highlightCallback, blockType, codeBlock) {
         controller.queue.addCommand(new WhileCommand(controller, highlightCallback, blockType, codeBlock));
+    },
+
+    ifBlockAhead: function(highlightCallback, blockType, codeBlock) {
+        controller.queue.addCommand(new IfBlockAheadCommand(controller, highlightCallback, blockType, codeBlock));
     },
 
     switchPlayer: function(playerName) {
