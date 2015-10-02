@@ -20,7 +20,7 @@ export default class LevelView {
     this.fluffPlane = null;
 
     this.blocksToMiniBlocks = {
-      "stone": "gravel", // TODO: update with stone miniblock
+      "stone": "cobblestone",
       "oreCoal": "coal",
       "oreDiamond": "diamond",
       "oreIron": "ingotIron",
