@@ -25,7 +25,8 @@ export default class LevelView {
       "oreDiamond": "diamond",
       "oreIron": "ingotIron",
       "oreGold": "ingotGold",
-      "oreEmerald": "emerald"
+      "oreEmerald": "emerald",
+      "oreRedstone": "redstoneDust"
     };
 
     this.miniBlocks = {
