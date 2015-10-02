@@ -157,6 +157,10 @@ export default class LevelModel {
 
     let actionIsEmpty = this.isBlockOfTypeOnPlane(blockForwardPosition, "empty", this.actionPlane);
 
+    if (blockType === '' && actionIsEmpty) {
+      return true;
+    }
+
     return actionIsEmpty ?
         this.isBlockOfTypeOnPlane(blockForwardPosition, blockType, this.groundPlane) :
         this.isBlockOfTypeOnPlane(blockForwardPosition, blockType, this.actionPlane)
