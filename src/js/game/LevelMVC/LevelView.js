@@ -19,6 +19,8 @@ export default class LevelView {
     this.actionPlane = null;
     this.fluffPlane = null;
 
+    this.isCreated = false;
+
     this.blocksToMiniBlocks = {
       "stone": "cobblestone",
       "oreCoal": "coal",
@@ -170,6 +172,7 @@ export default class LevelView {
     console.log("LevelView::create");
     this.createPlanes();
     this.reset(levelModel);
+    this.isCreated = true;
   }
 
   reset(levelModel) {
@@ -206,6 +209,9 @@ export default class LevelView {
   switchPlayer(playerAtlas) {
     var atlasLoader = this.loadPlayerAtlas(playerAtlas);
     atlasLoader.onLoadComplete.addOnce(() => {
+      if (!this.isCreated) {
+        return; // still loading
+      }
       this.reset(this.controller.levelModel);
     });
     this.game.load.start();
