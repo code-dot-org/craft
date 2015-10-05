@@ -280,15 +280,27 @@ export default class LevelModel {
   placeBlock(blockType) {
     let blockPosition = this.player.position;
     let blockIndex = (blockPosition[1] * 10) + blockPosition[0];
+    var shouldPlace = false,
+        block;
 
-    var block = new LevelBlock(blockType);
-    block.isEmpty = false;
-    block.isWalkable = false;
-    block.isPlacable = false;
-    block.isUsable = true;
+    switch (blockType) {
+      case "cropWheat":
+        shouldPlace = this.groundPlane[blockIndex].blockType === "farmlandWet";
+        break;
 
-    this.actionPlane[blockIndex] = block;
-    this.player.isOnBlock = true;
+      default:
+        shouldPlace = true;
+        break;
+    }
+
+    if (shouldPlace === true) {
+      var block = new LevelBlock(blockType);
+
+      this.actionPlane[blockIndex] = block;
+      this.player.isOnBlock = block.isDestroyable && block.isWalkable;
+    }
+
+    return shouldPlace;
   }
 
   destroyBlockForward() {

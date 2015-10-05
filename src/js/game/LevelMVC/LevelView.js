@@ -100,6 +100,9 @@ export default class LevelView {
       "leavesOak": ["leavesOak", "Leaves0", -100, 0],
       "leavesSpruce": ["leavesSpruce", "Leaves0", -76, 60],
 
+      "cropWheat": ["crops", "Wheat0", -13, 0],
+      "torch": ["torch", "Torch0", -13, 0],
+
       "tallGrass": ["tallGrass", "", -13, 0],
     };
 
@@ -126,6 +129,8 @@ export default class LevelView {
     this.game.load.atlasJSONHash('leavesOak', `${this.assetRoot}images/Leaves_Oak_Decay.png`, `${this.assetRoot}images/Leaves_Oak_Decay.json`);
     this.game.load.atlasJSONHash('leavesSpruce', `${this.assetRoot}images/Leaves_Spruce_Decay.png`, `${this.assetRoot}images/Leaves_Spruce_Decay.json`);
     this.game.load.atlasJSONHash('sheep', `${this.assetRoot}images/Sheep.png`, `${this.assetRoot}images/Sheep.json`);
+    this.game.load.atlasJSONHash('crops', `${this.assetRoot}images/Crops.png`, `${this.assetRoot}images/Crops.json`);
+    this.game.load.atlasJSONHash('torch', `${this.assetRoot}images/Torch.png`, `${this.assetRoot}images/Torch.json`);
 
     this.game.load.atlasJSONHash('destroyOverlay', `${this.assetRoot}images/Destroy_Overlay.png`, `${this.assetRoot}images/Destroy_Overlay.json`);
     this.game.load.atlasJSONHash('blockExplode', `${this.assetRoot}images/BlockExplode.png`, `${this.assetRoot}images/BlockExplode.json`);
@@ -275,29 +280,43 @@ export default class LevelView {
     var tween,
         jumpAnimName;
 
-    let direction = this.getDirectionName(facing);
-    this.setSelectionIndicatorPosition(position[0], position[1]);
+    if (blockType === "cropWheat") {
+      this.setSelectionIndicatorPosition(position[0], position[1]);
+      this.playPlayerAnimation("punch", position, facing, false).onComplete.add(() => {
+        let blockIndex = (position[1] * 10) + position[0];
+        var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
 
-    jumpAnimName = "jumpUp" + direction;
+        if (sprite) {
+          sprite.sortOrder = position[1] * 10;
+        }
 
-    this.playerSprite.animations.play(jumpAnimName);
-    tween = this.game.add.tween(this.playerSprite).to({
-      y: (-55 + 40 * position[1])
-    }, 125, Phaser.Easing.Cubic.EaseOut);
+        this.actionPlaneBlocks[blockIndex] = sprite;
+        completionHandler();                
+      });
+    } else {
+      let direction = this.getDirectionName(facing);
+      this.setSelectionIndicatorPosition(position[0], position[1]);
 
-    tween.onComplete.add(() => {
-      let blockIndex = (position[1] * 10) + position[0];
-      var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
-      
-      if (sprite) {
-        sprite.sortOrder = position[1] * 10;
-      }
+      jumpAnimName = "jumpUp" + direction;
 
-      this.actionPlaneBlocks[blockIndex] = sprite;
-      completionHandler();
-    });
+      this.playerSprite.animations.play(jumpAnimName);
+      tween = this.game.add.tween(this.playerSprite).to({
+        y: (-55 + 40 * position[1])
+      }, 125, Phaser.Easing.Cubic.EaseOut);
 
-    tween.start();
+      tween.onComplete.add(() => {
+        let blockIndex = (position[1] * 10) + position[0];
+        var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
+        
+        if (sprite) {
+          sprite.sortOrder = position[1] * 10;
+        }
+
+        this.actionPlaneBlocks[blockIndex] = sprite;
+        completionHandler();
+      });
+      tween.start();
+    }
   }
 
   playShearSheepAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
@@ -711,7 +730,11 @@ export default class LevelView {
   createBlock(plane, x, y, blockType) {
     var i,
         sprite = null,
-        frameList;
+        frameList,
+        atlas,
+        frame,
+        xOffset,
+        yOffset;
 
     switch (blockType) {
       case "treeAcacia":
@@ -750,11 +773,22 @@ export default class LevelView {
         sprite.animations.play("idle");
         break;
 
+      case "torch":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Torch", 0, 23, "", 0);
+        sprite.animations.add("idle", frameList, 15, true);
+        sprite.animations.play("idle");
+        break;
+
       default:
-        let atlas = this.blocks[blockType][0];
-        let frame = this.blocks[blockType][1];
-        let xOffset = this.blocks[blockType][2];
-        let yOffset = this.blocks[blockType][3];
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         break;
     }

@@ -277,14 +277,21 @@ class PhaserApp {
 
   placeBlock(commandQueueItem, blockType) {
     if (this.levelModel.canPlaceBlock()) {
-      this.levelModel.placeBlock(blockType);
-      this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, () => {
-        this.levelModel.computeShadingPlane();
-        this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
-        commandQueueItem.succeeded();
-      });
+      if (this.levelModel.placeBlock(blockType)) {
+        this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, () => {
+          this.levelModel.computeShadingPlane();
+          this.levelModel.computeFowPlane();
+          this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
+          this.levelView.updateFowPlane(this.levelModel.fowPlane);
+          commandQueueItem.succeeded();
+        });
+      } else {
+        // HACK: Shouldn't have to explicitly call this?
+        this.levelView.playFailureAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock);
+        commandQueueItem.failed();
+      }
     } else {
-      //commandQueueItem.failed();
+      commandQueueItem.failed();
     }
   }
 
