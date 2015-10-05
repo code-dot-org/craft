@@ -129,6 +129,7 @@ export default class LevelView {
     this.game.load.atlasJSONHash('leavesOak', `${this.assetRoot}images/Leaves_Oak_Decay.png`, `${this.assetRoot}images/Leaves_Oak_Decay.json`);
     this.game.load.atlasJSONHash('leavesSpruce', `${this.assetRoot}images/Leaves_Spruce_Decay.png`, `${this.assetRoot}images/Leaves_Spruce_Decay.json`);
     this.game.load.atlasJSONHash('sheep', `${this.assetRoot}images/Sheep.png`, `${this.assetRoot}images/Sheep.json`);
+    this.game.load.atlasJSONHash('creeper', `${this.assetRoot}images/Creeper.png`, `${this.assetRoot}images/Creeper.json`);
     this.game.load.atlasJSONHash('crops', `${this.assetRoot}images/Crops.png`, `${this.assetRoot}images/Crops.json`);
     this.game.load.atlasJSONHash('torch', `${this.assetRoot}images/Torch.png`, `${this.assetRoot}images/Torch.json`);
 
@@ -772,6 +773,16 @@ export default class LevelView {
         sprite.animations.add("used", frameList, 15, true);
         sprite.animations.play("idle");
         break;
+
+      case "creeper":
+        sprite = plane.create(-6 + 40 * x, 0 + plane.yOffset + 40 * y, "creeper", "Creeper_052");
+        frameList = Phaser.Animation.generateFrameNames("Creeper_", 52, 60, "", 3);
+        for (i = 0; i < 30; ++i) {
+          frameList.push("Creeper_052");
+        }
+        sprite.animations.add("idle", frameList, 15, true);
+        sprite.animations.play("idle");
+        break;      
 
       case "torch":
         atlas = this.blocks[blockType][0];
