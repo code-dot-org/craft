@@ -9,10 +9,15 @@ export default class LevelBlock {
     this.isDestroyable = blockType !== "";
     this.isUsable = isUsable || false;
     this.isEmpty = blockType === "";
+    this.isEmissive = false;
 
     if (blockType == "sheep") {
       this.isDestroyable = false;
       this.isUsable = true;
+    }
+
+    if (blockType == "lava" || blockType == "torch") {
+      this.isEmissive = true;
     }
   }
 

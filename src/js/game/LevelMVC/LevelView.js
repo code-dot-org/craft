@@ -18,6 +18,7 @@ export default class LevelView {
     this.shadingPlane = null;
     this.actionPlane = null;
     this.fluffPlane = null;
+    this.fowPlane = null;
 
     this.miniBlocks = {
       "dirt": ["Miniblocks", 0, 5],
@@ -50,7 +51,9 @@ export default class LevelView {
       "gunPowder": ["Miniblocks", 162, 167],
       "wheat": ["Miniblocks", 168, 173],
       "potato": ["Miniblocks", 174, 179],
-      "carrots": ["Miniblocks", 180, 185]
+      "carrots": ["Miniblocks", 180, 185],
+
+      "sheep": ["Miniblocks", 102, 107]
     };
 
     this.blocks = {
@@ -72,11 +75,6 @@ export default class LevelView {
       "oreIron": ["blocks", "Iron_Ore", -13, 0],
       "oreLapis": ["blocks", "Lapis_Ore", -13, 0],
       "lava": ["blocks", "Lava", -13, 0],
-      "leavesAcacia": ["blocks", "Leaves_Acacia", -13, 0],
-      "leavesBirch": ["blocks", "Leaves_Birch", -13, 0],
-      "leavesJungle": ["blocks", "Leaves_Jungle", -13, 0],
-      "leavesOak": ["blocks", "Leaves_Oak", -13, 0],
-      "leavesSpruce": ["blocks", "Leaves_Spruce", -13, 0],
       "logAcacia": ["blocks", "Log_Acacia", -13, 0],
       "logBirch": ["blocks", "Log_Birch", -13, 0],
       "logJungle": ["blocks", "Log_Jungle", -13, 0],
@@ -118,6 +116,7 @@ export default class LevelView {
     this.game.load.image('shadeLayer', `${this.assetRoot}images/Shade_Layer.png`);
     this.game.load.atlasJSONHash('AO', `${this.assetRoot}images/AO.png`, `${this.assetRoot}images/AO.json`);
     this.game.load.atlasJSONHash('blockShadows', `${this.assetRoot}images/Block_Shadows.png`, `${this.assetRoot}images/Block_Shadows.json`);
+    this.game.load.atlasJSONHash('undergroundFow', `${this.assetRoot}images/UndergroundFoW.png`, `${this.assetRoot}images/UndergroundFoW.json`);
 
     this.game.load.image('tallGrass', `${this.assetRoot}images/TallGrass.png`);
     this.game.load.atlasJSONHash('blocks', `${this.assetRoot}images/Blocks.png`, `${this.assetRoot}images/Blocks.json`);
@@ -162,6 +161,7 @@ export default class LevelView {
     this.resetPlanes(levelModel);
     this.preparePlayerSprite();
     this.updateShadingPlane(levelModel.shadingPlane);
+    this.updateFowPlane(levelModel.fowPlane);
     this.setPlayerPosition(player.position[0], player.position[1]);
     this.setSelectionIndicatorPosition(player.position[0], player.position[1]);
     this.playPlayerAnimation("idle", player.position, player.facing);
@@ -231,10 +231,12 @@ export default class LevelView {
   }
 
   playSuccessAnimation(position, facing, isOnBlock) {
+    console.log("LevelView::playSuccessAnimation");
     this.playPlayerAnimation("celebrate", position, facing, isOnBlock);
   }
 
   playFailureAnimation(position, facing, isOnBlock) {
+    console.log("LevelView::playFailureAnimation");
     this.playPlayerAnimation("fail", position, facing, isOnBlock);
   }
 
@@ -417,6 +419,8 @@ export default class LevelView {
     this.actionPlane.yOffset = -22;
     this.fluffPlane = this.game.add.group();
     this.fluffPlane.yOffset = -160;
+    this.fowPlane = this.game.add.group();
+    this.fowPlane.yOffset = 0;
   }
 
   resetPlanes(levelData) {
@@ -433,6 +437,7 @@ export default class LevelView {
     this.actionPlane.removeAll(true);
     this.fluffPlane.removeAll(true);
     this.shadingPlane.removeAll(true);
+    this.fowPlane.removeAll(true);
 
     this.baseShading = this.shadingPlane.create(0, 0, 'shadeLayer');
 
@@ -549,6 +554,32 @@ export default class LevelView {
       }
 
       this.shadingPlane.create(sx, sy, atlas, shadowItem.type);
+    }
+  }
+
+  updateFowPlane(fowData) {
+    var index, fx, fy, atlas;
+
+    this.fowPlane.removeAll();
+
+    for (index = 0; index < fowData.length; ++index) {
+      let fowItem = fowData[index];
+
+      if (fowItem !== "") {
+        atlas = "undergroundFow";
+        fx = -40 + 40 * fowItem.x;
+        fy = -40 + 40 * fowItem.y;
+
+        switch (fowItem.type) {
+          case "FogOfWar_Center":          
+            break;
+
+          default:
+            break;
+        }
+
+        this.fowPlane.create(fx, fy, atlas, fowItem.type);
+      }
     }
   }
 

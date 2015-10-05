@@ -22,6 +22,8 @@ export default class LevelModel {
     this.shadingPlane = [];
     this.actionPlane = this.constructPlane(this.initialLevelData.actionPlane, true);
     this.fluffPlane = this.constructPlane(this.initialLevelData.fluffPlane, false);
+    this.fowPlane = [];
+    this.isDaytime = this.initialLevelData.isDaytime === undefined || this.initialLevelData.isDaytime;
 
     let levelData = Object.create(this.initialLevelData);
     let [x, y] = [levelData.playerStartPosition[0], levelData.playerStartPosition[1]];
@@ -33,6 +35,7 @@ export default class LevelModel {
     this.player.inventory = ["logOak"];
 
     this.computeShadingPlane();
+    this.computeFowPlane();
   }
 
   constructPlane(planeData, isActionPlane) {
@@ -295,6 +298,54 @@ export default class LevelModel {
 
     if (x >= 0 && x < 10 && y >= 0 && y < 10) {
       this.actionPlane[blockIndex] = new LevelBlock("");
+    }
+  }
+
+  computeFowPlane() {
+    var x, y;
+
+    this.fowPlane = [];
+    if (this.isDaytime) {
+      for (y = 0; y < 10; ++y) {
+        for (x = 0; x < 10; ++x) {
+          this.fowPlane.push[""];          
+        }
+      }
+    } else {
+      // compute the fog of war for light emitting blocks
+      for (y = 0; y < 10; ++y) {
+        for (x = 0; x < 10; ++x) {
+          this.fowPlane.push({ x: x, y: y, type: "FogOfWar_Center" });
+        }
+      }
+
+      for (y = 0; y < 10; ++y) {
+        for (x = 0; x < 10; ++x) {
+          let blockIndex = (y * 10) + x;
+
+          if (this.groundPlane[blockIndex].isEmissive ||
+            (!this.actionPlane[blockIndex].isEmpty && this.actionPlane[blockIndex].isEmissive)) {
+            this.clearFowAround(x, y);
+          }
+        }
+      }
+    }
+  }
+
+  clearFowAround(x, y) {
+    var ox, oy;
+
+    for (oy = -1; oy <= 1; ++oy) {
+      for (ox = -1; ox <= 1; ++ox) {
+        this.clearFowAt(x + ox, y + oy);
+      }
+    }
+  }
+
+  clearFowAt(x, y) {
+    if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+      let blockIndex = (y * 10) + x;
+      this.fowPlane[blockIndex] = "";
     }
   }
 
