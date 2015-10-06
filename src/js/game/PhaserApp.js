@@ -180,16 +180,14 @@ class PhaserApp {
   }
 
   handleEndState() {
-      // TODO: go into success/failure animation? (or are we called by CodeOrg for that?)
-
-      // report back to the code.org side the pass/fail result 
+      // report back to the code.org side the pass/fail result
       //     then clear the callback so we dont keep calling it
       if (this.OnCompleteCallback != null) {
           if (this.queue.isSucceeded()) {
-              this.OnCompleteCallback(true);
+              this.OnCompleteCallback(true, this.levelModel);
           }
           else {
-              this.OnCompleteCallback(false);
+              this.OnCompleteCallback(false, this.levelModel);
           }
           this.OnCompleteCallback = null;
       }

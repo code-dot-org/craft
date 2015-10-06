@@ -24,9 +24,9 @@ export function get(controller) {
      * Called when an attempt should be started, and the entire set of
      * command-queue API calls have been issued.
      *
-     * @param {Function} onAttemptComplete - callback with a single parameter,
+     * @param {Function} onAttemptComplete - callback with two parameters,
      * "success", i.e., true if attempt was successful (level completed),
-     * false if unsuccessful (level not completed).
+     * false if unsuccessful (level not completed), and the current level model.
      */
     startAttempt: function(onAttemptComplete) {
         controller.OnCompleteCallback = onAttemptComplete;
