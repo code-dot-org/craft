@@ -281,7 +281,7 @@ export default class LevelView {
     var tween,
         jumpAnimName;
 
-    if (blockType === "cropWheat") {
+    if (blockType === "cropWheat" || blockType == "torch") {
       this.setSelectionIndicatorPosition(position[0], position[1]);
       this.playPlayerAnimation("punch", position, facing, false).onComplete.add(() => {
         let blockIndex = (position[1] * 10) + position[0];
