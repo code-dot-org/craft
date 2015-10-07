@@ -2,7 +2,6 @@ import FacingDirection from "./FacingDirection.js"
 
 export default class LevelView {
   constructor(controller) {
-    console.log("LevelView::constructor");
     this.controller = controller;
     this.audioPlayer = controller.audioPlayer;
     this.game = controller.game;
@@ -111,7 +110,6 @@ export default class LevelView {
   }
 
   preload(playerAtlas) {
-    console.log("LevelView::preload");
     this.game.load.atlasJSONHash('player', `${this.assetRoot}images/${playerAtlas}.png`, `${this.assetRoot}images/${playerAtlas}.json`);
     this.game.load.image('entityShadow', `${this.assetRoot}images/Character_Shadow.png`);
     this.game.load.image('selectionIndicator', `${this.assetRoot}images/Selection_Indicator.png`);
@@ -155,13 +153,11 @@ export default class LevelView {
   }
 
   create(levelModel) {
-    console.log("LevelView::create");
     this.createPlanes();
     this.reset(levelModel);
   }
 
   reset(levelModel) {
-    console.log("LevelView::reset");
     let player = levelModel.player;
     
     this.resetPlanes(levelModel);
@@ -237,12 +233,10 @@ export default class LevelView {
   }
 
   playSuccessAnimation(position, facing, isOnBlock) {
-    console.log("LevelView::playSuccessAnimation");
     this.playPlayerAnimation("celebrate", position, facing, isOnBlock);
   }
 
   playFailureAnimation(position, facing, isOnBlock) {
-    console.log("LevelView::playFailureAnimation");
     this.playPlayerAnimation("fail", position, facing, isOnBlock);
   }
 
@@ -268,7 +262,7 @@ export default class LevelView {
     tween = this.game.add.tween(this.playerSprite).to({
       x: (-18 + 40 * position[0]),
       y: (-32 + 40 * position[1])
-    }, 200, Phaser.Easing.Linear.EaseOut);
+    }, 200, Phaser.Easing.Linear.None);
 
     tween.onComplete.add(() => {
       completionHandler();
@@ -324,7 +318,9 @@ export default class LevelView {
     let direction = this.getDirectionName(facing);
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
 
-    this.playPlayerAnimation("punch", playerPosition, facing, false).onComplete.add(() => {
+    var signalBinding = this.playPlayerAnimation("punch", playerPosition, facing, false).onComplete.add(() => {
+      signalBinding.detach();
+
       let blockIndex = (destroyPosition[1] * 10) + destroyPosition[0];
       let blockToShear = this.actionPlaneBlocks[blockIndex];
 
@@ -350,8 +346,10 @@ export default class LevelView {
 
     let destroyOverlay = this.actionPlane.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
     destroyOverlay.sortOrder = destroyPosition[1] * 10 + 2;
-    destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false).onComplete.add(() =>
+    var signalBinding = destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false).onComplete.add(() =>
     {
+      signalBinding.detach();
+
       this.actionPlaneBlocks[blockIndex] = null;
 
       if (blockToDestroy.hasOwnProperty("onBlockDestroy")) {
@@ -388,8 +386,9 @@ export default class LevelView {
     let miningParticlesOffsetY = miningParticlesData[miningParticlesIndex][2];
     let miningParticles = this.actionPlane.create(miningParticlesOffsetX + 40 * destroyPosition[0], miningParticlesOffsetY + 40 * destroyPosition[1], "miningParticles", "MiningParticles" + miningParticlesFirstFrame);
     miningParticles.sortOrder = destroyPosition[1] * 10 + 2;
-    miningParticles.animations.add("miningParticles", Phaser.Animation.generateFrameNames("MiningParticles", miningParticlesFirstFrame, miningParticlesFirstFrame + 11, "", 0), 30, false).onComplete.add(() =>
-    {
+    var signalBinding = miningParticles.animations.add("miningParticles", Phaser.Animation.generateFrameNames("MiningParticles", miningParticlesFirstFrame, miningParticlesFirstFrame + 11, "", 0), 30, false).onComplete.add(() => {
+      signalBinding.detach();
+
       miningParticles.kill();
       this.toDestroy.push(miningParticles);
     });
@@ -397,10 +396,13 @@ export default class LevelView {
   }
 
   playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
-    var explodeAnim = this.actionPlane.create(-36 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
+    var signalBinding,
+        explodeAnim = this.actionPlane.create(-36 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
+    
     explodeAnim.sortOrder = destroyPosition[1] * 10 + 2;
-    explodeAnim.animations.add("explode", Phaser.Animation.generateFrameNames("BlockBreakParticle", 0, 7, "", 0), 30, false).onComplete.add(() =>
+    signalBinding = explodeAnim.animations.add("explode", Phaser.Animation.generateFrameNames("BlockBreakParticle", 0, 7, "", 0), 30, false).onComplete.add(() =>
     {
+      signalBinding.detach();
       explodeAnim.kill();
       this.toDestroy.push(explodeAnim);
 
@@ -411,11 +413,30 @@ export default class LevelView {
   }
 
   playItemDropAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
-    var sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
+    var signalBinding,
+        sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
     sprite.sortOrder = destroyPosition[1] * 10 + 2;
-    sprite.animations.play("animate").onComplete.add(() => {
+    signalBinding = sprite.animations.play("animate").onComplete.add(() => {
+      signalBinding.detach();
+      this.playItemAcquireAnimation(playerPosition, facing, destroyPosition, blockType, sprite, completionHandler);
+    });
+  }
+
+  playItemAcquireAnimation(playerPosition, facing, destroyPosition, blockType, sprite, completionHandler) {
+    var tween;
+
+    tween = this.game.add.tween(sprite).to({
+      x: (-18 + 40 * playerPosition[0]),
+      y: (-32 + 40 * playerPosition[1])
+    }, 200, Phaser.Easing.Linear.None);
+
+    tween.onComplete.add(() => {
+      sprite.kill();
+      this.toDestroy.push(sprite);
       completionHandler();
     });
+
+    tween.start();
   }
 
   setPlayerPosition(x, y) {
@@ -430,7 +451,6 @@ export default class LevelView {
   }
 
   createPlanes() {
-    console.log("LevelView::createPlanes");
     this.groundPlane = this.game.add.group();
     this.groundPlane.yOffset = -2;
     this.shadingPlane = this.game.add.group();
@@ -450,8 +470,6 @@ export default class LevelView {
         i,
         blockType,
         frameList;
-
-    console.log("LevelView::resetPlanes");
 
     this.groundPlane.removeAll(true);
     this.actionPlane.removeAll(true);
@@ -718,13 +736,9 @@ export default class LevelView {
     let yOffset = 0;
 
     frameList = Phaser.Animation.generateFrameNames(framePrefix, frameStart, frameEnd, "", 3);
-    len = frameList.length;
-    for (i = 0; i < len; ++i) {
-      frameList.push(frameList[i]);
-    }
 
     sprite = this.actionPlane.create(xOffset + 40 * x, yOffset + this.actionPlane.yOffset + 40 * y, atlas, "");
-    sprite.animations.add("animate", frameList, 5, false);
+    sprite.animations.add("animate", frameList, 10, false);
     return sprite;
   }
 

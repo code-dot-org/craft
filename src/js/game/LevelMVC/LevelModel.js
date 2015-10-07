@@ -304,12 +304,46 @@ export default class LevelModel {
   }
 
   destroyBlockForward() {
+    var i,
+        shouldAddToInventory = true,
+        block = null;
+
     let blockForwardPosition = this.getMoveForwardPosition();
     let blockIndex = (blockForwardPosition[1] * 10) + blockForwardPosition[0];
     let [x, y] = [blockForwardPosition[0], blockForwardPosition[1]];
-
+    
     if (x >= 0 && x < 10 && y >= 0 && y < 10) {
-      this.actionPlane[blockIndex] = new LevelBlock("");
+      block = this.actionPlane[blockIndex];
+      if (block !== null) {
+        block.position = [x, y];
+        let inventoryType = this.getInventoryType(block.blockType);
+
+        for (i = 0; i < this.player.inventory.length; ++i) {
+          if (this.player.inventory[i] === inventoryType) {
+            shouldAddToInventory = false;
+          }
+        }
+
+        if (shouldAddToInventory) {
+          this.player.inventory.push(inventoryType);
+        }
+
+        if (block.isDestroyable) {
+          this.actionPlane[blockIndex] = new LevelBlock("");
+        }
+      }
+    }
+
+    return block;
+  }
+
+  getInventoryType(blockType) {
+    switch (blockType) {
+      case "sheep":
+        return "wool";
+      
+      default:
+        return blockType;
     }
   }
 

@@ -26,7 +26,6 @@ class PhaserApp {
    * @constructor
    */
   constructor(phaserAppConfig) {
-    console.log("PhaserApp::constructor");
     this.DEBUG = phaserAppConfig.debug;
 
     // Phaser pre-initialization config
@@ -73,7 +72,6 @@ class PhaserApp {
    * @param {Object} levelConfig
    */
   loadLevel(levelConfig) {
-    console.log("PhaserApp::loadLevel");
     this.levelData = Object.freeze(levelConfig);
 
     this.levelModel = new LevelModel(this.levelData);
@@ -81,19 +79,16 @@ class PhaserApp {
   }
 
   reset() {
-    console.log("PhaserApp::reset");
     this.levelModel.reset();
     this.levelView.reset(this.levelModel);
   }
 
   preload() {
-    console.log("PhaserApp::preload");
     this.game.time.advancedTiming = true;
     this.levelView.preload(this.levelModel.player.name);
   }
 
   create() {
-    console.log("PhaserApp::create");
     this.levelView.create(this.levelModel);
     this.addCheatKeys();
   }
@@ -249,29 +244,34 @@ class PhaserApp {
 
   destroyBlock(commandQueueItem) {
     if (this.levelModel.canDestroyBlockForward()) {
-      let destroyPosition = this.levelModel.getMoveForwardPosition();
-      let block = this.levelModel.actionPlane[(destroyPosition[1] * 10) + destroyPosition[0]];
-      let blockType = block.blockType;
+      let block = this.levelModel.destroyBlockForward();
 
-      if (block.isDestroyable) {
-        this.levelModel.destroyBlockForward();
-        this.levelModel.computeShadingPlane();
-        this.levelView.playDestroyBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, destroyPosition, blockType, this.levelModel.shadingPlane, () => {
-          commandQueueItem.succeeded();
-        });
-      } else if (block.isUsable) {
-        switch (blockType) {
-          case "sheep":
-            // TODO: What to do with already sheered sheep?
-            this.levelView.playShearSheepAnimation(this.levelModel.player.position, this.levelModel.player.facing, destroyPosition, blockType, () => {
-              commandQueueItem.succeeded();
-            });
-            break;
+      if (block !== null) {
+        let destroyPosition = block.position;
+        let blockType = block.blockType;
+        let player = this.levelModel.player;
+
+        if (block.isDestroyable) {
+          this.levelModel.computeShadingPlane();
+          this.levelView.playDestroyBlockAnimation(player.position, player.facing, destroyPosition, blockType, this.levelModel.shadingPlane, () => {
+            commandQueueItem.succeeded();
+          });
+        } else if (block.isUsable) {
+          switch (blockType) {
+            case "sheep":
+              console.log("playShearSheepAnimation: " + player.position[0] + ", " + player.position[1]);
+
+              // TODO: What to do with already sheered sheep?
+              this.levelView.playShearSheepAnimation(player.position, player.facing, destroyPosition, blockType, () => {
+                commandQueueItem.succeeded();
+              });
+              break;
+          }
         }
       }
     } else {
-    // TODO: should we fail when there's no pblock to destroy??
-        commandQueueItem.succeeded();
+      // TODO: Should we fail if there's no block to destroy?
+      commandQueueItem.succeeded();
     }
   }
 
