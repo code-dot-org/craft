@@ -223,8 +223,9 @@ class PhaserApp {
         if (blockForwardPosition[0] >= 0 && blockForwardPosition[0] < 10 && blockForwardPosition[1] >= 0 && blockForwardPosition[1] < 10) {
             commandQueueItem.succeeded();
         }
+        
         // stop the walking animation and fail
-        this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing );
+        this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
         commandQueueItem.failed();
     }
   }
@@ -259,8 +260,6 @@ class PhaserApp {
         } else if (block.isUsable) {
           switch (blockType) {
             case "sheep":
-              console.log("playShearSheepAnimation: " + player.position[0] + ", " + player.position[1]);
-
               // TODO: What to do with already sheered sheep?
               this.levelView.playShearSheepAnimation(player.position, player.facing, destroyPosition, blockType, () => {
                 commandQueueItem.succeeded();

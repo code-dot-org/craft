@@ -164,9 +164,9 @@ export default class LevelView {
     this.preparePlayerSprite();
     this.updateShadingPlane(levelModel.shadingPlane);
     this.updateFowPlane(levelModel.fowPlane);
-    this.setPlayerPosition(player.position[0], player.position[1]);
+    this.setPlayerPosition(player.position[0], player.position[1], player.isOnBlock);
     this.setSelectionIndicatorPosition(player.position[0], player.position[1]);
-    this.playPlayerAnimation("idle", player.position, player.facing);
+    this.playIdleAnimation(player.position, player.facing, player.isOnBlock);
   }
 
   update() {
@@ -439,9 +439,9 @@ export default class LevelView {
     tween.start();
   }
 
-  setPlayerPosition(x, y) {
+  setPlayerPosition(x, y, isOnBlock) {
     this.playerSprite.x = -18 + 40 * x;
-    this.playerSprite.y = -32 + 40 * y;
+    this.playerSprite.y = -32 + (isOnBlock ? -23 : 0) + 40 * y;
     this.playerSprite.sortOrder = y * 10 + 5;
   }
 
