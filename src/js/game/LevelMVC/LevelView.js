@@ -19,18 +19,6 @@ export default class LevelView {
     this.fluffPlane = null;
     this.fowPlane = null;
 
-    this.isCreated = false;
-
-    this.blocksToMiniBlocks = {
-      "stone": "cobblestone",
-      "oreCoal": "coal",
-      "oreDiamond": "diamond",
-      "oreIron": "ingotIron",
-      "oreGold": "ingotGold",
-      "oreEmerald": "emerald",
-      "oreRedstone": "redstoneDust"
-    };
-
     this.miniBlocks = {
       "dirt": ["Miniblocks", 0, 5],
       "coarseDirt": ["Miniblocks", 6, 11],
@@ -171,14 +159,13 @@ export default class LevelView {
   create(levelModel) {
     this.createPlanes();
     this.reset(levelModel);
-    this.isCreated = true;
   }
 
   reset(levelModel) {
     let player = levelModel.player;
     
     this.resetPlanes(levelModel);
-    this.preparePlayerSprite(player.name);
+    this.preparePlayerSprite();
     this.updateShadingPlane(levelModel.shadingPlane);
     this.updateFowPlane(levelModel.fowPlane);
     this.setPlayerPosition(player.position[0], player.position[1], player.isOnBlock);
@@ -769,12 +756,31 @@ export default class LevelView {
       case "treeSpruce":
         frame = "log" + blockType.substring(4);
         break;
+      case "stone":
+        frame = "cobblestone";
+        break;
+      case "oreCoal":
+        frame = "coal";
+        break;
+      case "oreDiamond":
+        frame = "diamond";
+        break;
+      case "oreIron":
+        frame = "ingotIron";
+        break;
+      case "oreGold":
+        frame = "ingotGold";
+        break;
+      case "oreEmerald":
+        frame = "emerald";
+        break;
+      case "oreRedstone":
+        frame = "redstoneDust";
+        break;
       default:
         frame = blockType;
         break;
     }
-
-    frame = this.blocksToMiniBlocks[blockType] || frame;
 
     let atlas = "miniBlocks";
     let framePrefix = this.miniBlocks[frame][0];
