@@ -168,17 +168,6 @@ export default class LevelView {
     });
   }
 
-  loadPlayerAtlas(playerName) {
-    return this.game.load.atlasJSONHash(
-        this.playerAtlasKey(playerName),
-        `${this.assetRoot}images/${playerName}.png`,
-        `${this.assetRoot}images/${playerName}.json`);
-  }
-
-  playerAtlasKey(playerName) {
-    return `player${playerName}`;
-  }
-
   create(levelModel) {
     this.createPlanes();
     this.reset(levelModel);
@@ -214,17 +203,6 @@ export default class LevelView {
   render() {
     this.actionPlane.sort('sortOrder');
     this.fluffPlane.sort('z'); 
-  }
-
-  switchPlayer(playerAtlas) {
-    var atlasLoader = this.loadPlayerAtlas(playerAtlas);
-    atlasLoader.onLoadComplete.addOnce(() => {
-      if (!this.isCreated) {
-        return; // still loading
-      }
-      this.reset(this.controller.levelModel);
-    });
-    this.game.load.start();
   }
 
   getDirectionName(facing) {
@@ -697,8 +675,8 @@ export default class LevelView {
 
     let frameRate = 20;
 
-    this.playerSprite = this.actionPlane.create(0, 0, this.playerAtlasKey(playerName), 'Player_121');
-    this.playerGhost = this.fluffPlane.create(0, 0, this.playerAtlasKey(playerName), 'Player_121');
+    this.playerSprite = this.actionPlane.create(0, 0, 'player', 'Player_121');
+    this.playerGhost = this.fluffPlane.create(0, 0, 'player', 'Player_121');
     this.playerGhost.parent = this.playerSprite;
     this.playerGhost.alpha = 0.2;
 
