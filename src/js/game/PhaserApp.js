@@ -170,7 +170,9 @@ class PhaserApp {
   }
 
   handleEndState() {
-      // report back to the code.org side the pass/fail result
+      // TODO: go into success/failure animation? (or are we called by CodeOrg for that?)
+
+      // report back to the code.org side the pass/fail result 
       //     then clear the callback so we dont keep calling it
       if (this.OnCompleteCallback != null) {
           if (this.queue.isSucceeded()) {
@@ -190,13 +192,16 @@ class PhaserApp {
 
   // command processors
   moveForward(commandQueueItem) {
-    if (this.levelModel.canMoveForward()) {
-        let wasOnBlock = this.levelModel.player.isOnBlock;
-        this.levelModel.moveForward();
-        // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
+    var player = this.levelModel.player;
 
+    if (this.levelModel.canMoveForward()) {
+      let wasOnBlock = player.isOnBlock;
+      this.levelModel.moveForward();
+      // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
+
+      this.levelView.playMoveForwardAnimation(player.position, player.facing, wasOnBlock && wasOnBlock != player.isOnBlock, () => {
         if (this.levelModel.isPlayerStandingInWater()) {
-            //this.levelView.playDrownFailureAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock, () => {
+            //this.levelView.playDrownFailureAnimation(player.position, player.facing, player.isOnBlock, () => {
                 commandQueueItem.failed();
             //} );
         } 
@@ -205,18 +210,18 @@ class PhaserApp {
                 this.levelView.playFailureAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock);
                 commandQueueItem.failed();
             //} );
+          this.levelView.playBurnInLavaAnimation(player.position, player.facing, player.isOnBlock, () => {
+            commandQueueItem.failed();
+          } );
         } 
         else if(this.levelModel.isPlayerStandingNearCreeper()) {
-            //this.levelView.playCreeperExplodeAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock, () => {
+            //this.levelView.playCreeperExplodeAnimation(player.position, player.facing, player.isOnBlock, () => {
                 commandQueueItem.failed();
             //} );
-        } 
-        else  {
-            this.levelView.playMoveForwardAnimation(this.levelModel.player.position, this.levelModel.player.facing, wasOnBlock && wasOnBlock != this.levelModel.player.isOnBlock, () => {
-                commandQueueItem.succeeded();
-            });
+        } else {
+          commandQueueItem.succeeded();
         }
-        
+      });        
     } else {
         // check if moveFwd failed due to walking off the board
         let blockForwardPosition =  this.levelModel.getMoveForwardPosition();
@@ -226,7 +231,7 @@ class PhaserApp {
         }
         
         // stop the walking animation and fail
-        this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
+        this.levelView.playIdleAnimation(player.position, player.facing, false);
         commandQueueItem.failed();
     }
   }

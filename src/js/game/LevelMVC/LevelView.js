@@ -106,6 +106,8 @@ export default class LevelView {
       "tallGrass": ["tallGrass", "", -13, 0],
 
       "lavaPop": ["lavaPop", "LavaPop01", -13, 0],
+
+      "fire": ["fire", "", -11, 135],
     };
 
     this.actionPlaneBlocks = [];
@@ -139,6 +141,9 @@ export default class LevelView {
     this.game.load.atlasJSONHash('miningParticles', `${this.assetRoot}images/MiningParticles.png`, `${this.assetRoot}images/MiningParticles.json`);
     this.game.load.atlasJSONHash('miniBlocks', `${this.assetRoot}images/Miniblocks.png`, `${this.assetRoot}images/Miniblocks.json`);
     this.game.load.atlasJSONHash('lavaPop', `${this.assetRoot}images/LavaPop.png`, `${this.assetRoot}images/LavaPop.json`);
+    this.game.load.atlasJSONHash('fire', `${this.assetRoot}images/Fire.png`, `${this.assetRoot}images/Fire.json`);
+
+    this.game.load.image('finishOverlay', `${this.assetRoot}images/WhiteRect.png`);
 
     this.audioPlayer.register({id: 'beep', mp3: `${this.assetRoot}audio/beep.mp3`, ogg: 'TODO'});
     this.audioPlayer.register({
@@ -242,6 +247,28 @@ export default class LevelView {
 
   playFailureAnimation(position, facing, isOnBlock) {
     this.playPlayerAnimation("fail", position, facing, isOnBlock);
+  }
+
+  playBurnInLavaAnimation(position, facing, isOnBlock, completionHandler) {
+    var sprite,
+        tween;
+
+    this.playPlayerAnimation("jumpUp", position, facing, isOnBlock);
+    this.createBlock(this.fluffPlane, position[0], position[1], "fire");
+
+    sprite = this.fluffPlane.create(0, 0, "finishOverlay");
+    sprite.alpha = 0;
+    sprite.tint = 0xd1580d;
+
+    tween = this.game.add.tween(sprite).to({
+      alpha: 0.5,
+    }, 200, Phaser.Easing.Linear.None);
+
+    tween.onComplete.add(() => {
+      completionHandler();
+    });
+
+    tween.start();
   }
 
   playMoveForwardAnimation(position, facing, shouldJumpDown, completionHandler) {
@@ -892,6 +919,17 @@ export default class LevelView {
         yOffset = this.blocks[blockType][3];
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("LavaPop", 1, 30, "", 2);
+        sprite.animations.add("idle", frameList, 5, true);
+        sprite.animations.play("idle");
+        break;
+
+      case "fire":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Fire", 0, 14, "", 2);
         sprite.animations.add("idle", frameList, 5, true);
         sprite.animations.play("idle");
         break;

@@ -192,12 +192,12 @@ export default class LevelModel {
 
   isPlayerStandingInWater(){
     let blockIndex = (this.player.position[1] * 10) + this.player.position[0];
-    return this.actionPlane[blockIndex].blockType == "water";
+    return this.actionPlane[blockIndex].blockType === "water";
   }
 
   isPlayerStandingInLava() {
     let blockIndex = (this.player.position[1] * 10) + this.player.position[0];
-    return this.groundPlane[blockIndex].blockType == "lava";
+    return this.groundPlane[blockIndex].blockType === "lava";
   }
 
   isPlayerStandingNearCreeper() {
