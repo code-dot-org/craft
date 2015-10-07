@@ -22,6 +22,8 @@ export default class LevelModel {
     this.shadingPlane = [];
     this.actionPlane = this.constructPlane(this.initialLevelData.actionPlane, true);
     this.fluffPlane = this.constructPlane(this.initialLevelData.fluffPlane, false);
+    this.fowPlane = [];
+    this.isDaytime = this.initialLevelData.isDaytime === undefined || this.initialLevelData.isDaytime;
 
     let levelData = Object.create(this.initialLevelData);
     let [x, y] = [levelData.playerStartPosition[0], levelData.playerStartPosition[1]];
@@ -33,6 +35,7 @@ export default class LevelModel {
     this.player.inventory = ["logOak"];
 
     this.computeShadingPlane();
+    this.computeFowPlane();
   }
 
   constructPlane(planeData, isActionPlane) {
@@ -317,15 +320,27 @@ export default class LevelModel {
   placeBlock(blockType) {
     let blockPosition = this.player.position;
     let blockIndex = (blockPosition[1] * 10) + blockPosition[0];
+    var shouldPlace = false,
+        block;
 
-    var block = new LevelBlock(blockType);
-    block.isEmpty = false;
-    block.isWalkable = false;
-    block.isPlacable = false;
-    block.isUsable = true;
+    switch (blockType) {
+      case "cropWheat":
+        shouldPlace = this.groundPlane[blockIndex].blockType === "farmlandWet";
+        break;
 
-    this.actionPlane[blockIndex] = block;
-    this.player.isOnBlock = true;
+      default:
+        shouldPlace = true;
+        break;
+    }
+
+    if (shouldPlace === true) {
+      var block = new LevelBlock(blockType);
+
+      this.actionPlane[blockIndex] = block;
+      this.player.isOnBlock = block.isDestroyable && block.isWalkable;
+    }
+
+    return shouldPlace;
   }
 
   placeBlockForward(blockType, targetPlane) {
@@ -342,12 +357,94 @@ export default class LevelModel {
   }
 
   destroyBlockForward() {
+    var i,
+        shouldAddToInventory = true,
+        block = null;
+
     let blockForwardPosition = this.getMoveForwardPosition();
     let blockIndex = (blockForwardPosition[1] * 10) + blockForwardPosition[0];
     let [x, y] = [blockForwardPosition[0], blockForwardPosition[1]];
-
+    
     if (x >= 0 && x < 10 && y >= 0 && y < 10) {
-      this.actionPlane[blockIndex] = new LevelBlock("");
+      block = this.actionPlane[blockIndex];
+      if (block !== null) {
+        block.position = [x, y];
+        let inventoryType = this.getInventoryType(block.blockType);
+
+        for (i = 0; i < this.player.inventory.length; ++i) {
+          if (this.player.inventory[i] === inventoryType) {
+            shouldAddToInventory = false;
+          }
+        }
+
+        if (shouldAddToInventory) {
+          this.player.inventory.push(inventoryType);
+        }
+
+        if (block.isDestroyable) {
+          this.actionPlane[blockIndex] = new LevelBlock("");
+        }
+      }
+    }
+
+    return block;
+  }
+
+  getInventoryType(blockType) {
+    switch (blockType) {
+      case "sheep":
+        return "wool";
+      
+      default:
+        return blockType;
+    }
+  }
+
+  computeFowPlane() {
+    var x, y;
+
+    this.fowPlane = [];
+    if (this.isDaytime) {
+      for (y = 0; y < 10; ++y) {
+        for (x = 0; x < 10; ++x) {
+          this.fowPlane.push[""];          
+        }
+      }
+    } else {
+      // compute the fog of war for light emitting blocks
+      for (y = 0; y < 10; ++y) {
+        for (x = 0; x < 10; ++x) {
+          this.fowPlane.push({ x: x, y: y, type: "FogOfWar_Center" });
+        }
+      }
+
+      for (y = 0; y < 10; ++y) {
+        for (x = 0; x < 10; ++x) {
+          let blockIndex = (y * 10) + x;
+
+          if (this.groundPlane[blockIndex].isEmissive ||
+            (!this.actionPlane[blockIndex].isEmpty && this.actionPlane[blockIndex].isEmissive)) {
+            this.clearFowAround(x, y);
+          }
+        }
+      }
+    }
+  }
+
+  clearFowAround(x, y) {
+    var ox, oy;
+
+    for (oy = -1; oy <= 1; ++oy) {
+      for (ox = -1; ox <= 1; ++ox) {
+        this.clearFowAt(x + ox, y + oy);
+      }
+    }
+  }
+
+  clearFowAt(x, y) {
+    if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+      let blockIndex = (y * 10) + x;
+      this.fowPlane[blockIndex] = "";
     }
   }
 

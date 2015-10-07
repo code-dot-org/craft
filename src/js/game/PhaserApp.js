@@ -27,7 +27,6 @@ class PhaserApp {
    * @constructor
    */
   constructor(phaserAppConfig) {
-    console.log("PhaserApp::constructor");
     this.DEBUG = phaserAppConfig.debug;
 
     // Phaser pre-initialization config
@@ -74,7 +73,6 @@ class PhaserApp {
    * @param {Object} levelConfig
    */
   loadLevel(levelConfig) {
-    console.log("PhaserApp::loadLevel");
     this.levelData = Object.freeze(levelConfig);
 
     this.levelModel = new LevelModel(this.levelData);
@@ -82,19 +80,16 @@ class PhaserApp {
   }
 
   reset() {
-    console.log("PhaserApp::reset");
     this.levelModel.reset();
     this.levelView.reset(this.levelModel);
   }
 
   preload() {
-    console.log("PhaserApp::preload");
     this.game.time.advancedTiming = true;
     this.levelView.preload(this.levelModel.player.name);
   }
 
   create() {
-    console.log("PhaserApp::create");
     this.levelView.create(this.levelModel);
     this.game.time.slowMotion = 1.5;
     this.addCheatKeys();
@@ -234,8 +229,9 @@ class PhaserApp {
         if (blockForwardPosition[0] >= 0 && blockForwardPosition[0] < 10 && blockForwardPosition[1] >= 0 && blockForwardPosition[1] < 10) {
             commandQueueItem.succeeded();
         }
+        
         // stop the walking animation and fail
-        this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing );
+        this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
         commandQueueItem.failed();
     }
   }
@@ -255,42 +251,52 @@ class PhaserApp {
 
   destroyBlock(commandQueueItem) {
     if (this.levelModel.canDestroyBlockForward()) {
-      let destroyPosition = this.levelModel.getMoveForwardPosition();
-      let block = this.levelModel.actionPlane[(destroyPosition[1] * 10) + destroyPosition[0]];
-      let blockType = block.blockType;
+      let block = this.levelModel.destroyBlockForward();
 
-      if (block.isDestroyable) {
-        this.levelModel.destroyBlockForward();
-        this.levelModel.computeShadingPlane();
-        this.levelView.playDestroyBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, destroyPosition, blockType, this.levelModel.shadingPlane, () => {
-          commandQueueItem.succeeded();
-        });
-      } else if (block.isUsable) {
-        switch (blockType) {
-          case "sheep":
-            // TODO: What to do with already sheered sheep?
-            this.levelView.playShearSheepAnimation(this.levelModel.player.position, this.levelModel.player.facing, destroyPosition, blockType, () => {
-              commandQueueItem.succeeded();
-            });
-            break;
+      if (block !== null) {
+        let destroyPosition = block.position;
+        let blockType = block.blockType;
+        let player = this.levelModel.player;
+
+        if (block.isDestroyable) {
+          this.levelModel.computeShadingPlane();
+          this.levelView.playDestroyBlockAnimation(player.position, player.facing, destroyPosition, blockType, this.levelModel.shadingPlane, () => {
+            commandQueueItem.succeeded();
+          });
+        } else if (block.isUsable) {
+          switch (blockType) {
+            case "sheep":
+              // TODO: What to do with already sheered sheep?
+              this.levelView.playShearSheepAnimation(player.position, player.facing, destroyPosition, blockType, () => {
+                commandQueueItem.succeeded();
+              });
+              break;
+          }
         }
       }
     } else {
-    // TODO: should we fail when there's no pblock to destroy??
-        commandQueueItem.succeeded();
+      // TODO: Should we fail if there's no block to destroy?
+      commandQueueItem.succeeded();
     }
   }
 
   placeBlock(commandQueueItem, blockType) {
     if (this.levelModel.canPlaceBlock()) {
-      this.levelModel.placeBlock(blockType);
-      this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, () => {
-        this.levelModel.computeShadingPlane();
-        this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
-        commandQueueItem.succeeded();
-      });
+      if (this.levelModel.placeBlock(blockType)) {
+        this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, () => {
+          this.levelModel.computeShadingPlane();
+          this.levelModel.computeFowPlane();
+          this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
+          this.levelView.updateFowPlane(this.levelModel.fowPlane);
+          commandQueueItem.succeeded();
+        });
+      } else {
+        // HACK: Shouldn't have to explicitly call this?
+        this.levelView.playFailureAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock);
+        commandQueueItem.failed();
+      }
     } else {
-      //commandQueueItem.failed();
+      commandQueueItem.failed();
     }
   }
 

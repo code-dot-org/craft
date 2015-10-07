@@ -2,7 +2,6 @@ import FacingDirection from "./FacingDirection.js"
 
 export default class LevelView {
   constructor(controller) {
-    console.log("LevelView::constructor");
     this.controller = controller;
     this.audioPlayer = controller.audioPlayer;
     this.game = controller.game;
@@ -18,6 +17,7 @@ export default class LevelView {
     this.shadingPlane = null;
     this.actionPlane = null;
     this.fluffPlane = null;
+    this.fowPlane = null;
 
     this.isCreated = false;
 
@@ -63,7 +63,9 @@ export default class LevelView {
       "gunPowder": ["Miniblocks", 162, 167],
       "wheat": ["Miniblocks", 168, 173],
       "potato": ["Miniblocks", 174, 179],
-      "carrots": ["Miniblocks", 180, 185]
+      "carrots": ["Miniblocks", 180, 185],
+
+      "sheep": ["Miniblocks", 102, 107]
     };
 
     this.blocks = {
@@ -84,7 +86,7 @@ export default class LevelView {
       "clayHardened": ["blocks", "Hardened_Clay", -13, 0],
       "oreIron": ["blocks", "Iron_Ore", -13, 0],
       "oreLapis": ["blocks", "Lapis_Ore", -13, 0],
-      "lava": ["blocks", "Lava", -13, 0],
+      "lava": ["blocks", "Lava_0", -13, 0],
       "logAcacia": ["blocks", "Log_Acacia", -13, 0],
       "logBirch": ["blocks", "Log_Birch", -13, 0],
       "logJungle": ["blocks", "Log_Jungle", -13, 0],
@@ -101,7 +103,7 @@ export default class LevelView {
       "sandstone": ["blocks", "Sandstone", -13, 0],
       "stone": ["blocks", "Stone", -13, 0],
       "tnt": ["blocks", "Tnt", -13, 0],
-      "water": ["blocks", "Water", -13, 0],
+      "water": ["blocks", "Water_0", -13, 0],
       "wool": ["blocks", "Wool_White", -13, 0],
 
       "leavesAcacia": ["leavesAcacia", "Leaves0", -42, 80],
@@ -110,22 +112,27 @@ export default class LevelView {
       "leavesOak": ["leavesOak", "Leaves0", -100, 0],
       "leavesSpruce": ["leavesSpruce", "Leaves0", -76, 60],
 
+      "cropWheat": ["crops", "Wheat0", -13, 0],
+      "torch": ["torch", "Torch0", -13, 0],
+
       "tallGrass": ["tallGrass", "", -13, 0],
+
+      "lavaPop": ["lavaPop", "LavaPop01", -13, 0],
     };
 
     this.actionPlaneBlocks = [];
     this.toDestroy = [];
   }
 
-  preload(playerName) {
-    console.log("LevelView::preload");
-    this.loadPlayerAtlas(playerName);
+  preload(playerAtlas) {
+    this.game.load.atlasJSONHash('player', `${this.assetRoot}images/${playerAtlas}.png`, `${this.assetRoot}images/${playerAtlas}.json`);
     this.game.load.image('entityShadow', `${this.assetRoot}images/Character_Shadow.png`);
     this.game.load.image('selectionIndicator', `${this.assetRoot}images/Selection_Indicator.png`);
 
     this.game.load.image('shadeLayer', `${this.assetRoot}images/Shade_Layer.png`);
     this.game.load.atlasJSONHash('AO', `${this.assetRoot}images/AO.png`, `${this.assetRoot}images/AO.json`);
     this.game.load.atlasJSONHash('blockShadows', `${this.assetRoot}images/Block_Shadows.png`, `${this.assetRoot}images/Block_Shadows.json`);
+    this.game.load.atlasJSONHash('undergroundFow', `${this.assetRoot}images/UndergroundFoW.png`, `${this.assetRoot}images/UndergroundFoW.json`);
 
     this.game.load.image('tallGrass', `${this.assetRoot}images/TallGrass.png`);
     this.game.load.atlasJSONHash('blocks', `${this.assetRoot}images/Blocks.png`, `${this.assetRoot}images/Blocks.json`);
@@ -135,11 +142,15 @@ export default class LevelView {
     this.game.load.atlasJSONHash('leavesOak', `${this.assetRoot}images/Leaves_Oak_Decay.png`, `${this.assetRoot}images/Leaves_Oak_Decay.json`);
     this.game.load.atlasJSONHash('leavesSpruce', `${this.assetRoot}images/Leaves_Spruce_Decay.png`, `${this.assetRoot}images/Leaves_Spruce_Decay.json`);
     this.game.load.atlasJSONHash('sheep', `${this.assetRoot}images/Sheep.png`, `${this.assetRoot}images/Sheep.json`);
+    this.game.load.atlasJSONHash('creeper', `${this.assetRoot}images/Creeper.png`, `${this.assetRoot}images/Creeper.json`);
+    this.game.load.atlasJSONHash('crops', `${this.assetRoot}images/Crops.png`, `${this.assetRoot}images/Crops.json`);
+    this.game.load.atlasJSONHash('torch', `${this.assetRoot}images/Torch.png`, `${this.assetRoot}images/Torch.json`);
 
     this.game.load.atlasJSONHash('destroyOverlay', `${this.assetRoot}images/Destroy_Overlay.png`, `${this.assetRoot}images/Destroy_Overlay.json`);
     this.game.load.atlasJSONHash('blockExplode', `${this.assetRoot}images/BlockExplode.png`, `${this.assetRoot}images/BlockExplode.json`);
     this.game.load.atlasJSONHash('miningParticles', `${this.assetRoot}images/MiningParticles.png`, `${this.assetRoot}images/MiningParticles.json`);
     this.game.load.atlasJSONHash('miniBlocks', `${this.assetRoot}images/Miniblocks.png`, `${this.assetRoot}images/Miniblocks.json`);
+    this.game.load.atlasJSONHash('lavaPop', `${this.assetRoot}images/LavaPop.png`, `${this.assetRoot}images/LavaPop.json`);
 
     this.audioPlayer.register({id: 'beep', mp3: `${this.assetRoot}audio/beep.mp3`, ogg: 'TODO'});
     this.audioPlayer.register({
@@ -169,22 +180,21 @@ export default class LevelView {
   }
 
   create(levelModel) {
-    console.log("LevelView::create");
     this.createPlanes();
     this.reset(levelModel);
     this.isCreated = true;
   }
 
   reset(levelModel) {
-    console.log("LevelView::reset");
     let player = levelModel.player;
     
     this.resetPlanes(levelModel);
     this.preparePlayerSprite(player.name);
     this.updateShadingPlane(levelModel.shadingPlane);
-    this.setPlayerPosition(player.position[0], player.position[1]);
+    this.updateFowPlane(levelModel.fowPlane);
+    this.setPlayerPosition(player.position[0], player.position[1], player.isOnBlock);
     this.setSelectionIndicatorPosition(player.position[0], player.position[1]);
-    this.playPlayerAnimation("idle", player.position, player.facing);
+    this.playIdleAnimation(player.position, player.facing, player.isOnBlock);
   }
 
   update() {
@@ -291,7 +301,7 @@ export default class LevelView {
     tween = this.game.add.tween(this.playerSprite).to({
       x: (-18 + 40 * position[0]),
       y: (-32 + 40 * position[1])
-    }, 200, Phaser.Easing.Linear.EaseOut);
+    }, 200, Phaser.Easing.Linear.None);
 
     tween.onComplete.add(() => {
       completionHandler();
@@ -304,22 +314,43 @@ export default class LevelView {
     var tween,
         jumpAnimName;
 
-    let direction = this.getDirectionName(facing);
-    this.setSelectionIndicatorPosition(position[0], position[1]);
+    if (blockType === "cropWheat" || blockType == "torch") {
+      this.setSelectionIndicatorPosition(position[0], position[1]);
+      this.playPlayerAnimation("punch", position, facing, false).onComplete.add(() => {
+        let blockIndex = (position[1] * 10) + position[0];
+        var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
 
-    jumpAnimName = "jumpUp" + direction;
+        if (sprite) {
+          sprite.sortOrder = position[1] * 10;
+        }
 
-    this.playerSprite.animations.play(jumpAnimName);
-    tween = this.game.add.tween(this.playerSprite).to({
-      y: (-55 + 40 * position[1])
-    }, 125, Phaser.Easing.Cubic.EaseOut);
+        this.actionPlaneBlocks[blockIndex] = sprite;
+        completionHandler();                
+      });
+    } else {
+      let direction = this.getDirectionName(facing);
+      this.setSelectionIndicatorPosition(position[0], position[1]);
 
-    tween.onComplete.add(() => {
-      this.createActionPlaneBlock(position, blockType);
-      completionHandler();
-    });
+      jumpAnimName = "jumpUp" + direction;
 
-    tween.start();
+      this.playerSprite.animations.play(jumpAnimName);
+      tween = this.game.add.tween(this.playerSprite).to({
+        y: (-55 + 40 * position[1])
+      }, 125, Phaser.Easing.Cubic.EaseOut);
+
+      tween.onComplete.add(() => {
+        let blockIndex = (position[1] * 10) + position[0];
+        var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
+        
+        if (sprite) {
+          sprite.sortOrder = position[1] * 10;
+        }
+
+        this.actionPlaneBlocks[blockIndex] = sprite;
+        completionHandler();
+      });
+      tween.start();
+    }
   }
 
   playPlaceBlockInFrontAnimation(blockPosition, plane, blockType, completionHandler) {
@@ -348,7 +379,9 @@ export default class LevelView {
     let direction = this.getDirectionName(facing);
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
 
-    this.playPlayerAnimation("punch", playerPosition, facing, false).onComplete.add(() => {
+    var signalBinding = this.playPlayerAnimation("punch", playerPosition, facing, false).onComplete.add(() => {
+      signalBinding.detach();
+
       let blockIndex = (destroyPosition[1] * 10) + destroyPosition[0];
       let blockToShear = this.actionPlaneBlocks[blockIndex];
 
@@ -374,8 +407,10 @@ export default class LevelView {
 
     let destroyOverlay = this.actionPlane.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
     destroyOverlay.sortOrder = destroyPosition[1] * 10 + 2;
-    destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false).onComplete.add(() =>
+    var signalBinding = destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false).onComplete.add(() =>
     {
+      signalBinding.detach();
+
       this.actionPlaneBlocks[blockIndex] = null;
 
       if (blockToDestroy.hasOwnProperty("onBlockDestroy")) {
@@ -412,8 +447,9 @@ export default class LevelView {
     let miningParticlesOffsetY = miningParticlesData[miningParticlesIndex][2];
     let miningParticles = this.actionPlane.create(miningParticlesOffsetX + 40 * destroyPosition[0], miningParticlesOffsetY + 40 * destroyPosition[1], "miningParticles", "MiningParticles" + miningParticlesFirstFrame);
     miningParticles.sortOrder = destroyPosition[1] * 10 + 2;
-    miningParticles.animations.add("miningParticles", Phaser.Animation.generateFrameNames("MiningParticles", miningParticlesFirstFrame, miningParticlesFirstFrame + 11, "", 0), 30, false).onComplete.add(() =>
-    {
+    var signalBinding = miningParticles.animations.add("miningParticles", Phaser.Animation.generateFrameNames("MiningParticles", miningParticlesFirstFrame, miningParticlesFirstFrame + 11, "", 0), 30, false).onComplete.add(() => {
+      signalBinding.detach();
+
       miningParticles.kill();
       this.toDestroy.push(miningParticles);
     });
@@ -421,10 +457,13 @@ export default class LevelView {
   }
 
   playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
-    var explodeAnim = this.actionPlane.create(-36 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
+    var signalBinding,
+        explodeAnim = this.actionPlane.create(-36 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
+    
     explodeAnim.sortOrder = destroyPosition[1] * 10 + 2;
-    explodeAnim.animations.add("explode", Phaser.Animation.generateFrameNames("BlockBreakParticle", 0, 7, "", 0), 30, false).onComplete.add(() =>
+    signalBinding = explodeAnim.animations.add("explode", Phaser.Animation.generateFrameNames("BlockBreakParticle", 0, 7, "", 0), 30, false).onComplete.add(() =>
     {
+      signalBinding.detach();
       explodeAnim.kill();
       this.toDestroy.push(explodeAnim);
 
@@ -435,16 +474,35 @@ export default class LevelView {
   }
 
   playItemDropAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
-    var sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
+    var signalBinding,
+        sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
     sprite.sortOrder = destroyPosition[1] * 10 + 2;
-    sprite.animations.play("animate").onComplete.add(() => {
-      completionHandler();
+    signalBinding = sprite.animations.play("animate").onComplete.add(() => {
+      signalBinding.detach();
+      this.playItemAcquireAnimation(playerPosition, facing, destroyPosition, blockType, sprite, completionHandler);
     });
   }
 
-  setPlayerPosition(x, y) {
+  playItemAcquireAnimation(playerPosition, facing, destroyPosition, blockType, sprite, completionHandler) {
+    var tween;
+
+    tween = this.game.add.tween(sprite).to({
+      x: (-18 + 40 * playerPosition[0]),
+      y: (-32 + 40 * playerPosition[1])
+    }, 200, Phaser.Easing.Linear.None);
+
+    tween.onComplete.add(() => {
+      sprite.kill();
+      this.toDestroy.push(sprite);
+      completionHandler();
+    });
+
+    tween.start();
+  }
+
+  setPlayerPosition(x, y, isOnBlock) {
     this.playerSprite.x = -18 + 40 * x;
-    this.playerSprite.y = -32 + 40 * y;
+    this.playerSprite.y = -32 + (isOnBlock ? -23 : 0) + 40 * y;
     this.playerSprite.sortOrder = y * 10 + 5;
   }
 
@@ -454,7 +512,6 @@ export default class LevelView {
   }
 
   createPlanes() {
-    console.log("LevelView::createPlanes");
     this.groundPlane = this.game.add.group();
     this.groundPlane.yOffset = -2;
     this.shadingPlane = this.game.add.group();
@@ -463,6 +520,8 @@ export default class LevelView {
     this.actionPlane.yOffset = -22;
     this.fluffPlane = this.game.add.group();
     this.fluffPlane.yOffset = -160;
+    this.fowPlane = this.game.add.group();
+    this.fowPlane.yOffset = 0;
   }
 
   resetPlanes(levelData) {
@@ -473,12 +532,11 @@ export default class LevelView {
         blockType,
         frameList;
 
-    console.log("LevelView::resetPlanes");
-
     this.groundPlane.removeAll(true);
     this.actionPlane.removeAll(true);
     this.fluffPlane.removeAll(true);
     this.shadingPlane.removeAll(true);
+    this.fowPlane.removeAll(true);
 
     this.baseShading = this.shadingPlane.create(0, 0, 'shadeLayer');
 
@@ -606,7 +664,33 @@ export default class LevelView {
     }
   }
 
-  preparePlayerSprite(playerName) {
+  updateFowPlane(fowData) {
+    var index, fx, fy, atlas;
+
+    this.fowPlane.removeAll();
+
+    for (index = 0; index < fowData.length; ++index) {
+      let fowItem = fowData[index];
+
+      if (fowItem !== "") {
+        atlas = "undergroundFow";
+        fx = -40 + 40 * fowItem.x;
+        fy = -40 + 40 * fowItem.y;
+
+        switch (fowItem.type) {
+          case "FogOfWar_Center":          
+            break;
+
+          default:
+            break;
+        }
+
+        this.fowPlane.create(fx, fy, atlas, fowItem.type);
+      }
+    }
+  }
+
+  preparePlayerSprite() {
     var frameList,
         genFrames,
         i;
@@ -722,10 +806,6 @@ export default class LevelView {
     let yOffset = 0;
 
     frameList = Phaser.Animation.generateFrameNames(framePrefix, frameStart, frameEnd, "", 3);
-    len = frameList.length;
-    for (i = 0; i < len; ++i) {
-      frameList.push(frameList[i]);
-    }
 
     sprite = this.actionPlane.create(xOffset + 40 * x, yOffset + this.actionPlane.yOffset + 40 * y, atlas, "");
     sprite.animations.add("animate", frameList, 10, false);
@@ -735,7 +815,11 @@ export default class LevelView {
   createBlock(plane, x, y, blockType) {
     var i,
         sprite = null,
-        frameList;
+        frameList,
+        atlas,
+        frame,
+        xOffset,
+        yOffset;
 
     switch (blockType) {
       case "treeAcacia":
@@ -774,11 +858,65 @@ export default class LevelView {
         sprite.animations.play("idle");
         break;
 
+      case "creeper":
+        sprite = plane.create(-6 + 40 * x, 0 + plane.yOffset + 40 * y, "creeper", "Creeper_052");
+        frameList = Phaser.Animation.generateFrameNames("Creeper_", 52, 60, "", 3);
+        for (i = 0; i < 30; ++i) {
+          frameList.push("Creeper_052");
+        }
+        sprite.animations.add("idle", frameList, 15, true);
+        sprite.animations.play("idle");
+        break;      
+
+      case "torch":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Torch", 0, 23, "", 0);
+        sprite.animations.add("idle", frameList, 15, true);
+        sprite.animations.play("idle");
+        break;
+
+      case "water":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Water_", 0, 5, "", 0);
+        sprite.animations.add("idle", frameList, 5, true);
+        sprite.animations.play("idle");
+        break;
+
+      case "lava":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Lava_", 0, 5, "", 0);
+        sprite.animations.add("idle", frameList, 5, true);
+        sprite.animations.play("idle");
+        break;
+
+      case "lavaPop":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("LavaPop", 1, 30, "", 2);
+        sprite.animations.add("idle", frameList, 5, true);
+        sprite.animations.play("idle");
+        break;
+
       default:
-        let atlas = this.blocks[blockType][0];
-        let frame = this.blocks[blockType][1];
-        let xOffset = this.blocks[blockType][2];
-        let yOffset = this.blocks[blockType][3];
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         break;
     }

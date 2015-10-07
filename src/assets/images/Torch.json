@@ -1,6 +1,6 @@
 {"frames": {
 
-"Torch0.png":
+"Torch0":
 {
 	"frame": {"x":0,"y":84,"w":29,"h":37},
 	"rotated": false,
@@ -8,7 +8,7 @@
 	"spriteSourceSize": {"x":17,"y":7,"w":29,"h":37},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch1.png":
+"Torch1":
 {
 	"frame": {"x":78,"y":0,"w":35,"h":40},
 	"rotated": false,
@@ -16,7 +16,7 @@
 	"spriteSourceSize": {"x":14,"y":4,"w":35,"h":40},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch10.png":
+"Torch10":
 {
 	"frame": {"x":78,"y":40,"w":35,"h":40},
 	"rotated": false,
@@ -24,7 +24,7 @@
 	"spriteSourceSize": {"x":14,"y":4,"w":35,"h":40},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch11.png":
+"Torch11":
 {
 	"frame": {"x":0,"y":0,"w":39,"h":42},
 	"rotated": false,
@@ -32,7 +32,7 @@
 	"spriteSourceSize": {"x":12,"y":2,"w":39,"h":42},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch12.png":
+"Torch12":
 {
 	"frame": {"x":87,"y":80,"w":35,"h":40},
 	"rotated": false,
@@ -40,7 +40,7 @@
 	"spriteSourceSize": {"x":14,"y":4,"w":35,"h":40},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch13.png":
+"Torch13":
 {
 	"frame": {"x":192,"y":80,"w":29,"h":40},
 	"rotated": false,
@@ -48,7 +48,7 @@
 	"spriteSourceSize": {"x":17,"y":4,"w":29,"h":40},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch14.png":
+"Torch14":
 {
 	"frame": {"x":29,"y":84,"w":29,"h":37},
 	"rotated": false,
@@ -56,7 +56,7 @@
 	"spriteSourceSize": {"x":17,"y":7,"w":29,"h":37},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch15.png":
+"Torch15":
 {
 	"frame": {"x":113,"y":0,"w":35,"h":40},
 	"rotated": false,
@@ -64,7 +64,7 @@
 	"spriteSourceSize": {"x":14,"y":4,"w":35,"h":40},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch16.png":
+"Torch16":
 {
 	"frame": {"x":0,"y":42,"w":39,"h":42},
 	"rotated": false,
@@ -72,7 +72,7 @@
 	"spriteSourceSize": {"x":12,"y":2,"w":39,"h":42},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch17.png":
+"Torch17":
 {
 	"frame": {"x":113,"y":40,"w":35,"h":40},
 	"rotated": false,
@@ -80,7 +80,7 @@
 	"spriteSourceSize": {"x":14,"y":4,"w":35,"h":40},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch18.png":
+"Torch18":
 {
 	"frame": {"x":0,"y":84,"w":29,"h":37},
 	"rotated": false,
@@ -88,7 +88,7 @@
 	"spriteSourceSize": {"x":17,"y":7,"w":29,"h":37},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch19.png":
+"Torch19":
 {
 	"frame": {"x":122,"y":80,"w":35,"h":40},
 	"rotated": false,
@@ -96,7 +96,7 @@
 	"spriteSourceSize": {"x":14,"y":4,"w":35,"h":40},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch2.png":
+"Torch2":
 {
 	"frame": {"x":78,"y":0,"w":35,"h":40},
 	"rotated": false,
@@ -104,7 +104,7 @@
 	"spriteSourceSize": {"x":14,"y":4,"w":35,"h":40},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch20.png":
+"Torch20":
 {
 	"frame": {"x":148,"y":0,"w":35,"h":40},
 	"rotated": false,
@@ -112,7 +112,7 @@
 	"spriteSourceSize": {"x":14,"y":4,"w":35,"h":40},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch21.png":
+"Torch21":
 {
 	"frame": {"x":39,"y":0,"w":39,"h":42},
 	"rotated": false,
@@ -120,7 +120,7 @@
 	"spriteSourceSize": {"x":12,"y":2,"w":39,"h":42},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch22.png":
+"Torch22":
 {
 	"frame": {"x":148,"y":40,"w":35,"h":40},
 	"rotated": false,
@@ -128,7 +128,7 @@
 	"spriteSourceSize": {"x":14,"y":4,"w":35,"h":40},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch23.png":
+"Torch23":
 {
 	"frame": {"x":157,"y":80,"w":35,"h":40},
 	"rotated": false,
@@ -136,7 +136,7 @@
 	"spriteSourceSize": {"x":14,"y":4,"w":35,"h":40},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch3.png":
+"Torch3":
 {
 	"frame": {"x":0,"y":84,"w":29,"h":37},
 	"rotated": false,
@@ -144,7 +144,7 @@
 	"spriteSourceSize": {"x":17,"y":7,"w":29,"h":37},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch4.png":
+"Torch4":
 {
 	"frame": {"x":58,"y":84,"w":29,"h":37},
 	"rotated": false,
@@ -152,7 +152,7 @@
 	"spriteSourceSize": {"x":17,"y":7,"w":29,"h":37},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch5.png":
+"Torch5":
 {
 	"frame": {"x":183,"y":0,"w":35,"h":40},
 	"rotated": false,
@@ -160,7 +160,7 @@
 	"spriteSourceSize": {"x":14,"y":4,"w":35,"h":40},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch6.png":
+"Torch6":
 {
 	"frame": {"x":39,"y":42,"w":39,"h":42},
 	"rotated": false,
@@ -168,7 +168,7 @@
 	"spriteSourceSize": {"x":12,"y":2,"w":39,"h":42},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch7.png":
+"Torch7":
 {
 	"frame": {"x":183,"y":40,"w":35,"h":40},
 	"rotated": false,
@@ -176,7 +176,7 @@
 	"spriteSourceSize": {"x":14,"y":4,"w":35,"h":40},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch8.png":
+"Torch8":
 {
 	"frame": {"x":218,"y":0,"w":29,"h":37},
 	"rotated": false,
@@ -184,7 +184,7 @@
 	"spriteSourceSize": {"x":17,"y":7,"w":29,"h":37},
 	"sourceSize": {"w":64,"h":64}
 },
-"Torch9.png":
+"Torch9":
 {
 	"frame": {"x":218,"y":37,"w":29,"h":37},
 	"rotated": false,
@@ -195,7 +195,7 @@
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",
 	"version": "1.0",
-	"image": "Torch.png",
+	"image": "Torch",
 	"format": "RGBA8888",
 	"size": {"w":247,"h":121},
 	"scale": "1",
