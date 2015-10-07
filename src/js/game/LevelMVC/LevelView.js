@@ -73,7 +73,7 @@ export default class LevelView {
       "clayHardened": ["blocks", "Hardened_Clay", -13, 0],
       "oreIron": ["blocks", "Iron_Ore", -13, 0],
       "oreLapis": ["blocks", "Lapis_Ore", -13, 0],
-      "lava": ["blocks", "Lava", -13, 0],
+      "lava": ["blocks", "Lava_0", -13, 0],
       "logAcacia": ["blocks", "Log_Acacia", -13, 0],
       "logBirch": ["blocks", "Log_Birch", -13, 0],
       "logJungle": ["blocks", "Log_Jungle", -13, 0],
@@ -90,7 +90,7 @@ export default class LevelView {
       "sandstone": ["blocks", "Sandstone", -13, 0],
       "stone": ["blocks", "Stone", -13, 0],
       "tnt": ["blocks", "Tnt", -13, 0],
-      "water": ["blocks", "Water", -13, 0],
+      "water": ["blocks", "Water_0", -13, 0],
       "wool": ["blocks", "Wool_White", -13, 0],
 
       "leavesAcacia": ["leavesAcacia", "Leaves0", -42, 80],
@@ -806,6 +806,28 @@ export default class LevelView {
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Torch", 0, 23, "", 0);
         sprite.animations.add("idle", frameList, 15, true);
+        sprite.animations.play("idle");
+        break;
+
+      case "water":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Water_", 0, 5, "", 0);
+        sprite.animations.add("idle", frameList, 5, true);
+        sprite.animations.play("idle");
+        break;
+
+      case "lava":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Lava_", 0, 5, "", 0);
+        sprite.animations.add("idle", frameList, 5, true);
         sprite.animations.play("idle");
         break;
 
