@@ -103,6 +103,8 @@ export default class LevelView {
       "torch": ["torch", "Torch0", -13, 0],
 
       "tallGrass": ["tallGrass", "", -13, 0],
+
+      "lavaPop": ["lavaPop", "LavaPop01", -13, 0],
     };
 
     this.actionPlaneBlocks = [];
@@ -135,6 +137,7 @@ export default class LevelView {
     this.game.load.atlasJSONHash('blockExplode', `${this.assetRoot}images/BlockExplode.png`, `${this.assetRoot}images/BlockExplode.json`);
     this.game.load.atlasJSONHash('miningParticles', `${this.assetRoot}images/MiningParticles.png`, `${this.assetRoot}images/MiningParticles.json`);
     this.game.load.atlasJSONHash('miniBlocks', `${this.assetRoot}images/Miniblocks.png`, `${this.assetRoot}images/Miniblocks.json`);
+    this.game.load.atlasJSONHash('lavaPop', `${this.assetRoot}images/LavaPop.png`, `${this.assetRoot}images/LavaPop.json`);
 
     this.audioPlayer.register({id: 'beep', mp3: `${this.assetRoot}audio/beep.mp3`, ogg: 'TODO'});
     this.audioPlayer.register({
@@ -827,6 +830,17 @@ export default class LevelView {
         yOffset = this.blocks[blockType][3];
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Lava_", 0, 5, "", 0);
+        sprite.animations.add("idle", frameList, 5, true);
+        sprite.animations.play("idle");
+        break;
+
+      case "lavaPop":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("LavaPop", 1, 30, "", 2);
         sprite.animations.add("idle", frameList, 5, true);
         sprite.animations.play("idle");
         break;
