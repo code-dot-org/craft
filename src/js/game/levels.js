@@ -212,6 +212,9 @@ window.demoLevels = {
     solutionCode: turnRightBlock +
     moveForwardBlock +
     moveForwardBlock +
+    destroyBlock +
+    turnLeftBlock +
+    moveForwardBlock +
     destroyBlock
     ,
 
