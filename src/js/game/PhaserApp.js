@@ -201,9 +201,9 @@ class PhaserApp {
 
       this.levelView.playMoveForwardAnimation(player.position, player.facing, wasOnBlock && wasOnBlock != player.isOnBlock, () => {
         if (this.levelModel.isPlayerStandingInWater()) {
-            //this.levelView.playDrownFailureAnimation(player.position, player.facing, player.isOnBlock, () => {
-                commandQueueItem.failed();
-            //} );
+            this.levelView.playDrownFailureAnimation(player.position, player.facing, player.isOnBlock, () => {
+              commandQueueItem.failed();
+            } );
         } 
         else if(this.levelModel.isPlayerStandingInLava()) {
           this.levelView.playBurnInLavaAnimation(player.position, player.facing, player.isOnBlock, () => {
