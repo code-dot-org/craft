@@ -305,7 +305,9 @@ class PhaserApp {
     this.levelModel.placeBlockForward(blockType, placementPlane);
     this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.getMoveForwardPosition(), placementPlane, blockType, () => {
       this.levelModel.computeShadingPlane();
+      this.levelModel.computeFowPlane();
       this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
+      this.levelView.updateFowPlane(this.levelModel.fowPlane);
       commandQueueItem.succeeded();
     });
   }
