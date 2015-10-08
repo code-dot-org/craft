@@ -28,7 +28,7 @@ export default class LevelModel {
     let levelData = Object.create(this.initialLevelData);
     let [x, y] = [levelData.playerStartPosition[0], levelData.playerStartPosition[1]];
 
-    this.player.name = "Steve";
+    this.player.name = this.initialLevelData.playerName || "Steve";
     this.player.position = levelData.playerStartPosition;
     this.player.isOnBlock = !this.actionPlane[(y * 10) + x].getIsEmptyOrEntity();
     this.player.facing = levelData.playerStartDirection;
@@ -46,7 +46,8 @@ export default class LevelModel {
     for (index = 0; index < planeData.length; ++index) {
       block = new LevelBlock(planeData[index]);
       block.isWalkable = !isActionPlane || planeData[index] === "";
-      block.isPlacable = isActionPlane && block.isEmpty;
+      block.isPlacable = (isActionPlane && block.isEmpty) ||
+          (block.blockType === "lava" || block.blockType === "water");
       block.isUsable = isActionPlane && !block.isEmpty;
       result.push(block);
     }
@@ -155,21 +156,34 @@ export default class LevelModel {
   }
 
   isForwardBlockOfType(blockType) {
-      let blockForwardPosition = this.getMoveForwardPosition();
-      return this.isBlockOfType(blockForwardPosition, blockType);
+    let blockForwardPosition = this.getMoveForwardPosition();
+
+    let actionIsEmpty = this.isBlockOfTypeOnPlane(blockForwardPosition, "empty", this.actionPlane);
+
+    if (blockType === '' && actionIsEmpty) {
+      return true;
+    }
+
+    return actionIsEmpty ?
+        this.isBlockOfTypeOnPlane(blockForwardPosition, blockType, this.groundPlane) :
+        this.isBlockOfTypeOnPlane(blockForwardPosition, blockType, this.actionPlane)
   }
 
   isBlockOfType(position, blockType)  {
+      return this.isBlockOfTypeOnPlane(position, blockType, this.actionPlane);
+  }
+
+  isBlockOfTypeOnPlane(position, blockType, plane)  {
       var result = false;
 
       let blockIndex = (position[1] * 10) + position[0];
       if (blockIndex >= 0 && blockIndex < 100) {
 
           if (blockType == "empty") {
-              result =  this.actionPlane[blockIndex].isEmpty;
+              result =  plane[blockIndex].isEmpty;
           }
           else {
-              result = (blockType == this.actionPlane[blockIndex].blockType);
+              result = (blockType == plane[blockIndex].blockType);
           }
       }
 
@@ -208,6 +222,32 @@ export default class LevelModel {
 
   canPlaceBlock() {
     return true;
+  }
+
+  canPlaceBlockForward() {
+    if (this.player.isOnBlock) {
+      return false;
+    }
+
+    return this.getPlaneToPlaceOn(this.getMoveForwardPosition()) != null;
+  }
+
+  getPlaneToPlaceOn(coordinates) {
+    let blockIndex = (coordinates[1] * 10) + coordinates[0];
+    let [x, y] = [coordinates[0], coordinates[1]];
+
+    if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+      let actionBlock = this.actionPlane[blockIndex];
+      if (actionBlock.isPlacable) {
+        let groundBlock = this.groundPlane[blockIndex];
+        if (groundBlock.isPlacable) {
+          return this.groundPlane;
+        }
+        return this.actionPlane;
+      }
+    }
+
+    return null;
   }
 
   canDestroyBlockForward() {
@@ -280,8 +320,7 @@ export default class LevelModel {
   placeBlock(blockType) {
     let blockPosition = this.player.position;
     let blockIndex = (blockPosition[1] * 10) + blockPosition[0];
-    var shouldPlace = false,
-        block;
+    var shouldPlace = false;
 
     switch (blockType) {
       case "cropWheat":
@@ -301,6 +340,19 @@ export default class LevelModel {
     }
 
     return shouldPlace;
+  }
+
+  placeBlockForward(blockType, targetPlane) {
+    let blockPosition = this.getMoveForwardPosition();
+    let blockIndex = (blockPosition[1] * 10) + blockPosition[0];
+
+    var block = new LevelBlock(blockType);
+    block.isEmpty = false;
+    block.isWalkable = false;
+    block.isPlacable = false;
+    block.isUsable = true;
+
+    targetPlane[blockIndex] = block;
   }
 
   destroyBlockForward() {

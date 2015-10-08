@@ -2,9 +2,11 @@ import CommandQueue from "../CommandQueue/CommandQueue.js";
 import BaseCommand from "../CommandQueue/BaseCommand.js";
 import DestroyBlockCommand from "../CommandQueue/DestroyBlockCommand.js";
 import PlaceBlockCommand from "../CommandQueue/PlaceBlockCommand.js";
+import PlaceInFrontCommand from "../CommandQueue/PlaceInFrontCommand.js";
 import MoveForwardCommand from "../CommandQueue/MoveForwardCommand.js";
 import TurnCommand from "../CommandQueue/TurnCommand.js";
 import WhileCommand from "../CommandQueue/WhileCommand.js";
+import IfBlockAheadCommand from "../CommandQueue/IfBlockAheadCommand.js";
 import CheckSolutionCommand from "../CommandQueue/CheckSolutionCommand.js";
 
 export function get(controller) {
@@ -22,9 +24,9 @@ export function get(controller) {
      * Called when an attempt should be started, and the entire set of
      * command-queue API calls have been issued.
      *
-     * @param {Function} onAttemptComplete - callback with a single parameter,
+     * @param {Function} onAttemptComplete - callback with two parameters,
      * "success", i.e., true if attempt was successful (level completed),
-     * false if unsuccessful (level not completed).
+     * false if unsuccessful (level not completed), and the current level model.
      */
     startAttempt: function(onAttemptComplete) {
         controller.OnCompleteCallback = onAttemptComplete;
@@ -62,8 +64,16 @@ export function get(controller) {
         controller.queue.addCommand(new PlaceBlockCommand(controller, highlightCallback, blockType));
     },
 
+    placeInFront: function(highlightCallback, blockType) {
+        controller.queue.addCommand(new PlaceInFrontCommand(controller, highlightCallback, blockType));
+    },
+
     whilePathAhead: function(highlightCallback, blockType, codeBlock) {
         controller.queue.addCommand(new WhileCommand(controller, highlightCallback, blockType, codeBlock));
+    },
+
+    ifBlockAhead: function(highlightCallback, blockType, codeBlock) {
+        controller.queue.addCommand(new IfBlockAheadCommand(controller, highlightCallback, blockType, codeBlock));
     }
   }
 }

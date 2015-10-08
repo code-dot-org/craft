@@ -4,6 +4,7 @@ import DestroyBlockCommand from "./CommandQueue/DestroyBlockCommand.js";
 import MoveForwardCommand from "./CommandQueue/MoveForwardCommand.js";
 import TurnCommand from "./CommandQueue/TurnCommand.js";
 import WhileCommand from "./CommandQueue/WhileCommand.js";
+import IfBlockAheadCommand from "./CommandQueue/IfBlockAheadCommand.js";
 
 import LevelModel from "./LevelMVC/LevelModel.js"
 import LevelView from "./LevelMVC/LevelView.js"
@@ -90,6 +91,7 @@ class PhaserApp {
 
   create() {
     this.levelView.create(this.levelModel);
+    this.game.time.slowMotion = 1.5;
     this.addCheatKeys();
   }
 
@@ -174,10 +176,10 @@ class PhaserApp {
       //     then clear the callback so we dont keep calling it
       if (this.OnCompleteCallback != null) {
           if (this.queue.isSucceeded()) {
-              this.OnCompleteCallback(true);
+              this.OnCompleteCallback(true, this.levelModel);
           }
           else {
-              this.OnCompleteCallback(false);
+              this.OnCompleteCallback(false, this.levelModel);
           }
           this.OnCompleteCallback = null;
       }
@@ -292,6 +294,20 @@ class PhaserApp {
     } else {
       commandQueueItem.failed();
     }
+  }
+
+  placeBlockForward(commandQueueItem, blockType) {
+    if (!this.levelModel.canPlaceBlockForward()) {
+      commandQueueItem.succeeded();
+    }
+
+    var placementPlane = this.levelModel.getPlaneToPlaceOn(this.levelModel.getMoveForwardPosition());
+    this.levelModel.placeBlockForward(blockType, placementPlane);
+    this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.getMoveForwardPosition(), placementPlane, blockType, () => {
+      this.levelModel.computeShadingPlane();
+      this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
+      commandQueueItem.succeeded();
+    });
   }
 
   checkSolution(commandQueueItem) {

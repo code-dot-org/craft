@@ -5,8 +5,17 @@ var destroyBlock = "destroyBlock();\n";
 var whileBlockAhead = function (type, blockCode) {
   return "whileAhead('" + type + "', do{\n" + blockCode + "});\n"
 };
+var ifBlockAhead = function (type, blockCode) {
+  return "ifBlockAhead('" + type + "', do{\n" + blockCode + "});\n"
+};
+var ifLavaAhead = function (blockCode) {
+  return "ifLavaAhead(do{\n" + blockCode + "});\n"
+};
 var placeBlock = function (type) {
   return "placeBlock('" + type + "');\n"
+};
+var placeInFront = function (type) {
+  return "placeInFront('" + type + "');\n"
 };
 
 window.demoLevels = {
@@ -17,6 +26,8 @@ window.demoLevels = {
 
     // up: 0, right: 1, down: 2, left: 3
     playerStartDirection: 1,
+
+    playerName: "Alex",
 
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -600,6 +611,85 @@ window.demoLevels = {
     turnRightBlock +
     "for (var i = 0; i < 6; i++) {" +
     moveForwardBlock +
+    "}"
+
+      ,
+
+    verificationFunction: function (verificationAPI) {
+      return verificationAPI.solutionMapMatchesResultMap(
+          [
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "logOak", "logOak", "logOak", "logOak", "", "", "",
+            "", "", "", "logOak", "", "", "logOak", "", "", "",
+            "", "", "", "logOak", "", "", "logOak", "", "", "",
+            "", "", "", "", "", "", "logOak", "", "", "",
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", ""
+          ]);
+    }
+  },
+  9: {
+    instructions: "Underground test!",
+
+    playerStartPosition: [1, 5],
+
+    playerStartDirection: 1,
+
+    groundPlane: [
+      "stone", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "lava", "obsidian", "lava", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "stone"
+    ],
+
+    groundDecorationPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", ""],
+
+    actionPlane: [
+      "stone", "", "", "", "", "", "", "stone", "stone", "stone",
+      "", "", "", "", "", "", "", "", "", "stone",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "stone", "oreIron", "oreDiamond", "oreGold", "oreEmerald", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "stone", "", "", "", "", "", "", "", "", "",
+      "oreCoal", "stone", "", "", "", "", "", "", "", "",
+    ],
+
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    solutionCode: "for (var i = 0; i < 6; i++) {" +
+        destroyBlock + ifLavaAhead(placeInFront("stone")) + moveForwardBlock +
     "}"
 
       ,
