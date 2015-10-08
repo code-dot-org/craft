@@ -38,6 +38,7 @@ export default class LevelView {
       "cobblestone": ["Miniblocks", 90, 95],
       "sandstone": ["Miniblocks", 96, 101],
       "wool": ["Miniblocks", 102, 107],
+      "sheep": ["Miniblocks", 102, 107],
       "redstoneDust": ["Miniblocks", 108, 113],
       "lapisLazuli": ["Miniblocks", 114, 119],
       "ingotIron": ["Miniblocks", 120, 125],

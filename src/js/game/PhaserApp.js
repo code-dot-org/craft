@@ -206,6 +206,10 @@ class PhaserApp {
             //} );
         } 
         else if(this.levelModel.isPlayerStandingInLava()) {
+            //this.levelView.playBurnInLavaAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock, () => {
+                this.levelView.playFailureAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock);
+                commandQueueItem.failed();
+            //} );
           this.levelView.playBurnInLavaAnimation(player.position, player.facing, player.isOnBlock, () => {
             commandQueueItem.failed();
           } );
