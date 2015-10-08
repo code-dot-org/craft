@@ -32,7 +32,8 @@ export default class LevelModel {
     this.player.position = levelData.playerStartPosition;
     this.player.isOnBlock = !this.actionPlane[(y * 10) + x].getIsEmptyOrEntity();
     this.player.facing = levelData.playerStartDirection;
-    this.player.inventory = ["logOak"];
+
+    this.player.inventory = {};
 
     this.computeShadingPlane();
     this.computeFowPlane();
@@ -90,6 +91,10 @@ export default class LevelModel {
 
     return false;
   }
+
+  getInventoryAmount(inventoryType) {
+    return this.player.inventory[inventoryType] || 0;
+  };
 
   countOfTypeOnMap(blockType) {
     var count = 0,
@@ -369,16 +374,8 @@ export default class LevelModel {
       if (block !== null) {
         block.position = [x, y];
         let inventoryType = this.getInventoryType(block.blockType);
-
-        for (i = 0; i < this.player.inventory.length; ++i) {
-          if (this.player.inventory[i] === inventoryType) {
-            shouldAddToInventory = false;
-          }
-        }
-
-        if (shouldAddToInventory) {
-          this.player.inventory.push(inventoryType);
-        }
+        this.player.inventory[inventoryType] =
+            (this.player.inventory[inventoryType] || 0) + 1;
 
         if (block.isDestroyable) {
           this.actionPlane[blockIndex] = new LevelBlock("");

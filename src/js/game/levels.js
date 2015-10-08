@@ -190,7 +190,7 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "sheep", "", "", "",
       "", "", "", "", "sheep", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "treeOak", "",
@@ -216,7 +216,7 @@ window.demoLevels = {
     ,
 
     verificationFunction: function (verificationAPI) {
-      return verificationAPI.countOfTypeOnMap("logOak") === 0;
+      return verificationAPI.getInventoryAmount("wool") >= 2;
     }
   },
 
