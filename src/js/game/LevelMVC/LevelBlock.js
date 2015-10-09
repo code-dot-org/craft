@@ -39,17 +39,6 @@ export default class LevelBlock {
       this.isUsable = true;
       this.isDestroyable = false;
     }
-
-    if (blockType === "flowerDandelion" ||
-        blockType === "flowerOxeeye" ||
-        blockType === "flowerRose") {
-      this.isUsable = true;
-      this.isWalkable = true;
-      this.isDeadly = false;
-      this.isEntity = true;
-      this.isUsable = true;
-      this.isDestroyable = false;
-    }
   }
 
   getIsEmptyOrEntity() {
