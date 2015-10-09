@@ -448,7 +448,10 @@ export default class LevelView {
       let blockToShear = this.actionPlaneBlocks[blockIndex];
 
       blockToShear.animations.stop(null, true);
-      blockToShear.animations.play("used");
+      var binding = blockToShear.animations.play("used").onLoop.add(() => {
+        binding.detach();
+        blockToShear.animations.play("face");
+      });
 
       this.playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, true);
     });
@@ -940,12 +943,16 @@ export default class LevelView {
         }
         sprite.animations.add("idle", frameList, 15, true);
 
+        frameList = ["Sheep_300"];
+        sprite.animations.add("face", frameList, 15, true);
+
+
         frameList = Phaser.Animation.generateFrameNames("Sheep_", 430, 447, "", 0);
-        for (i = 0; i < 30; ++i) {
+        for (i = 0; i < 3; ++i) {
           frameList.push("Sheep_430");
         }
-
         sprite.animations.add("used", frameList, 15, true);
+
         sprite.animations.play("idle");
         break;
 
