@@ -236,11 +236,14 @@ class PhaserApp {
         let blockForwardPosition =  this.levelModel.getMoveForwardPosition();
 
         if (blockForwardPosition[0] >= 0 && blockForwardPosition[0] < 10 && blockForwardPosition[1] >= 0 && blockForwardPosition[1] < 10) {
-            commandQueueItem.succeeded();
+          commandQueueItem.succeeded();
+          this.levelView.playBumpAnimation(player.position, player.facing, false);
         }
-        
+        else
+        {
+          this.levelView.playIdleAnimation(player.position, player.facing, false);
+        }
         // stop the walking animation and fail
-        this.levelView.playIdleAnimation(player.position, player.facing, false);
         commandQueueItem.failed();
     }
   }
