@@ -108,10 +108,11 @@ export default class LevelView {
       "tallGrass": ["tallGrass", "", -13, 0],
 
       "lavaPop": ["lavaPop", "LavaPop01", -13, 0],
-
       "fire": ["fire", "", -11, 135],
       "bubbles": ["bubbles", "", -11, 135],
       "explosion": ["explosion", "", -70, 60],
+
+      "door": ["door", "", -70, 60],
     };
 
     this.actionPlaneBlocks = [];
@@ -148,6 +149,7 @@ export default class LevelView {
     this.game.load.atlasJSONHash('fire', `${this.assetRoot}images/Fire.png`, `${this.assetRoot}images/Fire.json`);
     this.game.load.atlasJSONHash('bubbles', `${this.assetRoot}images/Bubbles.png`, `${this.assetRoot}images/Bubbles.json`);
     this.game.load.atlasJSONHash('explosion', `${this.assetRoot}images/Explosion.png`, `${this.assetRoot}images/Explosion.json`);
+    this.game.load.atlasJSONHash('door', `${this.assetRoot}images/Door.png`, `${this.assetRoot}images/Door.json`);
 
     this.game.load.image('finishOverlay', `${this.assetRoot}images/WhiteRect.png`);
 
@@ -1032,6 +1034,17 @@ export default class LevelView {
           sprite.kill();
         });
         sprite.animations.play("idle");
+        break;
+
+      case "door":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Door", 0, 3, "", 1);
+        sprite.animations.add("open", frameList, 7, false);
+        sprite.animations.play("open");
         break;
 
       default:
