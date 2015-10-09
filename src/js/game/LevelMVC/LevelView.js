@@ -113,6 +113,7 @@ export default class LevelView {
       "explosion": ["explosion", "", -70, 60],
 
       "door": ["door", "", -70, 60],
+      //"bed": ["bed", "", -70, 60], 
     };
 
     this.actionPlaneBlocks = [];
@@ -152,6 +153,7 @@ export default class LevelView {
     this.game.load.atlasJSONHash('door', `${this.assetRoot}images/Door.png`, `${this.assetRoot}images/Door.json`);
 
     this.game.load.image('finishOverlay', `${this.assetRoot}images/WhiteRect.png`);
+    this.game.load.image('bed', `${this.assetRoot}images/Bed2.png`);
 
     this.audioPlayer.register({id: 'beep', mp3: `${this.assetRoot}audio/beep.mp3`, ogg: 'TODO'});
     this.audioPlayer.register({
@@ -906,6 +908,11 @@ export default class LevelView {
     return sprite;
   }
 
+  playAnimationWithOffset(sprite, animationName, animationFrameTotal, startFrame){
+    var rand = Math.trunc(Math.random() * animationFrameTotal) + startFrame;
+    sprite.animations.play(animationName).setFrame(rand, true);
+  }
+
   createBlock(plane, x, y, blockType) {
     var i,
         sprite = null,
@@ -952,8 +959,7 @@ export default class LevelView {
           frameList.push("Sheep_430");
         }
         sprite.animations.add("used", frameList, 15, true);
-
-        sprite.animations.play("idle");
+        this.playAnimationWithOffset(sprite,"idle",17, 199);
         break;
 
       case "creeper":
@@ -967,7 +973,7 @@ export default class LevelView {
           frameList.push("Creeper_052");
         }
         sprite.animations.add("idle", frameList, 15, true);
-        sprite.animations.play("idle");
+        this.playAnimationWithOffset(sprite, "idle", 8, 52);
         break;      
 
       case "torch":
