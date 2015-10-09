@@ -272,6 +272,29 @@ class PhaserApp {
 
         if (block.isDestroyable) {
           this.levelModel.computeShadingPlane();
+          switch(blockType){
+            case "logAcacia":
+            case "treeAcacia":
+              blockType = "planksAcacia";
+            break;
+            case "logBirch":
+            case "treeBirch":
+             blockType = "planksBirch";
+            break;
+            case "logJungle":
+            case "treeJungle":
+              blockType = "planksJungle";
+            break;
+            case "logOak":
+            case "treeOak":
+             blockType = "planksOak";
+            break;
+            case "logSpurce":
+            case "treeSpurce":
+              blockType = "planksOak";
+            break;
+          }
+
           this.levelView.playDestroyBlockAnimation(player.position, player.facing, destroyPosition, blockType, this.levelModel.shadingPlane, () => {
             commandQueueItem.succeeded();
           });
