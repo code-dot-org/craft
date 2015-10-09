@@ -211,9 +211,107 @@ export default class LevelModel {
     return this.groundPlane[blockIndex].blockType === "lava";
   }
 
+  coordinatesToIndex(coordinates){
+    return (coordinates[1] * 10) + coordinates[0];
+  }
+
+  checkPositionForTypeAndPush(blockType, position, objectArray){
+    if (this.isBlockOfType(position, blockType)) {
+      objectArray.push([true, position]);
+      return true;
+    }
+    else
+    {
+      objectArray.push([false, null]);
+      return false;
+    }
+  }
+
+  getAllBorderingPositions(position)
+  {
+    var positionArray = [];
+        //Top Right
+    positionArray.push([player.position[0] + 1, player.position[1] + 1]);
+    //Top Left
+    positionArray.push([player.position[0] - 1, player.position[1] + 1]);
+    //Bot Right
+    positionArray.push([player.position[0] + 1, player.position[1] - 1]);
+    //Bot Left
+    positionArray.push([player.position[0] - 1, player.position[1] - 1]);
+
+    //Check cardinal Directions
+    //Top
+    positionArray.push([player.position[0], player.position[1] + 1]);
+    //Bot
+    positionArray.push([player.position[0], player.position[1] - 1]);
+    //Right
+    positionArray.push([player.position[0] + 1, player.position[1]]);
+    //Left
+    positionArray.push([player.position[0] - 1, player.position[1]]);
+
+    return positionArray;
+  }
+
+  getAllBorderingPlayer(blockType){
+    var player = this.player;
+    var position;
+    var allFoundObjects = [false];
+    let actionPlane = this.actionPlane;
+    let coordinatesToIndex = this.coordinatesToIndex;
+    //Check all 8 directions
+
+    //Top Right
+    position = [player.position[0] + 1, player.position[1] + 1];
+    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+      allFoundObjects[0] = true;
+    }
+    //Top Left
+    position = [player.position[0] - 1, player.position[1] + 1];
+    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+      allFoundObjects[0] = true;
+    }
+    //Bot Right
+    position = [player.position[0] + 1, player.position[1] - 1];
+    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+      allFoundObjects[0] = true;
+    }
+    //Bot Left
+    position = [player.position[0] - 1, player.position[1] - 1];
+    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+      allFoundObjects[0] = true;
+    }
+
+    //Check cardinal Directions
+    //Top
+    position = [player.position[0], player.position[1] + 1];
+    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+      allFoundObjects[0] = true;
+    }
+    //Bot
+    position = [player.position[0], player.position[1] - 1];
+    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+      allFoundObjects[0] = true;
+    }
+    //Right
+    position = [player.position[0] + 1, player.position[1]];
+    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+      allFoundObjects[0] = true;
+    }
+    //Left
+    position = [player.position[0] - 1, player.position[1]];
+    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+      allFoundObjects[0] = true;
+    }
+
+    return allFoundObjects;
+  }
+
+  isBorderingPlayer(blockType){
+    return getAllBorderingPlayer[0];
+  }
+
   isPlayerStandingNearCreeper() {
-    // TODO: handle creepers
-    return false;
+    return this.getAllBorderingPlayer("creeper");
   }
 
   canMoveForward() {

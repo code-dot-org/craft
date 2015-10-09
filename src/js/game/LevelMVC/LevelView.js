@@ -110,8 +110,8 @@ export default class LevelView {
       "lavaPop": ["lavaPop", "LavaPop01", -13, 0],
 
       "fire": ["fire", "", -11, 135],
-
       "bubbles": ["bubbles", "", -11, 135],
+      "explosion": ["explosion", "", -70, 60],
     };
 
     this.actionPlaneBlocks = [];
@@ -147,6 +147,7 @@ export default class LevelView {
     this.game.load.atlasJSONHash('lavaPop', `${this.assetRoot}images/LavaPop.png`, `${this.assetRoot}images/LavaPop.json`);
     this.game.load.atlasJSONHash('fire', `${this.assetRoot}images/Fire.png`, `${this.assetRoot}images/Fire.json`);
     this.game.load.atlasJSONHash('bubbles', `${this.assetRoot}images/Bubbles.png`, `${this.assetRoot}images/Bubbles.json`);
+    this.game.load.atlasJSONHash('explosion', `${this.assetRoot}images/Explosion.png`, `${this.assetRoot}images/Explosion.json`);
 
     this.game.load.image('finishOverlay', `${this.assetRoot}images/WhiteRect.png`);
 
@@ -258,7 +259,7 @@ export default class LevelView {
       var sprite,
           tween;
 
-      this.playPlayerAnimation("jumpUp", position, facing, isOnBlock);
+      this.playPlayerAnimation("fail", position, facing, isOnBlock);
       this.createBlock(this.fluffPlane, position[0], position[1], "bubbles");
 
       sprite = this.fluffPlane.create(0, 0, "finishOverlay");
@@ -297,6 +298,39 @@ export default class LevelView {
 
     tween.start();
   }
+
+  playCreeperExplodeAnimation(position, facing, destroyPosition, isOnBlock, completionHandler) {
+
+    var signalBinding = this.playPlayerAnimation("jumpUp", position, facing, false).onLoop.add(() => {
+      this.playIdleAnimation(position, facing, isOnBlock);
+      signalBinding.detach();
+      this.playExplodingCreeperAnimation(position, facing, destroyPosition, isOnBlock, completionHandler);
+    });
+  }
+
+  playCreeperAnimation(position, facing, destroyPosition, isOnBlock, completionHandler){
+      playExplosionAnimation(position, facing, destroyPosition, isOnBlock, completionHandler, false);
+  }
+
+  playExplodingCreeperAnimation(position, facing, destroyPosition, isOnBlock, completionHandler) {
+    let direction = this.getDirectionName(facing);
+
+    let blockIndex = (destroyPosition[1] * 10) + destroyPosition[0];
+    let blockToExplode = this.actionPlaneBlocks[blockIndex];
+
+    var creeperExplodeAnimation = blockToExplode.animations.getAnimation("explode");
+    creeperExplodeAnimation.onComplete.add(()=>{
+      var borderingPositions;
+      blockToExplode.kill();
+      this.playFailureAnimation(position, facing, false);
+      this.playExplosionAnimation(position, facing, destroyPosition, isOnBlock, completionHandler, false);
+      var block = this.createBlock(this.fluffPlane, destroyPosition[0], destroyPosition[1], "explosion");
+    });
+
+    creeperExplodeAnimation.play();
+  }
+
+
 
   playMoveForwardAnimation(position, facing, shouldJumpDown, completionHandler) {
     var tween,
@@ -407,7 +441,7 @@ export default class LevelView {
       blockToShear.animations.stop(null, true);
       blockToShear.animations.play("used");
 
-      this.playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler);
+      this.playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, true);
     });
   }
 
@@ -445,7 +479,7 @@ export default class LevelView {
       this.setSelectionIndicatorPosition(playerPosition[0], playerPosition[1]);
 
       this.audioPlayer.play('dig_wood1');
-      this.playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler);
+      this.playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, true);
     });
 
     destroyOverlay.animations.play("destroy");
@@ -475,7 +509,7 @@ export default class LevelView {
     miningParticles.animations.play("miningParticles");
   }
 
-  playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
+  playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, placeBlock) {
     var signalBinding,
         explodeAnim = this.actionPlane.create(-36 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
     
@@ -486,10 +520,17 @@ export default class LevelView {
       explodeAnim.kill();
       this.toDestroy.push(explodeAnim);
 
-      this.playPlayerAnimation("idle", playerPosition, facing, false);
-      this.playItemDropAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler);
+      if(placeBlock)
+      {
+        this.playPlayerAnimation("idle", playerPosition, facing, false);
+        this.playItemDropAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler);
+      }
     });
     explodeAnim.animations.play("explode");
+    if(!placeBlock)
+    {
+      completionHandler();
+    }
   }
 
   playItemDropAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
@@ -901,6 +942,10 @@ export default class LevelView {
 
       case "creeper":
         sprite = plane.create(-6 + 40 * x, 0 + plane.yOffset + 40 * y, "creeper", "Creeper_052");
+
+        frameList = Phaser.Animation.generateFrameNames("Creeper_", 37, 51, "", 3);
+        sprite.animations.add("explode", frameList, 15, false);
+
         frameList = Phaser.Animation.generateFrameNames("Creeper_", 52, 60, "", 3);
         for (i = 0; i < 30; ++i) {
           frameList.push("Creeper_052");
@@ -972,6 +1017,20 @@ export default class LevelView {
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Bubbles", 0, 14, "", 2);
         sprite.animations.add("idle", frameList, 5, true);
+        sprite.animations.play("idle");
+        break;
+
+      case "explosion":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Explosion", 0, 16, "", 1);
+        sprite.animations.add("idle", frameList, 15, false).onComplete.add(() => {
+          this.toDestroy.push(sprite);
+          sprite.kill();
+        });
         sprite.animations.play("idle");
         break;
 

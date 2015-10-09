@@ -193,13 +193,17 @@ class PhaserApp {
   // command processors
   moveForward(commandQueueItem) {
     var player = this.levelModel.player;
+    var allFoundCreepers;
 
     if (this.levelModel.canMoveForward()) {
       let wasOnBlock = player.isOnBlock;
       this.levelModel.moveForward();
       // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
 
+      //First arg is if we found a creeper
       this.levelView.playMoveForwardAnimation(player.position, player.facing, wasOnBlock && wasOnBlock != player.isOnBlock, () => {
+
+        allFoundCreepers = this.levelModel.isPlayerStandingNearCreeper();
         if (this.levelModel.isPlayerStandingInWater()) {
             this.levelView.playDrownFailureAnimation(player.position, player.facing, player.isOnBlock, () => {
               commandQueueItem.failed();
@@ -210,10 +214,19 @@ class PhaserApp {
             commandQueueItem.failed();
           } );
         } 
-        else if(this.levelModel.isPlayerStandingNearCreeper()) {
-            //this.levelView.playCreeperExplodeAnimation(player.position, player.facing, player.isOnBlock, () => {
-                commandQueueItem.failed();
-            //} );
+        else if(allFoundCreepers[0]) {
+            for(var i = 1; i < 9; ++i)
+            {
+              let currentObject = allFoundCreepers[i];
+              let creeperfound = currentObject[0];
+              if(creeperfound)
+              {
+                let creeperPos = currentObject[1];              
+                this.levelView.playCreeperExplodeAnimation(player.position, player.facing, creeperPos, player.isOnBlock, () => {
+                  commandQueueItem.failed();
+                });
+              }
+            }
         } else {
           commandQueueItem.succeeded();
         }
