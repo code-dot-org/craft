@@ -21,7 +21,7 @@ export default class LevelView {
 
     this.miniBlocks = {
       "dirt": ["Miniblocks", 0, 5],
-      "coarseDirt": ["Miniblocks", 6, 11],
+      "dirtCoarse": ["Miniblocks", 6, 11],
       "sand": ["Miniblocks", 12, 17],
       "gravel": ["Miniblocks", 18, 23],
       "brick": ["Miniblocks", 24, 29],
@@ -802,6 +802,9 @@ export default class LevelView {
         break;
       case "oreRedstone":
         frame = "redstoneDust";
+        break;
+      case "grass":
+        frame = "dirt";
         break;
       default:
         frame = blockType;
