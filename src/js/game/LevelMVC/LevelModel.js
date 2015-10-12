@@ -395,7 +395,12 @@ export default class LevelModel {
     switch (blockType) {
       case "sheep":
         return "wool";
-      
+      case "treeAcacia":
+      case "treeBirch":
+      case "treeJungle":
+      case "treeOak":
+      case "treeSpruce":
+        return "planks" + blockType.substring(4);
       default:
         return blockType;
     }
