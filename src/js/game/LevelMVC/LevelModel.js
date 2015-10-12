@@ -96,6 +96,11 @@ export default class LevelModel {
     return this.player.inventory[inventoryType] || 0;
   };
 
+
+  getInventoryTypes() {
+    return Object.keys(this.player.inventory);
+  };
+
   countOfTypeOnMap(blockType) {
     var count = 0,
         i;
