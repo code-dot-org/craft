@@ -60,7 +60,7 @@ class PhaserApp {
         render: this.render.bind(this)
       }
     );
-
+    this.currentLevel = 0;
     this.queue = new CommandQueue(this);
     this.OnCompleteCallback = null;
 
@@ -72,11 +72,12 @@ class PhaserApp {
   /**
    * @param {Object} levelConfig
    */
-  loadLevel(levelConfig) {
+  loadLevel(levelConfig, levelNumber) {
     this.levelData = Object.freeze(levelConfig);
 
     this.levelModel = new LevelModel(this.levelData);
     this.levelView = new LevelView(this);
+    this.currentLevel = levelNumber;
   }
 
   reset() {
@@ -315,6 +316,10 @@ class PhaserApp {
     }
   }
 
+  checkHouseBuiltEndAnimation() {
+    return this.currentLevel === 6;
+  }
+
   placeBlock(commandQueueItem, blockType) {
     if (this.levelModel.canPlaceBlock()) {
       if (this.levelModel.placeBlock(blockType)) {
@@ -356,7 +361,13 @@ class PhaserApp {
 
     // check the final state to see if its solved
     if (this.levelModel.isSolved()) {
-      this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock);
+      if(this.checkHouseBuiltEndAnimation()) {
+        var array;
+        this.levelView.playSuccessHouseBuiltAnimation(player.position, player.facing, player.isOnBlock, this.levelModel.houseGroundToFloorBlocks([0,5,5], array));
+      }
+      else {
+        this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock);
+      }
       commandQueueItem.succeeded();
     } else {
       this.levelView.playFailureAnimation(player.position, player.facing, player.isOnBlock);

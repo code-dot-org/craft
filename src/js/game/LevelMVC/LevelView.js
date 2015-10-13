@@ -95,6 +95,7 @@ export default class LevelView {
       "tnt": ["blocks", "Tnt", -13, 0],
       "water": ["blocks", "Water_0", -13, 0],
       "wool": ["blocks", "Wool_White", -13, 0],
+      "wool_orange": ["blocks", "Wool_Orange", -13, 0],
 
       "leavesAcacia": ["leavesAcacia", "Leaves0", -42, 80],
       "leavesBirch": ["leavesBirch", "Leaves0", -100, -10],
@@ -112,7 +113,7 @@ export default class LevelView {
       "bubbles": ["bubbles", "", -11, 135],
       "explosion": ["explosion", "", -70, 60],
 
-      "door": ["door", "", -70, 60],
+      "door": ["door", "", -12, -10],
       //"bed": ["bed", "", -70, 60], 
     };
 
@@ -330,7 +331,7 @@ export default class LevelView {
     let blockToExplode = this.actionPlaneBlocks[blockIndex];
 
     var creeperExplodeAnimation = blockToExplode.animations.getAnimation("explode");
-    creeperExplodeAnimation.onComplete.add(()=>{
+    creeperExplodeAnimation.onComplete.add(() => {
       var borderingPositions;
       blockToExplode.kill();
       this.playFailureAnimation(position, facing, false);
@@ -341,7 +342,98 @@ export default class LevelView {
     creeperExplodeAnimation.play();
   }
 
+  coordinatesToIndex(coordinates) {
+    return (coordinates[1] * 10) + coordinates[0];
+  }
 
+  addHouseBed() {
+    //Temporary, will be replaced by bed blocks
+    var sprite = this.fluffPlane.create(190, 140, "bed");
+    sprite.z = -1000;
+  }
+
+  addDoor() {
+    var sprite;
+    let toDestroy = this.actionPlaneBlocks[this.coordinatesToIndex([4,6])];
+    this.createActionPlaneBlock([4, 6], "door");
+    //Need to grab the correct blocktype frome the action layer
+    //And use that type block to create the ground block under the door
+    sprite = this.createBlock(this.groundPlane, 4, 6, "wool_orange");
+    toDestroy.kill();
+    sprite.sortOrder = 6 * 10;
+  }
+
+  playSuccessHouseBuiltAnimation(position, facing, isOnBlock, createFloor ,completionHandler) {
+    //fade screen to white
+    //Add house blocks
+    //fade out of white
+    //Play success animation on player.
+    var tweenToW, 
+        tweenWToC; 
+
+    tweenToW = this.playLevelEndAnimation(position, facing, isOnBlock, createFloor ,completionHandler);
+    tweenToW.onComplete.add(() => {
+      //Change house ground to floor
+      var xCoord;
+      var yCoord;
+      var sprite;
+
+      for(var i = 0; i < createFloor.length; ++i)
+      {
+        xCoord = createFloor[i][1];
+        yCoord = createFloor[i][2];
+        /*this.groundPlane[this.coordinatesToIndex([xCoord,yCoord])].kill();*/
+        sprite = this.createBlock(this.groundPlane, xCoord, yCoord, "wool_orange");
+        sprite.sortOrder = yCoord * 10;
+      }
+
+      this.addHouseBed();
+      this.addDoor();
+      this.groundPlane.sort('sortOrder');
+
+    });
+  }
+
+  //Tweens in and then out of white. returns the tween to white for adding callbacks
+  playLevelEndAnimation(position, facing, isOnBlock, completionHandler) {
+    var sprite,
+        tweenToW, 
+        tweenWToC; 
+
+    sprite = this.fluffPlane.create(0, 0, "finishOverlay");
+    sprite.alpha = 0; 
+
+    tweenToW = this.tweenToWhite(sprite);
+    tweenWToC = this.tweenFromWhiteToClear(sprite);
+
+    tweenToW.onComplete.add(() => {
+      tweenWToC.start();
+    });
+    tweenWToC.onComplete.add(() => {
+      this.playSuccessAnimation(position, facing, isOnBlock, completionHandler);
+    });
+    tweenToW.start();
+
+    return tweenToW;
+  }
+
+  tweenFromWhiteToClear(sprite) {
+    var tweenWhiteToClear;
+
+    tweenWhiteToClear = this.game.add.tween(sprite).to({
+      alpha: 0.0,
+    }, 700, Phaser.Easing.Linear.None);
+    return tweenWhiteToClear;
+  }
+
+  tweenToWhite(sprite){
+    var tweenToWhite;
+
+    tweenToWhite = this.game.add.tween(sprite).to({
+      alpha: 1.0,
+    }, 300, Phaser.Easing.Linear.None);
+    return tweenToWhite;
+  }
 
   playMoveForwardAnimation(position, facing, shouldJumpDown, completionHandler) {
     var tween,
@@ -1069,8 +1161,16 @@ export default class LevelView {
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
-        frameList = Phaser.Animation.generateFrameNames("Door", 0, 3, "", 1);
-        sprite.animations.add("open", frameList, 7, false);
+
+        frameList = [];
+        let animationFrames = Phaser.Animation.generateFrameNames("Door", 0, 3, "", 1);
+        for(var i = 0; i < 5; ++i)
+        {
+          frameList.push("Door0");          
+        }
+        frameList = frameList.concat(animationFrames);
+
+        sprite.animations.add("open", frameList, 5, false);
         sprite.animations.play("open");
         break;
 

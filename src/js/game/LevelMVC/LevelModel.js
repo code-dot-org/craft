@@ -227,8 +227,72 @@ export default class LevelModel {
     }
   }
 
-  getAllBorderingPositions(position)
+  houseGroundToFloorHelper(position, woolType, arrayCheck)
   {
+    var checkActionBlock,
+        checkGroundBlock,
+        posAbove, 
+        posBelow,
+        posRight,
+        posLeft,
+        checkIndex = 0,
+        array = arrayCheck;
+        let index = (position[2] * 10) + position[1];
+
+        if(index === 44)
+        {
+          index = 44;
+        }
+
+    posAbove =  [0, position[1], position[2] + 1];
+    posAbove[0] = (posAbove[2] * 10) + posAbove[1];
+
+    posBelow =  [0, position[1], position[2] - 1];
+    posBelow[0] = (posBelow[2] * 10) + posBelow[1];
+
+    posRight =  [0, position[1] + 1, position[2]];
+    posRight[0] = (posRight[2] * 10) + posRight[1];
+    
+    posLeft =  [0, position[1] - 1, position[2]];
+    posRight[0] = (posRight[2] * 10) + posRight[1];
+
+    checkActionBlock = this.actionPlane[index];
+    checkGroundBlock = this.groundPlane[index];
+    for(var i = 0; i < array.length; ++i) {
+      if(array[i][0] === index) {
+        checkIndex = -1;
+        break;
+      }
+    }
+
+    if(checkActionBlock.blockType != "") {
+      return {};
+    }
+    else if(array.length > 0 && checkIndex === -1) {
+        return {};
+    }
+    array.push(position);
+    array.concat(this.houseGroundToFloorHelper(posAbove, woolType, array));
+    array.concat(this.houseGroundToFloorHelper(posBelow, woolType, array));
+    array.concat(this.houseGroundToFloorHelper(posRight, woolType, array));
+    array.concat(this.houseGroundToFloorHelper(posLeft, woolType, array));
+
+    return array;
+  }
+
+  houseGroundToFloorBlocks(startingPosition) {
+    //checkCardinalDirections for actionblocks.
+    //If no action block and square isn't the type we want.
+    //Change it.
+    var woolType = "wool_orange";
+
+    //Place this block here
+    //this.createBlock(this.groundPlane, startingPosition[0], startingPosition[1], woolType);
+    var array = this.houseGroundToFloorHelper(startingPosition, woolType, []);
+    return array;
+  }
+
+  getAllBorderingPositions(position) {
     var positionArray = [];
         //Top Right
     positionArray.push([player.position[0] + 1, player.position[1] + 1]);
