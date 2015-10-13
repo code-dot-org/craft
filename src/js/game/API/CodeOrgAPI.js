@@ -74,6 +74,10 @@ export function get(controller) {
 
     ifBlockAhead: function(highlightCallback, blockType, codeBlock) {
         controller.queue.addCommand(new IfBlockAheadCommand(controller, highlightCallback, blockType, codeBlock));
+    },
+
+    getScreenshot: function() {
+        return controller.getScreenshot();
     }
   }
 }
