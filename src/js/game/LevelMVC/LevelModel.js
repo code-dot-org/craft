@@ -191,8 +191,9 @@ export default class LevelModel {
 
           if (blockType == "empty") {
               result =  plane[blockIndex].isEmpty;
-          }
-          else {
+          } else if (blockType == "tree") {
+              result = plane[blockIndex].getIsTree();
+          } else {
               result = (blockType == plane[blockIndex].blockType);
           }
       }
@@ -395,6 +396,8 @@ export default class LevelModel {
     switch (blockType) {
       case "sheep":
         return "wool";
+      case "stone":
+        return "cobblestone";
       case "treeAcacia":
       case "treeBirch":
       case "treeJungle":

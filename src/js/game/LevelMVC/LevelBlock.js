@@ -41,6 +41,10 @@ export default class LevelBlock {
     }
   }
 
+  getIsTree() {
+    return !!this.blockType.match(/^tree/);
+  }
+
   getIsEmptyOrEntity() {
     return this.isEmpty || this.isEntity;
   }
