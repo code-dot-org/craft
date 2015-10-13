@@ -920,7 +920,8 @@ export default class LevelView {
         atlas,
         frame,
         xOffset,
-        yOffset;
+        yOffset,
+        stillFrames;
 
     switch (blockType) {
       case "treeAcacia":
@@ -944,33 +945,38 @@ export default class LevelView {
       case "sheep":
         // Facing Left: Eat Grass: 199-216
         sprite = plane.create(-12 + 40 * x, -12 + 40 * y, "sheep", "Sheep_199");
-        frameList = Phaser.Animation.generateFrameNames("Sheep_", 199, 216, "", 0);
+        frameList = Phaser.Animation.generateFrameNames("Sheep_", 199, 215, "", 0);
         for (i = 0; i < 30; ++i) {
-          frameList.push("Sheep_190");
+          frameList.push("Sheep_215");
         }
         sprite.animations.add("idle", frameList, 15, true);
 
-        frameList = ["Sheep_300"];
+        frameList = Phaser.Animation.generateFrameNames("Sheep_", 490, 491, "", 0);
+        stillFrames = Math.trunc(Math.random() * 20) + 5;
+        for (i = 0; i < stillFrames; ++i) {
+          frameList.push("Sheep_492");
+        }
         sprite.animations.add("face", frameList, 15, true);
 
 
-        frameList = Phaser.Animation.generateFrameNames("Sheep_", 430, 447, "", 0);
+        frameList = Phaser.Animation.generateFrameNames("Sheep_", 439, 455, "", 0);
         for (i = 0; i < 3; ++i) {
-          frameList.push("Sheep_430");
+          frameList.push("Sheep_455");
         }
         sprite.animations.add("used", frameList, 15, true);
         this.playAnimationWithOffset(sprite,"idle",17, 199);
         break;
 
       case "creeper":
-        sprite = plane.create(-6 + 40 * x, 0 + plane.yOffset + 40 * y, "creeper", "Creeper_052");
+        sprite = plane.create(-6 + 40 * x, 0 + plane.yOffset + 40 * y, "creeper", "Creeper_053");
 
         frameList = Phaser.Animation.generateFrameNames("Creeper_", 37, 51, "", 3);
         sprite.animations.add("explode", frameList, 15, false);
 
-        frameList = Phaser.Animation.generateFrameNames("Creeper_", 52, 60, "", 3);
-        for (i = 0; i < 30; ++i) {
-          frameList.push("Creeper_052");
+        frameList = Phaser.Animation.generateFrameNames("Creeper_", 53, 59, "", 3);
+        stillFrames = Math.trunc(Math.random() * 10) + 20;
+        for (i = 0; i < stillFrames; ++i) {
+          frameList.push("Creeper_053");
         }
         sprite.animations.add("idle", frameList, 15, true);
         this.playAnimationWithOffset(sprite, "idle", 8, 52);
@@ -1017,7 +1023,8 @@ export default class LevelView {
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("LavaPop", 1, 30, "", 2);
         sprite.animations.add("idle", frameList, 5, true);
-        sprite.animations.play("idle");
+        this.playAnimationWithOffset(sprite, "idle", 29, 1);
+        //sprite.animations.play("idle");
         break;
 
       case "fire":
