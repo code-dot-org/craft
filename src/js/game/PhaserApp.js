@@ -52,14 +52,19 @@ class PhaserApp {
      * Main Phaser game instance.
      * @property {Phaser.Game}
      */
-    this.game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO,
-      phaserAppConfig.containerId, {
+    this.game = new Phaser.Game({
+      width: GAME_WIDTH,
+      height: GAME_HEIGHT,
+      renderer: Phaser.AUTO,
+      parent: phaserAppConfig.containerId,
+      state: {
         preload: this.preload.bind(this),
         create: this.create.bind(this),
         update: this.update.bind(this),
         render: this.render.bind(this)
-      }
-    );
+      },
+      preserveDrawingBuffer: true // enables saving .png screengrabs
+    });
 
     this.queue = new CommandQueue(this);
     this.OnCompleteCallback = null;
@@ -93,6 +98,7 @@ class PhaserApp {
     this.levelView.create(this.levelModel);
     this.game.time.slowMotion = 1.5;
     this.addCheatKeys();
+    this.game.preserveDrawingBuffer = true;
   }
 
   update() {
@@ -188,6 +194,10 @@ class PhaserApp {
   render() {
     this.game.debug.text(this.game.time.fps || '--', 2, 14, "#00ff00");
     this.levelView.render();
+  }
+
+  getScreenshot() {
+    return this.game.canvas.toDataURL("image/png");
   }
 
   // command processors
