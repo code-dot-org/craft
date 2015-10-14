@@ -275,7 +275,7 @@ class PhaserApp {
     }
     this.levelView.updatePlayerDirection(this.levelModel.player.position, this.levelModel.player.facing);
     var timer = this.game.time.create(true);
-    timer.add(400, () => {
+    timer.add(800, () => {
       commandQueueItem.succeeded();
     }, this);
     timer.start();

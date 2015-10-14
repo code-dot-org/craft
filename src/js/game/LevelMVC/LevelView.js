@@ -256,7 +256,7 @@ export default class LevelView {
     beforeCelebrateTimer.add(250, () => {
       this.playPlayerAnimation("celebrate", position, facing, isOnBlock);
       var beforeCompleteTimer = this.game.time.create(true);
-      beforeCompleteTimer.add(1200, completionHandler, this);
+      beforeCompleteTimer.add(900, completionHandler, this);
       beforeCompleteTimer.start();
     }, this);
     beforeCelebrateTimer.start();
@@ -267,7 +267,7 @@ export default class LevelView {
     beforeFailTimer.add(500, () => {
       this.playPlayerAnimation("fail", position, facing, isOnBlock);
     var beforeCompleteTimer = this.game.time.create(true);
-      beforeCompleteTimer.add(1200, completionHandler, this);
+      beforeCompleteTimer.add(900, completionHandler, this);
       beforeCompleteTimer.start();
     }, this);
     beforeFailTimer.start();
