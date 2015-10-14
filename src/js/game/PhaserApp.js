@@ -66,7 +66,7 @@ class PhaserApp {
       preserveDrawingBuffer: true // enables saving .png screengrabs
     });
 
-    this.currentLevel = 0;
+    this.specialLevelType = null;
     this.queue = new CommandQueue(this);
     this.OnCompleteCallback = null;
 
@@ -78,12 +78,12 @@ class PhaserApp {
   /**
    * @param {Object} levelConfig
    */
-  loadLevel(levelConfig, levelNumber) {
+  loadLevel(levelConfig) {
     this.levelData = Object.freeze(levelConfig);
 
     this.levelModel = new LevelModel(this.levelData);
     this.levelView = new LevelView(this);
-    this.currentLevel = levelNumber;
+    this.specialLevelType = levelConfig.specialLevelType;
   }
 
   reset() {
@@ -93,6 +93,7 @@ class PhaserApp {
 
   preload() {
     this.game.time.advancedTiming = true;
+    this.game.stage.disableVisibilityChange = true;
     this.levelView.preload(this.levelModel.player.name);
   }
 
@@ -327,7 +328,7 @@ class PhaserApp {
   }
 
   checkHouseBuiltEndAnimation() {
-    return this.currentLevel === 6;
+    return this.specialLevelType === 'houseBuild';
   }
 
   placeBlock(commandQueueItem, blockType) {
@@ -372,13 +373,22 @@ class PhaserApp {
     // check the final state to see if its solved
     if (this.levelModel.isSolved()) {
       if(this.checkHouseBuiltEndAnimation()) {
-        var array;
-        this.levelView.playSuccessHouseBuiltAnimation(player.position, player.facing, player.isOnBlock, this.levelModel.houseGroundToFloorBlocks([0,5,5], array));
+        var houseBottomRight = this.levelModel.getHouseBottomRight();
+        var inFrontOfDoor = [houseBottomRight[0] - 1, houseBottomRight[1] + 2];
+        this.levelModel.moveTo(inFrontOfDoor);
+        this.levelView.playSuccessHouseBuiltAnimation(
+            player.position,
+            player.facing,
+            player.isOnBlock,
+            this.levelModel.houseGroundToFloorBlocks(houseBottomRight),
+            houseBottomRight,
+            () => { commandQueueItem.succeeded(); }
+        );
       }
       else {
-        this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock);
+        this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock,
+            () => { commandQueueItem.succeeded(); });
       }
-      commandQueueItem.succeeded();
     } else {
       this.levelView.playFailureAnimation(player.position, player.facing, player.isOnBlock);
       commandQueueItem.failed();

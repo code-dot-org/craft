@@ -252,8 +252,11 @@ export default class LevelView {
     this.playPlayerAnimation("idle", position, facing, isOnBlock);
   }
 
-  playSuccessAnimation(position, facing, isOnBlock) {
+  playSuccessAnimation(position, facing, isOnBlock, completionHandler) {
     this.playPlayerAnimation("celebrate", position, facing, isOnBlock);
+    var timer = this.game.time.create(true);
+    timer.add(1800, completionHandler, this);
+    timer.start();
   }
 
   playFailureAnimation(position, facing, isOnBlock) {
@@ -346,24 +349,25 @@ export default class LevelView {
     return (coordinates[1] * 10) + coordinates[0];
   }
 
-  addHouseBed() {
+  addHouseBed(bottomCoordinates) {
     //Temporary, will be replaced by bed blocks
-    var sprite = this.fluffPlane.create(190, 140, "bed");
-    sprite.z = -1000;
+    var bedTopCoordinate = (bottomCoordinates[1] - 1);
+    var sprite = this.actionPlane.create(38 * bottomCoordinates[0], 35 * bedTopCoordinate, "bed");
+    sprite.sortOrder = bottomCoordinates[1] * 10;
   }
 
-  addDoor() {
+  addDoor(coordinates) {
     var sprite;
-    let toDestroy = this.actionPlaneBlocks[this.coordinatesToIndex([4,6])];
-    this.createActionPlaneBlock([4, 6], "door");
-    //Need to grab the correct blocktype frome the action layer
+    let toDestroy = this.actionPlaneBlocks[this.coordinatesToIndex(coordinates)];
+    this.createActionPlaneBlock(coordinates, "door");
+    //Need to grab the correct blocktype from the action layer
     //And use that type block to create the ground block under the door
-    sprite = this.createBlock(this.groundPlane, 4, 6, "wool_orange");
+    sprite = this.createBlock(this.groundPlane, coordinates[0], coordinates[1], "wool_orange");
     toDestroy.kill();
     sprite.sortOrder = 6 * 10;
   }
 
-  playSuccessHouseBuiltAnimation(position, facing, isOnBlock, createFloor ,completionHandler) {
+  playSuccessHouseBuiltAnimation(position, facing, isOnBlock, createFloor, houseBottomRightPosition, completionHandler) {
     //fade screen to white
     //Add house blocks
     //fade out of white
@@ -371,7 +375,7 @@ export default class LevelView {
     var tweenToW, 
         tweenWToC; 
 
-    tweenToW = this.playLevelEndAnimation(position, facing, isOnBlock, createFloor ,completionHandler);
+    tweenToW = this.playLevelEndAnimation(position, facing, isOnBlock, completionHandler);
     tweenToW.onComplete.add(() => {
       //Change house ground to floor
       var xCoord;
@@ -387,10 +391,9 @@ export default class LevelView {
         sprite.sortOrder = yCoord * 10;
       }
 
-      this.addHouseBed();
-      this.addDoor();
+      this.addHouseBed([houseBottomRightPosition[0], houseBottomRightPosition[1]]);
+      this.addDoor([houseBottomRightPosition[0] - 1, houseBottomRightPosition[1] + 1]);
       this.groundPlane.sort('sortOrder');
-
     });
   }
 
@@ -407,6 +410,7 @@ export default class LevelView {
     tweenWToC = this.tweenFromWhiteToClear(sprite);
 
     tweenToW.onComplete.add(() => {
+      this.setPlayerPosition(position[0], position[1], isOnBlock);
       tweenWToC.start();
     });
     tweenWToC.onComplete.add(() => {

@@ -76,7 +76,7 @@
   });
   var levelNumber = parseInt(getParameterByName('level') || 1, 10);
   var testLevelToLoad = demoLevels[levelNumber];
-  phaserApp.loadLevel(testLevelToLoad, levelNumber);
+  phaserApp.loadLevel(testLevelToLoad);
 
   $('#test-code-area').val(testLevelToLoad.solutionCode);
   $('#level-instructions').html(testLevelToLoad.instructions);

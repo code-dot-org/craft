@@ -384,6 +384,10 @@ window.demoLevels = {
 
     playerStartDirection: 0,
 
+    specialLevelType: 'houseBuild',
+
+    houseBottomRight: [5, 5],
+
     groundPlane: [
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -508,7 +512,7 @@ window.demoLevels = {
       "tallGrass", "", "", "", "", "", "", "", "", ""],
 
     actionPlane: ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
-      "", "grass", "", "logOak", "logOak", "logOak", "", "", "", "grass",
+      "", "grass", "", "logOak", "door", "logOak", "", "", "", "grass",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",

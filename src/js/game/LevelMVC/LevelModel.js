@@ -60,6 +60,10 @@ export default class LevelModel {
       return this.initialLevelData.verificationFunction(this);
   }
 
+  getHouseBottomRight()  {
+      return this.initialLevelData.houseBottomRight;
+  }
+
     // Verifications
   isPlayerNextTo(blockType) {
     var position;
@@ -288,40 +292,14 @@ export default class LevelModel {
 
     //Place this block here
     //this.createBlock(this.groundPlane, startingPosition[0], startingPosition[1], woolType);
-    var array = this.houseGroundToFloorHelper(startingPosition, woolType, []);
-    return array;
-  }
-
-  getAllBorderingPositions(position) {
-    var positionArray = [];
-        //Top Right
-    positionArray.push([player.position[0] + 1, player.position[1] + 1]);
-    //Top Left
-    positionArray.push([player.position[0] - 1, player.position[1] + 1]);
-    //Bot Right
-    positionArray.push([player.position[0] + 1, player.position[1] - 1]);
-    //Bot Left
-    positionArray.push([player.position[0] - 1, player.position[1] - 1]);
-
-    //Check cardinal Directions
-    //Top
-    positionArray.push([player.position[0], player.position[1] + 1]);
-    //Bot
-    positionArray.push([player.position[0], player.position[1] - 1]);
-    //Right
-    positionArray.push([player.position[0] + 1, player.position[1]]);
-    //Left
-    positionArray.push([player.position[0] - 1, player.position[1]]);
-
-    return positionArray;
+    var helperStartData = [0, startingPosition[0], startingPosition[1]];
+    return this.houseGroundToFloorHelper(helperStartData, woolType, []);
   }
 
   getAllBorderingPlayer(blockType){
     var player = this.player;
     var position;
     var allFoundObjects = [false];
-    let actionPlane = this.actionPlane;
-    let coordinatesToIndex = this.coordinatesToIndex;
     //Check all 8 directions
 
     //Top Right
@@ -368,10 +346,6 @@ export default class LevelModel {
     }
 
     return allFoundObjects;
-  }
-
-  isBorderingPlayer(blockType){
-    return getAllBorderingPlayer[0];
   }
 
   isPlayerStandingNearCreeper() {
@@ -442,9 +416,13 @@ export default class LevelModel {
 
   moveForward() {
     let blockForwardPosition = this.getMoveForwardPosition();
-    let blockIndex = (blockForwardPosition[1] * 10) + blockForwardPosition[0];
+    this.moveTo(blockForwardPosition);
+  }
 
-    this.player.position = blockForwardPosition;
+  moveTo(position) {
+    let blockIndex = (position[1] * 10) + position[0];
+
+    this.player.position = position;
     if (this.actionPlane[blockIndex].isEmpty) {
       this.player.isOnBlock = false;
     }
