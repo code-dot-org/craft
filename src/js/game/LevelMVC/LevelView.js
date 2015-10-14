@@ -1087,17 +1087,18 @@ export default class LevelView {
         sprite.animations.add("idle", frameList, 15, true);
 
         // TODO(bjordan/gaallen) - update once updated Sheep.json
-        //frameList = Phaser.Animation.generateFrameNames("Sheep_", 490, 491, "", 0);
-        //stillFrames = Math.trunc(Math.random() * 20) + 5;
-        //for (i = 0; i < stillFrames; ++i) {
-        //  frameList.push("Sheep_492");
-        //}
+        frameList = Phaser.Animation.generateFrameNames("Sheep_", 490, 492, "", 0);
+        stillFrames = Math.trunc(Math.random() * 3) + 3;
+        for (i = 0; i < stillFrames; ++i) {
+          frameList.push("Sheep_492");
+        }
+        sprite.animations.add("face", frameList, 2, true);
 
         frameList = Phaser.Animation.generateFrameNames("Sheep_", 439, 455, "", 0);
         for (i = 0; i < 3; ++i) {
           frameList.push("Sheep_455");
         }
-        sprite.animations.add("face", frameList, 15, true);
+        
         sprite.animations.add("used", frameList, 15, true);
         this.playAnimationWithOffset(sprite,"idle",17, 199);
         break;
