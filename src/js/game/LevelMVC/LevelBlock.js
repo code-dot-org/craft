@@ -17,6 +17,10 @@ export default class LevelBlock {
       this.isUsable = true;
     }
 
+    if (blockType == "creeper"){
+      this.isEntity = true;
+    }
+
     if (blockType == "lava") {
       this.isEmissive = true;
       this.isWalkable = true;

@@ -66,6 +66,7 @@ class PhaserApp {
       preserveDrawingBuffer: true // enables saving .png screengrabs
     });
 
+    this.specialLevelType = null;
     this.queue = new CommandQueue(this);
     this.OnCompleteCallback = null;
 
@@ -82,6 +83,7 @@ class PhaserApp {
 
     this.levelModel = new LevelModel(this.levelData);
     this.levelView = new LevelView(this);
+    this.specialLevelType = levelConfig.specialLevelType;
   }
 
   reset() {
@@ -91,6 +93,7 @@ class PhaserApp {
 
   preload() {
     this.game.time.advancedTiming = true;
+    this.game.stage.disableVisibilityChange = true;
     this.levelView.preload(this.levelModel.player.name);
   }
 
@@ -98,7 +101,6 @@ class PhaserApp {
     this.levelView.create(this.levelModel);
     this.game.time.slowMotion = 1.5;
     this.addCheatKeys();
-    this.game.preserveDrawingBuffer = true;
   }
 
   update() {
@@ -203,27 +205,40 @@ class PhaserApp {
   // command processors
   moveForward(commandQueueItem) {
     var player = this.levelModel.player;
+    var allFoundCreepers;
 
     if (this.levelModel.canMoveForward()) {
       let wasOnBlock = player.isOnBlock;
       this.levelModel.moveForward();
       // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
 
+      //First arg is if we found a creeper
       this.levelView.playMoveForwardAnimation(player.position, player.facing, wasOnBlock && wasOnBlock != player.isOnBlock, () => {
+
+        allFoundCreepers = this.levelModel.isPlayerStandingNearCreeper();
         if (this.levelModel.isPlayerStandingInWater()) {
-            //this.levelView.playDrownFailureAnimation(player.position, player.facing, player.isOnBlock, () => {
-                commandQueueItem.failed();
-            //} );
+            this.levelView.playDrownFailureAnimation(player.position, player.facing, player.isOnBlock, () => {
+              commandQueueItem.failed();
+            } );
         } 
         else if(this.levelModel.isPlayerStandingInLava()) {
           this.levelView.playBurnInLavaAnimation(player.position, player.facing, player.isOnBlock, () => {
             commandQueueItem.failed();
           } );
         } 
-        else if(this.levelModel.isPlayerStandingNearCreeper()) {
-            //this.levelView.playCreeperExplodeAnimation(player.position, player.facing, player.isOnBlock, () => {
-                commandQueueItem.failed();
-            //} );
+        else if(allFoundCreepers[0]) {
+            for(var i = 1; i < 9; ++i)
+            {
+              let currentObject = allFoundCreepers[i];
+              let creeperfound = currentObject[0];
+              if(creeperfound)
+              {
+                let creeperPos = currentObject[1];              
+                this.levelView.playCreeperExplodeAnimation(player.position, player.facing, creeperPos, player.isOnBlock, () => {
+                  commandQueueItem.failed();
+                });
+              }
+            }
         } else {
           commandQueueItem.succeeded();
         }
@@ -233,11 +248,14 @@ class PhaserApp {
         let blockForwardPosition =  this.levelModel.getMoveForwardPosition();
 
         if (blockForwardPosition[0] >= 0 && blockForwardPosition[0] < 10 && blockForwardPosition[1] >= 0 && blockForwardPosition[1] < 10) {
-            commandQueueItem.succeeded();
+          commandQueueItem.succeeded();
+          this.levelView.playBumpAnimation(player.position, player.facing, false);
         }
-        
+        else
+        {
+          this.levelView.playIdleAnimation(player.position, player.facing, false);
+        }
         // stop the walking animation and fail
-        this.levelView.playIdleAnimation(player.position, player.facing, false);
         commandQueueItem.failed();
     }
   }
@@ -266,6 +284,29 @@ class PhaserApp {
 
         if (block.isDestroyable) {
           this.levelModel.computeShadingPlane();
+          switch(blockType){
+            case "logAcacia":
+            case "treeAcacia":
+              blockType = "planksAcacia";
+            break;
+            case "logBirch":
+            case "treeBirch":
+             blockType = "planksBirch";
+            break;
+            case "logJungle":
+            case "treeJungle":
+              blockType = "planksJungle";
+            break;
+            case "logOak":
+            case "treeOak":
+             blockType = "planksOak";
+            break;
+            case "logSpurce":
+            case "treeSpurce":
+              blockType = "planksOak";
+            break;
+          }
+
           this.levelView.playDestroyBlockAnimation(player.position, player.facing, destroyPosition, blockType, this.levelModel.shadingPlane, () => {
             commandQueueItem.succeeded();
           });
@@ -284,6 +325,10 @@ class PhaserApp {
       // TODO: Should we fail if there's no block to destroy?
       commandQueueItem.succeeded();
     }
+  }
+
+  checkHouseBuiltEndAnimation() {
+    return this.specialLevelType === 'houseBuild';
   }
 
   placeBlock(commandQueueItem, blockType) {
@@ -327,8 +372,23 @@ class PhaserApp {
 
     // check the final state to see if its solved
     if (this.levelModel.isSolved()) {
-      this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock);
-      commandQueueItem.succeeded();
+      if(this.checkHouseBuiltEndAnimation()) {
+        var houseBottomRight = this.levelModel.getHouseBottomRight();
+        var inFrontOfDoor = [houseBottomRight[0] - 1, houseBottomRight[1] + 2];
+        this.levelModel.moveTo(inFrontOfDoor);
+        this.levelView.playSuccessHouseBuiltAnimation(
+            player.position,
+            player.facing,
+            player.isOnBlock,
+            this.levelModel.houseGroundToFloorBlocks(houseBottomRight),
+            houseBottomRight,
+            () => { commandQueueItem.succeeded(); }
+        );
+      }
+      else {
+        this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock,
+            () => { commandQueueItem.succeeded(); });
+      }
     } else {
       this.levelView.playFailureAnimation(player.position, player.facing, player.isOnBlock);
       commandQueueItem.failed();

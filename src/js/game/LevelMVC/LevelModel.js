@@ -60,6 +60,10 @@ export default class LevelModel {
       return this.initialLevelData.verificationFunction(this);
   }
 
+  getHouseBottomRight()  {
+      return this.initialLevelData.houseBottomRight;
+  }
+
     // Verifications
   isPlayerNextTo(blockType) {
     var position;
@@ -203,7 +207,7 @@ export default class LevelModel {
 
   isPlayerStandingInWater(){
     let blockIndex = (this.player.position[1] * 10) + this.player.position[0];
-    return this.actionPlane[blockIndex].blockType === "water";
+    return this.groundPlane[blockIndex].blockType === "water";
   }
 
   isPlayerStandingInLava() {
@@ -211,9 +215,141 @@ export default class LevelModel {
     return this.groundPlane[blockIndex].blockType === "lava";
   }
 
+  coordinatesToIndex(coordinates){
+    return (coordinates[1] * 10) + coordinates[0];
+  }
+
+  checkPositionForTypeAndPush(blockType, position, objectArray){
+    if (this.isBlockOfType(position, blockType)) {
+      objectArray.push([true, position]);
+      return true;
+    }
+    else
+    {
+      objectArray.push([false, null]);
+      return false;
+    }
+  }
+
+  houseGroundToFloorHelper(position, woolType, arrayCheck)
+  {
+    var checkActionBlock,
+        checkGroundBlock,
+        posAbove, 
+        posBelow,
+        posRight,
+        posLeft,
+        checkIndex = 0,
+        array = arrayCheck;
+        let index = (position[2] * 10) + position[1];
+
+        if(index === 44)
+        {
+          index = 44;
+        }
+
+    posAbove =  [0, position[1], position[2] + 1];
+    posAbove[0] = (posAbove[2] * 10) + posAbove[1];
+
+    posBelow =  [0, position[1], position[2] - 1];
+    posBelow[0] = (posBelow[2] * 10) + posBelow[1];
+
+    posRight =  [0, position[1] + 1, position[2]];
+    posRight[0] = (posRight[2] * 10) + posRight[1];
+    
+    posLeft =  [0, position[1] - 1, position[2]];
+    posRight[0] = (posRight[2] * 10) + posRight[1];
+
+    checkActionBlock = this.actionPlane[index];
+    checkGroundBlock = this.groundPlane[index];
+    for(var i = 0; i < array.length; ++i) {
+      if(array[i][0] === index) {
+        checkIndex = -1;
+        break;
+      }
+    }
+
+    if(checkActionBlock.blockType != "") {
+      return {};
+    }
+    else if(array.length > 0 && checkIndex === -1) {
+        return {};
+    }
+    array.push(position);
+    array.concat(this.houseGroundToFloorHelper(posAbove, woolType, array));
+    array.concat(this.houseGroundToFloorHelper(posBelow, woolType, array));
+    array.concat(this.houseGroundToFloorHelper(posRight, woolType, array));
+    array.concat(this.houseGroundToFloorHelper(posLeft, woolType, array));
+
+    return array;
+  }
+
+  houseGroundToFloorBlocks(startingPosition) {
+    //checkCardinalDirections for actionblocks.
+    //If no action block and square isn't the type we want.
+    //Change it.
+    var woolType = "wool_orange";
+
+    //Place this block here
+    //this.createBlock(this.groundPlane, startingPosition[0], startingPosition[1], woolType);
+    var helperStartData = [0, startingPosition[0], startingPosition[1]];
+    return this.houseGroundToFloorHelper(helperStartData, woolType, []);
+  }
+
+  getAllBorderingPlayer(blockType){
+    var player = this.player;
+    var position;
+    var allFoundObjects = [false];
+    //Check all 8 directions
+
+    //Top Right
+    position = [player.position[0] + 1, player.position[1] + 1];
+    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+      allFoundObjects[0] = true;
+    }
+    //Top Left
+    position = [player.position[0] - 1, player.position[1] + 1];
+    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+      allFoundObjects[0] = true;
+    }
+    //Bot Right
+    position = [player.position[0] + 1, player.position[1] - 1];
+    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+      allFoundObjects[0] = true;
+    }
+    //Bot Left
+    position = [player.position[0] - 1, player.position[1] - 1];
+    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+      allFoundObjects[0] = true;
+    }
+
+    //Check cardinal Directions
+    //Top
+    position = [player.position[0], player.position[1] + 1];
+    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+      allFoundObjects[0] = true;
+    }
+    //Bot
+    position = [player.position[0], player.position[1] - 1];
+    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+      allFoundObjects[0] = true;
+    }
+    //Right
+    position = [player.position[0] + 1, player.position[1]];
+    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+      allFoundObjects[0] = true;
+    }
+    //Left
+    position = [player.position[0] - 1, player.position[1]];
+    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+      allFoundObjects[0] = true;
+    }
+
+    return allFoundObjects;
+  }
+
   isPlayerStandingNearCreeper() {
-    // TODO: handle creepers
-    return false;
+    return this.getAllBorderingPlayer("creeper");
   }
 
   canMoveForward() {
@@ -280,9 +416,13 @@ export default class LevelModel {
 
   moveForward() {
     let blockForwardPosition = this.getMoveForwardPosition();
-    let blockIndex = (blockForwardPosition[1] * 10) + blockForwardPosition[0];
+    this.moveTo(blockForwardPosition);
+  }
 
-    this.player.position = blockForwardPosition;
+  moveTo(position) {
+    let blockIndex = (position[1] * 10) + position[0];
+
+    this.player.position = position;
     if (this.actionPlane[blockIndex].isEmpty) {
       this.player.isOnBlock = false;
     }
