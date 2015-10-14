@@ -214,6 +214,7 @@ class PhaserApp {
 
       //First arg is if we found a creeper
       this.levelView.playMoveForwardAnimation(player.position, player.facing, wasOnBlock && wasOnBlock != player.isOnBlock, () => {
+        this.levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
 
         allFoundCreepers = this.levelModel.isPlayerStandingNearCreeper();
         if (this.levelModel.isPlayerStandingInWater()) {
@@ -240,9 +241,13 @@ class PhaserApp {
               }
             }
         } else {
-          commandQueueItem.succeeded();
+          var timer = this.game.time.create(true);
+          timer.add(200, () => {
+            commandQueueItem.succeeded();
+          }, this);
+          timer.start();
         }
-      });        
+      });
     } else {
         // check if moveFwd failed due to walking off the board
         let blockForwardPosition =  this.levelModel.getMoveForwardPosition();
@@ -268,9 +273,13 @@ class PhaserApp {
     if (direction == 1) {
       this.levelModel.turnRight();
     }
-
     this.levelView.updatePlayerDirection(this.levelModel.player.position, this.levelModel.player.facing);
-    commandQueueItem.succeeded();
+    var timer = this.game.time.create(true);
+    timer.add(400, () => {
+      commandQueueItem.succeeded();
+    }, this);
+    timer.start();
+
   }
 
   destroyBlock(commandQueueItem) {
@@ -339,12 +348,20 @@ class PhaserApp {
           this.levelModel.computeFowPlane();
           this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
           this.levelView.updateFowPlane(this.levelModel.fowPlane);
-          commandQueueItem.succeeded();
+          var timer = this.game.time.create(true);
+          timer.add(200, () => {
+            this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
+          }, this);
+          timer.add(400, () => {
+            commandQueueItem.succeeded();
+          }, this);
+          timer.start();
         });
       } else {
         // HACK: Shouldn't have to explicitly call this?
-        this.levelView.playFailureAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock);
-        commandQueueItem.failed();
+        this.levelView.playFailureAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock, () => {
+          commandQueueItem.failed();
+        });
       }
     } else {
       commandQueueItem.failed();
@@ -358,17 +375,25 @@ class PhaserApp {
 
     var placementPlane = this.levelModel.getPlaneToPlaceOn(this.levelModel.getMoveForwardPosition());
     this.levelModel.placeBlockForward(blockType, placementPlane);
-    this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.getMoveForwardPosition(), placementPlane, blockType, () => {
+    this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.getMoveForwardPosition(), placementPlane, blockType, () => {
       this.levelModel.computeShadingPlane();
       this.levelModel.computeFowPlane();
       this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
       this.levelView.updateFowPlane(this.levelModel.fowPlane);
-      commandQueueItem.succeeded();
+      var timer = this.game.time.create(true);
+      timer.add(200, () => {
+        this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
+      }, this);
+      timer.add(400, () => {
+        commandQueueItem.succeeded();
+      }, this);
+      timer.start();
     });
   }
 
   checkSolution(commandQueueItem) {
     let player = this.levelModel.player;
+    this.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]);
 
     // check the final state to see if its solved
     if (this.levelModel.isSolved()) {
@@ -390,8 +415,9 @@ class PhaserApp {
             () => { commandQueueItem.succeeded(); });
       }
     } else {
-      this.levelView.playFailureAnimation(player.position, player.facing, player.isOnBlock);
-      commandQueueItem.failed();
+      this.levelView.playFailureAnimation(player.position, player.facing, player.isOnBlock, () => {
+        commandQueueItem.failed();
+      });
     }
   }
 

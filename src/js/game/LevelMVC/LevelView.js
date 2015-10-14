@@ -179,7 +179,7 @@ export default class LevelView {
 
   reset(levelModel) {
     let player = levelModel.player;
-    
+
     this.resetPlanes(levelModel);
     this.preparePlayerSprite();
     this.updateShadingPlane(levelModel.shadingPlane);
@@ -205,7 +205,7 @@ export default class LevelView {
 
   render() {
     this.actionPlane.sort('sortOrder');
-    this.fluffPlane.sort('z'); 
+    this.fluffPlane.sort('z');
   }
 
   getDirectionName(facing) {
@@ -241,11 +241,10 @@ export default class LevelView {
 
   playPlayerAnimation(animationName, position, facing, isOnBlock) {
     let direction = this.getDirectionName(facing);
-    this.setSelectionIndicatorPosition(position[0], position[1]);
     this.playerSprite.sortOrder = position[1] * 10 + 5;
 
     let animName = animationName + direction;
-    return this.playerSprite.animations.play(animName);    
+    return this.playerSprite.animations.play(animName);
   }
 
   playIdleAnimation(position, facing, isOnBlock) {
@@ -253,14 +252,25 @@ export default class LevelView {
   }
 
   playSuccessAnimation(position, facing, isOnBlock, completionHandler) {
-    this.playPlayerAnimation("celebrate", position, facing, isOnBlock);
-    var timer = this.game.time.create(true);
-    timer.add(1800, completionHandler, this);
-    timer.start();
+    var beforeCelebrateTimer = this.game.time.create(true);
+    beforeCelebrateTimer.add(250, () => {
+      this.playPlayerAnimation("celebrate", position, facing, isOnBlock);
+      var beforeCompleteTimer = this.game.time.create(true);
+      beforeCompleteTimer.add(1200, completionHandler, this);
+      beforeCompleteTimer.start();
+    }, this);
+    beforeCelebrateTimer.start();
   }
 
-  playFailureAnimation(position, facing, isOnBlock) {
-    this.playPlayerAnimation("fail", position, facing, isOnBlock);
+  playFailureAnimation(position, facing, isOnBlock, completionHandler) {
+    var beforeFailTimer = this.game.time.create(true);
+    beforeFailTimer.add(500, () => {
+      this.playPlayerAnimation("fail", position, facing, isOnBlock);
+    var beforeCompleteTimer = this.game.time.create(true);
+      beforeCompleteTimer.add(1200, completionHandler, this);
+      beforeCompleteTimer.start();
+    }, this);
+    beforeFailTimer.start();
   }
 
   playBumpAnimation(position, facing, isOnBlock) {
@@ -315,12 +325,15 @@ export default class LevelView {
   }
 
   playCreeperExplodeAnimation(position, facing, destroyPosition, isOnBlock, completionHandler) {
-
-    var signalBinding = this.playPlayerAnimation("jumpUp", position, facing, false).onLoop.add(() => {
-      this.playIdleAnimation(position, facing, isOnBlock);
-      signalBinding.detach();
-      this.playExplodingCreeperAnimation(position, facing, destroyPosition, isOnBlock, completionHandler);
-    });
+    var timer = this.game.time.create(true);
+    timer.add(180, () => {
+      var signalBinding = this.playPlayerAnimation("jumpUp", position, facing, false).onLoop.add(() => {
+        this.playIdleAnimation(position, facing, isOnBlock);
+        signalBinding.detach();
+        this.playExplodingCreeperAnimation(position, facing, destroyPosition, isOnBlock, completionHandler, this);
+      });
+    }, this);
+    timer.start();
   }
 
   playCreeperAnimation(position, facing, destroyPosition, isOnBlock, completionHandler){
@@ -337,8 +350,13 @@ export default class LevelView {
     creeperExplodeAnimation.onComplete.add(() => {
       var borderingPositions;
       blockToExplode.kill();
-      this.playFailureAnimation(position, facing, false);
-      this.playExplosionAnimation(position, facing, destroyPosition, isOnBlock, completionHandler, false);
+      this.playExplosionAnimation(position, facing, destroyPosition, isOnBlock, () => {
+        var timer = this.game.time.create(true);
+        timer.add(400, () => {
+          this.playFailureAnimation(position, facing, false, completionHandler);
+        }, this);
+        timer.start();
+      }, false);
       var block = this.createBlock(this.fluffPlane, destroyPosition[0], destroyPosition[1], "explosion");
     });
 
@@ -372,8 +390,8 @@ export default class LevelView {
     //Add house blocks
     //fade out of white
     //Play success animation on player.
-    var tweenToW, 
-        tweenWToC; 
+    var tweenToW,
+        tweenWToC;
 
     tweenToW = this.playLevelEndAnimation(position, facing, isOnBlock, completionHandler);
     tweenToW.onComplete.add(() => {
@@ -400,11 +418,11 @@ export default class LevelView {
   //Tweens in and then out of white. returns the tween to white for adding callbacks
   playLevelEndAnimation(position, facing, isOnBlock, completionHandler) {
     var sprite,
-        tweenToW, 
-        tweenWToC; 
+        tweenToW,
+        tweenWToC;
 
     sprite = this.fluffPlane.create(0, 0, "finishOverlay");
-    sprite.alpha = 0; 
+    sprite.alpha = 0;
 
     tweenToW = this.tweenToWhite(sprite);
     tweenWToC = this.tweenFromWhiteToClear(sprite);
@@ -485,7 +503,7 @@ export default class LevelView {
         }
 
         this.actionPlaneBlocks[blockIndex] = sprite;
-        completionHandler();                
+        completionHandler();
       });
     } else {
       let direction = this.getDirectionName(facing);
@@ -501,7 +519,7 @@ export default class LevelView {
       tween.onComplete.add(() => {
         let blockIndex = (position[1] * 10) + position[0];
         var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
-        
+
         if (sprite) {
           sprite.sortOrder = position[1] * 10;
         }
@@ -513,15 +531,17 @@ export default class LevelView {
     }
   }
 
-  playPlaceBlockInFrontAnimation(blockPosition, plane, blockType, completionHandler) {
-    if (plane === this.controller.levelModel.actionPlane) {
-      this.createActionPlaneBlock(blockPosition, blockType);
-    } else {
-      // re-lay ground tiles based on model
-      this.refreshGroundPlane();
-    }
-
-    completionHandler();
+  playPlaceBlockInFrontAnimation(playerPosition, facing, blockPosition, plane, blockType, completionHandler) {
+    this.setSelectionIndicatorPosition(blockPosition[0], blockPosition[1]);
+    this.playPlayerAnimation("punch", playerPosition, facing, false).onComplete.add(() => {
+      if (plane === this.controller.levelModel.actionPlane) {
+        this.createActionPlaneBlock(blockPosition, blockType);
+      } else {
+        // re-lay ground tiles based on model
+        this.refreshGroundPlane();
+      }
+      completionHandler();
+    });
   }
 
   createActionPlaneBlock(position, blockType) {
@@ -622,7 +642,7 @@ export default class LevelView {
   playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, placeBlock) {
     var signalBinding,
         explodeAnim = this.actionPlane.create(-36 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
-    
+
     explodeAnim.sortOrder = destroyPosition[1] * 10 + 2;
     signalBinding = explodeAnim.animations.add("explode", Phaser.Animation.generateFrameNames("BlockBreakParticle", 0, 7, "", 0), 30, false).onComplete.add(() =>
     {
@@ -848,7 +868,7 @@ export default class LevelView {
         fy = -40 + 40 * fowItem.y;
 
         switch (fowItem.type) {
-          case "FogOfWar_Center":          
+          case "FogOfWar_Center":
             break;
 
           default:
@@ -1047,18 +1067,18 @@ export default class LevelView {
         }
         sprite.animations.add("idle", frameList, 15, true);
 
-        frameList = Phaser.Animation.generateFrameNames("Sheep_", 490, 491, "", 0);
-        stillFrames = Math.trunc(Math.random() * 20) + 5;
-        for (i = 0; i < stillFrames; ++i) {
-          frameList.push("Sheep_492");
-        }
-        sprite.animations.add("face", frameList, 15, true);
-
+        // TODO(bjordan/gaallen) - update once updated Sheep.json
+        //frameList = Phaser.Animation.generateFrameNames("Sheep_", 490, 491, "", 0);
+        //stillFrames = Math.trunc(Math.random() * 20) + 5;
+        //for (i = 0; i < stillFrames; ++i) {
+        //  frameList.push("Sheep_492");
+        //}
 
         frameList = Phaser.Animation.generateFrameNames("Sheep_", 439, 455, "", 0);
         for (i = 0; i < 3; ++i) {
           frameList.push("Sheep_455");
         }
+        sprite.animations.add("face", frameList, 15, true);
         sprite.animations.add("used", frameList, 15, true);
         this.playAnimationWithOffset(sprite,"idle",17, 199);
         break;
@@ -1076,7 +1096,7 @@ export default class LevelView {
         }
         sprite.animations.add("idle", frameList, 15, true);
         this.playAnimationWithOffset(sprite, "idle", 8, 52);
-        break;      
+        break;
 
       case "torch":
         atlas = this.blocks[blockType][0];
@@ -1170,7 +1190,7 @@ export default class LevelView {
         let animationFrames = Phaser.Animation.generateFrameNames("Door", 0, 3, "", 1);
         for(var i = 0; i < 5; ++i)
         {
-          frameList.push("Door0");          
+          frameList.push("Door0");
         }
         frameList = frameList.concat(animationFrames);
 
