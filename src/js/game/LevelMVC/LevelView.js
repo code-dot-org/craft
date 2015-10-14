@@ -352,7 +352,7 @@ export default class LevelView {
       blockToExplode.kill();
       this.playExplosionAnimation(position, facing, destroyPosition, isOnBlock, () => {
         var timer = this.game.time.create(true);
-        timer.add(400, () => {
+        timer.add(100, () => {
           this.playFailureAnimation(position, facing, false, completionHandler);
         }, this);
         timer.start();
