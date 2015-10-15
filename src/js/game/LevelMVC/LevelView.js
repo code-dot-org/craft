@@ -275,7 +275,6 @@ export default class LevelView {
 
   playBumpAnimation(position, facing, isOnBlock) {
     this.playPlayerAnimation("bump", position, facing, isOnBlock).onComplete.add(()=>{
-      //Should this be failure?
       this.playIdleAnimation(position, facing, isOnBlock);
     });
   }
@@ -393,7 +392,13 @@ export default class LevelView {
     var tweenToW,
         tweenWToC;
 
-    tweenToW = this.playLevelEndAnimation(position, facing, isOnBlock, completionHandler);
+    tweenToW = this.playLevelEndAnimation(position, facing, isOnBlock, () => {
+      var timer = this.game.time.create(true);
+      timer.add(4000, () => {
+        completionHandler();
+      }, this);
+      timer.start();
+    });
     tweenToW.onComplete.add(() => {
       //Change house ground to floor
       var xCoord;
@@ -578,9 +583,19 @@ export default class LevelView {
   playDestroyBlockAnimation(playerPosition, facing, destroyPosition, blockType, newShadingPlaneData, completionHandler) {
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
 
-    this.playPlayerAnimation("mine", playerPosition, facing, false);
+    var playerAnimation =
+        blockType.match(/(ore|stone|clay|bricks|bedrock)/) ? "mine" : "punchDestroy";
+    this.playPlayerAnimation(playerAnimation, playerPosition, facing, false);
     this.playMiningParticlesAnimation(facing, destroyPosition);
     this.playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, newShadingPlaneData, completionHandler);
+  }
+
+  playPunchAirAnimation(playerPosition, facing, destroyPosition, completionHandler) {
+    this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
+    var signalBinding = this.playPlayerAnimation("punchDestroy", playerPosition, facing, false).onComplete.add(() => {
+      signalBinding.detach();
+      completionHandler();
+    });
   }
 
   playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, newShadingPlaneData, completionHandler) {
@@ -883,7 +898,8 @@ export default class LevelView {
   preparePlayerSprite() {
     var frameList,
         genFrames,
-        i;
+        i,
+        singlePunch;
 
     let frameRate = 20;
 
@@ -902,7 +918,9 @@ export default class LevelView {
     frameList = frameList.concat(genFrames);
     this.playerSprite.animations.add('idle_down', frameList, frameRate / 2, true);
     this.playerSprite.animations.add('walk_down', Phaser.Animation.generateFrameNames("Player_", 13, frameRate, "", 3), frameRate, true);
-    this.playerSprite.animations.add('punch_down', Phaser.Animation.generateFrameNames("Player_", 21, 24, "", 3), frameRate, false);
+    singlePunch = Phaser.Animation.generateFrameNames("Player_", 21, 24, "", 3);
+    this.playerSprite.animations.add('punch_down', singlePunch, frameRate, false);
+    this.playerSprite.animations.add('punchDestroy_down', singlePunch.concat(singlePunch).concat(singlePunch), frameRate, false);
     this.playerSprite.animations.add('hurt_down', Phaser.Animation.generateFrameNames("Player_", 25, 28, "", 3), frameRate, true);
     this.playerSprite.animations.add('crouch_down', Phaser.Animation.generateFrameNames("Player_", 29, 32, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpUp_down', Phaser.Animation.generateFrameNames("Player_", 33, 36, "", 3), frameRate / 2, true);
@@ -920,7 +938,9 @@ export default class LevelView {
     frameList = frameList.concat(genFrames);
     this.playerSprite.animations.add('idle_right', frameList, frameRate / 2, true);
     this.playerSprite.animations.add('walk_right', Phaser.Animation.generateFrameNames("Player_", 73, 80, "", 3), frameRate, true);
-    this.playerSprite.animations.add('punch_right', Phaser.Animation.generateFrameNames("Player_", 81, 84, "", 3), frameRate, false);
+    singlePunch = Phaser.Animation.generateFrameNames("Player_", 81, 84, "", 3);
+    this.playerSprite.animations.add('punch_right', singlePunch, frameRate, false);
+    this.playerSprite.animations.add('punchDestroy_right', singlePunch.concat(singlePunch).concat(singlePunch), frameRate, false);
     this.playerSprite.animations.add('hurt_right', Phaser.Animation.generateFrameNames("Player_", 85, 88, "", 3), frameRate, true);
     this.playerSprite.animations.add('crouch_right', Phaser.Animation.generateFrameNames("Player_", 89, 92, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpUp_right', Phaser.Animation.generateFrameNames("Player_", 93, 96, "", 3), frameRate / 2, true);
@@ -938,7 +958,9 @@ export default class LevelView {
     frameList = frameList.concat(genFrames);
     this.playerSprite.animations.add('idle_left', frameList, frameRate / 2, true);
     this.playerSprite.animations.add('walk_left', Phaser.Animation.generateFrameNames("Player_", 193, 200, "", 3), frameRate, true);
-    this.playerSprite.animations.add('punch_left', Phaser.Animation.generateFrameNames("Player_", 201, 204, "", 3), frameRate, false);
+    singlePunch = Phaser.Animation.generateFrameNames("Player_", 201, 204, "", 3);
+    this.playerSprite.animations.add('punch_left', singlePunch, frameRate, false);
+    this.playerSprite.animations.add('punchDestroy_left', singlePunch.concat(singlePunch).concat(singlePunch), frameRate, false);
     this.playerSprite.animations.add('hurt_left', Phaser.Animation.generateFrameNames("Player_", 205, 208, "", 3), frameRate, true);
     this.playerSprite.animations.add('crouch_left', Phaser.Animation.generateFrameNames("Player_", 209, 212, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpUp_left', Phaser.Animation.generateFrameNames("Player_", 213, 216, "", 3), frameRate / 2, true);
@@ -956,7 +978,9 @@ export default class LevelView {
     frameList = frameList.concat(genFrames);
     this.playerSprite.animations.add('idle_up', frameList, frameRate / 2, true);
     this.playerSprite.animations.add('walk_up', Phaser.Animation.generateFrameNames("Player_", 133, 140, "", 3), frameRate, true);
-    this.playerSprite.animations.add('punch_up', Phaser.Animation.generateFrameNames("Player_", 141, 144, "", 3), frameRate, false);
+    singlePunch = Phaser.Animation.generateFrameNames("Player_", 141, 144, "", 3);
+    this.playerSprite.animations.add('punch_up', singlePunch, frameRate, false);
+    this.playerSprite.animations.add('punchDestroy_up', singlePunch.concat(singlePunch).concat(singlePunch), frameRate, false);
     this.playerSprite.animations.add('hurt_up', Phaser.Animation.generateFrameNames("Player_", 145, 148, "", 3), frameRate, true);
     this.playerSprite.animations.add('crouch_up', Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpUp_up', Phaser.Animation.generateFrameNames("Player_", 153, 156, "", 3), frameRate / 2, true);

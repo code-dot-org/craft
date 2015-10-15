@@ -249,19 +249,12 @@ class PhaserApp {
         }
       });
     } else {
-        // check if moveFwd failed due to walking off the board
-        let blockForwardPosition =  this.levelModel.getMoveForwardPosition();
-
-        if (blockForwardPosition[0] >= 0 && blockForwardPosition[0] < 10 && blockForwardPosition[1] >= 0 && blockForwardPosition[1] < 10) {
-          commandQueueItem.succeeded();
-          this.levelView.playBumpAnimation(player.position, player.facing, false);
-        }
-        else
-        {
-          this.levelView.playIdleAnimation(player.position, player.facing, false);
-        }
-        // stop the walking animation and fail
-        commandQueueItem.failed();
+      this.levelView.playBumpAnimation(player.position, player.facing, false);
+      var timer = this.game.time.create(true);
+      timer.add(800, () => {
+        commandQueueItem.succeeded();
+      }, this);
+      timer.start();
     }
   }
 
@@ -283,13 +276,13 @@ class PhaserApp {
   }
 
   destroyBlock(commandQueueItem) {
+    let player = this.levelModel.player;
     if (this.levelModel.canDestroyBlockForward()) {
       let block = this.levelModel.destroyBlockForward();
 
       if (block !== null) {
         let destroyPosition = block.position;
         let blockType = block.blockType;
-        let player = this.levelModel.player;
 
         if (block.isDestroyable) {
           this.levelModel.computeShadingPlane();
@@ -331,8 +324,15 @@ class PhaserApp {
         }
       }
     } else {
-      // TODO: Should we fail if there's no block to destroy?
-      commandQueueItem.succeeded();
+      this.levelView.playPunchAirAnimation(player.position, player.facing, this.levelModel.getMoveForwardPosition(), () => {
+        this.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]);
+        this.levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
+        var airPunchTimer = this.game.time.create(true);
+        airPunchTimer.add(600, () => {
+          commandQueueItem.succeeded();
+        }, this);
+        airPunchTimer.start();
+      });
     }
   }
 
