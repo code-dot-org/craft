@@ -186,6 +186,7 @@ export default class LevelView {
     this.updateFowPlane(levelModel.fowPlane);
     this.setPlayerPosition(player.position[0], player.position[1], player.isOnBlock);
     this.setSelectionIndicatorPosition(player.position[0], player.position[1]);
+    this.selectionIndicator.visible = true;
     this.playIdleAnimation(player.position, player.facing, player.isOnBlock);
   }
 
@@ -252,25 +253,17 @@ export default class LevelView {
   }
 
   playSuccessAnimation(position, facing, isOnBlock, completionHandler) {
-    var beforeCelebrateTimer = this.game.time.create(true);
-    beforeCelebrateTimer.add(250, () => {
+    this.controller.delayBy(250, () => {
       this.playPlayerAnimation("celebrate", position, facing, isOnBlock);
-      var beforeCompleteTimer = this.game.time.create(true);
-      beforeCompleteTimer.add(900, completionHandler, this);
-      beforeCompleteTimer.start();
-    }, this);
-    beforeCelebrateTimer.start();
+      this.controller.delayBy(1200, completionHandler);
+    });
   }
 
   playFailureAnimation(position, facing, isOnBlock, completionHandler) {
-    var beforeFailTimer = this.game.time.create(true);
-    beforeFailTimer.add(500, () => {
+    this.controller.delayBy(500, () => {
       this.playPlayerAnimation("fail", position, facing, isOnBlock);
-    var beforeCompleteTimer = this.game.time.create(true);
-      beforeCompleteTimer.add(900, completionHandler, this);
-      beforeCompleteTimer.start();
-    }, this);
-    beforeFailTimer.start();
+      this.controller.delayBy(900, completionHandler);
+    });
   }
 
   playBumpAnimation(position, facing, isOnBlock) {
@@ -324,15 +317,13 @@ export default class LevelView {
   }
 
   playCreeperExplodeAnimation(position, facing, destroyPosition, isOnBlock, completionHandler) {
-    var timer = this.game.time.create(true);
-    timer.add(180, () => {
+    this.controller.delayBy(180, () => {
       var signalBinding = this.playPlayerAnimation("jumpUp", position, facing, false).onLoop.add(() => {
         this.playIdleAnimation(position, facing, isOnBlock);
         signalBinding.detach();
         this.playExplodingCreeperAnimation(position, facing, destroyPosition, isOnBlock, completionHandler, this);
       });
-    }, this);
-    timer.start();
+    });
   }
 
   playCreeperAnimation(position, facing, destroyPosition, isOnBlock, completionHandler){
@@ -350,11 +341,9 @@ export default class LevelView {
       var borderingPositions;
       blockToExplode.kill();
       this.playExplosionAnimation(position, facing, destroyPosition, isOnBlock, () => {
-        var timer = this.game.time.create(true);
-        timer.add(100, () => {
+        this.controller.delayBy(100, () => {
           this.playFailureAnimation(position, facing, false, completionHandler);
-        }, this);
-        timer.start();
+        });
       }, false);
       var block = this.createBlock(this.fluffPlane, destroyPosition[0], destroyPosition[1], "explosion");
     });
@@ -393,11 +382,7 @@ export default class LevelView {
         tweenWToC;
 
     tweenToW = this.playLevelEndAnimation(position, facing, isOnBlock, () => {
-      var timer = this.game.time.create(true);
-      timer.add(4000, () => {
-        completionHandler();
-      }, this);
-      timer.start();
+      this.controller.delayBy(4000, completionHandler);
     });
     tweenToW.onComplete.add(() => {
       //Change house ground to floor
@@ -433,6 +418,7 @@ export default class LevelView {
     tweenWToC = this.tweenFromWhiteToClear(sprite);
 
     tweenToW.onComplete.add(() => {
+      this.selectionIndicator.visible = false;
       this.setPlayerPosition(position[0], position[1], isOnBlock);
       tweenWToC.start();
     });
@@ -590,9 +576,18 @@ export default class LevelView {
     this.playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, newShadingPlaneData, completionHandler);
   }
 
+
+  playPunchDestroyAirAnimation(playerPosition, facing, destroyPosition, completionHandler) {
+    this.playPunchAnimation(playerPosition, facing, destroyPosition, "punchDestroy", completionHandler);
+  }
+
   playPunchAirAnimation(playerPosition, facing, destroyPosition, completionHandler) {
+    this.playPunchAnimation(playerPosition, facing, destroyPosition, "punch", completionHandler);
+  }
+
+  playPunchAnimation(playerPosition, facing, destroyPosition, animationType, completionHandler) {
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
-    var signalBinding = this.playPlayerAnimation("punchDestroy", playerPosition, facing, false).onComplete.add(() => {
+    var signalBinding = this.playPlayerAnimation(animationType, playerPosition, facing, false).onComplete.add(() => {
       signalBinding.detach();
       completionHandler();
     });

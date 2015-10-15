@@ -92,7 +92,7 @@ class PhaserApp {
   }
 
   preload() {
-    this.game.time.advancedTiming = true;
+    this.game.time.advancedTiming = this.DEBUG;
     this.game.stage.disableVisibilityChange = true;
     this.levelView.preload(this.levelModel.player.name);
   }
@@ -194,7 +194,9 @@ class PhaserApp {
   }
 
   render() {
-    this.game.debug.text(this.game.time.fps || '--', 2, 14, "#00ff00");
+    if (this.DEBUG) {
+      this.game.debug.text(this.game.time.fps || '--', 2, 14, "#00ff00");
+    }
     this.levelView.render();
   }
 
@@ -241,20 +243,16 @@ class PhaserApp {
               }
             }
         } else {
-          var timer = this.game.time.create(true);
-          timer.add(200, () => {
+          this.delayBy(200, () => {
             commandQueueItem.succeeded();
-          }, this);
-          timer.start();
+          });
         }
       });
     } else {
       this.levelView.playBumpAnimation(player.position, player.facing, false);
-      var timer = this.game.time.create(true);
-      timer.add(800, () => {
+      this.delayBy(800, () => {
         commandQueueItem.succeeded();
-      }, this);
-      timer.start();
+      });
     }
   }
 
@@ -267,11 +265,10 @@ class PhaserApp {
       this.levelModel.turnRight();
     }
     this.levelView.updatePlayerDirection(this.levelModel.player.position, this.levelModel.player.facing);
-    var timer = this.game.time.create(true);
-    timer.add(800, () => {
+
+    this.delayBy(800, () => {
       commandQueueItem.succeeded();
-    }, this);
-    timer.start();
+    });
 
   }
 
@@ -324,14 +321,12 @@ class PhaserApp {
         }
       }
     } else {
-      this.levelView.playPunchAirAnimation(player.position, player.facing, this.levelModel.getMoveForwardPosition(), () => {
+      this.levelView.playPunchDestroyAirAnimation(player.position, player.facing, this.levelModel.getMoveForwardPosition(), () => {
         this.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]);
         this.levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
-        var airPunchTimer = this.game.time.create(true);
-        airPunchTimer.add(600, () => {
+        this.delayBy(600, () => {
           commandQueueItem.succeeded();
-        }, this);
-        airPunchTimer.start();
+        });
       });
     }
   }
@@ -348,24 +343,29 @@ class PhaserApp {
           this.levelModel.computeFowPlane();
           this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
           this.levelView.updateFowPlane(this.levelModel.fowPlane);
-          var timer = this.game.time.create(true);
-          timer.add(200, () => {
+          this.delayBy(200, () => {
             this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
-          }, this);
-          timer.add(400, () => {
+          });
+          this.delayBy(400, () => {
             commandQueueItem.succeeded();
-          }, this);
-          timer.start();
+          });
         });
       } else {
-        // HACK: Shouldn't have to explicitly call this?
-        this.levelView.playFailureAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.isOnBlock, () => {
-          commandQueueItem.failed();
-        });
+        var signalBinding = this.levelView.playPlayerAnimation("jumpUp", this.levelModel.player.position, this.levelModel.player.facing, false).onLoop.add(() => {
+          this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
+          signalBinding.detach();
+          this.delayBy(800, () => { commandQueueItem.succeeded(); });
+        }, this);
       }
     } else {
       commandQueueItem.failed();
     }
+  }
+
+  delayBy(ms, completionHandler) {
+    var timer = this.game.time.create(true);
+    timer.add(ms, completionHandler, this);
+    timer.start();
   }
 
   placeBlockForward(commandQueueItem, blockType) {
@@ -380,14 +380,12 @@ class PhaserApp {
       this.levelModel.computeFowPlane();
       this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
       this.levelView.updateFowPlane(this.levelModel.fowPlane);
-      var timer = this.game.time.create(true);
-      timer.add(200, () => {
+      this.delayBy(200, () => {
         this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
-      }, this);
-      timer.add(400, () => {
+      });
+      this.delayBy(400, () => {
         commandQueueItem.succeeded();
-      }, this);
-      timer.start();
+      });
     });
   }
 
