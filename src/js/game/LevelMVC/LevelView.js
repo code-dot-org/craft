@@ -255,14 +255,15 @@ export default class LevelView {
   playSuccessAnimation(position, facing, isOnBlock, completionHandler) {
     this.controller.delayBy(250, () => {
       this.playPlayerAnimation("celebrate", position, facing, isOnBlock);
-      this.controller.delayBy(1200, completionHandler);
+      this.controller.delayBy(1100, completionHandler);
     });
   }
 
   playFailureAnimation(position, facing, isOnBlock, completionHandler) {
     this.controller.delayBy(500, () => {
-      this.playPlayerAnimation("fail", position, facing, isOnBlock);
-      this.controller.delayBy(900, completionHandler);
+      this.onAnimationEnd(this.playPlayerAnimation("fail", position, facing, isOnBlock), () => {
+        this.controller.delayBy(2400, completionHandler);
+      });
     });
   }
 
@@ -318,9 +319,8 @@ export default class LevelView {
 
   playCreeperExplodeAnimation(position, facing, destroyPosition, isOnBlock, completionHandler) {
     this.controller.delayBy(180, () => {
-      var signalBinding = this.playPlayerAnimation("jumpUp", position, facing, false).onLoop.add(() => {
+      this.onAnimationLoopOnce(this.playPlayerAnimation("jumpUp", position, facing, false), () => {
         this.playIdleAnimation(position, facing, isOnBlock);
-        signalBinding.detach();
         this.playExplodingCreeperAnimation(position, facing, destroyPosition, isOnBlock, completionHandler, this);
       });
     });
@@ -550,15 +550,12 @@ export default class LevelView {
     let direction = this.getDirectionName(facing);
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
 
-    var signalBinding = this.playPlayerAnimation("punch", playerPosition, facing, false).onComplete.add(() => {
-      signalBinding.detach();
-
+    this.onAnimationEnd(this.playPlayerAnimation("punch", playerPosition, facing, false), () => {
       let blockIndex = (destroyPosition[1] * 10) + destroyPosition[0];
       let blockToShear = this.actionPlaneBlocks[blockIndex];
 
       blockToShear.animations.stop(null, true);
-      var binding = blockToShear.animations.play("used").onLoop.add(() => {
-        binding.detach();
+      this.onAnimationLoopOnce(blockToShear.animations.play("used"), () => {
         blockToShear.animations.play("face");
       });
 
@@ -587,8 +584,7 @@ export default class LevelView {
 
   playPunchAnimation(playerPosition, facing, destroyPosition, animationType, completionHandler) {
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
-    var signalBinding = this.playPlayerAnimation(animationType, playerPosition, facing, false).onComplete.add(() => {
-      signalBinding.detach();
+    this.onAnimationEnd(this.playPlayerAnimation(animationType, playerPosition, facing, false), () => {
       completionHandler();
     });
   }
@@ -600,10 +596,8 @@ export default class LevelView {
 
     let destroyOverlay = this.actionPlane.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
     destroyOverlay.sortOrder = destroyPosition[1] * 10 + 2;
-    var signalBinding = destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false).onComplete.add(() =>
+    this.onAnimationEnd(destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false), () =>
     {
-      signalBinding.detach();
-
       this.actionPlaneBlocks[blockIndex] = null;
 
       if (blockToDestroy.hasOwnProperty("onBlockDestroy")) {
@@ -640,9 +634,7 @@ export default class LevelView {
     let miningParticlesOffsetY = miningParticlesData[miningParticlesIndex][2];
     let miningParticles = this.actionPlane.create(miningParticlesOffsetX + 40 * destroyPosition[0], miningParticlesOffsetY + 40 * destroyPosition[1], "miningParticles", "MiningParticles" + miningParticlesFirstFrame);
     miningParticles.sortOrder = destroyPosition[1] * 10 + 2;
-    var signalBinding = miningParticles.animations.add("miningParticles", Phaser.Animation.generateFrameNames("MiningParticles", miningParticlesFirstFrame, miningParticlesFirstFrame + 11, "", 0), 30, false).onComplete.add(() => {
-      signalBinding.detach();
-
+    this.onAnimationEnd(miningParticles.animations.add("miningParticles", Phaser.Animation.generateFrameNames("MiningParticles", miningParticlesFirstFrame, miningParticlesFirstFrame + 11, "", 0), 30, false), () => {
       miningParticles.kill();
       this.toDestroy.push(miningParticles);
     });
@@ -654,9 +646,8 @@ export default class LevelView {
         explodeAnim = this.actionPlane.create(-36 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
 
     explodeAnim.sortOrder = destroyPosition[1] * 10 + 2;
-    signalBinding = explodeAnim.animations.add("explode", Phaser.Animation.generateFrameNames("BlockBreakParticle", 0, 7, "", 0), 30, false).onComplete.add(() =>
+    this.onAnimationEnd(explodeAnim.animations.add("explode", Phaser.Animation.generateFrameNames("BlockBreakParticle", 0, 7, "", 0), 30, false), () =>
     {
-      signalBinding.detach();
       explodeAnim.kill();
       this.toDestroy.push(explodeAnim);
 
@@ -674,11 +665,9 @@ export default class LevelView {
   }
 
   playItemDropAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
-    var signalBinding,
-        sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
+    var sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
     sprite.sortOrder = destroyPosition[1] * 10 + 2;
-    signalBinding = sprite.animations.play("animate").onComplete.add(() => {
-      signalBinding.detach();
+    this.onAnimationEnd(sprite.animations.play("animate"), () => {
       this.playItemAcquireAnimation(playerPosition, facing, destroyPosition, blockType, sprite, completionHandler);
     });
   }
@@ -1228,4 +1217,19 @@ export default class LevelView {
 
     return sprite;
   }
+
+  onAnimationEnd(animation, completionHandler) {
+    var signalBinding = animation.onComplete.add(() => {
+      signalBinding.detach();
+      completionHandler();
+    });
+  }
+
+  onAnimationLoopOnce(animation, completionHandler) {
+    var signalBinding = animation.onLoop.add(() => {
+      signalBinding.detach();
+      completionHandler();
+    });
+  }
+
 }
