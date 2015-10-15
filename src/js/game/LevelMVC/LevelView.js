@@ -122,7 +122,7 @@ export default class LevelView {
       "rails_topRight": ["rails", "Rails_TopRight", -12, -10],
       "rails_unpoweredHorizontal": ["rails", "Rails_UnpoweredHorizontal", -12, -10],
       "rails_unpoweredVertical": ["rails", "Rails_UnpoweredVertical", -12, -10],
-      "rails_vertical": ["rails", "Rails_Vertical", -12, -0], 
+      "rails_vertical": ["rails", "Rails_Vertical", -12, -0],
       "rails_poweredHorizontal": ["rails", "Rails_PoweredHorizontal", -12, -10],
       "rails_poweredVertical": ["rails", "Rails_PoweredVertical", -12, -10],
       "rails_redstoneTorch": ["rails", "Rails_RedstoneTorch", -12, -10],

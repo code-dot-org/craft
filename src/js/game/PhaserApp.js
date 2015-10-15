@@ -334,7 +334,7 @@ class PhaserApp {
   }
 
   checkMinecartLevelEndAnimation() {
-    return false;
+    return this.specialLevelType === 'minecart';
   }
 
   checkHouseBuiltEndAnimation() {
@@ -416,6 +416,9 @@ class PhaserApp {
       }
       else if(this.checkMinecartLevelEndAnimation())
       {
+        // For 10/16 playtest only: reset all blocks that the player placed so they can see the minecart
+        this.reset();
+
         this.levelView.playMinecartAnimation(player.position, player.facing, player.isOnBlock,
             () => { commandQueueItem.succeeded(); }, this.levelModel.getMinecartTrack());
       }
