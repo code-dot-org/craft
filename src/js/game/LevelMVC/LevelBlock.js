@@ -11,6 +11,14 @@ export default class LevelBlock {
     this.isEmpty = blockType === "";
     this.isEmissive = false;
 
+    if(blockType.substring(0, 5) == "rails")
+    {
+      this.isEntity = true;
+      this.isWalkable = true;
+      this.isUsable = true;
+      this.isDestroyable = false;
+    }
+
     if (blockType == "sheep") {
       this.isEntity = true;
       this.isDestroyable = false;

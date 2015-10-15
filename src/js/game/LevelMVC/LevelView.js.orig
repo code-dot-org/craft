@@ -465,9 +465,13 @@ export default class LevelView {
     var tweenToW,
         tweenWToC;
 
+<<<<<<< HEAD
     tweenToW = this.playLevelEndAnimation(position, facing, isOnBlock, () => {
       this.controller.delayBy(4000, completionHandler);
-    }, true);
+    });
+=======
+    tweenToW = this.playLevelEndAnimation(position, facing, isOnBlock, completionHandler, true);
+>>>>>>> d943293... Added Minecart Animation, just needs to check for the correct special level signature and it should work
     tweenToW.onComplete.add(() => {
       //Change house ground to floor
       var xCoord;

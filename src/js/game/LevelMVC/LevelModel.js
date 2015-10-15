@@ -352,6 +352,23 @@ export default class LevelModel {
     return this.getAllBorderingPlayer("creeper");
   }
 
+getMinecartTrack() {
+    var track = [];
+    track.push(["down", [3,4], FacingDirection.Down]);
+    track.push(["down", [3,5], FacingDirection.Down]);
+    track.push(["down", [3,6], FacingDirection.Down]);
+    track.push(["down", [3,7], FacingDirection.Down]);
+    track.push(["down", [3,8], FacingDirection.Down]);  
+    track.push(["turn_left", [3,8], FacingDirection.Right]);
+    track.push(["right", [4,8], FacingDirection.Right]);
+    track.push(["right", [5,8], FacingDirection.Right]);
+    track.push(["right", [6,8], FacingDirection.Right]);
+    track.push(["right", [7,8], FacingDirection.Right]);
+    track.push(["right", [8,8], FacingDirection.Right]);
+    track.push(["right", [9,8], FacingDirection.Right]);
+    return track;
+}
+
   canMoveForward() {
     var result = false;
 
