@@ -5,7 +5,7 @@
 	"frame": {"x":0,"y":0,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":40,"y":80,"w":40,"h":40},
+	"spriteSourceSize": {"x":40,"y":40,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
 },
 "FogOfWar_Bottom_Left":
@@ -13,7 +13,7 @@
 	"frame": {"x":0,"y":40,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":0,"y":80,"w":40,"h":40},
+	"spriteSourceSize": {"x":40,"y":40,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
 },
 "FogOfWar_Bottom_Right":
@@ -21,7 +21,7 @@
 	"frame": {"x":0,"y":80,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":80,"y":80,"w":40,"h":40},
+	"spriteSourceSize": {"x":40,"y":40,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
 },
 "FogOfWar_Center":
@@ -37,7 +37,7 @@
 	"frame": {"x":40,"y":40,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":20,"y":60,"w":40,"h":40},
+	"spriteSourceSize": {"x":40,"y":40,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
 },
 "FogOfWar_InCorner_BottomRight":
@@ -45,7 +45,7 @@
 	"frame": {"x":40,"y":80,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":60,"y":60,"w":40,"h":40},
+	"spriteSourceSize": {"x":40,"y":40,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
 },
 "FogOfWar_InCorner_TopLeft":
@@ -53,7 +53,7 @@
 	"frame": {"x":80,"y":0,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":20,"y":20,"w":40,"h":40},
+	"spriteSourceSize": {"x":40,"y":40,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
 },
 "FogOfWar_InCorner_TopRight":
@@ -61,7 +61,7 @@
 	"frame": {"x":80,"y":40,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":60,"y":20,"w":40,"h":40},
+	"spriteSourceSize": {"x":40,"y":40,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
 },
 "FogOfWar_Left":
@@ -69,7 +69,7 @@
 	"frame": {"x":80,"y":80,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":0,"y":40,"w":40,"h":40},
+	"spriteSourceSize": {"x":40,"y":40,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
 },
 "FogOfWar_Right":
@@ -77,7 +77,7 @@
 	"frame": {"x":120,"y":0,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":80,"y":40,"w":40,"h":40},
+	"spriteSourceSize": {"x":40,"y":40,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
 },
 "FogOfWar_Top":
@@ -85,7 +85,7 @@
 	"frame": {"x":160,"y":0,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":40,"y":0,"w":40,"h":40},
+	"spriteSourceSize": {"x":40,"y":40,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
 },
 "FogOfWar_Top_Left":
@@ -93,7 +93,7 @@
 	"frame": {"x":120,"y":40,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":40},
+	"spriteSourceSize": {"x":40,"y":40,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
 },
 "FogOfWar_Top_Right":
@@ -101,7 +101,7 @@
 	"frame": {"x":120,"y":80,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":80,"y":0,"w":40,"h":40},
+	"spriteSourceSize": {"x":40,"y":40,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
 }},
 "meta": {
