@@ -214,11 +214,13 @@ class PhaserApp {
       this.levelModel.moveForward();
       // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
 
-      //First arg is if we found a creeper
+
       this.levelView.playMoveForwardAnimation(player.position, player.facing, wasOnBlock && wasOnBlock != player.isOnBlock, () => {
         this.levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
 
+      //First arg is if we found a creeper
         allFoundCreepers = this.levelModel.isPlayerStandingNearCreeper();
+
         if (this.levelModel.isPlayerStandingInWater()) {
             this.levelView.playDrownFailureAnimation(player.position, player.facing, player.isOnBlock, () => {
               commandQueueItem.failed();
@@ -331,6 +333,10 @@ class PhaserApp {
     }
   }
 
+  checkMinecartLevelEndAnimation() {
+    return this.specialLevelType === 'minecart';
+  }
+
   checkHouseBuiltEndAnimation() {
     return this.specialLevelType === 'houseBuild';
   }
@@ -407,6 +413,14 @@ class PhaserApp {
             houseBottomRight,
             () => { commandQueueItem.succeeded(); }
         );
+      }
+      else if(this.checkMinecartLevelEndAnimation())
+      {
+        // For 10/16 playtest only: reset all blocks that the player placed so they can see the minecart
+        this.reset();
+
+        this.levelView.playMinecartAnimation(player.position, player.facing, player.isOnBlock,
+            () => { commandQueueItem.succeeded(); }, this.levelModel.getMinecartTrack());
       }
       else {
         this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock,

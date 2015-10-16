@@ -352,6 +352,23 @@ export default class LevelModel {
     return this.getAllBorderingPlayer("creeper");
   }
 
+getMinecartTrack() {
+    var track = [];
+    track.push(["down", [3,4], FacingDirection.Down]);
+    track.push(["down", [3,5], FacingDirection.Down]);
+    track.push(["down", [3,6], FacingDirection.Down]);
+    track.push(["down", [3,7], FacingDirection.Down]);
+    track.push(["down", [3,8], FacingDirection.Down]);  
+    track.push(["turn_left", [3,8], FacingDirection.Right]);
+    track.push(["right", [4,8], FacingDirection.Right]);
+    track.push(["right", [5,8], FacingDirection.Right]);
+    track.push(["right", [6,8], FacingDirection.Right]);
+    track.push(["right", [7,8], FacingDirection.Right]);
+    track.push(["right", [8,8], FacingDirection.Right]);
+    track.push(["right", [9,8], FacingDirection.Right]);
+    return track;
+}
+
   canMoveForward() {
     var result = false;
 
@@ -549,6 +566,196 @@ export default class LevelModel {
     }
   }
 
+  solveFOWTypeForMap() {
+    var emissives,
+        blocksToSolve;
+
+    emissives = this.getAllEmissives();
+    blocksToSolve = this.findBlocksAffectedByEmissives(emissives);
+
+    for(var block in blocksToSolve) {
+      if(blocksToSolve.hasOwnProperty(block)) {
+        this.solveFOWTypeFor(blocksToSolve[block], emissives);
+      }
+    }
+  }
+
+  solveFOWTypeFor(position, emissives) {
+    var emissivesTouching,
+        topLeftQuad = false,
+        botLeftQuad = false,
+        leftQuad = false,
+        topRightQuad = false,
+        botRightQuad = false,
+        rightQuad = false,
+        topQuad = false,
+        botQuad = false,
+        angle = 0,
+        index = this.coordinatesToIndex(position),
+        x,
+        y;
+
+    emissivesTouching = this.findEmissivesThatTouch(position, emissives);
+
+    for(var torch in emissivesTouching) {
+      var currentTorch = emissivesTouching[torch];
+      y = position[1];
+      x = position[0];
+
+      angle = Math.atan2(currentTorch[1] - position[1], currentTorch[0] - position[0]);
+      //invert
+      angle = -angle;
+      //Normalize to be between 0 and 2*pi
+      if(angle < 0) {
+        angle += 2 * Math.PI;
+      }
+      //convert to degrees for simplicity
+      angle *= 360 / (2*Math.PI);
+
+      //top right
+      if(!rightQuad &&angle > 32.5 && angle <= 57.5) {
+        topRightQuad = true;
+        this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_InCorner_TopRight" };
+      }//top left
+      if(!leftQuad &&angle > 122.5 && angle <= 147.5) {
+        topLeftQuad = true;
+        this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_InCorner_TopLeft"};
+      }//bot left
+      if(!leftQuad &&angle > 212.5 && angle <= 237.5) {
+        botLeftQuad = true;
+        this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_InCorner_BottomLeft"};
+      }//botright
+      if(!rightQuad && angle > 302.5 && angle <= 317.5) {
+        botRightQuad = true;
+        this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_InCorner_BottomRight"};
+      }
+      //right
+      if(angle >= 327.5 || angle <= 32.5) {
+        rightQuad = true;
+        this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Right" };
+      }//bot
+      if(angle > 237.5 && angle <= 302.5) {
+        botQuad = true;
+        this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Bottom"};
+      }
+      //left
+      if(angle > 147.5 && angle <= 212.5) {
+        leftQuad = true;
+        this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Left"};
+      }
+      //top
+      if(angle > 57.5 && angle <= 122.5) {
+        topQuad = true;
+        this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Top"};
+      }
+    }
+
+    if(topLeftQuad && botLeftQuad) {
+      this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Left"};
+    }
+    if(topRightQuad && botRightQuad) {
+      this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Right"};
+    }
+    if(topLeftQuad && topRightQuad) {
+      this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Top"};
+    }
+    if(botRightQuad && botLeftQuad) {
+      this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Bottom"};
+    }
+
+    //fully lit 
+    if( (botRightQuad && topLeftQuad) || (botLeftQuad && topRightQuad) || leftQuad && rightQuad || topQuad && botQuad || (rightQuad && botQuad && topLeftQuad) 
+          || (botQuad && topRightQuad && topLeftQuad) || (topQuad && botRightQuad && botLeftQuad) || (leftQuad && topRightQuad && botRightQuad) || (leftQuad && botQuad && topRightQuad)) {//((botRightQuad && (leftQuad) && (topLeftQuad || topRightQuad))) {
+      this.fowPlane[index] = "";
+    }
+
+    //darkend botleft corner
+    else if( (botQuad && leftQuad) || (botQuad && topLeftQuad) || (leftQuad && botRightQuad) ){// || (leftQuad || topLeftQuad || botLeftQuad) && ( botQuad || botRightQuad)) {//(rightQuad && (topRightQuad || botRightQuad)) {//(!botLeftQuad && !leftQuad && !botQuad && ((topLeftQuad || topQuad) && (botRightQuad) && (rightQuad || topRightQuad))) {
+      this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Bottom_Left"};
+    } 
+    //darkend botRight corner
+    else if((botQuad && rightQuad) || (botQuad && topRightQuad) || (rightQuad && botLeftQuad)) {//(!botRightQuad && !rightQuad && !botQuad && ((topLeftQuad || topQuad) && (botLeftQuad) && (leftQuad || topRightQuad))) {
+      this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Bottom_Right"};
+    }
+    //darkend topRight corner
+    else if((topQuad && rightQuad) || (topQuad && botRightQuad) || (rightQuad && topLeftQuad)) {//(!topRightQuad && !rightQuad && !topQuad && ((botRightQuad) && (botLeftQuad || botQuad) && (leftQuad || topLeftQuad))) {
+      this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Top_Right"};
+    }
+    //darkend topLeft corner
+    else if((topQuad && leftQuad) || (topQuad && botLeftQuad) || (leftQuad && topRightQuad)){// !topLeftQuad && !leftQuad && !topQuad && ((botRightQuad) && (botLeftQuad || botQuad) && (rightQuad || topRightQuad))) {
+      this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Top_Left"};
+    }
+  }
+
+  getAllEmissives(){
+    var emissives = [];
+    for (var y = 0; y < 10; ++y) {
+      for (var x = 0; x < 10; ++x) {
+        var index = this.coordinatesToIndex([x,y]);
+        if(!this.actionPlane[index].isEmpty && this.actionPlane[index].isEmissive || this.groundPlane[index].isEmissive && this.actionPlane[index].isEmpty ) {
+          emissives.push([x,y]);
+        }
+      }
+    }
+    return emissives;
+  }
+
+  findBlocksAffectedByEmissives(emissives) {
+    var blocksTouchedByEmissives = {};
+    //find emissives that are close enough to light us.
+    for(var torch in emissives)
+    {
+      var currentTorch = emissives[torch];
+      let y = currentTorch[1];
+      let x = currentTorch[0];
+      for (var yIndex = currentTorch[1] - 2; yIndex <= (currentTorch[1] + 2); ++yIndex) {
+        for (var xIndex = currentTorch[0] - 2; xIndex <= (currentTorch[0] + 2); ++xIndex) {
+
+          //Ensure we're looking inside the map
+          if(yIndex < 0 || yIndex > 9 || xIndex < 0 || xIndex > 9)
+            continue;
+
+          //Ignore the indexes directly around us.
+          //Theyre taken care of on the FOW first pass 
+          if( (yIndex >= y - 1 && yIndex <= y + 1) && (xIndex >= x - 1 && xIndex <= x + 1) )
+            continue;
+
+          //we want unique copies so we use a map.
+          blocksTouchedByEmissives[yIndex.toString() + xIndex.toString()] = [xIndex,yIndex]; 
+        }
+      }
+    }
+
+    return blocksTouchedByEmissives;
+  }
+
+  findEmissivesThatTouch(position, emissives) {
+    var emissivesThatTouch = [];
+    let y = position[1];
+    let x = position[0];
+    //find emissives that are close enough to light us.
+    for (var yIndex = y - 2; yIndex <= (y + 2); ++yIndex) {
+      for (var xIndex = x - 2; xIndex <= (x + 2); ++xIndex) {
+
+        //Ensure we're looking inside the map
+        if(yIndex < 0 || yIndex > 9 || xIndex < 0 || xIndex > 9)
+          continue;
+
+        //Ignore the indexes directly around us. 
+        if( (yIndex >= y - 1 && yIndex <= y + 1) && (xIndex >= x - 1 && xIndex <= x + 1) )
+          continue;
+
+        for(var torch in emissives) {
+          if(emissives[torch][0] === xIndex && emissives[torch][1] === yIndex) {
+            emissivesThatTouch.push(emissives[torch]);
+          }
+        }
+      }
+    }
+
+    return emissivesThatTouch;
+  }
+
   computeFowPlane() {
     var x, y;
 
@@ -567,16 +774,21 @@ export default class LevelModel {
         }
       }
 
+      //second pass for partial lit squares
+      this.solveFOWTypeForMap();
+
       for (y = 0; y < 10; ++y) {
         for (x = 0; x < 10; ++x) {
           let blockIndex = (y * 10) + x;
-
-          if (this.groundPlane[blockIndex].isEmissive ||
+          
+          if (this.groundPlane[blockIndex].isEmissive && this.actionPlane[blockIndex].isEmpty ||
             (!this.actionPlane[blockIndex].isEmpty && this.actionPlane[blockIndex].isEmissive)) {
             this.clearFowAround(x, y);
           }
         }
       }
+
+
     }
   }
 

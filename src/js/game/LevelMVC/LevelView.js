@@ -114,6 +114,19 @@ export default class LevelView {
       "explosion": ["explosion", "", -70, 60],
 
       "door": ["door", "", -12, -10],
+
+      "rails_bottomLeft": ["rails", "Rails_BottomLeft", -12, -10],
+      "rails_bottomRight": ["rails", "Rails_BottomRight", -12, -10],
+      "rails_horizontal": ["rails", "Rails_Horizontal", -12, -10],
+      "rails_topLeft": ["rails", "Rails_TopLeft", -12, -10],
+      "rails_topRight": ["rails", "Rails_TopRight", -12, -10],
+      "rails_unpoweredHorizontal": ["rails", "Rails_UnpoweredHorizontal", -12, -10],
+      "rails_unpoweredVertical": ["rails", "Rails_UnpoweredVertical", -12, -10],
+      "rails_vertical": ["rails", "Rails_Vertical", -12, -0],
+      "rails_poweredHorizontal": ["rails", "Rails_PoweredHorizontal", -12, -10],
+      "rails_poweredVertical": ["rails", "Rails_PoweredVertical", -12, -10],
+      "rails_redstoneTorch": ["rails", "Rails_RedstoneTorch", -12, -10],
+  
       //"bed": ["bed", "", -70, 60], 
     };
 
@@ -152,6 +165,7 @@ export default class LevelView {
     this.game.load.atlasJSONHash('bubbles', `${this.assetRoot}images/Bubbles.png`, `${this.assetRoot}images/Bubbles.json`);
     this.game.load.atlasJSONHash('explosion', `${this.assetRoot}images/Explosion.png`, `${this.assetRoot}images/Explosion.json`);
     this.game.load.atlasJSONHash('door', `${this.assetRoot}images/Door.png`, `${this.assetRoot}images/Door.json`);
+    this.game.load.atlasJSONHash('rails', `${this.assetRoot}images/Rails.png`, `${this.assetRoot}images/Rails.json`);
 
     this.game.load.image('finishOverlay', `${this.assetRoot}images/WhiteRect.png`);
     this.game.load.image('bed', `${this.assetRoot}images/Bed2.png`);
@@ -355,6 +369,76 @@ export default class LevelView {
     return (coordinates[1] * 10) + coordinates[0];
   }
 
+  playMinecartTurnAnimation(position, facing, isOnBlock, completionHandler, turnDirection) {
+    var animation = this.playPlayerAnimation("mineCart_turn" + turnDirection, position, FacingDirection.Down, false);
+    return animation
+  }
+
+  playMinecartMoveForwardAnimation(position, facing, isOnBlock, completionHandler, nextPosition) {
+    var animation,
+        tween;
+
+    this.playPlayerAnimation("mineCart",position, facing, false);
+    tween = this.game.add.tween(this.playerSprite).to({
+      x: (-18 + 40 * nextPosition[0]),
+      y: (-32 + 40 * nextPosition[1])
+    }, 400, Phaser.Easing.Linear.None);
+    tween.start();
+
+    position = nextPosition;
+
+    return tween
+  }
+
+  playMinecartAnimation(position, facing, isOnBlock, completionHandler, minecartTrack)
+  {
+    var positionObj = {},
+        animation;
+    this.track = minecartTrack;
+    this.i = 0;
+
+    //start at 3,3
+    this.setPlayerPosition(3,3, isOnBlock);
+    position = [3,3];
+    
+    animation = this.playLevelEndAnimation(position, facing, isOnBlock, completionHandler, false);
+
+    animation.onComplete.add(() => {
+      this.playTrack(position, facing, isOnBlock, completionHandler, minecartTrack);
+    }); 
+  }
+
+  playTrack(position, facing, isOnBlock, completionHandler, minecartTrack)
+  {
+    if(this.i < this.track.length) {
+      var direction,
+          arraydirection = this.track[this.i][0],
+          nextPosition = this.track[this.i][1],
+          facing = this.track[this.i][2];
+
+      //turn
+      if(arraydirection.substring(0,4) === "turn") {
+        direction = arraydirection.substring(5);
+        this.playMinecartTurnAnimation(position, facing, isOnBlock, completionHandler, direction).onComplete.add(() => {
+          this.playMinecartMoveForwardAnimation(position, facing, isOnBlock, completionHandler, nextPosition).onComplete.add(() => {
+            this.playTrack(position, facing, isOnBlock, completionHandler, minecartTrack);
+          });
+        });
+      }
+      else {
+        this.playMinecartMoveForwardAnimation(position, facing, isOnBlock, completionHandler, nextPosition).onComplete.add(() => {
+          this.playTrack(position, facing, isOnBlock, completionHandler, minecartTrack);
+        });
+      }
+      this.i++;
+    }
+    else
+    {
+      this.playSuccessAnimation(position, facing, isOnBlock, completionHandler);
+      completionHandler();
+    }
+  }
+
   addHouseBed(bottomCoordinates) {
     //Temporary, will be replaced by bed blocks
     var bedTopCoordinate = (bottomCoordinates[1] - 1);
@@ -383,15 +467,14 @@ export default class LevelView {
 
     tweenToW = this.playLevelEndAnimation(position, facing, isOnBlock, () => {
       this.controller.delayBy(4000, completionHandler);
-    });
+    }, true);
     tweenToW.onComplete.add(() => {
       //Change house ground to floor
       var xCoord;
       var yCoord;
       var sprite;
 
-      for(var i = 0; i < createFloor.length; ++i)
-      {
+      for(var i = 0; i < createFloor.length; ++i) {
         xCoord = createFloor[i][1];
         yCoord = createFloor[i][2];
         /*this.groundPlane[this.coordinatesToIndex([xCoord,yCoord])].kill();*/
@@ -406,7 +489,7 @@ export default class LevelView {
   }
 
   //Tweens in and then out of white. returns the tween to white for adding callbacks
-  playLevelEndAnimation(position, facing, isOnBlock, completionHandler) {
+  playLevelEndAnimation(position, facing, isOnBlock, completionHandler, playSuccessAnimation) {
     var sprite,
         tweenToW,
         tweenWToC;
@@ -422,9 +505,12 @@ export default class LevelView {
       this.setPlayerPosition(position[0], position[1], isOnBlock);
       tweenWToC.start();
     });
-    tweenWToC.onComplete.add(() => {
-      this.playSuccessAnimation(position, facing, isOnBlock, completionHandler);
-    });
+    if(playSuccessAnimation)
+    {
+      tweenWToC.onComplete.add(() => {
+        this.playSuccessAnimation(position, facing, isOnBlock, completionHandler);
+      });
+    }
     tweenToW.start();
 
     return tweenToW;
@@ -477,13 +563,15 @@ export default class LevelView {
     });
 
     tween.start();
+
+    return tween;
   }
 
   playPlaceBlockAnimation(position, facing, blockType, completionHandler) {
     var tween,
         jumpAnimName;
 
-    if (blockType === "cropWheat" || blockType == "torch") {
+    if (blockType === "cropWheat" || blockType == "torch" || blockType.substring(0, 5) == "rails") {
       this.setSelectionIndicatorPosition(position[0], position[1]);
       this.playPlayerAnimation("punch", position, facing, false).onComplete.add(() => {
         let blockIndex = (position[1] * 10) + position[0];
@@ -924,6 +1012,9 @@ export default class LevelView {
     this.playerSprite.animations.add('bump_down', Phaser.Animation.generateFrameNames("Player_", 49, 54, "", 3), frameRate, false);
     this.playerSprite.animations.add('jumpDown_down', Phaser.Animation.generateFrameNames("Player_", 55, 60, "", 3), frameRate, true);
     this.playerSprite.animations.add('mine_down', Phaser.Animation.generateFrameNames("Player_", 241, 244, "", 3), frameRate, true);
+    this.playerSprite.animations.add('mineCart_down', Phaser.Animation.generateFrameNames("Minecart_", 5, 5, "", 2), frameRate, false);
+    this.playerSprite.animations.add('mineCart_turnleft_down', Phaser.Animation.generateFrameNames("Minecart_", 6, 6, "", 2), frameRate, false);
+    this.playerSprite.animations.add('mineCart_turnright_down', Phaser.Animation.generateFrameNames("Minecart_", 12, 12, "", 2), frameRate, false);
 
     frameList = [];
     for (i = 0; i < 19; ++i) {
@@ -944,6 +1035,7 @@ export default class LevelView {
     this.playerSprite.animations.add('bump_right', Phaser.Animation.generateFrameNames("Player_", 109, 114, "", 3), frameRate, false);
     this.playerSprite.animations.add('jumpDown_right', Phaser.Animation.generateFrameNames("Player_", 115, 120, "", 3), frameRate, true);
     this.playerSprite.animations.add('mine_right', Phaser.Animation.generateFrameNames("Player_", 245, 248, "", 3), frameRate, true);
+    this.playerSprite.animations.add('mineCart_right', Phaser.Animation.generateFrameNames("Minecart_", 7, 7, "", 2), frameRate, false);
 
     frameList = [];
     for (i = 0; i < 19; ++i) {
@@ -964,6 +1056,7 @@ export default class LevelView {
     this.playerSprite.animations.add('bump_left', Phaser.Animation.generateFrameNames("Player_", 229, 234, "", 3), frameRate, false);
     this.playerSprite.animations.add('jumpDown_left', Phaser.Animation.generateFrameNames("Player_", 235, 240, "", 3), frameRate, true);
     this.playerSprite.animations.add('mine_left', Phaser.Animation.generateFrameNames("Player_", 253, 256, "", 3), frameRate, true);
+    this.playerSprite.animations.add('mineCart_left', Phaser.Animation.generateFrameNames("Minecart_", 11, 11, "", 2), frameRate, false);
 
     frameList = [];
     for (i = 0; i < 19; ++i) {
@@ -984,6 +1077,9 @@ export default class LevelView {
     this.playerSprite.animations.add('bump_up', Phaser.Animation.generateFrameNames("Player_", 169, 174, "", 3), frameRate, false);
     this.playerSprite.animations.add('jumpDown_up', Phaser.Animation.generateFrameNames("Player_", 175, 180, "", 3), frameRate, true);
     this.playerSprite.animations.add('mine_up', Phaser.Animation.generateFrameNames("Player_", 249, 252, "", 3), frameRate, true);
+    this.playerSprite.animations.add('mineCart_up', Phaser.Animation.generateFrameNames("Minecart_", 9, 9, "", 2), frameRate, false);
+    this.playerSprite.animations.add('mineCart_turnleft_up', Phaser.Animation.generateFrameNames("Minecart_", 10, 10, "", 2), frameRate, false);
+    this.playerSprite.animations.add('mineCart_turnright_up', Phaser.Animation.generateFrameNames("Minecart_", 8, 8, "", 2), frameRate, false);
   }
 
   createMiniBlock(x, y, blockType) {
@@ -1087,17 +1183,18 @@ export default class LevelView {
         sprite.animations.add("idle", frameList, 15, true);
 
         // TODO(bjordan/gaallen) - update once updated Sheep.json
-        //frameList = Phaser.Animation.generateFrameNames("Sheep_", 490, 491, "", 0);
-        //stillFrames = Math.trunc(Math.random() * 20) + 5;
-        //for (i = 0; i < stillFrames; ++i) {
-        //  frameList.push("Sheep_492");
-        //}
+        frameList = Phaser.Animation.generateFrameNames("Sheep_", 490, 492, "", 0);
+        stillFrames = Math.trunc(Math.random() * 3) + 3;
+        for (i = 0; i < stillFrames; ++i) {
+          frameList.push("Sheep_492");
+        }
+        sprite.animations.add("face", frameList, 2, true);
 
         frameList = Phaser.Animation.generateFrameNames("Sheep_", 439, 455, "", 0);
         for (i = 0; i < 3; ++i) {
           frameList.push("Sheep_455");
         }
-        sprite.animations.add("face", frameList, 15, true);
+        
         sprite.animations.add("used", frameList, 15, true);
         this.playAnimationWithOffset(sprite,"idle",17, 199);
         break;

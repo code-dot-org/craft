@@ -25,6 +25,7 @@ Facing Left
 	Eat Grass: 199-216
 	Kick Back Legs: 217-234
 	Look Down: 235-240
+	Look At Camera: 481-486
 
 NAKED SHEEP
 
@@ -55,3 +56,4 @@ Facing Left
 	Eat Grass: 439-456
 	Kick Back Legs: 457-474
 	Look Down: 475-480
+	Look At Camera: 487-492
