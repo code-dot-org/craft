@@ -967,11 +967,49 @@ export default class LevelView {
     }
   }
 
+  playRandomPlayerIdle(facing) {
+    var facingName,
+        rand,
+        animationName;
+
+    facingName = this.getDirectionName(facing);
+    rand = Math.trunc(Math.random() * 4) + 1;
+
+    switch(rand)
+    {
+      case 1:
+      animationName = "idle"
+      break;
+      case 2:
+      animationName = "lookLeft"
+      break;
+      case 3:
+      animationName = "lookRight"
+      break;
+      case 4:
+      animationName = "lookAtCam"
+      break;
+      default:
+    };
+
+    animationName += facingName;
+    this.playerSprite.animations.play(animationName);
+  }
+
+  generateFramesWithEndDelay(frameName, startFrame, endFrame, endFrameFullName, buffer, frameDelay) {
+    var frameList = Phaser.Animation.generateFrameNames(frameName, startFrame, endFrame, "", buffer);
+    for (var i = 0; i < frameDelay; ++i) {
+      frameList.push(endFrameFullName);
+    }
+    return frameList;
+  }
+
   preparePlayerSprite() {
     var frameList,
         genFrames,
         i,
-        singlePunch;
+        singlePunch,
+        idleFrameRate = 10;
 
     let frameRate = 20;
 
@@ -983,12 +1021,43 @@ export default class LevelView {
     this.selectionIndicator = this.shadingPlane.create(24, 44, 'selectionIndicator');
 
     frameList = [];
-    for (i = 0; i < 19; ++i) {
+
+    frameList.push("Player_001");
+    frameList.push("Player_003");
+    frameList.push("Player_001");
+    frameList.push("Player_007");
+    frameList.push("Player_009");
+    frameList.push("Player_007");
+    for (i = 0; i < 5; ++i) {
       frameList.push("Player_001");
     }
-    genFrames = Phaser.Animation.generateFrameNames("Player_", 1, 12, "", 3);
-    frameList = frameList.concat(genFrames);
-    this.playerSprite.animations.add('idle_down', frameList, frameRate / 2, true);
+
+    this.playerSprite.animations.add('idle_down', frameList, frameRate / 3, false).onComplete.add(()=> {
+      this.playRandomPlayerIdle(FacingDirection.Down);
+    });
+    frameList = this.generateFramesWithEndDelay("Player_", 6, 5, "Player_005", 3, 5);
+    frameList.push("Player_006");
+    this.playerSprite.animations.add('lookLeft_down', frameList, idleFrameRate, false).onComplete.add(()=> {
+      this.playerSprite.animations.play("idlePause_down");
+    });
+    frameList = this.generateFramesWithEndDelay("Player_", 12, 11, "Player_011", 3, 5);
+    frameList.push("Player_012");
+    this.playerSprite.animations.add('lookRight_down', frameList, idleFrameRate, false).onComplete.add(()=> {
+      this.playerSprite.animations.play("idlePause_down");
+    });
+    frameList = this.generateFramesWithEndDelay("Player_", 263, 262, "Player_262", 3, 5);
+    frameList.push("Player_263");
+    this.playerSprite.animations.add('lookAtCam_down', frameList, idleFrameRate, false).onComplete.add(()=> {
+      this.playerSprite.animations.play("idlePause_down");
+    });
+    frameList = [];
+    for (i = 0; i < 13; ++i) {
+      frameList.push("Player_001");
+    }
+    this.playerSprite.animations.add('idlePause_down', frameList, frameRate / 3, false).onComplete.add(()=> {
+      this.playRandomPlayerIdle(FacingDirection.Down);
+    });
+
     this.playerSprite.animations.add('walk_down', Phaser.Animation.generateFrameNames("Player_", 13, frameRate, "", 3), frameRate, true);
     singlePunch = Phaser.Animation.generateFrameNames("Player_", 21, 24, "", 3);
     this.playerSprite.animations.add('punch_down', singlePunch, frameRate, false);
@@ -1007,12 +1076,43 @@ export default class LevelView {
     this.playerSprite.animations.add('mineCart_turnright_down', Phaser.Animation.generateFrameNames("Minecart_", 12, 12, "", 2), frameRate, false);
 
     frameList = [];
-    for (i = 0; i < 19; ++i) {
+
+    frameList.push("Player_061");
+    frameList.push("Player_063");
+    frameList.push("Player_061");
+    frameList.push("Player_067");
+    frameList.push("Player_069");
+    frameList.push("Player_067");
+    for (i = 0; i < 5; ++i) {
       frameList.push("Player_061");
     }
-    genFrames = Phaser.Animation.generateFrameNames("Player_", 61, 72, "", 3);
-    frameList = frameList.concat(genFrames);
-    this.playerSprite.animations.add('idle_right', frameList, frameRate / 2, true);
+
+    this.playerSprite.animations.add('idle_right', frameList, frameRate / 3, false).onComplete.add(()=> {
+      this.playRandomPlayerIdle(FacingDirection.Right);
+    });
+    frameList = this.generateFramesWithEndDelay("Player_", 66, 65, "Player_065", 3, 5);
+    frameList.push("Player_066");
+    this.playerSprite.animations.add('lookLeft_right', frameList, idleFrameRate, false).onComplete.add(()=> {
+      this.playerSprite.animations.play("idlePause_right");
+    });
+    frameList = this.generateFramesWithEndDelay("Player_", 72, 71, "Player_071", 3, 5);
+    frameList.push("Player_072");
+    this.playerSprite.animations.add('lookRight_right',frameList, idleFrameRate, false).onComplete.add(()=> {
+      this.playerSprite.animations.play("idlePause_right");
+    });
+    frameList = this.generateFramesWithEndDelay("Player_", 270, 269, "Player_269", 3, 5);
+    frameList.push("Player_270");
+    this.playerSprite.animations.add('lookAtCam_right', frameList, idleFrameRate, false).onComplete.add(()=> {
+      this.playerSprite.animations.play("idlePause_right");
+    });
+    frameList = [];
+    for (i = 0; i < 13; ++i) {
+      frameList.push("Player_061");
+    }
+    this.playerSprite.animations.add('idlePause_right', frameList, frameRate / 3, false).onComplete.add(()=> {
+      this.playRandomPlayerIdle(FacingDirection.Right);
+    });
+
     this.playerSprite.animations.add('walk_right', Phaser.Animation.generateFrameNames("Player_", 73, 80, "", 3), frameRate, true);
     singlePunch = Phaser.Animation.generateFrameNames("Player_", 81, 84, "", 3);
     this.playerSprite.animations.add('punch_right', singlePunch, frameRate, false);
@@ -1028,12 +1128,43 @@ export default class LevelView {
     this.playerSprite.animations.add('mineCart_right', Phaser.Animation.generateFrameNames("Minecart_", 7, 7, "", 2), frameRate, false);
 
     frameList = [];
-    for (i = 0; i < 19; ++i) {
+
+    frameList.push("Player_181");
+    frameList.push("Player_183");
+    frameList.push("Player_181");
+    frameList.push("Player_187");
+    frameList.push("Player_189");
+    frameList.push("Player_187");
+    for (i = 0; i < 5; ++i) {
       frameList.push("Player_181");
     }
-    genFrames = Phaser.Animation.generateFrameNames("Player_", 181, 192, "", 3);
-    frameList = frameList.concat(genFrames);
-    this.playerSprite.animations.add('idle_left', frameList, frameRate / 2, true);
+
+    this.playerSprite.animations.add('idle_left', frameList, frameRate / 3, false).onComplete.add(()=> {
+      this.playRandomPlayerIdle(FacingDirection.Left);
+    });
+    frameList = this.generateFramesWithEndDelay("Player_", 186, 185, "Player_185", 3, 5);
+    frameList.push("Player_186");
+    this.playerSprite.animations.add('lookLeft_left', frameList, idleFrameRate, false).onComplete.add(()=> {
+     this.playerSprite.animations.play("idlePause_left");
+    });
+    frameList = this.generateFramesWithEndDelay("Player_", 192, 191, "Player_191", 3, 5);
+    frameList.push("Player_192");
+    this.playerSprite.animations.add('lookRight_left', frameList, idleFrameRate, false).onComplete.add(()=> {
+      this.playerSprite.animations.play("idlePause_left");
+    });
+    frameList = this.generateFramesWithEndDelay("Player_", 284, 283, "Player_283", 3, 5);
+    frameList.push("Player_284");
+    this.playerSprite.animations.add('lookAtCam_left', frameList, idleFrameRate, false).onComplete.add(()=> {
+      this.playerSprite.animations.play("idlePause_left");
+    });
+    frameList = [];
+    for (i = 0; i < 13; ++i) {
+      frameList.push("Player_181");
+    }
+    this.playerSprite.animations.add('idlePause_left', frameList, frameRate / 3, false).onComplete.add(()=> {
+      this.playRandomPlayerIdle(FacingDirection.Left);
+    });
+
     this.playerSprite.animations.add('walk_left', Phaser.Animation.generateFrameNames("Player_", 193, 200, "", 3), frameRate, true);
     singlePunch = Phaser.Animation.generateFrameNames("Player_", 201, 204, "", 3);
     this.playerSprite.animations.add('punch_left', singlePunch, frameRate, false);
@@ -1050,12 +1181,42 @@ export default class LevelView {
     this.playerSprite.animations.add('mineCart_left', Phaser.Animation.generateFrameNames("Minecart_", 11, 11, "", 2), frameRate, false);
 
     frameList = [];
-    for (i = 0; i < 19; ++i) {
+    frameList.push("Player_121");
+    frameList.push("Player_123");
+    frameList.push("Player_121");
+    frameList.push("Player_127");
+    frameList.push("Player_129");
+    frameList.push("Player_127");
+    for (i = 0; i < 5; ++i) {
       frameList.push("Player_121");
     }
-    genFrames = Phaser.Animation.generateFrameNames("Player_", 121, 132, "", 3);
-    frameList = frameList.concat(genFrames);
-    this.playerSprite.animations.add('idle_up', frameList, frameRate / 2, true);
+
+    this.playerSprite.animations.add('idle_up', frameList, frameRate / 3, false).onComplete.add(()=> {
+      this.playRandomPlayerIdle(FacingDirection.Up);
+    });
+    frameList = this.generateFramesWithEndDelay("Player_", 126, 125, "Player_125", 3, 5);
+    frameList.push("Player_126");
+    this.playerSprite.animations.add('lookLeft_up', frameList, idleFrameRate, false).onComplete.add(()=> {
+      this.playerSprite.animations.play("idlePause_up");
+    });
+    frameList = this.generateFramesWithEndDelay("Player_", 132, 131, "Player_131", 3, 5);
+    frameList.push("Player_132");
+    this.playerSprite.animations.add('lookRight_up', frameList, idleFrameRate, false).onComplete.add(()=> {
+      this.playerSprite.animations.play("idlePause_up");
+    });
+    frameList = this.generateFramesWithEndDelay("Player_", 277, 276, "Player_276", 3, 5);
+    frameList.push("Player_277");
+    this.playerSprite.animations.add('lookAtCam_up', frameList, idleFrameRate, false).onComplete.add(()=> {
+      this.playerSprite.animations.play("idlePause_up");
+    });
+
+    frameList = [];
+    for (i = 0; i < 13; ++i) {
+      frameList.push("Player_121");
+    }
+    this.playerSprite.animations.add('idlePause_up', frameList, frameRate / 3, false).onComplete.add(()=> {
+      this.playRandomPlayerIdle(FacingDirection.Up);
+    });
     this.playerSprite.animations.add('walk_up', Phaser.Animation.generateFrameNames("Player_", 133, 140, "", 3), frameRate, true);
     singlePunch = Phaser.Animation.generateFrameNames("Player_", 141, 144, "", 3);
     this.playerSprite.animations.add('punch_up', singlePunch, frameRate, false);
