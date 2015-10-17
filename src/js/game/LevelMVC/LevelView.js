@@ -515,7 +515,6 @@ export default class LevelView {
 
     return tweenToW;
   }
-
   tweenFromWhiteToClear(sprite) {
     var tweenWhiteToClear;
 
@@ -536,6 +535,8 @@ export default class LevelView {
 
   playMoveForwardAnimation(position, facing, shouldJumpDown, completionHandler) {
     var tween,
+        oldPosition,
+        newPosVec,
         animName;
 
     this.audioPlayer.play("step_grass1");
@@ -544,19 +545,26 @@ export default class LevelView {
 
     this.setSelectionIndicatorPosition(position[0], position[1]);
     this.playerSprite.sortOrder = position[1] * 10 + 5;
+    oldPosition = [Math.trunc((this.playerSprite.position.x + 18)/ 40), Math.ceil((this.playerSprite.position.y+ 32) / 40)];
+    newPosVec = [position[0] - oldPosition[0], position[1] - oldPosition[1]];
 
     if (!shouldJumpDown) {
       animName = "walk" + direction;
       this.playerSprite.animations.play(animName);
+      tween = this.game.add.tween(this.playerSprite).to({
+        x: (-18 + 40 * position[0]),
+        y: (-32 + 40 * position[1])
+      }, 200, Phaser.Easing.Linear.None);
     } else {
       animName = "jumpDown" + direction;
       this.playerSprite.animations.play(animName);
+      tween = this.game.add.tween(this.playerSprite).to({
+        x: [-18 + 40 * oldPosition[0], -18 + 40 * (oldPosition[0] + newPosVec[0]), -18 + 40 * position[0]],
+        y: [-32 + 40 * oldPosition[1], -32 + 40 * (oldPosition[1] + newPosVec[1]) - 80, -32 + 40 * position[1]]
+      }, 300, Phaser.Easing.Linear.None).interpolation((v,k) => {
+        return Phaser.Math.bezierInterpolation(v,k);
+      })
     }
-
-    tween = this.game.add.tween(this.playerSprite).to({
-      x: (-18 + 40 * position[0]),
-      y: (-32 + 40 * position[1])
-    }, 200, Phaser.Easing.Linear.None);
 
     tween.onComplete.add(() => {
       completionHandler();
