@@ -382,6 +382,8 @@ export default class LevelModel {
 
 getMinecartTrack() {
     var track = [];
+    track.push(["down", [3,2], FacingDirection.Down, 300]);
+    track.push(["down", [3,3], FacingDirection.Down, 300]);
     track.push(["down", [3,4], FacingDirection.Down, 300]);
     track.push(["down", [3,5], FacingDirection.Down, 300]);
     track.push(["down", [3,6], FacingDirection.Down, 300]);
@@ -394,6 +396,8 @@ getMinecartTrack() {
     track.push(["right", [7,8], FacingDirection.Right, 400]);
     track.push(["right", [8,8], FacingDirection.Right, 400]);
     track.push(["right", [9,8], FacingDirection.Right, 400]);
+    track.push(["right", [10,8], FacingDirection.Right, 400]);
+    track.push(["right", [11,8], FacingDirection.Right, 400]);
     return track;
 }
 
