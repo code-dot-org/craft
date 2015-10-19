@@ -8,6 +8,18 @@ export default class LevelModel {
     console.log("LevelModel::constructor");
     this.player = {};
 
+    this.railMap = 
+      ["","","","","","","","","","",
+      "","","","","","","","","","",
+      "","","","railsUnpoweredVertical","","","","","","",
+      "","","","railsUnpoweredVertical","","","","","","",
+      "","","","railsUnpoweredVertical","","","","","","",
+      "","","","railsUnpoweredVertical","","","","","","",
+      "","","","railsUnpoweredVertical","","","","","","",
+      "","","","railsUnpoweredVertical","","","","","","",
+      "","","","railsBottomLeft","railsHorizontal","railsHorizontal","railsHorizontal","railsHorizontal","railsHorizontal","railsHorizontal",
+      "","","","","","","","","",""];
+
     this.initialLevelData = Object.create(levelData);
 
     this.reset();
@@ -142,6 +154,22 @@ export default class LevelModel {
       }
     }
     return true;
+  }
+
+  getUnpoweredRails() {
+    var unpoweredRails = [];
+    for(var x = 0; x < 10; ++x) {
+      for(var y = 0; y < 10; ++y) {
+        var index = this.coordinatesToIndex([x,y]);
+        var block = this.actionPlane[index];
+        if(block.blockType.substring(0,7) == "railsUn") {
+          //this.createActionPlaneBlock([x,y], "railsPowered" + this.actionPlane[index].blockType.substring(14)); 
+          unpoweredRails.push([x,y], "railsPowered" + this.actionPlane[index].blockType.substring(14));
+        }
+      }
+    }
+
+    return unpoweredRails;
   }
 
   getMoveForwardPosition() {
@@ -354,18 +382,18 @@ export default class LevelModel {
 
 getMinecartTrack() {
     var track = [];
-    track.push(["down", [3,4], FacingDirection.Down]);
-    track.push(["down", [3,5], FacingDirection.Down]);
-    track.push(["down", [3,6], FacingDirection.Down]);
-    track.push(["down", [3,7], FacingDirection.Down]);
-    track.push(["down", [3,8], FacingDirection.Down]);  
-    track.push(["turn_left", [3,8], FacingDirection.Right]);
-    track.push(["right", [4,8], FacingDirection.Right]);
-    track.push(["right", [5,8], FacingDirection.Right]);
-    track.push(["right", [6,8], FacingDirection.Right]);
-    track.push(["right", [7,8], FacingDirection.Right]);
-    track.push(["right", [8,8], FacingDirection.Right]);
-    track.push(["right", [9,8], FacingDirection.Right]);
+    track.push(["down", [3,4], FacingDirection.Down, 300]);
+    track.push(["down", [3,5], FacingDirection.Down, 300]);
+    track.push(["down", [3,6], FacingDirection.Down, 300]);
+    track.push(["down", [3,7], FacingDirection.Down, 300]);
+    track.push(["down", [3,8], FacingDirection.Down, 300]);  
+    track.push(["turn_left", [3,8], FacingDirection.Right, 400]);
+    track.push(["right", [4,8], FacingDirection.Right, 400]);
+    track.push(["right", [5,8], FacingDirection.Right, 400]);
+    track.push(["right", [6,8], FacingDirection.Right, 400]);
+    track.push(["right", [7,8], FacingDirection.Right, 400]);
+    track.push(["right", [8,8], FacingDirection.Right, 400]);
+    track.push(["right", [9,8], FacingDirection.Right, 400]);
     return track;
 }
 

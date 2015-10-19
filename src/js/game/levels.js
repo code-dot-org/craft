@@ -57,7 +57,7 @@ window.demoLevels = {
       "", "", "", "treeOak", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "sheep", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
+      "", "", "cropWheat", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "treeOak", "", "", "", "", "", "", "",
@@ -382,7 +382,7 @@ window.demoLevels = {
 
     playerStartPosition: [3, 6],
 
-    playerStartDirection: 0,
+    playerStartDirection: 1,
 
     specialLevelType: 'houseBuild',
 
@@ -420,7 +420,7 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "logOak", "logOak", "logOak", "", "", "", "",
+      "", "", "", "logOak", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
@@ -438,28 +438,7 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
     ],
 
-    solutionCode: moveForwardBlock +
-      placeBlock("logOak") +
-      moveForwardBlock +
-      placeBlock("logOak") +
-      moveForwardBlock +
-      placeBlock("logOak") +
-      turnRightBlock +
-      placeBlock("logOak") +
-      moveForwardBlock +
-      placeBlock("logOak") +
-      moveForwardBlock +
-      placeBlock("logOak") +
-      moveForwardBlock +
-      placeBlock("logOak") +
-      turnRightBlock +
-      placeBlock("logOak") +
-      moveForwardBlock +
-      placeBlock("logOak") +
-      moveForwardBlock +
-      placeBlock("logOak") +
-      moveForwardBlock +
-      placeBlock("logOak"),
+    solutionCode: moveForwardBlock,
 
     verificationFunction: function (verificationAPI) {
       return verificationAPI.solutionMapMatchesResultMap(
