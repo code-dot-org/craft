@@ -573,7 +573,7 @@ export default class LevelView {
       this.playerSprite.animations.play(animName);
       tween = this.game.add.tween(this.playerSprite).to({
         x: [-18 + 40 * oldPosition[0], -18 + 40 * (oldPosition[0] + newPosVec[0]), -18 + 40 * position[0]],
-        y: [-32 + 40 * oldPosition[1], -32 + 40 * (oldPosition[1] + newPosVec[1]) - 80, -32 + 40 * position[1]]
+        y: [-32 + 40 * oldPosition[1], -32 + 40 * (oldPosition[1] + newPosVec[1]) - 50, -32 + 40 * position[1]]
       }, 300, Phaser.Easing.Linear.None).interpolation((v,k) => {
         return Phaser.Math.bezierInterpolation(v,k);
       })
@@ -1335,6 +1335,51 @@ export default class LevelView {
     sprite.animations.play(animationName).setFrame(rand, true);
   }
 
+  playRandomSheepAnimation(sprite) {
+    var rand = Math.trunc(Math.random() * 20 + 1);
+
+    switch(rand) {
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+      case 6:
+      //eat grass
+      sprite.play("idle");
+      break;
+      case 7:
+      case 8:
+      case 9:
+      case 10:
+      //look left
+      sprite.play("lookLeft");
+      break;
+      case 11:
+      case 12:
+      case 13:
+      case 14:
+      //look right
+      sprite.play("lookRight");
+      break;
+      case 15:
+      case 16:
+      case 17:
+      //cam
+      sprite.play("lookAtCam");
+      case 18:
+      case 19:
+      //kick
+      sprite.play("kick");
+      break;
+      case 20:
+      //idlePause
+      sprite.play("idlePause")
+      break;
+      default:
+    };
+  }
+
   createBlock(plane, x, y, blockType) {
     var i,
         sprite = null,
@@ -1365,13 +1410,60 @@ export default class LevelView {
         break;
 
       case "sheep":
+        let sFrames = 10;
         // Facing Left: Eat Grass: 199-216
-        sprite = plane.create(-12 + 40 * x, -12 + 40 * y, "sheep", "Sheep_199");
+        sprite = plane.create(-22 + 40 * x, -12 + 40 * y, "sheep", "Sheep_199");
         frameList = Phaser.Animation.generateFrameNames("Sheep_", 199, 215, "", 0);
-        for (i = 0; i < 30; ++i) {
+        for (i = 0; i < sFrames; ++i) {
           frameList.push("Sheep_215");
         }
-        sprite.animations.add("idle", frameList, 15, true);
+        sprite.animations.add("idle", frameList, 15, false).onComplete.add(() => {
+          sprite.play("idlePause");
+        });
+
+        //Look Right
+        frameList = Phaser.Animation.generateFrameNames("Sheep_", 184, 186, "", 0);
+        for (i = 0; i < sFrames; ++i) {
+          frameList.push("Sheep_186");
+        }
+        frameList.push("Sheep_188")
+        sprite.animations.add("lookRight", frameList, 15, false).onComplete.add(() => {
+          sprite.play("idlePause");
+        });
+
+        //Look Left
+        frameList = Phaser.Animation.generateFrameNames("Sheep_", 193, 195, "", 0);
+        for (i = 0; i < sFrames; ++i) {
+          frameList.push("Sheep_195");
+        }
+        frameList.push("Sheep_197");
+        sprite.animations.add("lookLeft", frameList, 15, false).onComplete.add(() => {
+          sprite.play("idlePause");
+        });
+
+        //Kick
+        frameList = Phaser.Animation.generateFrameNames("Sheep_", 217, 233, "", 0);
+        sprite.animations.add("kick", frameList, 15, false).onComplete.add(() => {
+          sprite.play("idlePause");
+        });
+
+        //Look At Camera
+        frameList = Phaser.Animation.generateFrameNames("Sheep_", 484, 485, "", 0);
+        for (i = 0; i < sFrames; ++i) {
+          frameList.push("Sheep_485");
+        }
+        frameList.push("Sheep_486")
+        sprite.animations.add("lookAtCam", frameList, 15, false).onComplete.add(() => {
+          sprite.play("idlePause");
+        });
+
+        frameList = [];
+        for (i = 0; i < 15; ++i) {
+          frameList.push("Sheep_215");
+        }
+        sprite.animations.add("idlePause", frameList, 15, false).onComplete.add(() => {
+          this.playRandomSheepAnimation(sprite);
+        });
 
         // TODO(bjordan/gaallen) - update once updated Sheep.json
         frameList = Phaser.Animation.generateFrameNames("Sheep_", 490, 492, "", 0);
