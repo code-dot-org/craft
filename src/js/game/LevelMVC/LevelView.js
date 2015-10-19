@@ -103,7 +103,7 @@ export default class LevelView {
       "leavesOak": ["leavesOak", "Leaves0", -100, 0],
       "leavesSpruce": ["leavesSpruce", "Leaves0", -76, 60],
 
-      "cropWheat": ["crops", "Wheat0", -13, 0],
+      "cropWheat": ["blocks", "Wheat2", -13, 0],
       "torch": ["torch", "Torch0", -13, 0],
 
       "tallGrass": ["tallGrass", "", -13, 0],
@@ -115,17 +115,17 @@ export default class LevelView {
 
       "door": ["door", "", -12, -10],
 
-      "rails_bottomLeft": ["rails", "Rails_BottomLeft", -12, -10],
-      "rails_bottomRight": ["rails", "Rails_BottomRight", -12, -10],
-      "rails_horizontal": ["rails", "Rails_Horizontal", -12, -10],
-      "rails_topLeft": ["rails", "Rails_TopLeft", -12, -10],
-      "rails_topRight": ["rails", "Rails_TopRight", -12, -10],
-      "rails_unpoweredHorizontal": ["rails", "Rails_UnpoweredHorizontal", -12, -10],
-      "rails_unpoweredVertical": ["rails", "Rails_UnpoweredVertical", -12, -10],
-      "rails_vertical": ["rails", "Rails_Vertical", -12, -0],
-      "rails_poweredHorizontal": ["rails", "Rails_PoweredHorizontal", -12, -10],
-      "rails_poweredVertical": ["rails", "Rails_PoweredVertical", -12, -10],
-      "rails_redstoneTorch": ["rails", "Rails_RedstoneTorch", -12, -10],
+      "railsBottomLeft":         ["blocks", "Rails_BottomLeft", -13, 0],
+      "railsBottomRight":        ["blocks", "Rails_BottomRight", -13, 0],
+      "railsHorizontal":         ["blocks", "Rails_Horizontal", -13, 0],
+      "railsTopLeft":            ["blocks", "Rails_TopLeft", -13, 0],
+      "railsTopRight":           ["blocks", "Rails_TopRight", -13, 0],
+      "railsUnpoweredHorizontal":["blocks", "Rails_UnpoweredHorizontal", -13, 0],
+      "railsUnpoweredVertical":  ["blocks", "Rails_UnpoweredVertical", -13, 0],
+      "railsVertical":           ["blocks", "Rails_Vertical", -13, -0],
+      "railsPoweredHorizontal":  ["blocks", "Rails_PoweredHorizontal", -13, 0],
+      "railsPoweredVertical":    ["blocks", "Rails_PoweredVertical", -13, 0],
+      "railsRedstoneTorch":      ["blocks", "Rails_RedstoneTorch", -13, 0],
   
       //"bed": ["bed", "", -70, 60], 
     };
