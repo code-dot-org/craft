@@ -1086,8 +1086,7 @@ export default class LevelView {
     this.playerSprite.animations.add('hurt_down', Phaser.Animation.generateFrameNames("Player_", 25, 28, "", 3), frameRate, true);
     this.playerSprite.animations.add('crouch_down', Phaser.Animation.generateFrameNames("Player_", 29, 32, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpUp_down', Phaser.Animation.generateFrameNames("Player_", 33, 36, "", 3), frameRate / 2, true);
-    // Temporarily play look-up-facing-down as failure
-    this.playerSprite.animations.add('fail_down', Phaser.Animation.generateFrameNames("Player_", 260, 262, "", 3), frameRate, false);
+    this.playerSprite.animations.add('fail_down', Phaser.Animation.generateFrameNames("Player_", 45, 48, "", 3), frameRate, false);
     frameList = Phaser.Animation.generateFrameNames("Player_", 29, 32, "", 3);
     frameList = frameList.concat(frameList);
     frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 285, 296, "", 3));
@@ -1201,10 +1200,9 @@ export default class LevelView {
     this.playerSprite.animations.add('punch_left', singlePunch, frameRate, false);
     this.playerSprite.animations.add('punchDestroy_left', singlePunch.concat(singlePunch).concat(singlePunch), frameRate, false);
     this.playerSprite.animations.add('hurt_left', Phaser.Animation.generateFrameNames("Player_", 205, 208, "", 3), frameRate, true);
-    // Temporarily play look-up-facing-left as failure
     this.playerSprite.animations.add('crouch_left', Phaser.Animation.generateFrameNames("Player_", 209, 212, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpUp_left', Phaser.Animation.generateFrameNames("Player_", 213, 216, "", 3), frameRate / 2, true);
-    this.playerSprite.animations.add('fail_left', Phaser.Animation.generateFrameNames("Player_", 279, 282, "", 3), frameRate / 2, false);
+    this.playerSprite.animations.add('fail_left', Phaser.Animation.generateFrameNames("Player_", 225, 228, "", 3), frameRate / 2, false);
     frameList = Phaser.Animation.generateFrameNames("Player_", 209, 212, "", 3);
     frameList = frameList.concat(frameList);
     frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 285, 296, "", 3));
@@ -1259,9 +1257,8 @@ export default class LevelView {
     this.playerSprite.animations.add('punchDestroy_up', singlePunch.concat(singlePunch).concat(singlePunch), frameRate, false);
     this.playerSprite.animations.add('hurt_up', Phaser.Animation.generateFrameNames("Player_", 145, 148, "", 3), frameRate, true);
     this.playerSprite.animations.add('crouch_up', Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3), frameRate, true);
-    // Temporarily play crouch up as failure
     this.playerSprite.animations.add('jumpUp_up', Phaser.Animation.generateFrameNames("Player_", 153, 156, "", 3), frameRate / 2, true);
-    this.playerSprite.animations.add('fail_up', Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3), frameRate / 2, false);
+    this.playerSprite.animations.add('fail_up', Phaser.Animation.generateFrameNames("Player_", 165, 168, "", 3), frameRate / 2, false);
     frameList = Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3);
     frameList = frameList.concat(frameList);
     frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 285, 296, "", 3));
