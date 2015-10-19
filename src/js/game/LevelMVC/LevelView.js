@@ -407,9 +407,9 @@ export default class LevelView {
     this.track = minecartTrack;
     this.i = 0;
 
-    //start at 3,3
-    this.setPlayerPosition(3,3, isOnBlock);
-    position = [3,3];
+    //start at 3,2
+    this.setPlayerPosition(3,2, isOnBlock);
+    position = [3,2];
     
     animation = this.playLevelEndAnimation(position, facing, isOnBlock, completionHandler, false);
 
