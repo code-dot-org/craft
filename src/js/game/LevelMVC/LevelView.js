@@ -374,26 +374,36 @@ export default class LevelView {
     return animation
   }
 
-  playMinecartMoveForwardAnimation(position, facing, isOnBlock, completionHandler, nextPosition) {
+  playMinecartMoveForwardAnimation(position, facing, isOnBlock, completionHandler, nextPosition, speed) {
     var animation,
         tween;
 
     this.playPlayerAnimation("mineCart",position, facing, false);
     tween = this.game.add.tween(this.playerSprite).to({
       x: (-18 + 40 * nextPosition[0]),
-      y: (-32 + 40 * nextPosition[1])
-    }, 400, Phaser.Easing.Linear.None);
+      y: (-32 + 40 * nextPosition[1]),
+    }, speed, Phaser.Easing.Linear.None);
     tween.start();
-
-    position = nextPosition;
+    this.playerSprite.sortOrder = 10 * nextPosition[1] + 5;
+    //position = nextPosition;
 
     return tween
   }
 
-  playMinecartAnimation(position, facing, isOnBlock, completionHandler, minecartTrack)
+
+  activateUnpoweredRails(unpoweredRails) {
+    for(var railIndex = 0; railIndex < unpoweredRails.length; railIndex += 2) {
+      var rail = unpoweredRails[railIndex + 1];
+      var position = unpoweredRails[railIndex];
+      this.createActionPlaneBlock(position, rail);
+    }
+  }
+
+
+
+  playMinecartAnimation(position, facing, isOnBlock, completionHandler, minecartTrack, unpoweredRails)
   {
-    var positionObj = {},
-        animation;
+    var animation;
     this.track = minecartTrack;
     this.i = 0;
 
@@ -404,6 +414,7 @@ export default class LevelView {
     animation = this.playLevelEndAnimation(position, facing, isOnBlock, completionHandler, false);
 
     animation.onComplete.add(() => {
+      this.activateUnpoweredRails(unpoweredRails);
       this.playTrack(position, facing, isOnBlock, completionHandler, minecartTrack);
     }); 
   }
@@ -414,19 +425,21 @@ export default class LevelView {
       var direction,
           arraydirection = this.track[this.i][0],
           nextPosition = this.track[this.i][1],
-          facing = this.track[this.i][2];
+          facing = this.track[this.i][2],
+          speed = this.track[this.i][3];
 
       //turn
       if(arraydirection.substring(0,4) === "turn") {
         direction = arraydirection.substring(5);
         this.playMinecartTurnAnimation(position, facing, isOnBlock, completionHandler, direction).onComplete.add(() => {
-          this.playMinecartMoveForwardAnimation(position, facing, isOnBlock, completionHandler, nextPosition).onComplete.add(() => {
+          this.playMinecartMoveForwardAnimation(position, facing, isOnBlock, completionHandler, nextPosition, speed).onComplete.add(() => {
+            position = nextPosition;
             this.playTrack(position, facing, isOnBlock, completionHandler, minecartTrack);
           });
         });
       }
       else {
-        this.playMinecartMoveForwardAnimation(position, facing, isOnBlock, completionHandler, nextPosition).onComplete.add(() => {
+        this.playMinecartMoveForwardAnimation(position, facing, isOnBlock, completionHandler, nextPosition, speed).onComplete.add(() => {
           this.playTrack(position, facing, isOnBlock, completionHandler, minecartTrack);
         });
       }
@@ -434,7 +447,7 @@ export default class LevelView {
     }
     else
     {
-      this.playSuccessAnimation(position, facing, isOnBlock, completionHandler);
+      this.playSuccessAnimation(position, facing, isOnBlock, completionHandler)
       completionHandler();
     }
   }

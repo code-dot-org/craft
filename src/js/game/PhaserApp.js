@@ -341,8 +341,24 @@ class PhaserApp {
     return this.specialLevelType === 'houseBuild';
   }
 
+  checkRailBlock(blockType) {
+    var checkRailBlock = this.levelModel.railMap[10 * this.levelModel.player.position[1] + this.levelModel.player.position[0]];
+    if(checkRailBlock != "") {
+      blockType = checkRailBlock;
+    }
+    else
+    {
+      blockType = "railsVertical";
+    }
+    return blockType;
+  }
+
   placeBlock(commandQueueItem, blockType) {
     if (this.levelModel.canPlaceBlock()) {
+      if(this.checkMinecartLevelEndAnimation() && blockType == "rail") {
+        blockType = this.checkRailBlock(blockType);
+      }
+
       if (this.levelModel.placeBlock(blockType)) {
         this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, () => {
           this.levelModel.computeShadingPlane();
@@ -416,11 +432,8 @@ class PhaserApp {
       }
       else if(this.checkMinecartLevelEndAnimation())
       {
-        // For 10/16 playtest only: reset all blocks that the player placed so they can see the minecart
-        this.reset();
-
         this.levelView.playMinecartAnimation(player.position, player.facing, player.isOnBlock,
-            () => { commandQueueItem.succeeded(); }, this.levelModel.getMinecartTrack());
+            () => { commandQueueItem.succeeded(); }, this.levelModel.getMinecartTrack(), this.levelModel.getUnpoweredRails());
       }
       else {
         this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock,
