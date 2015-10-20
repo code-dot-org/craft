@@ -57,7 +57,7 @@ window.demoLevels = {
       "", "", "", "treeOak", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "sheep", "", "", "",
-      "", "", "cropWheat", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "treeOak", "", "", "", "", "", "", "",
@@ -590,6 +590,7 @@ window.demoLevels = {
     ],
 
     solutionCode: "for (var i = 0; i < 6; i++) {" +
+    placeBlock("cropWheat") +
     moveForwardBlock +
     "}" +
     turnRightBlock +
@@ -597,6 +598,7 @@ window.demoLevels = {
     turnRightBlock +
     "for (var i = 0; i < 6; i++) {" +
     moveForwardBlock +
+    placeBlock("cropWheat") +
     "}"
 
       ,

@@ -103,7 +103,7 @@ export default class LevelView {
       "leavesOak": ["leavesOak", "Leaves0", -100, 0],
       "leavesSpruce": ["leavesSpruce", "Leaves0", -76, 60],
 
-      "cropWheat": ["blocks", "Wheat2", -13, 0],
+      "cropWheat": ["blocks", "Wheat0", -13, 0],
       "torch": ["torch", "Torch0", -13, 0],
 
       "tallGrass": ["tallGrass", "", -13, 0],
@@ -125,9 +125,7 @@ export default class LevelView {
       "railsVertical":           ["blocks", "Rails_Vertical", -13, -0],
       "railsPoweredHorizontal":  ["blocks", "Rails_PoweredHorizontal", -13, 0],
       "railsPoweredVertical":    ["blocks", "Rails_PoweredVertical", -13, 0],
-      "railsRedstoneTorch":      ["blocks", "Rails_RedstoneTorch", -13, 0],
-  
-      //"bed": ["bed", "", -70, 60], 
+      "railsRedstoneTorch":      ["blocks", "Rails_RedstoneTorch", -12, 9],
     };
 
     this.actionPlaneBlocks = [];
@@ -407,9 +405,9 @@ export default class LevelView {
     this.track = minecartTrack;
     this.i = 0;
 
-    //start at 3,3
-    this.setPlayerPosition(3,3, isOnBlock);
-    position = [3,3];
+    //start at 3,2
+    this.setPlayerPosition(3,2, isOnBlock);
+    position = [3,2];
     
     animation = this.playLevelEndAnimation(position, facing, isOnBlock, completionHandler, false);
 
@@ -573,7 +571,7 @@ export default class LevelView {
       this.playerSprite.animations.play(animName);
       tween = this.game.add.tween(this.playerSprite).to({
         x: [-18 + 40 * oldPosition[0], -18 + 40 * (oldPosition[0] + newPosVec[0]), -18 + 40 * position[0]],
-        y: [-32 + 40 * oldPosition[1], -32 + 40 * (oldPosition[1] + newPosVec[1]) - 80, -32 + 40 * position[1]]
+        y: [-32 + 40 * oldPosition[1], -32 + 40 * (oldPosition[1] + newPosVec[1]) - 50, -32 + 40 * position[1]]
       }, 300, Phaser.Easing.Linear.None).interpolation((v,k) => {
         return Phaser.Math.bezierInterpolation(v,k);
       })
@@ -592,11 +590,14 @@ export default class LevelView {
     var tween,
         jumpAnimName;
 
-    if (blockType === "cropWheat" || blockType == "torch" || blockType.substring(0, 5) == "rails") {
+    if (blockType === "cropWheat" || blockType === "torch" || blockType.substring(0, 5) === "rails") {
       this.setSelectionIndicatorPosition(position[0], position[1]);
-      this.playPlayerAnimation("punch", position, facing, false).onComplete.add(() => {
+
+      var signalDetacher = this.playPlayerAnimation("punch", position, facing, false).onComplete.add(() => {
+        var sprite;
+        signalDetacher.detach();
         let blockIndex = (position[1] * 10) + position[0];
-        var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
+        sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
 
         if (sprite) {
           sprite.sortOrder = position[1] * 10;
@@ -1030,6 +1031,7 @@ export default class LevelView {
         genFrames,
         i,
         singlePunch,
+        jumpCelebrateFrames,
         idleFrameRate = 10;
 
     let frameRate = 20;
@@ -1040,6 +1042,8 @@ export default class LevelView {
     this.playerGhost.alpha = 0.2;
 
     this.selectionIndicator = this.shadingPlane.create(24, 44, 'selectionIndicator');
+
+    jumpCelebrateFrames = Phaser.Animation.generateFrameNames("Player_", 285, 296, "", 3);
 
     frameList = [];
 
@@ -1087,10 +1091,10 @@ export default class LevelView {
     this.playerSprite.animations.add('crouch_down', Phaser.Animation.generateFrameNames("Player_", 29, 32, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpUp_down', Phaser.Animation.generateFrameNames("Player_", 33, 36, "", 3), frameRate / 2, true);
     this.playerSprite.animations.add('fail_down', Phaser.Animation.generateFrameNames("Player_", 45, 48, "", 3), frameRate, false);
-    frameList = Phaser.Animation.generateFrameNames("Player_", 29, 32, "", 3);
-    frameList = frameList.concat(frameList);
-    frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 285, 296, "", 3));
-    this.playerSprite.animations.add('celebrate_down', frameList, frameRate / 2, false).onComplete.add(() => {
+    //frameList = Phaser.Animation.generateFrameNames("Player_", 29, 32, "", 3);
+    //frameList = frameList.concat(frameList);
+    //frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 285, 296, "", 3));
+    this.playerSprite.animations.add('celebrate_down', jumpCelebrateFrames, frameRate / 2, false).onComplete.add(() => {
       this.playRandomPlayerIdle(FacingDirection.Down);
     });
     this.playerSprite.animations.add('bump_down', Phaser.Animation.generateFrameNames("Player_", 49, 54, "", 3), frameRate, false);
@@ -1146,10 +1150,10 @@ export default class LevelView {
     this.playerSprite.animations.add('crouch_right', Phaser.Animation.generateFrameNames("Player_", 89, 92, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpUp_right', Phaser.Animation.generateFrameNames("Player_", 93, 96, "", 3), frameRate / 2, true);
     this.playerSprite.animations.add('fail_right', Phaser.Animation.generateFrameNames("Player_", 105, 108, "", 3), frameRate / 2, false);
-    frameList = Phaser.Animation.generateFrameNames("Player_", 89, 92, "", 3);
-    frameList = frameList.concat(frameList);
-    frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 285, 296, "", 3));
-    this.playerSprite.animations.add('celebrate_right', frameList, frameRate / 2, false).onComplete.add(() => {
+    //frameList = Phaser.Animation.generateFrameNames("Player_", 89, 92, "", 3);
+    //frameList = frameList.concat(frameList);
+    //frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 285, 296, "", 3));
+    this.playerSprite.animations.add('celebrate_right', jumpCelebrateFrames, frameRate / 2, false).onComplete.add(() => {
       this.playRandomPlayerIdle(FacingDirection.Down);
     });
     this.playerSprite.animations.add('bump_right', Phaser.Animation.generateFrameNames("Player_", 109, 114, "", 3), frameRate, false);
@@ -1203,10 +1207,10 @@ export default class LevelView {
     this.playerSprite.animations.add('crouch_left', Phaser.Animation.generateFrameNames("Player_", 209, 212, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpUp_left', Phaser.Animation.generateFrameNames("Player_", 213, 216, "", 3), frameRate / 2, true);
     this.playerSprite.animations.add('fail_left', Phaser.Animation.generateFrameNames("Player_", 225, 228, "", 3), frameRate / 2, false);
-    frameList = Phaser.Animation.generateFrameNames("Player_", 209, 212, "", 3);
-    frameList = frameList.concat(frameList);
-    frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 285, 296, "", 3));
-    this.playerSprite.animations.add('celebrate_left', frameList, frameRate / 2, false).onComplete.add(() => {
+    //frameList = Phaser.Animation.generateFrameNames("Player_", 209, 212, "", 3);
+    //frameList = frameList.concat(frameList);
+    //frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 285, 296, "", 3));
+    this.playerSprite.animations.add('celebrate_left', jumpCelebrateFrames, frameRate / 2, false).onComplete.add(() => {
       this.playRandomPlayerIdle(FacingDirection.Down);
     });
     this.playerSprite.animations.add('bump_left', Phaser.Animation.generateFrameNames("Player_", 229, 234, "", 3), frameRate, false);
@@ -1259,10 +1263,10 @@ export default class LevelView {
     this.playerSprite.animations.add('crouch_up', Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpUp_up', Phaser.Animation.generateFrameNames("Player_", 153, 156, "", 3), frameRate / 2, true);
     this.playerSprite.animations.add('fail_up', Phaser.Animation.generateFrameNames("Player_", 165, 168, "", 3), frameRate / 2, false);
-    frameList = Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3);
-    frameList = frameList.concat(frameList);
-    frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 285, 296, "", 3));
-    this.playerSprite.animations.add('celebrate_up', frameList, frameRate / 2, false).onComplete.add(() => {
+    //frameList = Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3);
+    //frameList = frameList.concat(frameList);
+    //frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 285, 296, "", 3));
+    this.playerSprite.animations.add('celebrate_up', jumpCelebrateFrames, frameRate / 2, false).onComplete.add(() => {
       this.playRandomPlayerIdle(FacingDirection.Down);
     });
     this.playerSprite.animations.add('bump_up', Phaser.Animation.generateFrameNames("Player_", 169, 174, "", 3), frameRate, false);
@@ -1335,6 +1339,81 @@ export default class LevelView {
     sprite.animations.play(animationName).setFrame(rand, true);
   }
 
+  playRandomSheepAnimation(sprite) {
+    var rand = Math.trunc(Math.random() * 20 + 1);
+
+    switch(rand) {
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+      case 6:
+      //eat grass
+      sprite.play("idle");
+      break;
+      case 7:
+      case 8:
+      case 9:
+      case 10:
+      //look left
+      sprite.play("lookLeft");
+      break;
+      case 11:
+      case 12:
+      case 13:
+      case 14:
+      //look right
+      sprite.play("lookRight");
+      break;
+      case 15:
+      case 16:
+      case 17:
+      //cam
+      sprite.play("lookAtCam");
+      case 18:
+      case 19:
+      //kick
+      sprite.play("kick");
+      break;
+      case 20:
+      //idlePause
+      sprite.play("idlePause")
+      break;
+      default:
+    };
+  }
+
+  playRandomCreeperAnimation(sprite) {
+    var rand = Math.trunc(Math.random() * 10 + 1);
+
+    switch(rand) {
+      case 1:
+      case 2:
+      case 3:
+      //look left
+      sprite.play("lookLeft");
+      break;
+      case 4:
+      case 5:
+      case 6:
+      //look right
+      sprite.play("lookRight");
+      break;
+      case 7:
+      case 8:
+      //look at cam
+      sprite.play("lookAtCam");
+      break;
+      case 9:
+      case 10:
+      //shuffle feet
+      sprite.play("idle");
+      break;
+      default:
+    };
+  }
+
   createBlock(plane, x, y, blockType) {
     var i,
         sprite = null,
@@ -1365,13 +1444,60 @@ export default class LevelView {
         break;
 
       case "sheep":
+        let sFrames = 10;
         // Facing Left: Eat Grass: 199-216
-        sprite = plane.create(-12 + 40 * x, -12 + 40 * y, "sheep", "Sheep_199");
+        sprite = plane.create(-22 + 40 * x, -12 + 40 * y, "sheep", "Sheep_199");
         frameList = Phaser.Animation.generateFrameNames("Sheep_", 199, 215, "", 0);
-        for (i = 0; i < 30; ++i) {
+        for (i = 0; i < sFrames; ++i) {
           frameList.push("Sheep_215");
         }
-        sprite.animations.add("idle", frameList, 15, true);
+        sprite.animations.add("idle", frameList, 15, false).onComplete.add(() => {
+          sprite.play("idlePause");
+        });
+
+        //Look Right
+        frameList = Phaser.Animation.generateFrameNames("Sheep_", 184, 186, "", 0);
+        for (i = 0; i < sFrames; ++i) {
+          frameList.push("Sheep_186");
+        }
+        frameList.push("Sheep_188")
+        sprite.animations.add("lookRight", frameList, 15, false).onComplete.add(() => {
+          sprite.play("idlePause");
+        });
+
+        //Look Left
+        frameList = Phaser.Animation.generateFrameNames("Sheep_", 193, 195, "", 0);
+        for (i = 0; i < sFrames; ++i) {
+          frameList.push("Sheep_195");
+        }
+        frameList.push("Sheep_197");
+        sprite.animations.add("lookLeft", frameList, 15, false).onComplete.add(() => {
+          sprite.play("idlePause");
+        });
+
+        //Kick
+        frameList = Phaser.Animation.generateFrameNames("Sheep_", 217, 233, "", 0);
+        sprite.animations.add("kick", frameList, 15, false).onComplete.add(() => {
+          sprite.play("idlePause");
+        });
+
+        //Look At Camera
+        frameList = Phaser.Animation.generateFrameNames("Sheep_", 484, 485, "", 0);
+        for (i = 0; i < sFrames; ++i) {
+          frameList.push("Sheep_485");
+        }
+        frameList.push("Sheep_486")
+        sprite.animations.add("lookAtCam", frameList, 15, false).onComplete.add(() => {
+          sprite.play("idlePause");
+        });
+
+        frameList = [];
+        for (i = 0; i < 15; ++i) {
+          frameList.push("Sheep_215");
+        }
+        sprite.animations.add("idlePause", frameList, 15, false).onComplete.add(() => {
+          this.playRandomSheepAnimation(sprite);
+        });
 
         // TODO(bjordan/gaallen) - update once updated Sheep.json
         frameList = Phaser.Animation.generateFrameNames("Sheep_", 490, 492, "", 0);
@@ -1396,13 +1522,70 @@ export default class LevelView {
         frameList = Phaser.Animation.generateFrameNames("Creeper_", 37, 51, "", 3);
         sprite.animations.add("explode", frameList, 15, false);
 
+        //Look Left
+        frameList = Phaser.Animation.generateFrameNames("Creeper_", 4, 7, "", 3);
+        for (i = 0; i < 15; ++i) {
+          frameList.push("Creeper_007");
+        }
+        frameList.push("Creeper_008");
+        frameList.push("Creeper_009");
+        frameList.push("Creeper_010");
+        frameList.push("Creeper_011");
+        sprite.animations.add("lookLeft", frameList, 15, false).onComplete.add(() => {
+          sprite.play("idlePause");
+        });
+
+        //Look Right
+        frameList = Phaser.Animation.generateFrameNames("Creeper_", 16, 19, "", 3);
+        for (i = 0; i < 15; ++i) {
+          frameList.push("Creeper_019");
+        }
+        frameList.push("Creeper_020");
+        frameList.push("Creeper_021");
+        frameList.push("Creeper_022");
+        frameList.push("Creeper_023");
+        sprite.animations.add("lookRight", frameList, 15, false).onComplete.add(() => {
+          sprite.play("idlePause");
+        });
+
+        //Look At Cam
+        frameList = Phaser.Animation.generateFrameNames("Creeper_", 244, 245, "", 3);
+        for (i = 0; i < 15; ++i) {
+          frameList.push("Creeper_245");
+        }
+        frameList.push("Creeper_246");
+        sprite.animations.add("lookAtCam", frameList, 15, false).onComplete.add(() => {
+          sprite.play("idlePause");
+        });
+
+        frameList = [];
+        for (i = 0; i < 15; ++i) {
+          frameList.push("Creeper_004");
+        }
+        sprite.animations.add("idlePause", frameList, 15, false).onComplete.add(() => {
+          this.playRandomCreeperAnimation(sprite);
+        });
+
         frameList = Phaser.Animation.generateFrameNames("Creeper_", 53, 59, "", 3);
         stillFrames = Math.trunc(Math.random() * 10) + 20;
         for (i = 0; i < stillFrames; ++i) {
-          frameList.push("Creeper_053");
+          frameList.push("Creeper_004");
         }
-        sprite.animations.add("idle", frameList, 15, true);
+        sprite.animations.add("idle", frameList, 15, false).onComplete.add(() => {
+          sprite.play("idlePause");
+        });
         this.playAnimationWithOffset(sprite, "idle", 8, 52);
+        break;
+
+      case "cropWheat":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Wheat", 0, 2, "", 0);
+        sprite.animations.add("idle", frameList, 2, false);
+        sprite.animations.play("idle");
         break;
 
       case "torch":
