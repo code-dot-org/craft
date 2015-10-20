@@ -103,7 +103,7 @@ export default class LevelView {
       "leavesOak": ["leavesOak", "Leaves0", -100, 0],
       "leavesSpruce": ["leavesSpruce", "Leaves0", -76, 60],
 
-      "cropWheat": ["blocks", "Wheat2", -13, 0],
+      "cropWheat": ["blocks", "Wheat0", -13, 0],
       "torch": ["torch", "Torch0", -13, 0],
 
       "tallGrass": ["tallGrass", "", -13, 0],
@@ -590,11 +590,14 @@ export default class LevelView {
     var tween,
         jumpAnimName;
 
-    if (blockType === "cropWheat" || blockType == "torch" || blockType.substring(0, 5) == "rails") {
+    if (blockType === "cropWheat" || blockType === "torch" || blockType.substring(0, 5) === "rails") {
       this.setSelectionIndicatorPosition(position[0], position[1]);
-      this.playPlayerAnimation("punch", position, facing, false).onComplete.add(() => {
+
+      var signalDetacher = this.playPlayerAnimation("punch", position, facing, false).onComplete.add(() => {
+        var sprite;
+        signalDetacher.detach();
         let blockIndex = (position[1] * 10) + position[0];
-        var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
+        sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
 
         if (sprite) {
           sprite.sortOrder = position[1] * 10;
@@ -1569,6 +1572,17 @@ export default class LevelView {
           sprite.play("idlePause");
         });
         this.playAnimationWithOffset(sprite, "idle", 8, 52);
+        break;
+
+      case "cropWheat":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Wheat", 0, 2, "", 0);
+        sprite.animations.add("idle", frameList, 2, false);
+        sprite.animations.play("idle");
         break;
 
       case "torch":
