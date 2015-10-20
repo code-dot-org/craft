@@ -44,10 +44,9 @@ export default class LevelBlock {
     }
 
     if (blockType == "cropWheat") {
-      this.isUsable = true;
-      this.isWalkable = true;
-      this.isDeadly = false;
+      this.isEmissive = false;
       this.isEntity = true;
+      this.isWalkable = true;
       this.isUsable = true;
       this.isDestroyable = false;
     }

@@ -103,7 +103,7 @@ export default class LevelView {
       "leavesOak": ["leavesOak", "Leaves0", -100, 0],
       "leavesSpruce": ["leavesSpruce", "Leaves0", -76, 60],
 
-      "cropWheat": ["blocks", "Wheat2", -13, 0],
+      "cropWheat": ["blocks", "Wheat0", -13, 0],
       "torch": ["torch", "Torch0", -13, 0],
 
       "tallGrass": ["tallGrass", "", -13, 0],
@@ -590,11 +590,14 @@ export default class LevelView {
     var tween,
         jumpAnimName;
 
-    if (blockType === "cropWheat" || blockType == "torch" || blockType.substring(0, 5) == "rails") {
+    if (blockType === "cropWheat" || blockType === "torch" || blockType.substring(0, 5) === "rails") {
       this.setSelectionIndicatorPosition(position[0], position[1]);
-      this.playPlayerAnimation("punch", position, facing, false).onComplete.add(() => {
+
+      var signalDetacher = this.playPlayerAnimation("punch", position, facing, false).onComplete.add(() => {
+        var sprite;
+        signalDetacher.detach();
         let blockIndex = (position[1] * 10) + position[0];
-        var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
+        sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
 
         if (sprite) {
           sprite.sortOrder = position[1] * 10;
@@ -1084,8 +1087,7 @@ export default class LevelView {
     this.playerSprite.animations.add('hurt_down', Phaser.Animation.generateFrameNames("Player_", 25, 28, "", 3), frameRate, true);
     this.playerSprite.animations.add('crouch_down', Phaser.Animation.generateFrameNames("Player_", 29, 32, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpUp_down', Phaser.Animation.generateFrameNames("Player_", 33, 36, "", 3), frameRate / 2, true);
-    // Temporarily play look-up-facing-down as failure
-    this.playerSprite.animations.add('fail_down', Phaser.Animation.generateFrameNames("Player_", 260, 262, "", 3), frameRate, false);
+    this.playerSprite.animations.add('fail_down', Phaser.Animation.generateFrameNames("Player_", 45, 48, "", 3), frameRate, false);
     frameList = Phaser.Animation.generateFrameNames("Player_", 29, 32, "", 3);
     frameList = frameList.concat(frameList);
     frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 285, 296, "", 3));
@@ -1199,10 +1201,9 @@ export default class LevelView {
     this.playerSprite.animations.add('punch_left', singlePunch, frameRate, false);
     this.playerSprite.animations.add('punchDestroy_left', singlePunch.concat(singlePunch).concat(singlePunch), frameRate, false);
     this.playerSprite.animations.add('hurt_left', Phaser.Animation.generateFrameNames("Player_", 205, 208, "", 3), frameRate, true);
-    // Temporarily play look-up-facing-left as failure
     this.playerSprite.animations.add('crouch_left', Phaser.Animation.generateFrameNames("Player_", 209, 212, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpUp_left', Phaser.Animation.generateFrameNames("Player_", 213, 216, "", 3), frameRate / 2, true);
-    this.playerSprite.animations.add('fail_left', Phaser.Animation.generateFrameNames("Player_", 279, 282, "", 3), frameRate / 2, false);
+    this.playerSprite.animations.add('fail_left', Phaser.Animation.generateFrameNames("Player_", 225, 228, "", 3), frameRate / 2, false);
     frameList = Phaser.Animation.generateFrameNames("Player_", 209, 212, "", 3);
     frameList = frameList.concat(frameList);
     frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 285, 296, "", 3));
@@ -1257,9 +1258,8 @@ export default class LevelView {
     this.playerSprite.animations.add('punchDestroy_up', singlePunch.concat(singlePunch).concat(singlePunch), frameRate, false);
     this.playerSprite.animations.add('hurt_up', Phaser.Animation.generateFrameNames("Player_", 145, 148, "", 3), frameRate, true);
     this.playerSprite.animations.add('crouch_up', Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3), frameRate, true);
-    // Temporarily play crouch up as failure
     this.playerSprite.animations.add('jumpUp_up', Phaser.Animation.generateFrameNames("Player_", 153, 156, "", 3), frameRate / 2, true);
-    this.playerSprite.animations.add('fail_up', Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3), frameRate / 2, false);
+    this.playerSprite.animations.add('fail_up', Phaser.Animation.generateFrameNames("Player_", 165, 168, "", 3), frameRate / 2, false);
     frameList = Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3);
     frameList = frameList.concat(frameList);
     frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 285, 296, "", 3));
@@ -1572,6 +1572,17 @@ export default class LevelView {
           sprite.play("idlePause");
         });
         this.playAnimationWithOffset(sprite, "idle", 8, 52);
+        break;
+
+      case "cropWheat":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Wheat", 0, 2, "", 0);
+        sprite.animations.add("idle", frameList, 2, false);
+        sprite.animations.play("idle");
         break;
 
       case "torch":
