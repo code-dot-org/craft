@@ -91,7 +91,7 @@ window.demoLevels = {
 
     playerStartPosition: [6, 7],
 
-    playerStartDirection: 1,
+    playerStartDirection: 2,
 
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -142,11 +142,7 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
     ],
 
-    solutionCode: turnLeftBlock +
-    moveForwardBlock +
-    moveForwardBlock +
-    destroyBlock
-    ,
+    solutionCode: turnLeftBlock,
 
     verificationFunction: function (verificationAPI) {
       return verificationAPI.countOfTypeOnMap("logOak") === 0;
