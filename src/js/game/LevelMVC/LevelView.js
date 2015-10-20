@@ -125,9 +125,7 @@ export default class LevelView {
       "railsVertical":           ["blocks", "Rails_Vertical", -13, -0],
       "railsPoweredHorizontal":  ["blocks", "Rails_PoweredHorizontal", -13, 0],
       "railsPoweredVertical":    ["blocks", "Rails_PoweredVertical", -13, 0],
-      "railsRedstoneTorch":      ["blocks", "Rails_RedstoneTorch", -13, 0],
-  
-      //"bed": ["bed", "", -70, 60], 
+      "railsRedstoneTorch":      ["blocks", "Rails_RedstoneTorch", -12, 9],
     };
 
     this.actionPlaneBlocks = [];
@@ -1383,6 +1381,36 @@ export default class LevelView {
     };
   }
 
+  playRandomCreeperAnimation(sprite) {
+    var rand = Math.trunc(Math.random() * 10 + 1);
+
+    switch(rand) {
+      case 1:
+      case 2:
+      case 3:
+      //look left
+      sprite.play("lookLeft");
+      break;
+      case 4:
+      case 5:
+      case 6:
+      //look right
+      sprite.play("lookRight");
+      break;
+      case 7:
+      case 8:
+      //look at cam
+      sprite.play("lookAtCam");
+      break;
+      case 9:
+      case 10:
+      //shuffle feet
+      sprite.play("idle");
+      break;
+      default:
+    };
+  }
+
   createBlock(plane, x, y, blockType) {
     var i,
         sprite = null,
@@ -1491,12 +1519,58 @@ export default class LevelView {
         frameList = Phaser.Animation.generateFrameNames("Creeper_", 37, 51, "", 3);
         sprite.animations.add("explode", frameList, 15, false);
 
+        //Look Left
+        frameList = Phaser.Animation.generateFrameNames("Creeper_", 4, 7, "", 3);
+        for (i = 0; i < 15; ++i) {
+          frameList.push("Creeper_007");
+        }
+        frameList.push("Creeper_008");
+        frameList.push("Creeper_009");
+        frameList.push("Creeper_010");
+        frameList.push("Creeper_011");
+        sprite.animations.add("lookLeft", frameList, 15, false).onComplete.add(() => {
+          sprite.play("idlePause");
+        });
+
+        //Look Right
+        frameList = Phaser.Animation.generateFrameNames("Creeper_", 16, 19, "", 3);
+        for (i = 0; i < 15; ++i) {
+          frameList.push("Creeper_019");
+        }
+        frameList.push("Creeper_020");
+        frameList.push("Creeper_021");
+        frameList.push("Creeper_022");
+        frameList.push("Creeper_023");
+        sprite.animations.add("lookRight", frameList, 15, false).onComplete.add(() => {
+          sprite.play("idlePause");
+        });
+
+        //Look At Cam
+        frameList = Phaser.Animation.generateFrameNames("Creeper_", 244, 245, "", 3);
+        for (i = 0; i < 15; ++i) {
+          frameList.push("Creeper_245");
+        }
+        frameList.push("Creeper_246");
+        sprite.animations.add("lookAtCam", frameList, 15, false).onComplete.add(() => {
+          sprite.play("idlePause");
+        });
+
+        frameList = [];
+        for (i = 0; i < 15; ++i) {
+          frameList.push("Creeper_004");
+        }
+        sprite.animations.add("idlePause", frameList, 15, false).onComplete.add(() => {
+          this.playRandomCreeperAnimation(sprite);
+        });
+
         frameList = Phaser.Animation.generateFrameNames("Creeper_", 53, 59, "", 3);
         stillFrames = Math.trunc(Math.random() * 10) + 20;
         for (i = 0; i < stillFrames; ++i) {
-          frameList.push("Creeper_053");
+          frameList.push("Creeper_004");
         }
-        sprite.animations.add("idle", frameList, 15, true);
+        sprite.animations.add("idle", frameList, 15, false).onComplete.add(() => {
+          sprite.play("idlePause");
+        });
         this.playAnimationWithOffset(sprite, "idle", 8, 52);
         break;
 
