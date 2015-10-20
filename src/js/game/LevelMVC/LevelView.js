@@ -1583,7 +1583,7 @@ export default class LevelView {
         yOffset = this.blocks[blockType][3];
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Wheat", 0, 2, "", 0);
-        sprite.animations.add("idle", frameList, 2, false);
+        sprite.animations.add("idle", frameList, .4, false);
         sprite.animations.play("idle");
         break;
 
