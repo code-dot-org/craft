@@ -1,0 +1,3 @@
+Run the following command (assumes you have ffmpeg and LAME available)
+
+for f in $(find . -name '*.ogg' -exec bash -c 'echo ${0%.ogg}' {} \;); do ffmpeg -i $f.ogg $f.mp3; done
