@@ -544,11 +544,12 @@ export default class LevelView {
     return tweenToWhite;
   }
 
-  playMoveForwardAnimation(position, facing, shouldJumpDown, completionHandler) {
+  playMoveForwardAnimation(position, facing, shouldJumpDown, isOnBlock, completionHandler) {
     var tween,
         oldPosition,
         newPosVec,
-        animName;
+        animName,
+        yOffset = -32;
 
     this.audioPlayer.play("step_grass1");
 
@@ -558,13 +559,16 @@ export default class LevelView {
     this.playerSprite.sortOrder = position[1] * 10 + 5;
     oldPosition = [Math.trunc((this.playerSprite.position.x + 18)/ 40), Math.ceil((this.playerSprite.position.y+ 32) / 40)];
     newPosVec = [position[0] - oldPosition[0], position[1] - oldPosition[1]];
+    if(isOnBlock) {
+      yOffset -= 22;
+    }
 
     if (!shouldJumpDown) {
       animName = "walk" + direction;
       this.playerSprite.animations.play(animName);
       tween = this.game.add.tween(this.playerSprite).to({
         x: (-18 + 40 * position[0]),
-        y: (-32 + 40 * position[1])
+        y: (yOffset + 40 * position[1])
       }, 200, Phaser.Easing.Linear.None);
     } else {
       animName = "jumpDown" + direction;

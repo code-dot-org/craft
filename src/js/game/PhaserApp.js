@@ -215,7 +215,7 @@ class PhaserApp {
       // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
 
 
-      this.levelView.playMoveForwardAnimation(player.position, player.facing, wasOnBlock && wasOnBlock != player.isOnBlock, () => {
+      this.levelView.playMoveForwardAnimation(player.position, player.facing,wasOnBlock && wasOnBlock != player.isOnBlock, player.isOnBlock,() => {
         this.levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
 
       //First arg is if we found a creeper
@@ -232,7 +232,7 @@ class PhaserApp {
           } );
         } 
         else if(allFoundCreepers[0]) {
-            for(var i = 1; i < 9; ++i)
+            for(var i = 1; i < allFoundCreepers.length; ++i)
             {
               let currentObject = allFoundCreepers[i];
               let creeperfound = currentObject[0];
