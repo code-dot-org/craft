@@ -113,7 +113,7 @@ export default class LevelView {
       "bubbles": ["bubbles", "", -11, 135],
       "explosion": ["explosion", "", -70, 60],
 
-      "door": ["door", "", -12, -10],
+      "door": ["door", "", -12, -15],
 
       "railsBottomLeft":         ["blocks", "Rails_BottomLeft", -13, 0],
       "railsBottomRight":        ["blocks", "Rails_BottomRight", -13, 0],
@@ -1600,10 +1600,10 @@ export default class LevelView {
         });
 
         // TODO(bjordan/gaallen) - update once updated Sheep.json
-        frameList = Phaser.Animation.generateFrameNames("Sheep_", 490, 492, "", 0);
+        frameList = Phaser.Animation.generateFrameNames("Sheep_", 490, 491, "", 0);
         stillFrames = Math.trunc(Math.random() * 3) + 3;
         for (i = 0; i < stillFrames; ++i) {
-          frameList.push("Sheep_492");
+          frameList.push("Sheep_491");
         }
         sprite.animations.add("face", frameList, 2, true);
 
