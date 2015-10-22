@@ -92,7 +92,7 @@ export default class LevelView {
       "sand": ["blocks", "Sand", -13, 0],
       "sandstone": ["blocks", "Sandstone", -13, 0],
       "stone": ["blocks", "Stone", -13, 0],
-      "tnt": ["blocks", "Tnt", -13, 0],
+      "tnt": ["tnt", "TNTexplosion0", -80, -58],
       "water": ["blocks", "Water_0", -13, 0],
       "wool": ["blocks", "Wool_White", -13, 0],
       "wool_orange": ["blocks", "Wool_Orange", -13, 0],
@@ -164,6 +164,8 @@ export default class LevelView {
     this.game.load.atlasJSONHash('explosion', `${this.assetRoot}images/Explosion.png`, `${this.assetRoot}images/Explosion.json`);
     this.game.load.atlasJSONHash('door', `${this.assetRoot}images/Door.png`, `${this.assetRoot}images/Door.json`);
     this.game.load.atlasJSONHash('rails', `${this.assetRoot}images/Rails.png`, `${this.assetRoot}images/Rails.json`);
+    this.game.load.atlasJSONHash('tnt', `${this.assetRoot}images/TNT.png`, `${this.assetRoot}images/TNT.json`);
+
 
     this.game.load.image('finishOverlay', `${this.assetRoot}images/WhiteRect.png`);
     this.game.load.image('bed', `${this.assetRoot}images/Bed2.png`);
@@ -329,6 +331,21 @@ export default class LevelView {
     tween.start();
   }
 
+  playDestroyTntAnimation(position, facing, isOnBlock, tntArray , newShadingPlaneData, completionHandler) {
+    var block,
+        lastAnimation;
+    for(var tnt in tntArray) {
+        block = this.actionPlaneBlocks[this.coordinatesToIndex(tntArray[tnt])];
+        lastAnimation = block.animations.play("explode");
+    }
+
+    lastAnimation.onComplete.add(() => {
+      this.playSuccessAnimation(position,facing,isOnBlock,()=>{});
+      completionHandler();
+    });
+  }
+
+
   playCreeperExplodeAnimation(position, facing, destroyPosition, isOnBlock, completionHandler) {
     this.controller.delayBy(180, () => {
       this.onAnimationLoopOnce(this.playPlayerAnimation("jumpUp", position, facing, false), () => {
@@ -357,11 +374,16 @@ export default class LevelView {
           this.playFailureAnimation(position, facing, false, completionHandler);
         });
       }, false);
-      var block = this.createBlock(this.fluffPlane, destroyPosition[0], destroyPosition[1], "explosion");
+      this.playExplosionCloudAnimation(destroyPosition);
     });
 
     creeperExplodeAnimation.play();
   }
+
+  playExplosionCloudAnimation(position){
+    var block = this.createBlock(this.fluffPlane, position[0], position[1], "explosion");
+  }
+
 
   coordinatesToIndex(coordinates) {
     return (coordinates[1] * 10) + coordinates[0];
@@ -1689,6 +1711,21 @@ export default class LevelView {
 
         sprite.animations.add("open", frameList, 5, false);
         sprite.animations.play("open");
+        break;
+
+      case "tnt":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("TNTexplosion", 0, 8, "", 0);
+        sprite.animations.add("explode", frameList, 7, false).onComplete.add(() => {
+          this.playExplosionCloudAnimation([x,y]);
+          sprite.kill();
+          this.toDestroy.push(sprite);
+          this.actionPlaneBlocks[this.coordinatesToIndex([x,y])] = null;
+        });
         break;
 
       default:

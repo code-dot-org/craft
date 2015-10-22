@@ -215,7 +215,7 @@ class PhaserApp {
       // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
 
 
-      this.levelView.playMoveForwardAnimation(player.position, player.facing,wasOnBlock && wasOnBlock != player.isOnBlock, player.isOnBlock,() => {
+      this.levelView.playMoveForwardAnimation(player.position, player.facing, wasOnBlock && wasOnBlock != player.isOnBlock, player.isOnBlock,() => {
         this.levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
 
       //First arg is if we found a creeper
@@ -333,6 +333,10 @@ class PhaserApp {
     }
   }
 
+  checkTntAnimation() {
+    return false;
+  }
+
   checkMinecartLevelEndAnimation() {
     return this.specialLevelType === 'minecart';
   }
@@ -434,6 +438,22 @@ class PhaserApp {
       {
         this.levelView.playMinecartAnimation(player.position, player.facing, player.isOnBlock,
             () => { commandQueueItem.succeeded(); }, this.levelModel.getMinecartTrack(), this.levelModel.getUnpoweredRails());
+      }
+      else if(this.checkTntAnimation()) {
+        var tnt = this.levelModel.getTnt();
+        this.levelView.playDestroyTntAnimation(player.position, player.facing, player.isOnBlock, this.levelModel.getTnt(), this.levelModel.shadingPlane,
+        () => { 
+          for(var i in tnt) {
+            this.levelModel.destroyBlock(tnt[i]);
+          }
+          this.levelModel.computeShadingPlane();
+          this.levelModel.computeFowPlane();
+          this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
+          this.levelView.updateFowPlane(this.levelModel.fowPlane);
+          this.delayBy(400, () => {
+            commandQueueItem.succeeded();
+          });
+        });
       }
       else {
         this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock,

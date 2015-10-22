@@ -1,6 +1,6 @@
 {"frames": {
 
-"TNTexplosion0.png":
+"TNTexplosion0":
 {
 	"frame": {"x":70,"y":68,"w":40,"h":60},
 	"rotated": false,
@@ -8,7 +8,7 @@
 	"spriteSourceSize": {"x":80,"y":60,"w":40,"h":60},
 	"sourceSize": {"w":200,"h":200}
 },
-"TNTexplosion1.png":
+"TNTexplosion1":
 {
 	"frame": {"x":110,"y":68,"w":40,"h":60},
 	"rotated": false,
@@ -16,7 +16,7 @@
 	"spriteSourceSize": {"x":80,"y":55,"w":40,"h":60},
 	"sourceSize": {"w":200,"h":200}
 },
-"TNTexplosion2.png":
+"TNTexplosion2":
 {
 	"frame": {"x":158,"y":0,"w":40,"h":60},
 	"rotated": false,
@@ -24,7 +24,7 @@
 	"spriteSourceSize": {"x":80,"y":60,"w":40,"h":60},
 	"sourceSize": {"w":200,"h":200}
 },
-"TNTexplosion3.png":
+"TNTexplosion3":
 {
 	"frame": {"x":198,"y":0,"w":40,"h":60},
 	"rotated": false,
@@ -32,7 +32,7 @@
 	"spriteSourceSize": {"x":80,"y":56,"w":40,"h":60},
 	"sourceSize": {"w":200,"h":200}
 },
-"TNTexplosion4.png":
+"TNTexplosion4":
 {
 	"frame": {"x":190,"y":60,"w":40,"h":60},
 	"rotated": false,
@@ -40,7 +40,7 @@
 	"spriteSourceSize": {"x":80,"y":60,"w":40,"h":60},
 	"sourceSize": {"w":200,"h":200}
 },
-"TNTexplosion5.png":
+"TNTexplosion5":
 {
 	"frame": {"x":118,"y":0,"w":40,"h":62},
 	"rotated": false,
@@ -48,7 +48,7 @@
 	"spriteSourceSize": {"x":80,"y":58,"w":40,"h":62},
 	"sourceSize": {"w":200,"h":200}
 },
-"TNTexplosion6.png":
+"TNTexplosion6":
 {
 	"frame": {"x":150,"y":62,"w":40,"h":62},
 	"rotated": false,
@@ -56,7 +56,7 @@
 	"spriteSourceSize": {"x":80,"y":58,"w":40,"h":62},
 	"sourceSize": {"w":200,"h":200}
 },
-"TNTexplosion7.png":
+"TNTexplosion7":
 {
 	"frame": {"x":70,"y":0,"w":48,"h":68},
 	"rotated": false,
@@ -64,7 +64,7 @@
 	"spriteSourceSize": {"x":76,"y":55,"w":48,"h":68},
 	"sourceSize": {"w":200,"h":200}
 },
-"TNTexplosion8.png":
+"TNTexplosion8":
 {
 	"frame": {"x":0,"y":0,"w":70,"h":73},
 	"rotated": false,
@@ -75,7 +75,7 @@
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",
 	"version": "1.0",
-	"image": "TNT.png",
+	"image": "TNT",
 	"format": "RGBA8888",
 	"size": {"w":238,"h":128},
 	"scale": "1",
