@@ -391,7 +391,7 @@ export default class LevelView {
         lastAnimation = block.animations.play("explode");
     }
 
-    lastAnimation.onComplete.add(() => {
+    this.onAnimationEnd(lastAnimation, () => {
       this.playSuccessAnimation(position,facing,isOnBlock,()=>{});
       completionHandler();
     });
@@ -404,10 +404,11 @@ export default class LevelView {
       this.playPlayerAnimation("bump", position, facing, false).onComplete.add(() => {
         //add creeper windup sound
         this.audioPlayer.play("fuse");
+        this.playExplodingCreeperAnimation(position, facing, destroyPosition, isOnBlock, completionHandler, this);
+
         this.controller.delayBy(200, ()=>{
           this.onAnimationLoopOnce(this.playPlayerAnimation("jumpUp", position, facing, false), () => {
             this.playIdleAnimation(position, facing, isOnBlock);
-            this.playExplodingCreeperAnimation(position, facing, destroyPosition, isOnBlock, completionHandler, this);
           });
         });
       });
@@ -847,6 +848,7 @@ export default class LevelView {
     var signalBinding,
         explodeAnim = this.actionPlane.create(-36 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
 
+    //explodeAnim.tint = 0x324bff;
     explodeAnim.sortOrder = destroyPosition[1] * 10 + 2;
     this.onAnimationEnd(explodeAnim.animations.add("explode", Phaser.Animation.generateFrameNames("BlockBreakParticle", 0, 7, "", 0), 30, false), () =>
     {
@@ -1620,7 +1622,7 @@ export default class LevelView {
         sprite = plane.create(-6 + 40 * x, 0 + plane.yOffset + 40 * y, "creeper", "Creeper_053");
 
         frameList = Phaser.Animation.generateFrameNames("Creeper_", 37, 51, "", 3);
-        sprite.animations.add("explode", frameList, 15, false);
+        sprite.animations.add("explode", frameList, 10, false);
 
         //Look Left
         frameList = Phaser.Animation.generateFrameNames("Creeper_", 4, 7, "", 3);
