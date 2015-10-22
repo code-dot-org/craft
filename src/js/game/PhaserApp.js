@@ -230,31 +230,27 @@ class PhaserApp {
           this.levelView.playBurnInLavaAnimation(player.position, player.facing, player.isOnBlock, () => {
             commandQueueItem.failed();
           } );
-        } 
-        else if(allFoundCreepers[0]) {
-            for(var i = 1; i < allFoundCreepers.length; ++i)
-            {
-              let currentObject = allFoundCreepers[i];
-              let creeperfound = currentObject[0];
-              if(creeperfound)
-              {
-                let creeperPos = currentObject[1];              
-                this.levelView.playCreeperExplodeAnimation(player.position, player.facing, creeperPos, player.isOnBlock, () => {
-                  commandQueueItem.failed();
-                });
-              }
-            }
-        } else {
+        }
+        else {
           this.delayBy(200, () => {
             commandQueueItem.succeeded();
           });
         }
       });
-    } else {
-      this.levelView.playBumpAnimation(player.position, player.facing, false);
-      this.delayBy(800, () => {
-        commandQueueItem.succeeded();
-      });
+    } 
+    else {
+      if(this.levelModel.isForwardBlockOfType("creeper"))
+      {
+        this.levelView.playCreeperExplodeAnimation(player.position, player.facing, this.levelModel.getMoveForwardPosition(), player.isOnBlock, () => {
+          commandQueueItem.failed();
+        });
+      }
+      else {
+        this.levelView.playBumpAnimation(player.position, player.facing, false);
+        this.delayBy(800, () => {
+          commandQueueItem.succeeded();
+        });
+      }
     }
   }
 

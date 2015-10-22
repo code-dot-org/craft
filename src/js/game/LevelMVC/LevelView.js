@@ -282,9 +282,11 @@ export default class LevelView {
   }
 
   playBumpAnimation(position, facing, isOnBlock) {
-    this.playPlayerAnimation("bump", position, facing, isOnBlock).onComplete.add(()=>{
+    var animation = this.playPlayerAnimation("bump", position, facing, isOnBlock);
+    animation.onComplete.add(()=>{
       this.playIdleAnimation(position, facing, isOnBlock);
     });
+    return animation;
   }
 
   playDrownFailureAnimation(position, facing, isOnBlock, completionHandler) {
@@ -348,9 +350,15 @@ export default class LevelView {
 
   playCreeperExplodeAnimation(position, facing, destroyPosition, isOnBlock, completionHandler) {
     this.controller.delayBy(180, () => {
-      this.onAnimationLoopOnce(this.playPlayerAnimation("jumpUp", position, facing, false), () => {
-        this.playIdleAnimation(position, facing, isOnBlock);
-        this.playExplodingCreeperAnimation(position, facing, destroyPosition, isOnBlock, completionHandler, this);
+      //this.onAnimationLoopOnce(
+      this.playPlayerAnimation("bump", position, facing, false).onComplete.add(() => {
+        //add creeper windup sound
+        this.controller.delayBy(200, ()=>{
+          this.onAnimationLoopOnce(this.playPlayerAnimation("jumpUp", position, facing, false), () => {
+            this.playIdleAnimation(position, facing, isOnBlock);
+            this.playExplodingCreeperAnimation(position, facing, destroyPosition, isOnBlock, completionHandler, this);
+          });
+        });
       });
     });
   }
