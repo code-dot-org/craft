@@ -184,6 +184,54 @@ export default class LevelView {
       wav: `${this.assetRoot}audio/step_grass1.wav`,
       ogg: `${this.assetRoot}audio/step_grass1.ogg`
     });
+
+    this.audioPlayer.register({
+      id: 'failure',
+      mp3: `${this.assetRoot}audio/break.mp3`,
+      ogg: `${this.assetRoot}audio/break.ogg`
+    });
+
+    this.audioPlayer.register({
+      id: 'success',
+      mp3: `${this.assetRoot}audio/levelup.mp3`,
+      ogg: `${this.assetRoot}audio/levelup.ogg`
+    });
+
+    this.audioPlayer.register({
+      id: 'fall',
+      mp3: `${this.assetRoot}audio/fallsmall.mp3`,
+      ogg: `${this.assetRoot}audio/fallsmall.ogg`
+    });
+
+    this.audioPlayer.register({
+      id: 'fuse',
+      mp3: `${this.assetRoot}audio/fuse.mp3`,
+      ogg: `${this.assetRoot}audio/fuse.ogg`
+    });
+
+    this.audioPlayer.register({
+      id: 'explode',
+      mp3: `${this.assetRoot}audio/explode3.mp3`,
+      ogg: `${this.assetRoot}audio/explode3.ogg`
+    });
+
+    this.audioPlayer.register({
+      id: 'placeBlock',
+      mp3: `${this.assetRoot}audio/wood_click.mp3`,
+      ogg: `${this.assetRoot}audio/wood_click.ogg`
+    });
+
+    this.audioPlayer.register({
+      id: 'collectedBlock',
+      mp3: `${this.assetRoot}audio/pop.mp3`,
+      ogg: `${this.assetRoot}audio/pop.ogg`
+    });
+
+    this.audioPlayer.register({
+      id: 'bump',
+      mp3: `${this.assetRoot}audio/hit3.mp3`,
+      ogg: `${this.assetRoot}audio/hit3.ogg`
+    });
   }
 
   create(levelModel) {
@@ -268,6 +316,7 @@ export default class LevelView {
 
   playSuccessAnimation(position, facing, isOnBlock, completionHandler) {
     this.controller.delayBy(250, () => {
+      this.audioPlayer.play("success");
       this.playPlayerAnimation("celebrate", position, facing, isOnBlock);
       this.controller.delayBy(1100, completionHandler);
     });
@@ -275,6 +324,7 @@ export default class LevelView {
 
   playFailureAnimation(position, facing, isOnBlock, completionHandler) {
     this.controller.delayBy(500, () => {
+      this.audioPlayer.play("failure");
       this.onAnimationEnd(this.playPlayerAnimation("fail", position, facing, isOnBlock), () => {
         this.controller.delayBy(2400, completionHandler);
       });
@@ -353,6 +403,7 @@ export default class LevelView {
       //this.onAnimationLoopOnce(
       this.playPlayerAnimation("bump", position, facing, false).onComplete.add(() => {
         //add creeper windup sound
+        this.audioPlayer.play("fuse");
         this.controller.delayBy(200, ()=>{
           this.onAnimationLoopOnce(this.playPlayerAnimation("jumpUp", position, facing, false), () => {
             this.playIdleAnimation(position, facing, isOnBlock);
@@ -389,6 +440,7 @@ export default class LevelView {
   }
 
   playExplosionCloudAnimation(position){
+    this.audioPlayer.play("explode");
     var block = this.createBlock(this.fluffPlane, position[0], position[1], "explosion");
   }
 
@@ -609,6 +661,10 @@ export default class LevelView {
       }, 300, Phaser.Easing.Linear.None).interpolation((v,k) => {
         return Phaser.Math.bezierInterpolation(v,k);
       })
+
+      tween.onComplete.add(() => {
+        this.audioPlayer.play("fall");
+      });
     }
 
     tween.onComplete.add(() => {
@@ -624,6 +680,7 @@ export default class LevelView {
     var tween,
         jumpAnimName;
 
+    this.audioPlayer.play("placeBlock");
     if (blockType === "cropWheat" || blockType === "torch" || blockType.substring(0, 5) === "rails") {
       this.setSelectionIndicatorPosition(position[0], position[1]);
 
@@ -668,6 +725,7 @@ export default class LevelView {
 
   playPlaceBlockInFrontAnimation(playerPosition, facing, blockPosition, plane, blockType, completionHandler) {
     this.setSelectionIndicatorPosition(blockPosition[0], blockPosition[1]);
+    this.audioPlayer.play("placeBlock");
     this.playPlayerAnimation("punch", playerPosition, facing, false).onComplete.add(() => {
       if (plane === this.controller.levelModel.actionPlane) {
         this.createActionPlaneBlock(blockPosition, blockType);
@@ -825,6 +883,7 @@ export default class LevelView {
     }, 200, Phaser.Easing.Linear.None);
 
     tween.onComplete.add(() => {
+      this.audioPlayer.play("collectedBlock");
       sprite.kill();
       this.toDestroy.push(sprite);
       completionHandler();
@@ -1145,7 +1204,9 @@ export default class LevelView {
     this.playerSprite.animations.add('jumpUp_down', Phaser.Animation.generateFrameNames("Player_", 33, 36, "", 3), frameRate / 2, true);
     this.playerSprite.animations.add('fail_down', Phaser.Animation.generateFrameNames("Player_", 45, 48, "", 3), frameRate, false);
     this.playerSprite.animations.add('celebrate_down', this.generatePlayerCelebrateFrames(), frameRate / 2, true);
-    this.playerSprite.animations.add('bump_down', Phaser.Animation.generateFrameNames("Player_", 49, 54, "", 3), frameRate, false);
+    this.playerSprite.animations.add('bump_down', Phaser.Animation.generateFrameNames("Player_", 49, 54, "", 3), frameRate, false).onStart.add(() => {
+      this.audioPlayer.play("bump");
+    });;
     this.playerSprite.animations.add('jumpDown_down', Phaser.Animation.generateFrameNames("Player_", 55, 60, "", 3), frameRate, true);
     this.playerSprite.animations.add('mine_down', Phaser.Animation.generateFrameNames("Player_", 241, 244, "", 3), frameRate, true);
     this.playerSprite.animations.add('mineCart_down', Phaser.Animation.generateFrameNames("Minecart_", 5, 5, "", 2), frameRate, false);
@@ -1199,7 +1260,9 @@ export default class LevelView {
     this.playerSprite.animations.add('jumpUp_right', Phaser.Animation.generateFrameNames("Player_", 93, 96, "", 3), frameRate / 2, true);
     this.playerSprite.animations.add('fail_right', Phaser.Animation.generateFrameNames("Player_", 105, 108, "", 3), frameRate / 2, false);
     this.playerSprite.animations.add('celebrate_right', this.generatePlayerCelebrateFrames(), frameRate / 2, true);
-    this.playerSprite.animations.add('bump_right', Phaser.Animation.generateFrameNames("Player_", 109, 114, "", 3), frameRate, false);
+    this.playerSprite.animations.add('bump_right', Phaser.Animation.generateFrameNames("Player_", 109, 114, "", 3), frameRate, false).onStart.add(() => {
+      this.audioPlayer.play("bump");
+    });;
     this.playerSprite.animations.add('jumpDown_right', Phaser.Animation.generateFrameNames("Player_", 115, 120, "", 3), frameRate, true);
     this.playerSprite.animations.add('mine_right', Phaser.Animation.generateFrameNames("Player_", 245, 248, "", 3), frameRate, true);
     this.playerSprite.animations.add('mineCart_right', Phaser.Animation.generateFrameNames("Minecart_", 7, 7, "", 2), frameRate, false);
@@ -1251,7 +1314,9 @@ export default class LevelView {
     this.playerSprite.animations.add('jumpUp_left', Phaser.Animation.generateFrameNames("Player_", 213, 216, "", 3), frameRate / 2, true);
     this.playerSprite.animations.add('fail_left', Phaser.Animation.generateFrameNames("Player_", 225, 228, "", 3), frameRate / 2, false);
     this.playerSprite.animations.add('celebrate_left', this.generatePlayerCelebrateFrames(), frameRate / 2, true);
-    this.playerSprite.animations.add('bump_left', Phaser.Animation.generateFrameNames("Player_", 229, 234, "", 3), frameRate, false);
+    this.playerSprite.animations.add('bump_left', Phaser.Animation.generateFrameNames("Player_", 229, 234, "", 3), frameRate, false).onStart.add(() => {
+      this.audioPlayer.play("bump");
+    });;
     this.playerSprite.animations.add('jumpDown_left', Phaser.Animation.generateFrameNames("Player_", 235, 240, "", 3), frameRate, true);
     this.playerSprite.animations.add('mine_left', Phaser.Animation.generateFrameNames("Player_", 253, 256, "", 3), frameRate, true);
     this.playerSprite.animations.add('mineCart_left', Phaser.Animation.generateFrameNames("Minecart_", 11, 11, "", 2), frameRate, false);
@@ -1302,7 +1367,9 @@ export default class LevelView {
     this.playerSprite.animations.add('jumpUp_up', Phaser.Animation.generateFrameNames("Player_", 153, 156, "", 3), frameRate / 2, true);
     this.playerSprite.animations.add('fail_up', Phaser.Animation.generateFrameNames("Player_", 165, 168, "", 3), frameRate / 2, false);
     this.playerSprite.animations.add('celebrate_up', this.generatePlayerCelebrateFrames(), frameRate / 2, true);
-    this.playerSprite.animations.add('bump_up', Phaser.Animation.generateFrameNames("Player_", 169, 174, "", 3), frameRate, false);
+    this.playerSprite.animations.add('bump_up', Phaser.Animation.generateFrameNames("Player_", 169, 174, "", 3), frameRate, false).onStart.add(() => {
+      this.audioPlayer.play("bump");
+    });
     this.playerSprite.animations.add('jumpDown_up', Phaser.Animation.generateFrameNames("Player_", 175, 180, "", 3), frameRate, true);
     this.playerSprite.animations.add('mine_up', Phaser.Animation.generateFrameNames("Player_", 249, 252, "", 3), frameRate, true);
     this.playerSprite.animations.add('mineCart_up', Phaser.Animation.generateFrameNames("Minecart_", 9, 9, "", 2), frameRate, false);
