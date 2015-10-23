@@ -24,7 +24,7 @@ export default class LevelView {
       "dirtCoarse": ["Miniblocks", 6, 11],
       "sand": ["Miniblocks", 12, 17],
       "gravel": ["Miniblocks", 18, 23],
-      "brick": ["Miniblocks", 24, 29],
+      "bricks": ["Miniblocks", 24, 29],
       "logAcacia": ["Miniblocks", 30, 35],
       "logBirch": ["Miniblocks", 36, 41],
       "logJungle": ["Miniblocks", 42, 47],
@@ -58,7 +58,6 @@ export default class LevelView {
     this.blocks = {
       "bedrock": ["blocks", "Bedrock", -13, 0],
       "bricks": ["blocks", "Bricks", -13, 0],
-      "clay": ["blocks", "Clay", -13, 0],
       "oreCoal": ["blocks", "Coal_Ore", -13, 0],
       "dirtCoarse": ["blocks", "Coarse_Dirt", -13, 0],
       "cobblestone": ["blocks", "Cobblestone", -13, 0],
@@ -73,7 +72,6 @@ export default class LevelView {
       "oreGold": ["blocks", "Gold_Ore", -13, 0],
       "grass": ["blocks", "Grass", -13, 0],
       "gravel": ["blocks", "Gravel", -13, 0],
-      "clayHardened": ["blocks", "Hardened_Clay", -13, 0],
       "oreIron": ["blocks", "Iron_Ore", -13, 0],
       "oreLapis": ["blocks", "Lapis_Ore", -13, 0],
       "lava": ["blocks", "Lava_0", -13, 0],
@@ -82,7 +80,7 @@ export default class LevelView {
       "logJungle": ["blocks", "Log_Jungle", -13, 0],
       "logOak": ["blocks", "Log_Oak", -13, 0],
       "logSpruce": ["blocks", "Log_Spruce", -13, 0],
-      "obsidian": ["blocks", "Obsidian", -13, 0],
+      //"obsidian": ["blocks", "Obsidian", -13, 0],
       "planksAcacia": ["blocks", "Planks_Acacia", -13, 0],
       "planksBirch": ["blocks", "Planks_Birch", -13, 0],
       "planksJungle": ["blocks", "Planks_Jungle", -13, 0],
@@ -1541,6 +1539,12 @@ export default class LevelView {
         break;
       case "grass":
         frame = "dirt";
+        break;
+      case "wool_orange":
+        frame = "wool";
+        break;
+      case "tnt":
+        frame = "gunPowder";
         break;
       default:
         frame = blockType;

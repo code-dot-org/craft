@@ -31,6 +31,14 @@ export default class LevelBlock {
       this.isEntity = true;
     }
 
+    if (blockType == "glass"){
+      this.isDestroyable = false;
+    }
+
+    if (blockType == "bedrock"){
+      this.isDestroyable = false;
+    }
+
     if (blockType == "lava") {
       this.isEmissive = true;
       this.isWalkable = true;
