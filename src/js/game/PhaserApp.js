@@ -298,9 +298,9 @@ class PhaserApp {
             case "treeOak":
              blockType = "planksOak";
             break;
-            case "logSpurce":
-            case "treeSpurce":
-              blockType = "planksOak";
+            case "logSpruce":
+            case "treeSpruce":
+              blockType = "planksSpruce";
             break;
           }
 

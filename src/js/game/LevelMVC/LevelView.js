@@ -1732,7 +1732,7 @@ export default class LevelView {
         for (i = 0; i < stillFrames; ++i) {
           frameList.push("Sheep_491");
         }
-        sprite.animations.add("face", frameList, 2, true).onStart.add(()=>{
+        this.onAnimationStart(sprite.animations.add("face", frameList, 2, true), ()=>{
           this.audioPlayer.play("sheep");
         });
 
@@ -1976,6 +1976,13 @@ export default class LevelView {
 
   onAnimationEnd(animation, completionHandler) {
     var signalBinding = animation.onComplete.add(() => {
+      signalBinding.detach();
+      completionHandler();
+    });
+  }
+
+  onAnimationStart(animation, completionHandler) {
+    var signalBinding = animation.onStart.add(() => {
       signalBinding.detach();
       completionHandler();
     });
