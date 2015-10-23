@@ -897,8 +897,8 @@ getMinecartTrack() {
 
       hasLeft = false;
       hasRight = false;
-
-      if (this.actionPlane[index].isEmpty) {
+      
+      if (this.actionPlane[index].isEmpty || this.actionPlane[index].isTransparent) {
         if (y == 0) {
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Bottom' });
         }

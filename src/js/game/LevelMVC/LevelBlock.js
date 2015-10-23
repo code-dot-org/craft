@@ -10,6 +10,7 @@ export default class LevelBlock {
     this.isUsable = isUsable || false;
     this.isEmpty = blockType === "";
     this.isEmissive = false;
+    this.isTransparent = false;
 
     if(blockType.substring(0, 5) == "rails")
     {
@@ -17,6 +18,7 @@ export default class LevelBlock {
       this.isWalkable = true;
       this.isUsable = true;
       this.isDestroyable = false;
+      this.isTransparent = true;
     }
 
     if (blockType == "sheep") {
@@ -41,6 +43,7 @@ export default class LevelBlock {
       this.isWalkable = true;
       this.isUsable = true;
       this.isDestroyable = false;
+      this.isTransparent = true;
     }
 
     if (blockType == "cropWheat") {
@@ -49,6 +52,7 @@ export default class LevelBlock {
       this.isWalkable = true;
       this.isUsable = true;
       this.isDestroyable = false;
+      this.isTransparent = true;
     }
 
     if (blockType == "tnt") {
@@ -61,6 +65,7 @@ export default class LevelBlock {
       this.isWalkable = true;
       this.isUsable = true;
       this.isDestroyable = false;
+      this.isTransparent = true;
     }
   }
 
