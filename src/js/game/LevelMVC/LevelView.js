@@ -725,7 +725,7 @@ export default class LevelView {
     return tween;
   }
 
-  playPlaceBlockAnimation(position, facing, blockType, completionHandler) {
+  playPlaceBlockAnimation(position, facing, blockType, blockTypeAtPosition, completionHandler) {
     var tween,
         jumpAnimName;
 
@@ -752,6 +752,10 @@ export default class LevelView {
       this.setSelectionIndicatorPosition(position[0], position[1]);
 
       jumpAnimName = "jumpUp" + direction;
+
+      if(blockTypeAtPosition != "") {
+        this.playExplosionAnimation(position, facing, position, blockTypeAtPosition, (()=>{}), false);
+      }
 
       this.playerSprite.animations.play(jumpAnimName);
       tween = this.game.add.tween(this.playerSprite).to({
