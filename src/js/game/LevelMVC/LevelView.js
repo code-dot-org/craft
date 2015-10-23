@@ -132,6 +132,10 @@ export default class LevelView {
     this.toDestroy = [];
   }
 
+  yToIndex(y) {
+    return this.controller.levelModel.yToIndex(y);
+  }
+
   preload(playerAtlas) {
     this.game.load.atlasJSONHash('player', `${this.assetRoot}images/${playerAtlas}.png`, `${this.assetRoot}images/${playerAtlas}.json`);
     this.game.load.image('entityShadow', `${this.assetRoot}images/Character_Shadow.png`);
@@ -254,7 +258,7 @@ export default class LevelView {
 
   playPlayerAnimation(animationName, position, facing, isOnBlock) {
     let direction = this.getDirectionName(facing);
-    this.playerSprite.sortOrder = position[1] * 10 + 5;
+    this.playerSprite.sortOrder = this.yToIndex(position[1]) + 5;
 
     let animName = animationName + direction;
     return this.playerSprite.animations.play(animName);
@@ -345,7 +349,7 @@ export default class LevelView {
   playExplodingCreeperAnimation(position, facing, destroyPosition, isOnBlock, completionHandler) {
     let direction = this.getDirectionName(facing);
 
-    let blockIndex = (destroyPosition[1] * 10) + destroyPosition[0];
+    let blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
     let blockToExplode = this.actionPlaneBlocks[blockIndex];
 
     var creeperExplodeAnimation = blockToExplode.animations.getAnimation("explode");
@@ -364,7 +368,7 @@ export default class LevelView {
   }
 
   coordinatesToIndex(coordinates) {
-    return (coordinates[1] * 10) + coordinates[0];
+    return (this.yToIndex(coordinates[1])) + coordinates[0];
   }
 
   playMinecartTurnAnimation(position, facing, isOnBlock, completionHandler, turnDirection) {
@@ -382,7 +386,7 @@ export default class LevelView {
       y: (-32 + 40 * nextPosition[1]),
     }, speed, Phaser.Easing.Linear.None);
     tween.start();
-    this.playerSprite.sortOrder = 10 * nextPosition[1] + 5;
+    this.playerSprite.sortOrder = this.yToIndex(nextPosition[1]) + 5;
     //position = nextPosition;
 
     return tween
@@ -454,7 +458,7 @@ export default class LevelView {
     //Temporary, will be replaced by bed blocks
     var bedTopCoordinate = (bottomCoordinates[1] - 1);
     var sprite = this.actionPlane.create(38 * bottomCoordinates[0], 35 * bedTopCoordinate, "bed");
-    sprite.sortOrder = bottomCoordinates[1] * 10;
+    sprite.sortOrder = this.yToIndex(bottomCoordinates[1]);
   }
 
   addDoor(coordinates) {
@@ -465,7 +469,7 @@ export default class LevelView {
     //And use that type block to create the ground block under the door
     sprite = this.createBlock(this.groundPlane, coordinates[0], coordinates[1], "wool_orange");
     toDestroy.kill();
-    sprite.sortOrder = 6 * 10;
+    sprite.sortOrder = this.yToIndex(6);
   }
 
   playSuccessHouseBuiltAnimation(position, facing, isOnBlock, createFloor, houseBottomRightPosition, completionHandler) {
@@ -490,7 +494,7 @@ export default class LevelView {
         yCoord = createFloor[i][2];
         /*this.groundPlane[this.coordinatesToIndex([xCoord,yCoord])].kill();*/
         sprite = this.createBlock(this.groundPlane, xCoord, yCoord, "wool_orange");
-        sprite.sortOrder = yCoord * 10;
+        sprite.sortOrder = this.yToIndex(yCoord);
       }
 
       this.addHouseBed([houseBottomRightPosition[0], houseBottomRightPosition[1]]);
@@ -555,7 +559,7 @@ export default class LevelView {
     let direction = this.getDirectionName(facing);
 
     this.setSelectionIndicatorPosition(position[0], position[1]);
-    this.playerSprite.sortOrder = position[1] * 10 + 5;
+    this.playerSprite.sortOrder = this.yToIndex(position[1]) + 5;
     oldPosition = [Math.trunc((this.playerSprite.position.x + 18)/ 40), Math.ceil((this.playerSprite.position.y+ 32) / 40)];
     newPosVec = [position[0] - oldPosition[0], position[1] - oldPosition[1]];
 
@@ -596,11 +600,11 @@ export default class LevelView {
       var signalDetacher = this.playPlayerAnimation("punch", position, facing, false).onComplete.add(() => {
         var sprite;
         signalDetacher.detach();
-        let blockIndex = (position[1] * 10) + position[0];
+        let blockIndex = (this.yToIndex(position[1])) + position[0];
         sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
 
         if (sprite) {
-          sprite.sortOrder = position[1] * 10;
+          sprite.sortOrder = this.yToIndex(position[1]);
         }
 
         this.actionPlaneBlocks[blockIndex] = sprite;
@@ -618,11 +622,11 @@ export default class LevelView {
       }, 125, Phaser.Easing.Cubic.EaseOut);
 
       tween.onComplete.add(() => {
-        let blockIndex = (position[1] * 10) + position[0];
+        let blockIndex = (this.yToIndex(position[1])) + position[0];
         var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
 
         if (sprite) {
-          sprite.sortOrder = position[1] * 10;
+          sprite.sortOrder = this.yToIndex(position[1]);
         }
 
         this.actionPlaneBlocks[blockIndex] = sprite;
@@ -646,11 +650,11 @@ export default class LevelView {
   }
 
   createActionPlaneBlock(position, blockType) {
-    let blockIndex = (position[1] * 10) + position[0];
+    let blockIndex = (this.yToIndex(position[1])) + position[0];
     var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
 
     if (sprite) {
-      sprite.sortOrder = position[1] * 10;
+      sprite.sortOrder = this.yToIndex(position[1]);
     }
 
     this.actionPlaneBlocks[blockIndex] = sprite;
@@ -661,7 +665,7 @@ export default class LevelView {
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
 
     this.onAnimationEnd(this.playPlayerAnimation("punch", playerPosition, facing, false), () => {
-      let blockIndex = (destroyPosition[1] * 10) + destroyPosition[0];
+      let blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
       let blockToShear = this.actionPlaneBlocks[blockIndex];
 
       blockToShear.animations.stop(null, true);
@@ -700,12 +704,12 @@ export default class LevelView {
   }
 
   playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, newShadingPlaneData, completionHandler) {
-    let blockIndex = (destroyPosition[1] * 10) + destroyPosition[0];
+    let blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
     let blockToDestroy = this.actionPlaneBlocks[blockIndex];
     let direction = this.getDirectionName(facing);
 
     let destroyOverlay = this.actionPlane.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
-    destroyOverlay.sortOrder = destroyPosition[1] * 10 + 2;
+    destroyOverlay.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     this.onAnimationEnd(destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false), () =>
     {
       this.actionPlaneBlocks[blockIndex] = null;
@@ -743,7 +747,7 @@ export default class LevelView {
     let miningParticlesOffsetX = miningParticlesData[miningParticlesIndex][1];
     let miningParticlesOffsetY = miningParticlesData[miningParticlesIndex][2];
     let miningParticles = this.actionPlane.create(miningParticlesOffsetX + 40 * destroyPosition[0], miningParticlesOffsetY + 40 * destroyPosition[1], "miningParticles", "MiningParticles" + miningParticlesFirstFrame);
-    miningParticles.sortOrder = destroyPosition[1] * 10 + 2;
+    miningParticles.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     this.onAnimationEnd(miningParticles.animations.add("miningParticles", Phaser.Animation.generateFrameNames("MiningParticles", miningParticlesFirstFrame, miningParticlesFirstFrame + 11, "", 0), 30, false), () => {
       miningParticles.kill();
       this.toDestroy.push(miningParticles);
@@ -755,7 +759,7 @@ export default class LevelView {
     var signalBinding,
         explodeAnim = this.actionPlane.create(-36 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
 
-    explodeAnim.sortOrder = destroyPosition[1] * 10 + 2;
+    explodeAnim.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     this.onAnimationEnd(explodeAnim.animations.add("explode", Phaser.Animation.generateFrameNames("BlockBreakParticle", 0, 7, "", 0), 30, false), () =>
     {
       explodeAnim.kill();
@@ -776,7 +780,7 @@ export default class LevelView {
 
   playItemDropAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
     var sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
-    sprite.sortOrder = destroyPosition[1] * 10 + 2;
+    sprite.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     this.onAnimationEnd(sprite.animations.play("animate"), () => {
       this.playItemAcquireAnimation(playerPosition, facing, destroyPosition, blockType, sprite, completionHandler);
     });
@@ -802,7 +806,7 @@ export default class LevelView {
   setPlayerPosition(x, y, isOnBlock) {
     this.playerSprite.x = -18 + 40 * x;
     this.playerSprite.y = -32 + (isOnBlock ? -23 : 0) + 40 * y;
-    this.playerSprite.sortOrder = y * 10 + 5;
+    this.playerSprite.sortOrder = this.yToIndex(y) + 5;
   }
 
   setSelectionIndicatorPosition(x, y) {
@@ -837,20 +841,26 @@ export default class LevelView {
     this.shadingPlane.removeAll(true);
     this.fowPlane.removeAll(true);
 
-    this.baseShading = this.shadingPlane.create(0, 0, 'shadeLayer');
+    this.baseShading = this.game.add.group();
+
+    for (var shadeX = 0; shadeX < this.controller.levelModel.planeWidth * 40; shadeX += 400) {
+      for (var shadeY = 0; shadeY < this.controller.levelModel.planeHeight * 40; shadeY += 400) {
+        this.baseShading.create(shadeX, shadeY, 'shadeLayer');
+      }
+    }
 
     this.refreshGroundPlane();
 
     this.actionPlaneBlocks = [];
-    for (y = 0; y < 10; ++y) {
-      for (x = 0; x < 10; ++x) {
-        let blockIndex = (y * 10) + x;
+    for (y = 0; y < this.controller.levelModel.planeHeight; ++y) {
+      for (x = 0; x < this.controller.levelModel.planeWidth; ++x) {
+        let blockIndex = (this.yToIndex(y)) + x;
         sprite = null;
 
         if (!levelData.groundDecorationPlane[blockIndex].isEmpty) {
           sprite = this.createBlock(this.actionPlane, x, y, levelData.groundDecorationPlane[blockIndex].blockType);
           if (sprite) {
-            sprite.sortOrder = y * 10;
+            sprite.sortOrder = this.yToIndex(y);
           }
         }
 
@@ -859,7 +869,7 @@ export default class LevelView {
           blockType = levelData.actionPlane[blockIndex].blockType;
           sprite = this.createBlock(this.actionPlane, x, y, blockType);
           if (sprite !== null) {
-            sprite.sortOrder = y * 10;
+            sprite.sortOrder = this.yToIndex(y);
           }
         }
 
@@ -867,9 +877,9 @@ export default class LevelView {
       }
     }
 
-    for (y = 0; y < 10; ++y) {
-      for (x = 0; x < 10; ++x) {
-        let blockIndex = (y * 10) + x;
+    for (y = 0; y < this.controller.levelModel.planeHeight; ++y) {
+      for (x = 0; x < this.controller.levelModel.planeWidth; ++x) {
+        let blockIndex = (this.yToIndex(y)) + x;
         if (!levelData.fluffPlane[blockIndex].isEmpty) {
           sprite = this.createBlock(this.fluffPlane, x, y, levelData.fluffPlane[blockIndex].blockType);
         }
@@ -879,12 +889,12 @@ export default class LevelView {
 
   refreshGroundPlane() {
     this.groundPlane.removeAll(true);
-    for (var y = 0; y < 10; ++y) {
-      for (var x = 0; x < 10; ++x) {
-        let blockIndex = (y * 10) + x;
+    for (var y = 0; y < this.controller.levelModel.planeHeight; ++y) {
+      for (var x = 0; x < this.controller.levelModel.planeWidth; ++x) {
+        let blockIndex = (this.yToIndex(y)) + x;
         var sprite = this.createBlock(this.groundPlane, x, y, this.controller.levelModel.groundPlane[blockIndex].blockType);
         if (sprite) {
-          sprite.sortOrder = y * 10;
+          sprite.sortOrder = this.yToIndex(y);
         }
       }
     }
@@ -1037,6 +1047,9 @@ export default class LevelView {
     let frameRate = 20;
 
     this.playerSprite = this.actionPlane.create(0, 0, 'player', 'Player_121');
+    if (this.controller.followingPlayer()) {
+      this.game.camera.follow(this.playerSprite);
+    }
     this.playerGhost = this.fluffPlane.create(0, 0, 'player', 'Player_121');
     this.playerGhost.parent = this.playerSprite;
     this.playerGhost.alpha = 0.2;
@@ -1385,7 +1398,7 @@ export default class LevelView {
   }
 
   playRandomCreeperAnimation(sprite) {
-    var rand = Math.trunc(Math.random() * 10 + 1);
+    var rand = Math.trunc(this.yToIndex(Math.random()) + 1);
 
     switch(rand) {
       case 1:
@@ -1567,7 +1580,7 @@ export default class LevelView {
         });
 
         frameList = Phaser.Animation.generateFrameNames("Creeper_", 53, 59, "", 3);
-        stillFrames = Math.trunc(Math.random() * 10) + 20;
+        stillFrames = Math.trunc(this.yToIndex(Math.random())) + 20;
         for (i = 0; i < stillFrames; ++i) {
           frameList.push("Creeper_004");
         }
