@@ -103,6 +103,7 @@ export default class LevelView {
       "leavesOak": ["leavesOak", "Leaves0", -100, 0],
       "leavesSpruce": ["leavesSpruce", "Leaves0", -76, 60],
 
+      "watering" : ["blocks", "Water_0", -13, 0],
       "cropWheat": ["blocks", "Wheat0", -13, 0],
       "torch": ["torch", "Torch0", -13, 0],
 
@@ -1821,6 +1822,19 @@ export default class LevelView {
         frameList = Phaser.Animation.generateFrameNames("Water_", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
         sprite.animations.play("idle");
+        break;
+
+      //for placing wetland for crops in free play
+      case "watering":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        sprite.kill();
+        this.toDestroy.push(sprite);
+        this.createBlock(this.groundPlane, x, y, "farmlandWet");
+        this.refreshGroundPlane();
         break;
 
       case "lava":

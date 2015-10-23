@@ -559,6 +559,12 @@ getMinecartTrack() {
     let blockPosition = this.getMoveForwardPosition();
     let blockIndex = (blockPosition[1] * 10) + blockPosition[0];
 
+    //for placing wetland for crops in free play
+    if(blockType === "watering") {
+      blockType = "farmlandWet";
+      targetPlane = this.groundPlane;
+    }
+
     var block = new LevelBlock(blockType);
     block.isEmpty = false;
     block.isWalkable = false;
