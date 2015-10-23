@@ -269,6 +269,12 @@ export default class LevelView {
       mp3: `${this.assetRoot}audio/minecartBase.mp3`,
       ogg: `${this.assetRoot}audio/minecartBase.ogg`
     });
+
+    this.audioPlayer.register({
+      id: 'sheep',
+      mp3: `${this.assetRoot}audio/say3.mp3`,
+      ogg: `${this.assetRoot}audio/say3.ogg`
+    });
   }
 
   create(levelModel) {
@@ -1726,7 +1732,9 @@ export default class LevelView {
         for (i = 0; i < stillFrames; ++i) {
           frameList.push("Sheep_491");
         }
-        sprite.animations.add("face", frameList, 2, true);
+        sprite.animations.add("face", frameList, 2, true).onStart.add(()=>{
+          this.audioPlayer.play("sheep");
+        });
 
         frameList = Phaser.Animation.generateFrameNames("Sheep_", 439, 455, "", 0);
         for (i = 0; i < 3; ++i) {
