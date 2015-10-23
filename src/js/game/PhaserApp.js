@@ -215,7 +215,7 @@ class PhaserApp {
       // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
 
 
-      this.levelView.playMoveForwardAnimation(player.position, player.facing, wasOnBlock && wasOnBlock != player.isOnBlock, () => {
+      this.levelView.playMoveForwardAnimation(player.position, player.facing, wasOnBlock && wasOnBlock != player.isOnBlock, player.isOnBlock, this.levelModel.groundPlane[player.position[1] * 10 + player.position[0]].blockType ,() => {
         this.levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
 
       //First arg is if we found a creeper
@@ -230,31 +230,27 @@ class PhaserApp {
           this.levelView.playBurnInLavaAnimation(player.position, player.facing, player.isOnBlock, () => {
             commandQueueItem.failed();
           } );
-        } 
-        else if(allFoundCreepers[0]) {
-            for(var i = 1; i < 9; ++i)
-            {
-              let currentObject = allFoundCreepers[i];
-              let creeperfound = currentObject[0];
-              if(creeperfound)
-              {
-                let creeperPos = currentObject[1];              
-                this.levelView.playCreeperExplodeAnimation(player.position, player.facing, creeperPos, player.isOnBlock, () => {
-                  commandQueueItem.failed();
-                });
-              }
-            }
-        } else {
+        }
+        else {
           this.delayBy(200, () => {
             commandQueueItem.succeeded();
           });
         }
       });
-    } else {
-      this.levelView.playBumpAnimation(player.position, player.facing, false);
-      this.delayBy(800, () => {
-        commandQueueItem.succeeded();
-      });
+    } 
+    else {
+      if(this.levelModel.isForwardBlockOfType("creeper"))
+      {
+        this.levelView.playCreeperExplodeAnimation(player.position, player.facing, this.levelModel.getMoveForwardPosition(), player.isOnBlock, () => {
+          commandQueueItem.failed();
+        });
+      }
+      else {
+        this.levelView.playBumpAnimation(player.position, player.facing, false);
+        this.delayBy(800, () => {
+          commandQueueItem.succeeded();
+        });
+      }
     }
   }
 
@@ -333,6 +329,10 @@ class PhaserApp {
     }
   }
 
+  checkTntAnimation() {
+    return false;
+  }
+
   checkMinecartLevelEndAnimation() {
     return this.specialLevelType === 'minecart';
   }
@@ -391,17 +391,26 @@ class PhaserApp {
   }
 
   placeBlockForward(commandQueueItem, blockType) {
+    var forwardPosition,
+        placementPlane,
+        soundEffect = ()=>{};
+
     if (!this.levelModel.canPlaceBlockForward()) {
       commandQueueItem.succeeded();
     }
 
-    var placementPlane = this.levelModel.getPlaneToPlaceOn(this.levelModel.getMoveForwardPosition());
+    forwardPosition = this.levelModel.getMoveForwardPosition();
+    placementPlane = this.levelModel.getPlaneToPlaceOn(forwardPosition);
+    if(this.levelModel.isBlockOfTypeOnPlane(forwardPosition, "lava", placementPlane)) {
+      soundEffect = ()=>{this.levelView.audioPlayer.play("fizz");};
+    }
     this.levelModel.placeBlockForward(blockType, placementPlane);
     this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.getMoveForwardPosition(), placementPlane, blockType, () => {
       this.levelModel.computeShadingPlane();
       this.levelModel.computeFowPlane();
       this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
       this.levelView.updateFowPlane(this.levelModel.fowPlane);
+      soundEffect();
       this.delayBy(200, () => {
         this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
       });
@@ -434,6 +443,22 @@ class PhaserApp {
       {
         this.levelView.playMinecartAnimation(player.position, player.facing, player.isOnBlock,
             () => { commandQueueItem.succeeded(); }, this.levelModel.getMinecartTrack(), this.levelModel.getUnpoweredRails());
+      }
+      else if(this.checkTntAnimation()) {
+        var tnt = this.levelModel.getTnt();
+        this.levelView.playDestroyTntAnimation(player.position, player.facing, player.isOnBlock, this.levelModel.getTnt(), this.levelModel.shadingPlane,
+        () => { 
+          for(var i in tnt) {
+            this.levelModel.destroyBlock(tnt[i]);
+          }
+          this.levelModel.computeShadingPlane();
+          this.levelModel.computeFowPlane();
+          this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
+          this.levelView.updateFowPlane(this.levelModel.fowPlane);
+          this.delayBy(400, () => {
+            commandQueueItem.succeeded();
+          });
+        });
       }
       else {
         this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock,

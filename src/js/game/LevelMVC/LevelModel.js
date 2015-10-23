@@ -156,6 +156,20 @@ export default class LevelModel {
     return true;
   }
 
+  getTnt() {
+    var tnt = [];
+    for(var x = 0; x < 10; ++x) {
+      for(var y = 0; y < 10; ++y) {
+        var index = this.coordinatesToIndex([x,y]);
+        var block = this.actionPlane[index];
+        if(block.blockType === "tnt") {
+          tnt.push([x,y]);
+        }
+      }
+    }
+    return tnt;
+  }
+
   getUnpoweredRails() {
     var unpoweredRails = [];
     for(var x = 0; x < 10; ++x) {
@@ -163,7 +177,6 @@ export default class LevelModel {
         var index = this.coordinatesToIndex([x,y]);
         var block = this.actionPlane[index];
         if(block.blockType.substring(0,7) == "railsUn") {
-          //this.createActionPlaneBlock([x,y], "railsPowered" + this.actionPlane[index].blockType.substring(14)); 
           unpoweredRails.push([x,y], "railsPowered" + this.actionPlane[index].blockType.substring(14));
         }
       }
@@ -546,6 +559,12 @@ getMinecartTrack() {
     let blockPosition = this.getMoveForwardPosition();
     let blockIndex = (blockPosition[1] * 10) + blockPosition[0];
 
+    //for placing wetland for crops in free play
+    if(blockType === "watering") {
+      blockType = "farmlandWet";
+      targetPlane = this.groundPlane;
+    }
+
     var block = new LevelBlock(blockType);
     block.isEmpty = false;
     block.isWalkable = false;
@@ -553,6 +572,28 @@ getMinecartTrack() {
     block.isUsable = true;
 
     targetPlane[blockIndex] = block;
+  }
+
+  destroyBlock(position) {
+    var i,
+        block = null;
+
+    let blockPosition = position;
+    let blockIndex = (blockPosition[1] * 10) + blockPosition[0];
+    let [x, y] = [blockPosition[0], blockPosition[1]];
+    
+    if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+      block = this.actionPlane[blockIndex];
+      if (block !== null) {
+        block.position = [x, y];
+
+        if (block.isDestroyable) {
+          this.actionPlane[blockIndex] = new LevelBlock("");
+        }
+      }
+    }
+
+    return block;
   }
 
   destroyBlockForward() {

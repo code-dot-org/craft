@@ -50,6 +50,18 @@ export default class LevelBlock {
       this.isUsable = true;
       this.isDestroyable = false;
     }
+
+    if (blockType == "tnt") {
+      this.isUsable = true;
+      this.isDestroyable = true;
+    }
+
+    if(blockType == "door") {
+      this.isEntity = true;
+      this.isWalkable = true;
+      this.isUsable = true;
+      this.isDestroyable = false;
+    }
   }
 
   getIsTree() {
