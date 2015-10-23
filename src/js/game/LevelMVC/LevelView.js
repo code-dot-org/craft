@@ -224,8 +224,8 @@ export default class LevelView {
 
     this.audioPlayer.register({
       id: 'placeBlock',
-      mp3: `${this.assetRoot}audio/wood_click.mp3`,
-      ogg: `${this.assetRoot}audio/wood_click.ogg`
+      mp3: `${this.assetRoot}audio/cloth1.mp3`,
+      ogg: `${this.assetRoot}audio/cloth1.ogg`
     });
 
     this.audioPlayer.register({
