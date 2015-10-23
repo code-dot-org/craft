@@ -179,10 +179,16 @@ export default class LevelView {
     });
 
     this.audioPlayer.register({
-      id: 'step_grass1',
+      id: 'stepGrass',
       mp3: `${this.assetRoot}audio/step_grass1.mp3`,
       wav: `${this.assetRoot}audio/step_grass1.wav`,
       ogg: `${this.assetRoot}audio/step_grass1.ogg`
+    });
+
+    this.audioPlayer.register({
+      id: 'stepStone',
+      mp3: `${this.assetRoot}audio/stone2.mp3`,
+      ogg: `${this.assetRoot}audio/stone2.ogg`
     });
 
     this.audioPlayer.register({
@@ -237,6 +243,30 @@ export default class LevelView {
       id: 'punch',
       mp3: `${this.assetRoot}audio/cloth1.mp3`,
       ogg: `${this.assetRoot}audio/cloth1.ogg`
+    });
+
+    this.audioPlayer.register({
+      id: 'fizz',
+      mp3: `${this.assetRoot}audio/fizz.mp3`,
+      ogg: `${this.assetRoot}audio/fizz.ogg`
+    });
+
+    this.audioPlayer.register({
+      id: 'doorOpen',
+      mp3: `${this.assetRoot}audio/door_open.mp3`,
+      ogg: `${this.assetRoot}audio/door_open.ogg`
+    });
+
+    this.audioPlayer.register({
+      id: 'houseSuccess',
+      mp3: `${this.assetRoot}audio/launch1.mp3`,
+      ogg: `${this.assetRoot}audio/launch1.ogg`
+    });
+
+    this.audioPlayer.register({
+      id: 'minecart',
+      mp3: `${this.assetRoot}audio/minecartBase.mp3`,
+      ogg: `${this.assetRoot}audio/minecartBase.ogg`
     });
   }
 
@@ -465,6 +495,8 @@ export default class LevelView {
     var animation,
         tween;
 
+    //if we loop the sfx that might be better?
+    this.audioPlayer.play("minecart");
     this.playPlayerAnimation("mineCart",position, facing, false);
     tween = this.game.add.tween(this.playerSprite).to({
       x: (-18 + 40 * nextPosition[0]),
@@ -472,7 +504,6 @@ export default class LevelView {
     }, speed, Phaser.Easing.Linear.None);
     tween.start();
     this.playerSprite.sortOrder = 10 * nextPosition[1] + 5;
-    //position = nextPosition;
 
     return tween
   }
@@ -569,6 +600,7 @@ export default class LevelView {
       this.controller.delayBy(4000, completionHandler);
     }, true);
     tweenToW.onComplete.add(() => {
+      this.audioPlayer.play("houseSuccess");
       //Change house ground to floor
       var xCoord;
       var yCoord;
@@ -633,14 +665,20 @@ export default class LevelView {
     return tweenToWhite;
   }
 
-  playMoveForwardAnimation(position, facing, shouldJumpDown, isOnBlock, completionHandler) {
+  playMoveForwardAnimation(position, facing, shouldJumpDown, isOnBlock, groundType, completionHandler) {
     var tween,
         oldPosition,
         newPosVec,
         animName,
         yOffset = -32;
 
-    this.audioPlayer.play("step_grass1");
+    //stepping on stone sfx
+    if(groundType === "stone") {
+      this.audioPlayer.play("stepStone");
+    }
+    else {
+      this.audioPlayer.play("stepGrass");
+    }
 
     let direction = this.getDirectionName(facing);
 
@@ -1859,7 +1897,14 @@ export default class LevelView {
         }
         frameList = frameList.concat(animationFrames);
 
-        sprite.animations.add("open", frameList, 5, false);
+        var animation = sprite.animations.add("open", frameList, 5, false);
+        animation.enableUpdate = true;
+        //play when the door starts opening
+        animation.onUpdate.add(() => {
+          if(animation.frame === 1) {
+            this.audioPlayer.play("doorOpen");
+          }
+        })
         sprite.animations.play("open");
         break;
 

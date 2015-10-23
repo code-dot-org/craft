@@ -215,7 +215,7 @@ class PhaserApp {
       // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
 
 
-      this.levelView.playMoveForwardAnimation(player.position, player.facing, wasOnBlock && wasOnBlock != player.isOnBlock, player.isOnBlock,() => {
+      this.levelView.playMoveForwardAnimation(player.position, player.facing, wasOnBlock && wasOnBlock != player.isOnBlock, player.isOnBlock, this.levelModel.groundPlane[player.position[1] * 10 + player.position[0]].blockType ,() => {
         this.levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
 
       //First arg is if we found a creeper
@@ -391,17 +391,26 @@ class PhaserApp {
   }
 
   placeBlockForward(commandQueueItem, blockType) {
+    var forwardPosition,
+        placementPlane,
+        soundEffect = ()=>{};
+
     if (!this.levelModel.canPlaceBlockForward()) {
       commandQueueItem.succeeded();
     }
 
-    var placementPlane = this.levelModel.getPlaneToPlaceOn(this.levelModel.getMoveForwardPosition());
+    forwardPosition = this.levelModel.getMoveForwardPosition();
+    placementPlane = this.levelModel.getPlaneToPlaceOn(forwardPosition);
+    if(this.levelModel.isBlockOfTypeOnPlane(forwardPosition, "lava", placementPlane)) {
+      soundEffect = ()=>{this.levelView.audioPlayer.play("fizz");};
+    }
     this.levelModel.placeBlockForward(blockType, placementPlane);
     this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.getMoveForwardPosition(), placementPlane, blockType, () => {
       this.levelModel.computeShadingPlane();
       this.levelModel.computeFowPlane();
       this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
       this.levelView.updateFowPlane(this.levelModel.fowPlane);
+      soundEffect();
       this.delayBy(200, () => {
         this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
       });
