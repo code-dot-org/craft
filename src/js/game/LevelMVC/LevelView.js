@@ -684,9 +684,12 @@ export default class LevelView {
     let direction = this.getDirectionName(facing);
 
     this.setSelectionIndicatorPosition(position[0], position[1]);
-    this.playerSprite.sortOrder = position[1] * 10 + 5;
+    //make sure to render high for when moving up after placing a block
+    this.playerSprite.sortOrder = (position[1] + 1) * 10 + 5;
     oldPosition = [Math.trunc((this.playerSprite.position.x + 18)/ 40), Math.ceil((this.playerSprite.position.y+ 32) / 40)];
     newPosVec = [position[0] - oldPosition[0], position[1] - oldPosition[1]];
+
+    //change offset for moving on top of blocks
     if(isOnBlock) {
       yOffset -= 22;
     }
