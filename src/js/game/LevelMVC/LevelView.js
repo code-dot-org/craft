@@ -1861,10 +1861,20 @@ export default class LevelView {
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
-        frameList = Phaser.Animation.generateFrameNames("LavaPop", 1, 30, "", 2);
+        frameList = Phaser.Animation.generateFrameNames("LavaPop", 1, 7, "", 2);
+        for(i = 0; i < 4; ++i) {
+          frameList.push("LavaPop07");
+        }
+        frameList = frameList.concat(Phaser.Animation.generateFrameNames("LavaPop", 8, 13, "", 2));
+        for(i = 0; i < 3; ++i) {
+          frameList.push("LavaPop13");
+        }
+        frameList = frameList.concat(Phaser.Animation.generateFrameNames("LavaPop", 14, 30, "", 2));
+        for(i = 0; i < 8; ++i) {
+          frameList.push("LavaPop01");
+        }
         sprite.animations.add("idle", frameList, 5, true);
         this.playAnimationWithOffset(sprite, "idle", 29, 1);
-        //sprite.animations.play("idle");
         break;
 
       case "fire":
