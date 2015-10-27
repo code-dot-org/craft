@@ -24,7 +24,7 @@ export default class LevelView {
       "dirtCoarse": ["Miniblocks", 6, 11],
       "sand": ["Miniblocks", 12, 17],
       "gravel": ["Miniblocks", 18, 23],
-      "brick": ["Miniblocks", 24, 29],
+      "bricks": ["Miniblocks", 24, 29],
       "logAcacia": ["Miniblocks", 30, 35],
       "logBirch": ["Miniblocks", 36, 41],
       "logJungle": ["Miniblocks", 42, 47],
@@ -58,7 +58,6 @@ export default class LevelView {
     this.blocks = {
       "bedrock": ["blocks", "Bedrock", -13, 0],
       "bricks": ["blocks", "Bricks", -13, 0],
-      "clay": ["blocks", "Clay", -13, 0],
       "oreCoal": ["blocks", "Coal_Ore", -13, 0],
       "dirtCoarse": ["blocks", "Coarse_Dirt", -13, 0],
       "cobblestone": ["blocks", "Cobblestone", -13, 0],
@@ -73,7 +72,6 @@ export default class LevelView {
       "oreGold": ["blocks", "Gold_Ore", -13, 0],
       "grass": ["blocks", "Grass", -13, 0],
       "gravel": ["blocks", "Gravel", -13, 0],
-      "clayHardened": ["blocks", "Hardened_Clay", -13, 0],
       "oreIron": ["blocks", "Iron_Ore", -13, 0],
       "oreLapis": ["blocks", "Lapis_Ore", -13, 0],
       "lava": ["blocks", "Lava_0", -13, 0],
@@ -82,7 +80,7 @@ export default class LevelView {
       "logJungle": ["blocks", "Log_Jungle", -13, 0],
       "logOak": ["blocks", "Log_Oak", -13, 0],
       "logSpruce": ["blocks", "Log_Spruce", -13, 0],
-      "obsidian": ["blocks", "Obsidian", -13, 0],
+      //"obsidian": ["blocks", "Obsidian", -13, 0],
       "planksAcacia": ["blocks", "Planks_Acacia", -13, 0],
       "planksBirch": ["blocks", "Planks_Birch", -13, 0],
       "planksJungle": ["blocks", "Planks_Jungle", -13, 0],
@@ -224,8 +222,8 @@ export default class LevelView {
 
     this.audioPlayer.register({
       id: 'placeBlock',
-      mp3: `${this.assetRoot}audio/wood_click.mp3`,
-      ogg: `${this.assetRoot}audio/wood_click.ogg`
+      mp3: `${this.assetRoot}audio/cloth1.mp3`,
+      ogg: `${this.assetRoot}audio/cloth1.ogg`
     });
 
     this.audioPlayer.register({
@@ -268,6 +266,12 @@ export default class LevelView {
       id: 'minecart',
       mp3: `${this.assetRoot}audio/minecartBase.mp3`,
       ogg: `${this.assetRoot}audio/minecartBase.ogg`
+    });
+
+    this.audioPlayer.register({
+      id: 'sheep',
+      mp3: `${this.assetRoot}audio/say3.mp3`,
+      ogg: `${this.assetRoot}audio/say3.ogg`
     });
   }
 
@@ -688,9 +692,12 @@ export default class LevelView {
     let direction = this.getDirectionName(facing);
 
     this.setSelectionIndicatorPosition(position[0], position[1]);
-    this.playerSprite.sortOrder = position[1] * 10 + 5;
+    //make sure to render high for when moving up after placing a block
+    this.playerSprite.sortOrder = (position[1] + 1) * 10 + 5;
     oldPosition = [Math.trunc((this.playerSprite.position.x + 18)/ 40), Math.ceil((this.playerSprite.position.y+ 32) / 40)];
     newPosVec = [position[0] - oldPosition[0], position[1] - oldPosition[1]];
+
+    //change offset for moving on top of blocks
     if(isOnBlock) {
       yOffset -= 22;
     }
@@ -726,7 +733,7 @@ export default class LevelView {
     return tween;
   }
 
-  playPlaceBlockAnimation(position, facing, blockType, completionHandler) {
+  playPlaceBlockAnimation(position, facing, blockType, blockTypeAtPosition, completionHandler) {
     var tween,
         jumpAnimName;
 
@@ -753,6 +760,10 @@ export default class LevelView {
       this.setSelectionIndicatorPosition(position[0], position[1]);
 
       jumpAnimName = "jumpUp" + direction;
+
+      if(blockTypeAtPosition != "") {
+        this.playExplosionAnimation(position, facing, position, blockTypeAtPosition, (()=>{}), false);
+      }
 
       this.playerSprite.animations.play(jumpAnimName);
       tween = this.game.add.tween(this.playerSprite).to({
@@ -1535,6 +1546,12 @@ export default class LevelView {
       case "grass":
         frame = "dirt";
         break;
+      case "wool_orange":
+        frame = "wool";
+        break;
+      case "tnt":
+        frame = "gunPowder";
+        break;
       default:
         frame = blockType;
         break;
@@ -1725,7 +1742,9 @@ export default class LevelView {
         for (i = 0; i < stillFrames; ++i) {
           frameList.push("Sheep_491");
         }
-        sprite.animations.add("face", frameList, 2, true);
+        this.onAnimationStart(sprite.animations.add("face", frameList, 2, true), ()=>{
+          this.audioPlayer.play("sheep");
+        });
 
         frameList = Phaser.Animation.generateFrameNames("Sheep_", 439, 455, "", 0);
         for (i = 0; i < 3; ++i) {
@@ -1860,10 +1879,20 @@ export default class LevelView {
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
-        frameList = Phaser.Animation.generateFrameNames("LavaPop", 1, 30, "", 2);
+        frameList = Phaser.Animation.generateFrameNames("LavaPop", 1, 7, "", 2);
+        for(i = 0; i < 4; ++i) {
+          frameList.push("LavaPop07");
+        }
+        frameList = frameList.concat(Phaser.Animation.generateFrameNames("LavaPop", 8, 13, "", 2));
+        for(i = 0; i < 3; ++i) {
+          frameList.push("LavaPop13");
+        }
+        frameList = frameList.concat(Phaser.Animation.generateFrameNames("LavaPop", 14, 30, "", 2));
+        for(i = 0; i < 8; ++i) {
+          frameList.push("LavaPop01");
+        }
         sprite.animations.add("idle", frameList, 5, true);
         this.playAnimationWithOffset(sprite, "idle", 29, 1);
-        //sprite.animations.play("idle");
         break;
 
       case "fire":
@@ -1957,6 +1986,13 @@ export default class LevelView {
 
   onAnimationEnd(animation, completionHandler) {
     var signalBinding = animation.onComplete.add(() => {
+      signalBinding.detach();
+      completionHandler();
+    });
+  }
+
+  onAnimationStart(animation, completionHandler) {
+    var signalBinding = animation.onStart.add(() => {
       signalBinding.detach();
       completionHandler();
     });

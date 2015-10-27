@@ -298,9 +298,9 @@ class PhaserApp {
             case "treeOak":
              blockType = "planksOak";
             break;
-            case "logSpurce":
-            case "treeSpurce":
-              blockType = "planksOak";
+            case "logSpruce":
+            case "treeSpruce":
+              blockType = "planksSpruce";
             break;
           }
 
@@ -359,13 +359,14 @@ class PhaserApp {
   }
 
   placeBlock(commandQueueItem, blockType) {
+    var blockTypeAtPosition = this.levelModel.actionPlane[10 * this.levelModel.player.position[1] + this.levelModel.player.position[0]].blockType;
     if (this.levelModel.canPlaceBlock()) {
       if(this.checkMinecartLevelEndAnimation() && blockType == "rail") {
         blockType = this.checkRailBlock(blockType);
       }
 
       if (this.levelModel.placeBlock(blockType)) {
-        this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, () => {
+        this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, blockTypeAtPosition,  () => {
           this.levelModel.computeShadingPlane();
           this.levelModel.computeFowPlane();
           this.levelView.updateShadingPlane(this.levelModel.shadingPlane);

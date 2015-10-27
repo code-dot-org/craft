@@ -623,16 +623,16 @@ window.demoLevels = {
     playerStartDirection: 1,
 
     groundPlane: [
-      "stone", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
-      "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
       "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "lava", "obsidian", "lava", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone",
-      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "stone"
+      "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "lava", "cobblestone", "lava", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone"
     ],
 
     groundDecorationPlane: [

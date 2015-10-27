@@ -897,8 +897,8 @@ getMinecartTrack() {
 
       hasLeft = false;
       hasRight = false;
-
-      if (this.actionPlane[index].isEmpty) {
+      
+      if (this.actionPlane[index].isEmpty || this.actionPlane[index].isTransparent) {
         if (y == 0) {
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Bottom' });
         }
@@ -938,7 +938,7 @@ getMinecartTrack() {
           // needs a bottom side AO shadow
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Bottom' });
         } else if (y > 0) {
-          if (x < 9 && !this.actionPlane[((y - 1) * 10) + x + 1].getIsEmptyOrEntity()) {
+          if (x < 9 && !this.actionPlane[((y - 1) * 10) + x + 1].getIsEmptyOrEntity()&& this.actionPlane[(y * 10) + x + 1].getIsEmptyOrEntity()) {
             // needs a bottom left side AO shadow
             this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_BottomLeft' });
           }
@@ -950,7 +950,7 @@ getMinecartTrack() {
         }
 
         if (y < 9) {
-          if (x < 9 && !this.actionPlane[((y + 1) * 10) + x + 1].getIsEmptyOrEntity()) {
+          if (x < 9 && !this.actionPlane[((y + 1) * 10) + x + 1].getIsEmptyOrEntity()&& this.actionPlane[(y * 10) + x + 1].getIsEmptyOrEntity()) {
             // needs a bottom left side AO shadow
             this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_TopLeft' });
           }
