@@ -385,7 +385,9 @@ export default class LevelView {
 
       sprite = this.fluffPlane.create(0, 0, "finishOverlay");
       sprite.alpha = 0;
-      sprite.tint = 0x324bff;
+      if (this.controller.canUseTints()) {
+        sprite.tint = 0x324bff;
+      }
 
       tween = this.game.add.tween(sprite).to({
           alpha: 0.5,
@@ -407,7 +409,9 @@ export default class LevelView {
 
     sprite = this.fluffPlane.create(0, 0, "finishOverlay");
     sprite.alpha = 0;
-    sprite.tint = 0xd1580d;
+    if (this.controller.canUseTints()) {
+      sprite.tint = 0xd1580d;
+    }
 
     tween = this.game.add.tween(sprite).to({
       alpha: 0.5,
@@ -895,63 +899,65 @@ export default class LevelView {
         explodeAnim = this.actionPlane.create(-36 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
 
     //explodeAnim.tint = 0x324bff;
-    switch(blockType){
-      case "treeAcacia":
-      case "logAcacia":
-        explodeAnim.tint = 0x6c655a;
-      break;
-      case "treeBirch":
-      case "logBirch":
-        explodeAnim.tint = 0xdad6cc;
-      break;
-      case "treeJungle":
-      case "logJungle":
-        explodeAnim.tint = 0x6a4f31;
-      break;
-      case "treeOak":
-      case "logOak":
-        explodeAnim.tint = 0x675231;
-      break;
-      case "treeSpruce":
-      case "logSpruce":
-        explodeAnim.tint = 0x4b3923;
-      break;
+    if (this.controller.canUseTints()) {
+      switch (blockType) {
+        case "treeAcacia":
+        case "logAcacia":
+          explodeAnim.tint = 0x6c655a;
+          break;
+        case "treeBirch":
+        case "logBirch":
+          explodeAnim.tint = 0xdad6cc;
+          break;
+        case "treeJungle":
+        case "logJungle":
+          explodeAnim.tint = 0x6a4f31;
+          break;
+        case "treeOak":
+        case "logOak":
+          explodeAnim.tint = 0x675231;
+          break;
+        case "treeSpruce":
+        case "logSpruce":
+          explodeAnim.tint = 0x4b3923;
+          break;
 
-      case "planksAcacia":
-        explodeAnim.tint = 0xba6337;     
-      break;
-      case "planksBirch":
-        explodeAnim.tint = 0xd7cb8d;     
-      break;
-      case "planksJungle":
-        explodeAnim.tint = 0xb88764;     
-      break;
-      case "planksOak":
-        explodeAnim.tint = 0xb4905a;     
-      break;
-      case "planksSpruce":
-        explodeAnim.tint = 0x805e36;     
-      break;
-      case "stone":
-      case "oreCoal":
-      case "oreDiamond":
-      case "oreIron":
-      case "oreGold":
-      case "oreEmerald":
-      case "oreRedstone":
-        explodeAnim.tint = 0xC6C6C6;
-        break;
-      case "grass":
-      case "cropWheat":
-       explodeAnim.tint = 0x5d8f23;
-        break;
-      case "dirt":
-       explodeAnim.tint = 0x8a5e33;    
-      break;
+        case "planksAcacia":
+          explodeAnim.tint = 0xba6337;
+          break;
+        case "planksBirch":
+          explodeAnim.tint = 0xd7cb8d;
+          break;
+        case "planksJungle":
+          explodeAnim.tint = 0xb88764;
+          break;
+        case "planksOak":
+          explodeAnim.tint = 0xb4905a;
+          break;
+        case "planksSpruce":
+          explodeAnim.tint = 0x805e36;
+          break;
+        case "stone":
+        case "oreCoal":
+        case "oreDiamond":
+        case "oreIron":
+        case "oreGold":
+        case "oreEmerald":
+        case "oreRedstone":
+          explodeAnim.tint = 0xC6C6C6;
+          break;
+        case "grass":
+        case "cropWheat":
+          explodeAnim.tint = 0x5d8f23;
+          break;
+        case "dirt":
+          explodeAnim.tint = 0x8a5e33;
+          break;
 
-      default:
-        break;
-    };
+        default:
+          break;
+      }
+    }
 
     explodeAnim.sortOrder = destroyPosition[1] * 10 + 2;
     this.onAnimationEnd(explodeAnim.animations.add("explode", Phaser.Animation.generateFrameNames("BlockBreakParticle", 0, 7, "", 0), 30, false), () =>

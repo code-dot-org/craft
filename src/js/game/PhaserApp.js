@@ -329,6 +329,10 @@ class PhaserApp {
     }
   }
 
+  canUseTints() {
+    return !this.game.device.ieVersion || (this.game.device.ieVersion <= 10);
+  }
+
   checkTntAnimation() {
     return false;
   }
