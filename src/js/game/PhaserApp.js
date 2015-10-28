@@ -335,7 +335,7 @@ class PhaserApp {
   }
 
   checkTntAnimation() {
-    return false;
+    return this.specialLevelType === 'freeplay';
   }
 
   checkMinecartLevelEndAnimation() {

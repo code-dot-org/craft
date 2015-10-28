@@ -431,12 +431,14 @@ export default class LevelView {
   playDestroyTntAnimation(position, facing, isOnBlock, tntArray , newShadingPlaneData, completionHandler) {
     var block,
         lastAnimation;
+    this.audioPlayer.play("fuse");
     for(var tnt in tntArray) {
         block = this.actionPlaneBlocks[this.coordinatesToIndex(tntArray[tnt])];
         lastAnimation = block.animations.play("explode");
     }
 
     this.onAnimationEnd(lastAnimation, () => {
+      this.audioPlayer.play("explode");
       this.playSuccessAnimation(position,facing,isOnBlock,()=>{});
       completionHandler();
     });
@@ -479,6 +481,7 @@ export default class LevelView {
           this.playFailureAnimation(position, facing, false, completionHandler);
         });
       }, false);
+      this.audioPlayer.play("explode");
       this.playExplosionCloudAnimation(destroyPosition);
     });
 
@@ -486,8 +489,7 @@ export default class LevelView {
   }
 
   playExplosionCloudAnimation(position){
-    this.audioPlayer.play("explode");
-    var block = this.createBlock(this.fluffPlane, position[0], position[1], "explosion");
+    this.createBlock(this.fluffPlane, position[0], position[1], "explosion");
   }
 
 
