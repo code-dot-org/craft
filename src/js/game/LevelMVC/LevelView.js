@@ -431,6 +431,11 @@ export default class LevelView {
   playDestroyTntAnimation(position, facing, isOnBlock, tntArray , newShadingPlaneData, completionHandler) {
     var block,
         lastAnimation;
+    if (tntArray.length === 0) {
+      completionHandler();
+      return;
+    }
+
     this.audioPlayer.play("fuse");
     for(var tnt in tntArray) {
         block = this.actionPlaneBlocks[this.coordinatesToIndex(tntArray[tnt])];
