@@ -55,7 +55,7 @@ class PhaserApp {
     this.game = new Phaser.Game({
       width: GAME_WIDTH,
       height: GAME_HEIGHT,
-      renderer: Phaser.AUTO,
+      renderer: Phaser.CANVAS,
       parent: phaserAppConfig.containerId,
       state: {
         preload: this.preload.bind(this),
@@ -457,7 +457,7 @@ class PhaserApp {
       else if(this.checkTntAnimation()) {
         var tnt = this.levelModel.getTnt();
         this.levelView.playDestroyTntAnimation(player.position, player.facing, player.isOnBlock, this.levelModel.getTnt(), this.levelModel.shadingPlane,
-        () => { 
+        () => {
           for(var i in tnt) {
             this.levelModel.destroyBlock(tnt[i]);
           }
@@ -465,8 +465,10 @@ class PhaserApp {
           this.levelModel.computeFowPlane();
           this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
           this.levelView.updateFowPlane(this.levelModel.fowPlane);
-          this.delayBy(400, () => {
-            commandQueueItem.succeeded();
+          this.delayBy(200, () => {
+            this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock, () => {
+              commandQueueItem.succeeded();
+            });
           });
         });
       }

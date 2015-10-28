@@ -444,7 +444,6 @@ export default class LevelView {
 
     this.onAnimationEnd(lastAnimation, () => {
       this.audioPlayer.play("explode");
-      this.playSuccessAnimation(position,facing,isOnBlock,()=>{});
       completionHandler();
     });
   }
