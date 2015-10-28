@@ -13,6 +13,8 @@ export default class LevelView {
     this.playerGhost = null;        // The ghost is a copy of the player sprite that sits on top of everything at 20% opacity, so the player can go under trees and still be seen.
     this.selectionIndicator = null;
 
+    this.placementTween = null;
+
     this.groundPlane = null;
     this.shadingPlane = null;
     this.actionPlane = null;
@@ -282,6 +284,11 @@ export default class LevelView {
 
   reset(levelModel) {
     let player = levelModel.player;
+
+    if (this.placementTween) {
+      this.placementTween.stop(false);
+      this.placementTween = null;
+    }
 
     this.resetPlanes(levelModel);
     this.preparePlayerSprite();
@@ -740,8 +747,7 @@ export default class LevelView {
   }
 
   playPlaceBlockAnimation(position, facing, blockType, blockTypeAtPosition, completionHandler) {
-    var tween,
-        jumpAnimName;
+    var jumpAnimName;
 
     if (blockType === "cropWheat" || blockType === "torch" || blockType.substring(0, 5) === "rails") {
       this.setSelectionIndicatorPosition(position[0], position[1]);
@@ -772,11 +778,13 @@ export default class LevelView {
       }
 
       this.playerSprite.animations.play(jumpAnimName);
-      tween = this.game.add.tween(this.playerSprite).to({
+      this.placementTween = this.game.add.tween(this.playerSprite).to({
         y: (-55 + 40 * position[1])
       }, 125, Phaser.Easing.Cubic.EaseOut);
 
-      tween.onComplete.add(() => {
+      this.placementTween.onComplete.add(() => {
+        this.placementTween = null;
+
         let blockIndex = (position[1] * 10) + position[0];
         var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
 
@@ -787,7 +795,7 @@ export default class LevelView {
         this.actionPlaneBlocks[blockIndex] = sprite;
         completionHandler();
       });
-      tween.start();
+      this.placementTween.start();
     }
   }
 
