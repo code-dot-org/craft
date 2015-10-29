@@ -439,14 +439,27 @@ class PhaserApp {
       if(this.checkHouseBuiltEndAnimation()) {
         var houseBottomRight = this.levelModel.getHouseBottomRight();
         var inFrontOfDoor = [houseBottomRight[0] - 1, houseBottomRight[1] + 2];
+        var bedPosition = [houseBottomRight[0], houseBottomRight[1]];
+        var doorPosition = [houseBottomRight[0] - 1, houseBottomRight[1] + 1];
         this.levelModel.moveTo(inFrontOfDoor);
         this.levelView.playSuccessHouseBuiltAnimation(
             player.position,
             player.facing,
             player.isOnBlock,
             this.levelModel.houseGroundToFloorBlocks(houseBottomRight),
-            houseBottomRight,
-            () => { commandQueueItem.succeeded(); }
+            [bedPosition, doorPosition],
+            () => {
+              commandQueueItem.succeeded();
+            }
+            ,
+            () => {
+              this.levelModel.destroyBlock(bedPosition);
+              this.levelModel.destroyBlock(doorPosition);
+              this.levelModel.computeShadingPlane();
+              this.levelModel.computeFowPlane();
+              this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
+              this.levelView.updateFowPlane(this.levelModel.fowPlane);
+            }
         );
       }
       else if(this.checkMinecartLevelEndAnimation())
