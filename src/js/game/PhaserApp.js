@@ -315,7 +315,11 @@ class PhaserApp {
                 commandQueueItem.succeeded();
               });
               break;
+            default:
+              commandQueueItem.succeeded();
           }
+        } else {
+          commandQueueItem.succeeded();
         }
       }
     } else {
