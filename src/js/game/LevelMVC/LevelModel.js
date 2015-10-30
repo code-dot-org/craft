@@ -58,7 +58,10 @@ export default class LevelModel {
 
     for (index = 0; index < planeData.length; ++index) {
       block = new LevelBlock(planeData[index]);
-      block.isWalkable = !isActionPlane || planeData[index] === "";
+      // TODO: duplicated logic in the LevelBlock constructor?
+      block.isWalkable = !isActionPlane ||
+          planeData[index] === "" ||
+          planeData[index] === "torch";
       block.isPlacable = (isActionPlane && block.isEmpty) ||
           (block.blockType === "lava" || block.blockType === "water");
       block.isUsable = isActionPlane && !block.isEmpty;
