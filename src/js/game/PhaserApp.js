@@ -330,8 +330,9 @@ class PhaserApp {
   }
 
   canUseTints() {
-    var isIELessThan10 = this.game.device.ieVersion && this.game.device.ieVersion <= 10;
-    return !isIELessThan10;
+    return true; // testing with new version of Phaser
+    //var isIELessThan10 = this.game.device.ieVersion && this.game.device.ieVersion <= 10;
+    //return !isIELessThan10;
   }
 
   checkTntAnimation() {
