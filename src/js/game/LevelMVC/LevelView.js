@@ -610,7 +610,7 @@ export default class LevelView {
     sprite.sortOrder = 6 * 10;
   }
 
-  playSuccessHouseBuiltAnimation(position, facing, isOnBlock, createFloor, houseBottomRightPosition, completionHandler) {
+  playSuccessHouseBuiltAnimation(position, facing, isOnBlock, createFloor, houseObjectPositions, completionHandler, updateScreen) {
     //fade screen to white
     //Add house blocks
     //fade out of white
@@ -636,9 +636,10 @@ export default class LevelView {
         sprite.sortOrder = yCoord * 10;
       }
 
-      this.addHouseBed([houseBottomRightPosition[0], houseBottomRightPosition[1]]);
-      this.addDoor([houseBottomRightPosition[0] - 1, houseBottomRightPosition[1] + 1]);
+      this.addHouseBed(houseObjectPositions[0]);
+      this.addDoor(houseObjectPositions[1]);
       this.groundPlane.sort('sortOrder');
+      updateScreen();
     });
   }
 
