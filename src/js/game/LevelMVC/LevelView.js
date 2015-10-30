@@ -374,7 +374,7 @@ export default class LevelView {
     this.controller.delayBy(500, () => {
       this.audioPlayer.play("failure");
       this.onAnimationEnd(this.playPlayerAnimation("fail", position, facing, isOnBlock), () => {
-        this.controller.delayBy(2400, completionHandler);
+        this.controller.delayBy(1400, completionHandler);
       });
     });
   }
