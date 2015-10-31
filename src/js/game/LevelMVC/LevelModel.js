@@ -61,7 +61,8 @@ export default class LevelModel {
       // TODO(bjordan) duplicated logic in the LevelBlock constructor?
       block.isWalkable = !isActionPlane ||
           planeData[index] === "" ||
-          planeData[index] === "torch";
+          planeData[index] === "torch" ||
+          planeData[index] === "railsRedstoneTorch";
       block.isPlacable = (isActionPlane && block.isEmpty) ||
           (block.blockType === "lava" || block.blockType === "water");
       block.isUsable = isActionPlane && !block.isEmpty;
