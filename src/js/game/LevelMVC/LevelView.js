@@ -1549,6 +1549,9 @@ export default class LevelView {
       case "oreIron":
         frame = "ingotIron";
         break;
+      case "oreLapis":
+        frame = "lapisLazuli";
+        break;
       case "oreGold":
         frame = "ingotGold";
         break;
