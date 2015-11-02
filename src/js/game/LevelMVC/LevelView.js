@@ -1252,14 +1252,47 @@ export default class LevelView {
   generatePlayerCelebrateFrames() {
     var frameList = [],
         i;
-    //Crouch
-    frameList = Phaser.Animation.generateFrameNames("Player_", 29, 32, "", 3);
-    //Crouch
-    frameList = frameList.concat(frameList);
+
+    //Crouch Down
+   /* frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 29, 32, "", 3));
+    //Crouch Down
+    frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 29, 32, "", 3));
+    //turn and pause
+    for (i = 0; i < 4; ++i) {
+    frameList = frameList.concat("Player_061");
+    }   
+    for (i = 0; i < 2; ++i) {
+    frameList = frameList.concat("Player_149");
+    }    
+        //Crouch Up
+    frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3));
+    //Crouch Up
+    frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3));*/
+
+
+///////////////////////////Alternative Animation/////////////////////
+    //Face Down
+     for (i = 0; i < 6; ++i) {
+      frameList.push("Player_001");
+    }
+    //Crouch Left
+    frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 209, 212, "", 3));
+    //Crouch Left
+    frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 209, 212, "", 3));   
+    //Crouch Right
+    frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 89, 92, "", 3));
+    //Crouch Right
+    frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 89, 92, "", 3));
+    //Face Down (for pause)
+     for (i = 0; i < 3; ++i) {
+      frameList.push("Player_001");
+    }
+//////////////////////////////////////////////////////////////////
+
     //Jump success
-    frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 285, 296, "", 3));
+    /*frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 285, 296, "", 3));
     //frolick celebrate
-    frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 37, 44, "", 3));
+    frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 37, 44, "", 3));*/
     //look at cam
     frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 263, 262, "", 3));
     for (i = 0; i < 50; ++i) {
@@ -1343,7 +1376,7 @@ export default class LevelView {
     this.playerSprite.animations.add('crouch_down', Phaser.Animation.generateFrameNames("Player_", 29, 32, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpUp_down', Phaser.Animation.generateFrameNames("Player_", 33, 36, "", 3), frameRate / 2, true);
     this.playerSprite.animations.add('fail_down', Phaser.Animation.generateFrameNames("Player_", 45, 48, "", 3), frameRate, false);
-    this.playerSprite.animations.add('celebrate_down', this.generatePlayerCelebrateFrames(), frameRate / 2, true);
+    this.playerSprite.animations.add('celebrate_down', this.generatePlayerCelebrateFrames(), frameRate / 2, false);
     this.playerSprite.animations.add('bump_down', Phaser.Animation.generateFrameNames("Player_", 49, 54, "", 3), frameRate, false).onStart.add(() => {
       this.audioPlayer.play("bump");
     });;
@@ -1401,7 +1434,7 @@ export default class LevelView {
     this.playerSprite.animations.add('crouch_right', Phaser.Animation.generateFrameNames("Player_", 89, 92, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpUp_right', Phaser.Animation.generateFrameNames("Player_", 93, 96, "", 3), frameRate / 2, true);
     this.playerSprite.animations.add('fail_right', Phaser.Animation.generateFrameNames("Player_", 105, 108, "", 3), frameRate / 2, false);
-    this.playerSprite.animations.add('celebrate_right', this.generatePlayerCelebrateFrames(), frameRate / 2, true);
+    this.playerSprite.animations.add('celebrate_right', this.generatePlayerCelebrateFrames(), frameRate / 2, false);
     this.playerSprite.animations.add('bump_right', Phaser.Animation.generateFrameNames("Player_", 109, 114, "", 3), frameRate, false).onStart.add(() => {
       this.audioPlayer.play("bump");
     });;
@@ -1457,7 +1490,7 @@ export default class LevelView {
     this.playerSprite.animations.add('crouch_left', Phaser.Animation.generateFrameNames("Player_", 209, 212, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpUp_left', Phaser.Animation.generateFrameNames("Player_", 213, 216, "", 3), frameRate / 2, true);
     this.playerSprite.animations.add('fail_left', Phaser.Animation.generateFrameNames("Player_", 225, 228, "", 3), frameRate / 2, false);
-    this.playerSprite.animations.add('celebrate_left', this.generatePlayerCelebrateFrames(), frameRate / 2, true);
+    this.playerSprite.animations.add('celebrate_left', this.generatePlayerCelebrateFrames(), frameRate / 2, false);
     this.playerSprite.animations.add('bump_left', Phaser.Animation.generateFrameNames("Player_", 229, 234, "", 3), frameRate, false).onStart.add(() => {
       this.audioPlayer.play("bump");
     });;
@@ -1512,7 +1545,7 @@ export default class LevelView {
     this.playerSprite.animations.add('crouch_up', Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3), frameRate, true);
     this.playerSprite.animations.add('jumpUp_up', Phaser.Animation.generateFrameNames("Player_", 153, 156, "", 3), frameRate / 2, true);
     this.playerSprite.animations.add('fail_up', Phaser.Animation.generateFrameNames("Player_", 165, 168, "", 3), frameRate / 2, false);
-    this.playerSprite.animations.add('celebrate_up', this.generatePlayerCelebrateFrames(), frameRate / 2, true);
+    this.playerSprite.animations.add('celebrate_up', this.generatePlayerCelebrateFrames(), frameRate / 2, false);
     this.playerSprite.animations.add('bump_up', Phaser.Animation.generateFrameNames("Player_", 169, 174, "", 3), frameRate, false).onStart.add(() => {
       this.audioPlayer.play("bump");
     });
