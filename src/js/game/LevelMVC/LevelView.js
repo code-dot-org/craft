@@ -842,14 +842,14 @@ export default class LevelView {
     });
   }
 
-  playDestroyBlockAnimation(playerPosition, facing, destroyPosition, blockType, newShadingPlaneData, completionHandler) {
+  playDestroyBlockAnimation(playerPosition, facing, destroyPosition, blockType, newShadingPlaneData, newFowPlaneData, completionHandler) {
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
 
     var playerAnimation =
         blockType.match(/(ore|stone|clay|bricks|bedrock)/) ? "mine" : "punchDestroy";
     this.playPlayerAnimation(playerAnimation, playerPosition, facing, false);
     this.playMiningParticlesAnimation(facing, destroyPosition);
-    this.playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, newShadingPlaneData, completionHandler);
+    this.playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, newShadingPlaneData, newFowPlaneData, completionHandler);
   }
 
 
@@ -868,7 +868,7 @@ export default class LevelView {
     });
   }
 
-  playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, newShadingPlaneData, completionHandler) {
+  playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, newShadingPlaneData, newFowPlaneData, completionHandler) {
     let blockIndex = (destroyPosition[1] * 10) + destroyPosition[0];
     let blockToDestroy = this.actionPlaneBlocks[blockIndex];
     let direction = this.getDirectionName(facing);
@@ -888,6 +888,7 @@ export default class LevelView {
       this.toDestroy.push(blockToDestroy);
       this.toDestroy.push(destroyOverlay);
       this.updateShadingPlane(newShadingPlaneData);
+      this.updateFowPlane(newFowPlaneData);
 
       this.setSelectionIndicatorPosition(playerPosition[0], playerPosition[1]);
 
