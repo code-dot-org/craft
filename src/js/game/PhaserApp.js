@@ -99,6 +99,7 @@ class PhaserApp {
     this.resettableTimers.forEach((timer) => {
       timer.stop(true);
     });
+    this.resettableTimers.length = 0;
   }
 
   preload() {

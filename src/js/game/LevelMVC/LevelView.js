@@ -13,8 +13,6 @@ export default class LevelView {
     this.playerGhost = null;        // The ghost is a copy of the player sprite that sits on top of everything at 20% opacity, so the player can go under trees and still be seen.
     this.selectionIndicator = null;
 
-    this.placementTween = null;
-
     this.groundPlane = null;
     this.shadingPlane = null;
     this.actionPlane = null;
@@ -131,6 +129,7 @@ export default class LevelView {
 
     this.actionPlaneBlocks = [];
     this.toDestroy = [];
+    this.resettableTweens = [];
   }
 
   preload(playerAtlas) {
@@ -285,13 +284,15 @@ export default class LevelView {
   reset(levelModel) {
     let player = levelModel.player;
 
-    if (this.placementTween) {
-      this.placementTween.stop(false);
-      this.placementTween = null;
-    }
+    this.resettableTweens.forEach((tween) => {
+      tween.stop(false);
+    });
+    this.resettableTweens.length = 0;
 
     this.resetPlanes(levelModel);
     this.preparePlayerSprite();
+    this.playerSprite.animations.stop();
+    this.playerSprite.tweens
     this.updateShadingPlane(levelModel.shadingPlane);
     this.updateFowPlane(levelModel.fowPlane);
     this.setPlayerPosition(player.position[0], player.position[1], player.isOnBlock);
@@ -400,7 +401,7 @@ export default class LevelView {
         sprite.tint = 0x324bff;
       }
 
-      tween = this.game.add.tween(sprite).to({
+      tween = this.addResettableTween(sprite).to({
           alpha: 0.5,
       }, 200, Phaser.Easing.Linear.None);
 
@@ -424,7 +425,7 @@ export default class LevelView {
       sprite.tint = 0xd1580d;
     }
 
-    tween = this.game.add.tween(sprite).to({
+    tween = this.addResettableTween(sprite).to({
       alpha: 0.5,
     }, 200, Phaser.Easing.Linear.None);
 
@@ -520,7 +521,7 @@ export default class LevelView {
     //if we loop the sfx that might be better?
     this.audioPlayer.play("minecart");
     this.playPlayerAnimation("mineCart",position, facing, false);
-    tween = this.game.add.tween(this.playerSprite).to({
+    tween = this.addResettableTween(this.playerSprite).to({
       x: (-18 + 40 * nextPosition[0]),
       y: (-32 + 40 * nextPosition[1]),
     }, speed, Phaser.Easing.Linear.None);
@@ -673,7 +674,7 @@ export default class LevelView {
   tweenFromWhiteToClear(sprite) {
     var tweenWhiteToClear;
 
-    tweenWhiteToClear = this.game.add.tween(sprite).to({
+    tweenWhiteToClear = this.addResettableTween(sprite).to({
       alpha: 0.0,
     }, 700, Phaser.Easing.Linear.None);
     return tweenWhiteToClear;
@@ -682,7 +683,7 @@ export default class LevelView {
   tweenToWhite(sprite){
     var tweenToWhite;
 
-    tweenToWhite = this.game.add.tween(sprite).to({
+    tweenToWhite = this.addResettableTween(sprite).to({
       alpha: 1.0,
     }, 300, Phaser.Easing.Linear.None);
     return tweenToWhite;
@@ -719,14 +720,14 @@ export default class LevelView {
     if (!shouldJumpDown) {
       animName = "walk" + direction;
       this.playScaledSpeed(this.playerSprite.animations, animName);
-      tween = this.game.add.tween(this.playerSprite).to({
+      tween = this.addResettableTween(this.playerSprite).to({
         x: (-18 + 40 * position[0]),
         y: (yOffset + 40 * position[1])
       }, 200, Phaser.Easing.Linear.None);
     } else {
       animName = "jumpDown" + direction;
       this.playScaledSpeed(this.playerSprite.animations, animName);
-      tween = this.game.add.tween(this.playerSprite).to({
+      tween = this.addResettableTween(this.playerSprite).to({
         x: [-18 + 40 * oldPosition[0], -18 + 40 * (oldPosition[0] + newPosVec[0]), -18 + 40 * position[0]],
         y: [-32 + 40 * oldPosition[1], -32 + 40 * (oldPosition[1] + newPosVec[1]) - 50, -32 + 40 * position[1]]
       }, 300, Phaser.Easing.Linear.None).interpolation((v,k) => {
@@ -779,12 +780,12 @@ export default class LevelView {
       }
 
       this.playScaledSpeed(this.playerSprite.animations, jumpAnimName);
-      this.placementTween = this.game.add.tween(this.playerSprite).to({
+      var placementTween = this.addResettableTween(this.playerSprite).to({
         y: (-55 + 40 * position[1])
       }, 125, Phaser.Easing.Cubic.EaseOut);
 
-      this.placementTween.onComplete.add(() => {
-        this.placementTween = null;
+      placementTween.onComplete.add(() => {
+        placementTween = null;
 
         let blockIndex = (position[1] * 10) + position[0];
         var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
@@ -796,7 +797,7 @@ export default class LevelView {
         this.actionPlaneBlocks[blockIndex] = sprite;
         completionHandler();
       });
-      this.placementTween.start();
+      placementTween.start();
     }
   }
 
@@ -1022,7 +1023,7 @@ export default class LevelView {
   playItemAcquireAnimation(playerPosition, facing, destroyPosition, blockType, sprite, completionHandler) {
     var tween;
 
-    tween = this.game.add.tween(sprite).to({
+    tween = this.addResettableTween(sprite).to({
       x: (-18 + 40 * playerPosition[0]),
       y: (-32 + 40 * playerPosition[1])
     }, 200, Phaser.Easing.Linear.None);
@@ -2061,6 +2062,12 @@ export default class LevelView {
       signalBinding.detach();
       completionHandler();
     });
+  }
+
+  addResettableTween(sprite) {
+    var tween = this.game.add.tween(sprite);
+    this.resettableTweens.push(tween);
+    return tween;
   }
 
 }
