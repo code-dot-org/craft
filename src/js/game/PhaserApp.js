@@ -63,6 +63,7 @@ class PhaserApp {
         update: this.update.bind(this),
         render: this.render.bind(this)
       },
+      // TODO(bjordan): remove now that using canvas?
       preserveDrawingBuffer: true // enables saving .png screengrabs
     });
 
@@ -74,7 +75,11 @@ class PhaserApp {
 
     this.audioPlayer = phaserAppConfig.audioPlayer;
 
+
     this.resettableTimers = [];
+
+    this.assumedSlowMotion = 1.5; // slow motion we
+    this.initialSlowMotion = phaserAppConfig.customSlowMotion || this.assumedSlowMotion;
   }
 
   /**
@@ -104,7 +109,7 @@ class PhaserApp {
 
   create() {
     this.levelView.create(this.levelModel);
-    this.game.time.slowMotion = 1.5;
+    this.game.time.slowMotion = this.initialSlowMotion;
     this.addCheatKeys();
   }
 
@@ -403,9 +408,19 @@ class PhaserApp {
 
   delayBy(ms, completionHandler) {
     var timer = this.game.time.create(true);
-    timer.add(ms, completionHandler, this);
+    timer.add(this.originalMsToScaled(ms), completionHandler, this);
     timer.start();
     this.resettableTimers.push(timer);
+  }
+
+  originalMsToScaled(ms) {
+    var realMs = ms / this.assumedSlowMotion;
+    return realMs * this.game.time.slowMotion;
+  }
+
+  originalFpsToScaled(fps) {
+    var realFps = fps * this.assumedSlowMotion;
+    return realFps / this.game.time.slowMotion;
   }
 
   placeBlockForward(commandQueueItem, blockType) {

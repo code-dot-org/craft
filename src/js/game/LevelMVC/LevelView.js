@@ -347,7 +347,7 @@ export default class LevelView {
     let direction = this.getDirectionName(facing);
 
     this.setSelectionIndicatorPosition(position[0], position[1]);
-    this.playerSprite.animations.play("idle" + direction);
+    this.playScaledSpeed(this.playerSprite.animations, "idle" + direction);
   }
 
   playPlayerAnimation(animationName, position, facing, isOnBlock) {
@@ -355,7 +355,7 @@ export default class LevelView {
     this.playerSprite.sortOrder = position[1] * 10 + 5;
 
     let animName = animationName + direction;
-    return this.playerSprite.animations.play(animName);
+    return this.playScaledSpeed(this.playerSprite.animations, animName);
   }
 
   playIdleAnimation(position, facing, isOnBlock) {
@@ -446,7 +446,7 @@ export default class LevelView {
     this.audioPlayer.play("fuse");
     for(var tnt in tntArray) {
         block = this.actionPlaneBlocks[this.coordinatesToIndex(tntArray[tnt])];
-        lastAnimation = block.animations.play("explode");
+        lastAnimation = this.playScaledSpeed(block.animations, "explode");
     }
 
     this.onAnimationEnd(lastAnimation, () => {
@@ -718,14 +718,14 @@ export default class LevelView {
 
     if (!shouldJumpDown) {
       animName = "walk" + direction;
-      this.playerSprite.animations.play(animName);
+      this.playScaledSpeed(this.playerSprite.animations, animName);
       tween = this.game.add.tween(this.playerSprite).to({
         x: (-18 + 40 * position[0]),
         y: (yOffset + 40 * position[1])
       }, 200, Phaser.Easing.Linear.None);
     } else {
       animName = "jumpDown" + direction;
-      this.playerSprite.animations.play(animName);
+      this.playScaledSpeed(this.playerSprite.animations, animName);
       tween = this.game.add.tween(this.playerSprite).to({
         x: [-18 + 40 * oldPosition[0], -18 + 40 * (oldPosition[0] + newPosVec[0]), -18 + 40 * position[0]],
         y: [-32 + 40 * oldPosition[1], -32 + 40 * (oldPosition[1] + newPosVec[1]) - 50, -32 + 40 * position[1]]
@@ -778,7 +778,7 @@ export default class LevelView {
         this.playExplosionAnimation(position, facing, position, blockTypeAtPosition, (()=>{}), false);
       }
 
-      this.playerSprite.animations.play(jumpAnimName);
+      this.playScaledSpeed(this.playerSprite.animations, jumpAnimName);
       this.placementTween = this.game.add.tween(this.playerSprite).to({
         y: (-55 + 40 * position[1])
       }, 125, Phaser.Easing.Cubic.EaseOut);
@@ -834,8 +834,8 @@ export default class LevelView {
       let blockToShear = this.actionPlaneBlocks[blockIndex];
 
       blockToShear.animations.stop(null, true);
-      this.onAnimationLoopOnce(blockToShear.animations.play("used"), () => {
-        blockToShear.animations.play("face");
+      this.onAnimationLoopOnce(this.playScaledSpeed(blockToShear.animations, "used"), () => {
+        this.playScaledSpeed(blockToShear.animations, "face");
       });
 
       this.playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, true);
@@ -896,7 +896,7 @@ export default class LevelView {
       this.playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, true);
     });
 
-    destroyOverlay.animations.play("destroy");
+    this.playScaledSpeed(destroyOverlay.animations, "destroy");
   }
 
   playMiningParticlesAnimation(facing, destroyPosition) {
@@ -918,7 +918,7 @@ export default class LevelView {
       miningParticles.kill();
       this.toDestroy.push(miningParticles);
     });
-    miningParticles.animations.play("miningParticles");
+    this.playScaledSpeed(miningParticles.animations, "miningParticles");
   }
 
   playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, placeBlock) {
@@ -998,7 +998,7 @@ export default class LevelView {
         this.playItemDropAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler);
       }
     });
-    explodeAnim.animations.play("explode");
+    this.playScaledSpeed(explodeAnim.animations, "explode");
     if(!placeBlock)
     {
       completionHandler();
@@ -1008,9 +1008,15 @@ export default class LevelView {
   playItemDropAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
     var sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
     sprite.sortOrder = destroyPosition[1] * 10 + 2;
-    this.onAnimationEnd(sprite.animations.play("animate"), () => {
+    this.onAnimationEnd(this.playScaledSpeed(sprite.animations, "animate"), () => {
       this.playItemAcquireAnimation(playerPosition, facing, destroyPosition, blockType, sprite, completionHandler);
     });
+  }
+
+  playScaledSpeed(animationManager, name) {
+    var animation = animationManager.getAnimation(name);
+    var animationFrameRate = 1000 / animation.delay;
+    return animationManager.play(name, this.controller.originalFpsToScaled(animationFrameRate));
   }
 
   playItemAcquireAnimation(playerPosition, facing, destroyPosition, blockType, sprite, completionHandler) {
@@ -1247,7 +1253,7 @@ export default class LevelView {
     };
 
     animationName += facingName;
-    this.playerSprite.animations.play(animationName);
+    this.playScaledSpeed(this.playerSprite.animations, animationName);
   }
 
   generatePlayerCelebrateFrames() {
@@ -1347,17 +1353,17 @@ export default class LevelView {
     frameList = this.generateFramesWithEndDelay("Player_", 6, 5, "Player_005", 3, 5);
     frameList.push("Player_006");
     this.playerSprite.animations.add('lookLeft_down', frameList, idleFrameRate, false).onComplete.add(()=> {
-      this.playerSprite.animations.play("idlePause_down");
+      this.playScaledSpeed(this.playerSprite.animations, "idlePause_down");
     });
     frameList = this.generateFramesWithEndDelay("Player_", 12, 11, "Player_011", 3, 5);
     frameList.push("Player_012");
     this.playerSprite.animations.add('lookRight_down', frameList, idleFrameRate, false).onComplete.add(()=> {
-      this.playerSprite.animations.play("idlePause_down");
+      this.playScaledSpeed(this.playerSprite.animations, "idlePause_down");
     });
     frameList = this.generateFramesWithEndDelay("Player_", 263, 262, "Player_262", 3, 5);
     frameList.push("Player_263");
     this.playerSprite.animations.add('lookAtCam_down', frameList, idleFrameRate, false).onComplete.add(()=> {
-      this.playerSprite.animations.play("idlePause_down");
+      this.playScaledSpeed(this.playerSprite.animations, "idlePause_down");
     });
     frameList = [];
     for (i = 0; i < 13; ++i) {
@@ -1405,17 +1411,17 @@ export default class LevelView {
     frameList = this.generateFramesWithEndDelay("Player_", 66, 65, "Player_065", 3, 5);
     frameList.push("Player_066");
     this.playerSprite.animations.add('lookLeft_right', frameList, idleFrameRate, false).onComplete.add(()=> {
-      this.playerSprite.animations.play("idlePause_right");
+      this.playScaledSpeed(this.playerSprite.animations, "idlePause_right");
     });
     frameList = this.generateFramesWithEndDelay("Player_", 72, 71, "Player_071", 3, 5);
     frameList.push("Player_072");
     this.playerSprite.animations.add('lookRight_right',frameList, idleFrameRate, false).onComplete.add(()=> {
-      this.playerSprite.animations.play("idlePause_right");
+      this.playScaledSpeed(this.playerSprite.animations, "idlePause_right");
     });
     frameList = this.generateFramesWithEndDelay("Player_", 270, 269, "Player_269", 3, 5);
     frameList.push("Player_270");
     this.playerSprite.animations.add('lookAtCam_right', frameList, idleFrameRate, false).onComplete.add(()=> {
-      this.playerSprite.animations.play("idlePause_right");
+      this.playScaledSpeed(this.playerSprite.animations, "idlePause_right");
     });
     frameList = [];
     for (i = 0; i < 13; ++i) {
@@ -1461,17 +1467,17 @@ export default class LevelView {
     frameList = this.generateFramesWithEndDelay("Player_", 186, 185, "Player_185", 3, 5);
     frameList.push("Player_186");
     this.playerSprite.animations.add('lookLeft_left', frameList, idleFrameRate, false).onComplete.add(()=> {
-     this.playerSprite.animations.play("idlePause_left");
+     this.playScaledSpeed(this.playerSprite.animations, "idlePause_left");
     });
     frameList = this.generateFramesWithEndDelay("Player_", 192, 191, "Player_191", 3, 5);
     frameList.push("Player_192");
     this.playerSprite.animations.add('lookRight_left', frameList, idleFrameRate, false).onComplete.add(()=> {
-      this.playerSprite.animations.play("idlePause_left");
+      this.playScaledSpeed(this.playerSprite.animations, "idlePause_left");
     });
     frameList = this.generateFramesWithEndDelay("Player_", 284, 283, "Player_283", 3, 5);
     frameList.push("Player_284");
     this.playerSprite.animations.add('lookAtCam_left', frameList, idleFrameRate, false).onComplete.add(()=> {
-      this.playerSprite.animations.play("idlePause_left");
+      this.playScaledSpeed(this.playerSprite.animations, "idlePause_left");
     });
     frameList = [];
     for (i = 0; i < 13; ++i) {
@@ -1516,17 +1522,17 @@ export default class LevelView {
     frameList = this.generateFramesWithEndDelay("Player_", 126, 125, "Player_125", 3, 5);
     frameList.push("Player_126");
     this.playerSprite.animations.add('lookLeft_up', frameList, idleFrameRate, false).onComplete.add(()=> {
-      this.playerSprite.animations.play("idlePause_up");
+      this.playScaledSpeed(this.playerSprite.animations, "idlePause_up");
     });
     frameList = this.generateFramesWithEndDelay("Player_", 132, 131, "Player_131", 3, 5);
     frameList.push("Player_132");
     this.playerSprite.animations.add('lookRight_up', frameList, idleFrameRate, false).onComplete.add(()=> {
-      this.playerSprite.animations.play("idlePause_up");
+      this.playScaledSpeed(this.playerSprite.animations, "idlePause_up");
     });
     frameList = this.generateFramesWithEndDelay("Player_", 277, 276, "Player_276", 3, 5);
     frameList.push("Player_277");
     this.playerSprite.animations.add('lookAtCam_up', frameList, idleFrameRate, false).onComplete.add(()=> {
-      this.playerSprite.animations.play("idlePause_up");
+      this.playScaledSpeed(this.playerSprite.animations, "idlePause_up");
     });
 
     frameList = [];
@@ -1625,7 +1631,7 @@ export default class LevelView {
 
   playAnimationWithOffset(sprite, animationName, animationFrameTotal, startFrame){
     var rand = Math.trunc(Math.random() * animationFrameTotal) + startFrame;
-    sprite.animations.play(animationName).setFrame(rand, true);
+    this.playScaledSpeed(sprite.animations, animationName).setFrame(rand, true);
   }
 
   playRandomSheepAnimation(sprite) {
@@ -1728,7 +1734,7 @@ export default class LevelView {
             logSprite.fluff.kill();
           });
 
-          logSprite.fluff.animations.play("despawn");
+          this.playScaledSpeed(logSprite.fluff.animations, "despawn");
         };
         break;
 
@@ -1876,7 +1882,7 @@ export default class LevelView {
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Wheat", 0, 2, "", 0);
         sprite.animations.add("idle", frameList, .4, false);
-        sprite.animations.play("idle");
+        this.playScaledSpeed(sprite.animations, "idle");
         break;
 
       case "torch":
@@ -1887,7 +1893,7 @@ export default class LevelView {
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Torch", 0, 23, "", 0);
         sprite.animations.add("idle", frameList, 15, true);
-        sprite.animations.play("idle");
+        this.playScaledSpeed(sprite.animations, "idle");
         break;
 
       case "water":
@@ -1898,7 +1904,7 @@ export default class LevelView {
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Water_", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
-        sprite.animations.play("idle");
+        this.playScaledSpeed(sprite.animations, "idle");
         break;
 
       //for placing wetland for crops in free play
@@ -1922,7 +1928,7 @@ export default class LevelView {
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Lava_", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
-        sprite.animations.play("idle");
+        this.playScaledSpeed(sprite.animations, "idle");
         break;
 
       case "lavaPop":
@@ -1955,7 +1961,7 @@ export default class LevelView {
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Fire", 0, 14, "", 2);
         sprite.animations.add("idle", frameList, 5, true);
-        sprite.animations.play("idle");
+        this.playScaledSpeed(sprite.animations, "idle");
         break;
 
       case "bubbles":
@@ -1966,7 +1972,7 @@ export default class LevelView {
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Bubbles", 0, 14, "", 2);
         sprite.animations.add("idle", frameList, 5, true);
-        sprite.animations.play("idle");
+        this.playScaledSpeed(sprite.animations, "idle");
         break;
 
       case "explosion":
@@ -1980,7 +1986,7 @@ export default class LevelView {
           this.toDestroy.push(sprite);
           sprite.kill();
         });
-        sprite.animations.play("idle");
+        this.playScaledSpeed(sprite.animations, "idle");
         break;
 
       case "door":
@@ -2006,7 +2012,7 @@ export default class LevelView {
             this.audioPlayer.play("doorOpen");
           }
         })
-        sprite.animations.play("open");
+        this.playScaledSpeed(sprite.animations, "open");
         break;
 
       case "tnt":
