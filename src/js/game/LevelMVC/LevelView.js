@@ -366,7 +366,7 @@ export default class LevelView {
     this.controller.delayBy(250, () => {
       this.audioPlayer.play("success");
       this.playPlayerAnimation("celebrate", position, facing, isOnBlock);
-      this.controller.delayBy(1100, completionHandler);
+      this.controller.delayBy(2950, completionHandler);
     });
   }
 
@@ -587,7 +587,7 @@ export default class LevelView {
     }
     else
     {
-      this.playSuccessAnimation(position, facing, isOnBlock, completionHandler)
+      this.playSuccessAnimation(position, facing, isOnBlock, function(){});
       completionHandler();
     }
   }
