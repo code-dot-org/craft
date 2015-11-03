@@ -692,76 +692,88 @@ getMinecartTrack() {
       //top right
       if(!rightQuad &&angle > 32.5 && angle <= 57.5) {
         topRightQuad = true;
-        this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_InCorner_TopRight" };
+        this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_InCorner_TopRight", precedence: 0 });
       }//top left
       if(!leftQuad &&angle > 122.5 && angle <= 147.5) {
         topLeftQuad = true;
-        this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_InCorner_TopLeft"};
+        this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_InCorner_TopLeft", precedence: 0});
       }//bot left
       if(!leftQuad &&angle > 212.5 && angle <= 237.5) {
         botLeftQuad = true;
-        this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_InCorner_BottomLeft"};
+        this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_InCorner_BottomLeft", precedence: 0});
       }//botright
       if(!rightQuad && angle > 302.5 && angle <= 317.5) {
         botRightQuad = true;
-        this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_InCorner_BottomRight"};
+        this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_InCorner_BottomRight", precedence: 0});
       }
       //right
       if(angle >= 327.5 || angle <= 32.5) {
         rightQuad = true;
-        this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Right" };
+        this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Right" , precedence: 1});
       }//bot
       if(angle > 237.5 && angle <= 302.5) {
         botQuad = true;
-        this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Bottom"};
+        this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Bottom", precedence: 1});
       }
       //left
       if(angle > 147.5 && angle <= 212.5) {
         leftQuad = true;
-        this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Left"};
+        this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Left", precedence: 1});
       }
       //top
       if(angle > 57.5 && angle <= 122.5) {
         topQuad = true;
-        this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Top"};
+        this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Top", precedence: 1});
       }
     }
 
     if(topLeftQuad && botLeftQuad) {
-      this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Left"};
+      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Left", precedence: 1});
     }
     if(topRightQuad && botRightQuad) {
-      this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Right"};
+      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Right", precedence: 1});
     }
     if(topLeftQuad && topRightQuad) {
-      this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Top"};
+      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Top", precedence: 1});
     }
     if(botRightQuad && botLeftQuad) {
-      this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Bottom"};
+      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Bottom", precedence: 1});
     }
 
-    //fully lit 
-    if( (botRightQuad && topLeftQuad) || (botLeftQuad && topRightQuad) || leftQuad && rightQuad || topQuad && botQuad || (rightQuad && botQuad && topLeftQuad) 
-          || (botQuad && topRightQuad && topLeftQuad) || (topQuad && botRightQuad && botLeftQuad) || (leftQuad && topRightQuad && botRightQuad) || (leftQuad && botQuad && topRightQuad)) {//((botRightQuad && (leftQuad) && (topLeftQuad || topRightQuad))) {
+    //fully lit
+    if( (botRightQuad && topLeftQuad) || (botLeftQuad && topRightQuad) || leftQuad && rightQuad || topQuad && botQuad || (rightQuad && botQuad && topLeftQuad)
+          || (botQuad && topRightQuad && topLeftQuad) || (topQuad && botRightQuad && botLeftQuad) || (leftQuad && topRightQuad && botRightQuad) || (leftQuad && botQuad && topRightQuad)) {
       this.fowPlane[index] = "";
     }
 
     //darkend botleft corner
-    else if( (botQuad && leftQuad) || (botQuad && topLeftQuad) || (leftQuad && botRightQuad) ){// || (leftQuad || topLeftQuad || botLeftQuad) && ( botQuad || botRightQuad)) {//(rightQuad && (topRightQuad || botRightQuad)) {//(!botLeftQuad && !leftQuad && !botQuad && ((topLeftQuad || topQuad) && (botRightQuad) && (rightQuad || topRightQuad))) {
-      this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Bottom_Left"};
-    } 
+    else if( (botQuad && leftQuad) || (botQuad && topLeftQuad) || (leftQuad && botRightQuad) ){
+      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Bottom_Left", precedence: 2});
+    }
     //darkend botRight corner
-    else if((botQuad && rightQuad) || (botQuad && topRightQuad) || (rightQuad && botLeftQuad)) {//(!botRightQuad && !rightQuad && !botQuad && ((topLeftQuad || topQuad) && (botLeftQuad) && (leftQuad || topRightQuad))) {
-      this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Bottom_Right"};
+    else if((botQuad && rightQuad) || (botQuad && topRightQuad) || (rightQuad && botLeftQuad)) {
+      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Bottom_Right", precedence: 2});
     }
     //darkend topRight corner
-    else if((topQuad && rightQuad) || (topQuad && botRightQuad) || (rightQuad && topLeftQuad)) {//(!topRightQuad && !rightQuad && !topQuad && ((botRightQuad) && (botLeftQuad || botQuad) && (leftQuad || topLeftQuad))) {
-      this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Top_Right"};
+    else if((topQuad && rightQuad) || (topQuad && botRightQuad) || (rightQuad && topLeftQuad)) {
+      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Top_Right", precedence: 2});
     }
     //darkend topLeft corner
-    else if((topQuad && leftQuad) || (topQuad && botLeftQuad) || (leftQuad && topRightQuad)){// !topLeftQuad && !leftQuad && !topQuad && ((botRightQuad) && (botLeftQuad || botQuad) && (rightQuad || topRightQuad))) {
-      this.fowPlane[index] = { x: x, y: y, type: "FogOfWar_Top_Left"};
+    else if((topQuad && leftQuad) || (topQuad && botLeftQuad) || (leftQuad && topRightQuad)){
+      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Top_Left", precedence: 2});
     }
+  }
+
+  pushIfHigherPrecedence(index, fowObject) {
+    if (fowObject === "") {
+      this.fowPlane[index] = "";
+      return;
+    }
+    var existingItem = this.fowPlane[index];
+    if (existingItem && existingItem.precedence > fowObject.precedence) {
+      return;
+    }
+    this.fowPlane[index] = fowObject;
   }
 
   getAllEmissives(){
@@ -798,7 +810,7 @@ getMinecartTrack() {
             continue;
 
           //we want unique copies so we use a map.
-          blocksTouchedByEmissives[yIndex.toString() + xIndex.toString()] = [xIndex,yIndex]; 
+          blocksTouchedByEmissives[yIndex.toString() + xIndex.toString()] = [xIndex,yIndex];
         }
       }
     }

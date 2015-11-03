@@ -682,7 +682,6 @@ window.demoLevels = {
   },
 
   10: {
-    actionPlane: ["stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "", "stone", "oreRedstone", "oreDiamond", "stone", "oreRedstone", "stone", "stone", "stone", "", "", "oreRedstone", "", "", "oreRedstone", "oreRedstone", "stone", "stone", "stone", "", "", "", "", "", "", "oreDiamond", "stone", "stone", "", "", "", "", "", "", "", "stone", "stone", "stone", "", "", "", "", "", "", "oreRedstone", "stone", "stone", "stone", "", "", "", "stone", "stone", "stone", "oreRedstone", "stone", "stone", "stone", "", "", "", "", "", "", "", "", "stone", "stone", "", "", "", "", "", "", "", "", "stone", "stone", "", "", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"],
     fluffPlane: ["", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
