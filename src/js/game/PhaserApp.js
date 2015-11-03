@@ -73,6 +73,8 @@ class PhaserApp {
     this.assetRoot = phaserAppConfig.assetRoot;
 
     this.audioPlayer = phaserAppConfig.audioPlayer;
+
+    this.resettableTimers = [];
   }
 
   /**
@@ -89,6 +91,9 @@ class PhaserApp {
   reset() {
     this.levelModel.reset();
     this.levelView.reset(this.levelModel);
+    this.resettableTimers.forEach((timer) => {
+      timer.stop(true);
+    });
   }
 
   preload() {
@@ -400,6 +405,7 @@ class PhaserApp {
     var timer = this.game.time.create(true);
     timer.add(ms, completionHandler, this);
     timer.start();
+    this.resettableTimers.push(timer);
   }
 
   placeBlockForward(commandQueueItem, blockType) {
