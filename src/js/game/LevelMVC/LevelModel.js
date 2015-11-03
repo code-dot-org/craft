@@ -709,58 +709,58 @@ getMinecartTrack() {
       //right
       if(angle >= 327.5 || angle <= 32.5) {
         rightQuad = true;
-        this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Right" , precedence: 3});
+        this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Right" , precedence: 1});
       }//bot
       if(angle > 237.5 && angle <= 302.5) {
         botQuad = true;
-        this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Bottom", precedence: 3});
+        this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Bottom", precedence: 1});
       }
       //left
       if(angle > 147.5 && angle <= 212.5) {
         leftQuad = true;
-        this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Left", precedence: 3});
+        this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Left", precedence: 1});
       }
       //top
       if(angle > 57.5 && angle <= 122.5) {
         topQuad = true;
-        this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Top", precedence: 3});
+        this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Top", precedence: 1});
       }
     }
 
     if(topLeftQuad && botLeftQuad) {
-      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Left", precedence: 3});
+      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Left", precedence: 1});
     }
     if(topRightQuad && botRightQuad) {
-      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Right", precedence: 3});
+      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Right", precedence: 1});
     }
     if(topLeftQuad && topRightQuad) {
-      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Top", precedence: 3});
+      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Top", precedence: 1});
     }
     if(botRightQuad && botLeftQuad) {
-      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Bottom", precedence: 3});
+      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Bottom", precedence: 1});
     }
 
     //fully lit
     if( (botRightQuad && topLeftQuad) || (botLeftQuad && topRightQuad) || leftQuad && rightQuad || topQuad && botQuad || (rightQuad && botQuad && topLeftQuad)
-          || (botQuad && topRightQuad && topLeftQuad) || (topQuad && botRightQuad && botLeftQuad) || (leftQuad && topRightQuad && botRightQuad) || (leftQuad && botQuad && topRightQuad)) {//((botRightQuad && (leftQuad) && (topLeftQuad || topRightQuad))) {
+          || (botQuad && topRightQuad && topLeftQuad) || (topQuad && botRightQuad && botLeftQuad) || (leftQuad && topRightQuad && botRightQuad) || (leftQuad && botQuad && topRightQuad)) {
       this.fowPlane[index] = "";
     }
 
     //darkend botleft corner
-    else if( (botQuad && leftQuad) || (botQuad && topLeftQuad) || (leftQuad && botRightQuad) ){// || (leftQuad || topLeftQuad || botLeftQuad) && ( botQuad || botRightQuad)) {//(rightQuad && (topRightQuad || botRightQuad)) {//(!botLeftQuad && !leftQuad && !botQuad && ((topLeftQuad || topQuad) && (botRightQuad) && (rightQuad || topRightQuad))) {
-      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Bottom_Left", precedence: 1});
+    else if( (botQuad && leftQuad) || (botQuad && topLeftQuad) || (leftQuad && botRightQuad) ){
+      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Bottom_Left", precedence: 2});
     }
     //darkend botRight corner
-    else if((botQuad && rightQuad) || (botQuad && topRightQuad) || (rightQuad && botLeftQuad)) {//(!botRightQuad && !rightQuad && !botQuad && ((topLeftQuad || topQuad) && (botLeftQuad) && (leftQuad || topRightQuad))) {
-      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Bottom_Right", precedence: 1});
+    else if((botQuad && rightQuad) || (botQuad && topRightQuad) || (rightQuad && botLeftQuad)) {
+      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Bottom_Right", precedence: 2});
     }
     //darkend topRight corner
-    else if((topQuad && rightQuad) || (topQuad && botRightQuad) || (rightQuad && topLeftQuad)) {//(!topRightQuad && !rightQuad && !topQuad && ((botRightQuad) && (botLeftQuad || botQuad) && (leftQuad || topLeftQuad))) {
-      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Top_Right", precedence: 1});
+    else if((topQuad && rightQuad) || (topQuad && botRightQuad) || (rightQuad && topLeftQuad)) {
+      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Top_Right", precedence: 2});
     }
     //darkend topLeft corner
-    else if((topQuad && leftQuad) || (topQuad && botLeftQuad) || (leftQuad && topRightQuad)){// !topLeftQuad && !leftQuad && !topQuad && ((botRightQuad) && (botLeftQuad || botQuad) && (rightQuad || topRightQuad))) {
-      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Top_Left", precedence: 1});
+    else if((topQuad && leftQuad) || (topQuad && botLeftQuad) || (leftQuad && topRightQuad)){
+      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Top_Left", precedence: 2});
     }
   }
 
