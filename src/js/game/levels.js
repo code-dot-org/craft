@@ -597,7 +597,7 @@ window.demoLevels = {
     placeBlock("cropWheat") +
     "}"
 
-      ,
+    ,
 
     verificationFunction: function (verificationAPI) {
       return verificationAPI.solutionMapMatchesResultMap(
@@ -673,27 +673,37 @@ window.demoLevels = {
     ],
 
     solutionCode: "for (var i = 0; i < 6; i++) {" +
-        destroyBlock + ifLavaAhead(placeInFront("stone")) + moveForwardBlock +
-    "}"
-
-      ,
+      destroyBlock + ifLavaAhead(placeInFront("stone")) + moveForwardBlock +
+    "}",
 
     verificationFunction: function (verificationAPI) {
-      return verificationAPI.solutionMapMatchesResultMap(
-          [
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "logOak", "logOak", "logOak", "logOak", "", "", "",
-            "", "", "", "logOak", "", "", "logOak", "", "", "",
-            "", "", "", "logOak", "", "", "logOak", "", "", "",
-            "", "", "", "", "", "", "logOak", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", ""
-          ]);
+      return true;
     }
   },
+
+  10: {
+    actionPlane: ["stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "", "stone", "oreRedstone", "oreDiamond", "stone", "oreRedstone", "stone", "stone", "stone", "", "", "oreRedstone", "", "", "oreRedstone", "oreRedstone", "stone", "stone", "stone", "", "", "", "", "", "", "oreDiamond", "stone", "stone", "", "", "", "", "", "", "", "stone", "stone", "stone", "", "", "", "", "", "", "oreRedstone", "stone", "stone", "stone", "", "", "", "stone", "stone", "stone", "oreRedstone", "stone", "stone", "stone", "", "", "", "", "", "", "", "", "stone", "stone", "", "", "", "", "", "", "", "", "stone", "stone", "", "", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"],
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+    groundPlane: ["stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "stone", "lava", "lava", "stone", "stone", "lava", "stone", "stone", "lava", "stone", "lava", "stone", "stone", "lava", "lava", "stone", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"],
+    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "lavaPop", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "lavaPop", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+    actionPlane: ["stone", "stone", "stone", "stone", "stone", "stone", "stone", "", "stone", "stone", "stone", "stone", "", "", "", "", "", "", "stone", "stone", "stone", "", "", "", "", "", "", "", "stone", "stone", "stone", "", "", "", "", "", "", "", "stone", "stone", "stone", "", "stone", "stone", "oreCoal", "oreCoal", "stone", "oreIron", "oreIron", "stone", "stone", "", "", "", "", "", "", "", "", "", "stone", "", "", "", "", "", "stone", "", "stone", "stone", "stone", "stone", "", "", "stone", "", "", "", "stone", "stone", "stone", "stone", "", "", "stone", "stone", "", "", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"],
+    playerStartPosition: [1, 4],
+    playerStartDirection: 1,
+    isDaytime: false,
+    verificationFunction: function (verificationAPI) {
+      return true;
+    }
+  }
 
 };
 
