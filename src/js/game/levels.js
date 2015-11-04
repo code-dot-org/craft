@@ -434,7 +434,10 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
     ],
 
-    solutionCode: moveForwardBlock,
+    solutionCode: 'turnLeft(); moveForward(); moveForward();moveForward();moveForward(); ' +
+    'turnRight();moveForward();moveForward();moveForward();moveForward();turnRight();moveForward();' +
+    'moveForward();moveForward();turnRight();placeBlock("logOak"); moveForward();moveForward();moveForward();' +
+    ' placeBlock("logOak"); moveForward();moveForward();moveForward(); turnRight();' ,
 
     verificationFunction: function (verificationAPI) {
       return verificationAPI.solutionMapMatchesResultMap(

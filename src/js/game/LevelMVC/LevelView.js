@@ -711,9 +711,8 @@ export default class LevelView {
 
     this.setSelectionIndicatorPosition(position[0], position[1]);
     //make sure to render high for when moving up after placing a block
-    // TODO(bjordan/gaalle): the +1 in the y clause here is causing player walking
-    // behind wall of blocks to z-index wrong
-    this.playerSprite.sortOrder = this.yToIndex(position[1] + 1) + 5;
+    var zOrderYIndex = position[1] + (facing === FacingDirection.Up ? 1 : 0);
+    this.playerSprite.sortOrder = this.yToIndex(zOrderYIndex) + 5;
     oldPosition = [Math.trunc((this.playerSprite.position.x + 18)/ 40), Math.ceil((this.playerSprite.position.y+ 32) / 40)];
     newPosVec = [position[0] - oldPosition[0], position[1] - oldPosition[1]];
 
