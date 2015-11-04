@@ -296,7 +296,6 @@ export default class LevelView {
     this.resetPlanes(levelModel);
     this.preparePlayerSprite();
     this.playerSprite.animations.stop();
-    this.playerSprite.tweens
     this.updateShadingPlane(levelModel.shadingPlane);
     this.updateFowPlane(levelModel.fowPlane);
     this.setPlayerPosition(player.position[0], player.position[1], player.isOnBlock);
@@ -1020,8 +1019,10 @@ export default class LevelView {
 
   playScaledSpeed(animationManager, name) {
     var animation = animationManager.getAnimation(name);
-    var animationFrameRate = 1000 / animation.delay;
-    return animationManager.play(name, this.controller.originalFpsToScaled(animationFrameRate));
+    if (!animation.originalFps) {
+      animation.originalFps = 1000 / animation.delay;
+    }
+    return animationManager.play(name, this.controller.originalFpsToScaled(animation.originalFps));
   }
 
   playItemAcquireAnimation(playerPosition, facing, destroyPosition, blockType, sprite, completionHandler) {

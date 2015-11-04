@@ -179,8 +179,8 @@ export default class LevelModel {
 
   getTnt() {
     var tnt = [];
-    for(var x = 0; x < 10; ++x) {
-      for(var y = 0; y < 10; ++y) {
+    for(var x = 0; x < this.planeWidth; ++x) {
+      for(var y = 0; y < this.planeHeight; ++y) {
         var index = this.coordinatesToIndex([x,y]);
         var block = this.actionPlane[index];
         if(block.blockType === "tnt") {
@@ -414,7 +414,7 @@ export default class LevelModel {
     return this.getAllBorderingPlayer("creeper");
   }
 
-getMinecartTrack() {
+  getMinecartTrack() {
     var track = [];
     track.push(["down", [3,2], FacingDirection.Down, 300]);
     track.push(["down", [3,3], FacingDirection.Down, 300]);
@@ -442,7 +442,7 @@ getMinecartTrack() {
     let blockIndex = this.yToIndex(blockForwardPosition[1]) + blockForwardPosition[0];
     let [x, y] = [blockForwardPosition[0], blockForwardPosition[1]];
 
-    if (x >= 0 && x < this.planeWidth && y >= 0 && y < this.planeHeight) {
+    if (this.inBounds(x, y)) {
       result = this.actionPlane[blockIndex].isWalkable ||
                (this.player.isOnBlock && !this.actionPlane[blockIndex].isEmpty);
     }
@@ -600,10 +600,10 @@ getMinecartTrack() {
         block = null;
 
     let blockPosition = position;
-    let blockIndex = (blockPosition[1] * 10) + blockPosition[0];
+    let blockIndex = this.yToIndex(blockPosition[1]) + blockPosition[0];
     let [x, y] = [blockPosition[0], blockPosition[1]];
     
-    if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+    if (this.inBounds(x, y)) {
       block = this.actionPlane[blockIndex];
       if (block !== null) {
         block.position = [x, y];
@@ -869,7 +869,7 @@ getMinecartTrack() {
     if (this.isDaytime) {
       for (y = 0; y < this.planeHeight; ++y) {
         for (x = 0; x < this.planeWidth; ++x) {
-          this.fowPlane.push("");
+          this.fowPlane.push[""]; // noop TODO(bjordan) remove?
         }
       }
     } else {

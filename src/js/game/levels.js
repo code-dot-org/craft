@@ -681,6 +681,28 @@ window.demoLevels = {
     }
   },
   10: {
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+    groundPlane: ["stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "stone", "lava", "lava", "stone", "stone", "lava", "stone", "stone", "lava", "stone", "lava", "stone", "stone", "lava", "lava", "stone", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"],
+    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "lavaPop", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "lavaPop", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+    actionPlane: ["stone", "stone", "stone", "stone", "stone", "stone", "stone", "", "stone", "stone", "stone", "stone", "", "", "", "", "", "", "stone", "stone", "stone", "", "", "", "", "", "", "", "stone", "stone", "stone", "", "", "", "", "", "", "", "stone", "stone", "stone", "", "stone", "stone", "oreCoal", "oreCoal", "stone", "oreIron", "oreIron", "stone", "stone", "", "", "", "", "", "", "", "", "", "stone", "", "", "", "", "", "stone", "", "stone", "stone", "stone", "stone", "", "", "stone", "", "", "", "stone", "stone", "stone", "stone", "", "", "stone", "stone", "", "", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"],
+    playerStartPosition: [1, 4],
+    playerStartDirection: 1,
+    isDaytime: false,
+    verificationFunction: function (verificationAPI) {
+      return true;
+    }
+  },
+  11: {
     instructions: "Free play level. Explore!",
 
     playerStartPosition: [15, 15],
@@ -690,45 +712,45 @@ window.demoLevels = {
     gridDimensions: [20, 39],
 
     groundPlane: [
-      "stone", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
-      "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
       "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "lava", "obsidian", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "obsidian", "lava", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone",
-      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "stone",
-      "stone", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
-      "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "lava", "cobblestone", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "cobblestone", "lava", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone",
+      "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
       "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "lava", "obsidian", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "obsidian", "lava", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone",
-      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "stone",
-      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "stone"
+      "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "lava", "cobblestone", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "cobblestone", "lava", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone"
     ],
 
     groundDecorationPlane: [
@@ -857,13 +879,13 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
     ],
 
-    solutionCode: moveForwardBlock + turnRightBlock
+    solutionCode:
+    "for (var i = 0; i < 50; i++) {"
+    + "for (var j = 0; j < 10; j++) {"
     + moveForwardBlock
-    + moveForwardBlock
-    + moveForwardBlock
-    + moveForwardBlock
-    + moveForwardBlock
-    + moveForwardBlock
+    + "}"
+    + turnRightBlock
+    + "}"
 
       ,
 
@@ -882,31 +904,7 @@ window.demoLevels = {
             "", "", "", "", "", "", "", "", "", ""
           ]);
     }
-  },
-
-  10: {
-    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-    ],
-    groundPlane: ["stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "stone", "lava", "lava", "stone", "stone", "lava", "stone", "stone", "lava", "stone", "lava", "stone", "stone", "lava", "lava", "stone", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"],
-    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "lavaPop", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "lavaPop", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-    actionPlane: ["stone", "stone", "stone", "stone", "stone", "stone", "stone", "", "stone", "stone", "stone", "stone", "", "", "", "", "", "", "stone", "stone", "stone", "", "", "", "", "", "", "", "stone", "stone", "stone", "", "", "", "", "", "", "", "stone", "stone", "stone", "", "stone", "stone", "oreCoal", "oreCoal", "stone", "oreIron", "oreIron", "stone", "stone", "", "", "", "", "", "", "", "", "", "stone", "", "", "", "", "", "stone", "", "stone", "stone", "stone", "stone", "", "", "stone", "", "", "", "stone", "stone", "stone", "stone", "", "", "stone", "stone", "", "", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"],
-    playerStartPosition: [1, 4],
-    playerStartDirection: 1,
-    isDaytime: false,
-    verificationFunction: function (verificationAPI) {
-      return true;
-    }
   }
-
 };
 
 export default demoLevels;
