@@ -217,16 +217,25 @@ class PhaserApp {
 
   // command processors
   moveForward(commandQueueItem) {
-    var player = this.levelModel.player;
-    var allFoundCreepers;
+    var player = this.levelModel.player,
+      allFoundCreepers,
+      groundType,
+      jumpOff;
 
     if (this.levelModel.canMoveForward()) {
       let wasOnBlock = player.isOnBlock;
       this.levelModel.moveForward();
       // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
 
+      jumpOff = wasOnBlock && wasOnBlock != player.isOnBlock;
+      if(player.isOnBlock || jumpOff) {
+        groundType = this.levelModel.actionPlane[player.position[1] * 10 + player.position[0]].blockType;
+      }
+      else {
+        groundType = this.levelModel.groundPlane[player.position[1] * 10 + player.position[0]].blockType;
+      }
 
-      this.levelView.playMoveForwardAnimation(player.position, player.facing, wasOnBlock && wasOnBlock != player.isOnBlock, player.isOnBlock, this.levelModel.groundPlane[player.position[1] * 10 + player.position[0]].blockType ,() => {
+      this.levelView.playMoveForwardAnimation(player.position, player.facing, jumpOff, player.isOnBlock, groundType, () => {
         this.levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
 
       //First arg is if we found a creeper
