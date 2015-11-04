@@ -75,14 +75,8 @@ export default class LevelModel {
 
     for (index = 0; index < planeData.length; ++index) {
       block = new LevelBlock(planeData[index]);
-      // TODO(bjordan) duplicated logic in the LevelBlock constructor?
-      block.isWalkable = !isActionPlane ||
-          planeData[index] === "" ||
-          planeData[index] === "torch" ||
-          planeData[index] === "railsRedstoneTorch";
-      block.isPlacable = (isActionPlane && block.isEmpty) ||
-          (block.blockType === "lava" || block.blockType === "water");
-      block.isUsable = isActionPlane && !block.isEmpty;
+      // TODO(bjordan): put this truth in constructor like other attrs
+      block.isWalkable = block.isWalkable || !isActionPlane;
       result.push(block);
     }
 
@@ -570,7 +564,7 @@ export default class LevelModel {
       var block = new LevelBlock(blockType);
 
       this.actionPlane[blockIndex] = block;
-      this.player.isOnBlock = block.isDestroyable && block.isWalkable;
+      this.player.isOnBlock = block.isDestroyable && !block.isWalkable;
     }
 
     return shouldPlace;
@@ -586,13 +580,7 @@ export default class LevelModel {
       targetPlane = this.groundPlane;
     }
 
-    var block = new LevelBlock(blockType);
-    block.isEmpty = false;
-    block.isWalkable = false;
-    block.isPlacable = false;
-    block.isUsable = true;
-
-    targetPlane[blockIndex] = block;
+    targetPlane[blockIndex] = new LevelBlock(blockType);
   }
 
   destroyBlock(position) {
