@@ -265,7 +265,7 @@ export default class LevelModel {
   }
 
   checkPositionForTypeAndPush(blockType, position, objectArray){
-    if (this.isBlockOfType(position, blockType)) {
+    if ((!blockType && (this.actionPlane[this.coordinatesToIndex(position)].blockType != ""))|| this.isBlockOfType(position, blockType)) {
       objectArray.push([true, position]);
       return true;
     }
@@ -341,56 +341,69 @@ export default class LevelModel {
     return this.houseGroundToFloorHelper(helperStartData, woolType, []);
   }
 
-  getAllBorderingPlayer(blockType){
-    var player = this.player;
-    var position;
+  getAllBorderingPositionNotOfType(position, blockType) {
+    var surroundingBlocks = this.getAllBorderingPosition(position, null);
+    for(var b = 1; b < surroundingBlocks.length; ++b) {
+      if(surroundingBlocks[b][0] && this.actionPlane[this.coordinatesToIndex(surroundingBlocks[b][1])].blockType == blockType) {
+        surroundingBlocks[b][0] = false;
+      }
+    }
+    return surroundingBlocks;
+  }
+
+  getAllBorderingPosition(position, blockType) {
+    var p;
     var allFoundObjects = [false];
     //Check all 8 directions
 
     //Top Right
-    position = [player.position[0] + 1, player.position[1] + 1];
-    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+    p = [position[0] + 1, position[1] + 1];
+    if(this.checkPositionForTypeAndPush(blockType, p, allFoundObjects)) {
       allFoundObjects[0] = true;
     }
     //Top Left
-    position = [player.position[0] - 1, player.position[1] + 1];
-    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+    p = [position[0] - 1, position[1] + 1];
+    if(this.checkPositionForTypeAndPush(blockType, p, allFoundObjects)) {
       allFoundObjects[0] = true;
     }
     //Bot Right
-    position = [player.position[0] + 1, player.position[1] - 1];
-    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+    p = [position[0] + 1, position[1] - 1];
+    if(this.checkPositionForTypeAndPush(blockType, p, allFoundObjects)) {
       allFoundObjects[0] = true;
     }
     //Bot Left
-    position = [player.position[0] - 1, player.position[1] - 1];
-    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+    p = [position[0] - 1, position[1] - 1];
+    if(this.checkPositionForTypeAndPush(blockType, p, allFoundObjects)) {
       allFoundObjects[0] = true;
     }
 
     //Check cardinal Directions
     //Top
-    position = [player.position[0], player.position[1] + 1];
-    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+    p = [position[0], position[1] + 1];
+    if(this.checkPositionForTypeAndPush(blockType, p, allFoundObjects)) {
       allFoundObjects[0] = true;
     }
     //Bot
-    position = [player.position[0], player.position[1] - 1];
-    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+    p = [position[0], position[1] - 1];
+    if(this.checkPositionForTypeAndPush(blockType, p, allFoundObjects)) {
       allFoundObjects[0] = true;
     }
     //Right
-    position = [player.position[0] + 1, player.position[1]];
-    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+    p = [position[0] + 1, position[1]];
+    if(this.checkPositionForTypeAndPush(blockType, p, allFoundObjects)) {
       allFoundObjects[0] = true;
     }
     //Left
-    position = [player.position[0] - 1, player.position[1]];
-    if(this.checkPositionForTypeAndPush(blockType, position, allFoundObjects)) {
+    p = [position[0] - 1, position[1]];
+    if(this.checkPositionForTypeAndPush(blockType, p, allFoundObjects)) {
       allFoundObjects[0] = true;
     }
 
     return allFoundObjects;
+  }
+
+  getAllBorderingPlayer(blockType){
+    return this.getAllBorderingPosition(this.player.position, blockType);
   }
 
   isPlayerStandingNearCreeper() {

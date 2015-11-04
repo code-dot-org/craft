@@ -281,6 +281,52 @@ class PhaserApp {
 
   }
 
+  destroyBlockWithoutPlayerInteraction(position) {
+    let block = this.levelModel.actionPlane[position[1] * 10 + position[0]];
+    this.levelModel.destroyBlock(position);
+
+    if (block !== null) {
+      let destroyPosition = block.position;
+      let blockType = block.blockType;
+
+      if (block.isDestroyable) {
+        this.levelModel.computeShadingPlane();
+        this.levelModel.computeFowPlane();
+        switch(blockType){
+          case "logAcacia":
+          case "treeAcacia":
+            blockType = "planksAcacia";
+          break;
+          case "logBirch":
+          case "treeBirch":
+           blockType = "planksBirch";
+          break;
+          case "logJungle":
+          case "treeJungle":
+            blockType = "planksJungle";
+          break;
+          case "logOak":
+          case "treeOak":
+           blockType = "planksOak";
+          break;
+          case "logSpruce":
+          case "treeSpruce":
+            blockType = "planksSpruce";
+          break;
+        }
+        this.levelView.actionPlaneBlocks[destroyPosition[1] * 10 + destroyPosition[0]].kill();
+        this.levelView.playExplosionAnimation(this.levelModel.player.position, this.levelModel.player.facing, destroyPosition, blockType, ()=>{}, true);
+      } else if (block.isUsable) {
+        switch (blockType) {
+          case "sheep":
+            // TODO: What to do with already sheered sheep?
+            this.levelView.playShearAnimation(this.levelModel.player.position, this.levelModel.player.facing, destroyPosition, blockType, ()=>{})
+            break;
+        }
+      }
+    }
+  }
+
   destroyBlock(commandQueueItem) {
     let player = this.levelModel.player;
     if (this.levelModel.canDestroyBlockForward()) {
@@ -500,7 +546,13 @@ class PhaserApp {
         this.levelView.playDestroyTntAnimation(player.position, player.facing, player.isOnBlock, this.levelModel.getTnt(), this.levelModel.shadingPlane,
         () => {
           for(var i in tnt) {
+            var surroundingBlocks = this.levelModel.getAllBorderingPositionNotOfType(tnt[i], "tnt");
             this.levelModel.destroyBlock(tnt[i]);
+            for(var b = 1; b < surroundingBlocks.length; ++b) {
+              if(surroundingBlocks[b][0]) {
+              this.destroyBlockWithoutPlayerInteraction(surroundingBlocks[b][1]);
+              }
+            }
           }
           this.levelModel.computeShadingPlane();
           this.levelModel.computeFowPlane();

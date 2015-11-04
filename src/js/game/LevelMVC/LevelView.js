@@ -826,20 +826,24 @@ export default class LevelView {
     this.actionPlaneBlocks[blockIndex] = sprite;
   }
 
+  playShearAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
+    let blockIndex = (destroyPosition[1] * 10) + destroyPosition[0];
+    let blockToShear = this.actionPlaneBlocks[blockIndex];
+
+    blockToShear.animations.stop(null, true);
+    this.onAnimationLoopOnce(this.playScaledSpeed(blockToShear.animations, "used"), () => {
+      this.playScaledSpeed(blockToShear.animations, "face");
+    });
+
+    this.playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, true);
+  }
+
   playShearSheepAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
     let direction = this.getDirectionName(facing);
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
 
     this.onAnimationEnd(this.playPlayerAnimation("punch", playerPosition, facing, false), () => {
-      let blockIndex = (destroyPosition[1] * 10) + destroyPosition[0];
-      let blockToShear = this.actionPlaneBlocks[blockIndex];
-
-      blockToShear.animations.stop(null, true);
-      this.onAnimationLoopOnce(this.playScaledSpeed(blockToShear.animations, "used"), () => {
-        this.playScaledSpeed(blockToShear.animations, "face");
-      });
-
-      this.playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, true);
+      this.playShearAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler);
     });
   }
 
