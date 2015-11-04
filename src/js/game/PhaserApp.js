@@ -55,7 +55,7 @@ class PhaserApp {
     this.game = new Phaser.Game({
       width: GAME_WIDTH,
       height: GAME_HEIGHT,
-      renderer: Phaser.AUTO,
+      renderer: Phaser.CANVAS,
       parent: phaserAppConfig.containerId,
       state: {
         preload: this.preload.bind(this),
@@ -63,6 +63,7 @@ class PhaserApp {
         update: this.update.bind(this),
         render: this.render.bind(this)
       },
+      // TODO(bjordan): remove now that using canvas?
       preserveDrawingBuffer: true // enables saving .png screengrabs
     });
 
@@ -73,6 +74,12 @@ class PhaserApp {
     this.assetRoot = phaserAppConfig.assetRoot;
 
     this.audioPlayer = phaserAppConfig.audioPlayer;
+
+
+    this.resettableTimers = [];
+
+    this.assumedSlowMotion = 1.5; // slow motion we
+    this.initialSlowMotion = phaserAppConfig.customSlowMotion || this.assumedSlowMotion;
   }
 
   /**
@@ -89,6 +96,10 @@ class PhaserApp {
   reset() {
     this.levelModel.reset();
     this.levelView.reset(this.levelModel);
+    this.resettableTimers.forEach((timer) => {
+      timer.stop(true);
+    });
+    this.resettableTimers.length = 0;
   }
 
   preload() {
@@ -99,7 +110,7 @@ class PhaserApp {
 
   create() {
     this.levelView.create(this.levelModel);
-    this.game.time.slowMotion = 1.5;
+    this.game.time.slowMotion = this.initialSlowMotion;
     this.addCheatKeys();
     if (this.followingPlayer()) {
       this.game.world.setBounds(0, 0, this.levelModel.planeWidth * 40,
@@ -223,7 +234,7 @@ class PhaserApp {
       // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
 
 
-      this.levelView.playMoveForwardAnimation(player.position, player.facing, wasOnBlock && wasOnBlock != player.isOnBlock, () => {
+      this.levelView.playMoveForwardAnimation(player.position, player.facing, wasOnBlock && wasOnBlock != player.isOnBlock, player.isOnBlock, this.levelModel.groundPlane[player.position[1] * 10 + player.position[0]].blockType ,() => {
         this.levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
 
       //First arg is if we found a creeper
@@ -238,31 +249,27 @@ class PhaserApp {
           this.levelView.playBurnInLavaAnimation(player.position, player.facing, player.isOnBlock, () => {
             commandQueueItem.failed();
           } );
-        } 
-        else if(allFoundCreepers[0]) {
-            for(var i = 1; i < 9; ++i)
-            {
-              let currentObject = allFoundCreepers[i];
-              let creeperfound = currentObject[0];
-              if(creeperfound)
-              {
-                let creeperPos = currentObject[1];              
-                this.levelView.playCreeperExplodeAnimation(player.position, player.facing, creeperPos, player.isOnBlock, () => {
-                  commandQueueItem.failed();
-                });
-              }
-            }
-        } else {
+        }
+        else {
           this.delayBy(200, () => {
             commandQueueItem.succeeded();
           });
         }
       });
-    } else {
-      this.levelView.playBumpAnimation(player.position, player.facing, false);
-      this.delayBy(800, () => {
-        commandQueueItem.succeeded();
-      });
+    } 
+    else {
+      if(this.levelModel.isForwardBlockOfType("creeper"))
+      {
+        this.levelView.playCreeperExplodeAnimation(player.position, player.facing, this.levelModel.getMoveForwardPosition(), player.isOnBlock, () => {
+          commandQueueItem.failed();
+        });
+      }
+      else {
+        this.levelView.playBumpAnimation(player.position, player.facing, false);
+        this.delayBy(800, () => {
+          commandQueueItem.succeeded();
+        });
+      }
     }
   }
 
@@ -293,6 +300,7 @@ class PhaserApp {
 
         if (block.isDestroyable) {
           this.levelModel.computeShadingPlane();
+          this.levelModel.computeFowPlane();
           switch(blockType){
             case "logAcacia":
             case "treeAcacia":
@@ -310,13 +318,13 @@ class PhaserApp {
             case "treeOak":
              blockType = "planksOak";
             break;
-            case "logSpurce":
-            case "treeSpurce":
-              blockType = "planksOak";
+            case "logSpruce":
+            case "treeSpruce":
+              blockType = "planksSpruce";
             break;
           }
 
-          this.levelView.playDestroyBlockAnimation(player.position, player.facing, destroyPosition, blockType, this.levelModel.shadingPlane, () => {
+          this.levelView.playDestroyBlockAnimation(player.position, player.facing, destroyPosition, blockType, this.levelModel.shadingPlane, this.levelModel.fowPlane, () => {
             commandQueueItem.succeeded();
           });
         } else if (block.isUsable) {
@@ -327,7 +335,11 @@ class PhaserApp {
                 commandQueueItem.succeeded();
               });
               break;
+            default:
+              commandQueueItem.succeeded();
           }
+        } else {
+          commandQueueItem.succeeded();
         }
       }
     } else {
@@ -339,6 +351,16 @@ class PhaserApp {
         });
       });
     }
+  }
+
+  canUseTints() {
+    // TODO(bjordan): Remove
+    // all browsers appear to work with new version of Phaser
+    return true;
+  }
+
+  checkTntAnimation() {
+    return this.specialLevelType === 'freeplay';
   }
 
   checkMinecartLevelEndAnimation() {
@@ -362,13 +384,14 @@ class PhaserApp {
   }
 
   placeBlock(commandQueueItem, blockType) {
+    var blockTypeAtPosition = this.levelModel.actionPlane[10 * this.levelModel.player.position[1] + this.levelModel.player.position[0]].blockType;
     if (this.levelModel.canPlaceBlock()) {
       if(this.checkMinecartLevelEndAnimation() && blockType == "rail") {
         blockType = this.checkRailBlock(blockType);
       }
 
       if (this.levelModel.placeBlock(blockType)) {
-        this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, () => {
+        this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, blockTypeAtPosition,  () => {
           this.levelModel.computeShadingPlane();
           this.levelModel.computeFowPlane();
           this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
@@ -394,22 +417,46 @@ class PhaserApp {
 
   delayBy(ms, completionHandler) {
     var timer = this.game.time.create(true);
-    timer.add(ms, completionHandler, this);
+    timer.add(this.originalMsToScaled(ms), completionHandler, this);
     timer.start();
+    this.resettableTimers.push(timer);
+  }
+
+  originalMsToScaled(ms) {
+    var realMs = ms / this.assumedSlowMotion;
+    return realMs * this.game.time.slowMotion;
+  }
+
+  originalFpsToScaled(fps) {
+    var realFps = fps * this.assumedSlowMotion;
+    return realFps / this.game.time.slowMotion;
   }
 
   placeBlockForward(commandQueueItem, blockType) {
+    var forwardPosition,
+        placementPlane,
+        soundEffect = ()=>{};
+
     if (!this.levelModel.canPlaceBlockForward()) {
-      commandQueueItem.succeeded();
+      this.levelView.playPunchAirAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.position, () => {
+        this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
+        commandQueueItem.succeeded();
+      });
+      return;
     }
 
-    var placementPlane = this.levelModel.getPlaneToPlaceOn(this.levelModel.getMoveForwardPosition());
+    forwardPosition = this.levelModel.getMoveForwardPosition();
+    placementPlane = this.levelModel.getPlaneToPlaceOn(forwardPosition);
+    if(this.levelModel.isBlockOfTypeOnPlane(forwardPosition, "lava", placementPlane)) {
+      soundEffect = ()=>{this.levelView.audioPlayer.play("fizz");};
+    }
     this.levelModel.placeBlockForward(blockType, placementPlane);
     this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.getMoveForwardPosition(), placementPlane, blockType, () => {
       this.levelModel.computeShadingPlane();
       this.levelModel.computeFowPlane();
       this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
       this.levelView.updateFowPlane(this.levelModel.fowPlane);
+      soundEffect();
       this.delayBy(200, () => {
         this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
       });
@@ -428,20 +475,51 @@ class PhaserApp {
       if(this.checkHouseBuiltEndAnimation()) {
         var houseBottomRight = this.levelModel.getHouseBottomRight();
         var inFrontOfDoor = [houseBottomRight[0] - 1, houseBottomRight[1] + 2];
+        var bedPosition = [houseBottomRight[0], houseBottomRight[1]];
+        var doorPosition = [houseBottomRight[0] - 1, houseBottomRight[1] + 1];
         this.levelModel.moveTo(inFrontOfDoor);
         this.levelView.playSuccessHouseBuiltAnimation(
             player.position,
             player.facing,
             player.isOnBlock,
             this.levelModel.houseGroundToFloorBlocks(houseBottomRight),
-            houseBottomRight,
-            () => { commandQueueItem.succeeded(); }
+            [bedPosition, doorPosition],
+            () => {
+              commandQueueItem.succeeded();
+            }
+            ,
+            () => {
+              this.levelModel.destroyBlock(bedPosition);
+              this.levelModel.destroyBlock(doorPosition);
+              this.levelModel.computeShadingPlane();
+              this.levelModel.computeFowPlane();
+              this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
+              this.levelView.updateFowPlane(this.levelModel.fowPlane);
+            }
         );
       }
       else if(this.checkMinecartLevelEndAnimation())
       {
         this.levelView.playMinecartAnimation(player.position, player.facing, player.isOnBlock,
             () => { commandQueueItem.succeeded(); }, this.levelModel.getMinecartTrack(), this.levelModel.getUnpoweredRails());
+      }
+      else if(this.checkTntAnimation()) {
+        var tnt = this.levelModel.getTnt();
+        this.levelView.playDestroyTntAnimation(player.position, player.facing, player.isOnBlock, this.levelModel.getTnt(), this.levelModel.shadingPlane,
+        () => {
+          for(var i in tnt) {
+            this.levelModel.destroyBlock(tnt[i]);
+          }
+          this.levelModel.computeShadingPlane();
+          this.levelModel.computeFowPlane();
+          this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
+          this.levelView.updateFowPlane(this.levelModel.fowPlane);
+          this.delayBy(200, () => {
+            this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock, () => {
+              commandQueueItem.succeeded();
+            });
+          });
+        });
       }
       else {
         this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock,

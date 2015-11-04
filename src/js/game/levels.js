@@ -91,7 +91,7 @@ window.demoLevels = {
 
     playerStartPosition: [6, 7],
 
-    playerStartDirection: 1,
+    playerStartDirection: 2,
 
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -142,11 +142,7 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
     ],
 
-    solutionCode: turnLeftBlock +
-    moveForwardBlock +
-    moveForwardBlock +
-    destroyBlock
-    ,
+    solutionCode: turnLeftBlock,
 
     verificationFunction: function (verificationAPI) {
       return verificationAPI.countOfTypeOnMap("logOak") === 0;
@@ -188,7 +184,7 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "dirt", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "sheep", "", "", "",
       "", "", "", "", "sheep", "", "", "", "", "",
@@ -395,7 +391,7 @@ window.demoLevels = {
       "grass", "grass", "grass", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "grass", "grass", "grass",
       "grass", "grass", "grass", "dirtCoarse", "grass", "grass", "dirtCoarse", "grass", "grass", "grass",
       "grass", "grass", "grass", "dirtCoarse", "grass", "grass", "dirtCoarse", "grass", "grass", "grass",
-      "grass", "grass", "grass", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "grass", "grass", "grass",
+      "grass", "grass", "grass", "dirtCoarse", "wool_orange", "dirtCoarse", "dirtCoarse", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
@@ -416,11 +412,11 @@ window.demoLevels = {
     actionPlane: [
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "treeOak", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "logOak", "", "", "", "", "", "",
+      "", "treeOak", "cropWheat", "", "", "", "", "", "", "",
+      "", "", "", "logOak", "logOak", "logOak", "logOak", "", "", "",
+      "", "", "", "logOak", "", "", "logOak", "", "", "",
+      "", "", "", "logOak", "", "", "logOak", "", "", "",
+      "", "", "", "logOak", "logOak", "logOak", "logOak", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
@@ -601,7 +597,7 @@ window.demoLevels = {
     placeBlock("cropWheat") +
     "}"
 
-      ,
+    ,
 
     verificationFunction: function (verificationAPI) {
       return verificationAPI.solutionMapMatchesResultMap(
@@ -627,16 +623,16 @@ window.demoLevels = {
     playerStartDirection: 1,
 
     groundPlane: [
-      "stone", "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
-      "obsidian", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
       "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "lava", "obsidian", "lava", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "obsidian", "stone", "stone", "stone", "stone", "stone",
-      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "obsidian", "stone",
-      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "obsidian", "stone"
+      "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "lava", "cobblestone", "lava", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone"
     ],
 
     groundDecorationPlane: [
@@ -677,25 +673,11 @@ window.demoLevels = {
     ],
 
     solutionCode: "for (var i = 0; i < 6; i++) {" +
-        destroyBlock + ifLavaAhead(placeInFront("stone")) + moveForwardBlock +
-    "}"
-
-      ,
+      destroyBlock + ifLavaAhead(placeInFront("stone")) + moveForwardBlock +
+    "}",
 
     verificationFunction: function (verificationAPI) {
-      return verificationAPI.solutionMapMatchesResultMap(
-          [
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "logOak", "logOak", "logOak", "logOak", "", "", "",
-            "", "", "", "logOak", "", "", "logOak", "", "", "",
-            "", "", "", "logOak", "", "", "logOak", "", "", "",
-            "", "", "", "", "", "", "logOak", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", ""
-          ]);
+      return true;
     }
   },
   10: {
@@ -901,6 +883,29 @@ window.demoLevels = {
           ]);
     }
   },
+
+  10: {
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+    groundPlane: ["stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "stone", "lava", "lava", "stone", "stone", "lava", "stone", "stone", "lava", "stone", "lava", "stone", "stone", "lava", "lava", "stone", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"],
+    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "lavaPop", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "lavaPop", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+    actionPlane: ["stone", "stone", "stone", "stone", "stone", "stone", "stone", "", "stone", "stone", "stone", "stone", "", "", "", "", "", "", "stone", "stone", "stone", "", "", "", "", "", "", "", "stone", "stone", "stone", "", "", "", "", "", "", "", "stone", "stone", "stone", "", "stone", "stone", "oreCoal", "oreCoal", "stone", "oreIron", "oreIron", "stone", "stone", "", "", "", "", "", "", "", "", "", "stone", "", "", "", "", "", "stone", "", "stone", "stone", "stone", "stone", "", "", "stone", "", "", "", "stone", "stone", "stone", "stone", "", "", "stone", "stone", "", "", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"],
+    playerStartPosition: [1, 4],
+    playerStartDirection: 1,
+    isDaytime: false,
+    verificationFunction: function (verificationAPI) {
+      return true;
+    }
+  }
 
 };
 

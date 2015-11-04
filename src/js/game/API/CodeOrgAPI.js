@@ -68,6 +68,10 @@ export function get(controller) {
         controller.queue.addCommand(new PlaceInFrontCommand(controller, highlightCallback, blockType));
     },
 
+    tillSoil: function(highlightCallback) {
+        controller.queue.addCommand(new PlaceInFrontCommand(controller, highlightCallback, 'watering'));
+    },
+
     whilePathAhead: function(highlightCallback, blockType, codeBlock) {
         controller.queue.addCommand(new WhileCommand(controller, highlightCallback, blockType, codeBlock));
     },

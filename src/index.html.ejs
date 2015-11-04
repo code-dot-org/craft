@@ -29,6 +29,9 @@
 <button id="run-button">Run</button>
 <button id="reset-button">Reset</button>
 <div style="margin:10px; clear:both;"></div>
+<input type="range" min=".01" max="5" step=".1" name="speed-slider" id="speed-slider"/>
+<p id="speed-display">1.5</p>
+<div style="margin:10px; clear:both;"></div>
 <button id="previous-level">Previous level</button>
 <button id="refresh-button">Refresh</button>
 <button id="next-level">Next level</button>
@@ -112,6 +115,11 @@
     ctor.prototype = Function.prototype;
     return new ctor().apply(null, args);
   }
+
+  $('input[type=range]').on('input', function () {
+    $("#speed-display").html($(this).val());
+    phaserApp.game.time.slowMotion = parseFloat($(this).val(), 10);
+  });
 
   $('#run-button').click(function () {
     var shortHandCode = $('#test-code-area').val();
