@@ -571,11 +571,12 @@ class PhaserApp {
         this.levelView.playDestroyTntAnimation(player.position, player.facing, player.isOnBlock, this.levelModel.getTnt(), this.levelModel.shadingPlane,
         () => {
           if (tnt.length) {
-            this.game.camera.setPosition(0, 5);
-            this.game.add.tween(this.game.camera)
-                .to({y: -10}, 40, Phaser.Easing.Sinusoidal.InOut, false, 0, 3, true)
-                .to({y: 0}, 0)
-                .start();
+            // Shakes camera (need to avoid contention with pan?)
+            //this.game.camera.setPosition(0, 5);
+            //this.game.add.tween(this.game.camera)
+            //    .to({y: -10}, 40, Phaser.Easing.Sinusoidal.InOut, false, 0, 3, true)
+            //    .to({y: 0}, 0)
+            //    .start();
           }
           for(var i in tnt) {
             if (tnt[i].x === this.levelModel.player.position.x && tnt[i].y === this.levelModel.player.position.y) {
