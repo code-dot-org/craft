@@ -827,6 +827,7 @@ export default class LevelView {
 
   playPlaceBlockAnimation(position, facing, blockType, blockTypeAtPosition, completionHandler) {
     var jumpAnimName;
+    let blockIndex = this.yToIndex(position[1]) + position[0];
 
     if (blockType === "cropWheat" || blockType === "torch" || blockType.substring(0, 5) === "rails") {
       this.setSelectionIndicatorPosition(position[0], position[1]);
@@ -864,7 +865,9 @@ export default class LevelView {
       placementTween.onComplete.addOnce(() => {
         placementTween = null;
 
-        let blockIndex = this.yToIndex(position[1]) + position[0];
+        if (blockTypeAtPosition !== "") {
+          this.actionPlaneBlocks[blockIndex].kill();
+        }
         var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
 
         if (sprite) {

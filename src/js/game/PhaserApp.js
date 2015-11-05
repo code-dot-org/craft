@@ -429,7 +429,7 @@ class PhaserApp {
   }
 
   checkRailBlock(blockType) {
-    var checkRailBlock = this.levelModel.railMap[10 * this.levelModel.player.position[1] + this.levelModel.player.position[0]];
+    var checkRailBlock = this.levelModel.railMap[this.levelModel.yToIndex(this.levelModel.player.position[1]) + this.levelModel.player.position[0]];
     if(checkRailBlock != "") {
       blockType = checkRailBlock;
     }
@@ -441,12 +441,16 @@ class PhaserApp {
   }
 
   placeBlock(commandQueueItem, blockType) {
-    var blockTypeAtPosition = this.levelModel.actionPlane[10 * this.levelModel.player.position[1] + this.levelModel.player.position[0]].blockType;
+    var blockIndex = (this.levelModel.yToIndex(this.levelModel.player.position[1]) + this.levelModel.player.position[0]);
+    var blockTypeAtPosition = this.levelModel.actionPlane[blockIndex].blockType;
     if (this.levelModel.canPlaceBlock()) {
       if(this.checkMinecartLevelEndAnimation() && blockType == "rail") {
         blockType = this.checkRailBlock(blockType);
       }
 
+      if (blockTypeAtPosition !== "") {
+        this.levelModel.destroyBlock(blockIndex);
+      }
       if (this.levelModel.placeBlock(blockType)) {
         this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, blockTypeAtPosition,  () => {
           this.levelModel.computeShadingPlane();
@@ -561,34 +565,40 @@ class PhaserApp {
             () => { commandQueueItem.succeeded(); }, this.levelModel.getMinecartTrack(), this.levelModel.getUnpoweredRails());
       }
       else if(this.checkTntAnimation()) {
-        this.levelView.scaleShowWholeWorld(() => {
-          var tnt = this.levelModel.getTnt();
-          var wasOnBlock = player.isOnBlock;
-          this.levelView.playDestroyTntAnimation(player.position, player.facing, player.isOnBlock, this.levelModel.getTnt(), this.levelModel.shadingPlane,
-          () => {
-            for(var i in tnt) {
-              if (tnt[i].x === this.levelModel.player.position.x && tnt[i].y === this.levelModel.player.position.y) {
-                this.levelModel.player.isOnBlock = false;
-              }
-              var surroundingBlocks = this.levelModel.getAllBorderingPositionNotOfType(tnt[i], "tnt");
-              this.levelModel.destroyBlock(tnt[i]);
-              for(var b = 1; b < surroundingBlocks.length; ++b) {
-                if(surroundingBlocks[b][0]) {
-                  this.destroyBlockWithoutPlayerInteraction(surroundingBlocks[b][1]);
-                }
+        this.levelView.scaleShowWholeWorld(() => {});
+        var tnt = this.levelModel.getTnt();
+        var wasOnBlock = player.isOnBlock;
+        this.levelView.playDestroyTntAnimation(player.position, player.facing, player.isOnBlock, this.levelModel.getTnt(), this.levelModel.shadingPlane,
+        () => {
+          if (tnt.length) {
+            this.game.camera.setPosition(0, 5);
+            this.game.add.tween(this.game.camera)
+                .to({y: -10}, 40, Phaser.Easing.Sinusoidal.InOut, false, 0, 3, true)
+                .to({y: 0}, 0)
+                .start();
+          }
+          for(var i in tnt) {
+            if (tnt[i].x === this.levelModel.player.position.x && tnt[i].y === this.levelModel.player.position.y) {
+              this.levelModel.player.isOnBlock = false;
+            }
+            var surroundingBlocks = this.levelModel.getAllBorderingPositionNotOfType(tnt[i], "tnt");
+            this.levelModel.destroyBlock(tnt[i]);
+            for(var b = 1; b < surroundingBlocks.length; ++b) {
+              if(surroundingBlocks[b][0]) {
+                this.destroyBlockWithoutPlayerInteraction(surroundingBlocks[b][1]);
               }
             }
-            if (!player.isOnBlock && wasOnBlock) {
-              this.levelView.playPlayerJumpDownVerticalAnimation(player.position, player.facing);
-            }
-            this.levelModel.computeShadingPlane();
-            this.levelModel.computeFowPlane();
-            this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
-            this.levelView.updateFowPlane(this.levelModel.fowPlane);
-            this.delayBy(200, () => {
-              this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock, () => {
-                commandQueueItem.succeeded();
-              });
+          }
+          if (!player.isOnBlock && wasOnBlock) {
+            this.levelView.playPlayerJumpDownVerticalAnimation(player.position, player.facing);
+          }
+          this.levelModel.computeShadingPlane();
+          this.levelModel.computeFowPlane();
+          this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
+          this.levelView.updateFowPlane(this.levelModel.fowPlane);
+          this.delayBy(200, () => {
+            this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock, () => {
+              commandQueueItem.succeeded();
             });
           });
         });
