@@ -579,7 +579,7 @@ class PhaserApp {
               }
             }
             if (!player.isOnBlock && wasOnBlock) {
-              this.levelView.playPlayerJumpDownAnimation(player.position, player.facing);
+              this.levelView.playPlayerJumpDownVerticalAnimation(player.position, player.facing);
             }
             this.levelModel.computeShadingPlane();
             this.levelModel.computeFowPlane();

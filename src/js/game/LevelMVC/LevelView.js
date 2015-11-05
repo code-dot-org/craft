@@ -2143,7 +2143,7 @@ export default class LevelView {
     return sprite;
   }
 
-  playPlayerJumpDownAnimation(position, direction) {
+  playPlayerJumpDownVerticalAnimation(position, direction) {
     var animName = "jumpDown" + this.getDirectionName(direction);
     this.playScaledSpeed(this.playerSprite.animations, animName);
     var tween = this.addResettableTween(this.playerSprite).to({
