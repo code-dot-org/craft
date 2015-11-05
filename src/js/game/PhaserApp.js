@@ -237,10 +237,10 @@ class PhaserApp {
 
       jumpOff = wasOnBlock && wasOnBlock != player.isOnBlock;
       if(player.isOnBlock || jumpOff) {
-        groundType = this.levelModel.actionPlane[player.position[1] * 10 + player.position[0]].blockType;
+        groundType = this.levelModel.actionPlane[this.levelModel.yToIndex(player.position[1]) + player.position[0]].blockType;
       }
       else {
-        groundType = this.levelModel.groundPlane[player.position[1] * 10 + player.position[0]].blockType;
+        groundType = this.levelModel.groundPlane[this.levelModel.yToIndex(player.position[1]) + player.position[0]].blockType;
       }
 
       this.levelView.playMoveForwardAnimation(player.position, player.facing, jumpOff, player.isOnBlock, groundType, () => {
@@ -299,7 +299,7 @@ class PhaserApp {
   }
 
   destroyBlockWithoutPlayerInteraction(position) {
-    let block = this.levelModel.actionPlane[position[1] * 10 + position[0]];
+    let block = this.levelModel.actionPlane[this.levelModel.yToIndex(position[1]) + position[0]];
     this.levelModel.destroyBlock(position);
 
     if (block !== null) {
@@ -331,7 +331,7 @@ class PhaserApp {
             blockType = "planksSpruce";
           break;
         }
-        this.levelView.actionPlaneBlocks[destroyPosition[1] * 10 + destroyPosition[0]].kill();
+        this.levelView.actionPlaneBlocks[this.levelModel.yToIndex(destroyPosition[1]) + destroyPosition[0]].kill();
         this.levelView.playExplosionAnimation(this.levelModel.player.position, this.levelModel.player.facing, destroyPosition, blockType, ()=>{}, true);
       } else if (block.isUsable) {
         switch (blockType) {
