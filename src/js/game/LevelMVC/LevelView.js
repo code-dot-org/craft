@@ -190,10 +190,29 @@ export default class LevelView {
     });
 
     this.audioPlayer.register({
+      id: 'stepWood',
+      mp3: `${this.assetRoot}audio/wood2.mp3`,
+      ogg: `${this.assetRoot}audio/wood2.ogg`
+    });
+
+    this.audioPlayer.register({
       id: 'stepStone',
       mp3: `${this.assetRoot}audio/stone2.mp3`,
       ogg: `${this.assetRoot}audio/stone2.ogg`
     });
+
+    this.audioPlayer.register({
+      id: 'stepGravel',
+      mp3: `${this.assetRoot}audio/gravel1.mp3`,
+      ogg: `${this.assetRoot}audio/gravel1.ogg`
+    });
+
+    this.audioPlayer.register({
+      id: 'stepFarmland',
+      mp3: `${this.assetRoot}audio/cloth4.mp3`,
+      ogg: `${this.assetRoot}audio/cloth4.ogg`
+    });
+
 
     this.audioPlayer.register({
       id: 'failure',
@@ -692,6 +711,27 @@ export default class LevelView {
     return tweenToWhite;
   }
 
+  playBlockSound(groundType) {
+    var oreString = groundType.substring(0, 3);
+    if(groundType === "stone" || groundType === "cobblestone" || groundType === "bedrock" 
+      || oreString === "ore" || groundType === "bricks") {
+      this.audioPlayer.play("stepStone");
+    }
+    else if(groundType === "grass" || groundType === "dirt" || groundType === "dirtCoarse" 
+      || groundType == "wool_orange" || groundType == "wool") {
+      this.audioPlayer.play("stepGrass");
+    }
+    else if(groundType === "gravel") {
+      this.audioPlayer.play("stepGravel");
+    }
+    else if(groundType === "farmlandWet") {
+      this.audioPlayer.play("stepFarmland");
+    }
+    else{
+      this.audioPlayer.play("stepWood");
+    }
+  }
+
   playMoveForwardAnimation(position, facing, shouldJumpDown, isOnBlock, groundType, completionHandler) {
     var tween,
         oldPosition,
@@ -700,12 +740,7 @@ export default class LevelView {
         yOffset = -32;
 
     //stepping on stone sfx
-    if(groundType === "stone") {
-      this.audioPlayer.play("stepStone");
-    }
-    else {
-      this.audioPlayer.play("stepGrass");
-    }
+    this.playBlockSound(groundType);
 
     let direction = this.getDirectionName(facing);
 
@@ -828,6 +863,18 @@ export default class LevelView {
     }
 
     this.actionPlaneBlocks[blockIndex] = sprite;
+  }
+
+  playShearAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
+    let blockIndex = this.yToIndex(destroyPosition[1]) + destroyPosition[0];
+    let blockToShear = this.actionPlaneBlocks[blockIndex];
+
+    blockToShear.animations.stop(null, true);
+    this.onAnimationLoopOnce(this.playScaledSpeed(blockToShear.animations, "used"), () => {
+      this.playScaledSpeed(blockToShear.animations, "face");
+    });
+
+    this.playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, true);
   }
 
   playShearSheepAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
