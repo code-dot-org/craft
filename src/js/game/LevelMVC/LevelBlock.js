@@ -1,16 +1,30 @@
 export default class LevelBlock {
-  constructor(blockType, isWalkable, isDeadly, isPlacable, isUsable) {
+  constructor(blockType) {
     this.blockType = blockType;
 
+    // Default values apply to simple, action-plane destroyable blocks
     this.isEntity = false;
-    this.isWalkable = isWalkable || true;
-    this.isDeadly = isDeadly || false;
-    this.isPlacable = isPlacable || true;
-    this.isDestroyable = blockType !== "";
-    this.isUsable = isUsable || false;
-    this.isEmpty = blockType === "";
+    this.isWalkable = false;
+    this.isDeadly = false;
+    this.isPlacable = false; // whether another block can be placed in this block's spot
+    this.isDestroyable = true;
+    this.isUsable = true;
+    this.isEmpty = false;
     this.isEmissive = false;
     this.isTransparent = false;
+
+    if (blockType === "") {
+      this.isWalkable = true;
+      this.isDestroyable = false;
+      this.isEmpty = true;
+      this.isPlacable = true;
+      this.isUsable = false;
+    }
+
+    if (blockType.match('torch')) {
+      this.isWalkable = true;
+      this.isPlacable = true;
+    }
 
     if(blockType.substring(0, 5) == "rails")
     {
@@ -43,6 +57,11 @@ export default class LevelBlock {
       this.isEmissive = true;
       this.isWalkable = true;
       this.isDeadly = true;
+      this.isPlacable = true;
+    }
+
+    if (blockType == "water") {
+      this.isPlacable = true;
     }
 
     if (blockType == "torch") {

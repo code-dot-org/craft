@@ -5,6 +5,11 @@ import FacingDirection from "./FacingDirection.js"
 
 export default class LevelModel {
   constructor(levelData) {
+    this.planeWidth = levelData.gridDimensions ?
+        levelData.gridDimensions[0] : 10;
+    this.planeHeight = levelData.gridDimensions ?
+        levelData.gridDimensions[1] : 10;
+
     console.log("LevelModel::constructor");
     this.player = {};
 
@@ -27,6 +32,14 @@ export default class LevelModel {
     this.initialPlayerState = Object.create(this.player);
   }
 
+  planeArea() {
+    return this.planeWidth * this.planeHeight;
+  }
+
+  inBounds(x, y) {
+    return x >= 0 && x < this.planeWidth && y >= 0 && y < this.planeHeight;
+  }
+
   reset() {
     console.log("LevelModel::reset");
     this.groundPlane = this.constructPlane(this.initialLevelData.groundPlane, false);
@@ -42,13 +55,17 @@ export default class LevelModel {
 
     this.player.name = this.initialLevelData.playerName || "Steve";
     this.player.position = levelData.playerStartPosition;
-    this.player.isOnBlock = !this.actionPlane[(y * 10) + x].getIsEmptyOrEntity();
+    this.player.isOnBlock = !this.actionPlane[this.yToIndex(y) + x].getIsEmptyOrEntity();
     this.player.facing = levelData.playerStartDirection;
 
     this.player.inventory = {};
 
     this.computeShadingPlane();
     this.computeFowPlane();
+  }
+
+  yToIndex(y) {
+    return y * this.planeWidth;
   }
 
   constructPlane(planeData, isActionPlane) {
@@ -58,14 +75,8 @@ export default class LevelModel {
 
     for (index = 0; index < planeData.length; ++index) {
       block = new LevelBlock(planeData[index]);
-      // TODO(bjordan) duplicated logic in the LevelBlock constructor?
-      block.isWalkable = !isActionPlane ||
-          planeData[index] === "" ||
-          planeData[index] === "torch" ||
-          planeData[index] === "railsRedstoneTorch";
-      block.isPlacable = (isActionPlane && block.isEmpty) ||
-          (block.blockType === "lava" || block.blockType === "water");
-      block.isUsable = isActionPlane && !block.isEmpty;
+      // TODO(bjordan): put this truth in constructor like other attrs
+      block.isWalkable = block.isWalkable || !isActionPlane;
       result.push(block);
     }
 
@@ -125,7 +136,7 @@ export default class LevelModel {
     var count = 0,
         i;
 
-    for (i = 0; i < 100; ++i) {
+    for (i = 0; i < this.planeArea(); ++i) {
       if (blockType == this.actionPlane[i].blockType) {
         ++count;
       }
@@ -139,7 +150,7 @@ export default class LevelModel {
   }
 
   solutionMapMatchesResultMap(solutionMap) {
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < this.planeArea(); i++) {
       var solutionItemType = solutionMap[i];
 
       // "" on the solution map means we dont care what's at that spot
@@ -162,8 +173,8 @@ export default class LevelModel {
 
   getTnt() {
     var tnt = [];
-    for(var x = 0; x < 10; ++x) {
-      for(var y = 0; y < 10; ++y) {
+    for(var x = 0; x < this.planeWidth; ++x) {
+      for(var y = 0; y < this.planeHeight; ++y) {
         var index = this.coordinatesToIndex([x,y]);
         var block = this.actionPlane[index];
         if(block.blockType === "tnt") {
@@ -176,8 +187,8 @@ export default class LevelModel {
 
   getUnpoweredRails() {
     var unpoweredRails = [];
-    for(var x = 0; x < 10; ++x) {
-      for(var y = 0; y < 10; ++y) {
+    for(var x = 0; x < this.planeWidth; ++x) {
+      for(var y = 0; y < this.planeHeight; ++y) {
         var index = this.coordinatesToIndex([x,y]);
         var block = this.actionPlane[index];
         if(block.blockType.substring(0,7) == "railsUn") {
@@ -235,8 +246,8 @@ export default class LevelModel {
   isBlockOfTypeOnPlane(position, blockType, plane)  {
       var result = false;
 
-      let blockIndex = (position[1] * 10) + position[0];
-      if (blockIndex >= 0 && blockIndex < 100) {
+      let blockIndex = this.yToIndex(position[1]) + position[0];
+      if (blockIndex >= 0 && blockIndex < this.planeArea()) {
 
           if (blockType == "empty") {
               result =  plane[blockIndex].isEmpty;
@@ -251,17 +262,17 @@ export default class LevelModel {
   }
 
   isPlayerStandingInWater(){
-    let blockIndex = (this.player.position[1] * 10) + this.player.position[0];
+    let blockIndex = this.yToIndex(this.player.position[1]) + this.player.position[0];
     return this.groundPlane[blockIndex].blockType === "water";
   }
 
   isPlayerStandingInLava() {
-    let blockIndex = (this.player.position[1] * 10) + this.player.position[0];
+    let blockIndex = this.yToIndex(this.player.position[1]) + this.player.position[0];
     return this.groundPlane[blockIndex].blockType === "lava";
   }
 
   coordinatesToIndex(coordinates){
-    return (coordinates[1] * 10) + coordinates[0];
+    return this.yToIndex(coordinates[1]) + coordinates[0];
   }
 
   checkPositionForTypeAndPush(blockType, position, objectArray){
@@ -286,7 +297,7 @@ export default class LevelModel {
         posLeft,
         checkIndex = 0,
         array = arrayCheck;
-        let index = (position[2] * 10) + position[1];
+        let index = this.yToIndex(position[2]) + position[1];
 
         if(index === 44)
         {
@@ -294,16 +305,16 @@ export default class LevelModel {
         }
 
     posAbove =  [0, position[1], position[2] + 1];
-    posAbove[0] = (posAbove[2] * 10) + posAbove[1];
+    posAbove[0] = this.yToIndex(posAbove[2]) + posAbove[1];
 
     posBelow =  [0, position[1], position[2] - 1];
-    posBelow[0] = (posBelow[2] * 10) + posBelow[1];
+    posBelow[0] = this.yToIndex(posBelow[2]) + posBelow[1];
 
     posRight =  [0, position[1] + 1, position[2]];
-    posRight[0] = (posRight[2] * 10) + posRight[1];
+    posRight[0] = this.yToIndex(posRight[2]) + posRight[1];
     
     posLeft =  [0, position[1] - 1, position[2]];
-    posRight[0] = (posRight[2] * 10) + posRight[1];
+    posRight[0] = this.yToIndex(posRight[2]) + posRight[1];
 
     checkActionBlock = this.actionPlane[index];
     checkGroundBlock = this.groundPlane[index];
@@ -410,7 +421,7 @@ export default class LevelModel {
     return this.getAllBorderingPlayer("creeper");
   }
 
-getMinecartTrack() {
+  getMinecartTrack() {
     var track = [];
     track.push(["down", [3,2], FacingDirection.Down, 300]);
     track.push(["down", [3,3], FacingDirection.Down, 300]);
@@ -435,10 +446,10 @@ getMinecartTrack() {
     var result = false;
 
     let blockForwardPosition = this.getMoveForwardPosition();
-    let blockIndex = (blockForwardPosition[1] * 10) + blockForwardPosition[0];
+    let blockIndex = this.yToIndex(blockForwardPosition[1]) + blockForwardPosition[0];
     let [x, y] = [blockForwardPosition[0], blockForwardPosition[1]];
 
-    if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+    if (this.inBounds(x, y)) {
       result = this.actionPlane[blockIndex].isWalkable ||
                (this.player.isOnBlock && !this.actionPlane[blockIndex].isEmpty);
     }
@@ -459,10 +470,10 @@ getMinecartTrack() {
   }
 
   getPlaneToPlaceOn(coordinates) {
-    let blockIndex = (coordinates[1] * 10) + coordinates[0];
+    let blockIndex = this.yToIndex(coordinates[1]) + coordinates[0];
     let [x, y] = [coordinates[0], coordinates[1]];
 
-    if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+    if (this.inBounds(x, y)) {
       let actionBlock = this.actionPlane[blockIndex];
       if (actionBlock.isPlacable) {
         let groundBlock = this.groundPlane[blockIndex];
@@ -481,10 +492,10 @@ getMinecartTrack() {
 
     if (!this.player.isOnBlock) {
       let blockForwardPosition = this.getMoveForwardPosition();
-      let blockIndex = (blockForwardPosition[1] * 10) + blockForwardPosition[0];
+      let blockIndex = this.yToIndex(blockForwardPosition[1]) + blockForwardPosition[0];
       let [x, y] = [blockForwardPosition[0], blockForwardPosition[1]];
 
-      if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+      if (this.inBounds(x, y)) {
         let block = this.actionPlane[blockIndex];
         result = !block.isEmpty && (block.isDestroyable || block.isUsable);
       }
@@ -499,7 +510,7 @@ getMinecartTrack() {
   }
 
   moveTo(position) {
-    let blockIndex = (position[1] * 10) + position[0];
+    let blockIndex = this.yToIndex(position[1]) + position[0];
 
     this.player.position = position;
     if (this.actionPlane[blockIndex].isEmpty) {
@@ -549,7 +560,7 @@ getMinecartTrack() {
 
   placeBlock(blockType) {
     let blockPosition = this.player.position;
-    let blockIndex = (blockPosition[1] * 10) + blockPosition[0];
+    let blockIndex = this.yToIndex(blockPosition[1]) + blockPosition[0];
     var shouldPlace = false;
 
     switch (blockType) {
@@ -566,7 +577,7 @@ getMinecartTrack() {
       var block = new LevelBlock(blockType);
 
       this.actionPlane[blockIndex] = block;
-      this.player.isOnBlock = block.isDestroyable && block.isWalkable;
+      this.player.isOnBlock = block.isDestroyable && !block.isWalkable;
     }
 
     return shouldPlace;
@@ -574,7 +585,7 @@ getMinecartTrack() {
 
   placeBlockForward(blockType, targetPlane) {
     let blockPosition = this.getMoveForwardPosition();
-    let blockIndex = (blockPosition[1] * 10) + blockPosition[0];
+    let blockIndex = this.yToIndex(blockPosition[1]) + blockPosition[0];
 
     //for placing wetland for crops in free play
     if(blockType === "watering") {
@@ -582,13 +593,7 @@ getMinecartTrack() {
       targetPlane = this.groundPlane;
     }
 
-    var block = new LevelBlock(blockType);
-    block.isEmpty = false;
-    block.isWalkable = false;
-    block.isPlacable = false;
-    block.isUsable = true;
-
-    targetPlane[blockIndex] = block;
+    targetPlane[blockIndex] = new LevelBlock(blockType);
   }
 
   destroyBlock(position) {
@@ -596,10 +601,10 @@ getMinecartTrack() {
         block = null;
 
     let blockPosition = position;
-    let blockIndex = (blockPosition[1] * 10) + blockPosition[0];
+    let blockIndex = this.yToIndex(blockPosition[1]) + blockPosition[0];
     let [x, y] = [blockPosition[0], blockPosition[1]];
     
-    if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+    if (this.inBounds(x, y)) {
       block = this.actionPlane[blockIndex];
       if (block !== null) {
         block.position = [x, y];
@@ -619,10 +624,10 @@ getMinecartTrack() {
         block = null;
 
     let blockForwardPosition = this.getMoveForwardPosition();
-    let blockIndex = (blockForwardPosition[1] * 10) + blockForwardPosition[0];
+    let blockIndex = this.yToIndex(blockForwardPosition[1]) + blockForwardPosition[0];
     let [x, y] = [blockForwardPosition[0], blockForwardPosition[1]];
     
-    if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+    if (this.inBounds(x, y)) {
       block = this.actionPlane[blockIndex];
       if (block !== null) {
         block.position = [x, y];
@@ -791,8 +796,8 @@ getMinecartTrack() {
 
   getAllEmissives(){
     var emissives = [];
-    for (var y = 0; y < 10; ++y) {
-      for (var x = 0; x < 10; ++x) {
+    for (var y = 0; y < this.planeHeight; ++y) {
+      for (var x = 0; x < this.planeWidth; ++x) {
         var index = this.coordinatesToIndex([x,y]);
         if(!this.actionPlane[index].isEmpty && this.actionPlane[index].isEmissive || this.groundPlane[index].isEmissive && this.actionPlane[index].isEmpty ) {
           emissives.push([x,y]);
@@ -814,7 +819,7 @@ getMinecartTrack() {
         for (var xIndex = currentTorch[0] - 2; xIndex <= (currentTorch[0] + 2); ++xIndex) {
 
           //Ensure we're looking inside the map
-          if(yIndex < 0 || yIndex > 9 || xIndex < 0 || xIndex > 9)
+          if(!this.inBounds(xIndex, yIndex))
             continue;
 
           //Ignore the indexes directly around us.
@@ -840,7 +845,7 @@ getMinecartTrack() {
       for (var xIndex = x - 2; xIndex <= (x + 2); ++xIndex) {
 
         //Ensure we're looking inside the map
-        if(yIndex < 0 || yIndex > 9 || xIndex < 0 || xIndex > 9)
+        if(!this.inBounds(xIndex, yIndex))
           continue;
 
         //Ignore the indexes directly around us. 
@@ -863,15 +868,15 @@ getMinecartTrack() {
 
     this.fowPlane = [];
     if (this.isDaytime) {
-      for (y = 0; y < 10; ++y) {
-        for (x = 0; x < 10; ++x) {
-          this.fowPlane.push[""];          
+      for (y = 0; y < this.planeHeight; ++y) {
+        for (x = 0; x < this.planeWidth; ++x) {
+          this.fowPlane.push[""]; // noop TODO(bjordan) remove?
         }
       }
     } else {
       // compute the fog of war for light emitting blocks
-      for (y = 0; y < 10; ++y) {
-        for (x = 0; x < 10; ++x) {
+      for (y = 0; y < this.planeHeight; ++y) {
+        for (x = 0; x < this.planeWidth; ++x) {
           this.fowPlane.push({ x: x, y: y, type: "FogOfWar_Center" });
         }
       }
@@ -879,9 +884,9 @@ getMinecartTrack() {
       //second pass for partial lit squares
       this.solveFOWTypeForMap();
 
-      for (y = 0; y < 10; ++y) {
-        for (x = 0; x < 10; ++x) {
-          let blockIndex = (y * 10) + x;
+      for (y = 0; y < this.planeHeight; ++y) {
+        for (x = 0; x < this.planeWidth; ++x) {
+          let blockIndex = this.yToIndex(y) + x;
           
           if (this.groundPlane[blockIndex].isEmissive && this.actionPlane[blockIndex].isEmpty ||
             (!this.actionPlane[blockIndex].isEmpty && this.actionPlane[blockIndex].isEmissive)) {
@@ -905,8 +910,8 @@ getMinecartTrack() {
   }
 
   clearFowAt(x, y) {
-    if (x >= 0 && x < 10 && y >= 0 && y < 10) {
-      let blockIndex = (y * 10) + x;
+    if (x >= 0 && x < this.planeWidth && y >= 0 && y < this.planeHeight) {
+      let blockIndex = this.yToIndex(y) + x;
       this.fowPlane[blockIndex] = "";
     }
   }
@@ -920,9 +925,9 @@ getMinecartTrack() {
 
     this.shadingPlane = [];
 
-    for (index = 0; index < 100; ++index) {
-      x = index % 10;
-      y = Math.floor(index / 10);
+    for (index = 0; index < this.planeArea(); ++index) {
+      x = index % this.planeWidth;
+      y = Math.floor(index / this.planeWidth);
 
       hasLeft = false;
       hasRight = false;
@@ -932,7 +937,7 @@ getMinecartTrack() {
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Bottom' });
         }
 
-        if (y == 9) {
+        if (y == this.planeHeight - 1) {
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Top' });
         }
 
@@ -940,51 +945,55 @@ getMinecartTrack() {
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Right' });
         }
 
-        if (x == 9) {
+        if (x == this.planeWidth - 1) {
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Left' });
         }
 
 
-        if (x < 9 && !this.actionPlane[(y * 10) + x + 1].getIsEmptyOrEntity()) {
+        if (x < this.planeWidth - 1 && !this.actionPlane[this.yToIndex(y) + x + 1].getIsEmptyOrEntity()) {
           // needs a left side AO shadow
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Left' });
           hasLeft = true;
         }
 
-        if (x > 0 && !this.actionPlane[(y * 10) + x - 1].getIsEmptyOrEntity()) {
+        if (x > 0 && !this.actionPlane[this.yToIndex(y) + x - 1].getIsEmptyOrEntity()) {
           // needs a right side AO shadow
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Right' });
           this.shadingPlane.push({ x: x, y: y, type: 'Shadow_Parts_Fade_base.png' });
 
-          if (y > 0 && x > 0 && this.actionPlane[((y - 1) * 10) + x - 1].getIsEmptyOrEntity()) {
+          if (y > 0 && x > 0 && this.actionPlane[this.yToIndex(y - 1) + x - 1].getIsEmptyOrEntity()) {
             this.shadingPlane.push({ x: x, y: y, type: 'Shadow_Parts_Fade_top.png' });
           }
 
           hasRight = true;
         }
 
-        if (y > 0 && !this.actionPlane[((y - 1) * 10) + x].getIsEmptyOrEntity()) {
+        if (y > 0 && !this.actionPlane[this.yToIndex(y - 1) + x].getIsEmptyOrEntity()) {
           // needs a bottom side AO shadow
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Bottom' });
         } else if (y > 0) {
-          if (x < 9 && !this.actionPlane[((y - 1) * 10) + x + 1].getIsEmptyOrEntity()&& this.actionPlane[(y * 10) + x + 1].getIsEmptyOrEntity()) {
+          if (x < this.planeWidth - 1 && 
+              !this.actionPlane[this.yToIndex(y - 1) + x + 1].getIsEmptyOrEntity() &&
+              this.actionPlane[this.yToIndex(y) + x + 1].getIsEmptyOrEntity()) {
             // needs a bottom left side AO shadow
             this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_BottomLeft' });
           }
 
-          if (!hasRight && x > 0 && !this.actionPlane[((y - 1) * 10) + x - 1].getIsEmptyOrEntity()) {
+          if (!hasRight && x > 0 && !this.actionPlane[this.yToIndex(y - 1) + x - 1].getIsEmptyOrEntity()) {
             // needs a bottom right side AO shadow
             this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_BottomRight' });
           }
         }
 
-        if (y < 9) {
-          if (x < 9 && !this.actionPlane[((y + 1) * 10) + x + 1].getIsEmptyOrEntity()&& this.actionPlane[(y * 10) + x + 1].getIsEmptyOrEntity()) {
+        if (y < this.planeHeight - 1) {
+          if (x < this.planeWidth - 1 && 
+              !this.actionPlane[this.yToIndex(y + 1) + x + 1].getIsEmptyOrEntity() &&
+              this.actionPlane[this.yToIndex(y) + x + 1].getIsEmptyOrEntity()) {
             // needs a bottom left side AO shadow
             this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_TopLeft' });
           }
 
-          if (!hasRight && x > 0 && !this.actionPlane[((y + 1) * 10) + x - 1].getIsEmptyOrEntity()) {
+          if (!hasRight && x > 0 && !this.actionPlane[this.yToIndex(y + 1) + x - 1].getIsEmptyOrEntity()) {
             // needs a bottom right side AO shadow
             this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_TopRight' });
           }

@@ -57,7 +57,7 @@ window.demoLevels = {
       "", "", "", "treeOak", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "sheep", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "logOak", "logOak", "logOak", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "treeOak", "", "", "", "", "", "", "",
@@ -434,7 +434,10 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
     ],
 
-    solutionCode: moveForwardBlock,
+    solutionCode: 'turnLeft(); moveForward(); moveForward();moveForward();moveForward(); ' +
+    'turnRight();moveForward();moveForward();moveForward();moveForward();turnRight();moveForward();' +
+    'moveForward();moveForward();turnRight();placeBlock("logOak"); moveForward();moveForward();moveForward();' +
+    ' placeBlock("logOak"); moveForward();moveForward();moveForward(); turnRight();' ,
 
     verificationFunction: function (verificationAPI) {
       return verificationAPI.solutionMapMatchesResultMap(
@@ -680,7 +683,6 @@ window.demoLevels = {
       return true;
     }
   },
-
   10: {
     fluffPlane: ["", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
@@ -702,8 +704,210 @@ window.demoLevels = {
     verificationFunction: function (verificationAPI) {
       return true;
     }
-  }
+  },
+  11: {
+    instructions: "Free play level. Explore!",
 
+    playerStartPosition: [15, 15],
+
+    playerStartDirection: 1,
+
+    gridDimensions: [20, 39],
+
+    groundPlane: [
+      "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "lava", "cobblestone", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "cobblestone", "lava", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone",
+      "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "lava", "cobblestone", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "lava", "cobblestone", "lava", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "cobblestone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "cobblestone", "stone"
+    ],
+
+    groundDecorationPlane: [
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    actionPlane: [
+      "stone", "", "", "", "", "", "", "stone", "stone", "stone", "stone", "", "", "", "", "", "", "stone", "stone", "stone",
+      "", "", "", "", "", "", "", "", "", "stone", "", "", "", "", "", "", "", "", "", "stone",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "stone", "planksOak", "planksOak", "planksOak", "planksOak", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "stone", "logOak", "logOak", "logOak", "logOak", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "stone", "", "", "", "", "", "", "", "", "", "stone", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "stone", "", "", "", "", "", "", "stone", "stone", "stone", "stone", "", "", "", "", "", "", "stone", "stone", "stone",
+      "", "", "", "", "", "", "", "", "", "stone", "", "", "", "", "", "", "", "", "", "stone",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "stone", "planksOak", "planksOak", "planksOak", "planksOak", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "stone", "logOak", "logOak", "logOak", "logOak", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "stone", "", "", "", "", "", "", "", "", "", "stone", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "oreCoal", "stone", "", "stone", "", "oreDiamond", "", "", "", "", "oreCoal", "stone", "", "stone", "", "oreDiamond", "", "", "", "",
+    ],
+
+    fluffPlane: [
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    solutionCode:
+    "for (var i = 0; i < 50; i++) {"
+    + "for (var j = 0; j < 10; j++) {"
+    + moveForwardBlock
+    + "}"
+    + turnRightBlock
+    + "}"
+
+      ,
+
+    verificationFunction: function (verificationAPI) {
+      return verificationAPI.solutionMapMatchesResultMap(
+          [
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "logOak", "logOak", "logOak", "logOak", "", "", "",
+            "", "", "", "logOak", "", "", "logOak", "", "", "",
+            "", "", "", "logOak", "", "", "logOak", "", "", "",
+            "", "", "", "", "", "", "logOak", "", "", "",
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", ""
+          ]);
+    }
+  }
 };
 
 export default demoLevels;

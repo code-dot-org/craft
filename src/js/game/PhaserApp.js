@@ -112,6 +112,14 @@ class PhaserApp {
     this.levelView.create(this.levelModel);
     this.game.time.slowMotion = this.initialSlowMotion;
     this.addCheatKeys();
+    if (this.followingPlayer()) {
+      this.game.world.setBounds(0, 0, this.levelModel.planeWidth * 40,
+          this.levelModel.planeHeight * 40);
+    }
+  }
+
+  followingPlayer() {
+    return !!this.levelData.gridDimensions;
   }
 
   update() {
