@@ -321,6 +321,13 @@ export default class LevelView {
     this.setSelectionIndicatorPosition(player.position[0], player.position[1]);
     this.selectionIndicator.visible = true;
     this.playIdleAnimation(player.position, player.facing, player.isOnBlock);
+
+    if (this.controller.followingPlayer()) {
+      this.game.world.setBounds(0, 0, levelModel.planeWidth * 40, levelModel.planeHeight * 40);
+      this.game.camera.follow(this.playerSprite);
+      this.game.world.scale.x = 1;
+      this.game.world.scale.y = 1;
+    }
   }
 
   update() {
@@ -383,6 +390,28 @@ export default class LevelView {
 
   playIdleAnimation(position, facing, isOnBlock) {
     this.playPlayerAnimation("idle", position, facing, isOnBlock);
+  }
+
+  scaleShowWholeWorld(completionHandler) {
+    var [scaleX, scaleY] = this.controller.scaleFromOriginal();
+    var scaleTween = this.addResettableTween(this.game.world.scale).to({
+      x: 1 / scaleX,
+      y: 1 / scaleY
+    }, 1000, Phaser.Easing.Exponential.Out);
+
+    this.game.camera.unfollow();
+
+    var positionTween = this.addResettableTween(this.game.camera).to({
+      x: 0,
+      y: 0
+    }, 1000, Phaser.Easing.Exponential.Out);
+
+    scaleTween.onComplete.addOnce(() => {
+      completionHandler();
+    });
+
+    positionTween.start();
+    scaleTween.start();
   }
 
   playSuccessAnimation(position, facing, isOnBlock, completionHandler) {

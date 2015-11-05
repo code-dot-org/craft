@@ -112,10 +112,6 @@ class PhaserApp {
     this.levelView.create(this.levelModel);
     this.game.time.slowMotion = this.initialSlowMotion;
     this.addCheatKeys();
-    if (this.followingPlayer()) {
-      this.game.world.setBounds(0, 0, this.levelModel.planeWidth * 40,
-          this.levelModel.planeHeight * 40);
-    }
   }
 
   followingPlayer() {
@@ -225,24 +221,10 @@ class PhaserApp {
     return [newWidth / originalWidth, newHeight / originalHeight];
   }
 
-  scaleShowWholeWorld() {
-    var [scaleX, scaleY] = this.scaleFromOriginal();
-    this.game.world.scale.x = 1 / scaleX;
-    this.game.world.scale.y = 1 / scaleY;
-  }
-
-  getScreenshot() {
-    this.scaleShowWholeWorld();
-    var originalCameraTarget = this.game.camera.target;
-    this.game.camera.unfollow();
-    this.game.camera.setPosition(0, 0);
-    this.game.camera.update();
-    this.game.updateRender();
-    var screenshot = this.game.canvas.toDataURL("image/png");
-    this.game.camera.follow(originalCameraTarget);
-    this.game.world.scale.x = 1;
-    this.game.world.scale.y = 1;
-    return screenshot;
+  getScreenshot(onComplete) {
+    this.levelView.scaleShowWholeWorld(() => {
+      onComplete(this.game.canvas.toDataURL("image/png"));
+    });
   }
 
   // command processors
