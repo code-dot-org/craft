@@ -2143,6 +2143,21 @@ export default class LevelView {
     return sprite;
   }
 
+  playPlayerJumpDownAnimation(position, direction) {
+    var animName = "jumpDown" + this.getDirectionName(direction);
+    this.playScaledSpeed(this.playerSprite.animations, animName);
+    var tween = this.addResettableTween(this.playerSprite).to({
+      x: [-18 + 40 * position[0], -18 + 40 * position[0], -18 + 40 * position[0]],
+      y: [-32 + 40 * position[1], -32 + 40 * position[1] - 50, -32 + 40 * position[1]]
+    }, 300, Phaser.Easing.Linear.None).interpolation((v,k) => {
+      return Phaser.Math.bezierInterpolation(v,k);
+    });
+    tween.onComplete.addOnce(() => {
+      this.audioPlayer.play("fall");
+    });
+    tween.start();
+  }
+
   onAnimationEnd(animation, completionHandler) {
     var signalBinding = animation.onComplete.addOnce(() => {
       signalBinding.detach();

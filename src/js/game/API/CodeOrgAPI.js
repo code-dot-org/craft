@@ -80,10 +80,8 @@ export function get(controller) {
         controller.queue.addCommand(new IfBlockAheadCommand(controller, highlightCallback, blockType, codeBlock));
     },
 
-    getScreenshot: function(screenshotHandler) {
-        controller.getScreenshot((screenshot) => {
-          screenshotHandler(screenshot);
-        });
+    getScreenshot: function() {
+        return controller.getScreenshot();
     }
   }
 }

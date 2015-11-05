@@ -221,10 +221,8 @@ class PhaserApp {
     return [newWidth / originalWidth, newHeight / originalHeight];
   }
 
-  getScreenshot(onComplete) {
-    this.levelView.scaleShowWholeWorld(() => {
-      onComplete(this.game.canvas.toDataURL("image/png"));
-    });
+  getScreenshot() {
+    return this.game.canvas.toDataURL("image/png");
   }
 
   // command processors
@@ -563,25 +561,34 @@ class PhaserApp {
             () => { commandQueueItem.succeeded(); }, this.levelModel.getMinecartTrack(), this.levelModel.getUnpoweredRails());
       }
       else if(this.checkTntAnimation()) {
-        var tnt = this.levelModel.getTnt();
-        this.levelView.playDestroyTntAnimation(player.position, player.facing, player.isOnBlock, this.levelModel.getTnt(), this.levelModel.shadingPlane,
-        () => {
-          for(var i in tnt) {
-            var surroundingBlocks = this.levelModel.getAllBorderingPositionNotOfType(tnt[i], "tnt");
-            this.levelModel.destroyBlock(tnt[i]);
-            for(var b = 1; b < surroundingBlocks.length; ++b) {
-              if(surroundingBlocks[b][0]) {
-              this.destroyBlockWithoutPlayerInteraction(surroundingBlocks[b][1]);
+        this.levelView.scaleShowWholeWorld(() => {
+          var tnt = this.levelModel.getTnt();
+          var wasOnBlock = player.isOnBlock;
+          this.levelView.playDestroyTntAnimation(player.position, player.facing, player.isOnBlock, this.levelModel.getTnt(), this.levelModel.shadingPlane,
+          () => {
+            for(var i in tnt) {
+              if (tnt[i].x === this.levelModel.player.position.x && tnt[i].y === this.levelModel.player.position.y) {
+                this.levelModel.player.isOnBlock = false;
+              }
+              var surroundingBlocks = this.levelModel.getAllBorderingPositionNotOfType(tnt[i], "tnt");
+              this.levelModel.destroyBlock(tnt[i]);
+              for(var b = 1; b < surroundingBlocks.length; ++b) {
+                if(surroundingBlocks[b][0]) {
+                  this.destroyBlockWithoutPlayerInteraction(surroundingBlocks[b][1]);
+                }
               }
             }
-          }
-          this.levelModel.computeShadingPlane();
-          this.levelModel.computeFowPlane();
-          this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
-          this.levelView.updateFowPlane(this.levelModel.fowPlane);
-          this.delayBy(200, () => {
-            this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock, () => {
-              commandQueueItem.succeeded();
+            if (!player.isOnBlock && wasOnBlock) {
+              this.levelView.playPlayerJumpDownAnimation(player.position, player.facing);
+            }
+            this.levelModel.computeShadingPlane();
+            this.levelModel.computeFowPlane();
+            this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
+            this.levelView.updateFowPlane(this.levelModel.fowPlane);
+            this.delayBy(200, () => {
+              this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock, () => {
+                commandQueueItem.succeeded();
+              });
             });
           });
         });
