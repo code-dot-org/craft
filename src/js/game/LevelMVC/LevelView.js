@@ -418,6 +418,9 @@ export default class LevelView {
       this.createBlock(this.fluffPlane, position[0], position[1], "bubbles");
 
       sprite = this.fluffPlane.create(0, 0, "finishOverlay");
+      var [scaleX, scaleY] = this.controller.scaleFromOriginal();
+      sprite.scale.x = scaleX;
+      sprite.scale.y = scaleY;
       sprite.alpha = 0;
       if (this.controller.canUseTints()) {
         sprite.tint = 0x324bff;
@@ -442,6 +445,9 @@ export default class LevelView {
     this.createBlock(this.fluffPlane, position[0], position[1], "fire");
 
     sprite = this.fluffPlane.create(0, 0, "finishOverlay");
+    var [scaleX, scaleY] = this.controller.scaleFromOriginal();
+    sprite.scale.x = scaleX;
+    sprite.scale.y = scaleY;
     sprite.alpha = 0;
     if (this.controller.canUseTints()) {
       sprite.tint = 0xd1580d;
@@ -673,6 +679,9 @@ export default class LevelView {
         tweenWToC;
 
     sprite = this.fluffPlane.create(0, 0, "finishOverlay");
+    var [scaleX, scaleY] = this.controller.scaleFromOriginal();
+    sprite.scale.x = scaleX;
+    sprite.scale.y = scaleY;
     sprite.alpha = 0;
 
     tweenToW = this.tweenToWhite(sprite);

@@ -219,8 +219,30 @@ class PhaserApp {
     this.levelView.render();
   }
 
+  scaleFromOriginal() {
+    var [newWidth, newHeight] = this.levelData.gridDimensions || [10, 10];
+    var [originalWidth, originalHeight] = [10, 10];
+    return [newWidth / originalWidth, newHeight / originalHeight];
+  }
+
+  scaleShowWholeWorld() {
+    var [scaleX, scaleY] = this.scaleFromOriginal();
+    this.game.world.scale.x = 1 / scaleX;
+    this.game.world.scale.y = 1 / scaleY;
+  }
+
   getScreenshot() {
-    return this.game.canvas.toDataURL("image/png");
+    this.scaleShowWholeWorld();
+    var originalCameraTarget = this.game.camera.target;
+    this.game.camera.unfollow();
+    this.game.camera.setPosition(0, 0);
+    this.game.camera.update();
+    this.game.updateRender();
+    var screenshot = this.game.canvas.toDataURL("image/png");
+    this.game.camera.follow(originalCameraTarget);
+    this.game.world.scale.x = 1;
+    this.game.world.scale.y = 1;
+    return screenshot;
   }
 
   // command processors
