@@ -417,8 +417,9 @@ export default class LevelView {
   playSuccessAnimation(position, facing, isOnBlock, completionHandler) {
     this.controller.delayBy(250, () => {
       this.audioPlayer.play("success");
-      this.playPlayerAnimation("celebrate", position, facing, isOnBlock);
-      this.controller.delayBy(2950, completionHandler);
+      this.onAnimationEnd(this.playPlayerAnimation("celebrate", position, facing, isOnBlock), () => {
+        completionHandler();
+      });
     });
   }
 
@@ -1430,7 +1431,7 @@ export default class LevelView {
     frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 37, 44, "", 3));*/
     //look at cam
     frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 263, 262, "", 3));
-    for (i = 0; i < 50; ++i) {
+    for (i = 0; i < 5; ++i) {
       frameList.push("Player_262");
     }
     return frameList;
