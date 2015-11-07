@@ -21,8 +21,8 @@ export default class LevelModel {
       "","","","railsUnpoweredVertical","","","","","","",
       "","","","railsUnpoweredVertical","","","","","","",
       "","","","railsUnpoweredVertical","","","","","","",
-      "","","","railsUnpoweredVertical","","","","","","",
       "","","","railsBottomLeft","railsHorizontal","railsHorizontal","railsHorizontal","railsHorizontal","railsHorizontal","railsHorizontal",
+      "","","","","","","","","","",
       "","","","","","","","","",""];
 
     this.initialLevelData = Object.create(levelData);
@@ -429,16 +429,15 @@ export default class LevelModel {
     track.push(["down", [3,5], FacingDirection.Down, 300]);
     track.push(["down", [3,6], FacingDirection.Down, 300]);
     track.push(["down", [3,7], FacingDirection.Down, 300]);
-    track.push(["down", [3,8], FacingDirection.Down, 300]);  
-    track.push(["turn_left", [3,8], FacingDirection.Right, 400]);
-    track.push(["right", [4,8], FacingDirection.Right, 400]);
-    track.push(["right", [5,8], FacingDirection.Right, 400]);
-    track.push(["right", [6,8], FacingDirection.Right, 400]);
-    track.push(["right", [7,8], FacingDirection.Right, 400]);
-    track.push(["right", [8,8], FacingDirection.Right, 400]);
-    track.push(["right", [9,8], FacingDirection.Right, 400]);
-    track.push(["right", [10,8], FacingDirection.Right, 400]);
-    track.push(["right", [11,8], FacingDirection.Right, 400]);
+    track.push(["turn_left", [3,7], FacingDirection.Right, 400]);
+    track.push(["right", [4,7], FacingDirection.Right, 400]);
+    track.push(["right", [5,7], FacingDirection.Right, 400]);
+    track.push(["right", [6,7], FacingDirection.Right, 400]);
+    track.push(["right", [7,7], FacingDirection.Right, 400]);
+    track.push(["right", [8,7], FacingDirection.Right, 400]);
+    track.push(["right", [9,7], FacingDirection.Right, 400]);
+    track.push(["right", [10,7], FacingDirection.Right, 400]);
+    track.push(["right", [11,7], FacingDirection.Right, 400]);
     return track;
 }
 
