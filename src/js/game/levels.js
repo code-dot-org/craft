@@ -29,14 +29,22 @@ window.demoLevels = {
 
     playerName: "Alex",
 
+    earlyLoadAssetPacks: ['levelOneAssets'],
+    earlyLoadNiceToHaveAssetPacks: ['playerAlex'],
+
+    assetPacks: {
+      beforeLoad: ['levelOneAssets', 'playerAlex'],
+      afterLoad: ['playerSteve', 'playerAlex', 'grass']
+    },
+
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "dirtCoarse", "dirtCoarse", "dirtCoarse", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "lava", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "lava", "grass",
-      "grass", "grass", "grass", "grass", "water", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
     ],
@@ -46,8 +54,8 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "flowerDandelion", "", "", "", "", "", "", "lavaPop", "",
-      "", "", "", "", "", "", "", "", "lavaPop", "",
+      "", "flowerDandelion", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "flowerOxeeye",
       "", "", "", "", "", "", "", "", "", "",
       "tallGrass", "", "", "", "", "", "", "", "", ""],
@@ -89,6 +97,13 @@ window.demoLevels = {
   2: {
     instructions: "We're gonna need some wood. Move me to the tree and let’s chop it down.",
 
+    earlyLoadAssetPacks: ['levelTwoAssets', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['levelTwoAssets', 'playerSteve'],
+      afterLoad: ['levelThreeAssets']
+    },
+
     playerStartPosition: [6, 7],
 
     playerStartDirection: 2,
@@ -122,7 +137,7 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "treeOak", "", "", "",
+      "", "", "", "", "", "", "treeSpruce", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
@@ -142,7 +157,7 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
     ],
 
-    solutionCode: turnLeftBlock,
+    solutionCode: turnLeftBlock + turnLeftBlock + moveForwardBlock + moveForwardBlock + destroyBlock,
 
     verificationFunction: function (verificationAPI) {
       return verificationAPI.countOfTypeOnMap("logOak") === 0;
@@ -151,6 +166,13 @@ window.demoLevels = {
 
   3: {
     instructions: "Time to shear some sheep! Walk to both of the sheep and get their wool.",
+
+    earlyLoadAssetPacks: ['levelThreeAssets', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['levelThreeAssets', 'playerSteve'],
+      afterLoad: []
+    },
 
     playerStartPosition: [4, 3],
 
@@ -221,6 +243,13 @@ window.demoLevels = {
 
   4: {
     instructions: "Now I need to start chopping trees! Chop at least 3 Trees out of the 4. Nightfall is coming, so hurry up!",
+
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: []
+    },
 
     playerStartPosition: [2, 4],
 
@@ -299,6 +328,13 @@ window.demoLevels = {
   5: {
     instructions: "Make one wall of your house by placing three blocks.",
 
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: []
+    },
+
     playerStartPosition: [5, 6],
 
     playerStartDirection: 3,
@@ -375,6 +411,13 @@ window.demoLevels = {
 
   6: {
     instructions: "Let's make our own house! This spot looks good. Build a frame on the dirt blocks.",
+
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: []
+    },
 
     playerStartPosition: [3, 6],
 
@@ -459,6 +502,13 @@ window.demoLevels = {
   7: {
     instructions: "During the night monsters appear! These monsters explode when you get near them. Avoid the monsters and reach your house in the least possible number of commands.",
 
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: []
+    },
+
     playerStartPosition: [2, 7],
 
     // up: 0, right: 1, down: 2, left: 3
@@ -533,6 +583,13 @@ window.demoLevels = {
 
   8: {
     instructions: "All this running around has made you hungry! Grow some food! Code is great for doing repetitive tasks quickly. Let’s plant some crops by making a 4x3 block field.",
+
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: []
+    },
 
     playerStartPosition: [4, 7],
 
@@ -621,6 +678,13 @@ window.demoLevels = {
   9: {
     instructions: "Underground test!",
 
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: []
+    },
+
     playerStartPosition: [1, 5],
 
     playerStartDirection: 1,
@@ -684,6 +748,12 @@ window.demoLevels = {
     }
   },
   10: {
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: []
+    },
     fluffPlane: ["", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
@@ -707,6 +777,11 @@ window.demoLevels = {
   },
   11: {
     instructions: "Free play level. Explore!",
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: []
+    },
 
     playerStartPosition: [15, 15],
 

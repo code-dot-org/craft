@@ -5,7 +5,6 @@ export default class LevelView {
     this.controller = controller;
     this.audioPlayer = controller.audioPlayer;
     this.game = controller.game;
-    this.assetRoot = controller.assetRoot;
 
     this.baseShading = null;
 
@@ -136,169 +135,6 @@ export default class LevelView {
     return this.controller.levelModel.yToIndex(y);
   }
 
-  preload(playerAtlas) {
-    this.game.load.atlasJSONHash('player', `${this.assetRoot}images/${playerAtlas}.png`, `${this.assetRoot}images/${playerAtlas}.json`);
-    this.game.load.image('entityShadow', `${this.assetRoot}images/Character_Shadow.png`);
-    this.game.load.image('selectionIndicator', `${this.assetRoot}images/Selection_Indicator.png`);
-
-    this.game.load.image('shadeLayer', `${this.assetRoot}images/Shade_Layer.png`);
-    this.game.load.atlasJSONHash('AO', `${this.assetRoot}images/AO.png`, `${this.assetRoot}images/AO.json`);
-    this.game.load.atlasJSONHash('blockShadows', `${this.assetRoot}images/Block_Shadows.png`, `${this.assetRoot}images/Block_Shadows.json`);
-    this.game.load.atlasJSONHash('undergroundFow', `${this.assetRoot}images/UndergroundFoW.png`, `${this.assetRoot}images/UndergroundFoW.json`);
-
-    this.game.load.image('tallGrass', `${this.assetRoot}images/TallGrass.png`);
-    this.game.load.atlasJSONHash('blocks', `${this.assetRoot}images/Blocks.png`, `${this.assetRoot}images/Blocks.json`);
-    this.game.load.atlasJSONHash('leavesAcacia', `${this.assetRoot}images/Leaves_Acacia_Decay.png`, `${this.assetRoot}images/Leaves_Acacia_Decay.json`);
-    this.game.load.atlasJSONHash('leavesBirch', `${this.assetRoot}images/Leaves_Birch_Decay.png`, `${this.assetRoot}images/Leaves_Birch_Decay.json`);
-    this.game.load.atlasJSONHash('leavesJungle', `${this.assetRoot}images/Leaves_Jungle_Decay.png`, `${this.assetRoot}images/Leaves_Jungle_Decay.json`);
-    this.game.load.atlasJSONHash('leavesOak', `${this.assetRoot}images/Leaves_Oak_Decay.png`, `${this.assetRoot}images/Leaves_Oak_Decay.json`);
-    this.game.load.atlasJSONHash('leavesSpruce', `${this.assetRoot}images/Leaves_Spruce_Decay.png`, `${this.assetRoot}images/Leaves_Spruce_Decay.json`);
-    this.game.load.atlasJSONHash('sheep', `${this.assetRoot}images/Sheep.png`, `${this.assetRoot}images/Sheep.json`);
-    this.game.load.atlasJSONHash('creeper', `${this.assetRoot}images/Creeper.png`, `${this.assetRoot}images/Creeper.json`);
-    this.game.load.atlasJSONHash('crops', `${this.assetRoot}images/Crops.png`, `${this.assetRoot}images/Crops.json`);
-    this.game.load.atlasJSONHash('torch', `${this.assetRoot}images/Torch.png`, `${this.assetRoot}images/Torch.json`);
-
-    this.game.load.atlasJSONHash('destroyOverlay', `${this.assetRoot}images/Destroy_Overlay.png`, `${this.assetRoot}images/Destroy_Overlay.json`);
-    this.game.load.atlasJSONHash('blockExplode', `${this.assetRoot}images/BlockExplode.png`, `${this.assetRoot}images/BlockExplode.json`);
-    this.game.load.atlasJSONHash('miningParticles', `${this.assetRoot}images/MiningParticles.png`, `${this.assetRoot}images/MiningParticles.json`);
-    this.game.load.atlasJSONHash('miniBlocks', `${this.assetRoot}images/Miniblocks.png`, `${this.assetRoot}images/Miniblocks.json`);
-    this.game.load.atlasJSONHash('lavaPop', `${this.assetRoot}images/LavaPop.png`, `${this.assetRoot}images/LavaPop.json`);
-    this.game.load.atlasJSONHash('fire', `${this.assetRoot}images/Fire.png`, `${this.assetRoot}images/Fire.json`);
-    this.game.load.atlasJSONHash('bubbles', `${this.assetRoot}images/Bubbles.png`, `${this.assetRoot}images/Bubbles.json`);
-    this.game.load.atlasJSONHash('explosion', `${this.assetRoot}images/Explosion.png`, `${this.assetRoot}images/Explosion.json`);
-    this.game.load.atlasJSONHash('door', `${this.assetRoot}images/Door.png`, `${this.assetRoot}images/Door.json`);
-    this.game.load.atlasJSONHash('rails', `${this.assetRoot}images/Rails.png`, `${this.assetRoot}images/Rails.json`);
-    this.game.load.atlasJSONHash('tnt', `${this.assetRoot}images/TNT.png`, `${this.assetRoot}images/TNT.json`);
-
-
-    this.game.load.image('finishOverlay', `${this.assetRoot}images/WhiteRect.png`);
-    this.game.load.image('bed', `${this.assetRoot}images/Bed.png`);
-
-    this.audioPlayer.register({id: 'beep', mp3: `${this.assetRoot}audio/beep.mp3`, ogg: 'TODO'});
-    this.audioPlayer.register({
-      id: 'dig_wood1',
-      mp3: `${this.assetRoot}audio/dig_wood1.mp3`,
-      wav: `${this.assetRoot}audio/dig_wood1.wav`,
-      ogg: `${this.assetRoot}audio/dig_wood1.ogg`
-    });
-
-    this.audioPlayer.register({
-      id: 'stepGrass',
-      mp3: `${this.assetRoot}audio/step_grass1.mp3`,
-      wav: `${this.assetRoot}audio/step_grass1.wav`,
-      ogg: `${this.assetRoot}audio/step_grass1.ogg`
-    });
-
-    this.audioPlayer.register({
-      id: 'stepWood',
-      mp3: `${this.assetRoot}audio/wood2.mp3`,
-      ogg: `${this.assetRoot}audio/wood2.ogg`
-    });
-
-    this.audioPlayer.register({
-      id: 'stepStone',
-      mp3: `${this.assetRoot}audio/stone2.mp3`,
-      ogg: `${this.assetRoot}audio/stone2.ogg`
-    });
-
-    this.audioPlayer.register({
-      id: 'stepGravel',
-      mp3: `${this.assetRoot}audio/gravel1.mp3`,
-      ogg: `${this.assetRoot}audio/gravel1.ogg`
-    });
-
-    this.audioPlayer.register({
-      id: 'stepFarmland',
-      mp3: `${this.assetRoot}audio/cloth4.mp3`,
-      ogg: `${this.assetRoot}audio/cloth4.ogg`
-    });
-
-
-    this.audioPlayer.register({
-      id: 'failure',
-      mp3: `${this.assetRoot}audio/break.mp3`,
-      ogg: `${this.assetRoot}audio/break.ogg`
-    });
-
-    this.audioPlayer.register({
-      id: 'success',
-      mp3: `${this.assetRoot}audio/levelup.mp3`,
-      ogg: `${this.assetRoot}audio/levelup.ogg`
-    });
-
-    this.audioPlayer.register({
-      id: 'fall',
-      mp3: `${this.assetRoot}audio/fallsmall.mp3`,
-      ogg: `${this.assetRoot}audio/fallsmall.ogg`
-    });
-
-    this.audioPlayer.register({
-      id: 'fuse',
-      mp3: `${this.assetRoot}audio/fuse.mp3`,
-      ogg: `${this.assetRoot}audio/fuse.ogg`
-    });
-
-    this.audioPlayer.register({
-      id: 'explode',
-      mp3: `${this.assetRoot}audio/explode3.mp3`,
-      ogg: `${this.assetRoot}audio/explode3.ogg`
-    });
-
-    this.audioPlayer.register({
-      id: 'placeBlock',
-      mp3: `${this.assetRoot}audio/cloth1.mp3`,
-      ogg: `${this.assetRoot}audio/cloth1.ogg`
-    });
-
-    this.audioPlayer.register({
-      id: 'collectedBlock',
-      mp3: `${this.assetRoot}audio/pop.mp3`,
-      ogg: `${this.assetRoot}audio/pop.ogg`
-    });
-
-    this.audioPlayer.register({
-      id: 'bump',
-      mp3: `${this.assetRoot}audio/hit3.mp3`,
-      ogg: `${this.assetRoot}audio/hit3.ogg`
-    });
-
-    this.audioPlayer.register({
-      id: 'punch',
-      mp3: `${this.assetRoot}audio/cloth1.mp3`,
-      ogg: `${this.assetRoot}audio/cloth1.ogg`
-    });
-
-    this.audioPlayer.register({
-      id: 'fizz',
-      mp3: `${this.assetRoot}audio/fizz.mp3`,
-      ogg: `${this.assetRoot}audio/fizz.ogg`
-    });
-
-    this.audioPlayer.register({
-      id: 'doorOpen',
-      mp3: `${this.assetRoot}audio/door_open.mp3`,
-      ogg: `${this.assetRoot}audio/door_open.ogg`
-    });
-
-    this.audioPlayer.register({
-      id: 'houseSuccess',
-      mp3: `${this.assetRoot}audio/launch1.mp3`,
-      ogg: `${this.assetRoot}audio/launch1.ogg`
-    });
-
-    this.audioPlayer.register({
-      id: 'minecart',
-      mp3: `${this.assetRoot}audio/minecartBase.mp3`,
-      ogg: `${this.assetRoot}audio/minecartBase.ogg`
-    });
-
-    this.audioPlayer.register({
-      id: 'sheep',
-      mp3: `${this.assetRoot}audio/say3.mp3`,
-      ogg: `${this.assetRoot}audio/say3.ogg`
-    });
-  }
-
   create(levelModel) {
     this.createPlanes();
     this.reset(levelModel);
@@ -313,7 +149,7 @@ export default class LevelView {
     this.resettableTweens.length = 0;
 
     this.resetPlanes(levelModel);
-    this.preparePlayerSprite();
+    this.preparePlayerSprite(player.name);
     this.playerSprite.animations.stop();
     this.updateShadingPlane(levelModel.shadingPlane);
     this.updateFowPlane(levelModel.fowPlane);
@@ -609,13 +445,13 @@ export default class LevelView {
     //start at 3,2
     this.setPlayerPosition(3,2, isOnBlock);
     position = [3,2];
-    
+
     animation = this.playLevelEndAnimation(position, facing, isOnBlock, completionHandler, false);
 
     animation.onComplete.add(() => {
       this.activateUnpoweredRails(unpoweredRails);
       this.playTrack(position, facing, isOnBlock, completionHandler, minecartTrack);
-    }); 
+    });
   }
 
   playTrack(position, facing, isOnBlock, completionHandler, minecartTrack)
@@ -824,6 +660,21 @@ export default class LevelView {
     tween.start();
 
     return tween;
+  }
+
+  playPlayerJumpDownVerticalAnimation(position, direction) {
+    var animName = "jumpDown" + this.getDirectionName(direction);
+    this.playScaledSpeed(this.playerSprite.animations, animName);
+    var tween = this.addResettableTween(this.playerSprite).to({
+      x: [-18 + 40 * position[0], -18 + 40 * position[0], -18 + 40 * position[0]],
+      y: [-32 + 40 * position[1], -32 + 40 * position[1] - 50, -32 + 40 * position[1]]
+    }, 300, Phaser.Easing.Linear.None).interpolation((v,k) => {
+      return Phaser.Math.bezierInterpolation(v,k);
+    });
+    tween.onComplete.addOnce(() => {
+      this.audioPlayer.play("fall");
+    });
+    tween.start();
   }
 
   playPlaceBlockAnimation(position, facing, blockType, blockTypeAtPosition, completionHandler) {
@@ -1369,10 +1220,10 @@ export default class LevelView {
     //turn and pause
     for (i = 0; i < 4; ++i) {
     frameList = frameList.concat("Player_061");
-    }   
+    }
     for (i = 0; i < 2; ++i) {
     frameList = frameList.concat("Player_149");
-    }    
+    }
         //Crouch Up
     frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3));
     //Crouch Up
@@ -1448,7 +1299,7 @@ export default class LevelView {
     return frameList;
   }
 
-  preparePlayerSprite() {
+  preparePlayerSprite(playerName) {
     var frameList,
         genFrames,
         i,
@@ -1458,11 +1309,11 @@ export default class LevelView {
 
     let frameRate = 20;
 
-    this.playerSprite = this.actionPlane.create(0, 0, 'player', 'Player_121');
+    this.playerSprite = this.actionPlane.create(0, 0, `player${playerName}`, 'Player_121');
     if (this.controller.followingPlayer()) {
       this.game.camera.follow(this.playerSprite);
     }
-    this.playerGhost = this.fluffPlane.create(0, 0, 'player', 'Player_121');
+    this.playerGhost = this.fluffPlane.create(0, 0, `player${playerName}`, 'Player_121');
     this.playerGhost.parent = this.playerSprite;
     this.playerGhost.alpha = 0.2;
 
@@ -1936,14 +1787,14 @@ export default class LevelView {
           frameList.push("Sheep_491");
         }
         this.onAnimationStart(sprite.animations.add("face", frameList, 2, true), ()=>{
-          this.audioPlayer.play("sheep");
+          this.audioPlayer.play("sheepBaa");
         });
 
         frameList = Phaser.Animation.generateFrameNames("Sheep_", 439, 455, "", 0);
         for (i = 0; i < 3; ++i) {
           frameList.push("Sheep_455");
         }
-        
+
         sprite.animations.add("used", frameList, 15, true);
         this.playAnimationWithOffset(sprite,"idle",17, 199);
         break;

@@ -8,6 +8,7 @@ import IfBlockAheadCommand from "./CommandQueue/IfBlockAheadCommand.js";
 
 import LevelModel from "./LevelMVC/LevelModel.js"
 import LevelView from "./LevelMVC/LevelView.js"
+import AssetLoader from "./LevelMVC/AssetLoader.js"
 
 import DemoLevels from "./levels.js"
 
@@ -41,11 +42,6 @@ class PhaserApp {
      */
     this.codeOrgAPI = CodeOrgAPI.get(this);
 
-    /**
-     * @property {LevelConfig}
-     */
-    this.levelConfig = null;
-
     var Phaser = phaserAppConfig.Phaser;
 
     /**
@@ -57,12 +53,7 @@ class PhaserApp {
       height: GAME_HEIGHT,
       renderer: Phaser.CANVAS,
       parent: phaserAppConfig.containerId,
-      state: {
-        preload: this.preload.bind(this),
-        create: this.create.bind(this),
-        update: this.update.bind(this),
-        render: this.render.bind(this)
-      },
+      state: 'earlyLoad',
       // TODO(bjordan): remove now that using canvas?
       preserveDrawingBuffer: true // enables saving .png screengrabs
     });
@@ -74,12 +65,37 @@ class PhaserApp {
     this.assetRoot = phaserAppConfig.assetRoot;
 
     this.audioPlayer = phaserAppConfig.audioPlayer;
-
+    this.assetLoader = new AssetLoader(this);
+    this.earlyLoadAssetPacks =
+        phaserAppConfig.earlyLoadAssetPacks || [];
+    this.earlyLoadNiceToHaveAssetPacks =
+        phaserAppConfig.earlyLoadNiceToHaveAssetPacks || [];
 
     this.resettableTimers = [];
 
-    this.assumedSlowMotion = 1.5; // slow motion we
+    // Phaser "slow motion" modifier we originally tuned animations using
+    this.assumedSlowMotion = 1.5;
     this.initialSlowMotion = phaserAppConfig.customSlowMotion || this.assumedSlowMotion;
+
+    this.game.state.add('earlyLoad', {
+      preload: () => {
+        // don't let state change stomp essential asset downloads in progress
+        this.game.load.resetLocked = true;
+        this.assetLoader.loadPacks(this.earlyLoadAssetPacks);
+      },
+      create: () => {
+        // optionally load some more assets if we complete early load before level load
+        this.assetLoader.loadPacks(this.earlyLoadNiceToHaveAssetPacks);
+        this.game.load.start();
+      }
+    });
+
+    this.game.state.add('levelRunner', {
+      preload: this.preload.bind(this),
+      create: this.create.bind(this),
+      update: this.update.bind(this),
+      render: this.render.bind(this)
+    });
   }
 
   /**
@@ -91,6 +107,8 @@ class PhaserApp {
     this.levelModel = new LevelModel(this.levelData);
     this.levelView = new LevelView(this);
     this.specialLevelType = levelConfig.specialLevelType;
+
+    this.game.state.start('levelRunner');
   }
 
   reset() {
@@ -103,15 +121,18 @@ class PhaserApp {
   }
 
   preload() {
+    this.game.load.resetLocked = true;
     this.game.time.advancedTiming = this.DEBUG;
     this.game.stage.disableVisibilityChange = true;
-    this.levelView.preload(this.levelModel.player.name);
+    this.assetLoader.loadPacks(this.levelData.assetPacks.beforeLoad);
   }
 
   create() {
     this.levelView.create(this.levelModel);
     this.game.time.slowMotion = this.initialSlowMotion;
     this.addCheatKeys();
+    this.assetLoader.loadPacks(this.levelData.assetPacks.afterLoad);
+    this.game.load.start();
   }
 
   followingPlayer() {

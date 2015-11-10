@@ -69,17 +69,31 @@
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
   }
 
+  var levelNumber = parseInt(getParameterByName('level') || 1, 10);
+  var testLevelToLoad = demoLevels[levelNumber];
+
   // Initialize test instance of game, exposed to window for debugging.
   var phaserApp = new PhaserApp({
     Phaser: window.Phaser,
     containerId: 'phaser-game',
     assetRoot: 'assets/',
     audioPlayer: new Sounds(),
-    debug: true
+    debug: true,
+    earlyLoadAssetPacks: testLevelToLoad.earlyLoadAssetPacks,
+    earlyLoadNiceToHaveAssetPacks: testLevelToLoad.earlyLoadNiceToHaveAssetPacks
   });
-  var levelNumber = parseInt(getParameterByName('level') || 1, 10);
-  var testLevelToLoad = demoLevels[levelNumber];
-  phaserApp.loadLevel(testLevelToLoad);
+
+  if (levelNumber === 1) {
+    /**
+     * Simulate dialog being open, controller being created in different frame
+     * from level load.
+     */
+    window.setTimeout(function() {
+      phaserApp.loadLevel(testLevelToLoad);
+    }, 5000);
+  } else {
+    phaserApp.loadLevel(testLevelToLoad);
+  }
 
   $('#test-code-area').val(testLevelToLoad.solutionCode);
   $('#level-instructions').html(testLevelToLoad.instructions);
