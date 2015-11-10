@@ -576,7 +576,7 @@ export default class LevelModel {
       var block = new LevelBlock(blockType);
 
       this.actionPlane[blockIndex] = block;
-      this.player.isOnBlock = block.isDestroyable && !block.isWalkable;
+      this.player.isOnBlock = !block.isWalkable;
     }
 
     return shouldPlace;
