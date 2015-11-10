@@ -10,7 +10,6 @@ export default class LevelModel {
     this.planeHeight = levelData.gridDimensions ?
         levelData.gridDimensions[1] : 10;
 
-    console.log("LevelModel::constructor");
     this.player = {};
 
     this.railMap = 
@@ -41,7 +40,6 @@ export default class LevelModel {
   }
 
   reset() {
-    console.log("LevelModel::reset");
     this.groundPlane = this.constructPlane(this.initialLevelData.groundPlane, false);
     this.groundDecorationPlane = this.constructPlane(this.initialLevelData.groundDecorationPlane, false);
     this.shadingPlane = [];
