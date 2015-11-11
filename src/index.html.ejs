@@ -8,6 +8,7 @@
   <script src="<%= appBundle %>"></script>
   <script src="test-build-only/jquery-1.7.min.js"></script>
   <script src="test-build-only/soundEffects.js"></script>
+  <script src="test-build-only/levels.js"></script>
   <style>
     .description {
       font-size: small;
@@ -73,7 +74,7 @@
   var testLevelToLoad = demoLevels[levelNumber];
 
   // Initialize test instance of game, exposed to window for debugging.
-  var phaserApp = new PhaserApp({
+  var gameController = new GameController({
     Phaser: window.Phaser,
     containerId: 'phaser-game',
     assetRoot: 'assets/',
@@ -89,10 +90,10 @@
      * from level load.
      */
     window.setTimeout(function() {
-      phaserApp.loadLevel(testLevelToLoad);
+      gameController.loadLevel(testLevelToLoad);
     }, 5000);
   } else {
-    phaserApp.loadLevel(testLevelToLoad);
+    gameController.loadLevel(testLevelToLoad);
   }
 
   $('#test-code-area').val(testLevelToLoad.solutionCode);
@@ -132,14 +133,14 @@
 
   $('input[type=range]').on('input', function () {
     $("#speed-display").html($(this).val());
-    phaserApp.game.time.slowMotion = parseFloat($(this).val(), 10);
+    gameController.game.time.slowMotion = parseFloat($(this).val(), 10);
   });
 
   $('#run-button').click(function () {
     var shortHandCode = $('#test-code-area').val();
     var code = shortHandToApiCalls(shortHandCode);
 
-    var codeOrgAPI = phaserApp.codeOrgAPI;
+    var codeOrgAPI = gameController.codeOrgAPI;
     codeOrgAPI.startCommandCollection();
     runCodeWithParams(code, {
       codeOrgAPI: codeOrgAPI,
@@ -159,7 +160,7 @@
   });
 
   $('#reset-button').click(function () {
-    phaserApp.codeOrgAPI.resetAttempt();
+    gameController.codeOrgAPI.resetAttempt();
   });
 
   $("#refresh-button").click(function() {
@@ -182,7 +183,7 @@
     window.location.href = window.location.href.split("?")[0] + "?level=" + (levelNumber - 1);
   });
 
-  window.phaserApp = phaserApp;
+  window.gameController = gameController;
 </script>
 
 <% if (liveReloadPort) { %>

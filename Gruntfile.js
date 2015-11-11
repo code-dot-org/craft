@@ -89,7 +89,7 @@ module.exports = function (grunt) {
     },
     browserify: {
       app: {
-        src: ['<%= project.src %>/game/PhaserApp.js'],
+        src: ['<%= project.src %>/game/GameController.js'],
         dest: '<%= project.bundle %>',
         options: {
           transform: [

@@ -4,8 +4,8 @@ import CommandQueue from "./CommandQueue.js";
 import BaseCommand from "./BaseCommand.js";
 
 export default class WhileCommand extends BaseCommand {
-    constructor(phaserApp, highlightCallback, blockType, callback) {
-        super(phaserApp, highlightCallback);
+    constructor(gameController, highlightCallback, blockType, callback) {
+        super(gameController, highlightCallback);
         
         this.iterationsLeft = 15; 
         this.BlockType = blockType;
@@ -33,7 +33,7 @@ export default class WhileCommand extends BaseCommand {
     
     begin() {
         super.begin();
-        if (this.PhaserApp.DEBUG) {
+        if (this.GameController.DEBUG) {
             console.log("WHILE command: BEGIN");
         }
 
@@ -46,11 +46,11 @@ export default class WhileCommand extends BaseCommand {
             this.state = CommandState.FAILURE;
         }
 
-        if (this.PhaserApp.isPathAhead(this.BlockType)) {
+        if (this.GameController.isPathAhead(this.BlockType)) {
             this.queue.reset();
-            this.PhaserApp.queue.setWhileCommandInsertState(this.queue);
+            this.GameController.queue.setWhileCommandInsertState(this.queue);
             this.WhileCode();
-            this.PhaserApp.queue.setWhileCommandInsertState(null);
+            this.GameController.queue.setWhileCommandInsertState(null);
             this.queue.begin();
         }
         else {
@@ -58,7 +58,7 @@ export default class WhileCommand extends BaseCommand {
         }
 
         this.iterationsLeft--;
-        if (this.PhaserApp.DEBUG) {
+        if (this.GameController.DEBUG) {
             console.log(`While command: Iterationsleft   ${this.iterationsLeft} `);
         }
     }

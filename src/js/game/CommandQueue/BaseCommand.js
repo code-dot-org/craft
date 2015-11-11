@@ -2,9 +2,9 @@
 import CommandState from "./CommandState.js";
 
 export default class BaseCommand {
-    constructor(phaserApp, highlightCallback) {
-        this.PhaserApp = phaserApp;
-        this.Game = phaserApp.game;
+    constructor(gameController, highlightCallback) {
+        this.GameController = gameController;
+        this.Game = gameController.game;
         this.HighlightCallback = highlightCallback;
         this.state = CommandState.NOT_STARTED;
     }

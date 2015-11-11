@@ -4,8 +4,8 @@ import CommandQueue from "./CommandQueue.js";
 import BaseCommand from "./BaseCommand.js";
 
 export default class IfBlockAheadCommand extends BaseCommand {
-    constructor(phaserApp, highlightCallback, blockType, callback) {
-        super(phaserApp, highlightCallback);
+    constructor(gameController, highlightCallback, blockType, callback) {
+        super(gameController, highlightCallback);
 
         this.blockType = blockType;
         this.ifCodeCallback = callback;
@@ -31,7 +31,7 @@ export default class IfBlockAheadCommand extends BaseCommand {
 
     begin() {
         super.begin();
-        if (this.PhaserApp.DEBUG) {
+        if (this.GameController.DEBUG) {
             console.log("WHILE command: BEGIN");
         }
 
@@ -40,11 +40,11 @@ export default class IfBlockAheadCommand extends BaseCommand {
     }
 
     handleIfCheck() {
-        if (this.PhaserApp.isPathAhead(this.blockType)) {
+        if (this.GameController.isPathAhead(this.blockType)) {
             this.queue.reset();
-            this.PhaserApp.queue.setWhileCommandInsertState(this.queue);
+            this.GameController.queue.setWhileCommandInsertState(this.queue);
             this.ifCodeCallback(); // inserts commands via CodeOrgAPI
-            this.PhaserApp.queue.setWhileCommandInsertState(null);
+            this.GameController.queue.setWhileCommandInsertState(null);
             this.queue.begin();
         } else {
             this.state = CommandState.SUCCESS;

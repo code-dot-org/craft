@@ -4,14 +4,14 @@ import CommandQueue from "./CommandQueue.js";
 import BaseCommand from "./BaseCommand.js";
 
 export default class CheckSolutionCommand extends BaseCommand {
-    constructor(phaserApp) {
+    constructor(gameController) {
         var dummyFunc = function() {
-            if (phaserApp.DEBUG) {
+            if (gameController.DEBUG) {
                 console.log("Execute solve command");
             }
         };
 
-        super(phaserApp, dummyFunc);
+        super(gameController, dummyFunc);
     }
 
     tick() {
@@ -20,10 +20,10 @@ export default class CheckSolutionCommand extends BaseCommand {
     
     begin() {
         super.begin();
-        if (this.PhaserApp.DEBUG) {
+        if (this.GameController.DEBUG) {
             console.log("Solve command: BEGIN");
         }
-        var result = this.PhaserApp.checkSolution(this);
+        var result = this.GameController.checkSolution(this);
     }
 
 }

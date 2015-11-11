@@ -3,9 +3,9 @@ import CommandState from "./CommandState.js";
 import BaseCommand from "./BaseCommand.js";
 
 export default class DestroyBlockCommand extends BaseCommand {
-    constructor(phaserApp, highlightCallback) {
+    constructor(gameController, highlightCallback) {
 
-        super(phaserApp, highlightCallback);
+        super(gameController, highlightCallback);
     }
 
     tick() {
@@ -14,7 +14,7 @@ export default class DestroyBlockCommand extends BaseCommand {
     
     begin() {
         super.begin();
-        this.PhaserApp.destroyBlock(this);
+        this.GameController.destroyBlock(this);
     }
 
 }

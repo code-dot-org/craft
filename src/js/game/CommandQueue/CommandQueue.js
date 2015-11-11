@@ -3,9 +3,9 @@ import CommandState from "./CommandState.js";
 
 
 export default class CommandQueue {
-  constructor(phaserApp) {
-    this.phaserApp = phaserApp;
-    this.game = phaserApp.game;
+  constructor(gameController) {
+    this.gameController = gameController;
+    this.game = gameController.game;
     this.reset();
   }
 
@@ -24,7 +24,7 @@ export default class CommandQueue {
 
   begin() {
     this.state = CommandState.WORKING;
-    if (this.phaserApp.DEBUG) {
+    if (this.gameController.DEBUG) {
       console.log("Debug Queue: BEGIN");
     }
   }

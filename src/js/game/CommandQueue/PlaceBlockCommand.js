@@ -3,8 +3,8 @@ import CommandState from "./CommandState.js";
 import BaseCommand from "./BaseCommand.js";
 
 export default class PlaceBlockCommand extends BaseCommand {
-    constructor(phaserApp, highlightCallback, blockType) {
-        super(phaserApp, highlightCallback);
+    constructor(gameController, highlightCallback, blockType) {
+        super(gameController, highlightCallback);
         
         this.BlockType = blockType;
     }
@@ -15,7 +15,7 @@ export default class PlaceBlockCommand extends BaseCommand {
     
     begin() {
         super.begin();
-        this.PhaserApp.placeBlock(this, this.BlockType);
+        this.GameController.placeBlock(this, this.BlockType);
     }
 }
 

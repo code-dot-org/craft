@@ -3,9 +3,9 @@ import CommandState from "./CommandState.js";
 import BaseCommand from "./BaseCommand.js";
 
 export default class MoveForwardCommand extends BaseCommand {
-    constructor(phaserApp, highlightCallback) {
+    constructor(gameController, highlightCallback) {
 
-        super(phaserApp, highlightCallback);
+        super(gameController, highlightCallback);
     }
 
     tick() {
@@ -14,7 +14,7 @@ export default class MoveForwardCommand extends BaseCommand {
 
     begin() {
         super.begin();
-        this.PhaserApp.moveForward(this);
+        this.GameController.moveForward(this);
     }
 
 }

@@ -3,8 +3,8 @@ import CommandState from "./CommandState.js";
 import BaseCommand from "./BaseCommand.js";
 
 export default class TurnCommand extends BaseCommand {
-    constructor(phaserApp, highlightCallback, direction) {
-        super(phaserApp, highlightCallback);
+    constructor(gameController, highlightCallback, direction) {
+        super(gameController, highlightCallback);
         
         this.Direction = direction;
     }
@@ -15,10 +15,10 @@ export default class TurnCommand extends BaseCommand {
     
     begin() {
         super.begin();
-        if (this.PhaserApp.DEBUG) {
+        if (this.GameController.DEBUG) {
             console.log(`TURN command: BEGIN turning ${this.Direction}  `);
         }
-        this.PhaserApp.turn(this, this.Direction);
+        this.GameController.turn(this, this.Direction);
     }
 
 }

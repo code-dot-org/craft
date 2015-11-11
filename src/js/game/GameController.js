@@ -10,8 +10,6 @@ import LevelModel from "./LevelMVC/LevelModel.js"
 import LevelView from "./LevelMVC/LevelView.js"
 import AssetLoader from "./LevelMVC/AssetLoader.js"
 
-import DemoLevels from "./levels.js"
-
 import * as CodeOrgAPI from "./API/CodeOrgAPI.js"
 
 var GAME_WIDTH = 400;
@@ -20,15 +18,15 @@ var GAME_HEIGHT = 400;
 /**
  * Initializes a new instance of a mini-game visualization
  */
-class PhaserApp {
+class GameController {
   /**
-   * @param {Object} phaserAppConfig
-   * @param {String} phaserAppConfig.containerId DOM ID to mount this app
-   * @param {Phaser} phaserAppConfig.Phaser Phaser package
+   * @param {Object} gameControllerConfig
+   * @param {String} gameControllerConfig.containerId DOM ID to mount this app
+   * @param {Phaser} gameControllerConfig.Phaser Phaser package
    * @constructor
    */
-  constructor(phaserAppConfig) {
-    this.DEBUG = phaserAppConfig.debug;
+  constructor(gameControllerConfig) {
+    this.DEBUG = gameControllerConfig.debug;
 
     // Phaser pre-initialization config
     window.PhaserGlobal = {
@@ -42,7 +40,7 @@ class PhaserApp {
      */
     this.codeOrgAPI = CodeOrgAPI.get(this);
 
-    var Phaser = phaserAppConfig.Phaser;
+    var Phaser = gameControllerConfig.Phaser;
 
     /**
      * Main Phaser game instance.
@@ -52,7 +50,7 @@ class PhaserApp {
       width: GAME_WIDTH,
       height: GAME_HEIGHT,
       renderer: Phaser.CANVAS,
-      parent: phaserAppConfig.containerId,
+      parent: gameControllerConfig.containerId,
       state: 'earlyLoad',
       // TODO(bjordan): remove now that using canvas?
       preserveDrawingBuffer: true // enables saving .png screengrabs
@@ -62,20 +60,20 @@ class PhaserApp {
     this.queue = new CommandQueue(this);
     this.OnCompleteCallback = null;
 
-    this.assetRoot = phaserAppConfig.assetRoot;
+    this.assetRoot = gameControllerConfig.assetRoot;
 
-    this.audioPlayer = phaserAppConfig.audioPlayer;
+    this.audioPlayer = gameControllerConfig.audioPlayer;
     this.assetLoader = new AssetLoader(this);
     this.earlyLoadAssetPacks =
-        phaserAppConfig.earlyLoadAssetPacks || [];
+        gameControllerConfig.earlyLoadAssetPacks || [];
     this.earlyLoadNiceToHaveAssetPacks =
-        phaserAppConfig.earlyLoadNiceToHaveAssetPacks || [];
+        gameControllerConfig.earlyLoadNiceToHaveAssetPacks || [];
 
     this.resettableTimers = [];
 
     // Phaser "slow motion" modifier we originally tuned animations using
     this.assumedSlowMotion = 1.5;
-    this.initialSlowMotion = phaserAppConfig.customSlowMotion || this.assumedSlowMotion;
+    this.initialSlowMotion = gameControllerConfig.customSlowMotion || this.assumedSlowMotion;
 
     this.game.state.add('earlyLoad', {
       preload: () => {
@@ -198,13 +196,13 @@ class PhaserApp {
         };
         var blockType = "empty";
         var codeBlock = function () {
-          this.PhaserApp.codeOrgAPI.moveForward(function () {
+          this.GameController.codeOrgAPI.moveForward(function () {
             console.log("Execute While command move block");
           });
-          this.PhaserApp.codeOrgAPI.moveForward(function () {
+          this.GameController.codeOrgAPI.moveForward(function () {
             console.log("Execute While command move block2");
           });
-          this.PhaserApp.codeOrgAPI.turnLeft(function () {
+          this.GameController.codeOrgAPI.turnLeft(function () {
             console.log("Execute While command turn");
           });
         };
@@ -642,6 +640,6 @@ class PhaserApp {
 
 }
 
-window.PhaserApp = PhaserApp;
+window.GameController = GameController;
 
-export default PhaserApp;
+export default GameController;
