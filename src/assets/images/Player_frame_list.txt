@@ -10,8 +10,9 @@ Facing Down
 	Bump Into Something: 049-054, 6f
 	Jump Down: 055-060, 6f
 	Mine w/ Pickaxe: 241-244, 4f
-	Look At Camera: 257-264, 7f
+	Look At Camera: 257-263, 7f
 	Alt Celebration: 285-296, 12f *Always facing forward*
+	Look Up and Jump Celebration: 259, 260, loop(261, 297, 298, 297, 261, pause for 0-2 frames) *Always facing forward*
 
 Facing Right
 	Idle: 061-072
@@ -24,7 +25,7 @@ Facing Right
 	Bump Into Something: 109-114
 	Jump Down: 115-120
 	Mine w/ Pickaxe: 245-248
-	Look At Camera: 265-271
+	Look At Camera: 264-270
 
 Facing Up
 	Idle: 121-132
@@ -37,7 +38,7 @@ Facing Up
 	Bump Into Something: 169-174
 	Jump Down: 175-180
 	Mine w/ Pickaxe: 249-252
-	Look At Camera: 272-278
+	Look At Camera: 271-277
 
 Facing Left
 	Idle: 181-192
@@ -50,7 +51,7 @@ Facing Left
 	Bump Into Something: 229-234
 	Jump Down: 235-240
 	Mine w/ Pickaxe: 253-256
-	Look At Camera: 279-285
+	Look At Camera: 278-284
 
 Minecart
 	Empty Vertical: 01
