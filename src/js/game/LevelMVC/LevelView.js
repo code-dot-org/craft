@@ -1293,14 +1293,37 @@ export default class LevelView {
     });
     //jump celebration loop
     frameList = [];
+    //Jump
     frameList.push("Player_261");
     frameList.push("Player_297");
     frameList.push("Player_298");
     frameList.push("Player_297");
     frameList.push("Player_261");
+    //Jump
     frameList.push("Player_261");
+    frameList.push("Player_297");
+    frameList.push("Player_298");
+    frameList.push("Player_297");
     frameList.push("Player_261");
-    this.playerSprite.animations.add('jump_celebration', frameList, idleFrameRate, true);
+    //Pause
+    frameList.push("Player_001");
+    frameList.push("Player_001");
+    frameList.push("Player_001");
+    frameList.push("Player_001");
+    frameList.push("Player_001");
+    //Jump
+    frameList.push("Player_261");
+    frameList.push("Player_297");
+    frameList.push("Player_298");
+    frameList.push("Player_297");
+    frameList.push("Player_261");
+    //Jump
+    frameList.push("Player_261");
+    frameList.push("Player_297");
+    frameList.push("Player_298");
+    frameList.push("Player_297");
+    frameList.push("Player_261");
+    this.playerSprite.animations.add('jump_celebration', frameList, idleFrameRate, false);
 
     frameList = this.generateFramesWithEndDelay("Player_", 6, 5, "Player_005", 3, 5);
     frameList.push("Player_006");
