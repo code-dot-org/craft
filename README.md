@@ -1,10 +1,8 @@
-# Phaser.js app boilerplate — Grunt, Browserify, EJS
+# Minecraft Hour of Code development repository
 
-## What's being used?
+_Note: this repository is currently private and being periodically manually integrated with https://github.com/code-dot-org/code-dot-org — but consider commits to this repository as public in the future (though proprietary materials fall under different rules, per the [LICENSE](https://github.com/code-dot-org/code-dot-org/blob/staging/LICENSE))._
 
-[NPM](https://www.npmjs.org/) via [Browserify](http://browserify.org/), [ejs](http://www.embeddedjs.com/), [Lodash](http://lodash.com/), [JsHint](http://www.jshint.com/), Browserify inline [source maps](http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/), dev server with livereload (auto refresh), [.gitignore](https://github.com/serby/GitIgnore).
-
-## Installing
+## Local Setup (all platforms)
 
 ### Node.js and Grunt
 
@@ -25,15 +23,20 @@ And you should now be ready to spin up a development build of your new project:
 
     grunt
     
-A browser should open with a logo displayed:
+A browser should open with a Minecraft Hour of Code test page displayed:
 
-![](http://i.imgur.com/YvfoE8C.png)
+![](https://i.imgur.com/vzsfoH2.png)
 
 ## Developing
 
 All of the files required to run the game live in the `src` folder, including any javascript, images, HTML ([ejs](http://www.embeddedjs.com/) templated), and CSS. When the default `grunt` task is invoked, these files are compiled to a `build` directory.
 
 Files in the `build` directory will always be generated and excluded from Git by the `.gitignore`, as such these will removed without warning and should generally not be edited.
+
+### What's being used?
+
+* [NPM](https://www.npmjs.org/) via [Browserify](http://browserify.org/), [JsHint](http://www.jshint.com/), Browserify inline [source maps](http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/), dev server with livereload (auto refresh), [.gitignore](https://github.com/serby/GitIgnore).
+* ES6 via babelify
 
 ### Recommendations
 
@@ -66,17 +69,17 @@ You can install new npm-compatible libraries with:
 
 `npm install --save my-package-name`
 
-Then require it in your code with e.g. `var MyCoolTimesavingLibrary = require('My-Cool-Timesaving-Library')`.
+Then require it in your code with e.g. `import MyCoolTimesavingLibrary from 'My-Cool-Timesaving-Library'`.
 
 Some interesting npm libraries: list of [browserify-friendly game modules](https://github.com/hughsk/game-modules/wiki/Modules), [@substack's npm repositories](https://www.npmjs.com/~substack).
 
-Raw vendor packages can be added to `src/js/lib`.
+Raw vendor packages can be added to `src/test-build-only` and added directly to `src/index.html.ejs`.
 
 If adding new libraries that aren't CommonJS compatible, you'll have to additionally update the [Browserify shim configuration](https://github.com/thlorenz/browserify-shim#3-provide-browserify-shim-config) in our `package.json`.
 
 ### Coding style
 
-We will try to follow the [Code.org Javascript styleguide](https://github.com/code-dot-org/code-dot-org/blob/staging/STYLEGUIDE.md#javascript).
+We will try to follow the [Airbnb ES6 styleguide](https://github.com/airbnb/javascript).
 
 ### Acknowledgements
 

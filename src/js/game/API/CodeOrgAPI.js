@@ -29,62 +29,62 @@ export function get(controller) {
      * false if unsuccessful (level not completed), and the current level model.
      */
     startAttempt: function (onAttemptComplete) {
-        controller.OnCompleteCallback = onAttemptComplete;
-        controller.queue.addCommand(new CheckSolutionCommand(controller));
+      controller.OnCompleteCallback = onAttemptComplete;
+      controller.queue.addCommand(new CheckSolutionCommand(controller));
 
-        controller.setPlayerActionDelayByQueueLength();
+      controller.setPlayerActionDelayByQueueLength();
 
-        controller.queue.begin();
+      controller.queue.begin();
     },
 
     resetAttempt: function () {
-        controller.reset();
-        controller.queue.reset();
-        controller.OnCompleteCallback = null;
+      controller.reset();
+      controller.queue.reset();
+      controller.OnCompleteCallback = null;
     },
 
     moveForward: function (highlightCallback) {
-        controller.queue.addCommand(new MoveForwardCommand(controller, highlightCallback));
+      controller.queue.addCommand(new MoveForwardCommand(controller, highlightCallback));
     },
 
     turn: function (highlightCallback, direction) {
-        controller.queue.addCommand(new TurnCommand(controller, highlightCallback, direction === 'right' ? 1 : -1));
+      controller.queue.addCommand(new TurnCommand(controller, highlightCallback, direction === 'right' ? 1 : -1));
     },
 
     turnRight: function (highlightCallback) {
-        controller.queue.addCommand(new TurnCommand(controller, highlightCallback, 1));
+      controller.queue.addCommand(new TurnCommand(controller, highlightCallback, 1));
     },
 
     turnLeft: function (highlightCallback) {
-        controller.queue.addCommand(new TurnCommand(controller, highlightCallback, -1));
+      controller.queue.addCommand(new TurnCommand(controller, highlightCallback, -1));
     },
 
     destroyBlock: function (highlightCallback) {
-        controller.queue.addCommand(new DestroyBlockCommand(controller, highlightCallback));
+      controller.queue.addCommand(new DestroyBlockCommand(controller, highlightCallback));
     },
 
     placeBlock: function (highlightCallback, blockType) {
-        controller.queue.addCommand(new PlaceBlockCommand(controller, highlightCallback, blockType));
+      controller.queue.addCommand(new PlaceBlockCommand(controller, highlightCallback, blockType));
     },
 
     placeInFront: function (highlightCallback, blockType) {
-        controller.queue.addCommand(new PlaceInFrontCommand(controller, highlightCallback, blockType));
+      controller.queue.addCommand(new PlaceInFrontCommand(controller, highlightCallback, blockType));
     },
 
     tillSoil: function (highlightCallback) {
-        controller.queue.addCommand(new PlaceInFrontCommand(controller, highlightCallback, 'watering'));
+      controller.queue.addCommand(new PlaceInFrontCommand(controller, highlightCallback, 'watering'));
     },
 
     whilePathAhead: function (highlightCallback, blockType, codeBlock) {
-        controller.queue.addCommand(new WhileCommand(controller, highlightCallback, blockType, codeBlock));
+      controller.queue.addCommand(new WhileCommand(controller, highlightCallback, blockType, codeBlock));
     },
 
     ifBlockAhead: function (highlightCallback, blockType, codeBlock) {
-        controller.queue.addCommand(new IfBlockAheadCommand(controller, highlightCallback, blockType, codeBlock));
+      controller.queue.addCommand(new IfBlockAheadCommand(controller, highlightCallback, blockType, codeBlock));
     },
 
     getScreenshot: function () {
-        return controller.getScreenshot();
+      return controller.getScreenshot();
     }
   };
 }

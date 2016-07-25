@@ -13,16 +13,16 @@ export default class LevelModel {
     this.player = {};
 
     this.railMap =
-      ["","","","","","","","","","",
-      "","","","","","","","","","",
-      "","","","railsUnpoweredVertical","","","","","","",
-      "","","","railsUnpoweredVertical","","","","","","",
-      "","","","railsUnpoweredVertical","","","","","","",
-      "","","","railsUnpoweredVertical","","","","","","",
-      "","","","railsUnpoweredVertical","","","","","","",
-      "","","","railsBottomLeft","railsHorizontal","railsHorizontal","railsHorizontal","railsHorizontal","railsHorizontal","railsHorizontal",
-      "","","","","","","","","","",
-      "","","","","","","","","",""];
+        ["", "", "", "", "", "", "", "", "", "",
+          "", "", "", "", "", "", "", "", "", "",
+          "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
+          "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
+          "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
+          "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
+          "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
+          "", "", "", "railsBottomLeft", "railsHorizontal", "railsHorizontal", "railsHorizontal", "railsHorizontal", "railsHorizontal", "railsHorizontal",
+          "", "", "", "", "", "", "", "", "", "",
+          "", "", "", "", "", "", "", "", "", ""];
 
     this.initialLevelData = Object.create(levelData);
 
@@ -81,15 +81,15 @@ export default class LevelModel {
     return result;
   }
 
-  isSolved()  {
-      return this.initialLevelData.verificationFunction(this);
+  isSolved() {
+    return this.initialLevelData.verificationFunction(this);
   }
 
-  getHouseBottomRight()  {
-      return this.initialLevelData.houseBottomRight;
+  getHouseBottomRight() {
+    return this.initialLevelData.houseBottomRight;
   }
 
-    // Verifications
+  // Verifications
   isPlayerNextTo(blockType) {
     var position;
     var result = false;
@@ -125,7 +125,6 @@ export default class LevelModel {
     return this.player.inventory[inventoryType] || 0;
   }
 
-
   getInventoryTypes() {
     return Object.keys(this.player.inventory);
   }
@@ -143,8 +142,8 @@ export default class LevelModel {
   }
 
   isPlayerAt(position) {
-      return this.player.position[0] === position[0] &&
-          this.player.position[1] === position[1];
+    return this.player.position[0] === position[0] &&
+        this.player.position[1] === position[1];
   }
 
   solutionMapMatchesResultMap(solutionMap) {
@@ -160,7 +159,7 @@ export default class LevelModel {
         } else if (solutionItemType === "any") {
           if (this.actionPlane[i].isEmpty) {
             return false;
-        }
+          }
         } else if (this.actionPlane[i].blockType !== solutionItemType) {
           return false;
         }
@@ -173,10 +172,10 @@ export default class LevelModel {
     var tnt = [];
     for (var x = 0; x < this.planeWidth; ++x) {
       for (var y = 0; y < this.planeHeight; ++y) {
-        var index = this.coordinatesToIndex([x,y]);
+        var index = this.coordinatesToIndex([x, y]);
         var block = this.actionPlane[index];
         if (block.blockType === "tnt") {
-          tnt.push([x,y]);
+          tnt.push([x, y]);
         }
       }
     }
@@ -187,10 +186,10 @@ export default class LevelModel {
     var unpoweredRails = [];
     for (var x = 0; x < this.planeWidth; ++x) {
       for (var y = 0; y < this.planeHeight; ++y) {
-        var index = this.coordinatesToIndex([x,y]);
+        var index = this.coordinatesToIndex([x, y]);
         var block = this.actionPlane[index];
-        if (block.blockType.substring(0,7) === "railsUn") {
-          unpoweredRails.push([x,y], "railsPowered" + this.actionPlane[index].blockType.substring(14));
+        if (block.blockType.substring(0, 7) === "railsUn") {
+          unpoweredRails.push([x, y], "railsPowered" + this.actionPlane[index].blockType.substring(14));
         }
       }
     }
@@ -237,29 +236,29 @@ export default class LevelModel {
         this.isBlockOfTypeOnPlane(blockForwardPosition, blockType, this.actionPlane);
   }
 
-  isBlockOfType(position, blockType)  {
-      return this.isBlockOfTypeOnPlane(position, blockType, this.actionPlane);
+  isBlockOfType(position, blockType) {
+    return this.isBlockOfTypeOnPlane(position, blockType, this.actionPlane);
   }
 
-  isBlockOfTypeOnPlane(position, blockType, plane)  {
-      var result = false;
+  isBlockOfTypeOnPlane(position, blockType, plane) {
+    var result = false;
 
-      let blockIndex = this.yToIndex(position[1]) + position[0];
-      if (blockIndex >= 0 && blockIndex < this.planeArea()) {
+    let blockIndex = this.yToIndex(position[1]) + position[0];
+    if (blockIndex >= 0 && blockIndex < this.planeArea()) {
 
-          if (blockType === "empty") {
-              result =  plane[blockIndex].isEmpty;
-          } else if (blockType === "tree") {
-              result = plane[blockIndex].getIsTree();
-          } else {
-              result = (blockType === plane[blockIndex].blockType);
-          }
+      if (blockType === "empty") {
+        result = plane[blockIndex].isEmpty;
+      } else if (blockType === "tree") {
+        result = plane[blockIndex].getIsTree();
+      } else {
+        result = (blockType === plane[blockIndex].blockType);
       }
+    }
 
-      return result;
+    return result;
   }
 
-  isPlayerStandingInWater(){
+  isPlayerStandingInWater() {
     let blockIndex = this.yToIndex(this.player.position[1]) + this.player.position[0];
     return this.groundPlane[blockIndex].blockType === "water";
   }
@@ -269,12 +268,12 @@ export default class LevelModel {
     return this.groundPlane[blockIndex].blockType === "lava";
   }
 
-  coordinatesToIndex(coordinates){
+  coordinatesToIndex(coordinates) {
     return this.yToIndex(coordinates[1]) + coordinates[0];
   }
 
-  checkPositionForTypeAndPush(blockType, position, objectArray){
-    if ((!blockType && (this.actionPlane[this.coordinatesToIndex(position)].blockType !== ""))|| this.isBlockOfType(position, blockType)) {
+  checkPositionForTypeAndPush(blockType, position, objectArray) {
+    if ((!blockType && (this.actionPlane[this.coordinatesToIndex(position)].blockType !== "")) || this.isBlockOfType(position, blockType)) {
       objectArray.push([true, position]);
       return true;
     } else {
@@ -292,22 +291,22 @@ export default class LevelModel {
         posLeft,
         checkIndex = 0,
         array = arrayCheck;
-        let index = this.yToIndex(position[2]) + position[1];
+    let index = this.yToIndex(position[2]) + position[1];
 
-        if (index === 44) {
-          index = 44;
-        }
+    if (index === 44) {
+      index = 44;
+    }
 
-    posAbove =  [0, position[1], position[2] + 1];
+    posAbove = [0, position[1], position[2] + 1];
     posAbove[0] = this.yToIndex(posAbove[2]) + posAbove[1];
 
-    posBelow =  [0, position[1], position[2] - 1];
+    posBelow = [0, position[1], position[2] - 1];
     posBelow[0] = this.yToIndex(posBelow[2]) + posBelow[1];
 
-    posRight =  [0, position[1] + 1, position[2]];
+    posRight = [0, position[1] + 1, position[2]];
     posRight[0] = this.yToIndex(posRight[2]) + posRight[1];
 
-    posLeft =  [0, position[1] - 1, position[2]];
+    posLeft = [0, position[1] - 1, position[2]];
     posRight[0] = this.yToIndex(posRight[2]) + posRight[1];
 
     checkActionBlock = this.actionPlane[index];
@@ -322,7 +321,7 @@ export default class LevelModel {
     if (checkActionBlock.blockType !== "") {
       return {};
     } else if (array.length > 0 && checkIndex === -1) {
-        return {};
+      return {};
     }
     array.push(position);
     array.concat(this.houseGroundToFloorHelper(posAbove, woolType, array));
@@ -406,7 +405,7 @@ export default class LevelModel {
     return allFoundObjects;
   }
 
-  getAllBorderingPlayer(blockType){
+  getAllBorderingPlayer(blockType) {
     return this.getAllBorderingPosition(this.player.position, blockType);
   }
 
@@ -416,23 +415,23 @@ export default class LevelModel {
 
   getMinecartTrack() {
     var track = [];
-    track.push(["down", [3,2], FacingDirection.Down, 300]);
-    track.push(["down", [3,3], FacingDirection.Down, 300]);
-    track.push(["down", [3,4], FacingDirection.Down, 300]);
-    track.push(["down", [3,5], FacingDirection.Down, 300]);
-    track.push(["down", [3,6], FacingDirection.Down, 300]);
-    track.push(["down", [3,7], FacingDirection.Down, 300]);
-    track.push(["turn_left", [3,7], FacingDirection.Right, 400]);
-    track.push(["right", [4,7], FacingDirection.Right, 400]);
-    track.push(["right", [5,7], FacingDirection.Right, 400]);
-    track.push(["right", [6,7], FacingDirection.Right, 400]);
-    track.push(["right", [7,7], FacingDirection.Right, 400]);
-    track.push(["right", [8,7], FacingDirection.Right, 400]);
-    track.push(["right", [9,7], FacingDirection.Right, 400]);
-    track.push(["right", [10,7], FacingDirection.Right, 400]);
-    track.push(["right", [11,7], FacingDirection.Right, 400]);
+    track.push(["down", [3, 2], FacingDirection.Down, 300]);
+    track.push(["down", [3, 3], FacingDirection.Down, 300]);
+    track.push(["down", [3, 4], FacingDirection.Down, 300]);
+    track.push(["down", [3, 5], FacingDirection.Down, 300]);
+    track.push(["down", [3, 6], FacingDirection.Down, 300]);
+    track.push(["down", [3, 7], FacingDirection.Down, 300]);
+    track.push(["turn_left", [3, 7], FacingDirection.Right, 400]);
+    track.push(["right", [4, 7], FacingDirection.Right, 400]);
+    track.push(["right", [5, 7], FacingDirection.Right, 400]);
+    track.push(["right", [6, 7], FacingDirection.Right, 400]);
+    track.push(["right", [7, 7], FacingDirection.Right, 400]);
+    track.push(["right", [8, 7], FacingDirection.Right, 400]);
+    track.push(["right", [9, 7], FacingDirection.Right, 400]);
+    track.push(["right", [10, 7], FacingDirection.Right, 400]);
+    track.push(["right", [11, 7], FacingDirection.Right, 400]);
     return track;
-}
+  }
 
   canMoveForward() {
     var result = false;
@@ -443,7 +442,7 @@ export default class LevelModel {
 
     if (this.inBounds(x, y)) {
       result = this.actionPlane[blockIndex].isWalkable ||
-               (this.player.isOnBlock && !this.actionPlane[blockIndex].isEmpty);
+          (this.player.isOnBlock && !this.actionPlane[blockIndex].isEmpty);
     }
 
     return result;
@@ -697,18 +696,18 @@ export default class LevelModel {
         angle += 2 * Math.PI;
       }
       //convert to degrees for simplicity
-      angle *= 360 / (2*Math.PI);
+      angle *= 360 / (2 * Math.PI);
 
       //top right
-      if (!rightQuad &&angle > 32.5 && angle <= 57.5) {
+      if (!rightQuad && angle > 32.5 && angle <= 57.5) {
         topRightQuad = true;
         this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_InCorner_TopRight", precedence: 0 });
       }//top left
-      if (!leftQuad &&angle > 122.5 && angle <= 147.5) {
+      if (!leftQuad && angle > 122.5 && angle <= 147.5) {
         topLeftQuad = true;
         this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_InCorner_TopLeft", precedence: 0});
       }//bot left
-      if (!leftQuad &&angle > 212.5 && angle <= 237.5) {
+      if (!leftQuad && angle > 212.5 && angle <= 237.5) {
         botLeftQuad = true;
         this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_InCorner_BottomLeft", precedence: 0});
       }//botright
@@ -750,11 +749,11 @@ export default class LevelModel {
       this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Bottom", precedence: 1});
     }
 
-    if ( (botRightQuad && topLeftQuad) || (botLeftQuad && topRightQuad) || leftQuad && rightQuad || topQuad && botQuad || (rightQuad && botQuad && topLeftQuad) ||
+    if ((botRightQuad && topLeftQuad) || (botLeftQuad && topRightQuad) || leftQuad && rightQuad || topQuad && botQuad || (rightQuad && botQuad && topLeftQuad) ||
         (botQuad && topRightQuad && topLeftQuad) || (topQuad && botRightQuad && botLeftQuad) || (leftQuad && topRightQuad && botRightQuad) || (leftQuad && botQuad && topRightQuad)) {
       //fully lit
       this.fowPlane[index] = "";
-    } else if ( (botQuad && leftQuad) || (botQuad && topLeftQuad) || (leftQuad && botRightQuad) ){
+    } else if ((botQuad && leftQuad) || (botQuad && topLeftQuad) || (leftQuad && botRightQuad)) {
       // darkend botleft corner
       this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Bottom_Left", precedence: 2});
     } else if ((botQuad && rightQuad) || (botQuad && topRightQuad) || (rightQuad && botLeftQuad)) {
@@ -781,13 +780,13 @@ export default class LevelModel {
     this.fowPlane[index] = fowObject;
   }
 
-  getAllEmissives(){
+  getAllEmissives() {
     var emissives = [];
     for (var y = 0; y < this.planeHeight; ++y) {
       for (var x = 0; x < this.planeWidth; ++x) {
-        var index = this.coordinatesToIndex([x,y]);
-        if (!this.actionPlane[index].isEmpty && this.actionPlane[index].isEmissive || this.groundPlane[index].isEmissive && this.actionPlane[index].isEmpty ) {
-          emissives.push([x,y]);
+        var index = this.coordinatesToIndex([x, y]);
+        if (!this.actionPlane[index].isEmpty && this.actionPlane[index].isEmissive || this.groundPlane[index].isEmissive && this.actionPlane[index].isEmpty) {
+          emissives.push([x, y]);
         }
       }
     }
@@ -811,12 +810,12 @@ export default class LevelModel {
 
           //Ignore the indexes directly around us.
           //Theyre taken care of on the FOW first pass
-          if ( (yIndex >= y - 1 && yIndex <= y + 1) && (xIndex >= x - 1 && xIndex <= x + 1) ) {
+          if ((yIndex >= y - 1 && yIndex <= y + 1) && (xIndex >= x - 1 && xIndex <= x + 1)) {
             continue;
           }
 
           //we want unique copies so we use a map.
-          blocksTouchedByEmissives[yIndex.toString() + xIndex.toString()] = [xIndex,yIndex];
+          blocksTouchedByEmissives[yIndex.toString() + xIndex.toString()] = [xIndex, yIndex];
         }
       }
     }
@@ -838,7 +837,7 @@ export default class LevelModel {
         }
 
         //Ignore the indexes directly around us.
-        if ( (yIndex >= y - 1 && yIndex <= y + 1) && (xIndex >= x - 1 && xIndex <= x + 1) ) {
+        if ((yIndex >= y - 1 && yIndex <= y + 1) && (xIndex >= x - 1 && xIndex <= x + 1)) {
           continue;
         }
 
@@ -868,7 +867,7 @@ export default class LevelModel {
       // compute the fog of war for light emitting blocks
       for (y = 0; y < this.planeHeight; ++y) {
         for (x = 0; x < this.planeWidth; ++x) {
-          this.fowPlane.push({ x: x, y: y, type: "FogOfWar_Center" });
+          this.fowPlane.push({x: x, y: y, type: "FogOfWar_Center"});
         }
       }
 
@@ -880,12 +879,11 @@ export default class LevelModel {
           let blockIndex = this.yToIndex(y) + x;
 
           if (this.groundPlane[blockIndex].isEmissive && this.actionPlane[blockIndex].isEmpty ||
-            (!this.actionPlane[blockIndex].isEmpty && this.actionPlane[blockIndex].isEmissive)) {
+              (!this.actionPlane[blockIndex].isEmpty && this.actionPlane[blockIndex].isEmissive)) {
             this.clearFowAround(x, y);
           }
         }
       }
-
 
     }
   }
@@ -925,35 +923,42 @@ export default class LevelModel {
 
       if (this.actionPlane[index].isEmpty || this.actionPlane[index].isTransparent) {
         if (y === 0) {
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Bottom' });
+          this.shadingPlane.push({x: x, y: y, type: 'AOeffect_Bottom'});
         }
 
         if (y === this.planeHeight - 1) {
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Top' });
+          this.shadingPlane.push({x: x, y: y, type: 'AOeffect_Top'});
         }
 
         if (x === 0) {
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Right' });
+          this.shadingPlane.push({x: x, y: y, type: 'AOeffect_Right'});
         }
 
         if (x === this.planeWidth - 1) {
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Left' });
+          this.shadingPlane.push({x: x, y: y, type: 'AOeffect_Left'});
         }
-
 
         if (x < this.planeWidth - 1 && !this.actionPlane[this.yToIndex(y) + x + 1].getIsEmptyOrEntity()) {
           // needs a left side AO shadow
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Left' });
+          this.shadingPlane.push({x: x, y: y, type: 'AOeffect_Left'});
           hasLeft = true;
         }
 
         if (x > 0 && !this.actionPlane[this.yToIndex(y) + x - 1].getIsEmptyOrEntity()) {
           // needs a right side AO shadow
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Right' });
-          this.shadingPlane.push({ x: x, y: y, type: 'Shadow_Parts_Fade_base.png' });
+          this.shadingPlane.push({x: x, y: y, type: 'AOeffect_Right'});
+          this.shadingPlane.push({
+            x: x,
+            y: y,
+            type: 'Shadow_Parts_Fade_base.png'
+          });
 
           if (y > 0 && x > 0 && this.actionPlane[this.yToIndex(y - 1) + x - 1].getIsEmptyOrEntity()) {
-            this.shadingPlane.push({ x: x, y: y, type: 'Shadow_Parts_Fade_top.png' });
+            this.shadingPlane.push({
+              x: x,
+              y: y,
+              type: 'Shadow_Parts_Fade_top.png'
+            });
           }
 
           hasRight = true;
@@ -961,32 +966,30 @@ export default class LevelModel {
 
         if (y > 0 && !this.actionPlane[this.yToIndex(y - 1) + x].getIsEmptyOrEntity()) {
           // needs a bottom side AO shadow
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Bottom' });
+          this.shadingPlane.push({x: x, y: y, type: 'AOeffect_Bottom'});
         } else if (y > 0) {
-          if (x < this.planeWidth - 1 &&
-              !this.actionPlane[this.yToIndex(y - 1) + x + 1].getIsEmptyOrEntity() &&
+          if (x < this.planeWidth - 1 && !this.actionPlane[this.yToIndex(y - 1) + x + 1].getIsEmptyOrEntity() &&
               this.actionPlane[this.yToIndex(y) + x + 1].getIsEmptyOrEntity()) {
             // needs a bottom left side AO shadow
-            this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_BottomLeft' });
+            this.shadingPlane.push({x: x, y: y, type: 'AOeffect_BottomLeft'});
           }
 
           if (!hasRight && x > 0 && !this.actionPlane[this.yToIndex(y - 1) + x - 1].getIsEmptyOrEntity()) {
             // needs a bottom right side AO shadow
-            this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_BottomRight' });
+            this.shadingPlane.push({x: x, y: y, type: 'AOeffect_BottomRight'});
           }
         }
 
         if (y < this.planeHeight - 1) {
-          if (x < this.planeWidth - 1 &&
-              !this.actionPlane[this.yToIndex(y + 1) + x + 1].getIsEmptyOrEntity() &&
+          if (x < this.planeWidth - 1 && !this.actionPlane[this.yToIndex(y + 1) + x + 1].getIsEmptyOrEntity() &&
               this.actionPlane[this.yToIndex(y) + x + 1].getIsEmptyOrEntity()) {
             // needs a bottom left side AO shadow
-            this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_TopLeft' });
+            this.shadingPlane.push({x: x, y: y, type: 'AOeffect_TopLeft'});
           }
 
           if (!hasRight && x > 0 && !this.actionPlane[this.yToIndex(y + 1) + x - 1].getIsEmptyOrEntity()) {
             // needs a bottom right side AO shadow
-            this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_TopRight' });
+            this.shadingPlane.push({x: x, y: y, type: 'AOeffect_TopRight'});
           }
         }
       }
