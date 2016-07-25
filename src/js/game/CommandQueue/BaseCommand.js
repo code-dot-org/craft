@@ -11,9 +11,9 @@ export default class BaseCommand {
 
     tick() {
     }
-    
+
     begin() {
-        if (this.HighlightCallback != null) {
+        if (this.HighlightCallback) {
             this.HighlightCallback();
         }
         this.state = CommandState.WORKING;
@@ -24,7 +24,7 @@ export default class BaseCommand {
      * @returns {boolean}
      */
     isStarted() {
-        return this.state != CommandState.NOT_STARTED;
+        return this.state !== CommandState.NOT_STARTED;
     }
 
     /**
@@ -35,7 +35,7 @@ export default class BaseCommand {
     isFinished() {
         return this.isSucceeded() || this.isFailed();
     }
-    
+
     /**
      * Whether the command has finished with its work and reported success.
      * @returns {boolean}
@@ -55,7 +55,7 @@ export default class BaseCommand {
    succeeded() {
        this.state = CommandState.SUCCESS;
    }
-    
+
    failed() {
        this.state = CommandState.FAILURE;
    }

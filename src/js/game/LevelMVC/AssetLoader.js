@@ -32,13 +32,13 @@ export default class AssetLoader {
       },
       playerSteve: {
         type: 'atlasJSON',
-        pngPath: `${this.assetRoot}images/Steve.png`,
-        jsonPath: `${this.assetRoot}images/Steve.json`
+        pngPath: `${this.assetRoot}images/Steve1013.png`,
+        jsonPath: `${this.assetRoot}images/Steve1013.json`
       },
       playerAlex: {
         type: 'atlasJSON',
-        pngPath: `${this.assetRoot}images/Alex.png`,
-        jsonPath: `${this.assetRoot}images/Alex.json`
+        pngPath: `${this.assetRoot}images/Alex1013.png`,
+        jsonPath: `${this.assetRoot}images/Alex1013.json`
       },
       AO: {
         type: 'atlasJSON',
@@ -411,7 +411,7 @@ export default class AssetLoader {
   }
 
   loadAsset(key, config) {
-    switch(config.type) {
+    switch (config.type) {
       case 'image':
         this.game.load.image(key, config.path);
         break;
@@ -426,7 +426,7 @@ export default class AssetLoader {
         this.game.load.atlasJSONHash(key, config.pngPath, config.jsonPath);
         break;
       default:
-        throw `Asset ${key} needs config.type set in configuration.`
+        throw `Asset ${key} needs config.type set in configuration.`;
     }
   }
 }
