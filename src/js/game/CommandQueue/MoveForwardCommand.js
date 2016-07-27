@@ -12,7 +12,7 @@ export default class MoveForwardCommand extends BaseCommand {
 
   begin() {
     super.begin();
-    this.GameController.moveForward(this);
+    this.gameController.moveForward(this);
   }
 }
 

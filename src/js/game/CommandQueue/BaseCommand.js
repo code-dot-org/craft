@@ -2,9 +2,8 @@ import CommandState from "./CommandState.js";
 
 export default class BaseCommand {
   constructor(gameController, highlightCallback) {
-    this.GameController = gameController;
-    this.Game = gameController.game;
-    this.HighlightCallback = highlightCallback;
+    this.gameController = gameController;
+    this.highlightCallback = highlightCallback;
     this.state = CommandState.NOT_STARTED;
   }
 
@@ -12,8 +11,8 @@ export default class BaseCommand {
   }
 
   begin() {
-    if (this.HighlightCallback) {
-      this.HighlightCallback();
+    if (this.highlightCallback) {
+      this.highlightCallback();
     }
     this.state = CommandState.WORKING;
   }

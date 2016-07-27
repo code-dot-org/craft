@@ -14,9 +14,9 @@ export default class TurnCommand extends BaseCommand {
 
   begin() {
     super.begin();
-    if (this.GameController.DEBUG) {
+    if (this.gameController.DEBUG) {
       console.log(`TURN command: BEGIN turning ${this.Direction}  `);
     }
-    this.GameController.turn(this, this.Direction);
+    this.gameController.turn(this, this.Direction);
   }
 }

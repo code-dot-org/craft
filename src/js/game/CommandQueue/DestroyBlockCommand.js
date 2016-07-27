@@ -13,7 +13,7 @@ export default class DestroyBlockCommand extends BaseCommand {
 
   begin() {
     super.begin();
-    this.GameController.destroyBlock(this);
+    this.gameController.destroyBlock(this);
   }
 
 }
