@@ -1,6 +1,7 @@
 import CommandQueue from "./CommandQueue/CommandQueue.js";
 import BaseCommand from "./CommandQueue/BaseCommand.js";
 import DestroyBlockCommand from "./CommandQueue/DestroyBlockCommand.js";
+import CallbackCommand from "./CommandQueue/CallbackCommand.js";
 import MoveForwardCommand from "./CommandQueue/MoveForwardCommand.js";
 import TurnCommand from "./CommandQueue/TurnCommand.js";
 import WhileCommand from "./CommandQueue/WhileCommand.js";
@@ -9,6 +10,8 @@ import IfBlockAheadCommand from "./CommandQueue/IfBlockAheadCommand.js";
 import LevelModel from "./LevelMVC/LevelModel.js";
 import LevelView from "./LevelMVC/LevelView.js";
 import AssetLoader from "./LevelMVC/AssetLoader.js";
+
+import FacingDirection from "./LevelMVC/FacingDirection.js";
 
 import * as CodeOrgAPI from "./API/CodeOrgAPI.js";
 
@@ -73,6 +76,8 @@ class GameController {
 
     this.resettableTimers = [];
 
+    this.events = [];
+
     // Phaser "slow motion" modifier we originally tuned animations using
     this.assumedSlowMotion = 1.5;
     this.initialSlowMotion = gameControllerConfig.customSlowMotion || this.assumedSlowMotion;
@@ -120,6 +125,7 @@ class GameController {
       timer.stop(true);
     });
     this.resettableTimers.length = 0;
+    this.events.length = 0;
   }
 
   preload() {
@@ -156,67 +162,85 @@ class GameController {
   }
 
   addCheatKeys() {
-    this.game.input.keyboard.addKey(Phaser.Keyboard.TILDE).onUp.add(() => {
-      this.game.input.keyboard.addKey(Phaser.Keyboard.UP).onUp.add(() => {
-        var dummyFunc = function () {
-          console.log("highlight move forward command.");
-        };
-        this.codeOrgAPI.moveForward(dummyFunc);
-      });
+    if (!this.levelData.isEventLevel) {
+      return;
+    }
+    this.game.input.keyboard.addKey(Phaser.Keyboard.UP).onUp.add(() => {
+      var dummyFunc = function () {
+        console.log("highlight move forward command.");
+      };
+      //if (this.queue.currentCommand instanceof CallbackCommand) { return; }
+      this.codeOrgAPI.moveDirection(dummyFunc, FacingDirection.Up);
+      this.queue.begin();
+    });
 
-      this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onUp.add(() => {
-        var dummyFunc = function () {
-          console.log("highlight turn right command.");
-        };
-        this.codeOrgAPI.turnRight(dummyFunc);
-      });
+    this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onUp.add(() => {
+      var dummyFunc = function () {
+        console.log("highlight turn right command.");
+      };
+      //if (this.queue.currentCommand instanceof CallbackCommand) { return; }
+      this.codeOrgAPI.moveDirection(dummyFunc, FacingDirection.Right);
+      this.queue.begin();
+    });
 
-      this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT).onUp.add(() => {
-        var dummyFunc = function () {
-          console.log("highlight turn left command.");
-        };
-        this.codeOrgAPI.turnLeft(dummyFunc);
-      });
+    this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT).onUp.add(() => {
+      var dummyFunc = function () {
+        console.log("highlight turn left command.");
+      };
+      //if (this.queue.currentCommand instanceof CallbackCommand) { return; }
+      this.codeOrgAPI.moveDirection(dummyFunc, FacingDirection.Left);
+      this.queue.begin();
+    });
 
-      this.game.input.keyboard.addKey(Phaser.Keyboard.P).onUp.add(() => {
-        var dummyFunc = function () {
-          console.log("highlight placeBlock command.");
-        };
-        this.codeOrgAPI.placeBlock(dummyFunc, "logOak");
-      });
+    this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN).onUp.add(() => {
+      var dummyFunc = function () {
+        console.log("highlight turn left command.");
+      };
+      //if (this.queue.currentCommand instanceof CallbackCommand) { return; }
+      this.codeOrgAPI.moveDirection(dummyFunc, FacingDirection.Down);
+      this.queue.begin();
+    });
 
-      this.game.input.keyboard.addKey(Phaser.Keyboard.D).onUp.add(() => {
-        var dummyFunc = function () {
-          console.log("highlight destroy block command.");
-        };
-        this.codeOrgAPI.destroyBlock(dummyFunc);
-      });
+    this.game.input.keyboard.addKey(Phaser.Keyboard.P).onUp.add(() => {
+      var dummyFunc = function () {
+        console.log("highlight placeBlock command.");
+      };
+      this.codeOrgAPI.placeBlock(dummyFunc, "logOak");
+      this.codeOrgAPI.startAttempt(dummyFunc);
+    });
 
-      this.game.input.keyboard.addKey(Phaser.Keyboard.E).onUp.add(() => {
-        var dummyFunc = function (result) {
-          console.log(`Execute command list done: ${result} `);
-        };
-        this.codeOrgAPI.startAttempt(dummyFunc);
-      });
+    this.game.input.keyboard.addKey(Phaser.Keyboard.D).onUp.add(() => {
+      var dummyFunc = function () {
+        console.log("highlight destroy block command.");
+      };
+      this.codeOrgAPI.destroyBlock(dummyFunc);
+      this.codeOrgAPI.startAttempt(dummyFunc);
+    });
 
-      this.game.input.keyboard.addKey(Phaser.Keyboard.W).onUp.add(() => {
-        var dummyFunc = function () {
-          console.log("Execute While command list");
-        };
-        var blockType = "empty";
-        var codeBlock = function () {
-          this.GameController.codeOrgAPI.moveForward(function () {
-            console.log("Execute While command move block");
-          });
-          this.GameController.codeOrgAPI.moveForward(function () {
-            console.log("Execute While command move block2");
-          });
-          this.GameController.codeOrgAPI.turnLeft(function () {
-            console.log("Execute While command turn");
-          });
-        };
-        this.codeOrgAPI.whilePathAhead(dummyFunc, blockType, codeBlock);
-      });
+    this.game.input.keyboard.addKey(Phaser.Keyboard.E).onUp.add(() => {
+      var dummyFunc = function (result) {
+        console.log(`Execute command list done: ${result} `);
+      };
+      this.codeOrgAPI.startAttempt(dummyFunc);
+    });
+
+    this.game.input.keyboard.addKey(Phaser.Keyboard.W).onUp.add(() => {
+      var dummyFunc = function () {
+        console.log("Execute While command list");
+      };
+      var blockType = "empty";
+      var codeBlock = function () {
+        this.GameController.codeOrgAPI.moveForward(function () {
+          console.log("Execute While command move block");
+        });
+        this.GameController.codeOrgAPI.moveForward(function () {
+          console.log("Execute While command move block2");
+        });
+        this.GameController.codeOrgAPI.turnLeft(function () {
+          console.log("Execute While command turn");
+        });
+      };
+      this.codeOrgAPI.whilePathAhead(dummyFunc, blockType, codeBlock);
     });
   }
 
@@ -303,6 +327,30 @@ class GameController {
     }
   }
 
+  moveDirection(commandQueueItem, direction) {
+    const player = this.levelModel.player;
+
+    this.levelModel.turnToDirection(direction);
+
+    if (!this.levelModel.canMoveForward()) {
+      this.levelView.playBumpAnimation(player.position, player.facing, false);
+      commandQueueItem.succeeded();
+      // TODO(bjordan): handle facing edge of map
+      this.events.forEach(e => e({ eventType: 'blockTouched', blockReference: this.levelModel.getForwardBlock(), blockType: this.levelModel.getForwardBlockType() }));
+      return;
+    }
+
+    this.levelModel.moveDirection(direction);
+    const groundType = this.levelModel.groundPlane[this.levelModel.yToIndex(player.position[1]) + player.position[0]].blockType;
+    this.levelView.updatePlayerDirection(this.levelModel.player.position, this.levelModel.player.facing);
+    this.levelView.playMoveForwardAnimation(player.position, player.facing, false, player.isOnBlock, groundType, () => {
+      this.levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
+      this.delayPlayerMoveBy(30, 200, () => {
+        commandQueueItem.succeeded();
+      });
+    });
+  }
+
   turn(commandQueueItem, direction) {
     if (direction === -1) {
       this.levelModel.turnLeft();
@@ -319,11 +367,21 @@ class GameController {
 
   }
 
+  destroyEntity(commandQueueItem, entity) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+    this.destroyBlockWithoutPlayerInteraction([x, y]);
+    this.levelModel.computeShadingPlane();
+    this.levelModel.computeFowPlane();
+    this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
+    this.levelView.updateFowPlane(this.levelModel.fowPlane);
+    commandQueueItem.succeeded();
+  }
+
   destroyBlockWithoutPlayerInteraction(position) {
     let block = this.levelModel.actionPlane[this.levelModel.yToIndex(position[1]) + position[0]];
     this.levelModel.destroyBlock(position);
 
-    if (block !== null) {
+    if (block) {
       let destroyPosition = block.position;
       let blockType = block.blockType;
 

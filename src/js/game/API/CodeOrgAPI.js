@@ -8,6 +8,7 @@ import TurnCommand from "../CommandQueue/TurnCommand.js";
 import WhileCommand from "../CommandQueue/WhileCommand.js";
 import IfBlockAheadCommand from "../CommandQueue/IfBlockAheadCommand.js";
 import CheckSolutionCommand from "../CommandQueue/CheckSolutionCommand.js";
+import CallbackCommand from "../CommandQueue/CallbackCommand.js";
 
 export function get(controller) {
   return {
@@ -30,7 +31,9 @@ export function get(controller) {
      */
     startAttempt: function (onAttemptComplete) {
       controller.OnCompleteCallback = onAttemptComplete;
-      controller.queue.addCommand(new CheckSolutionCommand(controller));
+      if (!controller.levelData.isEventLevel) {
+        controller.queue.addCommand(new CheckSolutionCommand(controller));
+      }
 
       controller.setPlayerActionDelayByQueueLength();
 
@@ -41,6 +44,45 @@ export function get(controller) {
       controller.reset();
       controller.queue.reset();
       controller.OnCompleteCallback = null;
+    },
+
+    /**
+     * @param highlightCallback
+     * @param codeBlockCallback - for example:
+     *  (e) => {
+     *    if (e.type !== 'blockDestroyed') {
+     *      return;
+     *    }
+     *
+     *    if (e.blockType !== '[dropdown value, e.g. logOak') {
+     *      return;
+     *    }
+     *
+     *    evalUserCode(e.block);
+     *  }
+     */
+
+    registerEventCallback(highlightCallback, codeBlockCallback) {
+      // TODO(bjordan): maybe need to also handle top-level event block highlighting
+      controller.events.push(codeBlockCallback);
+
+      // in controller:
+      // this.events.forEach((e) => e({ type: EventType.BLOCK_DESTROYED, blockType: 'logOak' });
+      // (and clear out on reset)
+    },
+
+    destroyEntity: function (highlightCallback, entity) {
+      const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.destroyEntity(myQueueItem, entity);
+      });
+      controller.queue.addCommand(myQueueItem);
+    },
+
+    moveDirection: function (highlightCallback, direction) {
+      const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.moveDirection(myQueueItem, direction);
+      });
+      controller.queue.addCommand(myQueueItem);
     },
 
     moveForward: function (highlightCallback) {

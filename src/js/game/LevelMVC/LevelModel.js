@@ -62,8 +62,20 @@ export default class LevelModel {
     this.computeFowPlane();
   }
 
+  entityToPosition(entity) {
+    const entityIndex = this.actionPlane.indexOf(entity);
+    return this.indexToXY(entityIndex);
+  }
+
   yToIndex(y) {
     return y * this.planeWidth;
+  }
+
+  indexToXY(index) {
+    return {
+      x: index % this.planeWidth,
+      y: Math.floor(index / this.planeWidth)
+    }
   }
 
   constructPlane(planeData, isActionPlane) {
@@ -234,6 +246,16 @@ export default class LevelModel {
     return actionIsEmpty ?
         this.isBlockOfTypeOnPlane(blockForwardPosition, blockType, this.groundPlane) :
         this.isBlockOfTypeOnPlane(blockForwardPosition, blockType, this.actionPlane);
+  }
+
+  getForwardBlockType() {
+    return this.getForwardBlock().blockType;
+  }
+
+  getForwardBlock() {
+    let blockForwardPosition = this.getMoveForwardPosition();
+    let blockIndex = this.yToIndex(blockForwardPosition[1]) + blockForwardPosition[0];
+    return this.actionPlane[blockIndex];
   }
 
   isBlockOfType(position, blockType) {
@@ -549,6 +571,15 @@ export default class LevelModel {
     }
   }
 
+  turnToDirection(direction) {
+    this.player.facing = direction;
+  }
+
+  moveDirection(direction) {
+    this.turnToDirection(direction);
+    this.moveForward();
+  }
+
   placeBlock(blockType) {
     let blockPosition = this.player.position;
     let blockIndex = this.yToIndex(blockPosition[1]) + blockPosition[0];
@@ -610,9 +641,7 @@ export default class LevelModel {
   }
 
   destroyBlockForward() {
-    var i,
-        shouldAddToInventory = true,
-        block = null;
+    var block = null;
 
     let blockForwardPosition = this.getMoveForwardPosition();
     let blockIndex = this.yToIndex(blockForwardPosition[1]) + blockForwardPosition[0];

@@ -11,6 +11,9 @@ var ifBlockAhead = function (type, blockCode) {
 var ifLavaAhead = function (blockCode) {
   return "ifLavaAhead(do{\n" + blockCode + "});\n"
 };
+var onBlockTouched = function (type, blockCode) {
+  return "onBlockTouched('" + type + "', do{\n" + blockCode + "});\n"
+};
 var placeBlock = function (type) {
   return "placeBlock('" + type + "');\n"
 };
@@ -968,6 +971,89 @@ window.demoLevels = {
     + "}"
 
       ,
+
+    verificationFunction: function (verificationAPI) {
+      return true;
+    }
+  },
+  12: {
+    instructions: "My cool event level!",
+
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: []
+    },
+
+    playerStartPosition: [1, 5],
+
+    playerStartDirection: 1,
+
+    isEventLevel: true,
+
+    groundPlane: [
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "lava", "stone", "lava", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"
+    ],
+
+    groundDecorationPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", ""],
+
+    actionPlane: [
+      "stone", "", "", "", "", "", "", "stone", "stone", "stone",
+      "", "", "", "", "", "", "", "", "", "stone",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "stone", "oreIron", "oreDiamond", "oreGold", "oreEmerald", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "stone", "", "", "", "", "", "", "", "", "",
+      "oreCoal", "stone", "", "", "", "", "", "", "", "",
+    ],
+
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    solutionCode: `
+registerEventCallback(function (event) {
+  if (event.eventType !== 'blockTouched') {
+    return;
+  }
+  if (event.blockType !== 'stone') {
+    return;
+  }
+
+  destroyEntity(event.blockReference);
+})
+`,
 
     verificationFunction: function (verificationAPI) {
       return true;
