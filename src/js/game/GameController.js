@@ -315,7 +315,7 @@ class GameController {
 
       // Move the block in the model and view.
       this.levelModel.moveBlock(sourceIndex, targetIndex);
-      this.levelView.moveBlockSprite(sourceIndex, position);
+      this.levelView.moveBlockSprite(sourceIndex, position, entity.isEntity);
 
       // Update renderer
       this.levelModel.computeShadingPlane();

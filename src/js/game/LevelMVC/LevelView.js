@@ -962,14 +962,14 @@ export default class LevelView {
     tween.start();
   }
 
-  moveBlockSprite(sourceIndex, targetPosition){
+  moveBlockSprite(sourceIndex, targetPosition, isEntity){
     const targetIndex = this.yToIndex(targetPosition[1]) + targetPosition[0];
     const sprite = this.actionPlaneBlocks[sourceIndex];
 
     // move the actual sprite stored in the blocks array.
     if (sprite) {
       // Handle sprite offsets differently if a block vs. a non-block.
-      if (sprite.key === "blocks") {
+      if (!isEntity) {
         sprite.x = -14 + 40 * targetPosition[0];
         sprite.y = -22 + 40 * (targetPosition[1]);
       }
@@ -977,6 +977,9 @@ export default class LevelView {
         sprite.x = -6 + 40 * targetPosition[0];
         sprite.y = -22 + 40 * (targetPosition[1]);
       }
+
+      // Set the draw order appropriately so that sprites below this one will render on top of it.
+      sprite.sortOrder = this.yToIndex(targetPosition[1]) + 5;
 
       // move in the actionPlaneBlocks array
       this.actionPlaneBlocks[targetIndex] = sprite;
