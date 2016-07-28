@@ -964,8 +964,8 @@ export default class LevelView {
 
   moveBlockSprite(sourceIndex, targetPosition){
     const targetIndex = this.yToIndex(targetPosition[1]) + targetPosition[0];
-    const sprite = this.actionPlaneBlocks[sourceIndex]; 
-    
+    const sprite = this.actionPlaneBlocks[sourceIndex];
+
     // move the actual sprite stored in the blocks array.
     if (sprite) {
       // Handle sprite offsets differently if a block vs. a non-block.

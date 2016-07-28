@@ -582,7 +582,7 @@ export default class LevelModel {
 
   moveBlock(sourceIndex, targetIndex) {
     // Swap so that we don't invalidate our Block Reference.
-    const tempBlock = this.actionPlane[targetIndex];    
+    const tempBlock = this.actionPlane[targetIndex];
     this.actionPlane[targetIndex] = this.actionPlane[sourceIndex];
     this.actionPlane[sourceIndex] = tempBlock;
   }
