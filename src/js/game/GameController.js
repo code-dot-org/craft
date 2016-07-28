@@ -377,6 +377,11 @@ class GameController {
     commandQueueItem.succeeded();
   }
 
+  playSound(commandQueueItem, sound) {
+    this.levelView.audioPlayer.play(sound);
+    commandQueueItem.succeeded();
+  }
+
   destroyBlockWithoutPlayerInteraction(position) {
     let block = this.levelModel.actionPlane[this.levelModel.yToIndex(position[1]) + position[0]];
     this.levelModel.destroyBlock(position);
@@ -410,6 +415,7 @@ class GameController {
             blockType = "planksSpruce";
             break;
         }
+
         this.levelView.actionPlaneBlocks[this.levelModel.yToIndex(destroyPosition[1]) + destroyPosition[0]].kill();
         this.levelView.playExplosionAnimation(this.levelModel.player.position, this.levelModel.player.facing, destroyPosition, blockType, () => {}, true);
       } else if (block.isUsable) {

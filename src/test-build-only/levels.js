@@ -1051,6 +1051,7 @@ registerEventCallback(function (event) {
     return;
   }
 
+  playSound("fizz");
   destroyEntity(event.blockReference);
 })
 `,
