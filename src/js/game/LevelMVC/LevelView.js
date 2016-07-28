@@ -970,7 +970,7 @@ export default class LevelView {
     if (sprite) {
       // Handle sprite offsets differently if a block vs. a non-block.
       if (!isEntity) {
-        sprite.x = -14 + 40 * targetPosition[0];
+        sprite.x = -13 + 40 * targetPosition[0];
         sprite.y = -22 + 40 * (targetPosition[1]);
       }
       else {
