@@ -364,7 +364,6 @@ class GameController {
     this.delayPlayerMoveBy(200, 800, () => {
       commandQueueItem.succeeded();
     });
-
   }
 
   destroyEntity(commandQueueItem, entity) {
@@ -374,6 +373,12 @@ class GameController {
     this.levelModel.computeFowPlane();
     this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
     this.levelView.updateFowPlane(this.levelModel.fowPlane);
+    commandQueueItem.succeeded();
+  }
+
+  explodeEntity(commandQueueItem, entity) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+    this.levelView.playExplosionCloudAnimation([x, y]);
     commandQueueItem.succeeded();
   }
 
