@@ -105,6 +105,11 @@ class GameController {
     });
   }
 
+  // Returns a random integer between min (included) and max (excluded)
+  getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
   /**
    * @param {Object} levelConfig
    */

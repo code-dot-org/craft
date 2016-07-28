@@ -1133,7 +1133,7 @@ registerEventCallback(function (event) {
   }
 
   moveEntityForward(event.blockReference);
-  turnEntityRight(event.blockReference);
+  turnEntityRandom(event.blockReference);
 })
 `,
 

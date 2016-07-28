@@ -171,6 +171,15 @@ export function get(controller) {
       controller.queue.addCommand(myQueueItem);
     },
 
+    turnEntityRandom: function (highlightCallback, entity) {
+      const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
+        // spread the random number across a decent range and mod for even/odd to determine turn direction.
+        const rand = controller.getRandomInt(0, 100) % 2;
+        controller.turnEntity(myQueueItem, entity, rand ? 1 : -1);
+      });
+      controller.queue.addCommand(myQueueItem);
+    },
+
     destroyBlock: function (highlightCallback) {
       controller.queue.addCommand(new DestroyBlockCommand(controller, highlightCallback));
     },
