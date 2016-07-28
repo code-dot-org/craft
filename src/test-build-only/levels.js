@@ -1131,11 +1131,9 @@ registerEventCallback(function (event) {
   if (event.eventType !== 'blockTouched') {
     return;
   }
-  if (event.blockType !== 'creeper') {
-    return;
-  }
 
   moveEntityNorth(event.blockReference);
+  turnEntityRight(event.blockReference);
 })
 `,
 

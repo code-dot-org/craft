@@ -531,52 +531,52 @@ export default class LevelModel {
     }
   }
 
-  turnLeft() {
-    switch (this.player.facing) {
+  turnLeft(entity) {
+    switch (entity.facing) {
       case FacingDirection.Up:
-        this.player.facing = FacingDirection.Left;
+        entity.facing = FacingDirection.Left;
         break;
 
       case FacingDirection.Left:
-        this.player.facing = FacingDirection.Down;
+        entity.facing = FacingDirection.Down;
         break;
 
       case FacingDirection.Down:
-        this.player.facing = FacingDirection.Right;
+        entity.facing = FacingDirection.Right;
         break;
 
       case FacingDirection.Right:
-        this.player.facing = FacingDirection.Up;
+        entity.facing = FacingDirection.Up;
         break;
     }
   }
 
-  turnRight() {
-    switch (this.player.facing) {
+  turnRight(entity) {
+    switch (entity.facing) {
       case FacingDirection.Up:
-        this.player.facing = FacingDirection.Right;
+        entity.facing = FacingDirection.Right;
         break;
 
       case FacingDirection.Right:
-        this.player.facing = FacingDirection.Down;
+        entity.facing = FacingDirection.Down;
         break;
 
       case FacingDirection.Down:
-        this.player.facing = FacingDirection.Left;
+        entity.facing = FacingDirection.Left;
         break;
 
       case FacingDirection.Left:
-        this.player.facing = FacingDirection.Up;
+        entity.facing = FacingDirection.Up;
         break;
     }
   }
 
-  turnToDirection(direction) {
-    this.player.facing = direction;
+  turnToDirection(entity, direction) {
+    entity.facing = direction;
   }
 
   moveDirection(direction) {
-    this.turnToDirection(direction);
+    this.turnToDirection(this.player, direction);
     this.moveForward();
   }
 

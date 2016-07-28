@@ -216,6 +216,15 @@ export default class LevelView {
     this.playScaledSpeed(this.playerSprite.animations, "idle" + direction);
   }
 
+  updateBlockSpriteDirection(entityIndex, facing) {
+    const sprite = this.actionPlaneBlocks[entityIndex];
+    if (sprite) {
+      let direction = this.getDirectionName(facing);
+
+      this.playScaledSpeed(sprite.animations, "idle" + direction);
+    }
+  }
+
   playPlayerAnimation(animationName, position, facing, isOnBlock) {
     let direction = this.getDirectionName(facing);
     this.playerSprite.sortOrder = this.yToIndex(position[1]) + 5;
@@ -938,6 +947,12 @@ export default class LevelView {
 
   playScaledSpeed(animationManager, name) {
     var animation = animationManager.getAnimation(name);
+
+    // if the animation doesn't exist, do nothing.  
+    if (!animation) {
+      return;
+    }
+
     if (!animation.originalFps) {
       animation.originalFps = 1000 / animation.delay;
     }

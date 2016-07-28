@@ -380,7 +380,7 @@ class GameController {
   moveDirection(commandQueueItem, direction) {
     const player = this.levelModel.player;
 
-    this.levelModel.turnToDirection(direction);
+    this.levelModel.turnToDirection(player, direction);
 
     if (!this.levelModel.canMoveForward()) {
       this.levelView.playBumpAnimation(player.position, player.facing, false);
@@ -390,7 +390,6 @@ class GameController {
       return;
     }
 
-    
     this.levelModel.moveDirection(direction);
     const groundType = this.levelModel.groundPlane[this.levelModel.yToIndex(player.position[1]) + player.position[0]].blockType;
     this.levelView.updatePlayerDirection(this.levelModel.player.position, this.levelModel.player.facing);
@@ -403,18 +402,35 @@ class GameController {
   }
 
   turn(commandQueueItem, direction) {
+    const player = this.levelModel.player;
+
     if (direction === -1) {
-      this.levelModel.turnLeft();
+      this.levelModel.turnLeft(player);
     }
 
     if (direction === 1) {
-      this.levelModel.turnRight();
+      this.levelModel.turnRight(player);
     }
     this.levelView.updatePlayerDirection(this.levelModel.player.position, this.levelModel.player.facing);
 
     this.delayPlayerMoveBy(200, 800, () => {
       commandQueueItem.succeeded();
     });
+  }
+
+  turnEntity(commandQueueItem, entity, direction) {
+    if (direction === -1) {
+      this.levelModel.turnLeft(entity);
+    }
+
+    if (direction === 1) {
+      this.levelModel.turnRight(entity);
+    }
+
+    const sourceIndex = this.levelModel.actionPlane.indexOf(entity);
+    this.levelView.updateBlockSpriteDirection(sourceIndex, entity.facing);
+
+    commandQueueItem.succeeded();
   }
 
   destroyEntity(commandQueueItem, entity) {
