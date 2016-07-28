@@ -364,7 +364,6 @@ class GameController {
     this.delayPlayerMoveBy(200, 800, () => {
       commandQueueItem.succeeded();
     });
-
   }
 
   destroyEntity(commandQueueItem, entity) {
@@ -374,6 +373,17 @@ class GameController {
     this.levelModel.computeFowPlane();
     this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
     this.levelView.updateFowPlane(this.levelModel.fowPlane);
+    commandQueueItem.succeeded();
+  }
+
+  explodeEntity(commandQueueItem, entity) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+    this.levelView.playExplosionCloudAnimation([x, y]);
+    commandQueueItem.succeeded();
+  }
+
+  playSound(commandQueueItem, sound) {
+    this.levelView.audioPlayer.play(sound);
     commandQueueItem.succeeded();
   }
 
@@ -410,6 +420,7 @@ class GameController {
             blockType = "planksSpruce";
             break;
         }
+
         this.levelView.actionPlaneBlocks[this.levelModel.yToIndex(destroyPosition[1]) + destroyPosition[0]].kill();
         this.levelView.playExplosionAnimation(this.levelModel.player.position, this.levelModel.player.facing, destroyPosition, blockType, () => {}, true);
       } else if (block.isUsable) {
