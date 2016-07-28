@@ -303,6 +303,13 @@ class GameController {
     commandQueueItem.succeeded();
   }
 
+  moveEntityForward(commandQueueItem, entity) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+
+    this.moveEntityTo(entity, this.levelModel.getEntityMoveForwardPosition([x, y], entity.facing));
+    commandQueueItem.succeeded();
+  }
+
   moveEntityTo(entity, position) {
     const playerIndex = this.levelModel.yToIndex(this.levelModel.player.position[1]) + this.levelModel.player.position[0];
 

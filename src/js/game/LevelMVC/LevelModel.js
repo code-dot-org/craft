@@ -210,10 +210,14 @@ export default class LevelModel {
   }
 
   getMoveForwardPosition() {
-    var cx = this.player.position[0],
-        cy = this.player.position[1];
+    return this.getEntityMoveForwardPosition(this.player.position, this.player.facing);
+  }
 
-    switch (this.player.facing) {
+  getEntityMoveForwardPosition(position, faceDirection) {
+    var cx = position[0],
+        cy = position[1];
+
+    switch (faceDirection) {
       case FacingDirection.Up:
         --cy;
         break;

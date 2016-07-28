@@ -120,6 +120,13 @@ export function get(controller) {
       controller.queue.addCommand(myQueueItem);
     },
 
+    moveEntityForward: function (highlightCallback, entity) {
+      const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.moveEntityForward(myQueueItem, entity);
+      });
+      controller.queue.addCommand(myQueueItem);
+    },
+
     moveDirection: function (highlightCallback, direction) {
       const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
         controller.moveDirection(myQueueItem, direction);
