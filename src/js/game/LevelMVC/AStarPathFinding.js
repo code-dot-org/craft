@@ -131,8 +131,7 @@ export default class AStarPathFinding {
           neighbor.visited = true;
           neighbor.h = this.manhattanDistance(neighbor, endNode);
           openList.push(neighbor);
-        }
-        else if (gScore < neighbor.g) {
+        } else if (gScore < neighbor.g) {
           // We've already visited this node, but it now has a better score, let's try it again.
           dirtyFlag = true;
         }
