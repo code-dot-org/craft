@@ -210,10 +210,14 @@ export default class LevelModel {
   }
 
   getMoveForwardPosition() {
-    var cx = this.player.position[0],
-        cy = this.player.position[1];
+    return this.getEntityMoveForwardPosition(this.player.position, this.player.facing);
+  }
 
-    switch (this.player.facing) {
+  getEntityMoveForwardPosition(position, faceDirection) {
+    var cx = position[0],
+        cy = position[1];
+
+    switch (faceDirection) {
       case FacingDirection.Up:
         --cy;
         break;
@@ -531,58 +535,58 @@ export default class LevelModel {
     }
   }
 
-  turnLeft() {
-    switch (this.player.facing) {
+  turnLeft(entity) {
+    switch (entity.facing) {
       case FacingDirection.Up:
-        this.player.facing = FacingDirection.Left;
+        entity.facing = FacingDirection.Left;
         break;
 
       case FacingDirection.Left:
-        this.player.facing = FacingDirection.Down;
+        entity.facing = FacingDirection.Down;
         break;
 
       case FacingDirection.Down:
-        this.player.facing = FacingDirection.Right;
+        entity.facing = FacingDirection.Right;
         break;
 
       case FacingDirection.Right:
-        this.player.facing = FacingDirection.Up;
+        entity.facing = FacingDirection.Up;
         break;
     }
   }
 
-  turnRight() {
-    switch (this.player.facing) {
+  turnRight(entity) {
+    switch (entity.facing) {
       case FacingDirection.Up:
-        this.player.facing = FacingDirection.Right;
+        entity.facing = FacingDirection.Right;
         break;
 
       case FacingDirection.Right:
-        this.player.facing = FacingDirection.Down;
+        entity.facing = FacingDirection.Down;
         break;
 
       case FacingDirection.Down:
-        this.player.facing = FacingDirection.Left;
+        entity.facing = FacingDirection.Left;
         break;
 
       case FacingDirection.Left:
-        this.player.facing = FacingDirection.Up;
+        entity.facing = FacingDirection.Up;
         break;
     }
   }
 
-  turnToDirection(direction) {
-    this.player.facing = direction;
+  turnToDirection(entity, direction) {
+    entity.facing = direction;
   }
 
   moveDirection(direction) {
-    this.turnToDirection(direction);
+    this.turnToDirection(this.player, direction);
     this.moveForward();
   }
 
   moveBlock(sourceIndex, targetIndex) {
     // Swap so that we don't invalidate our Block Reference.
-    const tempBlock = this.actionPlane[targetIndex];    
+    const tempBlock = this.actionPlane[targetIndex];
     this.actionPlane[targetIndex] = this.actionPlane[sourceIndex];
     this.actionPlane[sourceIndex] = tempBlock;
   }

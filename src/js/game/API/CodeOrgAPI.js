@@ -120,6 +120,13 @@ export function get(controller) {
       controller.queue.addCommand(myQueueItem);
     },
 
+    moveEntityForward: function (highlightCallback, entity) {
+      const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.moveEntityForward(myQueueItem, entity);
+      });
+      controller.queue.addCommand(myQueueItem);
+    },
+
     moveDirection: function (highlightCallback, direction) {
       const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
         controller.moveDirection(myQueueItem, direction);
@@ -141,6 +148,27 @@ export function get(controller) {
 
     turnLeft: function (highlightCallback) {
       controller.queue.addCommand(new TurnCommand(controller, highlightCallback, -1));
+    },
+
+    turnEntity: function (highlightCallback, entity, direction) {
+      const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.turnEntity(myQueueItem, entity, direction === 'right' ? 1 : -1);
+      });
+      controller.queue.addCommand(myQueueItem);
+    },
+
+    turnEntityRight: function (highlightCallback, entity) {
+      const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.turnEntity(myQueueItem, entity, 1);
+      });
+      controller.queue.addCommand(myQueueItem);
+    },
+
+    turnEntityLeft: function (highlightCallback, entity) {
+      const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.turnEntity(myQueueItem, entity, -1);
+      });
+      controller.queue.addCommand(myQueueItem);
     },
 
     destroyBlock: function (highlightCallback) {

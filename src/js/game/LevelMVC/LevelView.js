@@ -216,6 +216,15 @@ export default class LevelView {
     this.playScaledSpeed(this.playerSprite.animations, "idle" + direction);
   }
 
+  updateBlockSpriteDirection(entityIndex, facing) {
+    const sprite = this.actionPlaneBlocks[entityIndex];
+    if (sprite) {
+      let direction = this.getDirectionName(facing);
+
+      this.playScaledSpeed(sprite.animations, "idle" + direction);
+    }
+  }
+
   playPlayerAnimation(animationName, position, facing, isOnBlock) {
     let direction = this.getDirectionName(facing);
     this.playerSprite.sortOrder = this.yToIndex(position[1]) + 5;
@@ -938,6 +947,12 @@ export default class LevelView {
 
   playScaledSpeed(animationManager, name) {
     var animation = animationManager.getAnimation(name);
+
+    // if the animation doesn't exist, do nothing.  
+    if (!animation) {
+      return;
+    }
+
     if (!animation.originalFps) {
       animation.originalFps = 1000 / animation.delay;
     }
@@ -962,21 +977,24 @@ export default class LevelView {
     tween.start();
   }
 
-  moveBlockSprite(sourceIndex, targetPosition){
+  moveBlockSprite(sourceIndex, targetPosition, isEntity){
     const targetIndex = this.yToIndex(targetPosition[1]) + targetPosition[0];
-    const sprite = this.actionPlaneBlocks[sourceIndex]; 
-    
+    const sprite = this.actionPlaneBlocks[sourceIndex];
+
     // move the actual sprite stored in the blocks array.
     if (sprite) {
       // Handle sprite offsets differently if a block vs. a non-block.
-      if (sprite.key === "blocks") {
-        sprite.x = -14 + 40 * targetPosition[0];
+      if (!isEntity) {
+        sprite.x = -13 + 40 * targetPosition[0];
         sprite.y = -22 + 40 * (targetPosition[1]);
       }
       else {
         sprite.x = -6 + 40 * targetPosition[0];
         sprite.y = -22 + 40 * (targetPosition[1]);
       }
+
+      // Set the draw order appropriately so that sprites below this one will render on top of it.
+      sprite.sortOrder = this.yToIndex(targetPosition[1]) + 5;
 
       // move in the actionPlaneBlocks array
       this.actionPlaneBlocks[targetIndex] = sprite;
