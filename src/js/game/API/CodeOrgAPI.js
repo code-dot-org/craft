@@ -127,6 +127,20 @@ export function get(controller) {
       controller.queue.addCommand(myQueueItem);
     },
 
+    moveEntityTowardPlayer: function (highlightCallback, entity) {
+      const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.moveEntityToPlayer(myQueueItem, entity, 1);
+      });
+      controller.queue.addCommand(myQueueItem);
+    },
+
+    moveEntityAwayFromPlayer: function (highlightCallback, entity) {
+      const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.moveEntityToPlayer(myQueueItem, entity, 0);
+      });
+      controller.queue.addCommand(myQueueItem);
+    },
+
     moveDirection: function (highlightCallback, direction) {
       const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
         controller.moveDirection(myQueueItem, direction);
@@ -173,9 +187,15 @@ export function get(controller) {
 
     turnEntityRandom: function (highlightCallback, entity) {
       const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
-        // spread the random number across a decent range and mod for even/odd to determine turn direction.
-        const rand = controller.getRandomInt(0, 100) % 2;
+        const rand = controller.getRandomBool();
         controller.turnEntity(myQueueItem, entity, rand ? 1 : -1);
+      });
+      controller.queue.addCommand(myQueueItem);
+    },
+
+    turnEntityToPlayer: function (highlightCallback, entity) {
+      const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.turnEntityToPlayer(myQueueItem, entity);
       });
       controller.queue.addCommand(myQueueItem);
     },

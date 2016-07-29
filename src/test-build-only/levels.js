@@ -1132,8 +1132,7 @@ registerEventCallback(function (event) {
     return;
   }
 
-  moveEntityForward(event.blockReference);
-  turnEntityRandom(event.blockReference);
+  moveEntityAwayFromPlayer(event.blockReference);
 })
 `,
 
