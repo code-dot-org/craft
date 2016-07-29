@@ -350,11 +350,11 @@ class GameController {
 
       const sourcePos = this.levelModel.indexToXY(sourceIndex);
       const targetPos = this.levelModel.indexToXY(targetIndex);
-      this.levelView.playEntityAnimation("normalWalk", this.levelModel.actionPlane.indexOf(entity), this.levelModel.getFaceDirectionTo([sourcePos.x, sourcePos.y], [targetPos.x, targetPos.y]));
 
       // Move the block in the model and view.
       this.levelModel.moveBlock(sourceIndex, targetIndex);
-      this.levelView.moveBlockSprite(sourceIndex, position, entity.isEntity);
+      this.levelView.moveBlockSprite(sourceIndex, position, entity.isEntity, this.levelModel.getFaceDirectionTo([sourcePos.x, sourcePos.y], [targetPos.x, targetPos.y]), () =>{
+        });
 
       // Update renderer
       this.levelModel.computeShadingPlane();
@@ -427,7 +427,7 @@ class GameController {
 
       // The world edge was bumped, don't invoke events.
       const forwardPos = this.levelModel.getMoveForwardPosition();
-      if (this.levelModel.inBounds(forwardPos[0], forwardPos[1])) {
+         if (this.levelModel.inBounds(forwardPos[0], forwardPos[1])) {
         this.events.forEach(e => e({ eventType: 'blockTouched', blockReference: this.levelModel.getForwardBlock(), blockType: this.levelModel.getForwardBlockType() }));
       }
       return;

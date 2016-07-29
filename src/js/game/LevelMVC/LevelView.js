@@ -235,6 +235,28 @@ export default class LevelView {
     }
   }
 
+  playEntityMoveForwardAnimation(animationName, sourceIndex, facing, targetPos, completionHandler) {
+    // Play the correct animation.
+    this.playEntityAnimation(animationName, sourceIndex, facing);
+
+    // Now smooth the moving of that animation.
+    const sprite = this.actionPlaneBlocks[sourceIndex];
+    if (sprite) {
+      let tween = this.addResettableTween(sprite).to({
+        x: targetPos[0],
+        y: targetPos[1]
+      }, 200, Phaser.Easing.Linear.None);
+
+      tween.onComplete.addOnce(() => {
+        // Set the draw order appropriately so that sprites below this one will render on top of it.
+        sprite.sortOrder = this.yToIndex(targetPos[1]) + 5;
+        completionHandler();
+      });
+
+      tween.start();
+    }
+  }
+
   playPlayerAnimation(animationName, position, facing, isOnBlock) {
     let direction = this.getDirectionName(facing);
     this.playerSprite.sortOrder = this.yToIndex(position[1]) + 5;
@@ -1034,24 +1056,24 @@ export default class LevelView {
     tween.start();
   }
 
-  moveBlockSprite(sourceIndex, targetPosition, isEntity){
+  moveBlockSprite(sourceIndex, targetPosition, isEntity, facing, completionHandler){
     const targetIndex = this.yToIndex(targetPosition[1]) + targetPosition[0];
     const sprite = this.actionPlaneBlocks[sourceIndex];
 
     // move the actual sprite stored in the blocks array.
     if (sprite) {
+      let {x, y} = [0, 0];
       // Handle sprite offsets differently if a block vs. a non-block.
       if (!isEntity) {
-        sprite.x = -13 + 40 * targetPosition[0];
-        sprite.y = -22 + 40 * (targetPosition[1]);
+        x = -13 + 40 * targetPosition[0];
+        y = -22 + 40 * (targetPosition[1]);
       }
       else {
-        sprite.x = -6 + 40 * targetPosition[0];
-        sprite.y = -22 + 40 * (targetPosition[1]);
+        x = -6 + 40 * targetPosition[0];
+        y = -22 + 40 * (targetPosition[1]);
       }
 
-      // Set the draw order appropriately so that sprites below this one will render on top of it.
-      sprite.sortOrder = this.yToIndex(targetPosition[1]) + 5;
+      this.playEntityMoveForwardAnimation("normalWalk", sourceIndex, facing, [x, y], completionHandler);
 
       // move in the actionPlaneBlocks array
       this.actionPlaneBlocks[targetIndex] = sprite;
@@ -1787,7 +1809,7 @@ export default class LevelView {
       case "sheep":
         var sFrames = 10;
         // Facing Left: Eat Grass: 199-216
-        sprite = plane.create(-22 + 40 * x, -12 + 40 * y, "sheep", "Sheep_199");
+        sprite = plane.create(-6 + 40 * x, -22 + 40 * y, "sheep", "Sheep_199");
         frameList = Phaser.Animation.generateFrameNames("Sheep_", 199, 215, "", 0);
         for (i = 0; i < sFrames; ++i) {
           frameList.push("Sheep_215");
