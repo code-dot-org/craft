@@ -376,6 +376,53 @@ export default class LevelView {
     });
   }
 
+  flashSpriteToWhite(position) {
+    let blockIndex = (this.yToIndex(position[1])) + position[0];
+    let block = this.actionPlaneBlocks[blockIndex];
+
+    var fillBmd = this.game.add.bitmapData(block.width, block.height);
+    fillBmd.fill(0xFF, 0xFF, 0xFF, 0xFF);
+    var maskBmd = this.game.add.bitmapData(block.width, block.height, block);
+    var maskedBmd = this.game.add.bitmapData(block.width, block.height);
+
+    var srcRect = { x: 0, y: 0, width: block.width, height: block.height };
+    var dstRect = { x: 0, y: 0, width: block.texture.crop.width, height: block.texture.crop.height };
+    maskedBmd.alphaMask(fillBmd, block, srcRect, dstRect);
+
+    var flashSprite = block.addChild(this.game.make.sprite(0, 0, maskedBmd.texture));
+    flashSprite.alpha = 0;
+    var fadeMs = 60;
+    var pauseMs = fadeMs * 4;
+    var totalIterations = 3;
+    var totalDuration = 0;
+    var aIn = { alpha: 1.0 };
+    var aOut = { alpha: 0.0 };
+    var fadeIn = this.game.add.tween(flashSprite).to(aIn, fadeMs, Phaser.Easing.Linear.None);
+    var fadeOut = this.game.add.tween(flashSprite).to(aOut, fadeMs, Phaser.Easing.Linear.None);
+    totalDuration = fadeMs * 2;
+    fadeIn.chain(fadeOut);
+    var lastStep = fadeOut;
+
+    for(var i = 0; i < totalIterations - 1; i++) {
+      var innerPause = this.game.add.tween(flashSprite).to(aOut, pauseMs, Phaser.Easing.Linear.None);
+      var innerFadeIn = this.game.add.tween(flashSprite).to(aIn, fadeMs, Phaser.Easing.Linear.None);
+      var innerFadeOut = this.game.add.tween(flashSprite).to(aOut, fadeMs, Phaser.Easing.Linear.None);
+      totalDuration += pauseMs + fadeMs * 2;
+      lastStep.chain(innerPause);
+      innerPause.chain(innerFadeIn);
+      innerFadeIn.chain(innerFadeOut);
+      lastStep = innerFadeOut;
+    }
+
+    lastStep.onComplete.add(() => {
+      flashSprite.destroy();
+    });
+
+    fadeIn.start();
+
+    return totalDuration * 2;
+  }
+
   playExplodingCreeperAnimation(position, facing, destroyPosition, isOnBlock, completionHandler) {
     let direction = this.getDirectionName(facing);
 

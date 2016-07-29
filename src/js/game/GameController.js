@@ -145,6 +145,7 @@ class GameController {
         this.afterAssetsLoaded();
       }
     });
+
     this.game.load.start();
   }
 
@@ -454,6 +455,14 @@ class GameController {
     const {x, y} = this.levelModel.entityToPosition(entity);
     this.levelView.playExplosionCloudAnimation([x, y]);
     commandQueueItem.succeeded();
+  }
+
+  flashEntity(commandQueueItem, entity) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+    var delay = this.levelView.flashSpriteToWhite([x, y]);
+    this.delayBy(delay, () => {
+      commandQueueItem.succeeded();
+    });
   }
 
   playSound(commandQueueItem, sound) {
