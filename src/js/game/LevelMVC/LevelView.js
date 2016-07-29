@@ -225,6 +225,16 @@ export default class LevelView {
     }
   }
 
+  playEntityAnimation(animationName, sourceIndex, facing) {
+    let direction = this.getDirectionName(facing);
+    const sprite = this.actionPlaneBlocks[sourceIndex];
+
+    if (sprite) {
+      let animName = animationName + direction;
+      this.playScaledSpeed(sprite.animations, animName);
+    }
+  }
+
   playPlayerAnimation(animationName, position, facing, isOnBlock) {
     let direction = this.getDirectionName(facing);
     this.playerSprite.sortOrder = this.yToIndex(position[1]) + 5;
@@ -1783,6 +1793,50 @@ export default class LevelView {
           this.playRandomSheepAnimation(sprite);
         });
 
+        //idle_up
+        frameList = [];
+        for (i = 0; i < 5; ++i) {
+          frameList.push("Sheep_543");
+        }
+        sprite.animations.add("idle_up", frameList, 5, false).onComplete.add(() => {});
+
+        //idle_down
+        frameList = [];
+        for (i = 0; i < 5; ++i) {
+          frameList.push("Sheep_501");
+        }
+        sprite.animations.add("idle_down", frameList, 5, false).onComplete.add(() => {});
+
+        //idle_left
+        frameList = [];
+        for (i = 0; i < 5; ++i) {
+          frameList.push("Sheep_556");
+        }
+        sprite.animations.add("idle_left", frameList, 5, false).onComplete.add(() => {});
+
+        //idle_right
+        frameList = [];
+        for (i = 0; i < 5; ++i) {
+          frameList.push("Sheep_522");
+        }
+        sprite.animations.add("idle_right", frameList, 5, false).onComplete.add(() => {});
+
+        //normalWalk_up
+        frameList = Phaser.Animation.generateFrameNames("Sheep_", 532, 543, "", 0);
+        sprite.animations.add("normalWalk_up", frameList, 543-532, false).onComplete.add(() => {});
+
+        //normalWalk_down
+        frameList = Phaser.Animation.generateFrameNames("Sheep_", 490, 501, "", 0);
+        sprite.animations.add("normalWalk_down", frameList, 501-490, false).onComplete.add(() => {});
+
+        //normalWalk_left
+        frameList = Phaser.Animation.generateFrameNames("Sheep_", 545, 556, "", 0);
+        sprite.animations.add("normalWalk_left", frameList, 556-545, false).onComplete.add(() => {});
+
+        //normalWalk_right
+        frameList = Phaser.Animation.generateFrameNames("Sheep_", 511, 522, "", 0);
+        sprite.animations.add("normalWalk_right", frameList, 522-511, false).onComplete.add(() => {});
+
         // TODO(bjordan/gaallen) - update once updated Sheep.json
         frameList = Phaser.Animation.generateFrameNames("Sheep_", 490, 491, "", 0);
         stillFrames = Math.trunc(Math.random() * 3) + 3;
@@ -1799,7 +1853,7 @@ export default class LevelView {
         }
 
         sprite.animations.add("used", frameList, 15, true);
-        this.playAnimationWithOffset(sprite, "idle", 17, 199);
+      //  this.playAnimationWithOffset(sprite, "idle", 17, 199);
         break;
 
       case "creeper":

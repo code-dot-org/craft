@@ -346,6 +346,10 @@ class GameController {
         playerIndex !== targetIndex) {
       const sourceIndex = this.levelModel.actionPlane.indexOf(entity);
 
+      const sourcePos = this.levelModel.indexToXY(sourceIndex);
+      const targetPos = this.levelModel.indexToXY(targetIndex);
+      this.levelView.playEntityAnimation("normalWalk", this.levelModel.actionPlane.indexOf(entity), this.levelModel.getFaceDirectionTo([sourcePos.x, sourcePos.y], [targetPos.x, targetPos.y]));
+
       // Move the block in the model and view.
       this.levelModel.moveBlock(sourceIndex, targetIndex);
       this.levelView.moveBlockSprite(sourceIndex, position, entity.isEntity);
@@ -469,14 +473,14 @@ class GameController {
   turnEntityToPlayer(commandQueueItem, entity) {
     const aStar = new AStarPathFinding(this.levelModel);
     const entityPosition = this.levelModel.entityToPosition(entity);
-    
+
     const path = aStar.findPath([entityPosition.x, entityPosition.y], this.levelModel.player.position);
 
     // if there is a valid path to the player, turn to face the block in the first step.
     if (path.length > 0) {
       const firstNode = path[0];
       this.levelModel.turnToDirection(entity, this.levelModel.getFaceDirectionTo([entityPosition.x, entityPosition.y], [firstNode.x, firstNode.y]));
-      
+
       const sourceIndex = this.levelModel.actionPlane.indexOf(entity);
       this.levelView.updateBlockSpriteDirection(sourceIndex, entity.facing);
     }
