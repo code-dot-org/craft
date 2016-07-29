@@ -1109,7 +1109,7 @@ registerEventCallback(function (event) {
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "stone", "", "oreDiamond", "oreGold", "oreEmerald", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "creeper", "", "", "", "", "",
+      "", "", "", "", "sheep", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
     ],
@@ -1132,8 +1132,7 @@ registerEventCallback(function (event) {
     return;
   }
 
-  moveEntityForward(event.blockReference);
-  turnEntityRight(event.blockReference);
+  moveEntityAwayFromPlayer(event.blockReference);
 })
 `,
 
