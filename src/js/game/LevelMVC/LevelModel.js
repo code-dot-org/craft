@@ -534,7 +534,7 @@ export default class LevelModel {
     }
     return null;
   }
-  
+
   // Attempts to find a position that an entity can move to in the direction opposite the one specified.
   getEntityRunAwayPosition(entity, direction) {
     const entityPosition = this.entityToPosition(entity);
@@ -699,6 +699,11 @@ export default class LevelModel {
     targetPlane[blockIndex] = new LevelBlock(blockType);
   }
 
+  placeBlockAt(x, y, blockType) {
+    let blockIndex = this.yToIndex(y) + x;
+    this.actionPlane[blockIndex] = new LevelBlock(blockType);
+  }
+
   destroyBlock(position) {
     var i,
         block = null;
@@ -735,7 +740,7 @@ export default class LevelModel {
         let inventoryType = this.getInventoryType(block.blockType);
         this.player.inventory[inventoryType] =
             (this.player.inventory[inventoryType] || 0) + 1;
-              
+
         if (block.isDestroyable) {
           this.actionPlane[blockIndex] = new LevelBlock("");
         }

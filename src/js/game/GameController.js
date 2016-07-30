@@ -739,6 +739,11 @@ class GameController {
     return realFps / this.game.time.slowMotion;
   }
 
+  setBlockAt(x, y, blockType) {
+    this.levelModel.placeBlockAt(x, y, blockType);
+    this.levelView.setBlockAt(x, y, blockType);
+  }
+
   placeBlockForward(commandQueueItem, blockType) {
     var forwardPosition,
         placementPlane,
