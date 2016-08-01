@@ -1062,7 +1062,8 @@ export default class LevelView {
 
     // move the actual sprite stored in the blocks array.
     if (sprite) {
-      let {x, y} = [0, 0];
+      let x, y;
+
       // Handle sprite offsets differently if a block vs. a non-block.
       if (!isEntity) {
         x = -13 + 40 * targetPosition[0];
