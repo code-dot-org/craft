@@ -818,6 +818,10 @@ export default class LevelView {
     });
   }
 
+  setBlockAt(x, y, type) {
+    this.createActionPlaneBlock([x, y], type);
+  }
+
   createActionPlaneBlock(position, blockType) {
     let blockIndex = (this.yToIndex(position[1])) + position[0];
     var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
