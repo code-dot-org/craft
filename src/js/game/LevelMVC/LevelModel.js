@@ -238,6 +238,81 @@ export default class LevelModel {
     return [cx, cy];
   }
 
+  getEntityMoveBackwardPosition(position, faceDirection) {
+    var cx = position[0],
+        cy = position[1];
+
+    switch (faceDirection) {
+      case FacingDirection.Up:
+        ++cy;
+        break;
+
+      case FacingDirection.Down:
+        --cy;
+        break;
+
+      case FacingDirection.Left:
+        ++cx;
+        break;
+
+      case FacingDirection.Right:
+        --cx;
+        break;
+    }
+
+    return [cx, cy];
+  }
+
+  getEntityLeftPosition(position, faceDirection) {
+    var cx = position[0],
+        cy = position[1];
+
+    switch (faceDirection) {
+      case FacingDirection.Up:
+        ++cx;
+        break;
+
+      case FacingDirection.Down:
+        --cx;
+        break;
+
+      case FacingDirection.Left:
+        ++cy;
+        break;
+
+      case FacingDirection.Right:
+        --cy;
+        break;
+    }
+
+    return [cx, cy];
+  }
+
+  getEntityRightPosition(position, faceDirection) {
+    var cx = position[0],
+        cy = position[1];
+
+    switch (faceDirection) {
+      case FacingDirection.Up:
+        --cx;
+        break;
+
+      case FacingDirection.Down:
+        ++cx;
+        break;
+
+      case FacingDirection.Left:
+        --cy;
+        break;
+
+      case FacingDirection.Right:
+        ++cy;
+        break;
+    }
+
+    return [cx, cy];
+  }
+
   isForwardBlockOfType(blockType) {
     let blockForwardPosition = this.getMoveForwardPosition();
 

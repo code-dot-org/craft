@@ -215,12 +215,66 @@ export function get(controller) {
       controller.queue.addCommand(new PlaceBlockCommand(controller, highlightCallback, blockType));
     },
 
+    setEntityNorth: function (highlightCallback, entity, blockType) {
+      const queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.setEntityNorth(queueItem, entity, blockType);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
+    setEntitySouth: function (highlightCallback, entity, blockType) {
+      const queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.setEntitySouth(queueItem, entity, blockType);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
+    setEntityEast: function (highlightCallback, entity, blockType) {
+      const queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.setEntityEast(queueItem, entity, blockType);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
+    setEntityWest: function (highlightCallback, entity, blockType) {
+      const queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.setEntityWest(queueItem, entity, blockType);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
     setBlockAt(highlightCallback, x, y, blockType) {
-      console.log('setting', arguments);
       var queueItem = new CallbackCommand(controller, highlightCallback, () => {
-        console.log('setting2', arguments);
         controller.setBlockAt(x, y, blockType);
         queueItem.succeeded();
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
+    setEntityAhead(highlightCallback, x, y, blockType) {
+      var queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.setEntityAhead(queueItem, x, y, blockType);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
+    setEntityBehind(highlightCallback, x, y, blockType) {
+      var queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.setEntityBehind(queueItem, x, y, blockType);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
+    setEntityLeft(highlightCallback, x, y, blockType) {
+      var queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.setEntityLeft(queueItem, x, y, blockType);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
+    setEntityRight(highlightCallback, x, y, blockType) {
+      var queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.setEntityRight(queueItem, x, y, blockType);
       });
       controller.queue.addCommand(queueItem);
     },

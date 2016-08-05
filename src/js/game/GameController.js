@@ -311,6 +311,62 @@ class GameController {
     commandQueueItem.succeeded();
   }
 
+  setEntityNorth(commandQueueItem, entity, blockType) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+
+    this.setBlockAt(x, y - 1, blockType);
+    commandQueueItem.succeeded();
+  }
+
+  setEntitySouth(commandQueueItem, entity, blockType) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+
+    this.setBlockAt(x, y + 1, blockType);
+    commandQueueItem.succeeded();
+  }
+
+  setEntityEast(commandQueueItem, entity, blockType) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+
+    this.setBlockAt(x + 1, y, blockType);
+    commandQueueItem.succeeded();
+  }
+
+  setEntityWest(commandQueueItem, entity, blockType) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+
+    this.setBlockAt(x - 1, y, blockType);
+    commandQueueItem.succeeded();
+  }
+
+  setEntityAhead(commandQueueItem, entity, blockType) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+    const [aheadX, aheadY] = this.levelModel.getEntityMoveForwardPosition([x, y], entity.facing);
+    this.setBlockAt(aheadX, aheadY, blockType);
+    commandQueueItem.succeeded();
+  }
+
+  setEntityBehind(commandQueueItem, entity, blockType) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+    const [aheadX, aheadY] = this.levelModel.getEntityMoveBackwardPosition([x, y], entity.facing);
+    this.setBlockAt(aheadX, aheadY, blockType);
+    commandQueueItem.succeeded();
+  }
+
+  setEntityLeft(commandQueueItem, entity, blockType) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+    const [aheadX, aheadY] = this.levelModel.getEntityLeftPosition([x, y], entity.facing);
+    this.setBlockAt(aheadX, aheadY, blockType);
+    commandQueueItem.succeeded();
+  }
+
+  setEntityRight(commandQueueItem, entity, blockType) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+    const [aheadX, aheadY] = this.levelModel.getEntityRightPosition([x, y], entity.facing);
+    this.setBlockAt(aheadX, aheadY, blockType);
+    commandQueueItem.succeeded();
+  }
+
   moveEntityForward(commandQueueItem, entity) {
     const {x, y} = this.levelModel.entityToPosition(entity);
 
