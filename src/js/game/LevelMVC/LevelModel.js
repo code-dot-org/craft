@@ -39,6 +39,10 @@ export default class LevelModel {
     return x >= 0 && x < this.planeWidth && y >= 0 && y < this.planeHeight;
   }
 
+  isPlayer(x, y) {
+    return x == this.player.position[0] && y == this.player.position[1];
+  }
+
   reset() {
     this.groundPlane = this.constructPlane(this.initialLevelData.groundPlane, false);
     this.groundDecorationPlane = this.constructPlane(this.initialLevelData.groundDecorationPlane, false);
@@ -647,6 +651,20 @@ export default class LevelModel {
     }
     // turn to south
     return FacingDirection.Down;
+  }
+
+  getFaceDirectionAway(sourcePosition, targetPosition) {
+    if(targetPosition[0] > sourcePosition[0]) { // turn to east
+      return FacingDirection.Left;
+    }
+    else if(targetPosition[0] < sourcePosition[0]) { // turn to west
+      return FacingDirection.Right;
+    }
+    else if(targetPosition[1] < sourcePosition[1]) { // turn to north
+      return FacingDirection.Down;
+    }
+    // turn to south
+    return FacingDirection.Up;
   }
 
   canDestroyBlockForward() {

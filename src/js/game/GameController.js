@@ -378,7 +378,7 @@ class GameController {
     setTimeout(() => commandQueueItem.succeeded(), ms);
   }
 
-  // direction is 1 ==> move toward, or -1 ==> move away from
+  // direction is 1 ==> move toward, or 0 ==> move away from
   moveEntityToPlayer(commandQueueItem, entity, isToward) {
     const aStar = new AStarPathFinding(this.levelModel);
     const entityPosition = this.levelModel.entityToPosition(entity);
@@ -555,6 +555,23 @@ class GameController {
     if (path.length > 0) {
       const firstNode = path[0];
       this.levelModel.turnToDirection(entity, this.levelModel.getFaceDirectionTo([entityPosition.x, entityPosition.y], [firstNode.x, firstNode.y]));
+
+      const sourceIndex = this.levelModel.actionPlane.indexOf(entity);
+      this.levelView.updateBlockSpriteDirection(sourceIndex, entity.facing);
+    }
+    commandQueueItem.succeeded();
+  }
+
+  turnEntityAwayPlayer(commandQueueItem, entity) {
+    const aStar = new AStarPathFinding(this.levelModel);
+    const entityPosition = this.levelModel.entityToPosition(entity);
+
+    const path = aStar.findPath([entityPosition.x, entityPosition.y], this.levelModel.player.position);
+
+    // if there is a valid path to the player, turn to face the block in the first step.
+    if (path.length > 0) {
+      const firstNode = path[0];
+      this.levelModel.turnToDirection(entity, this.levelModel.getFaceDirectionTo([firstNode.x, firstNode.y], [entityPosition.x, entityPosition.y]));
 
       const sourceIndex = this.levelModel.actionPlane.indexOf(entity);
       this.levelView.updateBlockSpriteDirection(sourceIndex, entity.facing);
@@ -799,6 +816,15 @@ class GameController {
   }
 
   setBlockAt(x, y, blockType) {
+    if (!this.levelModel.inBounds(x, y)) {
+      return;
+    }
+    if (this.levelModel.isPlayer(x, y)) {
+      return; // TODO(bjordan): should not do when e.g. placing on ground
+    }
+    if (!this.levelModel.isBlockOfTypeOnPlane([x, y], "empty", this.levelModel.actionPlane)) {
+      return; // TODO(bjordan): should not do when e.g. placing on ground
+    }
     const block = this.levelModel.placeBlockAt(x, y, blockType);
     this.levelView.setBlockAt(x, y, blockType);
     this.events.forEach(e => e({ eventType: 'entitySpawned', blockReference: block, blockType: block.blockType }));

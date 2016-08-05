@@ -207,6 +207,13 @@ export function get(controller) {
       controller.queue.addCommand(queueItem);
     },
 
+    turnEntityAwayPlayer: function (highlightCallback, entity) {
+      const queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.turnEntityAwayPlayer(queueItem, entity);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
     destroyBlock: function (highlightCallback) {
       controller.queue.addCommand(new DestroyBlockCommand(controller, highlightCallback));
     },

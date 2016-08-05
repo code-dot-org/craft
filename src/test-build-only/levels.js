@@ -1580,10 +1580,10 @@ registerEventCallback(function (event) {
       "", "", "", "", "", "", "", "", "", "",
       "", "oreDiamond", "", "", "", "", "", "", "", "",
       "", "", "logOak", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
+      "", "sheep", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "logOak", "", "", "", "",
+      "", "", "", "", "", "logOak", "", "", "", "",
+      "", "", "", "", "", "logOak", "", "", "", "",
     ],
 
     fluffPlane: ["", "", "", "", "", "", "", "", "", "",
@@ -1607,8 +1607,9 @@ registerEventCallback(function (event) {
   if (event.blockType !== 'logOak') {
     return;
   }
-
+  turnEntityAwayPlayer(event.blockReference)
   setEntityAhead(event.blockReference, 'logOak')
+  destroyEntity(event.blockReference);
 });
 
 registerEventCallback(function (event) {
@@ -1619,9 +1620,22 @@ registerEventCallback(function (event) {
     return;
   }
 
-  explodeEntity(event.blockReference);
+  //explodeEntity(event.blockReference);
+  turnEntityAwayPlayer(event.blockReference)
   setEntityAhead(event.blockReference, 'logOak')
-  waitFor(200);
+  destroyEntity(event.blockReference);
+  //waitFor(200);
+});
+
+registerEventCallback(function (event) {
+  if (event.eventType !== 'blockTouched') {
+    return;
+  }
+  if (event.blockType !== 'sheep') {
+    return;
+  }
+
+  turnEntityAwayPlayer(event.blockReference)
 });
 
 registerEventCallback(function (event) {
