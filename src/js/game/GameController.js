@@ -282,6 +282,25 @@ class GameController {
     return this.game.canvas.toDataURL("image/png");
   }
 
+  startAttempt() {
+    if (this.levelData.isEventLevel) {
+      const timeoutCallback = () => {
+        this.levelModel.actionPlane.forEach((block) => {
+          if (block.isEmpty) {
+            return;
+          }
+
+          this.events.forEach(e => {
+            e({ eventType: 'everySecond', blockReference: block, blockType: block.blockType });
+          });
+          this.queue.begin();
+        });
+        this.delayBy(1000, timeoutCallback);
+      };
+      this.delayBy(1000, timeoutCallback);
+    }
+  }
+
   // command processors
   moveEntityNorth(commandQueueItem, entity) {
     const {x, y} = this.levelModel.entityToPosition(entity);
@@ -360,8 +379,8 @@ class GameController {
 
   setEntityBehind(commandQueueItem, entity, blockType) {
     const {x, y} = this.levelModel.entityToPosition(entity);
-    const [aheadX, aheadY] = this.levelModel.getEntityMoveBackwardPosition([x, y], entity.facing);
-    this.setBlockAt(aheadX, aheadY, blockType);
+    const [behindX, behindY] = this.levelModel.getEntityMoveBackwardPosition([x, y], entity.facing);
+    this.setBlockAt(behindX, behindY, blockType);
     commandQueueItem.succeeded();
   }
 
@@ -404,6 +423,7 @@ class GameController {
 
       // if the intent is to move away from the player, there may not be a valid position to move to.
       if (targetPosition) {
+        this.levelModel.turnToDirection(entity, this.levelModel.getFaceDirectionTo([entityPosition.x, entityPosition.y], targetPosition));
         this.moveEntityTo(entity, targetPosition);
       }
     }

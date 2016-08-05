@@ -36,6 +36,7 @@ export function get(controller) {
       }
 
       controller.setPlayerActionDelayByQueueLength();
+      controller.startAttempt();
 
       controller.queue.begin();
     },
