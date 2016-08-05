@@ -776,7 +776,9 @@ export default class LevelModel {
 
   placeBlockAt(x, y, blockType) {
     let blockIndex = this.yToIndex(y) + x;
-    this.actionPlane[blockIndex] = new LevelBlock(blockType);
+    const newBlock = new LevelBlock(blockType);
+    this.actionPlane[blockIndex] = newBlock;
+    return newBlock;
   }
 
   destroyBlock(position) {

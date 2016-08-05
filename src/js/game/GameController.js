@@ -795,8 +795,9 @@ class GameController {
   }
 
   setBlockAt(x, y, blockType) {
-    this.levelModel.placeBlockAt(x, y, blockType);
+    const block = this.levelModel.placeBlockAt(x, y, blockType);
     this.levelView.setBlockAt(x, y, blockType);
+    this.events.forEach(e => e({ eventType: 'entitySpawned', blockReference: block, blockType: block.blockType }));
   }
 
   placeBlockForward(commandQueueItem, blockType) {

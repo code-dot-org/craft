@@ -1531,5 +1531,126 @@ registerEventCallback(function (event) {
     verificationFunction: function (verificationAPI) {
       return true;
     }
+  },
+  18: {
+    instructions: "On block spawned...",
+
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: []
+    },
+
+    playerStartPosition: [1, 5],
+
+    playerStartDirection: 1,
+
+    isEventLevel: true,
+
+    groundPlane: [
+      "lava", "lava", "lava", "lava", "stone", "stone", "lava", "lava", "lava", "lava",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "water", "water", "water", "water", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"
+    ],
+
+    groundDecorationPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", ""],
+
+    actionPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "oreDiamond", "", "", "", "", "", "", "", "",
+      "", "", "logOak", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    solutionCode: `
+//setBlockAt(1, 4, 'oreDiamond');
+registerEventCallback(function (event) {
+  if (event.eventType !== 'blockTouched') {
+    return;
+  }
+  if (event.blockType !== 'logOak') {
+    return;
+  }
+
+  setEntityAhead(event.blockReference, 'logOak')
+});
+
+registerEventCallback(function (event) {
+  if (event.eventType !== 'entitySpawned') {
+    return;
+  }
+  if (event.blockType !== 'logOak') {
+    return;
+  }
+
+  explodeEntity(event.blockReference);
+  setEntityAhead(event.blockReference, 'logOak')
+});
+
+registerEventCallback(function (event) {
+  if (event.eventType !== 'blockTouched') {
+    return;
+  }
+  if (event.blockType !== 'oreDiamond') {
+    return;
+  }
+
+  setEntityBehind(event.blockReference, 'oreDiamond')
+});
+
+registerEventCallback(function (event) {
+  if (event.eventType !== 'entitySpawned') {
+    return;
+  }
+  if (event.blockType !== 'oreDiamond') {
+    return;
+  }
+
+  explodeEntity(event.blockReference);
+  explodeEntity(event.blockReference);
+  setEntityBehind(event.blockReference, 'oreDiamond')
+});
+
+`,
+
+    verificationFunction: function (verificationAPI) {
+      return true;
+    }
   }
 };
