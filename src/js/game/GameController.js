@@ -346,6 +346,18 @@ class GameController {
     commandQueueItem.succeeded();
   }
 
+  destroyEntityAhead(commandQueueItem, entity) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+    this.destroyBlockWithoutPlayerInteraction(this.levelModel.getEntityMoveForwardPosition([x, y], entity.facing));
+    commandQueueItem.succeeded();
+  }
+
+  destroyEntityBehind(commandQueueItem, entity) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+    this.destroyBlockWithoutPlayerInteraction(this.levelModel.getEntityMoveBackwardPosition([x, y], entity.facing));
+    commandQueueItem.succeeded();
+  }
+
   setEntityBehind(commandQueueItem, entity, blockType) {
     const {x, y} = this.levelModel.entityToPosition(entity);
     const [aheadX, aheadY] = this.levelModel.getEntityMoveBackwardPosition([x, y], entity.facing);

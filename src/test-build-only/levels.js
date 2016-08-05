@@ -1645,7 +1645,8 @@ registerEventCallback(function (event) {
   if (event.blockType !== 'oreDiamond') {
     return;
   }
-
+  destroyEntityBehind(event.blockReference);
+  waitFor(200);
   setEntityBehind(event.blockReference, 'oreDiamond')
 });
 
@@ -1657,7 +1658,8 @@ registerEventCallback(function (event) {
     return;
   }
 
-  explodeEntity(event.blockReference);
+  destroyEntityBehind(event.blockReference);
+  waitFor(200);
   explodeEntity(event.blockReference);
   setEntityBehind(event.blockReference, 'oreDiamond')
 });

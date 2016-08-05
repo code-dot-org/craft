@@ -207,6 +207,20 @@ export function get(controller) {
       controller.queue.addCommand(queueItem);
     },
 
+    destroyEntityAhead: function (highlightCallback, entity) {
+      const queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.destroyEntityAhead(queueItem, entity);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
+    destroyEntityBehind: function (highlightCallback, entity) {
+      const queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.destroyEntityBehind(queueItem, entity);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
     turnEntityAwayPlayer: function (highlightCallback, entity) {
       const queueItem = new CallbackCommand(controller, highlightCallback, () => {
         controller.turnEntityAwayPlayer(queueItem, entity);
