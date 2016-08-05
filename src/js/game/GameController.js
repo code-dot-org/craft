@@ -374,6 +374,10 @@ class GameController {
     commandQueueItem.succeeded();
   }
 
+  waitFor(commandQueueItem, ms) {
+    setTimeout(() => commandQueueItem.succeeded(), ms);
+  }
+
   // direction is 1 ==> move toward, or -1 ==> move away from
   moveEntityToPlayer(commandQueueItem, entity, isToward) {
     const aStar = new AStarPathFinding(this.levelModel);

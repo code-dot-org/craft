@@ -1621,6 +1621,7 @@ registerEventCallback(function (event) {
 
   explodeEntity(event.blockReference);
   setEntityAhead(event.blockReference, 'logOak')
+  waitFor(200);
 });
 
 registerEventCallback(function (event) {

@@ -222,6 +222,13 @@ export function get(controller) {
       controller.queue.addCommand(queueItem);
     },
 
+    waitFor: function (highlightCallback, ms) {
+      const queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.waitFor(queueItem, ms);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
     setEntitySouth: function (highlightCallback, entity, blockType) {
       const queueItem = new CallbackCommand(controller, highlightCallback, () => {
         controller.setEntitySouth(queueItem, entity, blockType);
