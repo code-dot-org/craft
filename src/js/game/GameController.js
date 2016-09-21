@@ -5,6 +5,7 @@ import CallbackCommand from "./CommandQueue/CallbackCommand.js";
 import MoveForwardCommand from "./CommandQueue/MoveForwardCommand.js";
 import TurnCommand from "./CommandQueue/TurnCommand.js";
 import WhileCommand from "./CommandQueue/WhileCommand.js";
+import ForeverCommand from "./CommandQueue/ForeverCommand.js";
 import IfBlockAheadCommand from "./CommandQueue/IfBlockAheadCommand.js";
 
 import LevelModel from "./LevelMVC/LevelModel.js";
@@ -178,7 +179,7 @@ class GameController {
         console.log("highlight move forward command.");
       };
       //if (this.queue.currentCommand instanceof CallbackCommand) { return; }
-      this.codeOrgAPI.moveDirection(dummyFunc, FacingDirection.Up);
+      this.codeOrgAPI.moveDirectionNow(dummyFunc, FacingDirection.Up);
       this.queue.begin();
     });
 
@@ -187,7 +188,7 @@ class GameController {
         console.log("highlight turn right command.");
       };
       //if (this.queue.currentCommand instanceof CallbackCommand) { return; }
-      this.codeOrgAPI.moveDirection(dummyFunc, FacingDirection.Right);
+      this.codeOrgAPI.moveDirectionNow(dummyFunc, FacingDirection.Right);
       this.queue.begin();
     });
 
@@ -196,7 +197,7 @@ class GameController {
         console.log("highlight turn left command.");
       };
       //if (this.queue.currentCommand instanceof CallbackCommand) { return; }
-      this.codeOrgAPI.moveDirection(dummyFunc, FacingDirection.Left);
+      this.codeOrgAPI.moveDirectionNow(dummyFunc, FacingDirection.Left);
       this.queue.begin();
     });
 
@@ -205,7 +206,7 @@ class GameController {
         console.log("highlight turn left command.");
       };
       //if (this.queue.currentCommand instanceof CallbackCommand) { return; }
-      this.codeOrgAPI.moveDirection(dummyFunc, FacingDirection.Down);
+      this.codeOrgAPI.moveDirectionNow(dummyFunc, FacingDirection.Down);
       this.queue.begin();
     });
 

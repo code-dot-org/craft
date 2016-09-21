@@ -6,6 +6,7 @@ import PlaceInFrontCommand from "../CommandQueue/PlaceInFrontCommand.js";
 import MoveForwardCommand from "../CommandQueue/MoveForwardCommand.js";
 import TurnCommand from "../CommandQueue/TurnCommand.js";
 import WhileCommand from "../CommandQueue/WhileCommand.js";
+import ForeverCommand from "../CommandQueue/ForeverCommand.js";
 import IfBlockAheadCommand from "../CommandQueue/IfBlockAheadCommand.js";
 import CheckSolutionCommand from "../CommandQueue/CheckSolutionCommand.js";
 import CallbackCommand from "../CommandQueue/CallbackCommand.js";
@@ -45,6 +46,13 @@ export function get(controller) {
       controller.reset();
       controller.queue.reset();
       controller.OnCompleteCallback = null;
+    },
+
+    moveDirectionNow: function (highlightCallback, direction) {
+      const queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.moveDirection(queueItem, direction);
+      });
+      controller.queue.addCommandInFront(queueItem);
     },
 
     /**
@@ -318,6 +326,10 @@ export function get(controller) {
 
     whilePathAhead: function (highlightCallback, blockType, codeBlock) {
       controller.queue.addCommand(new WhileCommand(controller, highlightCallback, blockType, codeBlock));
+    },
+
+    forever: function (highlightCallback, codeBlock) {
+      controller.queue.addCommand(new ForeverCommand(controller, highlightCallback, codeBlock));
     },
 
     ifBlockAhead: function (highlightCallback, blockType, codeBlock) {

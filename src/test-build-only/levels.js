@@ -1754,5 +1754,91 @@ registerEventCallback(function (event) {
     verificationFunction: function (verificationAPI) {
       return true;
     }
+  },
+  16: {
+    instructions: "Let's repeat forever",
+
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: []
+    },
+
+    playerStartPosition: [1, 5],
+
+    playerStartDirection: 1,
+
+    isEventLevel: true,
+
+    groundPlane: [
+      "lava", "lava", "lava", "lava", "stone", "stone", "lava", "lava", "lava", "lava",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "water", "water", "water", "water", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"
+    ],
+
+    groundDecorationPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", ""],
+
+    actionPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "logOak", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    solutionCode: `
+
+/**
+ * Returns a random integer between min (inclusive) and max (inclusive)
+ * Using Math.round() will give you a non-uniform distribution!
+ */
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+forever(function() {
+  setBlockAt(getRandomInt(0,10), getRandomInt(0,10), 'logOak');
+  waitFor(250);
+});
+`,
+
+    verificationFunction: function (verificationAPI) {
+      return true;
+    }
   }
 };
