@@ -5,6 +5,7 @@ import CallbackCommand from "./CommandQueue/CallbackCommand.js";
 import MoveForwardCommand from "./CommandQueue/MoveForwardCommand.js";
 import TurnCommand from "./CommandQueue/TurnCommand.js";
 import WhileCommand from "./CommandQueue/WhileCommand.js";
+import ForeverCommand from "./CommandQueue/ForeverCommand.js";
 import IfBlockAheadCommand from "./CommandQueue/IfBlockAheadCommand.js";
 
 import LevelModel from "./LevelMVC/LevelModel.js";
@@ -178,7 +179,7 @@ class GameController {
         console.log("highlight move forward command.");
       };
       //if (this.queue.currentCommand instanceof CallbackCommand) { return; }
-      this.codeOrgAPI.moveDirection(dummyFunc, FacingDirection.Up);
+      this.codeOrgAPI.moveDirectionNow(dummyFunc, FacingDirection.Up);
       this.queue.begin();
     });
 
@@ -187,7 +188,7 @@ class GameController {
         console.log("highlight turn right command.");
       };
       //if (this.queue.currentCommand instanceof CallbackCommand) { return; }
-      this.codeOrgAPI.moveDirection(dummyFunc, FacingDirection.Right);
+      this.codeOrgAPI.moveDirectionNow(dummyFunc, FacingDirection.Right);
       this.queue.begin();
     });
 
@@ -196,7 +197,7 @@ class GameController {
         console.log("highlight turn left command.");
       };
       //if (this.queue.currentCommand instanceof CallbackCommand) { return; }
-      this.codeOrgAPI.moveDirection(dummyFunc, FacingDirection.Left);
+      this.codeOrgAPI.moveDirectionNow(dummyFunc, FacingDirection.Left);
       this.queue.begin();
     });
 
@@ -205,7 +206,7 @@ class GameController {
         console.log("highlight turn left command.");
       };
       //if (this.queue.currentCommand instanceof CallbackCommand) { return; }
-      this.codeOrgAPI.moveDirection(dummyFunc, FacingDirection.Down);
+      this.codeOrgAPI.moveDirectionNow(dummyFunc, FacingDirection.Down);
       this.queue.begin();
     });
 
@@ -282,6 +283,25 @@ class GameController {
     return this.game.canvas.toDataURL("image/png");
   }
 
+  startAttempt() {
+    if (this.levelData.isEventLevel) {
+      const timeoutCallback = () => {
+        this.levelModel.actionPlane.forEach((block) => {
+          if (block.isEmpty) {
+            return;
+          }
+
+          this.events.forEach(e => {
+            e({ eventType: 'everySecond', blockReference: block, blockType: block.blockType });
+          });
+          this.queue.begin();
+        });
+        this.delayBy(1000, timeoutCallback);
+      };
+      this.delayBy(1000, timeoutCallback);
+    }
+  }
+
   // command processors
   moveEntityNorth(commandQueueItem, entity) {
     const {x, y} = this.levelModel.entityToPosition(entity);
@@ -311,6 +331,74 @@ class GameController {
     commandQueueItem.succeeded();
   }
 
+  setEntityNorth(commandQueueItem, entity, blockType) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+
+    this.setBlockAt(x, y - 1, blockType);
+    commandQueueItem.succeeded();
+  }
+
+  setEntitySouth(commandQueueItem, entity, blockType) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+
+    this.setBlockAt(x, y + 1, blockType);
+    commandQueueItem.succeeded();
+  }
+
+  setEntityEast(commandQueueItem, entity, blockType) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+
+    this.setBlockAt(x + 1, y, blockType);
+    commandQueueItem.succeeded();
+  }
+
+  setEntityWest(commandQueueItem, entity, blockType) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+
+    this.setBlockAt(x - 1, y, blockType);
+    commandQueueItem.succeeded();
+  }
+
+  setEntityAhead(commandQueueItem, entity, blockType) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+    const [aheadX, aheadY] = this.levelModel.getEntityMoveForwardPosition([x, y], entity.facing);
+    this.setBlockAt(aheadX, aheadY, blockType);
+    commandQueueItem.succeeded();
+  }
+
+  destroyEntityAhead(commandQueueItem, entity) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+    this.destroyBlockWithoutPlayerInteraction(this.levelModel.getEntityMoveForwardPosition([x, y], entity.facing));
+    commandQueueItem.succeeded();
+  }
+
+  destroyEntityBehind(commandQueueItem, entity) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+    this.destroyBlockWithoutPlayerInteraction(this.levelModel.getEntityMoveBackwardPosition([x, y], entity.facing));
+    commandQueueItem.succeeded();
+  }
+
+  setEntityBehind(commandQueueItem, entity, blockType) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+    const [behindX, behindY] = this.levelModel.getEntityMoveBackwardPosition([x, y], entity.facing);
+    this.setBlockAt(behindX, behindY, blockType);
+    commandQueueItem.succeeded();
+  }
+
+  setEntityLeft(commandQueueItem, entity, blockType) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+    const [aheadX, aheadY] = this.levelModel.getEntityLeftPosition([x, y], entity.facing);
+    this.setBlockAt(aheadX, aheadY, blockType);
+    commandQueueItem.succeeded();
+  }
+
+  setEntityRight(commandQueueItem, entity, blockType) {
+    const {x, y} = this.levelModel.entityToPosition(entity);
+    const [aheadX, aheadY] = this.levelModel.getEntityRightPosition([x, y], entity.facing);
+    this.setBlockAt(aheadX, aheadY, blockType);
+    commandQueueItem.succeeded();
+  }
+
   moveEntityForward(commandQueueItem, entity) {
     const {x, y} = this.levelModel.entityToPosition(entity);
 
@@ -318,7 +406,11 @@ class GameController {
     commandQueueItem.succeeded();
   }
 
-  // direction is 1 ==> move toward, or -1 ==> move away from
+  waitFor(commandQueueItem, ms) {
+    setTimeout(() => commandQueueItem.succeeded(), ms);
+  }
+
+  // direction is 1 ==> move toward, or 0 ==> move away from
   moveEntityToPlayer(commandQueueItem, entity, isToward) {
     const aStar = new AStarPathFinding(this.levelModel);
     const entityPosition = this.levelModel.entityToPosition(entity);
@@ -332,6 +424,7 @@ class GameController {
 
       // if the intent is to move away from the player, there may not be a valid position to move to.
       if (targetPosition) {
+        this.levelModel.turnToDirection(entity, this.levelModel.getFaceDirectionTo([entityPosition.x, entityPosition.y], targetPosition));
         this.moveEntityTo(entity, targetPosition);
       }
     }
@@ -495,6 +588,23 @@ class GameController {
     if (path.length > 0) {
       const firstNode = path[0];
       this.levelModel.turnToDirection(entity, this.levelModel.getFaceDirectionTo([entityPosition.x, entityPosition.y], [firstNode.x, firstNode.y]));
+
+      const sourceIndex = this.levelModel.actionPlane.indexOf(entity);
+      this.levelView.updateBlockSpriteDirection(sourceIndex, entity.facing);
+    }
+    commandQueueItem.succeeded();
+  }
+
+  turnEntityAwayPlayer(commandQueueItem, entity) {
+    const aStar = new AStarPathFinding(this.levelModel);
+    const entityPosition = this.levelModel.entityToPosition(entity);
+
+    const path = aStar.findPath([entityPosition.x, entityPosition.y], this.levelModel.player.position);
+
+    // if there is a valid path to the player, turn to face the block in the first step.
+    if (path.length > 0) {
+      const firstNode = path[0];
+      this.levelModel.turnToDirection(entity, this.levelModel.getFaceDirectionTo([firstNode.x, firstNode.y], [entityPosition.x, entityPosition.y]));
 
       const sourceIndex = this.levelModel.actionPlane.indexOf(entity);
       this.levelView.updateBlockSpriteDirection(sourceIndex, entity.facing);
@@ -739,8 +849,18 @@ class GameController {
   }
 
   setBlockAt(x, y, blockType) {
-    this.levelModel.placeBlockAt(x, y, blockType);
+    if (!this.levelModel.inBounds(x, y)) {
+      return;
+    }
+    if (this.levelModel.isPlayer(x, y)) {
+      return; // TODO(bjordan): should not do when e.g. placing on ground
+    }
+    if (!this.levelModel.isBlockOfTypeOnPlane([x, y], "empty", this.levelModel.actionPlane)) {
+      return; // TODO(bjordan): should not do when e.g. placing on ground
+    }
+    const block = this.levelModel.placeBlockAt(x, y, blockType);
     this.levelView.setBlockAt(x, y, blockType);
+    this.events.forEach(e => e({ eventType: 'entitySpawned', blockReference: block, blockType: block.blockType }));
   }
 
   placeBlockForward(commandQueueItem, blockType) {

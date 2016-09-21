@@ -105,9 +105,9 @@ module.exports = function (grunt) {
       }
     },
     open: {
-      server: {path: 'http://localhost:<%= project.port %>/?level=12'},
+      server: {path: 'http://localhost:<%= project.port %>/?level=16&autorun=true'},
       deployed: {path: 'https://s3-us-west-1.amazonaws.com/cdo-mc-test/'
-        + deployName + '/index.html?level=12'}
+        + deployName + '/index.html?level=16&autorun=true'}
     },
     clean: ['./build/'],
     copy: {

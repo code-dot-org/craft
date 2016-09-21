@@ -6,6 +6,7 @@ import PlaceInFrontCommand from "../CommandQueue/PlaceInFrontCommand.js";
 import MoveForwardCommand from "../CommandQueue/MoveForwardCommand.js";
 import TurnCommand from "../CommandQueue/TurnCommand.js";
 import WhileCommand from "../CommandQueue/WhileCommand.js";
+import ForeverCommand from "../CommandQueue/ForeverCommand.js";
 import IfBlockAheadCommand from "../CommandQueue/IfBlockAheadCommand.js";
 import CheckSolutionCommand from "../CommandQueue/CheckSolutionCommand.js";
 import CallbackCommand from "../CommandQueue/CallbackCommand.js";
@@ -36,6 +37,7 @@ export function get(controller) {
       }
 
       controller.setPlayerActionDelayByQueueLength();
+      controller.startAttempt();
 
       controller.queue.begin();
     },
@@ -44,6 +46,13 @@ export function get(controller) {
       controller.reset();
       controller.queue.reset();
       controller.OnCompleteCallback = null;
+    },
+
+    moveDirectionNow: function (highlightCallback, direction) {
+      const queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.moveDirection(queueItem, direction);
+      });
+      controller.queue.addCommandInFront(queueItem);
     },
 
     /**
@@ -207,6 +216,27 @@ export function get(controller) {
       controller.queue.addCommand(queueItem);
     },
 
+    destroyEntityAhead: function (highlightCallback, entity) {
+      const queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.destroyEntityAhead(queueItem, entity);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
+    destroyEntityBehind: function (highlightCallback, entity) {
+      const queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.destroyEntityBehind(queueItem, entity);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
+    turnEntityAwayPlayer: function (highlightCallback, entity) {
+      const queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.turnEntityAwayPlayer(queueItem, entity);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
     destroyBlock: function (highlightCallback) {
       controller.queue.addCommand(new DestroyBlockCommand(controller, highlightCallback));
     },
@@ -215,12 +245,73 @@ export function get(controller) {
       controller.queue.addCommand(new PlaceBlockCommand(controller, highlightCallback, blockType));
     },
 
+    setEntityNorth: function (highlightCallback, entity, blockType) {
+      const queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.setEntityNorth(queueItem, entity, blockType);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
+    waitFor: function (highlightCallback, ms) {
+      const queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.waitFor(queueItem, ms);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
+    setEntitySouth: function (highlightCallback, entity, blockType) {
+      const queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.setEntitySouth(queueItem, entity, blockType);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
+    setEntityEast: function (highlightCallback, entity, blockType) {
+      const queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.setEntityEast(queueItem, entity, blockType);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
+    setEntityWest: function (highlightCallback, entity, blockType) {
+      const queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.setEntityWest(queueItem, entity, blockType);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
     setBlockAt(highlightCallback, x, y, blockType) {
-      console.log('setting', arguments);
       var queueItem = new CallbackCommand(controller, highlightCallback, () => {
-        console.log('setting2', arguments);
         controller.setBlockAt(x, y, blockType);
         queueItem.succeeded();
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
+    setEntityAhead(highlightCallback, x, y, blockType) {
+      var queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.setEntityAhead(queueItem, x, y, blockType);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
+    setEntityBehind(highlightCallback, x, y, blockType) {
+      var queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.setEntityBehind(queueItem, x, y, blockType);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
+    setEntityLeft(highlightCallback, x, y, blockType) {
+      var queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.setEntityLeft(queueItem, x, y, blockType);
+      });
+      controller.queue.addCommand(queueItem);
+    },
+
+    setEntityRight(highlightCallback, x, y, blockType) {
+      var queueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.setEntityRight(queueItem, x, y, blockType);
       });
       controller.queue.addCommand(queueItem);
     },
@@ -235,6 +326,10 @@ export function get(controller) {
 
     whilePathAhead: function (highlightCallback, blockType, codeBlock) {
       controller.queue.addCommand(new WhileCommand(controller, highlightCallback, blockType, codeBlock));
+    },
+
+    forever: function (highlightCallback, codeBlock) {
+      controller.queue.addCommand(new ForeverCommand(controller, highlightCallback, codeBlock));
     },
 
     ifBlockAhead: function (highlightCallback, blockType, codeBlock) {

@@ -1324,5 +1324,521 @@ registerEventCallback(function (event) {
     verificationFunction: function (verificationAPI) {
       return true;
     }
+  },
+  16: {
+    instructions: "Set those blocks relatively..",
+
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: []
+    },
+
+    playerStartPosition: [1, 5],
+
+    playerStartDirection: 1,
+
+    isEventLevel: true,
+
+    groundPlane: [
+      "lava", "lava", "lava", "lava", "stone", "stone", "lava", "lava", "lava", "lava",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "water", "water", "water", "water", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"
+    ],
+
+    groundDecorationPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", ""],
+
+    actionPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "logOak", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    solutionCode: `
+
+registerEventCallback(function (event) {
+  if (event.eventType !== 'blockTouched') {
+    return;
+  }
+  if (event.blockType !== 'logOak') {
+    return;
+  }
+
+  moveEntityAwayFromPlayer(event.blockReference);
+  setEntityNorth(event.blockReference, 'logOak')
+  setEntitySouth(event.blockReference, 'logOak')
+  setEntityEast(event.blockReference, 'logOak')
+  setEntityWest(event.blockReference, 'logOak')
+});
+
+registerEventCallback(function (event) {
+  if (event.eventType !== 'playerMoved') {
+    return;
+  }
+  if (event.blockType !== 'oreDiamond') {
+    return;
+  }
+
+  moveEntityTowardPlayer(event.blockReference);
+});
+
+`,
+
+    verificationFunction: function (verificationAPI) {
+      return true;
+    }
+  },
+  17: {
+    instructions: "Set those blocks relatively..",
+
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: []
+    },
+
+    playerStartPosition: [1, 5],
+
+    playerStartDirection: 1,
+
+    isEventLevel: true,
+
+    groundPlane: [
+      "lava", "lava", "lava", "lava", "stone", "stone", "lava", "lava", "lava", "lava",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "water", "water", "water", "water", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"
+    ],
+
+    groundDecorationPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", ""],
+
+    actionPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "logOak", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    solutionCode: `
+setBlockAt(1, 4, 'oreDiamond');
+registerEventCallback(function (event) {
+  if (event.eventType !== 'blockTouched') {
+    return;
+  }
+  if (event.blockType !== 'logOak') {
+    return;
+  }
+
+  moveEntityAwayFromPlayer(event.blockReference);
+  setEntityAhead(event.blockReference, 'oreIron')
+  setEntityBehind(event.blockReference, 'oreDiamond')
+});
+
+registerEventCallback(function (event) {
+  if (event.eventType !== 'blockTouched') {
+    return;
+  }
+  if (event.blockType !== 'oreDiamond') {
+    return;
+  }
+
+  moveEntityAwayFromPlayer(event.blockReference);
+  setEntityNorth(event.blockReference, 'oreIron')
+  setEntityWest(event.blockReference, 'treeOak')
+});
+
+registerEventCallback(function (event) {
+  if (event.eventType !== 'playerMoved') {
+    return;
+  }
+  //moveEntityTowardPlayer(event.blockReference);
+});
+
+`,
+
+    verificationFunction: function (verificationAPI) {
+      return true;
+    }
+  },
+  18: {
+    instructions: "On block spawned...",
+
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: []
+    },
+
+    playerStartPosition: [1, 5],
+
+    playerStartDirection: 1,
+
+    isEventLevel: true,
+
+    groundPlane: [
+      "lava", "lava", "lava", "lava", "stone", "stone", "lava", "lava", "lava", "lava",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "water", "water", "water", "water", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"
+    ],
+
+    groundDecorationPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", ""],
+
+    actionPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "oreDiamond", "", "", "", "", "", "", "", "",
+      "", "", "logOak", "", "", "", "", "", "", "",
+      "", "sheep", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "logOak", "", "", "", "",
+      "", "", "", "", "", "logOak", "", "", "", "",
+      "", "", "", "", "", "logOak", "", "", "", "",
+    ],
+
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    solutionCode: `
+//setBlockAt(1, 4, 'oreDiamond');
+registerEventCallback(function (event) {
+  if (event.eventType !== 'blockTouched') {
+    return;
+  }
+  if (event.blockType !== 'logOak') {
+    return;
+  }
+  turnEntityAwayPlayer(event.blockReference)
+  setEntityAhead(event.blockReference, 'logOak')
+  destroyEntity(event.blockReference);
+});
+
+registerEventCallback(function (event) {
+  if (event.eventType !== 'entitySpawned') {
+    return;
+  }
+  if (event.blockType !== 'logOak') {
+    return;
+  }
+
+  //explodeEntity(event.blockReference);
+  turnEntityAwayPlayer(event.blockReference)
+  setEntityAhead(event.blockReference, 'logOak')
+  destroyEntity(event.blockReference);
+  //waitFor(200);
+});
+
+registerEventCallback(function (event) {
+  if (event.eventType !== 'blockTouched') {
+    return;
+  }
+  if (event.blockType !== 'sheep') {
+    return;
+  }
+
+  turnEntityAwayPlayer(event.blockReference)
+});
+
+registerEventCallback(function (event) {
+  if (event.eventType !== 'blockTouched') {
+    return;
+  }
+  if (event.blockType !== 'oreDiamond') {
+    return;
+  }
+  destroyEntityBehind(event.blockReference);
+  waitFor(200);
+  setEntityBehind(event.blockReference, 'oreDiamond')
+});
+
+registerEventCallback(function (event) {
+  if (event.eventType !== 'entitySpawned') {
+    return;
+  }
+  if (event.blockType !== 'oreDiamond') {
+    return;
+  }
+
+  destroyEntityBehind(event.blockReference);
+  waitFor(200);
+  explodeEntity(event.blockReference);
+  setEntityBehind(event.blockReference, 'oreDiamond')
+});
+
+`,
+
+    verificationFunction: function (verificationAPI) {
+      return true;
+    }
+  },
+  19: {
+    instructions: "Let's make a snake...",
+
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: []
+    },
+
+    playerStartPosition: [1, 5],
+
+    playerStartDirection: 1,
+
+    isEventLevel: true,
+
+    groundPlane: [
+      "lava", "lava", "lava", "lava", "stone", "stone", "lava", "lava", "lava", "lava",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "water", "water", "water", "water", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"
+    ],
+
+    groundDecorationPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", ""],
+
+    actionPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "logOak", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    solutionCode: `
+//setBlockAt(1, 4, 'oreDiamond');
+registerEventCallback(function (event) {
+  if (event.eventType !== 'everySecond') {
+    return;
+  }
+  if (event.blockType !== 'logOak') {
+    return;
+  }
+  moveEntityAwayFromPlayer(event.blockReference);
+  setEntityBehind(event.blockReference, 'oreDiamond')
+  //waitFor(250);
+});
+`,
+
+    verificationFunction: function (verificationAPI) {
+      return true;
+    }
+  },
+  20: {
+    instructions: "Let's repeat forever",
+
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: []
+    },
+
+    playerStartPosition: [1, 5],
+
+    playerStartDirection: 1,
+
+    isEventLevel: true,
+
+    groundPlane: [
+      "lava", "lava", "lava", "lava", "stone", "stone", "lava", "lava", "lava", "lava",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "water", "water", "water", "water", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone",
+      "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"
+    ],
+
+    groundDecorationPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", ""],
+
+    actionPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "logOak", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    solutionCode: `
+
+/**
+ * Returns a random integer between min (inclusive) and max (inclusive)
+ * Using Math.round() will give you a non-uniform distribution!
+ */
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+forever(function() {
+  setBlockAt(getRandomInt(0,10), getRandomInt(0,10), 'logOak');
+  waitFor(250);
+});
+`,
+
+    verificationFunction: function (verificationAPI) {
+      return true;
+    }
   }
 };

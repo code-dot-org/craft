@@ -17,6 +17,14 @@ export default class CommandQueue {
     }
   }
 
+  addCommandInFront(command) {
+    if (this.currentCommand) {
+      this.commandList_.unshift(this.currentCommand);
+    }
+
+    this.currentCommand = command;
+  }
+
   setWhileCommandInsertState(queue) {
     this.whileCommandQueue = queue;
   }

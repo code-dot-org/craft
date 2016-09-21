@@ -81,7 +81,8 @@
     audioPlayer: new Sounds(),
     debug: true,
     earlyLoadAssetPacks: testLevelToLoad.earlyLoadAssetPacks,
-    earlyLoadNiceToHaveAssetPacks: testLevelToLoad.earlyLoadNiceToHaveAssetPacks
+    earlyLoadNiceToHaveAssetPacks: testLevelToLoad.earlyLoadNiceToHaveAssetPacks,
+    afterAssetsLoaded: getParameterByName('autorun') ? () => $('#run-button').click() : null
   });
 
   if (levelNumber === 1) {
@@ -139,39 +140,14 @@
   $('#run-button').click(function () {
     var shortHandCode = $('#test-code-area').val();
     var code = shortHandToApiCalls(shortHandCode);
-
     var codeOrgAPI = gameController.codeOrgAPI;
     codeOrgAPI.startCommandCollection();
-    runCodeWithParams(code, {
-      codeOrgAPI: codeOrgAPI,
-      placeBlock: codeOrgAPI.placeBlock.bind(null, function(){}),
-      setBlockAt: codeOrgAPI.setBlockAt.bind(null, function(){}),
-      moveForward: codeOrgAPI.moveForward.bind(null, function(){}),
-      turnLeft: codeOrgAPI.turnLeft.bind(null, function(){}),
-      turnRight: codeOrgAPI.turnRight.bind(null, function(){}),
-      destroyBlock: codeOrgAPI.destroyBlock.bind(null, function(){}),
-      registerEventCallback: codeOrgAPI.registerEventCallback.bind(null, function(){}),
-      destroyEntity: codeOrgAPI.destroyEntity.bind(null, function(){}),
-      moveEntityNorth: codeOrgAPI.moveEntityNorth.bind(null, function(){}),
-      moveEntitySouth: codeOrgAPI.moveEntitySouth.bind(null, function(){}),
-      moveEntityEast: codeOrgAPI.moveEntityEast.bind(null, function(){}),
-      moveEntityWest: codeOrgAPI.moveEntityWest.bind(null, function(){}),
-      moveEntityForward: codeOrgAPI.moveEntityForward.bind(null, function(){}),
-      moveEntityTowardPlayer: codeOrgAPI.moveEntityTowardPlayer.bind(null, function(){}),
-      moveEntityAwayFromPlayer: codeOrgAPI.moveEntityAwayFromPlayer.bind(null, function(){}),
-      turnEntity: codeOrgAPI.turnEntity.bind(null, function(){}),
-      turnEntityRight: codeOrgAPI.turnEntityRight.bind(null, function(){}),
-      turnEntityLeft: codeOrgAPI.turnEntityLeft.bind(null, function(){}),
-      turnEntityRandom: codeOrgAPI.turnEntityRandom.bind(null, function(){}),
-      turnEntityToPlayer: codeOrgAPI.turnEntityToPlayer.bind(null, function(){}),
-      explodeEntity: codeOrgAPI.explodeEntity.bind(null, function(){}),
-      flashEntity: codeOrgAPI.flashEntity.bind(null, function(){}),
-      playSound: codeOrgAPI.playSound.bind(null, function(){}),
-      ifBlockAhead: codeOrgAPI.ifBlockAhead.bind(null, function(){}),
-      ifLavaAhead: codeOrgAPI.ifBlockAhead.bind(null, function(){}, "lava"),
-      whileAhead: codeOrgAPI.whilePathAhead.bind(null, function(){}),
-      placeInFront: codeOrgAPI.placeInFront.bind(null, function(){})
+    const codeParams = {};
+    Object.keys(codeOrgAPI).forEach(function (key) {
+      let fn = codeOrgAPI[key];
+      codeParams[key] = fn.bind(null, () => {});
     });
+    runCodeWithParams(code, Object.assign({}, {codeOrgAPI: codeOrgAPI}, codeParams));
     codeOrgAPI.startAttempt(function (result) {
       $('#level-feedback').html(result ? "Success!" : "Failure").css("color", result ? "green" : "red");
     });
