@@ -1755,7 +1755,7 @@ registerEventCallback(function (event) {
       return true;
     }
   },
-  16: {
+  20: {
     instructions: "Let's repeat forever",
 
     earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
