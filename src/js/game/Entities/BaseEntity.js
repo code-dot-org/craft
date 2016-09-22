@@ -206,10 +206,11 @@ export default class BaseEntity {
     use(commandQueueItem, userEntity)
     {
         // default behavior for use ?
+        commandQueueItem.succeeded();
     }
 
     updateDirection(direction) {
-
+        
     }
 }
 

@@ -468,7 +468,7 @@ class GameController {
     // if there is a entity in front of the player
     } else if(frontEntity != null) {
       frontEntity.use(commandQueueItem,player);
-      this.events.forEach(e => e({ eventType: EventType.WhenUsed, targetType: frontEntity.type, eventSenderIdentifier: player.identifer ,targetIdentifier: frontEntity.identifer }));
+      this.events.forEach(e => e({ eventType: EventType.WhenUsed, targetType: frontEntity.type, eventSenderIdentifier: player.identifier ,targetIdentifier: frontEntity.identifier }));
     } else {
         this.levelView.playPunchDestroyAirAnimation(player.position, player.facing, this.levelModel.getMoveForwardPosition(), () => {
         this.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]);

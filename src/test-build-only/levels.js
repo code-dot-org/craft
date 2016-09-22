@@ -183,6 +183,9 @@ window.demoLevels = {
       afterLoad: []
     },
 
+    entities: [['sheep',3,3,1],['sheep',4,2,1],['sheep',6,2,1]],
+
+
     playerStartPosition: [4, 3],
 
     playerStartDirection: 1,
@@ -238,7 +241,7 @@ window.demoLevels = {
     isEventLevel: true,
 
     solutionCode: 
-    "createEntity('sheep','a',2,2,1);\ncreateEntity('sheep','b',4,2,1);\ncreateEntity('sheep','c',6,2,1);\nregisterEventCallback(function (event) {\nif(isEventTriggered(event,0)){\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\n}\n})"
+    "registerEventCallback(function (event) {\nif(isEventTriggered(event,0)){\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\n}if(isEventTriggered(event,1)){\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\n}\n})"
     ,
 
     verificationFunction: function (verificationAPI) {
