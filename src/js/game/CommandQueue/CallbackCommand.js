@@ -1,9 +1,10 @@
 import CommandState from "./CommandState.js";
 import BaseCommand from "./BaseCommand.js";
 
-export default class MoveForwardCommand extends BaseCommand {
-  constructor(gameController, highlightCallback, targetEntity) {
+export default class CallbackCommand extends BaseCommand {
+  constructor(gameController, highlightCallback, targetEntity, actionCallback) {
     super(gameController, highlightCallback, targetEntity);
+    this.actionCallback = actionCallback;
   }
 
   tick() {
@@ -12,7 +13,7 @@ export default class MoveForwardCommand extends BaseCommand {
 
   begin() {
     super.begin();
-    this.GameController.moveForward(this);
+    this.actionCallback();
   }
 }
 
