@@ -2,7 +2,7 @@ import CommandState from "./CommandState.js";
 import BaseCommand from "./BaseCommand.js";
 
 export default class CallbackCommand extends BaseCommand {
-  constructor(gameController, highlightCallback, targetEntity, actionCallback) {
+  constructor(gameController, highlightCallback, actionCallback, targetEntity) {
     super(gameController, highlightCallback, targetEntity);
     this.actionCallback = actionCallback;
   }

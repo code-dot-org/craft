@@ -82,8 +82,8 @@ export default class BaseEntity {
             // not entity moved event
             //this.controller.events.forEach(e => e({ eventType: 'entityMoved', entityIdentifier: this.identifier }));
         } else {
-            this.callBumpEvents(forwardPositionInformation);
             this.bump(commandQueueItem);
+            this.callBumpEvents(forwardPositionInformation);
         }
     }
 

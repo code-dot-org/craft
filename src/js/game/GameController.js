@@ -177,32 +177,28 @@ class GameController {
       var dummyFunc = function () {
         console.log("highlight move forward command.");
       };
-      this.codeOrgAPI.moveDirection(dummyFunc, FacingDirection.Up);
-      this.queue.begin();
+      this.codeOrgAPI.moveDirection(function(){}, FacingDirection.Up);
     });
 
     this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onUp.add(() => {
       var dummyFunc = function () {
         console.log("highlight turn right command.");
       };
-      this.codeOrgAPI.moveDirection(dummyFunc, FacingDirection.Right);
-      this.queue.begin();
+      this.codeOrgAPI.moveDirection(function(){}, FacingDirection.Right);
     });
 
     this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT).onUp.add(() => {
       var dummyFunc = function () {
         console.log("highlight turn left command.");
       };
-      this.codeOrgAPI.moveDirection(dummyFunc, FacingDirection.Left);
-      this.queue.begin();
+      this.codeOrgAPI.moveDirection(function(){}, FacingDirection.Left);
     });
 
     this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN).onUp.add(() => {
       var dummyFunc = function () {
         console.log("highlight turn left command.");
       };
-      this.codeOrgAPI.moveDirection(dummyFunc, FacingDirection.Down);
-      this.queue.begin();
+      this.codeOrgAPI.moveDirection(function(){}, FacingDirection.Down);
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.P).onUp.add(() => {
       var dummyFunc = function () {
@@ -359,6 +355,11 @@ class GameController {
     } else {
       commandQueueItem.failed();
     }
+  }
+  
+  playSound(commandQueueItem, sound) {
+    this.levelView.audioPlayer.play(sound);
+    commandQueueItem.succeeded();
   }
 
   destroyBlockWithoutPlayerInteraction(position) {
@@ -718,8 +719,8 @@ class GameController {
     commandQueueItem.succeeded();
   }
 
-  addCommand(commandQueueItem, targetEntity) {
-    var target = this.getEntity(targetEntity);
+  addCommand(commandQueueItem) {
+    var target = this.getEntity(commandQueueItem.target);
     if (target !== undefined)
       target.addCommand(commandQueueItem);
   }
