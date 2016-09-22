@@ -155,9 +155,9 @@ export function get(controller) {
       return controller.getScreenshot();
     },
 
-    spawnEntity: function (highlightCallback, identifier, type, spawnDirection,facing) {
+    spawnEntity: function (highlightCallback, identifier, type, spawnDirection, facing) {
       var callbackCommand = new CallbackCommand(controller, highlightCallback, undefined, () => {
-        controller.spawnEntity(callbackCommand, identifier, type, spawnDirection,facing);
+        controller.spawnEntity(callbackCommand, identifier, type, spawnDirection, facing);
       });
       controller.queue.addCommand(callbackCommand);
     },

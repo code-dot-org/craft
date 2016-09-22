@@ -407,8 +407,7 @@ class GameController {
     }
   }
 
-  destroyBlock(commandQueueItem, type) 
-  {
+  destroyBlock(commandQueueItem, type) {
     let player = this.levelModel.player;
     let frontEntity = this.levelEntity.getEntityAt(this.levelModel.getMoveForwardPosition(player));
     // if there is a destroyable block in front of the player
@@ -456,7 +455,7 @@ class GameController {
               this.levelView.playShearSheepAnimation(player.position, player.facing, destroyPosition, blockType, () => {
                 commandQueueItem.succeeded();
               });
-              
+
               break;
             default:
               commandQueueItem.succeeded();
@@ -465,12 +464,12 @@ class GameController {
           commandQueueItem.succeeded();
         }
       }
-    // if there is a entity in front of the player
-    } else if(frontEntity != null) {
-      frontEntity.use(commandQueueItem,player);
-      this.events.forEach(e => e({ eventType: EventType.WhenUsed, targetType: frontEntity.type, eventSenderIdentifier: player.identifier ,targetIdentifier: frontEntity.identifier }));
+      // if there is a entity in front of the player
+    } else if (frontEntity != null) {
+      frontEntity.use(commandQueueItem, player);
+      this.events.forEach(e => e({ eventType: EventType.WhenUsed, targetType: frontEntity.type, eventSenderIdentifier: player.identifier, targetIdentifier: frontEntity.identifier }));
     } else {
-        this.levelView.playPunchDestroyAirAnimation(player.position, player.facing, this.levelModel.getMoveForwardPosition(), () => {
+      this.levelView.playPunchDestroyAirAnimation(player.position, player.facing, this.levelModel.getMoveForwardPosition(), () => {
         this.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]);
         this.levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
         this.delayPlayerMoveBy(200, 600, () => {
@@ -697,17 +696,15 @@ class GameController {
     return this.levelModel.isForwardBlockOfType(blockType);
   }
 
-  useEntity(commandQueueItem, userIdentifier, targetIdentifier)
-  {
-    if(this.levelEntity.entityMap.has(targetIdentifier))
-    {
+  useEntity(commandQueueItem, userIdentifier, targetIdentifier) {
+    if (this.levelEntity.entityMap.has(targetIdentifier)) {
       let userEntity = this.getEntity(userIdentifier);
-      this.levelEntity.entityMap.get(targetIdentifier).use(commandQueueItem,userEntity);
+      this.levelEntity.entityMap.get(targetIdentifier).use(commandQueueItem, userEntity);
     }
   }
 
-  spawnEntity(commandQueueItem, eventSenderIdentifier , type, facing) {
-    if(this.levelEntity.spawnEntity(eventSenderIdentifier, type, facing))
+  spawnEntity(commandQueueItem, eventSenderIdentifier, type, spawnDirection, facing) {
+    if (this.levelEntity.spawnEntity(eventSenderIdentifier, type, spawnDirection, facing))
       commandQueueItem.succeeded();
     else
       commandQueueItem.failed();
@@ -718,10 +715,9 @@ class GameController {
     commandQueueItem.succeeded();
   }
 
-  addCommand(commandQueueItem, targetEntity)
-  {
+  addCommand(commandQueueItem, targetEntity) {
     var target = this.getEntity(targetEntity);
-    if(target !== undefined)
+    if (target !== undefined)
       target.addCommand(commandQueueItem);
   }
 }

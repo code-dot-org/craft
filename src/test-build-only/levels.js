@@ -1,9 +1,9 @@
 var moveForwardBlock = "moveForward();\n";
-var moveForwardFunction = function (type) { return "moveForward('" + type + "');\n"};
+var moveForwardFunction = function (type) { return "moveForward('" + type + "');\n" };
 var turnLeftBlock = "turnLeft();\n";
 var turnRightBlock = "turnRight();\n";
 var destroyBlock = "destroyBlock();\n";
-var registerEventCallback = function(functionImplementation) { return "registerEventCallback(function (event) {\n" + functionImplementation + "\n})\n" };
+var registerEventCallback = function (functionImplementation) { return "registerEventCallback(function (event) {\n" + functionImplementation + "\n})\n" };
 var whileBlockAhead = function (type, blockCode) {
   return "whileAhead('" + type + "', do{\n" + blockCode + "});\n"
 };
@@ -40,7 +40,7 @@ window.demoLevels = {
       afterLoad: ['playerSteve', 'playerAlex', 'grass']
     },
 
-    entities: [['sheep',3,3,1]],
+    entities: [['sheep', 3, 3, 1]],
 
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -90,13 +90,13 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", ""
     ],
 
-    
+
 
     verificationFunction: function (verificationAPI) {
       return verificationAPI.isPlayerNextTo("sheep");
     },
 
-    solutionCode: 
+    solutionCode:
     moveForwardBlock + moveForwardBlock
 
   },
@@ -181,7 +181,7 @@ window.demoLevels = {
       afterLoad: []
     },
 
-    entities: [['sheep',3,3,1],['sheep',4,2,1],['sheep',6,2,1]],
+    entities: [['sheep', 3, 3, 1], ['sheep', 4, 2, 1], ['sheep', 6, 2, 1]],
 
 
     playerStartPosition: [4, 3],
@@ -238,7 +238,7 @@ window.demoLevels = {
     ],
     isEventLevel: true,
 
-    solutionCode: 
+    solutionCode:
     "registerEventCallback(function (event) {\nif(isEventTriggered(event,0)){\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\n}if(isEventTriggered(event,1)){\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\n}\n})"
     ,
 
@@ -394,18 +394,18 @@ window.demoLevels = {
 
     verificationFunction: function (verificationAPI) {
       return verificationAPI.solutionMapMatchesResultMap(
-          [
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "any", "any", "any", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", ""
-          ]);
+        [
+          "", "", "", "", "", "", "", "", "", "",
+          "", "", "", "", "", "", "", "", "", "",
+          "", "", "", "", "", "", "", "", "", "",
+          "", "", "", "", "", "", "", "", "", "",
+          "", "", "", "", "", "", "", "", "", "",
+          "", "", "", "", "", "", "", "", "", "",
+          "", "", "", "any", "any", "any", "", "", "", "",
+          "", "", "", "", "", "", "", "", "", "",
+          "", "", "", "", "", "", "", "", "", "",
+          "", "", "", "", "", "", "", "", "", ""
+        ]);
     },
 
     solutionCode: placeBlock('logOak') +
@@ -486,22 +486,22 @@ window.demoLevels = {
     solutionCode: 'turnLeft(); moveForward(); moveForward();moveForward();moveForward(); ' +
     'turnRight();moveForward();moveForward();moveForward();moveForward();turnRight();moveForward();' +
     'moveForward();moveForward();turnRight();placeBlock("logOak"); moveForward();moveForward();moveForward();' +
-    ' placeBlock("logOak"); moveForward();moveForward();moveForward(); turnRight();' ,
+    ' placeBlock("logOak"); moveForward();moveForward();moveForward(); turnRight();',
 
     verificationFunction: function (verificationAPI) {
       return verificationAPI.solutionMapMatchesResultMap(
-          [
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "any", "any", "any", "any", "", "", "",
-            "", "", "", "any", "", "", "any", "", "", "",
-            "", "", "", "any", "", "", "any", "", "", "",
-            "", "", "", "", "", "", "any", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", ""
-          ]);
+        [
+          "", "", "", "", "", "", "", "", "", "",
+          "", "", "", "", "", "", "", "", "", "",
+          "", "", "", "", "", "", "", "", "", "",
+          "", "", "", "any", "any", "any", "any", "", "", "",
+          "", "", "", "any", "", "", "any", "", "", "",
+          "", "", "", "any", "", "", "any", "", "", "",
+          "", "", "", "", "", "", "any", "", "", "",
+          "", "", "", "", "", "", "", "", "", "",
+          "", "", "", "", "", "", "", "", "", "",
+          "", "", "", "", "", "", "", "", "", ""
+        ]);
     }
   },
 
@@ -667,18 +667,18 @@ window.demoLevels = {
 
     verificationFunction: function (verificationAPI) {
       return verificationAPI.solutionMapMatchesResultMap(
-          [
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "logOak", "logOak", "logOak", "logOak", "", "", "",
-            "", "", "", "logOak", "", "", "logOak", "", "", "",
-            "", "", "", "logOak", "", "", "logOak", "", "", "",
-            "", "", "", "", "", "", "logOak", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", ""
-          ]);
+        [
+          "", "", "", "", "", "", "", "", "", "",
+          "", "", "", "", "", "", "", "", "", "",
+          "", "", "", "", "", "", "", "", "", "",
+          "", "", "", "logOak", "logOak", "logOak", "logOak", "", "", "",
+          "", "", "", "logOak", "", "", "logOak", "", "", "",
+          "", "", "", "logOak", "", "", "logOak", "", "", "",
+          "", "", "", "", "", "", "logOak", "", "", "",
+          "", "", "", "", "", "", "", "", "", "",
+          "", "", "", "", "", "", "", "", "", "",
+          "", "", "", "", "", "", "", "", "", ""
+        ]);
     }
   },
   9: {
@@ -746,7 +746,7 @@ window.demoLevels = {
     ],
 
     solutionCode: "for (var i = 0; i < 6; i++) {" +
-      destroyBlock + ifLavaAhead(placeInFront("stone")) + moveForwardBlock +
+    destroyBlock + ifLavaAhead(placeInFront("stone")) + moveForwardBlock +
     "}",
 
     verificationFunction: function (verificationAPI) {
@@ -973,7 +973,7 @@ window.demoLevels = {
     + turnRightBlock
     + "}"
 
-      ,
+    ,
 
     verificationFunction: function (verificationAPI) {
       return true;
