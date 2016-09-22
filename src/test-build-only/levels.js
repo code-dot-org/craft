@@ -1,7 +1,11 @@
 var moveForwardBlock = "moveForward();\n";
+var moveForwardFunction = function (type) { return "moveForward('" + type + "');\n"};
+var createEntityBlock = function ( type, identifier, x, y, direction) { return "createEntity('" + type + "','" + identifier + "'," + x +"," + y + "," + direction + ");\n"};
 var turnLeftBlock = "turnLeft();\n";
 var turnRightBlock = "turnRight();\n";
 var destroyBlock = "destroyBlock();\n";
+var registerEventCallback = function(functionImplementation) { return "registerEventCallback(function (event) {\n" + functionImplementation + "\n})\n" };
+var isEntityTouch = function(entity1, entity2) { return "isEntityTouch(event,'"+entity1+"','"+entity2 +"')"};
 var whileBlockAhead = function (type, blockCode) {
   return "whileAhead('" + type + "', do{\n" + blockCode + "});\n"
 };
@@ -28,6 +32,7 @@ window.demoLevels = {
     playerStartDirection: 1,
 
     playerName: "Alex",
+    isEventLevel: true,
 
     earlyLoadAssetPacks: ['levelOneAssets'],
     earlyLoadNiceToHaveAssetPacks: ['playerAlex'],
@@ -36,6 +41,8 @@ window.demoLevels = {
       beforeLoad: ['levelOneAssets', 'playerAlex'],
       afterLoad: ['playerSteve', 'playerAlex', 'grass']
     },
+
+    entities: [['sheep',3,3,1]],
 
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -85,12 +92,14 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", ""
     ],
 
+    
+
     verificationFunction: function (verificationAPI) {
       return verificationAPI.isPlayerNextTo("sheep");
     },
 
-    solutionCode: moveForwardBlock +
-    moveForwardBlock
+    solutionCode: createEntityBlock("sheep",5,4,0) + 
+    moveForwardBlock + moveForwardBlock
 
   },
 
@@ -226,14 +235,10 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
     ],
+    isEventLevel: true,
 
-    solutionCode: turnRightBlock +
-    moveForwardBlock +
-    moveForwardBlock +
-    destroyBlock +
-    turnLeftBlock +
-    moveForwardBlock +
-    destroyBlock
+    solutionCode: 
+    "createEntity('sheep','a',2,2,1);\ncreateEntity('sheep','b',4,2,1);\ncreateEntity('sheep','c',6,2,1);\nregisterEventCallback(function (event) {\nif(isEventTriggered(event,0)){\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\n}\n})"
     ,
 
     verificationFunction: function (verificationAPI) {
