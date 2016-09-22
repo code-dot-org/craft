@@ -706,8 +706,11 @@ class GameController {
     }
   }
 
-  createEntity(commandQueueItem, type, identifier, x, y, facing) {
-    this.levelEntity.createEntity(type, identifier, x, y, facing);
+  spawnEntity(commandQueueItem, eventSenderIdentifier , type, facing) {
+    if(this.levelEntity.spawnEntity(eventSenderIdentifier, type, facing))
+      commandQueueItem.succeeded();
+    else
+      commandQueueItem.failed();
   }
 
   destroyEntity(commandQueueItem, type) {

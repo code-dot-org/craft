@@ -218,6 +218,15 @@ export default class LevelModel {
     return [cx, cy];
   }
 
+  getMoveDirectionPosition(entity = this.player, facing)
+  {
+    let currentFacing = entity.facing;
+    this.turnToDirection(entity,facing);
+    let position = this.getMoveForwardPosition(entity);
+    this.turnToDirection(entity,currentFacing);
+    return position;
+  }
+
   isForwardBlockOfType(blockType) {
     let blockForwardPosition = this.getMoveForwardPosition();
 
@@ -483,11 +492,11 @@ export default class LevelModel {
 
   canMoveDirection(entity = this.player, direction) {
     // save current direction of the entity
-    var currentDirection = entity.direction;
+    var currentDirection = entity.facing;
     this.turnToDirection(entity, direction);
     var result = this.canMoveForward(entity);
     // rerotate the entity to the saved direction
-    this.turnToDirection(currentDirection);
+    this.turnToDirection(entity,currentDirection);
     return result;
   }
 

@@ -79,7 +79,7 @@ export function get(controller) {
       return false;
     },*/
     // helper functions for event
-    isEventTriggered: function(event, eventType) {
+    isEventTriggered: function (event, eventType) {
       return (event.eventType === eventType);
     },
     // command list
@@ -155,8 +155,11 @@ export function get(controller) {
       return controller.getScreenshot();
     },
 
-    createEntity: function (highlightCallback, type, identifier, x, y, facing) {
-      controller.createEntity(undefined, type, identifier, x, y, facing);
+    spawnEntity: function (highlightCallback, identifier, type, spawnDirection,facing) {
+      var callbackCommand = new CallbackCommand(controller, highlightCallback, undefined, () => {
+        controller.spawnEntity(callbackCommand, identifier, type, spawnDirection,facing);
+      });
+      controller.queue.addCommand(callbackCommand);
     },
 
     destroyEntity: function (highlightCallback, type) {

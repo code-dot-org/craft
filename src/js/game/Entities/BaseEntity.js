@@ -17,13 +17,11 @@ export default class BaseEntity {
         this.identifier = identifier;
     }
 
-    tick()
-    {
+    tick() {
         this.queue.tick();
     }
 
-    addCommand(commandQueueItem)
-    {
+    addCommand(commandQueueItem) {
         this.queue.addCommand(commandQueueItem);
         // execute the command
         this.queue.begin();
@@ -63,7 +61,7 @@ export default class BaseEntity {
             /*if (forwardPositionInformation[i] === 'notEmpty')
                 this.controller.events.forEach(e => e({ eventType: 'blockTouched', blockReference: this.controller.levelModel.getForwardBlock(), blockType: this.controller.levelModel.getForwardBlockType() }));
             else*/
-             if (forwardPositionInformation[i] === 'frontEntity') {
+            if (forwardPositionInformation[i] === 'frontEntity') {
                 this.controller.events.forEach(e => e({ eventType: EventType.WhenTouched, targetType: forwardPositionInformation[i + 1].type, eventSenderIdentifier: this.identifier, targetIdentifier: forwardPositionInformation[i + 1].identifier }));
                 i++;
             }
@@ -203,14 +201,13 @@ export default class BaseEntity {
         });
     }
 
-    use(commandQueueItem, userEntity)
-    {
+    use(commandQueueItem, userEntity) {
         // default behavior for use ?
         commandQueueItem.succeeded();
     }
 
     updateDirection(direction) {
-        
+
     }
 }
 

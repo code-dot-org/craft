@@ -1,11 +1,9 @@
 var moveForwardBlock = "moveForward();\n";
 var moveForwardFunction = function (type) { return "moveForward('" + type + "');\n"};
-var createEntityBlock = function ( type, identifier, x, y, direction) { return "createEntity('" + type + "','" + identifier + "'," + x +"," + y + "," + direction + ");\n"};
 var turnLeftBlock = "turnLeft();\n";
 var turnRightBlock = "turnRight();\n";
 var destroyBlock = "destroyBlock();\n";
 var registerEventCallback = function(functionImplementation) { return "registerEventCallback(function (event) {\n" + functionImplementation + "\n})\n" };
-var isEntityTouch = function(entity1, entity2) { return "isEntityTouch(event,'"+entity1+"','"+entity2 +"')"};
 var whileBlockAhead = function (type, blockCode) {
   return "whileAhead('" + type + "', do{\n" + blockCode + "});\n"
 };
@@ -98,7 +96,7 @@ window.demoLevels = {
       return verificationAPI.isPlayerNextTo("sheep");
     },
 
-    solutionCode: createEntityBlock("sheep",5,4,0) + 
+    solutionCode: 
     moveForwardBlock + moveForwardBlock
 
   },
