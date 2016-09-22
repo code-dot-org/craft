@@ -238,9 +238,8 @@ window.demoLevels = {
     isEventLevel: true,
 
     solutionCode:
-    registerEventCallback(function (event) {
-      "if(isEventTriggered(event,0)){\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\nturnRight(event.targetIdentifier);\nturnRight(event.targetIdentifier);\nturnRight(event.targetIdentifier);\nmoveAway(event.eventSenderIdentifier, event.targetIdentifier);\nturnRight(event.eventSenderIdentifier);\nturnRight(event.eventSenderIdentifier);\n}if(isEventTriggered(event,1)){\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\n}\n})"
-    ,
+    "registerEventCallback(function (event) {\nif(isEventTriggered(event,0)){\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\nturnRight(event.targetIdentifier);\nturnRight(event.targetIdentifier);\nturnRight(event.targetIdentifier);\nmoveAway(event.eventSenderIdentifier, event.targetIdentifier);\nturnRight(event.eventSenderIdentifier);\nturnRight(event.eventSenderIdentifier);\n}if(isEventTriggered(event,1)){\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\n}\n})"
+,
 
     verificationFunction: function (verificationAPI) {
       return verificationAPI.getInventoryAmount("wool") >= 2;
