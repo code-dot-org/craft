@@ -97,8 +97,7 @@ window.demoLevels = {
     },
 
     solutionCode:
-    moveForwardBlock + moveForwardBlock
-
+    "spawnEntity('player','sheep',1,1);\nregisterEventCallback(function (event) {\nif(event.targetType !==" + '"sheep"' +")\nreturn;\nif(isEventTriggered(event,2)){\nmoveAway(event.targetIdentifier,event.eventSenderIdentifier);\n}\n})"
   },
 
   2: {

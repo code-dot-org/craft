@@ -704,8 +704,11 @@ class GameController {
   }
 
   spawnEntity(commandQueueItem, eventSenderIdentifier, type, spawnDirection, facing) {
-    if (this.levelEntity.spawnEntity(eventSenderIdentifier, type, spawnDirection, facing))
+    var spawnedEntity = this.levelEntity.spawnEntity(eventSenderIdentifier, type, spawnDirection, facing);
+    if (spawnedEntity !== null) {
+      this.events.forEach(e => e({ eventType: EventType.WhenSpawned, targetType: type, eventSenderIdentifier: eventSenderIdentifier, targetIdentifier: spawnedEntity.identifier }));
       commandQueueItem.succeeded();
+    }
     else
       commandQueueItem.failed();
   }
