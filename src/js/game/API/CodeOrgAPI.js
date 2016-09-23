@@ -9,6 +9,7 @@ import WhileCommand from "../CommandQueue/WhileCommand.js";
 import IfBlockAheadCommand from "../CommandQueue/IfBlockAheadCommand.js";
 import CheckSolutionCommand from "../CommandQueue/CheckSolutionCommand.js";
 import CallbackCommand from "../CommandQueue/CallbackCommand.js";
+import RepeatCommand from "../CommandQueue/RepeatCommand.js";
 
 export function get(controller) {
   return {
@@ -156,6 +157,10 @@ export function get(controller) {
 
     ifBlockAhead: function (highlightCallback, blockType, codeBlock) {
       controller.queue.addCommand(new IfBlockAheadCommand(controller, highlightCallback, blockType, codeBlock));
+    },
+    // -1 for infinite repeat
+    repeat: function(highlightCallback, codeBlock, targetEntity, iteration) {
+      controller.addCommand(new RepeatCommand(controller, highlightCallback, codeBlock, targetEntity, iteration));
     },
 
     getScreenshot: function () {

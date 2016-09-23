@@ -6,6 +6,7 @@ export default class CommandQueue {
     this.gameController = gameController;
     this.game = gameController.game;
     this.reset();
+    this.repeatCommands = [];
   }
 
   addCommand(command) {
@@ -43,6 +44,18 @@ export default class CommandQueue {
       if (!this.currentCommand) {
         if (this.commandList_.length === 0) {
           this.state = CommandState.SUCCESS;
+          for( var i = 0; i < this.repeatCommands.length; i++ )
+          {
+            if(this.repeatCommands[i][1] > 0)
+            {
+              this.repeatCommands[i][0]();
+              this.repeatCommands[i][1]--;
+            }
+            else if( this.repeatCommands[i][1] === -1)
+            {
+              this.repeatCommands[i][0]();
+            }
+          }
           return;
         }
         this.currentCommand = this.commandList_.shift();
@@ -98,6 +111,11 @@ export default class CommandQueue {
    */
   isFailed() {
     return this.state === CommandState.FAILURE;
+  }
+
+  addRepeatCommands(codeBlock, iteration)
+  {
+    this.repeatCommands.push([codeBlock,iteration]);
   }
 }
 

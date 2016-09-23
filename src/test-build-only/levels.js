@@ -97,7 +97,7 @@ window.demoLevels = {
     },
 
     solutionCode:
-    "spawnEntity('player','sheep',1,1);\nregisterEventCallback(function (event) {\nif(event.targetType !==" + '"sheep"' +")\nreturn;\nif(isEventTriggered(event,2)){\nmoveAway(event.targetIdentifier,event.eventSenderIdentifier);\n}\n})"
+    "spawnEntity('player','sheep',1,1);\nregisterEventCallback(function (event) {\nif(event.targetType !==" + '"sheep"' +")\nreturn;\nif(isEventTriggered(event,2)){\nrepeat(function() {\nmoveAway(event.targetIdentifier ,'player');\n}, event.targetIdentifier ,-1);\n}\nif(isEventTriggered(event,1)){\nrepeat(function() {\nmoveAway(event.targetIdentifier ,'player');\n}, event.targetIdentifier ,-1);\n}\n})"
   },
 
   2: {
