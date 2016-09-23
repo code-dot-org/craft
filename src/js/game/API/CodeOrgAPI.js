@@ -88,6 +88,17 @@ export function get(controller) {
       controller.addCommand(new MoveForwardCommand(controller, highlightCallback, targetEntity), targetEntity);
     },
 
+    moveRandom: function (highlightCallback, targetEntity) {
+      var getRandomInt = function (min, max) {
+          return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+      var randomDirection = getRandomInt(0,3);
+      const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
+        controller.moveDirection(myQueueItem, randomDirection);
+      }, targetEntity);
+      controller.addCommand(myQueueItem);
+    },
+
     moveDirection: function (highlightCallback, direction, targetEntity) {
       const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
         controller.moveDirection(myQueueItem, direction);
@@ -128,10 +139,7 @@ export function get(controller) {
     },
 
     turnRandom: function(highlightCallback, targetEntity) {
-      let randomInt = function (min, max) {
-        return Math.floor(Math.random() * (max - min)) + min;
-      };
-      if(randomInt(0,1) === 0)
+      if(Math.random()  > 0.5)
         controller.addCommand(new TurnCommand(controller, highlightCallback, 1, targetEntity));
       else
         controller.addCommand(new TurnCommand(controller, highlightCallback, -1, targetEntity));
@@ -146,27 +154,27 @@ export function get(controller) {
     },
 
     destroyBlock: function (highlightCallback, targetEntity) {
-      controller.queue.addCommand(new DestroyBlockCommand(controller, highlightCallback, targetEntity));
+      controller.addCommand(new DestroyBlockCommand(controller, highlightCallback, targetEntity));
     },
 
     placeBlock: function (highlightCallback, blockType) {
-      controller.queue.addCommand(new PlaceBlockCommand(controller, highlightCallback, blockType));
+      controller.addCommand(new PlaceBlockCommand(controller, highlightCallback, blockType));
     },
 
     placeInFront: function (highlightCallback, blockType) {
-      controller.queue.addCommand(new PlaceInFrontCommand(controller, highlightCallback, blockType));
+      controller.addCommand(new PlaceInFrontCommand(controller, highlightCallback, blockType));
     },
 
     tillSoil: function (highlightCallback) {
-      controller.queue.addCommand(new PlaceInFrontCommand(controller, highlightCallback, 'watering'));
+      controller.addCommand(new PlaceInFrontCommand(controller, highlightCallback, 'watering'));
     },
 
     whilePathAhead: function (highlightCallback, blockType, codeBlock) {
-      controller.queue.addCommand(new WhileCommand(controller, highlightCallback, blockType, codeBlock));
+      controller.addCommand(new WhileCommand(controller, highlightCallback, blockType, codeBlock));
     },
 
     ifBlockAhead: function (highlightCallback, blockType, codeBlock) {
-      controller.queue.addCommand(new IfBlockAheadCommand(controller, highlightCallback, blockType, codeBlock));
+      controller.addCommand(new IfBlockAheadCommand(controller, highlightCallback, blockType, codeBlock));
     },
     // -1 for infinite repeat
     repeat: function(highlightCallback, codeBlock, targetEntity, iteration) {
