@@ -127,6 +127,16 @@ export function get(controller) {
       controller.addCommand(new TurnCommand(controller, highlightCallback, direction === 'right' ? 1 : -1, targetEntity));
     },
 
+    turnRandom: function(highlightCallback, targetEntity) {
+      let randomInt = function (min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
+      };
+      if(randomInt(0,1) === 0)
+        controller.addCommand(new TurnCommand(controller, highlightCallback, 1, targetEntity));
+      else
+        controller.addCommand(new TurnCommand(controller, highlightCallback, -1, targetEntity));
+    },
+
     turnRight: function (highlightCallback, targetEntity) {
       controller.addCommand(new TurnCommand(controller, highlightCallback, 1, targetEntity));
     },

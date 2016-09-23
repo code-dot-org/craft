@@ -203,7 +203,7 @@ export default class BaseEntity {
 
     use(commandQueueItem, userEntity) {
         // default behavior for use ?
-        commandQueueItem.succeeded();
+        this.controller.events.forEach(e => e({ eventType: EventType.WhenUsed, targetType: this.type, eventSenderIdentifier: userEntity.identifier, targetIdentifier: this.identifier }));
     }
 
     updateDirection(direction) {

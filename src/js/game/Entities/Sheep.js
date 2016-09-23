@@ -10,4 +10,11 @@ export default class Sheep extends BaseEntity {
         this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex);
         this.Offset = [-22, -12];
     }
+
+    use(commandQueueItem, userEntity) {
+        // default behavior for use ?
+        super.use(commandQueueItem,userEntity);
+        this.controller.levelView.playShearSheepAnimationWithEntity(userEntity.position, userEntity.facing, this, () => {
+                commandQueueItem.succeeded();});
+    }
 }

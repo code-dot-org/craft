@@ -5,6 +5,7 @@ import MoveForwardCommand from "./CommandQueue/MoveForwardCommand.js";
 import TurnCommand from "./CommandQueue/TurnCommand.js";
 import WhileCommand from "./CommandQueue/WhileCommand.js";
 import IfBlockAheadCommand from "./CommandQueue/IfBlockAheadCommand.js";
+import CallbackCommand from "./CommandQueue/CallbackCommand.js";
 
 import EventType from "./Event/EventType.js";
 import FacingDirection from "./LevelMVC/FacingDirection.js";
@@ -467,8 +468,10 @@ class GameController {
       }
       // if there is a entity in front of the player
     } else if (frontEntity != null) {
-      frontEntity.use(commandQueueItem, player);
-      this.events.forEach(e => e({ eventType: EventType.WhenUsed, targetType: frontEntity.type, eventSenderIdentifier: player.identifier, targetIdentifier: frontEntity.identifier }));
+      // push use command to execute general use behavior of the entity before executing the event
+      var useCommand = new CallbackCommand(this,() => {},() => {frontEntity.use(useCommand, player); },frontEntity.identifier);
+      frontEntity.addCommand(useCommand);
+      commandQueueItem.succeeded();
     } else {
       this.levelView.playPunchDestroyAirAnimation(player.position, player.facing, this.levelModel.getMoveForwardPosition(), () => {
         this.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]);
