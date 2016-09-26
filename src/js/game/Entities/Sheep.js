@@ -13,8 +13,9 @@ export default class Sheep extends BaseEntity {
 
     use(commandQueueItem, userEntity) {
         // default behavior for use ?
-        super.use(commandQueueItem,userEntity);
         this.controller.levelView.playShearSheepAnimationWithEntity(userEntity.position, userEntity.facing, this, () => {
-                commandQueueItem.succeeded();});
+                commandQueueItem.succeeded();
+                super.use(commandQueueItem,userEntity);});
+        
     }
 }

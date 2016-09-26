@@ -280,7 +280,7 @@ class GameController {
 
   getEntity(target) {
     if (target === undefined)
-      target = 'player';
+      target = 'Player';
     return this.levelEntity.entityMap.get(target);
   }
 
@@ -296,29 +296,176 @@ class GameController {
    */
   moveAway(commandQueueItem, moveAwayFrom) {
     var target = commandQueueItem.target;
-    var entity = this.getEntity(target);
-    var moveAwayFromEntity = this.getEntity(moveAwayFrom);
-    if (entity !== undefined && moveAwayFromEntity !== undefined) {
-      entity.moveAway(commandQueueItem, moveAwayFromEntity);
-    } else {
-      commandQueueItem.failed();
+    var targetIsType = typeof(target) === 'string' && target !== 'Player';
+    var moveAwayFromIsType = typeof(moveAwayFrom) === 'string' && moveAwayFrom !== 'Player';
+    if( target === moveAwayFrom)
+    {
+      commandQueueItem.faild();
+      return;
+    }
+    // move away entity from entity
+    if(!targetIsType && !moveAwayFromIsType) {
+      var entity = this.getEntity(target);
+      var moveAwayFromEntity = this.getEntity(moveAwayFrom);
+      if (entity !== undefined && moveAwayFromEntity !== undefined) {
+        entity.moveAway(commandQueueItem, moveAwayFromEntity);
+      } else {
+        commandQueueItem.failed();
+      }
+    }
+    // move away type from entity
+    else if(targetIsType && !moveAwayFromIsType){
+      var targetEntities = this.getEntities(target);
+      var moveAwayFromEntity = this.getEntity(moveAwayFrom);
+      if(moveAwayFromEntity !== undefined)
+      {
+        for(var i = 0; i < targetEntities.length ; i++)
+        {
+          let newCommand = new CallbackCommand(this, ()=>{}, () => { this.moveAway(newCommand, moveAwayFrom) }, targetEntities[i].identifier);
+          targetEntities[i].addCommand(newCommand);
+        }
+        commandQueueItem.succeeded();
+      }
+      else{
+        commandQueueItem.failed();
+      }
+    }
+    // move away entity from type
+    else if(!targetIsType && moveAwayFromIsType){
+      var entity = this.getEntity(target);
+      var moveAwayFromEntities = this.getEntities(moveAwayFrom);
+      if( moveAwayFromEntities.length > 0)
+      {
+        var closestTarget = [entity.getDistance(moveAwayFromEntities[0]),0];
+        for(var i = 1 ; i < moveAwayFromEntities.length ; i++)
+        {
+          let distance = entity.getDistance(moveAwayFromEntities[i]);
+          if( distance < closestTarget[0])
+          {
+            closestTarget = [distance, i];
+          }
+        }
+        entity.moveAway(commandQueueItem,moveAwayFromEntities[closestTarget[1]]);
+      }
+      else {
+        commandQueueItem.failed();
+      }
+    }
+    // move away type from type
+    else{
+      var entities = this.getEntities(target);
+      var moveAwayFromEntities = this.getEntities(moveAwayFrom);
+      if( moveAwayFromEntities.length > 0 && entities.length > 0 ) {
+        for(var i = 0 ; i < entities.length; i++) {
+          var entity = entities[i];
+          var closestTarget = [entity.getDistance(moveAwayFromEntities[0]),0];
+          for(var j = 1 ; j < moveAwayFromEntities.length ; j++)
+          {
+            let distance = entity.getDistance(moveAwayFromEntities[j]);
+            if( distance < closestTarget[0])
+            {
+              closestTarget = [distance, j];
+            }
+          }
+          let newCommand = new CallbackCommand(this, ()=>{}, () => { this.moveAway(newCommand, moveAwayFromEntities[closestTarget[1]].identifier) }, entity.identifier);
+          entity.addCommand(newCommand);
+        }
+        commandQueueItem.succeeded();
+      }
+      else {
+        commandQueueItem.failed();
+      }
     }
   }
 
+
   /**
    * @param {any} commandQueueItem
-   * @param {any} moveTowardFrom (entity identifier)
+   * @param {any} moveTowardTo (entity identifier)
    * 
    * @memberOf GameController
    */
-  moveToward(commandQueueItem, moveTowardFrom) {
+  moveToward(commandQueueItem, moveTowardTo) {
     var target = commandQueueItem.target;
-    var entity = this.getEntity(target);
-    var moveTowardFromEntity = this.getEntity(moveTowardFrom);
-    if (entity !== undefined && moveTowardFromEntity !== undefined) {
-      entity.moveToward(commandQueueItem, moveTowardFromEntity);
-    } else {
-      commandQueueItem.failed();
+    var targetIsType = typeof(target) === 'string' && target !== 'Player';
+    var moveTowardToIsType = typeof(moveTowardTo) === 'string' && moveTowardTo !== 'Player';
+    if( target === moveTowardTo)
+    {
+      commandQueueItem.faild();
+      return;
+    }
+    // move toward entity to entity
+    if(!targetIsType && !moveTowardToIsType) {
+      var entity = this.getEntity(target);
+      var moveTowardToEntity = this.getEntity(moveTowardTo);
+      if (entity !== undefined && moveTowardToEntity !== undefined) {
+        entity.moveToward(commandQueueItem, moveTowardToEntity);
+      } else {
+        commandQueueItem.failed();
+      }
+    }
+    // move toward type to entity
+    else if(targetIsType && !moveTowardToIsType){
+      var targetEntities = this.getEntities(target);
+      var moveTowardToEntity = this.getEntity(moveTowardTo);
+      if(moveTowardToEntity !== undefined)
+      {
+        for(var i = 0; i < targetEntities.length ; i++)
+        {
+          let newCommand = new CallbackCommand(this, ()=>{}, () => { this.moveToward(newCommand, moveTowardTo) }, targetEntities[i].identifier);
+          targetEntities[i].addCommand(newCommand);
+        }
+        commandQueueItem.succeeded();
+      }
+      else{
+        commandQueueItem.failed();
+      }
+    }
+    // move toward entity to type
+    else if(!targetIsType && moveTowardToIsType){
+      var entity = this.getEntity(target);
+      var moveTowardToEntities = this.getEntities(moveTowardTo);
+      if( moveTowardToEntities.length > 0)
+      {
+        var closestTarget = [entity.getDistance(moveTowardToEntities[0]),0];
+        for(var i = 1 ; i < moveTowardToEntities.length ; i++)
+        {
+          let distance = entity.getDistance(moveTowardToEntities[i]);
+          if( distance < closestTarget[0])
+          {
+            closestTarget = [distance, i];
+          }
+        }
+        entity.moveToward(commandQueueItem,moveTowardToEntities[closestTarget[1]]);
+      }
+      else {
+        commandQueueItem.failed();
+      }
+    }
+    // move toward type to type
+    else{
+      var entities = this.getEntities(target);
+      var moveTowardToEntities = this.getEntities(moveTowardTo);
+      if( moveTowardToEntities.length > 0 && entities.length > 0 ) {
+        for(var i = 0 ; i < entities.length; i++) {
+          var entity = entities[i];
+          var closestTarget = [entity.getDistance(moveTowardToEntities[0]),0];
+          for(var j = 1 ; j < moveTowardToEntities.length ; j++)
+          {
+            let distance = entity.getDistance(moveTowardToEntities[j]);
+            if( distance < closestTarget[0])
+            {
+              closestTarget = [distance, j];
+            }
+          }
+          let newCommand = new CallbackCommand(this, ()=>{}, () => { this.moveToward(newCommand, moveTowardToEntities[closestTarget[1]].identifier) }, entity.identifier);
+          entity.addCommand(newCommand);
+        }
+        commandQueueItem.succeeded();
+      }
+      else {
+        commandQueueItem.failed();
+      }
     }
   }
 
@@ -728,8 +875,14 @@ class GameController {
 
   addCommand(commandQueueItem) {
     var target = this.getEntity(commandQueueItem.target);
+    // there is a target, push command to the specific target
     if (target !== undefined)
       target.addCommand(commandQueueItem);
+    else
+    {
+      this.queue.addCommand(commandQueueItem);
+      this.queue.begin();
+    }
   }
 
   startDay(commandQueueItem) {

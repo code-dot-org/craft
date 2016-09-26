@@ -2,7 +2,7 @@ import BaseEntity from "./BaseEntity.js"
 
 export default class Player extends BaseEntity {
   constructor(controller, type, x, y, name, isOnBlock, facing) {
-    super(controller, type, 'player', x, y, facing);
+    super(controller, type, 'Player', x, y, facing);
     this.name = name;
     this.isOnBlock = isOnBlock;
     this.inventory = {};
@@ -53,7 +53,6 @@ export default class Player extends BaseEntity {
   }
 
   bump(commandQueueItem) {
-
     var levelView = this.controller.levelView,
       levelModel = this.controller.levelModel;
     if (levelModel.isForwardBlockOfType("creeper")) {

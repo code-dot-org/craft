@@ -160,6 +160,11 @@ export default class AssetLoader {
         pngPath: `${this.assetRoot}images/TNT.png`,
         jsonPath: `${this.assetRoot}images/TNT.json`
       },
+      burningInSun: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/BurningInSun.png`,
+        jsonPath: `${this.assetRoot}images/BurningInSun.json`
+      },
       dig_wood1: {
         type: 'sound',
         mp3: `${this.assetRoot}audio/dig_wood1.mp3`,

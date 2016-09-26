@@ -209,4 +209,8 @@ export default class BaseEntity {
     updateDirection(direction) {
 
     }
+
+    getDistance(entity) {
+        return Math.abs(Math.pow(this.position[0] - entity.position[0],2) + Math.pow(this.position[1] - entity.position[1],2));
+    }
 }
