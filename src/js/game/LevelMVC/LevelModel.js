@@ -481,7 +481,7 @@ export default class LevelModel {
         result.push("frontEntity");
         result.push(frontEntity);
       }
-      result[0] = (this.actionPlane[blockIndex].isWalkable || (this.player.isOnBlock && !this.actionPlane[blockIndex].isEmpty)) && (frontEntity === undefined);
+      result[0] = (this.actionPlane[blockIndex].isWalkable || (entity.isOnBlock && !this.actionPlane[blockIndex].isEmpty)) && (frontEntity === undefined);
     }
     else
       result.push("outBound");
@@ -963,6 +963,15 @@ export default class LevelModel {
     if (x >= 0 && x < this.planeWidth && y >= 0 && y < this.planeHeight) {
       let blockIndex = this.yToIndex(y) + x;
       this.fowPlane[blockIndex] = "";
+    }
+  }
+
+  clearFow() {
+    for(var x = 0 ; x < this.planeWidth ; x++) {
+      for(var y = 0; y < this.planeHeight; y++) {
+        let blockIndex = this.yToIndex(y) + x;
+        this.fowPlane[blockIndex] = "";
+      }
     }
   }
 

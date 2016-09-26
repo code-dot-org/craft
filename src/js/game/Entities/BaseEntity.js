@@ -30,7 +30,7 @@ export default class BaseEntity {
     playMoveForwardAnimation(position, facing, commandQueueItem) {
         var tween;
         var zOrderYIndex = position[1] + (facing === FacingDirection.Up ? 1 : 0);
-        this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex) + 5;
+        this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex) +1;
         tween = this.controller.levelView.addResettableTween(this.sprite).to({
             x: (this.offset[0] + 40 * position[0]), y: (this.offset[1] + 40 * position[1])
         }, 200, Phaser.Easing.Linear.None);
@@ -210,19 +210,3 @@ export default class BaseEntity {
 
     }
 }
-
-/*
-
-
-        switch(frontEntity.type)
-        {
-          case "sheep":
-            this.levelView.playShearSheepAnimationWithEntity(player.position, player.facing, frontEntity, () => {
-                commandQueueItem.succeeded();
-              });
-              break;
-            default:
-              commandQueueItem.succeeded();
-        }
-
-*/

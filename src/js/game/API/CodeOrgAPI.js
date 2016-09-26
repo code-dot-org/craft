@@ -197,6 +197,27 @@ export function get(controller) {
         controller.destroyEntity(callbackCommand, identifier);
       });
       controller.addCommand(callbackCommand);
+    },
+
+    startDay: function (highlightCallback) {
+      var callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
+        controller.startDay(callbackCommand);
+      });
+      controller.addCommand(callbackCommand);
+    },
+
+    startNight: function (highlightCallback) {
+      var callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
+        controller.startNight(callbackCommand);
+      });
+      controller.addCommand(callbackCommand);
+    },
+
+    wait: function (highlightCallback, time) {
+      var callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
+        setTimeout(() =>{ callbackCommand.succeeded() }, time*1000);
+      });
+      controller.addCommand(callbackCommand);
     }
   };
 }

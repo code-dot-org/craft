@@ -164,7 +164,10 @@
       placeInFront: codeOrgAPI.placeInFront.bind(null, function(){}),
       spawnEntity: codeOrgAPI.spawnEntity.bind(null, function(){}),
       destroyEntity: codeOrgAPI.destroyEntity.bind(null, function(){}),
-      flashEntity: codeOrgAPI.flashEntity.bind(null,function(){})
+      flashEntity: codeOrgAPI.flashEntity.bind(null,function(){}),
+      startDay: codeOrgAPI.startDay.bind(null,function(){}),
+      startNight: codeOrgAPI.startNight.bind(null,function(){}),
+      wait: codeOrgAPI.wait.bind(null,function(){})
     });
     codeOrgAPI.startAttempt(function (result) {
       $('#level-feedback').html(result ? "Success!" : "Failure").css("color", result ? "green" : "red");

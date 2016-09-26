@@ -284,6 +284,10 @@ class GameController {
     return this.levelEntity.entityMap.get(target);
   }
 
+  getEntities(type) {
+    return this.levelEntity.getEntitiesOfType(type);
+  }
+
   /**
    * @param {any} commandQueueItem
    * @param {any} moveAwayFrom (entity identifier)
@@ -726,6 +730,36 @@ class GameController {
     var target = this.getEntity(commandQueueItem.target);
     if (target !== undefined)
       target.addCommand(commandQueueItem);
+  }
+
+  startDay(commandQueueItem) {
+    if(this.levelModel.isDaytime){
+      commandQueueItem.failed();
+      if(this.DEBUG)
+        this.game.debug.text("Impossible to start day since it's already day time\n");
+    }
+    else{
+      this.levelModel.isDaytime = true;
+      this.levelModel.clearFow();
+      this.levelView.updateFowPlane(this.levelModel.fowPlane);
+      this.events.forEach(e => e({ eventType: EventType.WhenDay}));
+      commandQueueItem.succeeded();
+    }
+  }
+
+  startNight(commandQueueItem) {
+    if(!this.levelModel.isDaytime) {
+      commandQueueItem.failed();
+      if(this.DEBUG)
+        this.game.debug.text("Impossible to start night since it's already night time\n");
+    }
+    else {
+      this.levelModel.isDaytime = false;
+      this.levelModel.computeFowPlane();
+      this.levelView.updateFowPlane(this.levelModel.fowPlane);
+      this.events.forEach(e => e({ eventType: EventType.WhenNight}));
+      commandQueueItem.succeeded();
+    }
   }
 }
 

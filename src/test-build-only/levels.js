@@ -173,10 +173,10 @@ window.demoLevels = {
   3: {
     instructions: "Time to shear some sheep! Walk to both of the sheep and get their wool.",
 
-    earlyLoadAssetPacks: ['levelThreeAssets', 'playerSteve'],
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
 
     assetPacks: {
-      beforeLoad: ['levelThreeAssets', 'playerSteve'],
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
       afterLoad: []
     },
 
@@ -775,6 +775,7 @@ window.demoLevels = {
     actionPlane: ["stone", "stone", "stone", "stone", "stone", "stone", "stone", "", "stone", "stone", "stone", "stone", "", "", "", "", "", "", "stone", "stone", "stone", "", "", "", "", "", "", "", "stone", "stone", "stone", "", "", "", "", "", "", "", "stone", "stone", "stone", "", "stone", "stone", "oreCoal", "oreCoal", "stone", "oreIron", "oreIron", "stone", "stone", "", "", "", "", "", "", "", "", "", "stone", "", "", "", "", "", "stone", "", "stone", "stone", "stone", "stone", "", "", "stone", "", "", "", "stone", "stone", "stone", "stone", "", "", "stone", "stone", "", "", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone", "stone"],
     playerStartPosition: [1, 4],
     playerStartDirection: 1,
+    isEventLevel: true,
     isDaytime: false,
     verificationFunction: function (verificationAPI) {
       return true;
