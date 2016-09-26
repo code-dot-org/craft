@@ -288,6 +288,10 @@ class GameController {
     return this.levelEntity.getEntitiesOfType(type);
   }
 
+  isType(target) {
+    return typeof(target) === 'string' && target !== 'Player';
+  }
+
   /**
    * @param {any} commandQueueItem
    * @param {any} moveAwayFrom (entity identifier)
@@ -296,8 +300,8 @@ class GameController {
    */
   moveAway(commandQueueItem, moveAwayFrom) {
     var target = commandQueueItem.target;
-    var targetIsType = typeof(target) === 'string' && target !== 'Player';
-    var moveAwayFromIsType = typeof(moveAwayFrom) === 'string' && moveAwayFrom !== 'Player';
+    var targetIsType = this.isType(target);
+    var moveAwayFromIsType = this.isType(moveAwayFrom);
     if( target === moveAwayFrom)
     {
       commandQueueItem.faild();
@@ -387,8 +391,8 @@ class GameController {
    */
   moveToward(commandQueueItem, moveTowardTo) {
     var target = commandQueueItem.target;
-    var targetIsType = typeof(target) === 'string' && target !== 'Player';
-    var moveTowardToIsType = typeof(moveTowardTo) === 'string' && moveTowardTo !== 'Player';
+    var targetIsType = this.isType(target);
+    var moveTowardToIsType = this.isType(moveTowardTo);
     if( target === moveTowardTo)
     {
       commandQueueItem.faild();
@@ -498,14 +502,24 @@ class GameController {
 
   flashEntity(commandQueueItem) {
     var target = commandQueueItem.target;
-    var entity = this.getEntity(target);
-    if (entity !== undefined) {
-      var delay = this.levelView.flashSpriteToWhite(entity.sprite);
-      this.delayBy(delay, () => {
-        commandQueueItem.succeeded();
-      });
+    if(!this.isType(target))
+    {
+      var entity = this.getEntity(target);
+      if (entity !== undefined) {
+        var delay = this.levelView.flashSpriteToWhite(entity.sprite);
+        this.delayBy(delay, () => {
+          commandQueueItem.succeeded();
+        });
+      } else {
+        commandQueueItem.failed();
+      }
     } else {
-      commandQueueItem.failed();
+      var entities = this.getEntities(target);
+      for(var i = 0 ; i < entities.length ; i++) {
+        let newCommand = new CallbackCommand(this, ()=>{}, () => { this.flashEntity(newCommand) }, entities[i].identifier);
+        entities[i].addCommand(newCommand);
+      }
+      commandQueueItem.succeeded();
     }
   }
   
