@@ -30,7 +30,7 @@ export default class BaseEntity {
     playMoveForwardAnimation(position, facing, commandQueueItem) {
         var tween;
         var zOrderYIndex = position[1] + (facing === FacingDirection.Up ? 1 : 0);
-        this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex) +1;
+        this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex) + 1;
         tween = this.controller.levelView.addResettableTween(this.sprite).to({
             x: (this.offset[0] + 40 * position[0]), y: (this.offset[1] + 40 * position[1])
         }, 200, Phaser.Easing.Linear.None);
@@ -211,6 +211,6 @@ export default class BaseEntity {
     }
 
     getDistance(entity) {
-        return Math.abs(Math.pow(this.position[0] - entity.position[0],2) + Math.pow(this.position[1] - entity.position[1],2));
+        return Math.abs(Math.pow(this.position[0] - entity.position[0], 2) + Math.pow(this.position[1] - entity.position[1], 2));
     }
 }

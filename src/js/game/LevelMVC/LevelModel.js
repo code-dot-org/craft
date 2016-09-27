@@ -967,8 +967,8 @@ export default class LevelModel {
   }
 
   clearFow() {
-    for(var x = 0 ; x < this.planeWidth ; x++) {
-      for(var y = 0; y < this.planeHeight; y++) {
+    for (var x = 0; x < this.planeWidth; x++) {
+      for (var y = 0; y < this.planeHeight; y++) {
         let blockIndex = this.yToIndex(y) + x;
         this.fowPlane[blockIndex] = "";
       }

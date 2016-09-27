@@ -89,60 +89,63 @@ export function get(controller) {
     },
 
     moveRandom: function (highlightCallback, targetEntity) {
-      var getRandomInt = function (min, max) {
-          return Math.floor(Math.random() * (max - min + 1)) + min;
-      }
-      var randomDirection = getRandomInt(0,3);
-      const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
-        controller.moveDirection(myQueueItem, randomDirection);
+      const callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
+        controller.moveRandom(callbackCommand);
       }, targetEntity);
-      controller.addCommand(myQueueItem);
+      controller.addCommand(callbackCommand);
     },
 
     moveDirection: function (highlightCallback, direction, targetEntity) {
-      const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
-        controller.moveDirection(myQueueItem, direction);
+      const callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
+        controller.moveDirection(callbackCommand, direction);
       }, targetEntity);
-      controller.addCommand(myQueueItem);
+      controller.addCommand(callbackCommand);
     },
 
     moveAway: function (highlightCallback, targetEntity, moveAwayFrom) {
-      const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
-        controller.moveAway(myQueueItem, moveAwayFrom);
+      const callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
+        controller.moveAway(callbackCommand, moveAwayFrom);
       }, targetEntity);
-      controller.addCommand(myQueueItem);
+      controller.addCommand(callbackCommand);
     },
 
-    moveToward: function (highlightCallback,targetEntity, moveTowardTo) {
-      const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
-        controller.moveToward(myQueueItem, moveTowardTo);
+    moveToward: function (highlightCallback, targetEntity, moveTowardTo) {
+      const callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
+        controller.moveToward(callbackCommand, moveTowardTo);
       }, targetEntity);
-      controller.addCommand(myQueueItem);
+      controller.addCommand(callbackCommand);
     },
 
     flashEntity: function (highlightCallback, targetEntity) {
-      const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
-        controller.flashEntity(myQueueItem);
+      const callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
+        controller.flashEntity(callbackCommand);
       }, targetEntity);
-      controller.addCommand(myQueueItem);
+      controller.addCommand(callbackCommand);
+    },
+
+    explodeEntity: function (highlightCallback, targetEntity) {
+      const callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
+        controller.explodeEntity(callbackCommand);
+      }, targetEntity);
+      controller.addCommand(callbackCommand);
     },
 
     playSound: function (highlightCallback, sound) {
-      const myQueueItem = new CallbackCommand(controller, highlightCallback, () => {
-        controller.playSound(myQueueItem, sound);
+      const callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
+        controller.playSound(callbackCommand, sound);
       });
-      controller.addCommand(myQueueItem);
+      controller.addCommand(callbackCommand);
     },
 
     turn: function (highlightCallback, direction, targetEntity) {
       controller.addCommand(new TurnCommand(controller, highlightCallback, direction === 'right' ? 1 : -1, targetEntity));
     },
 
-    turnRandom: function(highlightCallback, targetEntity) {
-      if(Math.random()  > 0.5)
-        controller.addCommand(new TurnCommand(controller, highlightCallback, 1, targetEntity));
-      else
-        controller.addCommand(new TurnCommand(controller, highlightCallback, -1, targetEntity));
+    turnRandom: function (highlightCallback, targetEntity) {
+      const callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
+        controller.turnRandom(callbackCommand);
+      }, targetEntity);
+      controller.addCommand(callbackCommand);
     },
 
     turnRight: function (highlightCallback, targetEntity) {
@@ -177,7 +180,7 @@ export function get(controller) {
       controller.addCommand(new IfBlockAheadCommand(controller, highlightCallback, blockType, codeBlock));
     },
     // -1 for infinite repeat
-    repeat: function(highlightCallback, codeBlock, iteration, targetEntity) {
+    repeat: function (highlightCallback, codeBlock, iteration, targetEntity) {
       controller.addCommand(new RepeatCommand(controller, highlightCallback, codeBlock, iteration, targetEntity));
     },
 
@@ -185,16 +188,16 @@ export function get(controller) {
       return controller.getScreenshot();
     },
 
-    spawnEntity: function (highlightCallback, identifier, type, spawnDirection, facing) {
+    spawnEntity: function (highlightCallback, targetEntity, type, spawnDirection, facing) {
       var callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
-        controller.spawnEntity(callbackCommand, identifier, type, spawnDirection, facing);
+        controller.spawnEntity(callbackCommand, targetEntity, type, spawnDirection, facing);
       });
       controller.addCommand(callbackCommand);
     },
 
-    destroyEntity: function (highlightCallback, identifier) {
+    destroyEntity: function (highlightCallback, targetEntity) {
       var callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
-        controller.destroyEntity(callbackCommand, identifier);
+        controller.destroyEntity(callbackCommand, targetEntity);
       });
       controller.addCommand(callbackCommand);
     },
@@ -213,10 +216,10 @@ export function get(controller) {
       controller.addCommand(callbackCommand);
     },
 
-    wait: function (highlightCallback, time) {
+    wait: function (highlightCallback, targetEntity, time) {
       var callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
-        setTimeout(() =>{ callbackCommand.succeeded() }, time*1000);
-      });
+        controller.wait(callbackCommand, time)
+      }, targetEntity);
       controller.addCommand(callbackCommand);
     }
   };

@@ -178,28 +178,28 @@ class GameController {
       var dummyFunc = function () {
         console.log("highlight move forward command.");
       };
-      this.codeOrgAPI.moveDirection(function(){}, FacingDirection.Up);
+      this.codeOrgAPI.moveDirection(function () { }, FacingDirection.Up);
     });
 
     this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onUp.add(() => {
       var dummyFunc = function () {
         console.log("highlight turn right command.");
       };
-      this.codeOrgAPI.moveDirection(function(){}, FacingDirection.Right);
+      this.codeOrgAPI.moveDirection(function () { }, FacingDirection.Right);
     });
 
     this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT).onUp.add(() => {
       var dummyFunc = function () {
         console.log("highlight turn left command.");
       };
-      this.codeOrgAPI.moveDirection(function(){}, FacingDirection.Left);
+      this.codeOrgAPI.moveDirection(function () { }, FacingDirection.Left);
     });
 
     this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN).onUp.add(() => {
       var dummyFunc = function () {
         console.log("highlight turn left command.");
       };
-      this.codeOrgAPI.moveDirection(function(){}, FacingDirection.Down);
+      this.codeOrgAPI.moveDirection(function () { }, FacingDirection.Down);
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.P).onUp.add(() => {
       var dummyFunc = function () {
@@ -282,7 +282,7 @@ class GameController {
     if (target === undefined)
       target = 'Player';
     let entity = this.levelEntity.entityMap.get(target);
-    if(entity === undefined)
+    if (entity === undefined)
       this.printErrorMsg("Debug GetEntity: there is no entity : " + target + "\n");
     return entity;
   }
@@ -292,12 +292,12 @@ class GameController {
   }
 
   isType(target) {
-    return typeof(target) === 'string' && target !== 'Player';
+    return typeof (target) === 'string' && target !== 'Player';
   }
 
   printErrorMsg(msg) {
-    if(this.DEBUG)
-        this.game.debug.text(msg);
+    if (this.DEBUG)
+      this.game.debug.text(msg);
   }
 
   /**
@@ -310,69 +310,61 @@ class GameController {
     var target = commandQueueItem.target;
     var targetIsType = this.isType(target);
     var moveAwayFromIsType = this.isType(moveAwayFrom);
-    if( target === moveAwayFrom)
-    {
+    if (target === moveAwayFrom) {
       this.printErrorMsg("Debug MoveAway: Can't move away entity from itself\n");
       commandQueueItem.failed();
       return;
     }
     // move away entity from entity
-    if(!targetIsType && !moveAwayFromIsType) {
+    if (!targetIsType && !moveAwayFromIsType) {
       var entity = this.getEntity(target);
       var moveAwayFromEntity = this.getEntity(moveAwayFrom);
       entity.moveAway(commandQueueItem, moveAwayFromEntity);
     }
     // move away type from entity
-    else if(targetIsType && !moveAwayFromIsType){
+    else if (targetIsType && !moveAwayFromIsType) {
       var targetEntities = this.getEntities(target);
       var moveAwayFromEntity = this.getEntity(moveAwayFrom);
-      if(moveAwayFromEntity !== undefined)
-      {
-        for(var i = 0; i < targetEntities.length ; i++)
-        {
-          let newCommand = new CallbackCommand(this, ()=>{}, () => { this.moveAway(newCommand, moveAwayFrom) }, targetEntities[i].identifier);
-          targetEntities[i].addCommand(newCommand);
+      if (moveAwayFromEntity !== undefined) {
+        for (var i = 0; i < targetEntities.length; i++) {
+          let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveAway(callbackCommand, moveAwayFrom) }, targetEntities[i].identifier);
+          targetEntities[i].addCommand(callbackCommand);
         }
       }
       commandQueueItem.succeeded();
     }
     // move away entity from type
-    else if(!targetIsType && moveAwayFromIsType){
+    else if (!targetIsType && moveAwayFromIsType) {
       var entity = this.getEntity(target);
       var moveAwayFromEntities = this.getEntities(moveAwayFrom);
-      if( moveAwayFromEntities.length > 0)
-      {
-        var closestTarget = [entity.getDistance(moveAwayFromEntities[0]),0];
-        for(var i = 1 ; i < moveAwayFromEntities.length ; i++)
-        {
+      if (moveAwayFromEntities.length > 0) {
+        var closestTarget = [entity.getDistance(moveAwayFromEntities[0]), 0];
+        for (var i = 1; i < moveAwayFromEntities.length; i++) {
           let distance = entity.getDistance(moveAwayFromEntities[i]);
-          if( distance < closestTarget[0])
-          {
+          if (distance < closestTarget[0]) {
             closestTarget = [distance, i];
           }
         }
-        entity.moveAway(commandQueueItem,moveAwayFromEntities[closestTarget[1]]);
+        entity.moveAway(commandQueueItem, moveAwayFromEntities[closestTarget[1]]);
       }
       commandQueueItem.succeeded();
     }
     // move away type from type
-    else{
+    else {
       var entities = this.getEntities(target);
       var moveAwayFromEntities = this.getEntities(moveAwayFrom);
-      if( moveAwayFromEntities.length > 0 && entities.length > 0 ) {
-        for(var i = 0 ; i < entities.length; i++) {
+      if (moveAwayFromEntities.length > 0 && entities.length > 0) {
+        for (var i = 0; i < entities.length; i++) {
           var entity = entities[i];
-          var closestTarget = [entity.getDistance(moveAwayFromEntities[0]),0];
-          for(var j = 1 ; j < moveAwayFromEntities.length ; j++)
-          {
+          var closestTarget = [entity.getDistance(moveAwayFromEntities[0]), 0];
+          for (var j = 1; j < moveAwayFromEntities.length; j++) {
             let distance = entity.getDistance(moveAwayFromEntities[j]);
-            if( distance < closestTarget[0])
-            {
+            if (distance < closestTarget[0]) {
               closestTarget = [distance, j];
             }
           }
-          let newCommand = new CallbackCommand(this, ()=>{}, () => { this.moveAway(newCommand, moveAwayFromEntities[closestTarget[1]].identifier) }, entity.identifier);
-          entity.addCommand(newCommand);
+          let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveAway(callbackCommand, moveAwayFromEntities[closestTarget[1]].identifier) }, entity.identifier);
+          entity.addCommand(callbackCommand);
         }
         commandQueueItem.succeeded();
       }
@@ -390,69 +382,61 @@ class GameController {
     var target = commandQueueItem.target;
     var targetIsType = this.isType(target);
     var moveTowardToIsType = this.isType(moveTowardTo);
-    if( target === moveTowardTo)
-    {
+    if (target === moveTowardTo) {
       this.printErrorMsg("Debug MoveToward: Can't move toward entity to itself\n");
       commandQueueItem.failed();
       return;
     }
     // move toward entity to entity
-    if(!targetIsType && !moveTowardToIsType) {
+    if (!targetIsType && !moveTowardToIsType) {
       var entity = this.getEntity(target);
       var moveTowardToEntity = this.getEntity(moveTowardTo);
       entity.moveToward(commandQueueItem, moveTowardToEntity);
     }
     // move toward type to entity
-    else if(targetIsType && !moveTowardToIsType){
+    else if (targetIsType && !moveTowardToIsType) {
       var targetEntities = this.getEntities(target);
       var moveTowardToEntity = this.getEntity(moveTowardTo);
-      if(moveTowardToEntity !== undefined)
-      {
-        for(var i = 0; i < targetEntities.length ; i++)
-        {
-          let newCommand = new CallbackCommand(this, ()=>{}, () => { this.moveToward(newCommand, moveTowardTo) }, targetEntities[i].identifier);
-          targetEntities[i].addCommand(newCommand);
+      if (moveTowardToEntity !== undefined) {
+        for (var i = 0; i < targetEntities.length; i++) {
+          let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveToward(callbackCommand, moveTowardTo) }, targetEntities[i].identifier);
+          targetEntities[i].addCommand(callbackCommand);
         }
         commandQueueItem.succeeded();
       }
     }
     // move toward entity to type
-    else if(!targetIsType && moveTowardToIsType){
+    else if (!targetIsType && moveTowardToIsType) {
       var entity = this.getEntity(target);
       var moveTowardToEntities = this.getEntities(moveTowardTo);
-      if( moveTowardToEntities.length > 0)
-      {
-        var closestTarget = [entity.getDistance(moveTowardToEntities[0]),0];
-        for(var i = 1 ; i < moveTowardToEntities.length ; i++)
-        {
+      if (moveTowardToEntities.length > 0) {
+        var closestTarget = [entity.getDistance(moveTowardToEntities[0]), 0];
+        for (var i = 1; i < moveTowardToEntities.length; i++) {
           let distance = entity.getDistance(moveTowardToEntities[i]);
-          if( distance < closestTarget[0])
-          {
+          if (distance < closestTarget[0]) {
             closestTarget = [distance, i];
           }
         }
-        entity.moveToward(commandQueueItem,moveTowardToEntities[closestTarget[1]]);
+        entity.moveToward(commandQueueItem, moveTowardToEntities[closestTarget[1]]);
       }
       commandQueueItem.succeeded();
     }
     // move toward type to type
-    else{
+    else {
       var entities = this.getEntities(target);
       var moveTowardToEntities = this.getEntities(moveTowardTo);
-      if( moveTowardToEntities.length > 0 && entities.length > 0 ) {
-        for(var i = 0 ; i < entities.length; i++) {
+      if (moveTowardToEntities.length > 0 && entities.length > 0) {
+        for (var i = 0; i < entities.length; i++) {
           var entity = entities[i];
-          var closestTarget = [entity.getDistance(moveTowardToEntities[0]),0];
-          for(var j = 1 ; j < moveTowardToEntities.length ; j++)
-          {
+          var closestTarget = [entity.getDistance(moveTowardToEntities[0]), 0];
+          for (var j = 1; j < moveTowardToEntities.length; j++) {
             let distance = entity.getDistance(moveTowardToEntities[j]);
-            if( distance < closestTarget[0])
-            {
+            if (distance < closestTarget[0]) {
               closestTarget = [distance, j];
             }
           }
-          let newCommand = new CallbackCommand(this, ()=>{}, () => { this.moveToward(newCommand, moveTowardToEntities[closestTarget[1]].identifier) }, entity.identifier);
-          entity.addCommand(newCommand);
+          let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveToward(callbackCommand, moveTowardToEntities[closestTarget[1]].identifier) }, entity.identifier);
+          entity.addCommand(callbackCommand);
         }
         commandQueueItem.succeeded();
       }
@@ -461,17 +445,15 @@ class GameController {
 
   moveForward(commandQueueItem) {
     var target = commandQueueItem.target;
-    if(!this.isType(target))
-    {
+    if (!this.isType(target)) {
       var entity = this.getEntity(target);
       entity.moveForward(commandQueueItem);
     }
     else {
       var entities = this.getEntities(target);
-      for(var i = 0 ; i < entities.length ; i++)
-      {
-        let newCommand = new CallbackCommand(this, ()=>{}, () => { this.moveForward(newCommand)}, entities[i].identifier);
-        entities[i].addCommand(newCommand);
+      for (var i = 0; i < entities.length; i++) {
+        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveForward(callbackCommand) }, entities[i].identifier);
+        entities[i].addCommand(callbackCommand);
       }
       commandQueueItem.succeeded();
     }
@@ -479,17 +461,34 @@ class GameController {
 
   moveDirection(commandQueueItem, direction) {
     var target = commandQueueItem.target;
-    if(!this.isType(target))
-    {
+    if (!this.isType(target)) {
       var entity = this.getEntity(target);
       entity.moveDirection(commandQueueItem, direction);
     }
-    else{
+    else {
       var entities = this.getEntities(target);
-      for(var i = 0 ; i < entities.length ; i++)
-      {
-        let newCommand = new CallbackCommand(this, ()=>{}, () => { this.moveDirection(newCommand, direction)}, entities[i].identifier);
-        entities[i].addCommand(newCommand);
+      for (var i = 0; i < entities.length; i++) {
+        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveDirection(callbackCommand, direction) }, entities[i].identifier);
+        entities[i].addCommand(callbackCommand);
+      }
+      commandQueueItem.succeeded();
+    }
+  }
+
+  moveRandom(commandQueueItem) {
+    var target = commandQueueItem.target;
+    var getRandomInt = function (min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    if (!this.isType(target)) {
+      var entity = this.getEntity(target);
+      entity.moveDirection(commandQueueItem, getRandomInt(0, 3));
+    }
+    else {
+      var entities = this.getEntities(target);
+      for (var i = 0; i < entities.length; i++) {
+        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveDirection(callbackCommand, getRandomInt(0, 3)) }, entities[i].identifier);
+        entities[i].addCommand(callbackCommand);
       }
       commandQueueItem.succeeded();
     }
@@ -497,17 +496,34 @@ class GameController {
 
   turn(commandQueueItem, direction) {
     var target = commandQueueItem.target;
-    if(!this.isType(target))
-    {
+    if (!this.isType(target)) {
       var entity = this.getEntity(target);
       entity.turn(commandQueueItem, direction);
     }
     else {
       var entities = this.getEntities(target);
-      for(var i = 0 ; i < entities.length ; i++)
-      {
-        let newCommand = new CallbackCommand(this, ()=>{}, () => { this.turn(newCommand, direction)}, entities[i].identifier);
-        entities[i].addCommand(newCommand);
+      for (var i = 0; i < entities.length; i++) {
+        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.turn(callbackCommand, direction) }, entities[i].identifier);
+        entities[i].addCommand(callbackCommand);
+      }
+      commandQueueItem.succeeded();
+    }
+  }
+
+  turnRandom(commandQueueItem) {
+    var target = commandQueueItem.target;
+    var getRandomInt = function (min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    if (!this.isType(target)) {
+      var entity = this.getEntity(target);
+      entity.turn(commandQueueItem, getRandomInt(0, 3));
+    }
+    else {
+      var entities = this.getEntities(target);
+      for (var i = 0; i < entities.length; i++) {
+        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.turn(callbackCommand, getRandomInt(0, 3)) }, entities[i].identifier);
+        entities[i].addCommand(callbackCommand);
       }
       commandQueueItem.succeeded();
     }
@@ -515,23 +531,53 @@ class GameController {
 
   flashEntity(commandQueueItem) {
     var target = commandQueueItem.target;
-    if(!this.isType(target))
-    {
+    if (!this.isType(target)) {
       var entity = this.getEntity(target);
       var delay = this.levelView.flashSpriteToWhite(entity.sprite);
       this.delayBy(delay, () => {
         commandQueueItem.succeeded();
-        });
+      });
     } else {
       var entities = this.getEntities(target);
-      for(var i = 0 ; i < entities.length ; i++) {
-        let newCommand = new CallbackCommand(this, ()=>{}, () => { this.flashEntity(newCommand) }, entities[i].identifier);
-        entities[i].addCommand(newCommand);
+      for (var i = 0; i < entities.length; i++) {
+        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.flashEntity(callbackCommand) }, entities[i].identifier);
+        entities[i].addCommand(callbackCommand);
       }
       commandQueueItem.succeeded();
     }
   }
-  
+
+
+  explodeEntity(commandQueueItem) {
+    var target = commandQueueItem.target;
+    if (!this.isType(target)) {
+      var entity = this.getEntity(target);
+      this.levelView.playExplosionCloudAnimation(entity.position);
+      commandQueueItem.succeeded();
+    } else {
+      var entities = this.getEntities(target);
+      for (var i = 0; i < entities.length; i++) {
+        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.explodeEntity(callbackCommand) }, entities[i].identifier);
+        entities[i].addCommand(callbackCommand);
+      }
+      commandQueueItem.succeeded();
+    }
+  }
+
+  wait(commandQueueItem, time) {
+    var target = commandQueueItem.target;
+    if (!this.isType(target)) {
+      setTimeout(() => { commandQueueItem.succeeded() }, time * 1000);
+    } else {
+      var entities = this.getEntities(target);
+      for (var i = 0; i < entities.length; i++) {
+        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.wait(callbackCommand, time) }, entities[i].identifier);
+        entities[i].addCommand(callbackCommand);
+      }
+      commandQueueItem.succeeded();
+    }
+  }
+
   playSound(commandQueueItem, sound) {
     this.levelView.audioPlayer.play(sound);
     commandQueueItem.succeeded();
@@ -643,7 +689,7 @@ class GameController {
       // if there is a entity in front of the player
     } else if (frontEntity != null) {
       // push use command to execute general use behavior of the entity before executing the event
-      var useCommand = new CallbackCommand(this,() => {},() => {frontEntity.use(useCommand, player); },frontEntity.identifier);
+      var useCommand = new CallbackCommand(this, () => { }, () => { frontEntity.use(useCommand, player); }, frontEntity.identifier);
       frontEntity.addCommand(useCommand);
       commandQueueItem.succeeded();
     } else {
@@ -891,9 +937,23 @@ class GameController {
       commandQueueItem.failed();
   }
 
-  destroyEntity(commandQueueItem, type) {
-    this.levelEntity.destroyEntity(type);
-    commandQueueItem.succeeded();
+  destroyEntity(commandQueueItem, target) {
+    if (!this.isType(target)) {
+      if (target !== 'Player') {
+        this.levelEntity.destroyEntity(target);
+      }
+      else {
+        this.printErrorMsg("Not able to destroy player\n");
+      }
+      commandQueueItem.succeeded();
+    }
+    else {
+      var entities = this.getEntities(target);
+      for (var i = 0; i < entities.length; i++) {
+        this.levelEntity.destroyEntity(entities[i].identifier);
+      }
+      commandQueueItem.succeeded();
+    }
   }
 
   addCommand(commandQueueItem) {
@@ -901,39 +961,38 @@ class GameController {
     // there is a target, push command to the specific target
     if (target !== undefined)
       target.addCommand(commandQueueItem);
-    else
-    {
+    else {
       this.queue.addCommand(commandQueueItem);
       this.queue.begin();
     }
   }
 
   startDay(commandQueueItem) {
-    if(this.levelModel.isDaytime){
+    if (this.levelModel.isDaytime) {
       commandQueueItem.failed();
-      if(this.DEBUG)
+      if (this.DEBUG)
         this.game.debug.text("Impossible to start day since it's already day time\n");
     }
-    else{
+    else {
       this.levelModel.isDaytime = true;
       this.levelModel.clearFow();
       this.levelView.updateFowPlane(this.levelModel.fowPlane);
-      this.events.forEach(e => e({ eventType: EventType.WhenDay}));
+      this.events.forEach(e => e({ eventType: EventType.WhenDay }));
       commandQueueItem.succeeded();
     }
   }
 
   startNight(commandQueueItem) {
-    if(!this.levelModel.isDaytime) {
+    if (!this.levelModel.isDaytime) {
       commandQueueItem.failed();
-      if(this.DEBUG)
+      if (this.DEBUG)
         this.game.debug.text("Impossible to start night since it's already night time\n");
     }
     else {
       this.levelModel.isDaytime = false;
       this.levelModel.computeFowPlane();
       this.levelView.updateFowPlane(this.levelModel.fowPlane);
-      this.events.forEach(e => e({ eventType: EventType.WhenNight}));
+      this.events.forEach(e => e({ eventType: EventType.WhenNight }));
       commandQueueItem.succeeded();
     }
   }

@@ -57,7 +57,7 @@ export default class LevelEntity {
         return entity;
     }
 
-    spawnEntity(eventSenderIdentifier, type,spawnDirection, facing) {
+    spawnEntity(eventSenderIdentifier, type, spawnDirection, facing) {
         var entity = this.entityMap.get(eventSenderIdentifier);
         if (entity === undefined) {
             if (this.controller.DEBUG)
@@ -66,7 +66,7 @@ export default class LevelEntity {
         // can spawn entity if it's possible to move
         else if (this.controller.levelModel.canMoveDirection(entity, spawnDirection)[0]) {
 
-            let position = this.controller.levelModel.getMoveDirectionPosition(entity,spawnDirection);
+            let position = this.controller.levelModel.getMoveDirectionPosition(entity, spawnDirection);
             return this.createEntity(type, this.id++, position[0], position[1], facing);
         }
         return null;
