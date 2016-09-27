@@ -116,6 +116,7 @@ export default class CommandQueue {
   addRepeatCommands(codeBlock, iteration)
   {
     this.repeatCommands.push([codeBlock,iteration]);
+    this.begin();
   }
 }
 

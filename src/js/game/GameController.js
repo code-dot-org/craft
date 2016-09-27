@@ -281,7 +281,10 @@ class GameController {
   getEntity(target) {
     if (target === undefined)
       target = 'Player';
-    return this.levelEntity.entityMap.get(target);
+    let entity = this.levelEntity.entityMap.get(target);
+    if(entity === undefined)
+      this.printErrorMsg("Debug GetEntity: there is no entity : " + target + "\n");
+    return entity;
   }
 
   getEntities(type) {
@@ -290,6 +293,11 @@ class GameController {
 
   isType(target) {
     return typeof(target) === 'string' && target !== 'Player';
+  }
+
+  printErrorMsg(msg) {
+    if(this.DEBUG)
+        this.game.debug.text(msg);
   }
 
   /**
@@ -304,18 +312,15 @@ class GameController {
     var moveAwayFromIsType = this.isType(moveAwayFrom);
     if( target === moveAwayFrom)
     {
-      commandQueueItem.faild();
+      this.printErrorMsg("Debug MoveAway: Can't move away entity from itself\n");
+      commandQueueItem.failed();
       return;
     }
     // move away entity from entity
     if(!targetIsType && !moveAwayFromIsType) {
       var entity = this.getEntity(target);
       var moveAwayFromEntity = this.getEntity(moveAwayFrom);
-      if (entity !== undefined && moveAwayFromEntity !== undefined) {
-        entity.moveAway(commandQueueItem, moveAwayFromEntity);
-      } else {
-        commandQueueItem.failed();
-      }
+      entity.moveAway(commandQueueItem, moveAwayFromEntity);
     }
     // move away type from entity
     else if(targetIsType && !moveAwayFromIsType){
@@ -328,11 +333,8 @@ class GameController {
           let newCommand = new CallbackCommand(this, ()=>{}, () => { this.moveAway(newCommand, moveAwayFrom) }, targetEntities[i].identifier);
           targetEntities[i].addCommand(newCommand);
         }
-        commandQueueItem.succeeded();
       }
-      else{
-        commandQueueItem.failed();
-      }
+      commandQueueItem.succeeded();
     }
     // move away entity from type
     else if(!targetIsType && moveAwayFromIsType){
@@ -351,9 +353,7 @@ class GameController {
         }
         entity.moveAway(commandQueueItem,moveAwayFromEntities[closestTarget[1]]);
       }
-      else {
-        commandQueueItem.failed();
-      }
+      commandQueueItem.succeeded();
     }
     // move away type from type
     else{
@@ -376,9 +376,6 @@ class GameController {
         }
         commandQueueItem.succeeded();
       }
-      else {
-        commandQueueItem.failed();
-      }
     }
   }
 
@@ -395,18 +392,15 @@ class GameController {
     var moveTowardToIsType = this.isType(moveTowardTo);
     if( target === moveTowardTo)
     {
-      commandQueueItem.faild();
+      this.printErrorMsg("Debug MoveToward: Can't move toward entity to itself\n");
+      commandQueueItem.failed();
       return;
     }
     // move toward entity to entity
     if(!targetIsType && !moveTowardToIsType) {
       var entity = this.getEntity(target);
       var moveTowardToEntity = this.getEntity(moveTowardTo);
-      if (entity !== undefined && moveTowardToEntity !== undefined) {
-        entity.moveToward(commandQueueItem, moveTowardToEntity);
-      } else {
-        commandQueueItem.failed();
-      }
+      entity.moveToward(commandQueueItem, moveTowardToEntity);
     }
     // move toward type to entity
     else if(targetIsType && !moveTowardToIsType){
@@ -420,9 +414,6 @@ class GameController {
           targetEntities[i].addCommand(newCommand);
         }
         commandQueueItem.succeeded();
-      }
-      else{
-        commandQueueItem.failed();
       }
     }
     // move toward entity to type
@@ -442,9 +433,7 @@ class GameController {
         }
         entity.moveToward(commandQueueItem,moveTowardToEntities[closestTarget[1]]);
       }
-      else {
-        commandQueueItem.failed();
-      }
+      commandQueueItem.succeeded();
     }
     // move toward type to type
     else{
@@ -467,37 +456,61 @@ class GameController {
         }
         commandQueueItem.succeeded();
       }
-      else {
-        commandQueueItem.failed();
-      }
     }
   }
 
   moveForward(commandQueueItem) {
     var target = commandQueueItem.target;
-    var entity = this.getEntity(target);
-    if (entity !== undefined)
+    if(!this.isType(target))
+    {
+      var entity = this.getEntity(target);
       entity.moveForward(commandQueueItem);
-    else
-      commandQueueItem.failed();
+    }
+    else {
+      var entities = this.getEntities(target);
+      for(var i = 0 ; i < entities.length ; i++)
+      {
+        let newCommand = new CallbackCommand(this, ()=>{}, () => { this.moveForward(newCommand)}, entities[i].identifier);
+        entities[i].addCommand(newCommand);
+      }
+      commandQueueItem.succeeded();
+    }
   }
 
   moveDirection(commandQueueItem, direction) {
     var target = commandQueueItem.target;
-    var entity = this.getEntity(target);
-    if (entity !== undefined)
+    if(!this.isType(target))
+    {
+      var entity = this.getEntity(target);
       entity.moveDirection(commandQueueItem, direction);
-    else
-      commandQueueItem.failed();
+    }
+    else{
+      var entities = this.getEntities(target);
+      for(var i = 0 ; i < entities.length ; i++)
+      {
+        let newCommand = new CallbackCommand(this, ()=>{}, () => { this.moveDirection(newCommand, direction)}, entities[i].identifier);
+        entities[i].addCommand(newCommand);
+      }
+      commandQueueItem.succeeded();
+    }
   }
 
   turn(commandQueueItem, direction) {
     var target = commandQueueItem.target;
-    var entity = this.getEntity(target);
-    if (entity !== undefined)
+    if(!this.isType(target))
+    {
+      var entity = this.getEntity(target);
       entity.turn(commandQueueItem, direction);
-    else
-      commandQueueItem.failed();
+    }
+    else {
+      var entities = this.getEntities(target);
+      for(var i = 0 ; i < entities.length ; i++)
+      {
+        let newCommand = new CallbackCommand(this, ()=>{}, () => { this.turn(newCommand, direction)}, entities[i].identifier);
+        entities[i].addCommand(newCommand);
+      }
+      commandQueueItem.succeeded();
+    }
   }
 
   flashEntity(commandQueueItem) {
@@ -505,14 +518,10 @@ class GameController {
     if(!this.isType(target))
     {
       var entity = this.getEntity(target);
-      if (entity !== undefined) {
-        var delay = this.levelView.flashSpriteToWhite(entity.sprite);
-        this.delayBy(delay, () => {
-          commandQueueItem.succeeded();
+      var delay = this.levelView.flashSpriteToWhite(entity.sprite);
+      this.delayBy(delay, () => {
+        commandQueueItem.succeeded();
         });
-      } else {
-        commandQueueItem.failed();
-      }
     } else {
       var entities = this.getEntities(target);
       for(var i = 0 ; i < entities.length ; i++) {

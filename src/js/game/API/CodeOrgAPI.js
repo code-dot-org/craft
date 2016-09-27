@@ -177,8 +177,8 @@ export function get(controller) {
       controller.addCommand(new IfBlockAheadCommand(controller, highlightCallback, blockType, codeBlock));
     },
     // -1 for infinite repeat
-    repeat: function(highlightCallback, codeBlock, targetEntity, iteration) {
-      controller.addCommand(new RepeatCommand(controller, highlightCallback, codeBlock, targetEntity, iteration));
+    repeat: function(highlightCallback, codeBlock, iteration, targetEntity) {
+      controller.addCommand(new RepeatCommand(controller, highlightCallback, codeBlock, iteration, targetEntity));
     },
 
     getScreenshot: function () {
