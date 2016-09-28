@@ -138,7 +138,11 @@ export function get(controller) {
     },
 
     turn: function (highlightCallback, direction, targetEntity) {
-      controller.addCommand(new TurnCommand(controller, highlightCallback, direction === 'right' ? 1 : -1, targetEntity));
+
+      const callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
+        controller.turn(callbackCommand,direction === 'right' ? 1 : -1);
+      }, targetEntity);
+      controller.addCommand(callbackCommand);
     },
 
     turnRandom: function (highlightCallback, targetEntity) {

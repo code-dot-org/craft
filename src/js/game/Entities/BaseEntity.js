@@ -5,13 +5,13 @@ import FacingDirection from "../LevelMVC/FacingDirection.js";
 import EventType from "../Event/EventType.js";
 
 export default class BaseEntity {
-    constructor(controller, type, identifier, x, y, direction) {
+    constructor(controller, type, identifier, x, y, facing) {
         this.queue = new CommandQueue(controller);
         this.controller = controller;
         this.position = [x, y];
         this.type = type;
         // temp
-        this.facing = direction;
+        this.facing = facing;
         // offset for sprite position in grid
         this.offset = [-22, -12];
         this.identifier = identifier;
@@ -27,25 +27,40 @@ export default class BaseEntity {
         this.queue.begin();
     }
 
-    playMoveForwardAnimation(position, facing, commandQueueItem) {
+    playMoveForwardAnimation(position, facing, commandQueueItem, groundType, completionHandler) {
+        var levelModel = this.controller.levelModel, levelView = this.controller.levelView;
         var tween;
+        // update z order
         var zOrderYIndex = position[1] + (facing === FacingDirection.Up ? 1 : 0);
         this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex) + 1;
-        tween = this.controller.levelView.addResettableTween(this.sprite).to({
+        // stepping sound
+        levelView.playBlockSound(groundType);
+        // play walk animation
+        var animName = "walk" + this.controller.levelView.getDirectionName(this.facing);
+        levelView.playScaledSpeed(this.sprite.animations, animName);
+        setTimeout(() => {tween = this.controller.levelView.addResettableTween(this.sprite).to({
             x: (this.offset[0] + 40 * position[0]), y: (this.offset[1] + 40 * position[1])
-        }, 200, Phaser.Easing.Linear.None);
+        }, 300, Phaser.Easing.Linear.None);
         tween.onComplete.add(() => {
             commandQueueItem.succeeded();
         });
 
-        tween.start();
+        tween.start();}, 50);
+        // smooth movement using tween
+        
     }
 
     doMoveForward(commandQueueItem, forwardPosition) {
+        var levelModel = this.controller.levelModel, levelView = this.controller.levelView;
         this.position = forwardPosition;
         // set selection indicator 
+        // TODO : selection indicator for every entity?
         this.controller.levelView.setSelectionIndicatorPosition(this.position[0], this.position[1]);
-        this.playMoveForwardAnimation(forwardPosition, this.facing, commandQueueItem);
+        // play sound effect
+        let groundType = levelModel.groundPlane[levelModel.yToIndex(this.position[1]) + this.position[0]].blockType;
+        // play move forward animation and play idle after that
+        this.playMoveForwardAnimation(forwardPosition, this.facing, commandQueueItem, groundType, () => {
+        });
     }
 
     bump(commandQueueItem) {
@@ -188,6 +203,7 @@ export default class BaseEntity {
     }
 
     turn(commandQueueItem, direction) {
+        // update entity direction
         if (direction === -1) {
             this.controller.levelModel.turnLeft(this);
         }
@@ -195,7 +211,8 @@ export default class BaseEntity {
         if (direction === 1) {
             this.controller.levelModel.turnRight(this);
         }
-        this.updateDirection(direction);
+        // update animation
+        this.updateAnimationDirection();
         this.controller.delayPlayerMoveBy(200, 800, () => {
             commandQueueItem.succeeded();
         });
@@ -206,11 +223,14 @@ export default class BaseEntity {
         this.controller.events.forEach(e => e({ eventType: EventType.WhenUsed, targetType: this.type, eventSenderIdentifier: userEntity.identifier, targetIdentifier: this.identifier }));
     }
 
-    updateDirection(direction) {
-
+    updateAnimationDirection() {
+        let facingName = this.controller.levelView.getDirectionName(this.facing);
+        this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + facingName);
     }
 
     getDistance(entity) {
         return Math.abs(Math.pow(this.position[0] - entity.position[0], 2) + Math.pow(this.position[1] - entity.position[1], 2));
     }
+
+    
 }

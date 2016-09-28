@@ -87,8 +87,8 @@ export default class AssetLoader {
       },
       sheep: {
         type: 'atlasJSON',
-        pngPath: `${this.assetRoot}images/Sheep.png`,
-        jsonPath: `${this.assetRoot}images/Sheep.json`
+        pngPath: `${this.assetRoot}images/Sheep_2016.png`,
+        jsonPath: `${this.assetRoot}images/Sheep_2016.json`
       },
       creeper: {
         type: 'atlasJSON',

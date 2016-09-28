@@ -829,11 +829,11 @@ export default class LevelView {
     let direction = this.getDirectionName(facing);
     this.setSelectionIndicatorPosition(entity.position[0], entity.position[1]);
 
+    let entityDirection = this.getDirectionName(entity.facing);
     this.onAnimationEnd(this.playPlayerAnimation("punch", playerPosition, facing, false), () => {
       entity.sprite.animations.stop(null, true);
-      this.onAnimationLoopOnce(this.playScaledSpeed(entity.sprite.animations, "used"), () => {
-        this.playScaledSpeed(entity.sprite.animations, "face");
-      });
+      entity.naked = true;
+      this.playScaledSpeed(entity.sprite.animations, "naked_idle" + entityDirection, () => {});
 
       this.playExplosionAnimation(playerPosition, facing, entity.position, entity.type, completionHandler, true);
     });
@@ -1330,6 +1330,18 @@ export default class LevelView {
     return frameList;
   }
 
+  generateReverseFrames(frameName, startFrame, endFrame, suffix ,buffer) {
+    var frameList = Phaser.Animation.generateFrameNames(frameName, startFrame, endFrame, suffix, buffer);
+    return frameList.concat(Phaser.Animation.generateFrameNames(frameName, endFrame - 1, startFrame, suffix, buffer));
+  }
+
+  generateReverseFramesWithBetweenDelay(frameName, startFrame, endFrame, endFrameFullName, suffix, buffer, frameDelay) {
+    var frameList = Phaser.Animation.generateFrameNames(frameName, startFrame, endFrame, suffix, buffer);
+    for (var i = 0; i < frameDelay; ++i) {
+      frameList.push(endFrameFullName);
+    }
+    return frameList.concat(Phaser.Animation.generateFrameNames(frameName, endFrame - 1, startFrame, suffix, buffer));
+  }
   preparePlayerSprite(playerName) {
     var frameList,
       genFrames,
@@ -1755,7 +1767,8 @@ export default class LevelView {
           this.playScaledSpeed(logSprite.fluff.animations, "despawn");
         };
         break;
-
+      // It's not able to create sheep as a block since it's an entity
+      /* 
       case "sheep":
         var sFrames = 10;
         // Facing Left: Eat Grass: 199-216
@@ -1829,7 +1842,7 @@ export default class LevelView {
 
         sprite.animations.add("used", frameList, 15, true);
         this.playAnimationWithOffset(sprite, "idle", 17, 199);
-        break;
+        break;*/
 
       case "creeper":
         sprite = plane.create(-6 + 40 * x, 0 + plane.yOffset + 40 * y, "creeper", "Creeper_053");

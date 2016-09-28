@@ -20,6 +20,7 @@ export default class Player extends BaseEntity {
       levelModel = this.controller.levelModel,
       levelView = this.controller.levelView;
     let wasOnBlock = player.isOnBlock;
+    // update position
     levelModel.moveForward();
     // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
 

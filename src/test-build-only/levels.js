@@ -40,7 +40,7 @@ window.demoLevels = {
       afterLoad: ['playerSteve', 'playerAlex', 'grass']
     },
 
-    entities: [['sheep', 3, 3, 1]],
+    entities: [['sheep', 3, 3, 2]],
 
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -69,7 +69,7 @@ window.demoLevels = {
       "", "grass", "", "", "", "", "", "", "", "grass",
       "", "", "", "treeOak", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "sheep", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
       "", "", "", "logOak", "logOak", "logOak", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
@@ -97,7 +97,7 @@ window.demoLevels = {
     },
 
     solutionCode:
-    "spawnEntity('player','sheep',1,1);\nregisterEventCallback(function (event) {\nif(event.targetType !==" + '"sheep"' +")\nreturn;\nif(isEventTriggered(event,2)){\nrepeat(function() {\nmoveAway(event.targetIdentifier ,'player');\n}, event.targetIdentifier ,-1);\n}\nif(isEventTriggered(event,1)){\nrepeat(function() {\nmoveAway(event.targetIdentifier ,'player');\n}, event.targetIdentifier ,-1);\n}\n})"
+    "registerEventCallback(function (event) {\nif(event.targetType !==" + '"sheep"' +")\nreturn;\nif(isEventTriggered(event,2)){\nrepeat(function() {\nmoveAway(event.targetIdentifier ,'player');\n}, event.targetIdentifier ,-1);\n}\nif(isEventTriggered(event,1)){\nrepeat(function() {\nmoveAway(event.targetIdentifier ,'player');\n}, event.targetIdentifier ,-1);\n}\n})"
   },
 
   2: {
@@ -110,9 +110,11 @@ window.demoLevels = {
       afterLoad: ['levelThreeAssets']
     },
 
-    playerStartPosition: [6, 7],
+    playerStartPosition: [4, 3],
 
     playerStartDirection: 2,
+    entities: [['sheep', 3, 3, 2]],
+    isEventLevel: true,
 
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -163,7 +165,7 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
     ],
 
-    solutionCode: turnLeftBlock + turnLeftBlock + moveForwardBlock + moveForwardBlock + destroyBlock,
+    solutionCode: "registerEventCallback(function (event) {\nif(event.targetType !==" + "'sheep'" + ")\nreturn;\nif(isEventTriggered(event,0)){\nturnRight('sheep');\n}\n})",
 
     verificationFunction: function (verificationAPI) {
       return verificationAPI.countOfTypeOnMap("logOak") === 0;
@@ -217,8 +219,8 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "dirt", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "sheep", "", "", "",
-      "", "", "", "", "sheep", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "treeOak", "",
       "", "", "", "", "", "", "", "", "", "",
