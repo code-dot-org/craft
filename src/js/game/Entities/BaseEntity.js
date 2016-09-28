@@ -3,6 +3,7 @@ import LevelView from "../LevelMVC/LevelView.js"
 import LevelModel from "../LevelMVC/LevelModel.js";
 import FacingDirection from "../LevelMVC/FacingDirection.js";
 import EventType from "../Event/EventType.js";
+import CallbackCommand from "../CommandQueue/CallbackCommand.js";
 
 export default class BaseEntity {
     constructor(controller, type, identifier, x, y, facing) {
@@ -156,12 +157,12 @@ export default class BaseEntity {
      * check all the movable points and choose the farthest one
      * 
      * @param {any} commandQueueItem
-     * @param {any} moveTowardFrom (entity)
+     * @param {any} moveTowardTo (entity)
      * 
      * @memberOf BaseEntity
      */
-    moveToward(commandQueueItem, moveTowardFrom) {
-        var moveTowardPosition = moveTowardFrom.position;
+    moveToward(commandQueueItem, moveTowardTo) {
+        var moveTowardPosition = moveTowardTo.position;
         var bestPosition = [];
         let absoluteDistanceSquare = function (position1, position2) {
             return Math.pow(position1[0] - position2[0], 2) + Math.pow(position1[1] - position2[1], 2);
@@ -196,10 +197,46 @@ export default class BaseEntity {
         }
         // terminate the action since it's impossible to move
         if (bestPosition.length === 0)
+        {
             commandQueueItem.succeeded();
+            return false;
         // execute the best result
+        }
         else
+        {
             this.moveDirection(commandQueueItem, bestPosition[0]);
+            return true;
+        }
+    }
+
+    moveTo(commandQueueItem, moveTowardTo) {
+        
+        let absoluteDistanceSquare = function (position1, position2) {
+            return Math.sqrt(Math.pow(position1[0] - position2[0], 2) + Math.pow(position1[1] - position2[1], 2));
+        }
+        if( absoluteDistanceSquare(moveTowardTo.position,this.position) === 1 )
+        {
+            /// north
+            if(moveTowardTo.position[1] - this.position[1] == -1)
+                this.moveDirection(commandQueueItem,FacingDirection.Up);
+            else if(moveTowardTo.position[1] - this.position[1] == 1)
+                this.moveDirection(commandQueueItem,FacingDirection.Down);
+            else if(moveTowardTo.position[0] - this.position[0] == 1)
+                this.moveDirection(commandQueueItem,FacingDirection.Right);
+            else
+                this.moveDirection(commandQueueItem,FacingDirection.Left);
+        }
+        else if (this.moveToward(commandQueueItem,moveTowardTo) )
+        {
+            var callbackCommand = new CallbackCommand(this.controller, () => {}, () => {
+                this.moveTo(callbackCommand,moveTowardTo);
+            },this.identifier);
+            this.addCommand(callbackCommand);
+        }
+        else
+        {
+            this.bump(callbackCommand);
+        }
     }
 
     turn(commandQueueItem, direction) {

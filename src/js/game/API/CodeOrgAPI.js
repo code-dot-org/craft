@@ -116,6 +116,13 @@ export function get(controller) {
       controller.addCommand(callbackCommand);
     },
 
+    moveTo: function(highlightCallback, targetEntity, moveTowardTo) {
+      const callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
+        controller.moveTo(callbackCommand, moveTowardTo);
+      }, targetEntity);
+      controller.addCommand(callbackCommand);
+    },
+
     flashEntity: function (highlightCallback, targetEntity) {
       const callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
         controller.flashEntity(callbackCommand);
