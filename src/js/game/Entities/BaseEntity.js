@@ -120,6 +120,7 @@ export default class BaseEntity {
         let comparePositions = function (moveAwayPosition, position1, position2) {
             return absoluteDistanceSquare(position1[1], moveAwayPosition) < absoluteDistanceSquare(position2[1], moveAwayPosition) ? position2 : position1;
         }
+        var currentDistance = absoluteDistanceSquare(moveAwayPosition,this.position);
         // this entity is on the right side and can move to right
         if (moveAwayPosition[0] <= this.position[0] && this.controller.levelModel.canMoveDirection(this, FacingDirection.Right)[0]) {
             bestPosition = [FacingDirection.Right, [this.position[0] + 1, this.position[1]]];
@@ -146,7 +147,7 @@ export default class BaseEntity {
                 bestPosition = [FacingDirection.Down, [this.position[0], this.position[1] + 1]];
         }
         // terminate the action since it's impossible to move
-        if (bestPosition.length === 0)
+        if (bestPosition.length === 0 || currentDistance >= absoluteDistanceSquare(moveAwayPosition, bestPosition[1]) )
             commandQueueItem.succeeded();
         // execute the best result
         else
@@ -170,6 +171,7 @@ export default class BaseEntity {
         let comparePositions = function (moveTowardPosition, position1, position2) {
             return absoluteDistanceSquare(position1[1], moveTowardPosition) > absoluteDistanceSquare(position2[1], moveTowardPosition) ? position2 : position1;
         }
+        var currentDistance = absoluteDistanceSquare(moveTowardPosition,this.position);
         // this entity is on the right side and can move to right
         if (moveTowardPosition[0] >= this.position[0] && this.controller.levelModel.canMoveDirection(this, FacingDirection.Right)[0]) {
             bestPosition = [FacingDirection.Right, [this.position[0] + 1, this.position[1]]];
@@ -196,14 +198,14 @@ export default class BaseEntity {
                 bestPosition = [FacingDirection.Down, [this.position[0], this.position[1] + 1]];
         }
         // terminate the action since it's impossible to move
-        if (bestPosition.length === 0)
+        if (bestPosition.length === 0 || currentDistance <= absoluteDistanceSquare(moveTowardPosition, bestPosition[1]) )
         {
             commandQueueItem.succeeded();
             return false;
         // execute the best result
         }
         else
-        {
+        {   
             this.moveDirection(commandQueueItem, bestPosition[0]);
             return true;
         }
