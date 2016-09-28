@@ -205,6 +205,12 @@ export function get(controller) {
       });
       controller.addCommand(callbackCommand);
     },
+    spawnEntityAt: function (highlightCallback, type, x, y, facing) {
+      var callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
+        controller.spawnEntityAt(callbackCommand, type, x, y, facing);
+      });
+      controller.addCommand(callbackCommand);
+    },
 
     destroyEntity: function (highlightCallback, targetEntity) {
       var callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
@@ -227,7 +233,7 @@ export function get(controller) {
       controller.addCommand(callbackCommand);
     },
 
-    wait: function (highlightCallback, targetEntity, time) {
+    wait: function (highlightCallback, time, targetEntity) {
       var callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
         controller.wait(callbackCommand, time)
       }, targetEntity);

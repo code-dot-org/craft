@@ -72,6 +72,10 @@ export default class LevelEntity {
         return null;
     }
 
+    spawnEntityAt(type, x, y, facing) {
+        return this.createEntity(type, this.id++, x, y, facing);
+    }
+
     destroyEntity(identifier) {
         if (this.entityMap.has(identifier)) {
             this.entityMap.get(identifier).sprite.destroy();

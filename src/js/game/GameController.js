@@ -1003,6 +1003,16 @@ class GameController {
       commandQueueItem.failed();
   }
 
+  spawnEntityAt(commandQueueItem, type, x, y, facing) {
+    var spawnedEntity = this.levelEntity.spawnEntityAt(type, x, y, facing);
+    if (spawnedEntity !== null) {
+      this.events.forEach(e => e({ eventType: EventType.WhenSpawned, targetType: type, targetIdentifier: spawnedEntity.identifier }));
+      commandQueueItem.succeeded();
+    }
+    else
+      commandQueueItem.failed();
+  }
+
   destroyEntity(commandQueueItem, target) {
     if (!this.isType(target)) {
       if (target !== 'Player') {

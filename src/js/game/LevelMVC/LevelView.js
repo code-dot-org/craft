@@ -1007,6 +1007,10 @@ export default class LevelView {
 
   playScaledSpeed(animationManager, name) {
     var animation = animationManager.getAnimation(name);
+    if(animation === null)
+    {
+      this.controller.printErrorMsg("There is no animation : " + name + "\n");
+    }
     if (!animation.originalFps) {
       animation.originalFps = 1000 / animation.delay;
     }
@@ -1017,8 +1021,8 @@ export default class LevelView {
     var tween;
 
     tween = this.addResettableTween(sprite).to({
-      x: (-18 + 40 * playerPosition[0]),
-      y: (-32 + 40 * playerPosition[1])
+      x: ( 40 * playerPosition[0]),
+      y: ( 40 * playerPosition[1] - 10)
     }, 200, Phaser.Easing.Linear.None);
 
     tween.onComplete.add(() => {
@@ -1648,13 +1652,14 @@ export default class LevelView {
     let framePrefix = this.miniBlocks[frame][0];
     let frameStart = this.miniBlocks[frame][1];
     let frameEnd = this.miniBlocks[frame][2];
-    let xOffset = -10;
-    let yOffset = 0;
+    let xOffset = Math.random()*(-20) + 40;
+    let yOffset = Math.random()*(-20) + 40;
 
     frameList = Phaser.Animation.generateFrameNames(framePrefix, frameStart, frameEnd, "", 3);
 
     sprite = this.actionPlane.create(xOffset + 40 * x, yOffset + this.actionPlane.yOffset + 40 * y, atlas, "");
     sprite.animations.add("animate", frameList, 10, false);
+    sprite.scale.setTo(0.5,0.5);
     return sprite;
   }
 

@@ -980,5 +980,83 @@ window.demoLevels = {
     verificationFunction: function (verificationAPI) {
       return true;
     }
+  },
+  12: {
+    instructions: "Nighttime is boring with no zombies (sheep at this time). Get the Zombies spawning at night, and get them to chase you.",
+
+    playerStartPosition: [3, 4],
+
+    // up: 0, right: 1, down: 2, left: 3
+    playerStartDirection: 1,
+
+    playerName: "Alex",
+    isEventLevel: true,
+
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer'],
+    earlyLoadNiceToHaveAssetPacks: ['playerAlex'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerAlex'],
+      afterLoad: ['playerSteve', 'playerAlex', 'grass']
+    },
+
+    entities: [],
+
+    groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "dirtCoarse", "dirtCoarse", "dirtCoarse", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
+    ],
+
+    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "flowerRose", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "flowerDandelion", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "flowerOxeeye",
+      "", "", "", "", "", "", "", "", "", "",
+      "tallGrass", "", "", "", "", "", "", "", "", ""],
+
+    actionPlane: ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
+      "", "grass", "", "", "", "", "", "", "", "grass",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "treeOak", "", "", ""
+    ],
+
+    fluffPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", ""
+    ],
+
+
+
+    verificationFunction: function (verificationAPI) {
+      return verificationAPI.isPlayerNextTo("sheep");
+    },
+
+    solutionCode:
+    "registerEventCallback(function (event) {\nif(event.targetType !==" + '"sheep"' +")\nreturn;\nif(isEventTriggered(event,2)){\nrepeat(function() {\nmoveAway(event.targetIdentifier ,'player');\n}, event.targetIdentifier ,-1);\n}\nif(isEventTriggered(event,1)){\nrepeat(function() {\nmoveAway(event.targetIdentifier ,'player');\n}, event.targetIdentifier ,-1);\n}\n})"
   }
 };
