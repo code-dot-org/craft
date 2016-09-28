@@ -261,6 +261,10 @@ export default class BaseEntity {
         // default behavior for use ?
         this.controller.events.forEach(e => e({ eventType: EventType.WhenUsed, targetType: this.type, eventSenderIdentifier: userEntity.identifier, targetIdentifier: this.identifier }));
     }
+    
+    drop(commandQueueItem, itemType) {
+
+    }
 
     updateAnimationDirection() {
         let facingName = this.controller.levelView.getDirectionName(this.facing);
@@ -271,5 +275,4 @@ export default class BaseEntity {
         return Math.abs(Math.pow(this.position[0] - entity.position[0], 2) + Math.pow(this.position[1] - entity.position[1], 2));
     }
 
-    
 }

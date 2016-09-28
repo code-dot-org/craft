@@ -755,9 +755,12 @@ class GameController {
       // if there is a entity in front of the player
     } else if (frontEntity != null) {
       // push use command to execute general use behavior of the entity before executing the event
+      this.levelView.onAnimationEnd(this.levelView.playPlayerAnimation("punch", player.position, player.facing, false), () => {
       var useCommand = new CallbackCommand(this, () => { }, () => { frontEntity.use(useCommand, player); }, frontEntity.identifier);
       frontEntity.addCommand(useCommand);
-      commandQueueItem.succeeded();
+      setTimeout(()=>{commandQueueItem.succeeded();}, 200);
+      
+      });
     } else {
       this.levelView.playPunchDestroyAirAnimation(player.position, player.facing, this.levelModel.getMoveForwardPosition(), () => {
         this.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]);

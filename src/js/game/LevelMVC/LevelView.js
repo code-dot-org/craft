@@ -51,7 +51,9 @@ export default class LevelView {
       "wheat": ["Miniblocks", 168, 173],
       "potato": ["Miniblocks", 174, 179],
       "carrots": ["Miniblocks", 180, 185],
-
+      "milk": ["Miniblocks", 186, 191],
+      "egg": ["Miniblocks", 192, 197],
+      "poppy": ["Miniblocks", 198, 203],
       "sheep": ["Miniblocks", 102, 107]
     };
 
@@ -830,13 +832,11 @@ export default class LevelView {
     this.setSelectionIndicatorPosition(entity.position[0], entity.position[1]);
 
     let entityDirection = this.getDirectionName(entity.facing);
-    this.onAnimationEnd(this.playPlayerAnimation("punch", playerPosition, facing, false), () => {
-      entity.sprite.animations.stop(null, true);
-      entity.naked = true;
-      this.playScaledSpeed(entity.sprite.animations, "naked_idle" + entityDirection, () => {});
+    entity.sprite.animations.stop(null, true);
+    entity.naked = true;
+    this.playScaledSpeed(entity.sprite.animations, "naked_idle" + entityDirection, () => {});
 
-      this.playExplosionAnimation(playerPosition, facing, entity.position, entity.type, completionHandler, true);
-    });
+    this.playExplosionAnimation(playerPosition, facing, entity.position, entity.type, completionHandler, false);
   }
 
   playDestroyBlockAnimation(playerPosition, facing, destroyPosition, blockType, newShadingPlaneData, newFowPlaneData, completionHandler) {
@@ -985,16 +985,14 @@ export default class LevelView {
     this.onAnimationEnd(explodeAnim.animations.add("explode", Phaser.Animation.generateFrameNames("BlockBreakParticle", 0, 7, "", 0), 30, false), () => {
       explodeAnim.kill();
       this.toDestroy.push(explodeAnim);
+      this.playPlayerAnimation("idle", playerPosition, facing, false);
 
       if (placeBlock) {
-        this.playPlayerAnimation("idle", playerPosition, facing, false);
         this.playItemDropAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler);
       }
     });
     this.playScaledSpeed(explodeAnim.animations, "explode");
-    if (!placeBlock) {
-      completionHandler();
-    }
+    completionHandler();
   }
 
   playItemDropAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
@@ -1007,10 +1005,6 @@ export default class LevelView {
 
   playScaledSpeed(animationManager, name) {
     var animation = animationManager.getAnimation(name);
-    if(animation === null)
-    {
-      this.controller.printErrorMsg("There is no animation : " + name + "\n");
-    }
     if (!animation.originalFps) {
       animation.originalFps = 1000 / animation.delay;
     }
@@ -1021,8 +1015,8 @@ export default class LevelView {
     var tween;
 
     tween = this.addResettableTween(sprite).to({
-      x: ( 40 * playerPosition[0]),
-      y: ( 40 * playerPosition[1] - 10)
+      x: (-18 + 40 * playerPosition[0]),
+      y: (-32 + 40 * playerPosition[1])
     }, 200, Phaser.Easing.Linear.None);
 
     tween.onComplete.add(() => {
@@ -1652,14 +1646,13 @@ export default class LevelView {
     let framePrefix = this.miniBlocks[frame][0];
     let frameStart = this.miniBlocks[frame][1];
     let frameEnd = this.miniBlocks[frame][2];
-    let xOffset = Math.random()*(-20) + 40;
-    let yOffset = Math.random()*(-20) + 40;
+    let xOffset = -10;
+    let yOffset = 0;
 
     frameList = Phaser.Animation.generateFrameNames(framePrefix, frameStart, frameEnd, "", 3);
 
     sprite = this.actionPlane.create(xOffset + 40 * x, yOffset + this.actionPlane.yOffset + 40 * y, atlas, "");
     sprite.animations.add("animate", frameList, 10, false);
-    sprite.scale.setTo(0.5,0.5);
     return sprite;
   }
 

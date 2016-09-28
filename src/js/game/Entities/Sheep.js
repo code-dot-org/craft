@@ -14,11 +14,21 @@ export default class Sheep extends BaseEntity {
 
     use(commandQueueItem, userEntity) {
         // default behavior for use ?
-        this.controller.levelView.playShearSheepAnimationWithEntity(userEntity.position, userEntity.facing, this, () => {
-            commandQueueItem.succeeded();
-            super.use(commandQueueItem, userEntity);
-        });
-
+        if(!this.naked)
+        {
+            this.controller.levelView.playShearSheepAnimationWithEntity(userEntity.position, userEntity.facing, this, () => {
+                commandQueueItem.succeeded();
+                super.use(commandQueueItem, userEntity);
+            });
+        }
+        else
+        {
+            var animName = "naked_takeDamage" + this.controller.levelView.getDirectionName(this.facing);
+            this.controller.levelView.onAnimationEnd(this.controller.levelView.playScaledSpeed(this.sprite.animations, animName),() => 
+            {
+                commandQueueItem.succeeded();
+            });
+        }
     }
 
     playMoveForwardAnimation(position, facing, commandQueueItem, groundType, completionHandler) {
@@ -281,5 +291,13 @@ export default class Sheep extends BaseEntity {
         this.controller.levelView.playScaledSpeed(this.sprite.animations, animationName);
         this.controller.printErrorMsg(this.type + " calls animation : " + animationName + "\n");
     }
+    
 
+    updateAnimationDirection() {
+        let facingName = "";
+        if(this.naked)
+            facingName = "naked_";
+        facingName += this.controller.levelView.getDirectionName(this.facing);
+        this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + facingName);
+    }
 }
