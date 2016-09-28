@@ -78,6 +78,7 @@ export default class LevelEntity {
 
     destroyEntity(identifier) {
         if (this.entityMap.has(identifier)) {
+            this.entityMap.get(identifier).sprite.animations.stop(null,true);
             this.entityMap.get(identifier).sprite.destroy();
             this.entityMap.delete(identifier);
         } else if (this.controller.DEBUG) {

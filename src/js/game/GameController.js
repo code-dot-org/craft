@@ -1043,6 +1043,16 @@ class GameController {
     }
   }
 
+  addGlobalCommand(commandQueueItem) {
+    let entity = this.levelEntity.entityMap.get(commandQueueItem.target);
+    if(entity !== undefined)
+      entity.addCommand(commandQueueItem);
+    else {
+      this.queue.addCommand(commandQueueItem);
+      this.queue.begin();
+    }
+  }
+
   startDay(commandQueueItem) {
     if (this.levelModel.isDaytime) {
       commandQueueItem.failed();

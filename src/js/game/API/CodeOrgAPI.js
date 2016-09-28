@@ -223,21 +223,21 @@ export function get(controller) {
       var callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
         controller.startDay(callbackCommand);
       });
-      controller.addCommand(callbackCommand);
+      controller.addGlobalCommand(callbackCommand);
     },
 
     startNight: function (highlightCallback) {
       var callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
         controller.startNight(callbackCommand);
       });
-      controller.addCommand(callbackCommand);
+      controller.addGlobalCommand(callbackCommand);
     },
 
     wait: function (highlightCallback, time, targetEntity) {
       var callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
         controller.wait(callbackCommand, time)
       }, targetEntity);
-      controller.addCommand(callbackCommand);
+      controller.addGlobalCommand(callbackCommand);
     }
   };
 }
