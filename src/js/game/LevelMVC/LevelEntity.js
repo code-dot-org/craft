@@ -1,6 +1,7 @@
 import BaseEntity from "../Entities/BaseEntity.js";
 import Sheep from "../Entities/Sheep.js";
 import Zombie from "../Entities/Zombie.js"
+import IronGolem from "../Entities/IronGolem.js"
 
 /**
  * Handling non-player entities inside of the level
@@ -48,6 +49,9 @@ export default class LevelEntity {
                     break;
                 case 'zombie':
                     entity = new Zombie(this.controller, type, identifier, x, y, facing);
+                    break;
+                case 'ironGolem':
+                    entity = new IronGolem(this.controller, type, identifier, x, y, facing);
                     break;
                 default:
                     entity = new BaseEntity(this.controller, type, identifier, x, y, facing);
