@@ -56,9 +56,6 @@ export default class BaseEntity {
     doMoveForward(commandQueueItem, forwardPosition) {
         var levelModel = this.controller.levelModel, levelView = this.controller.levelView;
         this.position = forwardPosition;
-        // set selection indicator 
-        // TODO : selection indicator for every entity?
-        this.controller.levelView.setSelectionIndicatorPosition(this.position[0], this.position[1]);
         // play sound effect
         let groundType = levelModel.groundPlane[levelModel.yToIndex(this.position[1]) + this.position[0]].blockType;
         // play move forward animation and play idle after that
@@ -203,14 +200,29 @@ export default class BaseEntity {
                 bestPosition = [FacingDirection.Down, [this.position[0], this.position[1] + 1]];
         }
         // terminate the action since it's impossible to move
-        if (bestPosition.length === 0 || currentDistance <= absoluteDistanceSquare(moveTowardPosition, bestPosition[1])) {
+        if (bestPosition.length === 0) {
             commandQueueItem.succeeded();
             return false;
             // execute the best result
-        }
-        else {
-            this.moveDirection(commandQueueItem, bestPosition[0]);
-            return true;
+        } else {
+            if (absoluteDistanceSquare(this.position, moveTowardPosition) === 1) {
+                if(this.position[0] < moveTowardPosition[0])
+                    this.facing = FacingDirection.Right;
+                else if(this.position[0] > moveTowardPosition[0])
+                    this.facing = FacingDirection.Left;
+                else if(this.position[1] < moveTowardPosition[1])
+                    this.facing = FacingDirection.Down;
+                else if(this.position[1] > moveTowardPosition[1])
+                    this.facing = FacingDirection.Up;
+                this.updateAnimationDirection();
+                this.controller.delayPlayerMoveBy(200, 800, () => {
+                    commandQueueItem.succeeded();
+                });
+                return false;
+            } else {
+                this.moveDirection(commandQueueItem, bestPosition[0]);
+                return true;
+            }
         }
     }
 
@@ -271,13 +283,14 @@ export default class BaseEntity {
 
     attack(commandQueueItem) {
         let facingName = this.controller.levelView.getDirectionName(this.facing);
-        this.controller.levelView.onAnimationEnd(this.controller.levelView.playScaledSpeed(this.sprite.animations, "attack" + facingName),()=>{
-        let frontEntity = this.controller.levelEntity.getEntityAt(this.controller.levelModel.getMoveForwardPosition(this));
-        if(frontEntity !== null) {
-            this.controller.levelView.onAnimationEnd(this.controller.levelView.playScaledSpeed(frontEntity.sprite.animations, "takeDamage" + facingName),()=>{
-            this.controller.events.forEach(e => e({ eventType: EventType.WhenAttacked, targetType: this.type, eventSenderIdentifier: this.identifier, targetIdentifier: frontEntity.identifier }))});
-        }
-        commandQueueItem.succeeded();
+        this.controller.levelView.onAnimationEnd(this.controller.levelView.playScaledSpeed(this.sprite.animations, "attack" + facingName), () => {
+            let frontEntity = this.controller.levelEntity.getEntityAt(this.controller.levelModel.getMoveForwardPosition(this));
+            if (frontEntity !== null) {
+                this.controller.levelView.onAnimationEnd(this.controller.levelView.playScaledSpeed(frontEntity.sprite.animations, "takeDamage" + facingName), () => {
+                    this.controller.events.forEach(e => e({ eventType: EventType.WhenAttacked, targetType: this.type, eventSenderIdentifier: this.identifier, targetIdentifier: frontEntity.identifier }))
+                });
+            }
+            commandQueueItem.succeeded();
         });
     }
 
