@@ -1,8 +1,11 @@
 import BaseEntity from "../Entities/BaseEntity.js";
 import Sheep from "../Entities/Sheep.js";
-import Zombie from "../Entities/Zombie.js"
-import IronGolem from "../Entities/IronGolem.js"
-import Creeper from "../Entities/Creeper.js"
+import Zombie from "../Entities/Zombie.js";
+import IronGolem from "../Entities/IronGolem.js";
+import Creeper from "../Entities/Creeper.js";
+import Cow from "../Entities/Cow.js";
+import Chicken from "../Entities/Chicken.js";
+
 
 /**
  * Handling non-player entities inside of the level
@@ -56,6 +59,12 @@ export default class LevelEntity {
                     break;
                 case 'creeper':
                     entity = new Creeper(this.controller, type, identifier, x, y, facing);
+                    break;
+                case 'cow':
+                    entity = new Cow(this.controller, type, identifier, x, y, facing);
+                    break;
+                case 'chicken':
+                    entity = new Chicken(this.controller, type, identifier, x, y, facing);
                     break;
                 default:
                     entity = new BaseEntity(this.controller, type, identifier, x, y, facing);
