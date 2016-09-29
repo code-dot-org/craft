@@ -469,11 +469,15 @@ export default class LevelModel {
   }
 
   canMoveForward(entity = this.player) {
-    var result = [false,];
 
     let blockForwardPosition = this.getMoveForwardPosition(entity);
-    let blockIndex = this.yToIndex(blockForwardPosition[1]) + blockForwardPosition[0];
-    let [x, y] = [blockForwardPosition[0], blockForwardPosition[1]];
+    return this.isPositionEmpty(blockForwardPosition);
+  }
+
+  isPositionEmpty(position) {
+    var result = [false,];
+    let blockIndex = this.yToIndex(position[1]) + position[0];
+    let [x, y] = [position[0], position[1]];
 
     if (this.inBounds(x, y)) {
       if (!this.actionPlane[blockIndex].isWalkable) {
@@ -481,7 +485,7 @@ export default class LevelModel {
       }
       if (!this.actionPlane[blockIndex].isEmpty)
         result.push("notEmpty");
-      var frontEntity = this.getEntityAt(blockForwardPosition);
+      var frontEntity = this.getEntityAt(position);
       if (frontEntity !== undefined) {
         result.push("frontEntity");
         result.push(frontEntity);

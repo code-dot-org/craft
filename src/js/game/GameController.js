@@ -1095,7 +1095,7 @@ class GameController {
 
   startDay(commandQueueItem) {
     if (this.levelModel.isDaytime) {
-      commandQueueItem.failed();
+      commandQueueItem.succeeded();
       if (this.DEBUG)
         this.game.debug.text("Impossible to start day since it's already day time\n");
     }
@@ -1110,7 +1110,7 @@ class GameController {
 
   startNight(commandQueueItem) {
     if (!this.levelModel.isDaytime) {
-      commandQueueItem.failed();
+      commandQueueItem.succeeded();
       if (this.DEBUG)
         this.game.debug.text("Impossible to start night since it's already night time\n");
     }
