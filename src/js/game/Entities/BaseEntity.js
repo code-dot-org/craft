@@ -39,16 +39,18 @@ export default class BaseEntity {
         // play walk animation
         var animName = "walk" + this.controller.levelView.getDirectionName(this.facing);
         levelView.playScaledSpeed(this.sprite.animations, animName);
-        setTimeout(() => {tween = this.controller.levelView.addResettableTween(this.sprite).to({
-            x: (this.offset[0] + 40 * position[0]), y: (this.offset[1] + 40 * position[1])
-        }, 300, Phaser.Easing.Linear.None);
-        tween.onComplete.add(() => {
-            commandQueueItem.succeeded();
-        });
+        setTimeout(() => {
+            tween = this.controller.levelView.addResettableTween(this.sprite).to({
+                x: (this.offset[0] + 40 * position[0]), y: (this.offset[1] + 40 * position[1])
+            }, 300, Phaser.Easing.Linear.None);
+            tween.onComplete.add(() => {
+                commandQueueItem.succeeded();
+            });
 
-        tween.start();}, 50);
+            tween.start();
+        }, 50);
         // smooth movement using tween
-        
+
     }
 
     doMoveForward(commandQueueItem, forwardPosition) {
@@ -66,6 +68,9 @@ export default class BaseEntity {
 
     bump(commandQueueItem) {
         // TODO: bump animation
+        var animName = "bump";
+        var facingName = this.controller.levelView.getDirectionName(this.facing);
+        this.controller.levelView.playScaledSpeed(this.sprite.animations, animName + facingName);
         this.controller.delayPlayerMoveBy(400, 800, () => {
             commandQueueItem.succeeded();
         });
@@ -120,7 +125,7 @@ export default class BaseEntity {
         let comparePositions = function (moveAwayPosition, position1, position2) {
             return absoluteDistanceSquare(position1[1], moveAwayPosition) < absoluteDistanceSquare(position2[1], moveAwayPosition) ? position2 : position1;
         }
-        var currentDistance = absoluteDistanceSquare(moveAwayPosition,this.position);
+        var currentDistance = absoluteDistanceSquare(moveAwayPosition, this.position);
         // this entity is on the right side and can move to right
         if (moveAwayPosition[0] <= this.position[0] && this.controller.levelModel.canMoveDirection(this, FacingDirection.Right)[0]) {
             bestPosition = [FacingDirection.Right, [this.position[0] + 1, this.position[1]]];
@@ -147,7 +152,7 @@ export default class BaseEntity {
                 bestPosition = [FacingDirection.Down, [this.position[0], this.position[1] + 1]];
         }
         // terminate the action since it's impossible to move
-        if (bestPosition.length === 0 || currentDistance >= absoluteDistanceSquare(moveAwayPosition, bestPosition[1]) )
+        if (bestPosition.length === 0 || currentDistance >= absoluteDistanceSquare(moveAwayPosition, bestPosition[1]))
             commandQueueItem.succeeded();
         // execute the best result
         else
@@ -171,7 +176,7 @@ export default class BaseEntity {
         let comparePositions = function (moveTowardPosition, position1, position2) {
             return absoluteDistanceSquare(position1[1], moveTowardPosition) > absoluteDistanceSquare(position2[1], moveTowardPosition) ? position2 : position1;
         }
-        var currentDistance = absoluteDistanceSquare(moveTowardPosition,this.position);
+        var currentDistance = absoluteDistanceSquare(moveTowardPosition, this.position);
         // this entity is on the right side and can move to right
         if (moveTowardPosition[0] >= this.position[0] && this.controller.levelModel.canMoveDirection(this, FacingDirection.Right)[0]) {
             bestPosition = [FacingDirection.Right, [this.position[0] + 1, this.position[1]]];
@@ -198,45 +203,40 @@ export default class BaseEntity {
                 bestPosition = [FacingDirection.Down, [this.position[0], this.position[1] + 1]];
         }
         // terminate the action since it's impossible to move
-        if (bestPosition.length === 0 || currentDistance <= absoluteDistanceSquare(moveTowardPosition, bestPosition[1]) )
-        {
+        if (bestPosition.length === 0 || currentDistance <= absoluteDistanceSquare(moveTowardPosition, bestPosition[1])) {
             commandQueueItem.succeeded();
             return false;
-        // execute the best result
+            // execute the best result
         }
-        else
-        {   
+        else {
             this.moveDirection(commandQueueItem, bestPosition[0]);
             return true;
         }
     }
 
     moveTo(commandQueueItem, moveTowardTo) {
-        
+
         let absoluteDistanceSquare = function (position1, position2) {
             return Math.sqrt(Math.pow(position1[0] - position2[0], 2) + Math.pow(position1[1] - position2[1], 2));
         }
-        if( absoluteDistanceSquare(moveTowardTo.position,this.position) === 1 )
-        {
+        if (absoluteDistanceSquare(moveTowardTo.position, this.position) === 1) {
             /// north
-            if(moveTowardTo.position[1] - this.position[1] == -1)
-                this.moveDirection(commandQueueItem,FacingDirection.Up);
-            else if(moveTowardTo.position[1] - this.position[1] == 1)
-                this.moveDirection(commandQueueItem,FacingDirection.Down);
-            else if(moveTowardTo.position[0] - this.position[0] == 1)
-                this.moveDirection(commandQueueItem,FacingDirection.Right);
+            if (moveTowardTo.position[1] - this.position[1] == -1)
+                this.moveDirection(commandQueueItem, FacingDirection.Up);
+            else if (moveTowardTo.position[1] - this.position[1] == 1)
+                this.moveDirection(commandQueueItem, FacingDirection.Down);
+            else if (moveTowardTo.position[0] - this.position[0] == 1)
+                this.moveDirection(commandQueueItem, FacingDirection.Right);
             else
-                this.moveDirection(commandQueueItem,FacingDirection.Left);
+                this.moveDirection(commandQueueItem, FacingDirection.Left);
         }
-        else if (this.moveToward(commandQueueItem,moveTowardTo) )
-        {
-            var callbackCommand = new CallbackCommand(this.controller, () => {}, () => {
-                this.moveTo(callbackCommand,moveTowardTo);
-            },this.identifier);
+        else if (this.moveToward(commandQueueItem, moveTowardTo)) {
+            var callbackCommand = new CallbackCommand(this.controller, () => { }, () => {
+                this.moveTo(callbackCommand, moveTowardTo);
+            }, this.identifier);
             this.addCommand(callbackCommand);
         }
-        else
-        {
+        else {
             this.bump(commandQueueItem);
         }
     }
@@ -261,9 +261,54 @@ export default class BaseEntity {
         // default behavior for use ?
         this.controller.events.forEach(e => e({ eventType: EventType.WhenUsed, targetType: this.type, eventSenderIdentifier: userEntity.identifier, targetIdentifier: this.identifier }));
     }
-    
-    drop(commandQueueItem, itemType) {
 
+    drop(commandQueueItem, itemType) {
+        var sprite = this.controller.levelView.createMiniBlock(this.position[0], this.position[1], itemType);
+        sprite.sortOrder = this.controller.levelView.yToIndex(this.position[1]) + 2;
+        this.controller.levelView.playScaledSpeed(sprite.animations, "animate");
+        commandQueueItem.succeeded();
+    }
+
+    attack(commandQueueItem) {
+        let facingName = this.controller.levelView.getDirectionName(this.facing);
+        this.controller.levelView.onAnimationEnd(this.controller.levelView.playScaledSpeed(this.sprite.animations, "attack" + facingName),()=>{
+        let frontEntity = this.controller.levelEntity.getEntityAt(this.controller.levelModel.getMoveForwardPosition(this));
+        if(frontEntity !== null) {
+            this.controller.levelView.onAnimationEnd(this.controller.levelView.playScaledSpeed(frontEntity.sprite.animations, "takeDamage" + facingName),()=>{
+            this.controller.events.forEach(e => e({ eventType: EventType.WhenAttacked, targetType: this.type, eventSenderIdentifier: this.identifier, targetIdentifier: frontEntity.identifier }))});
+        }
+        commandQueueItem.succeeded();
+        });
+    }
+
+    playRandomIdle(facing) {
+        var facingName,
+            rand,
+            animationName = "";
+        facingName = this.controller.levelView.getDirectionName(facing);
+        rand = Math.trunc(Math.random() * 5) + 1;
+
+        switch (rand) {
+            case 1:
+                animationName += "idle";
+                break;
+            case 2:
+                animationName += "lookLeft";
+                break;
+            case 3:
+                animationName += "lookRight";
+                break;
+            case 4:
+                animationName += "lookAtCam";
+                break;
+            case 5:
+                animationName += "lookDown";
+            default:
+        }
+
+        animationName += facingName;
+        this.controller.levelView.playScaledSpeed(this.sprite.animations, animationName);
+        this.controller.printErrorMsg(this.type + " calls animation : " + animationName + "\n");
     }
 
     updateAnimationDirection() {

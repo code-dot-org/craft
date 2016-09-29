@@ -2,6 +2,8 @@ import BaseEntity from "./BaseEntity.js"
 import AssetLoader from "../LevelMVC/AssetLoader.js";
 import LevelView from "../LevelMVC/LevelView.js"
 import FacingDirection from "../LevelMVC/FacingDirection.js";
+import EventType from "../Event/EventType.js";
+
 export default class Sheep extends BaseEntity {
     constructor(controller, type, identifier, x, y, facing) {
         super(controller, type, identifier, x, y, facing);
@@ -14,21 +16,14 @@ export default class Sheep extends BaseEntity {
 
     use(commandQueueItem, userEntity) {
         // default behavior for use ?
-        if(!this.naked)
-        {
-            this.controller.levelView.playShearSheepAnimationWithEntity(userEntity.position, userEntity.facing, this, () => {
-                commandQueueItem.succeeded();
-                super.use(commandQueueItem, userEntity);
-            });
+        if (!this.naked) {
+            let direction = this.controller.levelView.getDirectionName(this.facing);
+            this.naked = true;
+            this.controller.levelView.playScaledSpeed(this.sprite.animations, "naked_idle" + direction, () => { });
         }
-        else
-        {
-            var animName = "naked_takeDamage" + this.controller.levelView.getDirectionName(this.facing);
-            this.controller.levelView.onAnimationEnd(this.controller.levelView.playScaledSpeed(this.sprite.animations, animName),() => 
-            {
-                commandQueueItem.succeeded();
-            });
-        }
+        this.controller.levelView.setSelectionIndicatorPosition(this.position[0], this.position[1]);
+        commandQueueItem.succeeded();
+        super.use(commandQueueItem, userEntity);
     }
 
     playMoveForwardAnimation(position, facing, commandQueueItem, groundType, completionHandler) {
@@ -40,31 +35,35 @@ export default class Sheep extends BaseEntity {
         // stepping sound
         levelView.playBlockSound(groundType);
         // play walk animation
-        var animName ="";
-        if(this.naked)
+        var animName = "";
+        if (this.naked)
             animName += "naked_";
         animName += "walk" + this.controller.levelView.getDirectionName(this.facing);
         levelView.playScaledSpeed(this.sprite.animations, animName);
-        setTimeout(() => {tween = this.controller.levelView.addResettableTween(this.sprite).to({
-            x: (this.offset[0] + 40 * position[0]), y: (this.offset[1] + 40 * position[1])
-        }, 300, Phaser.Easing.Linear.None);
-        tween.onComplete.add(() => {
-            commandQueueItem.succeeded();
-        });
+        setTimeout(() => {
+            tween = this.controller.levelView.addResettableTween(this.sprite).to({
+                x: (this.offset[0] + 40 * position[0]), y: (this.offset[1] + 40 * position[1])
+            }, 300, Phaser.Easing.Linear.None);
+            tween.onComplete.add(() => {
+                commandQueueItem.succeeded();
+            });
 
-        tween.start();}, 50);
+            tween.start();
+        }, 50);
         // smooth movement using tween
-        
+
     }
 
     bump(commandQueueItem) {
         var animName = "";
-        if(this.naked)
+        if (this.naked)
             animName += "naked_";
         animName += "bump";
         var facingName = this.controller.levelView.getDirectionName(this.facing);
         this.controller.levelView.playScaledSpeed(this.sprite.animations, animName + facingName);
-        super.bump(commandQueueItem);
+        this.controller.delayPlayerMoveBy(400, 800, () => {
+            commandQueueItem.succeeded();
+        });
     }
 
     prepareSprite() {
@@ -74,6 +73,7 @@ export default class Sheep extends BaseEntity {
         let frameRate = 12, pauseFrame = 30, randomPauseMin = 0.2, randomPauseMax = 1;
         let actionPlane = this.controller.levelView.actionPlane;
         var frameList = [];
+        var frameName = "ShadowSheep_2016";
         this.sprite = actionPlane.create(0, 0, 'sheep', 'ShadowSheep_2016001.png');
         // for normal sheep
         // [direction][[idle],[look left],[look right],[look up],[look down],[walk],[attack],[take dmg],[die],[eat],[bump]]
@@ -85,12 +85,12 @@ export default class Sheep extends BaseEntity {
             var facingName = this.controller.levelView.getDirectionName(i);
 
             // idle sequence
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][0][0], frameListPerDirection[i][0][1], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][0][0], frameListPerDirection[i][0][1], ".png", 3);
             this.sprite.animations.add("idle" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.playRandomIdle(this.facing);
             });
             // look left sequence ( look left -> pause for random time -> look front -> idle)
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][1][0], frameListPerDirection[i][1][1], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][1][0], frameListPerDirection[i][1][1], ".png", 3);
             this.sprite.animations.add("lookLeft" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.sprite.animations.stop();
                 setTimeout(() => {
@@ -98,12 +98,12 @@ export default class Sheep extends BaseEntity {
                 }, getRandomSecondBetween(randomPauseMin, randomPauseMax));
 
             });
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][1][1], frameListPerDirection[i][1][0], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][1][1], frameListPerDirection[i][1][0], ".png", 3);
             this.sprite.animations.add("lookLeft" + facingName + "_2", frameList, frameRate, false).onComplete.add(() => {
                 this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + this.controller.levelView.getDirectionName(this.facing));
             });
             // look right sequence ( look right -> pause for random time -> look front -> idle)
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][2][0], frameListPerDirection[i][2][1], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][2][0], frameListPerDirection[i][2][1], ".png", 3);
             this.sprite.animations.add("lookRight" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.sprite.animations.stop();
                 setTimeout(() => {
@@ -111,12 +111,12 @@ export default class Sheep extends BaseEntity {
                 }, getRandomSecondBetween(randomPauseMin, randomPauseMax));
 
             });
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][2][1], frameListPerDirection[i][2][0], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][2][1], frameListPerDirection[i][2][0], ".png", 3);
             this.sprite.animations.add("lookRight" + facingName + "_2", frameList, frameRate, false).onComplete.add(() => {
                 this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + this.controller.levelView.getDirectionName(this.facing));
             });
             // look up sequence ( look up -> pause for random time -> look front -> play random idle)
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][3][0], frameListPerDirection[i][3][1], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][3][0], frameListPerDirection[i][3][1], ".png", 3);
             this.sprite.animations.add("lookAtCam" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.sprite.animations.stop();
                 setTimeout(() => {
@@ -124,42 +124,42 @@ export default class Sheep extends BaseEntity {
                 }, getRandomSecondBetween(randomPauseMin, randomPauseMax));
 
             });
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][3][1], frameListPerDirection[i][3][0], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][3][1], frameListPerDirection[i][3][0], ".png", 3);
             this.sprite.animations.add("lookAtCam" + facingName + "_2", frameList, frameRate, false).onComplete.add(() => {
                 this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + this.controller.levelView.getDirectionName(this.facing));
             });
             // look down
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][4][0], frameListPerDirection[i][4][1], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][4][0], frameListPerDirection[i][4][1], ".png", 3);
             this.sprite.animations.add("lookDown" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + this.controller.levelView.getDirectionName(this.facing));
             });
             // walk
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][5][0], frameListPerDirection[i][5][1], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][5][0], frameListPerDirection[i][5][1], ".png", 3);
             this.sprite.animations.add("walk" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.playRandomIdle(this.facing);
             });
             // attack
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][6][0], frameListPerDirection[i][6][1], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][6][0], frameListPerDirection[i][6][1], ".png", 3);
             this.sprite.animations.add("attack" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.playRandomIdle(this.facing);
             });
             // take damage
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][7][0], frameListPerDirection[i][7][1], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][7][0], frameListPerDirection[i][7][1], ".png", 3);
             this.sprite.animations.add("takeDamage" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.playRandomIdle(this.facing);
             });
             // die
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][8][0], frameListPerDirection[i][8][1], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][8][0], frameListPerDirection[i][8][1], ".png", 3);
             this.sprite.animations.add("die" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.playRandomIdle(this.facing);
             });
             // eat
-            frameList = this.controller.levelView.generateReverseFrames("ShadowSheep_2016", frameListPerDirection[i][9][0], frameListPerDirection[i][9][1], ".png", 3);
+            frameList = this.controller.levelView.generateReverseFrames(frameName, frameListPerDirection[i][9][0], frameListPerDirection[i][9][1], ".png", 3);
             this.sprite.animations.add("eat" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.playRandomIdle(this.facing);
             });
             // bump
-            frameList = this.controller.levelView.generateReverseFrames("ShadowSheep_2016", frameListPerDirection[i][10][0], frameListPerDirection[i][10][1], ".png", 3);
+            frameList = this.controller.levelView.generateReverseFrames(frameName, frameListPerDirection[i][10][0], frameListPerDirection[i][10][1], ".png", 3);
             this.sprite.animations.add("bump" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.playRandomIdle(this.facing);
             });
@@ -174,12 +174,12 @@ export default class Sheep extends BaseEntity {
             var facingName = this.controller.levelView.getDirectionName(i);
 
             // idle sequence
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][0][0], frameListPerDirection[i][0][1], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][0][0], frameListPerDirection[i][0][1], ".png", 3);
             this.sprite.animations.add("naked_idle" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.playRandomIdle(this.facing);
             });
             // look left sequence ( look left -> pause for random time -> look front -> idle)
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][1][0], frameListPerDirection[i][1][1], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][1][0], frameListPerDirection[i][1][1], ".png", 3);
             this.sprite.animations.add("naked_lookLeft" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.sprite.animations.stop();
                 setTimeout(() => {
@@ -187,12 +187,12 @@ export default class Sheep extends BaseEntity {
                 }, getRandomSecondBetween(randomPauseMin, randomPauseMax));
 
             });
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][1][1], frameListPerDirection[i][1][0], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][1][1], frameListPerDirection[i][1][0], ".png", 3);
             this.sprite.animations.add("naked_lookLeft" + facingName + "_2", frameList, frameRate, false).onComplete.add(() => {
                 this.controller.levelView.playScaledSpeed(this.sprite.animations, "naked_idle" + this.controller.levelView.getDirectionName(this.facing));
             });
             // look right sequence ( look right -> pause for random time -> look front -> idle)
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][2][0], frameListPerDirection[i][2][1], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][2][0], frameListPerDirection[i][2][1], ".png", 3);
             this.sprite.animations.add("naked_lookRight" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.sprite.animations.stop();
                 setTimeout(() => {
@@ -200,12 +200,12 @@ export default class Sheep extends BaseEntity {
                 }, getRandomSecondBetween(randomPauseMin, randomPauseMax));
 
             });
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][2][1], frameListPerDirection[i][2][0], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][2][1], frameListPerDirection[i][2][0], ".png", 3);
             this.sprite.animations.add("naked_lookRight" + facingName + "_2", frameList, frameRate, false).onComplete.add(() => {
                 this.controller.levelView.playScaledSpeed(this.sprite.animations, "naked_idle" + this.controller.levelView.getDirectionName(this.facing));
             });
             // look up sequence ( look up -> pause for random time -> look front -> play random idle)
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][3][0], frameListPerDirection[i][3][1], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][3][0], frameListPerDirection[i][3][1], ".png", 3);
             this.sprite.animations.add("naked_lookAtCam" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.sprite.animations.stop();
                 setTimeout(() => {
@@ -213,42 +213,42 @@ export default class Sheep extends BaseEntity {
                 }, getRandomSecondBetween(randomPauseMin, randomPauseMax));
 
             });
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][3][1], frameListPerDirection[i][3][0], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][3][1], frameListPerDirection[i][3][0], ".png", 3);
             this.sprite.animations.add("naked_lookAtCam" + facingName + "_2", frameList, frameRate, false).onComplete.add(() => {
                 this.controller.levelView.playScaledSpeed(this.sprite.animations, "naked_idle" + this.controller.levelView.getDirectionName(this.facing));
             });
             // look down
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][4][0], frameListPerDirection[i][4][1], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][4][0], frameListPerDirection[i][4][1], ".png", 3);
             this.sprite.animations.add("naked_lookDown" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.controller.levelView.playScaledSpeed(this.sprite.animations, "naked_idle" + this.controller.levelView.getDirectionName(this.facing));
             });
             // walk
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][5][0], frameListPerDirection[i][5][1], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][5][0], frameListPerDirection[i][5][1], ".png", 3);
             this.sprite.animations.add("naked_walk" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.playRandomIdle(this.facing);
             });
             // attack
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][6][0], frameListPerDirection[i][6][1], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][6][0], frameListPerDirection[i][6][1], ".png", 3);
             this.sprite.animations.add("naked_attack" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.playRandomIdle(this.facing);
             });
             // take damage
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][7][0], frameListPerDirection[i][7][1], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][7][0], frameListPerDirection[i][7][1], ".png", 3);
             this.sprite.animations.add("naked_takeDamage" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.playRandomIdle(this.facing);
             });
             // die
-            frameList = Phaser.Animation.generateFrameNames("ShadowSheep_2016", frameListPerDirection[i][8][0], frameListPerDirection[i][8][1], ".png", 3);
+            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][8][0], frameListPerDirection[i][8][1], ".png", 3);
             this.sprite.animations.add("naked_die" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.playRandomIdle(this.facing);
             });
             // eat
-            frameList = this.controller.levelView.generateReverseFrames("ShadowSheep_2016", frameListPerDirection[i][9][0], frameListPerDirection[i][9][1], ".png", 3);
+            frameList = this.controller.levelView.generateReverseFrames(frameName, frameListPerDirection[i][9][0], frameListPerDirection[i][9][1], ".png", 3);
             this.sprite.animations.add("naked_eat" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.playRandomIdle(this.facing);
             });
             // bump
-            frameList = this.controller.levelView.generateReverseFrames("ShadowSheep_2016", frameListPerDirection[i][10][0], frameListPerDirection[i][10][1], ".png", 3);
+            frameList = this.controller.levelView.generateReverseFrames(frameName, frameListPerDirection[i][10][0], frameListPerDirection[i][10][1], ".png", 3);
             this.sprite.animations.add("naked_bump" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.playRandomIdle(this.facing);
             });
@@ -291,11 +291,26 @@ export default class Sheep extends BaseEntity {
         this.controller.levelView.playScaledSpeed(this.sprite.animations, animationName);
         this.controller.printErrorMsg(this.type + " calls animation : " + animationName + "\n");
     }
-    
+
+    attack(commandQueueItem) {
+        let nakedSuffix = "";
+        if (this.naked)
+            nakedSuffix = "naked_";
+        let facingName = this.controller.levelView.getDirectionName(this.facing);
+        this.controller.levelView.onAnimationEnd(this.controller.levelView.playScaledSpeed(this.sprite.animations, nakedSuffix + "attack" + facingName),()=>{
+        let frontEntity = this.controller.levelEntity.getEntityAt(this.controller.levelModel.getMoveForwardPosition(this));
+        if(frontEntity !== null) {
+            this.controller.levelView.onAnimationEnd(this.controller.levelView.playScaledSpeed(frontEntity.sprite.animations, nakedSuffix +  "takeDamage" + facingName),()=>{
+            this.controller.events.forEach(e => e({ eventType: EventType.WhenAttacked, targetType: this.type, eventSenderIdentifier: this.identifier, targetIdentifier: frontEntity.identifier }))});
+        }
+        commandQueueItem.succeeded();
+        });
+    }
+
 
     updateAnimationDirection() {
         let facingName = "";
-        if(this.naked)
+        if (this.naked)
             facingName = "naked_";
         facingName += this.controller.levelView.getDirectionName(this.facing);
         this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + facingName);

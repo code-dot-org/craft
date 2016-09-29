@@ -90,11 +90,6 @@ export default class AssetLoader {
         pngPath: `${this.assetRoot}images/Sheep_2016.png`,
         jsonPath: `${this.assetRoot}images/Sheep_2016.json`
       },
-      creeper: {
-        type: 'atlasJSON',
-        pngPath: `${this.assetRoot}images/Creeper.png`,
-        jsonPath: `${this.assetRoot}images/Creeper.json`
-      },
       crops: {
         type: 'atlasJSON',
         pngPath: `${this.assetRoot}images/Crops.png`,
@@ -164,6 +159,31 @@ export default class AssetLoader {
         type: 'atlasJSON',
         pngPath: `${this.assetRoot}images/BurningInSun.png`,
         jsonPath: `${this.assetRoot}images/BurningInSun.json`
+      },
+      zombie: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/Zombie.png`,
+        jsonPath: `${this.assetRoot}images/Zombie.json`
+      },
+      ironGolem: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/Iron_Golem.png`,
+        jsonPath: `${this.assetRoot}images/Iron_Golem.json`
+      },
+      creeper: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/Creeper_2016.png`,
+        jsonPath: `${this.assetRoot}images/Creeper_2016.json`
+      },
+      cow: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/Cow.png`,
+        jsonPath: `${this.assetRoot}images/Cow.json`
+      },
+      chicken: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/Chicken.png`,
+        jsonPath: `${this.assetRoot}images/Chicken.json`
       },
       dig_wood1: {
         type: 'sound',
@@ -266,7 +286,7 @@ export default class AssetLoader {
         type: 'sound',
         mp3: `${this.assetRoot}audio/say3.mp3`,
         ogg: `${this.assetRoot}audio/say3.ogg`
-      }
+      },
     };
 
     this.assetPacks = {
@@ -387,7 +407,11 @@ export default class AssetLoader {
         'doorOpen',
         'houseSuccess',
         'minecart',
-        'sheepBaa'
+        'sheepBaa',
+        'zombie',
+        'cow',
+        'chicken',
+        'ironGolem'
       ],
       playerSteve: [
         'playerSteve'

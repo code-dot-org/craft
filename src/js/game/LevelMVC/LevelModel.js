@@ -143,6 +143,11 @@ export default class LevelModel {
       this.player.position[1] === position[1];
   }
 
+  spritePositionToIndex(offset, spritePosition) {
+    var position = [spritePosition[0] - offset[0], spritePosition[1] - offset[1]];
+    return [position[0] / 40, position[1] / 40];
+  }
+
   solutionMapMatchesResultMap(solutionMap) {
     for (var i = 0; i < this.planeArea(); i++) {
       var solutionItemType = solutionMap[i];

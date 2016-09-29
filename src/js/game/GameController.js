@@ -443,8 +443,7 @@ class GameController {
     }
   }
 
-  moveTo(commandQueueItem, moveTowardTo)
-  {
+  moveTo(commandQueueItem, moveTowardTo) {
     var target = commandQueueItem.target;
     var targetIsType = this.isType(target);
     var moveTowardToIsType = this.isType(moveTowardTo);
@@ -756,10 +755,12 @@ class GameController {
     } else if (frontEntity != null) {
       // push use command to execute general use behavior of the entity before executing the event
       this.levelView.onAnimationEnd(this.levelView.playPlayerAnimation("punch", player.position, player.facing, false), () => {
-      var useCommand = new CallbackCommand(this, () => { }, () => { frontEntity.use(useCommand, player); }, frontEntity.identifier);
-      frontEntity.addCommand(useCommand);
-      setTimeout(()=>{commandQueueItem.succeeded();}, 200);
-      
+        var useCommand = new CallbackCommand(this, () => { }, () => { frontEntity.use(useCommand, player); }, frontEntity.identifier);
+        frontEntity.addCommand(useCommand);
+        this.levelView.playExplosionAnimation(player.position, player.facing, frontEntity.position, frontEntity.type, () => { }, false);
+        this.levelView.playPlayerAnimation("idle", player.position, player.facing, false);
+        commandQueueItem.succeeded();
+        setTimeout(() => { this.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]); }, 200);
       });
     } else {
       this.levelView.playPunchDestroyAirAnimation(player.position, player.facing, this.levelModel.getMoveForwardPosition(), () => {
@@ -1035,6 +1036,42 @@ class GameController {
     }
   }
 
+  drop(commandQueueItem, itemType) {
+    var target = commandQueueItem.target;
+    if (!this.isType(target)) {
+      var entity = this.getEntity(target);
+      entity.drop(commandQueueItem, itemType);
+    } else {
+      var entities = this.getEntities(target);
+      for (var i = 0; i < entities.length; i++) {
+        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.drop(callbackCommand, itemType) }, entities[i].identifier);
+        entities[i].addCommand(callbackCommand);
+      }
+      commandQueueItem.succeeded();
+    }
+  }
+
+  attack(commandQueueItem) {
+    var target = commandQueueItem.target;
+    if (!this.isType(target)) {
+      var entity = this.getEntity(target);
+      if(entity.identifier === 'Player')
+      {
+        this.codeOrgAPI.destroyBlock(dummyFunc);
+        commandQueueItem.succeeded();
+      } else {
+        entity.attack(commandQueueItem);
+      }
+    } else {
+      var entities = this.getEntities(target);
+      for (var i = 0; i < entities.length; i++) {
+        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.attack(callbackCommand) }, entities[i].identifier);
+        entities[i].addCommand(callbackCommand);
+      }
+      commandQueueItem.succeeded();
+    }
+  }
+
   addCommand(commandQueueItem) {
     var target = this.getEntity(commandQueueItem.target);
     // there is a target, push command to the specific target
@@ -1048,7 +1085,7 @@ class GameController {
 
   addGlobalCommand(commandQueueItem) {
     let entity = this.levelEntity.entityMap.get(commandQueueItem.target);
-    if(entity !== undefined)
+    if (entity !== undefined)
       entity.addCommand(commandQueueItem);
     else {
       this.queue.addCommand(commandQueueItem);

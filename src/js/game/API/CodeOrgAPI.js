@@ -116,7 +116,7 @@ export function get(controller) {
       controller.addCommand(callbackCommand);
     },
 
-    moveTo: function(highlightCallback, targetEntity, moveTowardTo) {
+    moveTo: function (highlightCallback, targetEntity, moveTowardTo) {
       const callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
         controller.moveTo(callbackCommand, moveTowardTo);
       }, targetEntity);
@@ -147,7 +147,7 @@ export function get(controller) {
     turn: function (highlightCallback, direction, targetEntity) {
 
       const callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
-        controller.turn(callbackCommand,direction === 'right' ? 1 : -1);
+        controller.turn(callbackCommand, direction === 'right' ? 1 : -1);
       }, targetEntity);
       controller.addCommand(callbackCommand);
     },
@@ -219,6 +219,13 @@ export function get(controller) {
       controller.addCommand(callbackCommand);
     },
 
+    drop: function (highlightCallback, itemType, targetEntity) {
+      var callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
+        controller.drop(callbackCommand, itemType);
+      }, targetEntity);
+      controller.addCommand(callbackCommand);
+    },
+
     startDay: function (highlightCallback) {
       var callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
         controller.startDay(callbackCommand);
@@ -238,6 +245,13 @@ export function get(controller) {
         controller.wait(callbackCommand, time)
       }, targetEntity);
       controller.addGlobalCommand(callbackCommand);
+    },
+    
+    attack: function (highlightCallback, targetEntity) {
+      var callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
+        controller.attack(callbackCommand)
+      }, targetEntity);
+      controller.addCommand(callbackCommand);
     }
   };
 }

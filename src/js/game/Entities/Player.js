@@ -20,6 +20,7 @@ export default class Player extends BaseEntity {
       levelModel = this.controller.levelModel,
       levelView = this.controller.levelView;
     let wasOnBlock = player.isOnBlock;
+    let prevPosition = this.position;
     // update position
     levelModel.moveForward();
     // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
@@ -51,6 +52,8 @@ export default class Player extends BaseEntity {
         });
       }
     });
+    this.collectItems(prevPosition);
+    this.collectItems();
   }
 
   bump(commandQueueItem) {
@@ -60,8 +63,7 @@ export default class Player extends BaseEntity {
       levelView.playCreeperExplodeAnimation(player.position, player.facing, levelModel.getMoveForwardPosition(), player.isOnBlock, () => {
         commandQueueItem.failed();
       });
-    }
-    else {
+    } else {
       levelView.playBumpAnimation(this.position, this.facing, false);
       this.controller.delayPlayerMoveBy(400, 800, () => {
         commandQueueItem.succeeded();
@@ -75,6 +77,28 @@ export default class Player extends BaseEntity {
 
   updateDirection(direction) {
     this.controller.levelView.updatePlayerDirection(this.position, this.facing);
+  }
+
+  collectItems(targetPosition = this.position) {
+    // collectible check
+    var collectibles = this.controller.levelView.collectibleItems;
+    var distanceBetween = function (position, position2) {
+      return Math.sqrt(Math.pow(position[0] - position2[0], 2) + Math.pow(position[1] - position2[1], 2));
+    }
+    for (var i = 0; i < collectibles.length; i++) {
+      let sprite = collectibles[i][0];
+      // already collected item
+      if (sprite === null) {
+        collectibles.splice(i, 1);
+
+      } else {
+        let collectiblePosition = this.controller.levelModel.spritePositionToIndex(collectibles[i][1], [sprite.x, sprite.y]);
+        if (distanceBetween(targetPosition, collectiblePosition) < 2) {
+          this.controller.levelView.playItemAcquireAnimation(this.position, this.facing, sprite, () => { });
+          collectibles.splice(i, 1);
+        }
+      }
+    }
   }
 }
 

@@ -1,5 +1,6 @@
 import BaseEntity from "../Entities/BaseEntity.js";
 import Sheep from "../Entities/Sheep.js";
+import Zombie from "../Entities/Zombie.js"
 
 /**
  * Handling non-player entities inside of the level
@@ -45,6 +46,9 @@ export default class LevelEntity {
                 case 'sheep':
                     entity = new Sheep(this.controller, type, identifier, x, y, facing);
                     break;
+                case 'zombie':
+                    entity = new Zombie(this.controller, type, identifier, x, y, facing);
+                    break;
                 default:
                     entity = new BaseEntity(this.controller, type, identifier, x, y, facing);
 
@@ -78,7 +82,7 @@ export default class LevelEntity {
 
     destroyEntity(identifier) {
         if (this.entityMap.has(identifier)) {
-            this.entityMap.get(identifier).sprite.animations.stop(null,true);
+            this.entityMap.get(identifier).sprite.animations.stop(null, true);
             this.entityMap.get(identifier).sprite.destroy();
             this.entityMap.delete(identifier);
         } else if (this.controller.DEBUG) {

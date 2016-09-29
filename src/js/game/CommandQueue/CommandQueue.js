@@ -56,7 +56,7 @@ export default class CommandQueue {
             else if (this.repeatCommands[i][1] === -1)
               this.repeatCommands[i][0]();
             else
-              this.repeatCommands.splice(i);
+              this.repeatCommands.splice(i,1);
           }
           return;
         }

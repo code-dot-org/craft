@@ -18,6 +18,7 @@ export default class LevelView {
     this.actionPlane = null;
     this.fluffPlane = null;
     this.fowPlane = null;
+    this.collectibleItems = [];
 
     this.miniBlocks = {
       "dirt": ["Miniblocks", 0, 5],
@@ -150,6 +151,7 @@ export default class LevelView {
       tween.stop(false);
     });
     this.resettableTweens.length = 0;
+    this.collectibleItems = [];
 
     this.resetPlanes(levelModel);
     this.preparePlayerSprite(this.player.name);
@@ -985,7 +987,6 @@ export default class LevelView {
     this.onAnimationEnd(explodeAnim.animations.add("explode", Phaser.Animation.generateFrameNames("BlockBreakParticle", 0, 7, "", 0), 30, false), () => {
       explodeAnim.kill();
       this.toDestroy.push(explodeAnim);
-      this.playPlayerAnimation("idle", playerPosition, facing, false);
 
       if (placeBlock) {
         this.playItemDropAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler);
@@ -999,7 +1000,7 @@ export default class LevelView {
     var sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
     sprite.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     this.onAnimationEnd(this.playScaledSpeed(sprite.animations, "animate"), () => {
-      this.playItemAcquireAnimation(playerPosition, facing, destroyPosition, blockType, sprite, completionHandler);
+      this.playItemAcquireAnimation(playerPosition, facing, sprite, completionHandler);
     });
   }
 
@@ -1008,10 +1009,11 @@ export default class LevelView {
     if (!animation.originalFps) {
       animation.originalFps = 1000 / animation.delay;
     }
-    return animationManager.play(name, this.controller.originalFpsToScaled(animation.originalFps));
+    var fps = this.controller.originalFpsToScaled(animation.originalFps);
+    return animationManager.play(name, fps);
   }
 
-  playItemAcquireAnimation(playerPosition, facing, destroyPosition, blockType, sprite, completionHandler) {
+  playItemAcquireAnimation(playerPosition, facing, sprite, completionHandler) {
     var tween;
 
     tween = this.addResettableTween(sprite).to({
@@ -1020,10 +1022,16 @@ export default class LevelView {
     }, 200, Phaser.Easing.Linear.None);
 
     tween.onComplete.add(() => {
-      this.audioPlayer.play("collectedBlock");
-      sprite.kill();
-      this.toDestroy.push(sprite);
-      completionHandler();
+      if(this.player.position[0] === playerPosition[0] && this.player.position[1] === playerPosition[1])
+      {
+        this.audioPlayer.play("collectedBlock");
+        sprite.kill();
+        this.toDestroy.push(sprite);
+        completionHandler();
+      }
+      else {
+        this.playItemAcquireAnimation(this.player.position,this.player.facing,sprite, completionHandler);
+      }
     });
 
     tween.start();
@@ -1646,13 +1654,22 @@ export default class LevelView {
     let framePrefix = this.miniBlocks[frame][0];
     let frameStart = this.miniBlocks[frame][1];
     let frameEnd = this.miniBlocks[frame][2];
-    let xOffset = -10;
-    let yOffset = 0;
+    let xOffset = -10 -20 + Math.random()*40;
+    let yOffset = 0 -20 + Math.random()*40;
 
-    frameList = Phaser.Animation.generateFrameNames(framePrefix, frameStart, frameEnd, "", 3);
+    frameList = Phaser.Animation.generateFrameNames(framePrefix, frameStart, frameEnd, ".png", 3);
 
+    var distanceBetween = function(position, position2) {
+      return Math.sqrt( Math.pow(position[0] - position2[0],2) +  Math.pow(position[1] - position2[1],2));
+    }
+      // todo : acquire after animation
     sprite = this.actionPlane.create(xOffset + 40 * x, yOffset + this.actionPlane.yOffset + 40 * y, atlas, "");
-    sprite.animations.add("animate", frameList, 10, false);
+    this.collectibleItems.push([sprite,[xOffset,yOffset]]);
+    let collectiblePosition = this.controller.levelModel.spritePositionToIndex([xOffset,yOffset],[sprite.x,sprite.y]);
+    var anim = sprite.animations.add("animate", frameList, 10, false);
+    anim.onComplete.add(()=>{
+    if(distanceBetween(this.player.position,collectiblePosition) < 2)
+      this.playItemAcquireAnimation(this.player.position,this.player.facing,sprite,()=>{})});
     return sprite;
   }
 
