@@ -20,7 +20,8 @@ export default class Cow extends BaseEntity {
         var frameList = [];
         var frameName = "Cow"
         this.sprite = actionPlane.create(0, 0, 'cow', 'Cow0001.png');
-        // for normal sheep
+        let stillFrameName = ['Cow0222.png','Cow0111.png','Cow0001.png','Cow0333.png'];
+        let idleDelayFrame = 20;
         // [direction][[idle],[look left],[look right],[look up],[look down],[walk],[attack],[take dmg],[die],[bump],[idle2],[eat]]
         var frameListPerDirection = [[[258,264],[225,227],[224,226],[285,287],[276,281],[291,302],[303,313],[314,326],[327,332],[460,467],[275,282],[240,249]], // down
             [[147,153],[114,116],[113,115],[174,176],[165,170],[180,191],[192,202],[203,215],[216,221],[452,459],[164,171],[129,138]], // right
@@ -30,15 +31,17 @@ export default class Cow extends BaseEntity {
             var facingName = this.controller.levelView.getDirectionName(i);
 
             // idle sequence
+            frameList = [];
+            for(var j = 0 ; j < idleDelayFrame ; j++)
+                frameList.push(stillFrameName[i]);
             frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][0][0], frameListPerDirection[i][0][1], ".png", 4);
             this.sprite.animations.add("idle" + facingName, frameList, frameRate, false).onComplete.add(() => {
-                this.sprite.animations.stop();
-                setTimeout(() => {
-                    this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + this.controller.levelView.getDirectionName(this.facing) + "_reverse");
-                }, getRandomSecondBetween(randomPauseMin, randomPauseMax));
+                this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + this.controller.levelView.getDirectionName(this.facing) + "_reverse");
             });
             frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][0][1], frameListPerDirection[i][0][0], ".png", 4);
-            this.sprite.animations.add("idle" + facingName + "_reverse", frameList, frameRate, false).onComplete.add(() => {
+            for(var j = 0 ; j < idleDelayFrame ; j++)
+                frameList.push(stillFrameName[i]);
+            this.sprite.animations.add("idle" + facingName+ "_reverse", frameList, frameRate, false).onComplete.add(() => {
                 this.playRandomIdle(this.facing);
             });
             // look left sequence ( look left -> pause for random time -> look front -> idle)
@@ -86,38 +89,33 @@ export default class Cow extends BaseEntity {
             // walk
             frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][5][0], frameListPerDirection[i][5][1], ".png", 4);
             this.sprite.animations.add("walk" + facingName, frameList, frameRate, false).onComplete.add(() => {
-                this.playRandomIdle(this.facing);
+                this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + this.controller.levelView.getDirectionName(this.facing));
             });
             // attack
             frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][6][0], frameListPerDirection[i][6][1], ".png", 4);
             this.sprite.animations.add("attack" + facingName, frameList, frameRate, false).onComplete.add(() => {
-                this.playRandomIdle(this.facing);
+                this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + this.controller.levelView.getDirectionName(this.facing));
             });
             // take damage
             frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][7][0], frameListPerDirection[i][7][1], ".png", 4);
             this.sprite.animations.add("takeDamage" + facingName, frameList, frameRate, false).onComplete.add(() => {
-                this.playRandomIdle(this.facing);
+                this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + this.controller.levelView.getDirectionName(this.facing));
             });
             // die
             frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][8][0], frameListPerDirection[i][8][1], ".png", 4);
             this.sprite.animations.add("die" + facingName, frameList, frameRate, false).onComplete.add(() => {
-                this.playRandomIdle(this.facing);
+                this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + this.controller.levelView.getDirectionName(this.facing));
             });
             // bump
             frameList = this.controller.levelView.generateReverseFrames(frameName, frameListPerDirection[i][9][0], frameListPerDirection[i][9][1], ".png", 4);
             this.sprite.animations.add("bump" + facingName, frameList, frameRate, false).onComplete.add(() => {
-                this.playRandomIdle(this.facing);
+                this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + this.controller.levelView.getDirectionName(this.facing));
             });
             // idle2 sequence
             frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][10][0], frameListPerDirection[i][10][1], ".png", 4);
-            this.sprite.animations.add("idle2" + facingName, frameList, frameRate, false).onComplete.add(() => {
-                this.sprite.animations.stop();
-                setTimeout(() => {
-                    this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle2" + this.controller.levelView.getDirectionName(this.facing) + "_reverse");
-                }, getRandomSecondBetween(randomPauseMin, randomPauseMax));
-            });
-            frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][10][1], frameListPerDirection[i][10][0], ".png", 4);
-            this.sprite.animations.add("idle2" + facingName + "_reverse", frameList, frameRate, false).onComplete.add(() => {
+            for(var j = 0 ; j < idleDelayFrame ; j++)
+                frameList.push(stillFrameName[i]);
+            this.sprite.animations.add("idle2" + facingName, frameList, frameRate/2, false).onComplete.add(() => {
                 this.playRandomIdle(this.facing);
             });
             // eat
@@ -130,7 +128,7 @@ export default class Cow extends BaseEntity {
             });
             frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][11][1], frameListPerDirection[i][11][0], ".png", 4);
             this.sprite.animations.add("eat" + facingName + "_2", frameList, frameRate, false).onComplete.add(() => {
-                this.playRandomIdle(this.facing);
+                this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + this.controller.levelView.getDirectionName(this.facing));
             });
             
         }
@@ -145,7 +143,7 @@ export default class Cow extends BaseEntity {
             rand,
             animationName = "";
         facingName = this.controller.levelView.getDirectionName(facing);
-        rand = Math.trunc(Math.random() * 6) + 1;
+        rand = Math.trunc(Math.random() * 7) + 1;
 
         switch (rand) {
             case 1:
@@ -165,6 +163,9 @@ export default class Cow extends BaseEntity {
                 break;
             case 6:
                 animationName += "idle2";
+                break;
+            case 7:
+                animationName += "eat";
                 break;
             default:
         }

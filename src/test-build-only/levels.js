@@ -191,7 +191,7 @@ window.demoLevels = {
       afterLoad: []
     },
 
-    entities: [['zombie', 3, 3, 1], ['zombie', 4, 2, 1], ['zombie', 6, 2, 1]],
+    entities: [['cow', 3, 3, 0], ['cow', 4, 2, 1], ['cow', 6, 2, 2], ['cow', 8, 2, 3]],
 
 
     playerStartPosition: [4, 3],
