@@ -94,7 +94,11 @@ export default class Sheep extends BaseEntity {
             this.sprite.animations.add("lookLeft" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.sprite.animations.stop();
                 setTimeout(() => {
-                    this.controller.levelView.playScaledSpeed(this.sprite.animations, "lookLeft" + this.controller.levelView.getDirectionName(this.facing) + "_2");
+                    
+                    if(this.naked)
+                        this.controller.levelView.playScaledSpeed(this.sprite.animations, "naked_lookLeft" + this.controller.levelView.getDirectionName(this.facing) + "_2");
+                    else
+                        this.controller.levelView.playScaledSpeed(this.sprite.animations, "lookLeft" + this.controller.levelView.getDirectionName(this.facing) + "_2");
                 }, getRandomSecondBetween(randomPauseMin, randomPauseMax));
 
             });
@@ -107,7 +111,10 @@ export default class Sheep extends BaseEntity {
             this.sprite.animations.add("lookRight" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.sprite.animations.stop();
                 setTimeout(() => {
-                    this.controller.levelView.playScaledSpeed(this.sprite.animations, "lookRight" + this.controller.levelView.getDirectionName(this.facing) + "_2");
+                    if(this.naked)
+                        this.controller.levelView.playScaledSpeed(this.sprite.animations, "naked_lookRight" + this.controller.levelView.getDirectionName(this.facing) + "_2");
+                    else
+                        this.controller.levelView.playScaledSpeed(this.sprite.animations, "lookRight" + this.controller.levelView.getDirectionName(this.facing) + "_2");
                 }, getRandomSecondBetween(randomPauseMin, randomPauseMax));
 
             });
@@ -120,7 +127,10 @@ export default class Sheep extends BaseEntity {
             this.sprite.animations.add("lookAtCam" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.sprite.animations.stop();
                 setTimeout(() => {
-                    this.controller.levelView.playScaledSpeed(this.sprite.animations, "lookAtCam" + this.controller.levelView.getDirectionName(this.facing) + "_2");
+                    if(this.naked)
+                        this.controller.levelView.playScaledSpeed(this.sprite.animations, "naked_lookAtCam" + this.controller.levelView.getDirectionName(this.facing) + "_2");
+                    else
+                        this.controller.levelView.playScaledSpeed(this.sprite.animations, "lookAtCam" + this.controller.levelView.getDirectionName(this.facing) + "_2");
                 }, getRandomSecondBetween(randomPauseMin, randomPauseMax));
 
             });
