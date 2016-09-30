@@ -1664,12 +1664,16 @@ export default class LevelView {
     }
       // todo : acquire after animation
     sprite = this.actionPlane.create(xOffset + 40 * x, yOffset + this.actionPlane.yOffset + 40 * y, atlas, "");
-    this.collectibleItems.push([sprite,[xOffset,yOffset]]);
     let collectiblePosition = this.controller.levelModel.spritePositionToIndex([xOffset,yOffset],[sprite.x,sprite.y]);
     var anim = sprite.animations.add("animate", frameList, 10, false);
     anim.onComplete.add(()=>{
+    
     if(distanceBetween(this.player.position,collectiblePosition) < 2)
-      this.playItemAcquireAnimation(this.player.position,this.player.facing,sprite,()=>{})});
+      this.playItemAcquireAnimation(this.player.position,this.player.facing,sprite,()=>{})
+    else {
+    this.collectibleItems.push([sprite,[xOffset,yOffset]]);
+    }});
+    
     return sprite;
   }
 
