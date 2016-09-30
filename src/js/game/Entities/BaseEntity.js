@@ -9,6 +9,7 @@ export default class BaseEntity {
     constructor(controller, type, identifier, x, y, facing) {
         this.queue = new CommandQueue(controller);
         this.controller = controller;
+        this.game = controller.game;
         this.position = [x, y];
         this.type = type;
         // temp

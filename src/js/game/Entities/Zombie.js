@@ -9,6 +9,7 @@ export default class Zombie extends BaseEntity {
         this.offset = [-43, -55];
         this.prepareSprite();
         this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex);
+        this.burningSprite = [];
     }
 
     prepareSprite() {
@@ -17,9 +18,19 @@ export default class Zombie extends BaseEntity {
         }
         let frameRate = 12, pauseFrame = 30, randomPauseMin = 0.2, randomPauseMax = 1;
         let actionPlane = this.controller.levelView.actionPlane;
+        let fluffPlane = this.controller.levelView.fluffPlane;
         var frameList = [];
         var frameName = "Zombie_"
         this.sprite = actionPlane.create(0, 0, 'zombie', 'Zombie_001.png');
+        this.burningSprite = [this.sprite.addChild(actionPlane.create(47,30,'burningInSun',"BurningFront_001.png")),
+                         this.sprite.addChild(actionPlane.create(47,30,'burningInSun',"BurningBehind_001.png"))];
+        frameList = Phaser.Animation.generateFrameNames("BurningFront_",1,15,".png",3);
+        this.burningSprite[0].animations.add("burn",frameList,frameRate,true);
+        frameList = Phaser.Animation.generateFrameNames("BurningBehind_",1,15,".png",3);
+        this.burningSprite[1].animations.add("burn",frameList,frameRate,true);
+        this.controller.levelView.playScaledSpeed(this.burningSprite[0].animations, "burn");
+        this.controller.levelView.playScaledSpeed(this.burningSprite[1].animations, "burn");
+        this.burningSprite[1].sortOrder = this.sprite.sortOrder+100;
         // for normal sheep
         // [direction][[idle],[look left],[look right],[look up],[look down],[walk],[attack],[take dmg],[die],[bump]]
         var frameListPerDirection = [[[73, 79], [57, 59], [61, 63], [69, 71], [65, 67], [80, 88], [89, 91], [93, 101], [102, 110], [229, 236]], // down
