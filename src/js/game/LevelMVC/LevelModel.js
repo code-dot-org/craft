@@ -490,7 +490,7 @@ export default class LevelModel {
         result.push("frontEntity");
         result.push(frontEntity);
       }
-      result[0] = (this.actionPlane[blockIndex].isWalkable || (entity.isOnBlock && !this.actionPlane[blockIndex].isEmpty)) && (frontEntity === undefined);
+      result[0] = (this.actionPlane[blockIndex].isWalkable || ((frontEntity !== undefined && frontEntity.isOnBlock) && !this.actionPlane[blockIndex].isEmpty)) && (frontEntity === undefined);
     }
     else
       result.push("outBound");

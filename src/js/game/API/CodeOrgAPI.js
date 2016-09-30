@@ -199,9 +199,9 @@ export function get(controller) {
       return controller.getScreenshot();
     },
 
-    spawnEntity: function (highlightCallback, targetEntity, type, spawnDirection, facing) {
+    spawnEntity: function (highlightCallback, type, spawnDirection) {
       var callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
-        controller.spawnEntity(callbackCommand, targetEntity, type, spawnDirection, facing);
+        controller.spawnEntity(callbackCommand, type, spawnDirection);
       });
       controller.addCommand(callbackCommand);
     },

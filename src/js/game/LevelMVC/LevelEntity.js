@@ -78,17 +78,99 @@ export default class LevelEntity {
         return entity;
     }
 
-    spawnEntity(eventSenderIdentifier, type, spawnDirection, facing) {
-        var entity = this.entityMap.get(eventSenderIdentifier);
-        if (entity === undefined) {
-            if (this.controller.DEBUG)
-                this.game.debug.text("Not able to spawn entity since sender is not specified\n");
+    spawnEntity(type, spawnDirection) {
+        var getRandomInt = function (min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
         }
-        // can spawn entity if it's possible to move
-        else if (this.controller.levelModel.canMoveDirection(entity, spawnDirection)[0]) {
-
-            let position = this.controller.levelModel.getMoveDirectionPosition(entity, spawnDirection);
-            return this.createEntity(type, this.id++, position[0], position[1], facing);
+        var levelModel = this.controller.levelModel;
+        var width = levelModel.planeWidth;
+        var height = levelModel.planeHeight;
+        if (spawnDirection === "middle") {
+            var position = [getRandomInt(1, width - 2), getRandomInt(1, height - 2)];
+            while (!levelModel.isPositionEmpty(position)[0]) {
+                position = [getRandomInt(1, width - 2), getRandomInt(1, height - 2)];
+            }
+            return this.createEntity(type, this.id++, position[0], position[1], getRandomInt(0, 3));
+        } else if (spawnDirection === "left") {
+            var xIndex = 0;
+            var columnFull = true;
+            while (xIndex < width && columnFull) {
+                columnFull = true;
+                for (var i = 0; i < height; i++) {
+                    if (levelModel.isPositionEmpty([xIndex, i])) {
+                        columnFull = false;
+                        break;
+                    }
+                }
+                xIndex++;
+            }
+            if (xIndex < width) {
+                var position = [xIndex, getRandomInt(1, height - 2)];
+                while (!levelModel.isPositionEmpty(position)[0]) {
+                    position = [xIndex, getRandomInt(1, height - 2)];
+                }
+                return this.createEntity(type, this.id++, position[0], position[1], getRandomInt(0, 3));
+            }
+        } else if (spawnDirection === "right") {
+            var xIndex = width - 1;
+            var columnFull = true;
+            while (xIndex > -1 && columnFull) {
+                columnFull = true;
+                for (var i = 0; i < height; i++) {
+                    if (levelModel.isPositionEmpty([xIndex, i])) {
+                        columnFull = false;
+                        break;
+                    }
+                }
+                xIndex--;
+            }
+            if (xIndex > -1) {
+                var position = [xIndex, getRandomInt(1, height - 2)];
+                while (!levelModel.isPositionEmpty(position)[0]) {
+                    position = [xIndex, getRandomInt(1, height - 2)];
+                }
+                return this.createEntity(type, this.id++, position[0], position[1], getRandomInt(0, 3));
+            }
+        } else if (spawnDirection === "up") {
+            var yIndex = 0;
+            var rowFull = true;
+            while (yIndex < height && rowFull) {
+                rowFull = true;
+                for (var i = 0; i < width; i++) {
+                    if (levelModel.isPositionEmpty([i,yIndex])) {
+                        rowFull = false;
+                        break;
+                    }
+                }
+                yIndex++;
+            }
+            if (yIndex < height) {
+                var position = [getRandomInt(1, height - 2), yIndex];
+                while (!levelModel.isPositionEmpty(position)[0]) {
+                    position = [getRandomInt(1, height - 2), yIndex];
+                }
+                return this.createEntity(type, this.id++, position[0], position[1], getRandomInt(0, 3));
+            }
+        } else if(spawnDirection === "down") {
+            var yIndex = height - 1;
+            var rowFull = true;
+            while (yIndex > -1 && rowFull) {
+                rowFull = true;
+                for (var i = 0; i < width; i++) {
+                    if (levelModel.isPositionEmpty([i,yIndex])) {
+                        rowFull = false;
+                        break;
+                    }
+                }
+                yIndex--;
+            }
+            if (yIndex > -1) {
+                var position = [getRandomInt(1, height - 2), yIndex];
+                while (!levelModel.isPositionEmpty(position)[0]) {
+                    position = [getRandomInt(1, height - 2), yIndex];
+                }
+                return this.createEntity(type, this.id++, position[0], position[1], getRandomInt(0, 3));
+            }
         }
         return null;
     }
