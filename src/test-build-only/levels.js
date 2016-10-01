@@ -191,7 +191,7 @@ window.demoLevels = {
       afterLoad: []
     },
 
-    entities: [['cow', 3, 3, 0], ['cow', 4, 2, 1], ['cow', 6, 2, 2], ['cow', 8, 2, 3]],
+    entities: [['chicken', 3, 3, 0]],
 
 
     playerStartPosition: [4, 3],
@@ -249,7 +249,7 @@ window.demoLevels = {
     isEventLevel: true,
 
     solutionCode:
-    "registerEventCallback(function (event) {\nif(isEventTriggered(event,0)){\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\nturnRight(event.targetIdentifier);\nturnRight(event.targetIdentifier);\nturnRight(event.targetIdentifier);\nmoveAway(event.eventSenderIdentifier, event.targetIdentifier);\nturnRight(event.eventSenderIdentifier);\nturnRight(event.eventSenderIdentifier);\n}if(isEventTriggered(event,1)){\nmoveAway(event.targetIdentifier, event.eventSenderIdentifier);\n}\n})"
+    "registerEventCallback(function (event) {\nif(event.targetType !== 'chicken')\n	return;\nif(isEventTriggered(event,2)){\nmoveForward(event.targetIdentifier);\nmoveForward(event.targetIdentifier);\nturnRight(event.targetIdentifier);\nmoveForward(event.targetIdentifier);\n}\n})"
 ,
 
     verificationFunction: function (verificationAPI) {
