@@ -216,34 +216,6 @@ class GameController {
       this.codeOrgAPI.destroyBlock(dummyFunc);
       this.queue.begin();
     });
-
-    /*
-    this.game.input.keyboard.addKey(Phaser.Keyboard.E).onUp.add(() => {
-      var dummyFunc = function (result) {
-        console.log(`Execute command list done: ${result} `);
-      };
-      this.codeOrgAPI.startAttempt(dummyFunc);
-    });
-
-    this.game.input.keyboard.addKey(Phaser.Keyboard.W).onUp.add(() => {
-      var dummyFunc = function () {
-        console.log("Execute While command list");
-      };
-      var blockType = "empty";
-      var codeBlock = function () {
-        this.GameController.codeOrgAPI.moveForward(function () {
-          console.log("Execute While command move block");
-        });
-        this.GameController.codeOrgAPI.moveForward(function () {
-          console.log("Execute While command move block2");
-        });
-        this.GameController.codeOrgAPI.turnLeft(function () {
-          console.log("Execute While command turn");
-        });
-      };
-      this.codeOrgAPI.whilePathAhead(dummyFunc, blockType, codeBlock);
-    });
-    */
   }
 
   handleEndState() {
@@ -1055,8 +1027,7 @@ class GameController {
     var target = commandQueueItem.target;
     if (!this.isType(target)) {
       var entity = this.getEntity(target);
-      if(entity.identifier === 'Player')
-      {
+      if (entity.identifier === 'Player') {
         this.codeOrgAPI.destroyBlock(dummyFunc);
         commandQueueItem.succeeded();
       } else {
@@ -1120,6 +1091,13 @@ class GameController {
       this.levelView.updateFowPlane(this.levelModel.fowPlane);
       this.events.forEach(e => e({ eventType: EventType.WhenNight }));
       commandQueueItem.succeeded();
+    }
+  }
+
+  dispatchSpawnEventAtStart() {
+    for (var value of this.levelEntity.entityMap) {
+      var entity = value[1];
+      this.events.forEach(e => e({ eventType: EventType.WhenSpawned, targetType: entity.type, targetIdentifier: entity.identifier }));
     }
   }
 }

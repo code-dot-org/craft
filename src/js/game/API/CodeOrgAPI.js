@@ -38,6 +38,7 @@ export function get(controller) {
 
       controller.setPlayerActionDelayByQueueLength();
       controller.queue.begin();
+      controller.dispatchSpawnEventAtStart();
     },
 
     resetAttempt: function () {
