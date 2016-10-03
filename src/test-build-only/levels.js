@@ -4,6 +4,10 @@ var turnLeftBlock = "turnLeft();\n";
 var turnRightBlock = "turnRight();\n";
 var destroyBlock = "destroyBlock();\n";
 var registerEventCallback = function (functionImplementation) { return "registerEventCallback(function (event) {\n" + functionImplementation + "\n})\n" };
+var checkTargetType = function (type) { return "if(event.targetType !== '"+ type +"')\n return false;\n" };
+var ifEventTriggered = function(eventType, functionImplementation) { return "if(isEventTriggered(event,"+eventType+")){\n" + functionImplementation + "\n}" };
+var repeat = function(iterationTime, functionImplementation) { return "repeat(function() {\n" + functionImplementation +"\n},"+iterationTime+", event.targetIdentifier);\n"  };
+var repeatRandom = function(functionImplementation) {return "repeatRandom(function() {\n" + functionImplementation +"\n}, event.targetIdentifier);\n"  };
 var whileBlockAhead = function (type, blockCode) {
   return "whileAhead('" + type + "', do{\n" + blockCode + "});\n"
 };
@@ -103,7 +107,319 @@ window.demoLevels = {
 
   
   2: {
-    instructions: "Nighttime is boring with no zombies (sheep at this time). Get the Zombies spawning at night, and get them to chase you.",
+  instructions: "Time to shear some sheep! Walk to both of the sheep and get their wool.",
+
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: []
+    },
+
+    entities: [['chicken', 3, 3, 0]],
+
+
+    playerStartPosition: [4, 3],
+
+    playerStartDirection: 1,
+
+    groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "dirtCoarse", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "dirtCoarse", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
+    ],
+
+    groundDecorationPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "tallGrass", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "tallGrass", "", "", "", "", "", "", "", "", ""],
+
+    actionPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "dirt", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "treeOak", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+    isEventLevel: true,
+
+    solutionCode:
+       registerEventCallback(checkTargetType('chicken') + ifEventTriggered(2,"moveForward(event.targetIdentifier);\nmoveForward(event.targetIdentifier);\nturnRight(event.targetIdentifier);\nmoveForward(event.targetIdentifier);" ))
+ 
+,
+
+    verificationFunction: function (verificationAPI) {
+      return verificationAPI.getInventoryAmount("wool") >= 2;
+    }
+  },
+
+  3: {
+    instructions: "Time to shear some sheep! Walk to both of the sheep and get their wool.",
+
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: []
+    },
+
+    entities: [['chicken', 3, 3, 0]],
+
+
+    playerStartPosition: [4, 3],
+
+    playerStartDirection: 1,
+
+    groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "dirtCoarse", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "dirtCoarse", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
+    ],
+
+    groundDecorationPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "tallGrass", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "tallGrass", "", "", "", "", "", "", "", "", ""],
+
+    actionPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "dirt", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "treeOak", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+    isEventLevel: true,
+
+    solutionCode:
+    registerEventCallback(checkTargetType('chicken') + ifEventTriggered(2,repeat(-1,"moveForward(event.targetIdentifier);\nmoveForward(event.targetIdentifier);\nturnRight(event.targetIdentifier);\nmoveForward(event.targetIdentifier);" ) ))
+    
+,
+
+    verificationFunction: function (verificationAPI) {
+      return verificationAPI.getInventoryAmount("wool") >= 2;
+    }
+  },
+
+  4: {
+      instructions: "Time to shear some sheep! Walk to both of the sheep and get their wool.",
+
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: []
+    },
+
+    entities: [['chicken', 3, 3, 0]],
+
+
+    playerStartPosition: [4, 3],
+
+    playerStartDirection: 1,
+
+    groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "dirtCoarse", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "dirtCoarse", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
+    ],
+
+    groundDecorationPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "tallGrass", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "tallGrass", "", "", "", "", "", "", "", "", ""],
+
+    actionPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "dirt", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "treeOak", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+    isEventLevel: true,
+
+    solutionCode:
+    registerEventCallback(checkTargetType('chicken') + ifEventTriggered(2,repeat(-1,repeatRandom("moveForward(event.targetIdentifier);\n" ) + "turnRandom(event.targetIdentifier);\n")))
+    
+,
+
+    verificationFunction: function (verificationAPI) {
+      return verificationAPI.getInventoryAmount("wool") >= 2;
+    }
+  },
+
+  5: {
+       instructions: "Time to shear some sheep! Walk to both of the sheep and get their wool.",
+
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: []
+    },
+
+    entities: [['sheep', 3, 3, 0]],
+
+
+    playerStartPosition: [4, 3],
+
+    playerStartDirection: 1,
+
+    groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "dirtCoarse", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "dirtCoarse", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
+    ],
+
+    groundDecorationPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "tallGrass", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "tallGrass", "", "", "", "", "", "", "", "", ""],
+
+    actionPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "dirt", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "treeOak", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+
+    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+    ],
+    isEventLevel: true,
+
+    solutionCode:
+    registerEventCallback(checkTargetType('sheep') + 
+    ifEventTriggered(2,repeat(-1,repeatRandom("moveForward(event.targetIdentifier);\n" ) + "turnRandom(event.targetIdentifier);\n")) +
+    ifEventTriggered(0,repeat(-1, "moveToward(event.targetIdentifier,'Player');\n")) +
+    ifEventTriggered(1,"drop('wool',event.targetIdentifier);\n")
+    )
+    
+,
+
+    verificationFunction: function (verificationAPI) {
+      return verificationAPI.getInventoryAmount("wool") >= 2;
+    }
+  },
+
+  6: {
+       instructions: "Nighttime is boring with no zombies (sheep at this time). Get the Zombies spawning at night, and get them to chase you.",
 
     playerStartPosition: [3, 4],
 
@@ -178,341 +494,7 @@ window.demoLevels = {
     },
 
     solutionCode:
-    "wait(5);\nstartNight();\nregisterEventCallback(function (event) \n{\n  // when night time\n  if(isEventTriggered(event,4))\n  {\n    for(var i = 2 ; i < 7 ; i++)\n     spawnEntityAt("+"'zombie'"+",i,0,2);\n  }\n  // when target type is sheep\n  if(event.targetType === 'zombie')\n  {\n    // when spawned\n    if(isEventTriggered(event,2))\n    {\n	  // repeat forever\n      repeat(function() {\n	                     // move spawned entity towards to the player\n                       moveToward(event.targetIdentifier ,'Player');\n                       } ,-1, event.targetIdentifier);\n    }\n  }\n})"
-  },
-
-  3: {
-    instructions: "Time to shear some sheep! Walk to both of the sheep and get their wool.",
-
-    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
-
-    assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
-      afterLoad: []
-    },
-
-    entities: [['chicken', 3, 3, 0]],
-
-
-    playerStartPosition: [4, 3],
-
-    playerStartDirection: 1,
-
-    groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "dirtCoarse", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "dirtCoarse", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
-    ],
-
-    groundDecorationPlane: [
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "tallGrass", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "tallGrass", "", "", "", "", "", "", "", "", ""],
-
-    actionPlane: [
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "dirt", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "treeOak", "",
-      "", "", "", "", "", "", "", "", "", "",
-    ],
-
-    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-    ],
-    isEventLevel: true,
-
-    solutionCode:
-    "registerEventCallback(function (event) {\nif(event.targetType !== 'chicken')\n	return;\nif(isEventTriggered(event,2)){\nmoveForward(event.targetIdentifier);\nmoveForward(event.targetIdentifier);\nturnRight(event.targetIdentifier);\nmoveForward(event.targetIdentifier);\n}\n})"
-,
-
-    verificationFunction: function (verificationAPI) {
-      return verificationAPI.getInventoryAmount("wool") >= 2;
-    }
-  },
-
-  4: {
-    instructions: "Now I need to start chopping trees! Chop at least 3 Trees out of the 4. Nightfall is coming, so hurry up!",
-
-    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
-
-    assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
-      afterLoad: []
-    },
-
-    playerStartPosition: [2, 4],
-
-    playerStartDirection: 1,
-
-    groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "dirtCoarse", "dirtCoarse", "dirtCoarse", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
-    ],
-
-    groundDecorationPlane: [
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "tallGrass", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "tallGrass", "", "", "", "", "", "", "", "", ""],
-
-    actionPlane: [
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "treeOak", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "treeOak", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "treeOak", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-    ],
-
-    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-    ],
-
-    solutionCode: moveForwardBlock +
-    moveForwardBlock +
-    moveForwardBlock +
-    destroyBlock +
-    turnRightBlock +
-    moveForwardBlock +
-    moveForwardBlock +
-    moveForwardBlock +
-    destroyBlock +
-    turnRightBlock +
-    moveForwardBlock +
-    moveForwardBlock +
-    moveForwardBlock +
-    destroyBlock
-    ,
-
-    verificationFunction: function (verificationAPI) {
-      return verificationAPI.countOfTypeOnMap("treeOak") === 0;
-    }
-  },
-
-  5: {
-    instructions: "Make one wall of your house by placing three blocks.",
-
-    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
-
-    assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
-      afterLoad: []
-    },
-
-    playerStartPosition: [5, 6],
-
-    playerStartDirection: 3,
-
-    groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "dirtCoarse", "dirtCoarse", "dirtCoarse", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
-    ],
-
-    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "tallGrass", "", "", "", "", "", "", "", "", ""],
-
-    actionPlane: ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
-      "", "grass", "", "", "", "", "", "", "", "grass",
-      "", "", "", "treeOak", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "treeOak", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", ""
-    ],
-
-    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", ""
-    ],
-
-    verificationFunction: function (verificationAPI) {
-      return verificationAPI.solutionMapMatchesResultMap(
-        [
-          "", "", "", "", "", "", "", "", "", "",
-          "", "", "", "", "", "", "", "", "", "",
-          "", "", "", "", "", "", "", "", "", "",
-          "", "", "", "", "", "", "", "", "", "",
-          "", "", "", "", "", "", "", "", "", "",
-          "", "", "", "", "", "", "", "", "", "",
-          "", "", "", "any", "any", "any", "", "", "", "",
-          "", "", "", "", "", "", "", "", "", "",
-          "", "", "", "", "", "", "", "", "", "",
-          "", "", "", "", "", "", "", "", "", ""
-        ]);
-    },
-
-    solutionCode: placeBlock('logOak') +
-    moveForwardBlock +
-    placeBlock('logOak') +
-    moveForwardBlock +
-    placeBlock('logOak')
-  },
-
-  6: {
-    instructions: "Let's make our own house! This spot looks good. Build a frame on the dirt blocks.",
-
-    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
-
-    assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
-      afterLoad: []
-    },
-
-    playerStartPosition: [3, 6],
-
-    playerStartDirection: 1,
-
-    specialLevelType: 'houseBuild',
-
-    houseBottomRight: [5, 5],
-
-    groundPlane: [
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "grass", "grass", "grass",
-      "grass", "grass", "grass", "dirtCoarse", "grass", "grass", "dirtCoarse", "grass", "grass", "grass",
-      "grass", "grass", "grass", "dirtCoarse", "grass", "grass", "dirtCoarse", "grass", "grass", "grass",
-      "grass", "grass", "grass", "dirtCoarse", "wool_orange", "dirtCoarse", "dirtCoarse", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
-    ],
-
-    groundDecorationPlane: [
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "tallGrass", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "tallGrass", "", "", "", "", "", "", "", "", ""],
-
-    actionPlane: [
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "treeOak", "cropWheat", "", "", "", "", "", "", "",
-      "", "", "", "logOak", "logOak", "logOak", "logOak", "", "", "",
-      "", "", "", "logOak", "", "", "logOak", "", "", "",
-      "", "", "", "logOak", "", "", "logOak", "", "", "",
-      "", "", "", "logOak", "logOak", "logOak", "logOak", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-    ],
-
-    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-    ],
-
-    solutionCode: 'turnLeft(); moveForward(); moveForward();moveForward();moveForward(); ' +
-    'turnRight();moveForward();moveForward();moveForward();moveForward();turnRight();moveForward();' +
-    'moveForward();moveForward();turnRight();placeBlock("logOak"); moveForward();moveForward();moveForward();' +
-    ' placeBlock("logOak"); moveForward();moveForward();moveForward(); turnRight();',
-
-    verificationFunction: function (verificationAPI) {
-      return verificationAPI.solutionMapMatchesResultMap(
-        [
-          "", "", "", "", "", "", "", "", "", "",
-          "", "", "", "", "", "", "", "", "", "",
-          "", "", "", "", "", "", "", "", "", "",
-          "", "", "", "any", "any", "any", "any", "", "", "",
-          "", "", "", "any", "", "", "any", "", "", "",
-          "", "", "", "any", "", "", "any", "", "", "",
-          "", "", "", "", "", "", "any", "", "", "",
-          "", "", "", "", "", "", "", "", "", "",
-          "", "", "", "", "", "", "", "", "", "",
-          "", "", "", "", "", "", "", "", "", ""
-        ]);
-    }
+    "wait(5);\nstartNight();\nregisterEventCallback(function (event) \n{\n  // when night time\n  if(isEventTriggered(event,4))\n  {\n    for(var i = 2 ; i < 7 ; i++)\n     spawnEntity("+"'zombie'"+",'middle');\n  }\n  // when target type is sheep\n  if(event.targetType === 'zombie')\n  {\n    // when spawned\n    if(isEventTriggered(event,2))\n    {\n	  // repeat forever\n      repeat(function() {\n	                     // move spawned entity towards to the player\n                       moveToward(event.targetIdentifier ,'Player');\n                       } ,-1, event.targetIdentifier);\n    }\n  }\n})"
   },
 
   7: {
