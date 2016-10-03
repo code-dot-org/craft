@@ -1006,7 +1006,9 @@ export default class LevelView {
 
   playScaledSpeed(animationManager, name) {
     var animation = animationManager.getAnimation(name);
-    if (!animation.originalFps) {
+    if(animation === null)
+      console.log("can't find animation name : " + name);
+    else if (!animation.originalFps) {
       animation.originalFps = 1000 / animation.delay;
     }
     var fps = this.controller.originalFpsToScaled(animation.originalFps);
