@@ -326,11 +326,11 @@ export default class Sheep extends BaseEntity {
 
 
     updateAnimationDirection() {
-        let facingName = "";
+        let suffix = "";
+        let facingName = this.controller.levelView.getDirectionName(this.facing);
         if (this.naked)
-            facingName = "naked_";
-        facingName += this.controller.levelView.getDirectionName(this.facing);
-        this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + facingName);
+            suffix = "naked_";
+        this.controller.levelView.playScaledSpeed(this.sprite.animations, suffix + "idle" + facingName);
     }
 
     drop(commandQueueItem, itemType) {
