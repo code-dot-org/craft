@@ -836,7 +836,7 @@ export default class LevelView {
     let entityDirection = this.getDirectionName(entity.facing);
     entity.sprite.animations.stop(null, true);
     entity.naked = true;
-    this.playScaledSpeed(entity.sprite.animations, "naked_idle" + entityDirection, () => {});
+    this.playScaledSpeed(entity.sprite.animations, "naked_idle" + entityDirection, () => { });
 
     this.playExplosionAnimation(playerPosition, facing, entity.position, entity.type, completionHandler, false);
   }
@@ -1006,13 +1006,15 @@ export default class LevelView {
 
   playScaledSpeed(animationManager, name) {
     var animation = animationManager.getAnimation(name);
-    if(animation === null)
+    if (animation === null) {
       console.log("can't find animation name : " + name);
-    else if (!animation.originalFps) {
-      animation.originalFps = 1000 / animation.delay;
+    } else {
+      if (!animation.originalFps) {
+        animation.originalFps = 1000 / animation.delay;
+      }
+      var fps = this.controller.originalFpsToScaled(animation.originalFps);
+      return animationManager.play(name, fps);
     }
-    var fps = this.controller.originalFpsToScaled(animation.originalFps);
-    return animationManager.play(name, fps);
   }
 
   playItemAcquireAnimation(playerPosition, facing, sprite, completionHandler) {
@@ -1024,15 +1026,14 @@ export default class LevelView {
     }, 200, Phaser.Easing.Linear.None);
 
     tween.onComplete.add(() => {
-      if(this.player.position[0] === playerPosition[0] && this.player.position[1] === playerPosition[1])
-      {
+      if (this.player.position[0] === playerPosition[0] && this.player.position[1] === playerPosition[1]) {
         this.audioPlayer.play("collectedBlock");
         sprite.kill();
         this.toDestroy.push(sprite);
         completionHandler();
       }
       else {
-        this.playItemAcquireAnimation(this.player.position,this.player.facing,sprite, completionHandler);
+        this.playItemAcquireAnimation(this.player.position, this.player.facing, sprite, completionHandler);
       }
     });
 
@@ -1338,7 +1339,7 @@ export default class LevelView {
     return frameList;
   }
 
-  generateReverseFrames(frameName, startFrame, endFrame, suffix ,buffer) {
+  generateReverseFrames(frameName, startFrame, endFrame, suffix, buffer) {
     var frameList = Phaser.Animation.generateFrameNames(frameName, startFrame, endFrame, suffix, buffer);
     return frameList.concat(Phaser.Animation.generateFrameNames(frameName, endFrame - 1, startFrame, suffix, buffer));
   }
@@ -1656,26 +1657,27 @@ export default class LevelView {
     let framePrefix = this.miniBlocks[frame][0];
     let frameStart = this.miniBlocks[frame][1];
     let frameEnd = this.miniBlocks[frame][2];
-    let xOffset = -10 -20 + Math.random()*40;
-    let yOffset = 0 -20 + Math.random()*40;
+    let xOffset = -10 - 20 + Math.random() * 40;
+    let yOffset = 0 - 20 + Math.random() * 40;
 
     frameList = Phaser.Animation.generateFrameNames(framePrefix, frameStart, frameEnd, ".png", 3);
 
-    var distanceBetween = function(position, position2) {
-      return Math.sqrt( Math.pow(position[0] - position2[0],2) +  Math.pow(position[1] - position2[1],2));
+    var distanceBetween = function (position, position2) {
+      return Math.sqrt(Math.pow(position[0] - position2[0], 2) + Math.pow(position[1] - position2[1], 2));
     }
-      // todo : acquire after animation
+    // todo : acquire after animation
     sprite = this.actionPlane.create(xOffset + 40 * x, yOffset + this.actionPlane.yOffset + 40 * y, atlas, "");
-    let collectiblePosition = this.controller.levelModel.spritePositionToIndex([xOffset,yOffset],[sprite.x,sprite.y]);
+    let collectiblePosition = this.controller.levelModel.spritePositionToIndex([xOffset, yOffset], [sprite.x, sprite.y]);
     var anim = sprite.animations.add("animate", frameList, 10, false);
-    anim.onComplete.add(()=>{
-    
-    if(distanceBetween(this.player.position,collectiblePosition) < 2)
-      this.playItemAcquireAnimation(this.player.position,this.player.facing,sprite,()=>{})
-    else {
-    this.collectibleItems.push([sprite,[xOffset,yOffset]]);
-    }});
-    
+    anim.onComplete.add(() => {
+
+      if (distanceBetween(this.player.position, collectiblePosition) < 2)
+        this.playItemAcquireAnimation(this.player.position, this.player.facing, sprite, () => { })
+      else {
+        this.collectibleItems.push([sprite, [xOffset, yOffset]]);
+      }
+    });
+
     return sprite;
   }
 

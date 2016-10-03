@@ -498,85 +498,83 @@ window.demoLevels = {
   },
 
   7: {
-    instructions: "During the night monsters appear! These monsters explode when you get near them. Avoid the monsters and reach your house in the least possible number of commands.",
+    instructions: "Nighttime is boring with no zombies (sheep at this time). Get the Zombies spawning at night, and get them to chase you.",
 
-    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
-
-    assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
-      afterLoad: []
-    },
-
-    playerStartPosition: [2, 7],
+    playerStartPosition: [3, 4],
 
     // up: 0, right: 1, down: 2, left: 3
     playerStartDirection: 1,
 
-    isDaytime: false,
+    playerName: "Alex",
+    isEventLevel: true,
+
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer'],
+    earlyLoadNiceToHaveAssetPacks: ['playerAlex'],
+
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerAlex'],
+      afterLoad: ['playerSteve', 'playerAlex', 'grass']
+    },
+
+    entities: [],
 
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "dirtCoarse", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "dirtCoarse", "bricks", "dirtCoarse", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "cobblestone", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "stone", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "farmlandWet", "grass", "grass", "grass",
-      "grass", "grass", "dirtCoarse", "oreIron", "oreDiamond", "gravel", "logOak", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "dirtCoarse", "dirtCoarse", "dirtCoarse", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
     ],
 
     groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "flowerRose", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
+      "", "flowerDandelion", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "flowerOxeeye",
       "", "", "", "", "", "", "", "", "", "",
       "tallGrass", "", "", "", "", "", "", "", "", ""],
 
     actionPlane: ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
-      "", "grass", "", "logOak", "door", "logOak", "", "", "", "grass",
+      "", "grass", "", "", "", "", "", "", "", "grass",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "creeper", "", "creeper", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "treeOak", "", "", ""
+    ],
+
+    fluffPlane: [
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", ""
     ],
 
-    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", ""
-    ],
+
 
     verificationFunction: function (verificationAPI) {
-      return verificationAPI.isPlayerNextTo("logOak");
+      return verificationAPI.isPlayerNextTo("sheep");
     },
 
-    solutionCode: "for (var i = 0; i < 4; i++) {" +
-    moveForwardBlock +
-    "}" +
-    turnLeftBlock +
-    "for (var i = 0; i < 4; i++) {" +
-    moveForwardBlock +
-    "}" +
-    turnLeftBlock +
-    moveForwardBlock +
-    moveForwardBlock +
-    turnRightBlock +
-    moveForwardBlock
+    solutionCode:
+    "for(var i = 0  ; i < 10 ; i++)spawnEntity('cow','middle')"
+  
   },
 
   8: {
