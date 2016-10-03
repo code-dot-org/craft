@@ -195,6 +195,12 @@ export function get(controller) {
     repeat: function (highlightCallback, codeBlock, iteration, targetEntity) {
       controller.addCommand(new RepeatCommand(controller, highlightCallback, codeBlock, iteration, targetEntity));
     },
+    // -1 for infinite repeat
+    repeatRandom: function (highlightCallback, codeBlock, targetEntity) {
+      var maxIteration = 10;
+      var randomIteration = Math.floor(Math.random()*maxIteration) + 1;
+      controller.addCommand(new RepeatCommand(controller, highlightCallback, codeBlock, randomIteration, targetEntity));
+    },
 
     getScreenshot: function () {
       return controller.getScreenshot();
