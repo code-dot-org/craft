@@ -87,6 +87,7 @@ class GameController {
     this.initialSlowMotion = gameControllerConfig.customSlowMotion || this.assumedSlowMotion;
 
     this.playerDelayFactor = 1.0;
+    this.dayNightCycle = false;
 
     this.game.state.add('earlyLoad', {
       preload: () => {
@@ -124,6 +125,7 @@ class GameController {
   }
 
   reset() {
+    this.dayNightCycle = false
     this.levelEntity.reset();
     this.levelModel.reset();
     this.levelView.reset(this.levelModel);
@@ -1069,7 +1071,8 @@ class GameController {
 
   startDay(commandQueueItem) {
     if (this.levelModel.isDaytime) {
-      commandQueueItem.succeeded();
+      if(commandQueueItem)
+        commandQueueItem.succeeded();
       if (this.DEBUG)
         this.game.debug.text("Impossible to start day since it's already day time\n");
     }
@@ -1078,13 +1081,20 @@ class GameController {
       this.levelModel.clearFow();
       this.levelView.updateFowPlane(this.levelModel.fowPlane);
       this.events.forEach(e => e({ eventType: EventType.WhenDay }));
-      commandQueueItem.succeeded();
+      var zombieList = this.levelEntity.getEntitiesOfType('zombie');
+      for(var i = 0 ; i < zombieList.length ; i++)
+      {
+        zombieList[i].setBurn(true);
+      }
+      if(commandQueueItem)
+        commandQueueItem.succeeded();
     }
   }
 
   startNight(commandQueueItem) {
     if (!this.levelModel.isDaytime) {
-      commandQueueItem.succeeded();
+      if(commandQueueItem)
+        commandQueueItem.succeeded();
       if (this.DEBUG)
         this.game.debug.text("Impossible to start night since it's already night time\n");
     }
@@ -1093,7 +1103,32 @@ class GameController {
       this.levelModel.computeFowPlane();
       this.levelView.updateFowPlane(this.levelModel.fowPlane);
       this.events.forEach(e => e({ eventType: EventType.WhenNight }));
-      commandQueueItem.succeeded();
+      var zombieList = this.levelEntity.getEntitiesOfType('zombie');
+      for(var i = 0 ; i < zombieList.length ; i++)
+      {
+        zombieList[i].setBurn(false);
+      }
+      if(commandQueueItem)
+        commandQueueItem.succeeded();
+    }
+  }
+
+  setDayNightCycle(delayInSecond, startTime) {
+    if(!this.dayNightCycle)
+      return;
+    if(startTime === "day" || startTime === "Day")
+    {
+      setTimeout(()=>{ 
+        this.startDay(null);
+        this.setDayNightCycle(delayInSecond, "night");
+      }, delayInSecond*1000)
+    }
+    else if(startTime === "night" || startTime === "Night")
+    {
+      setTimeout(()=>{ 
+        this.startNight(null);
+        this.setDayNightCycle(delayInSecond, "day");
+      }, delayInSecond*1000)
     }
   }
 

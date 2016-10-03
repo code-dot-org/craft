@@ -198,7 +198,7 @@ export function get(controller) {
     // -1 for infinite repeat
     repeatRandom: function (highlightCallback, codeBlock, targetEntity) {
       var maxIteration = 10;
-      var randomIteration = Math.floor(Math.random()*maxIteration) + 1;
+      var randomIteration = Math.floor(Math.random() * maxIteration) + 1;
       controller.addCommand(new RepeatCommand(controller, highlightCallback, codeBlock, randomIteration, targetEntity));
     },
 
@@ -223,7 +223,7 @@ export function get(controller) {
       var callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
         controller.destroyEntity(callbackCommand, targetEntity);
       });
-      controller.addCommand(callbackCommand);
+      controller.addGlobalCommand(callbackCommand);
     },
 
     drop: function (highlightCallback, itemType, targetEntity) {
@@ -253,12 +253,19 @@ export function get(controller) {
       }, targetEntity);
       controller.addGlobalCommand(callbackCommand);
     },
-    
+
     attack: function (highlightCallback, targetEntity) {
       var callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
         controller.attack(callbackCommand)
       }, targetEntity);
       controller.addCommand(callbackCommand);
+    },
+
+    setDayNightCycle: function (delayInSecond, startTime) {
+      if (!controller.dayNightCycle) {
+        controller.dayNightCycle = true;
+        controller.setDayNightCycle(delayInSecond, startTime);
+      }
     }
   };
 }
