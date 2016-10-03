@@ -23,6 +23,10 @@ export default class BaseEntity {
         this.queue.tick();
     }
 
+    reset() {
+        
+    }
+
     addCommand(commandQueueItem) {
         this.queue.addCommand(commandQueueItem);
         // execute the command

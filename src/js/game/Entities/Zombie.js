@@ -6,9 +6,17 @@ export default class Zombie extends BaseEntity {
     constructor(controller, type, identifier, x, y, facing) {
         super(controller, type, identifier, x, y, facing);
         this.offset = [-43, -55];
-        this.burningSprite = [];
+        this.burningSprite = [null,null];
         this.burningSpriteOffset = [47,30];
         this.prepareSprite();
+    }
+
+    reset() {
+        for(var i = 0 ; i < 2 ; i++) {
+            if(this.burningSprite[i]) {
+                this.burningSprite[i].destroy();
+            }
+        }
     }
 
     playMoveForwardAnimation(position, facing, commandQueueItem, groundType, completionHandler) {
@@ -88,7 +96,7 @@ export default class Zombie extends BaseEntity {
         this.burningSprite[0].sortOrder = this.sprite.sortOrder + 1;
         this.burningSprite[1].sortOrder = this.sprite.sortOrder - 1;
         // turn off (default)
-        this.setBurn(false);
+        this.setBurn(this.controller.levelModel.isDaytime);
         var stillFrameName = ['Zombie_056.png','Zombie_166.png','Zombie_001.png','Zombie_111.png'];
         let idleDelayFrame = 8;
         // [direction][[idle],[look left],[look right],[look up],[look down],[walk],[attack],[take dmg],[die],[bump]]
