@@ -554,12 +554,12 @@ class GameController {
     }
     if (!this.isType(target)) {
       var entity = this.getEntity(target);
-      entity.turn(commandQueueItem, getRandomInt(0, 3));
+      entity.turn(commandQueueItem, getRandomInt(0, 1) === 0 ? 1 : -1);
     }
     else {
       var entities = this.getEntities(target);
       for (var i = 0; i < entities.length; i++) {
-        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.turn(callbackCommand, getRandomInt(0, 3)) }, entities[i].identifier);
+        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.turn(callbackCommand, getRandomInt(0, 1) === 0 ? 1 : -1) }, entities[i].identifier);
         entities[i].addCommand(callbackCommand);
       }
       commandQueueItem.succeeded();
@@ -728,7 +728,10 @@ class GameController {
       // push use command to execute general use behavior of the entity before executing the event
       this.levelView.onAnimationEnd(this.levelView.playPlayerAnimation("punch", player.position, player.facing, false), () => {
         var useCommand = new CallbackCommand(this, () => { }, () => { frontEntity.use(useCommand, player); }, frontEntity.identifier);
+        
+        frontEntity.queue.startPushHighpriorityCommands();
         frontEntity.addCommand(useCommand);
+        frontEntity.queue.endPushHighpriorityCommands();
         this.levelView.playExplosionAnimation(player.position, player.facing, frontEntity.position, frontEntity.type, () => { }, false);
         this.levelView.playPlayerAnimation("idle", player.position, player.facing, false);
         commandQueueItem.succeeded();

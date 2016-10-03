@@ -272,7 +272,9 @@ export default class BaseEntity {
 
     use(commandQueueItem, userEntity) {
         // default behavior for use ?
+        this.queue.startPushHighpriorityCommands();
         this.controller.events.forEach(e => e({ eventType: EventType.WhenUsed, targetType: this.type, eventSenderIdentifier: userEntity.identifier, targetIdentifier: this.identifier }));
+        this.queue.endPushHighpriorityCommands();
     }
 
     drop(commandQueueItem, itemType) {
