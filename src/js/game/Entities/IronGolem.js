@@ -97,7 +97,7 @@ export default class IronGolem extends BaseEntity {
             });
             // take damage
             frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][7][0], frameListPerDirection[i][7][1], ".png", 3);
-            this.sprite.animations.add("takeDamage" + facingName, frameList, frameRate, false).onComplete.add(() => {
+            this.sprite.animations.add("hurt" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + this.controller.levelView.getDirectionName(this.facing));
             });
             // die

@@ -573,65 +573,67 @@ window.demoLevels = {
     },
 
     solutionCode:
-    "for(var i = 0  ; i < 10 ; i++)spawnEntity('cow','middle')"
+    "setDayNightCycle(5,'night');\nregisterEventCallback(function (event) \n{\n  // when night time\n  if(isEventTriggered(event,4))\n  {\n    for(var i = 2 ; i < 7 ; i++)\n     spawnEntity("+"'zombie'"+",'middle');\n  }\n  // when target type is sheep\n  if(event.targetType === 'zombie')\n  {\n    // when spawned\n    if(isEventTriggered(event,2))\n    {\n	  // repeat forever\n      repeat(function() {\n	                     // move spawned entity towards to the player\n                       moveToward(event.targetIdentifier ,'Player');\n                       } ,-1, event.targetIdentifier);\n    }\n  }\n})"
   
   },
 
   8: {
-    instructions: "All this running around has made you hungry! Grow some food! Code is great for doing repetitive tasks quickly. Let’s plant some crops by making a 4x3 block field.",
+       instructions: "Nighttime is boring with no zombies (sheep at this time). Get the Zombies spawning at night, and get them to chase you.",
 
-    earlyLoadAssetPacks: ['allAssetsMinusPlayer', 'playerSteve'],
+    playerStartPosition: [3, 4],
+
+    // up: 0, right: 1, down: 2, left: 3
+    playerStartDirection: 1,
+
+    playerName: "Alex",
+    isEventLevel: true,
+
+    earlyLoadAssetPacks: ['allAssetsMinusPlayer'],
+    earlyLoadNiceToHaveAssetPacks: ['playerAlex'],
 
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
-      afterLoad: []
+      beforeLoad: ['allAssetsMinusPlayer', 'playerAlex'],
+      afterLoad: ['playerSteve', 'playerAlex', 'grass']
     },
 
-    playerStartPosition: [4, 7],
+    entities: [['zombie', 8, 8, 0],['cow', 3, 3, 0]],
 
-    playerStartDirection: 0,
-
-    groundPlane: [
+    groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "farmlandWet", "farmlandWet", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "farmlandWet", "farmlandWet", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "farmlandWet", "farmlandWet", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "farmlandWet", "farmlandWet", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "farmlandWet", "farmlandWet", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "farmlandWet", "farmlandWet", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "dirtCoarse", "dirtCoarse", "dirtCoarse", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
     ],
 
-    groundDecorationPlane: [
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "tallGrass", "",
-      "", "", "", "", "", "", "", "", "", "",
+    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "flowerRose", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
+      "", "flowerDandelion", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "flowerOxeeye",
       "", "", "", "", "", "", "", "", "", "",
       "tallGrass", "", "", "", "", "", "", "", "", ""],
 
-    actionPlane: [
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "logOak", "", "", "", "", "", "", "", "",
-      "logOak", "", "", "", "", "", "", "", "", "",
-      "logOak", "", "", "", "", "", "", "", "", "",
-      "logOak", "", "", "", "", "", "", "", "", "",
-      "logOak", "", "", "", "", "", "", "", "", "",
+    actionPlane: ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
+      "", "grass", "", "", "", "", "", "", "", "grass",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "treeOak", "", "", ""
     ],
 
-    fluffPlane: ["", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "leavesOak", "", "", "", "", "", "", "", "",
+    fluffPlane: [
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
@@ -639,37 +641,25 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", ""
     ],
 
-    solutionCode: "for (var i = 0; i < 6; i++) {" +
-    placeBlock("cropWheat") +
-    moveForwardBlock +
-    "}" +
-    turnRightBlock +
-    moveForwardBlock +
-    turnRightBlock +
-    "for (var i = 0; i < 6; i++) {" +
-    moveForwardBlock +
-    placeBlock("cropWheat") +
-    "}"
 
-    ,
 
     verificationFunction: function (verificationAPI) {
-      return verificationAPI.solutionMapMatchesResultMap(
-        [
-          "", "", "", "", "", "", "", "", "", "",
-          "", "", "", "", "", "", "", "", "", "",
-          "", "", "", "", "", "", "", "", "", "",
-          "", "", "", "logOak", "logOak", "logOak", "logOak", "", "", "",
-          "", "", "", "logOak", "", "", "logOak", "", "", "",
-          "", "", "", "logOak", "", "", "logOak", "", "", "",
-          "", "", "", "", "", "", "logOak", "", "", "",
-          "", "", "", "", "", "", "", "", "", "",
-          "", "", "", "", "", "", "", "", "", "",
-          "", "", "", "", "", "", "", "", "", ""
-        ]);
-    }
+      return verificationAPI.isPlayerNextTo("sheep");
+    },
+
+    solutionCode:
+    registerEventCallback(checkTargetType('zombie') + 
+    ifEventTriggered(2,repeat(-1,"moveToward(event.targetIdentifier, 'cow');\nattack(event.targetIdentifier);\n"))) +
+    registerEventCallback(checkTargetType('cow') + 
+    ifEventTriggered(0,"moveToward(event.targetIdentifier, 'Player');\n") + 
+    ifEventTriggered(1,"drop('milk',event.targetIdentifier);\n") + 
+    ifEventTriggered(3,"moveAway(event.targetIdentifier, 'zombie');\nmoveAway(event.targetIdentifier, 'zombie');\nmoveAway(event.targetIdentifier, 'zombie');\n"))
+  
   },
   9: {
     instructions: "Underground test!",

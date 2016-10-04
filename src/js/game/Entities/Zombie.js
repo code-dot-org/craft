@@ -48,12 +48,11 @@ export default class Zombie extends BaseEntity {
                     x: (this.offset[0] + this.burningSpriteOffset[0] + 40 * position[0]), y: (this.offset[1] + this.burningSpriteOffset[1] + 40 * position[1])
                 }, 300, Phaser.Easing.Linear.None);
                 tween.onComplete.add(() => {
-                    commandQueueItem.succeeded();
                 });
 
                 tween.start();
             }
-        }, 50);
+        }, 500);
         // smooth movement using tween
 
     }
@@ -170,7 +169,7 @@ export default class Zombie extends BaseEntity {
             });
             // take damage
             frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][7][0], frameListPerDirection[i][7][1], ".png", 3);
-            this.sprite.animations.add("takeDamage" + facingName, frameList, frameRate, false).onComplete.add(() => {
+            this.sprite.animations.add("hurt" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + this.controller.levelView.getDirectionName(this.facing));
             });
             // die

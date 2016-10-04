@@ -93,7 +93,7 @@ export default class Chicken extends BaseEntity {
             });
             // take damage
             frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][7][0], frameListPerDirection[i][7][1], ".png", 4);
-            this.sprite.animations.add("takeDamage" + facingName, frameList, frameRate, false).onComplete.add(() => {
+            this.sprite.animations.add("hurt" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.playRandomIdle(this.facing);
             });
             // die

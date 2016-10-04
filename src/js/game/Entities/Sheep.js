@@ -154,7 +154,7 @@ export default class Sheep extends BaseEntity {
             });
             // take damage
             frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][7][0], frameListPerDirection[i][7][1], ".png", 3);
-            this.sprite.animations.add("takeDamage" + facingName, frameList, frameRate, false).onComplete.add(() => {
+            this.sprite.animations.add("hurt" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + this.controller.levelView.getDirectionName(this.facing));
             });
             // die
@@ -247,7 +247,7 @@ export default class Sheep extends BaseEntity {
             });
             // take damage
             frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][7][0], frameListPerDirection[i][7][1], ".png", 3);
-            this.sprite.animations.add("naked_takeDamage" + facingName, frameList, frameRate, false).onComplete.add(() => {
+            this.sprite.animations.add("naked_hurt_" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.controller.levelView.playScaledSpeed(this.sprite.animations, "naked_idle" + this.controller.levelView.getDirectionName(this.facing));
             });
             // die
@@ -317,7 +317,7 @@ export default class Sheep extends BaseEntity {
         this.controller.levelView.onAnimationEnd(this.controller.levelView.playScaledSpeed(this.sprite.animations, nakedSuffix + "attack" + facingName),()=>{
         let frontEntity = this.controller.levelEntity.getEntityAt(this.controller.levelModel.getMoveForwardPosition(this));
         if(frontEntity !== null) {
-            this.controller.levelView.onAnimationEnd(this.controller.levelView.playScaledSpeed(frontEntity.sprite.animations, nakedSuffix +  "takeDamage" + facingName),()=>{
+            this.controller.levelView.onAnimationEnd(this.controller.levelView.playScaledSpeed(frontEntity.sprite.animations, nakedSuffix +  "hurt" + facingName),()=>{
             this.controller.events.forEach(e => e({ eventType: EventType.WhenAttacked, targetType: this.type, eventSenderIdentifier: this.identifier, targetIdentifier: frontEntity.identifier }))});
         }
         commandQueueItem.succeeded();

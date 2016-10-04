@@ -24,7 +24,7 @@ export default class BaseEntity {
     }
 
     reset() {
-        
+
     }
 
     addCommand(commandQueueItem) {
@@ -211,13 +211,13 @@ export default class BaseEntity {
             // execute the best result
         } else {
             if (absoluteDistanceSquare(this.position, moveTowardPosition) === 1) {
-                if(this.position[0] < moveTowardPosition[0])
+                if (this.position[0] < moveTowardPosition[0])
                     this.facing = FacingDirection.Right;
-                else if(this.position[0] > moveTowardPosition[0])
+                else if (this.position[0] > moveTowardPosition[0])
                     this.facing = FacingDirection.Left;
-                else if(this.position[1] < moveTowardPosition[1])
+                else if (this.position[1] < moveTowardPosition[1])
                     this.facing = FacingDirection.Down;
-                else if(this.position[1] > moveTowardPosition[1])
+                else if (this.position[1] > moveTowardPosition[1])
                     this.facing = FacingDirection.Up;
                 this.updateAnimationDirection();
                 this.controller.delayPlayerMoveBy(200, 800, () => {
@@ -279,6 +279,7 @@ export default class BaseEntity {
         this.queue.startPushHighpriorityCommands();
         this.controller.events.forEach(e => e({ eventType: EventType.WhenUsed, targetType: this.type, eventSenderIdentifier: userEntity.identifier, targetIdentifier: this.identifier }));
         this.queue.endPushHighpriorityCommands();
+        commandQueueItem.succeeded();
     }
 
     drop(commandQueueItem, itemType) {
@@ -292,12 +293,16 @@ export default class BaseEntity {
         let facingName = this.controller.levelView.getDirectionName(this.facing);
         this.controller.levelView.onAnimationEnd(this.controller.levelView.playScaledSpeed(this.sprite.animations, "attack" + facingName), () => {
             let frontEntity = this.controller.levelEntity.getEntityAt(this.controller.levelModel.getMoveForwardPosition(this));
-            if (frontEntity !== null) {
-                this.controller.levelView.onAnimationEnd(this.controller.levelView.playScaledSpeed(frontEntity.sprite.animations, "takeDamage" + facingName), () => {
-                    this.controller.events.forEach(e => e({ eventType: EventType.WhenAttacked, targetType: this.type, eventSenderIdentifier: this.identifier, targetIdentifier: frontEntity.identifier }))
-                });
-            }
-            commandQueueItem.succeeded();
+            if (frontEntity !== null)
+                this.controller.levelView.playScaledSpeed(frontEntity.sprite.animations, "hurt" + facingName);
+            setTimeout(function (controller, entity, thisEntity) {
+                if (entity !== null) {
+                    frontEntity.queue.startPushHighpriorityCommands();
+                    controller.events.forEach(e => e({ eventType: EventType.WhenAttacked, targetType: entity.type, eventSenderIdentifier: thisEntity.identifier, targetIdentifier: entity.identifier }))
+                    frontEntity.queue.endPushHighpriorityCommands();
+                }
+                commandQueueItem.succeeded();
+            }, 300, this.controller, frontEntity, this);
         });
     }
 
