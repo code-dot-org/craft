@@ -320,8 +320,8 @@ class GameController {
           }
         }
         entity.moveAway(commandQueueItem, moveAwayFromEntities[closestTarget[1]]);
-      }
-      commandQueueItem.succeeded();
+      } else 
+        commandQueueItem.succeeded();
     }
     // move away type from type
     else {
@@ -392,8 +392,8 @@ class GameController {
           }
         }
         entity.moveToward(commandQueueItem, moveTowardToEntities[closestTarget[1]]);
-      }
-      commandQueueItem.succeeded();
+      } else
+        commandQueueItem.succeeded();
     }
     // move toward type to type
     else {
@@ -457,8 +457,8 @@ class GameController {
           }
         }
         entity.moveTo(commandQueueItem, moveTowardToEntities[closestTarget[1]]);
-      }
-      commandQueueItem.succeeded();
+      } else 
+        commandQueueItem.succeeded();
     }
     // move toward type to type
     else {
