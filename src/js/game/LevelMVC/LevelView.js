@@ -1000,7 +1000,7 @@ export default class LevelView {
     var sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
     sprite.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     this.onAnimationEnd(this.playScaledSpeed(sprite.animations, "animate"), () => {
-      this.playItemAcquireAnimation(playerPosition, facing, sprite, completionHandler);
+      this.playItemAcquireAnimation(playerPosition, facing, sprite, completionHandler, blockType);
     });
   }
 
@@ -1017,7 +1017,7 @@ export default class LevelView {
     }
   }
 
-  playItemAcquireAnimation(playerPosition, facing, sprite, completionHandler) {
+  playItemAcquireAnimation(playerPosition, facing, sprite, completionHandler, blockType) {
     var tween;
 
     tween = this.addResettableTween(sprite).to({
@@ -1028,12 +1028,14 @@ export default class LevelView {
     tween.onComplete.add(() => {
       if (this.player.position[0] === playerPosition[0] && this.player.position[1] === playerPosition[1]) {
         this.audioPlayer.play("collectedBlock");
+        this.player.inventory[blockType] =
+          (this.player.inventory[blockType] || 0) + 1;
         sprite.kill();
         this.toDestroy.push(sprite);
         completionHandler();
       }
       else {
-        this.playItemAcquireAnimation(this.player.position, this.player.facing, sprite, completionHandler);
+        this.playItemAcquireAnimation(this.player.position, this.player.facing, sprite, completionHandler, blockType);
       }
     });
 
@@ -1680,9 +1682,9 @@ export default class LevelView {
     anim.onComplete.add(() => {
 
       if (distanceBetween(this.player.position, collectiblePosition) < 2)
-        this.playItemAcquireAnimation(this.player.position, this.player.facing, sprite, () => { })
+        this.playItemAcquireAnimation(this.player.position, this.player.facing, sprite, () => { }, blockType)
       else {
-        this.collectibleItems.push([sprite, [xOffset, yOffset]]);
+        this.collectibleItems.push([sprite, [xOffset, yOffset], blockType]);
       }
     });
 
