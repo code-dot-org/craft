@@ -34,15 +34,15 @@ window.demoLevels = {
     // up: 0, right: 1, down: 2, left: 3
     playerStartDirection: 1,
 
-    playerName: "Alex",
+    playerName: "Steve",
     isEventLevel: true,
 
     earlyLoadAssetPacks: ['allAssetsMinusPlayer'],
-    earlyLoadNiceToHaveAssetPacks: ['playerAlex'],
+    earlyLoadNiceToHaveAssetPacks: ['playerSteve'],
 
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerAlex'],
-      afterLoad: ['playerSteve', 'playerAlex', 'grass']
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: ['playerSteve', 'playerSteve', 'grass']
     },
 
     entities: [['sheep', 3, 3, 1]],
@@ -426,15 +426,15 @@ window.demoLevels = {
     // up: 0, right: 1, down: 2, left: 3
     playerStartDirection: 1,
 
-    playerName: "Alex",
+    playerName: "Steve",
     isEventLevel: true,
 
     earlyLoadAssetPacks: ['allAssetsMinusPlayer'],
-    earlyLoadNiceToHaveAssetPacks: ['playerAlex'],
+    earlyLoadNiceToHaveAssetPacks: ['playerSteve'],
 
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerAlex'],
-      afterLoad: ['playerSteve', 'playerAlex', 'grass']
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: ['playerSteve', 'playerSteve', 'grass']
     },
 
     entities: [],
@@ -505,15 +505,15 @@ window.demoLevels = {
     // up: 0, right: 1, down: 2, left: 3
     playerStartDirection: 1,
 
-    playerName: "Alex",
+    playerName: "Steve",
     isEventLevel: true,
 
     earlyLoadAssetPacks: ['allAssetsMinusPlayer'],
-    earlyLoadNiceToHaveAssetPacks: ['playerAlex'],
+    earlyLoadNiceToHaveAssetPacks: ['playerSteve'],
 
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerAlex'],
-      afterLoad: ['playerSteve', 'playerAlex', 'grass']
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: ['playerSteve', 'playerSteve', 'grass']
     },
 
     entities: [],
@@ -585,15 +585,15 @@ window.demoLevels = {
     // up: 0, right: 1, down: 2, left: 3
     playerStartDirection: 1,
 
-    playerName: "Alex",
+    playerName: "Steve",
     isEventLevel: true,
 
     earlyLoadAssetPacks: ['allAssetsMinusPlayer'],
-    earlyLoadNiceToHaveAssetPacks: ['playerAlex'],
+    earlyLoadNiceToHaveAssetPacks: ['playerSteve'],
 
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerAlex'],
-      afterLoad: ['playerSteve', 'playerAlex', 'grass']
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
+      afterLoad: ['playerSteve', 'playerSteve', 'grass']
     },
 
     entities: [['zombie', 8, 8, 0],['cow', 3, 3, 0]],
