@@ -731,9 +731,9 @@ class GameController {
       this.levelView.onAnimationEnd(this.levelView.playPlayerAnimation("punch", player.position, player.facing, false), () => {
         var useCommand = new CallbackCommand(this, () => { }, () => { frontEntity.use(useCommand, player); }, frontEntity.identifier);
         
-        frontEntity.queue.startPushHighpriorityCommands();
+        frontEntity.queue.startPushHighPriorityCommands();
         frontEntity.addCommand(useCommand);
-        frontEntity.queue.endPushHighpriorityCommands();
+        frontEntity.queue.endPushHighPriorityCommands();
         this.levelView.playExplosionAnimation(player.position, player.facing, frontEntity.position, frontEntity.type, () => { }, false);
         this.levelView.playPlayerAnimation("idle", player.position, player.facing, false);
         commandQueueItem.succeeded();

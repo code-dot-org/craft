@@ -299,9 +299,9 @@ export default class BaseEntity {
                 this.controller.levelView.playScaledSpeed(frontEntity.sprite.animations, "hurt" + facingName);
             setTimeout(function (controller, entity, thisEntity) {
                 if (entity !== null) {
-                    frontEntity.queue.startPushHighpriorityCommands();
+                    frontEntity.queue.startPushHighPriorityCommands();
                     controller.events.forEach(e => e({ eventType: EventType.WhenAttacked, targetType: entity.type, eventSenderIdentifier: thisEntity.identifier, targetIdentifier: entity.identifier }))
-                    frontEntity.queue.endPushHighpriorityCommands();
+                    frontEntity.queue.endPushHighPriorityCommands();
                 }
                 commandQueueItem.succeeded();
             }, 300, this.controller, frontEntity, this);
