@@ -291,7 +291,9 @@ export default class BaseEntity {
 
     attack(commandQueueItem) {
         let facingName = this.controller.levelView.getDirectionName(this.facing);
-        this.controller.levelView.onAnimationEnd(this.controller.levelView.playScaledSpeed(this.sprite.animations, "attack" + facingName), () => {
+        this.controller.levelView.playScaledSpeed(this.sprite.animations, "attack" + facingName);
+        setTimeout(() => 
+        {
             let frontEntity = this.controller.levelEntity.getEntityAt(this.controller.levelModel.getMoveForwardPosition(this));
             if (frontEntity !== null)
                 this.controller.levelView.playScaledSpeed(frontEntity.sprite.animations, "hurt" + facingName);
@@ -303,7 +305,7 @@ export default class BaseEntity {
                 }
                 commandQueueItem.succeeded();
             }, 300, this.controller, frontEntity, this);
-        });
+        }, 200);
     }
 
     playRandomIdle(facing) {
