@@ -52,7 +52,7 @@ export default class Zombie extends BaseEntity {
 
                 tween.start();
             }
-        }, 500);
+        }, 50);
         // smooth movement using tween
 
     }
