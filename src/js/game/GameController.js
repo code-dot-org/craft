@@ -736,7 +736,9 @@ class GameController {
         frontEntity.queue.endPushHighPriorityCommands();
         this.levelView.playExplosionAnimation(player.position, player.facing, frontEntity.position, frontEntity.type, () => { }, false);
         this.levelView.playPlayerAnimation("idle", player.position, player.facing, false);
-        commandQueueItem.succeeded();
+        this.delayPlayerMoveBy(200, 600, () => {
+          commandQueueItem.succeeded();
+        });
         setTimeout(() => { this.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]); }, 200);
       });
     } else {
