@@ -999,17 +999,21 @@ class GameController {
   destroyEntity(commandQueueItem, target) {
     if (!this.isType(target)) {
       if (target !== 'Player') {
-        this.levelEntity.destroyEntity(target);
+        let entity = this.getEntity(target);
+        entity.healthPoint = 1;
+        entity.takeDamage(commandQueueItem);
       }
       else {
         this.printErrorMsg("Not able to destroy player\n");
+        commandQueueItem.succeeded();
       }
-      commandQueueItem.succeeded();
     }
     else {
       var entities = this.getEntities(target);
       for (var i = 0; i < entities.length; i++) {
-        this.levelEntity.destroyEntity(entities[i].identifier);
+        let entity = entities[i];
+        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.destroyEntity(callbackCommand, entity.identifier);}, entity.identifier);
+        entity.addCommand(callbackCommand);
       }
       commandQueueItem.succeeded();
     }

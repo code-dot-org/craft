@@ -204,16 +204,15 @@ export default class Zombie extends BaseEntity {
                     alpha: 0
                 }, 500, Phaser.Easing.Linear.None);
 
+                tween.onComplete.add(() => {
+                    this.controller.levelEntity.destroyEntity(this.identifier);
+                });
+
                 tween.start();
                 for (var i = 0; i < 2; i++) {
                     tween = this.controller.levelView.addResettableTween(this.burningSprite[i]).to({
                         alpha: 0
                     }, 500, Phaser.Easing.Linear.None);
-
-                    tween.onComplete.add(() => {
-
-                        this.controller.levelEntity.destroyEntity(this.identifier);
-                    });
                     tween.start();
                 }
             }, 1500);
