@@ -261,10 +261,10 @@ export function get(controller) {
       controller.addCommand(callbackCommand);
     },
 
-    setDayNightCycle: function (delayInSecond, startTime) {
+    setDayNightCycle: function (firstDelay, delayInSecond,  startTime) {
       if (!controller.dayNightCycle) {
         controller.dayNightCycle = true;
-        controller.setDayNightCycle(delayInSecond, startTime);
+        controller.initiateDayNightCycle(firstDelay, delayInSecond, startTime);
       }
     },
 
