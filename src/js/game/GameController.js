@@ -997,10 +997,8 @@ class GameController {
     var spawnedEntity = this.levelEntity.spawnEntity(type, spawnDirection);
     if (spawnedEntity !== null) {
       this.events.forEach(e => e({ eventType: EventType.WhenSpawned, targetType: type, targetIdentifier: spawnedEntity.identifier }));
-      commandQueueItem.succeeded();
     }
-    else
-      commandQueueItem.failed();
+    commandQueueItem.succeeded();
   }
 
   spawnEntityAt(commandQueueItem, type, x, y, facing) {
