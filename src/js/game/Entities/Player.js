@@ -12,8 +12,15 @@ export default class Player extends BaseEntity {
 
   updateMovement() {
     if ((this.queue.isFinished() || !this.queue.isStarted()) && this.movementState !== -1) {
-        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.controller.moveDirection(callbackCommand, this.movementState) }, this.identifier);
+      // Arrow key
+      if(this.movementState >= 0) {
+        let direction = this.movementState;
+        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.controller.moveDirection(callbackCommand, direction) }, this.identifier);
         this.addCommand(callbackCommand);
+      // Spacebar
+      } else {
+        this.controller.codeOrgAPI.destroyBlock(()=>{}, this.identifier);
+      }
     }
   }
 

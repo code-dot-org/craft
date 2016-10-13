@@ -179,10 +179,24 @@ class GameController {
       if (this.player.movementState === FacingDirection.Up)
         this.player.movementState = -1;
     });
+    this.game.input.keyboard.addKey(Phaser.Keyboard.W).onDown.add(() => {
+      this.player.movementState = FacingDirection.Up;
+    })
+    this.game.input.keyboard.addKey(Phaser.Keyboard.W).onUp.add(() => {
+      if (this.player.movementState === FacingDirection.Up)
+        this.player.movementState = -1;
+    });
     this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onDown.add(() => {
       this.player.movementState = FacingDirection.Right;
     })
     this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onUp.add(() => {
+      if (this.player.movementState === FacingDirection.Right)
+        this.player.movementState = -1;
+    });
+    this.game.input.keyboard.addKey(Phaser.Keyboard.D).onDown.add(() => {
+      this.player.movementState = FacingDirection.Right;
+    })
+    this.game.input.keyboard.addKey(Phaser.Keyboard.D).onUp.add(() => {
       if (this.player.movementState === FacingDirection.Right)
         this.player.movementState = -1;
     });
@@ -193,6 +207,13 @@ class GameController {
       if (this.player.movementState === FacingDirection.Down)
         this.player.movementState = -1;
     });
+    this.game.input.keyboard.addKey(Phaser.Keyboard.S).onDown.add(() => {
+      this.player.movementState = FacingDirection.Down;
+    })
+    this.game.input.keyboard.addKey(Phaser.Keyboard.S).onUp.add(() => {
+      if (this.player.movementState === FacingDirection.Down)
+        this.player.movementState = -1;
+    });
     this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT).onDown.add(() => {
       this.player.movementState = FacingDirection.Left;
     })
@@ -200,12 +221,19 @@ class GameController {
       if (this.player.movementState === FacingDirection.Left)
         this.player.movementState = -1;
     });
+    this.game.input.keyboard.addKey(Phaser.Keyboard.A).onDown.add(() => {
+      this.player.movementState = FacingDirection.Left;
+    })
+    this.game.input.keyboard.addKey(Phaser.Keyboard.A).onUp.add(() => {
+      if (this.player.movementState === FacingDirection.Left)
+        this.player.movementState = -1;
+    });
+    this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).onDown.add(() => {
+      this.player.movementState = -2;
+    })
     this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).onUp.add(() => {
-      var dummyFunc = function () {
-        console.log("highlight destroy / use block command.");
-      };
-      this.codeOrgAPI.destroyBlock(dummyFunc);
-      this.queue.begin();
+      if (this.player.movementState === -2)
+        this.player.movementState = -1;
     });
   }
 
@@ -1128,6 +1156,24 @@ class GameController {
       var entity = value[1];
       this.events.forEach(e => e({ eventType: EventType.WhenSpawned, targetType: entity.type, targetIdentifier: entity.identifier }));
     }
+  }
+
+  arrowDown(direction) {
+    this.player.movementState = direction;
+  }
+
+  arrowUp(direction) {
+    if (this.player.movementState === direction)
+      this.player.movementState = -1;
+  }
+
+  clickDown() {
+    this.player.movementState = -2;
+  }
+
+  clickUp() {
+    if (this.player.movementState === -2)
+      this.player.movementState = -1;
   }
 }
 

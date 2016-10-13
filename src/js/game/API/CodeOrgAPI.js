@@ -266,6 +266,22 @@ export function get(controller) {
         controller.dayNightCycle = true;
         controller.setDayNightCycle(delayInSecond, startTime);
       }
+    },
+
+    arrowDown: function(direction) {
+      controller.arrowDown(direction);
+    },
+    
+    arrowUp: function(direction) {
+      controller.arrowUp(direction);
+    },
+
+    clickDown: function() {
+      controller.clickDown();
+    },
+    
+    clickUp: function() {
+      controller.clickUp();
     }
   };
 }
