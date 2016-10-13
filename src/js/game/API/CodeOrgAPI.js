@@ -268,19 +268,19 @@ export function get(controller) {
       }
     },
 
-    arrowDown: function(direction) {
+    arrowDown: function (direction) {
       controller.arrowDown(direction);
     },
-    
-    arrowUp: function(direction) {
+
+    arrowUp: function (direction) {
       controller.arrowUp(direction);
     },
 
-    clickDown: function() {
+    clickDown: function () {
       controller.clickDown();
     },
-    
-    clickUp: function() {
+
+    clickUp: function () {
       controller.clickUp();
     }
   };
