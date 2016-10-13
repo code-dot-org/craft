@@ -1101,7 +1101,12 @@ class GameController {
       this.levelModel.isDaytime = true;
       this.levelModel.clearFow();
       this.levelView.updateFowPlane(this.levelModel.fowPlane);
-      this.events.forEach(e => e({ eventType: EventType.WhenDay }));
+      this.events.forEach(e => e({ eventType: EventType.WhenDayGlobal }));
+      var entities = this.levelEntity.entityMap;
+      for (var value of entities) {
+        let entity = value[1];
+        this.events.forEach(e => e({ eventType: EventType.WhenDay, targetIdentifier: entity.identifier, targetType: entity.type }));
+      }
       var zombieList = this.levelEntity.getEntitiesOfType('zombie');
       for (var i = 0; i < zombieList.length; i++) {
         zombieList[i].setBurn(true);
@@ -1122,7 +1127,12 @@ class GameController {
       this.levelModel.isDaytime = false;
       this.levelModel.computeFowPlane();
       this.levelView.updateFowPlane(this.levelModel.fowPlane);
-      this.events.forEach(e => e({ eventType: EventType.WhenNight }));
+      this.events.forEach(e => e({ eventType: EventType.WhenNightGlobal }));
+      var entities = this.levelEntity.entityMap;
+      for (var value of entities) {
+        let entity = value[1];
+        this.events.forEach(e => e({ eventType: EventType.WhenNight, targetIdentifier: entity.identifier, targetType: entity.type }));
+      }
       var zombieList = this.levelEntity.getEntitiesOfType('zombie');
       for (var i = 0; i < zombieList.length; i++) {
         zombieList[i].setBurn(false);
