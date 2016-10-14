@@ -45,7 +45,9 @@ window.demoLevels = {
       afterLoad: ['playerSteve', 'playerSteve', 'grass']
     },
 
-    entities: [['sheep', 3, 3, 1]],
+    levelVerificationTimeout : 1000000,
+
+    entities: [['sheep', 3, 3, 1],['chicken', 5, 4, 1],['cow', 4, 3, 1],['creeper', 5, 3, 1],['ironGolem', 6, 3, 1],['zombie', 2, 3, 1]],
 
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -273,7 +275,7 @@ window.demoLevels = {
     entities: [['chicken', 3, 3, 0]],
 
 
-    playerStartPosition: [4, 3],
+    playerStartPosition: [6, 3],
 
     playerStartDirection: 1,
 
@@ -304,9 +306,9 @@ window.demoLevels = {
     actionPlane: [
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "dirt", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "dirt", "dirt", "", "", "", "", "",
+      "", "", "dirt", "", "", "dirt", "", "", "", "",
+      "", "", "", "dirt", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
