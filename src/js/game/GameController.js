@@ -677,16 +677,14 @@ class GameController {
     if (!this.levelModel.inBounds(position[0], position[1]))
       return;
     let block = this.levelModel.actionPlane[this.levelModel.yToIndex(position[1]) + position[0]];
+    // clear the block in level model (block info in 2d grid)
     this.levelModel.destroyBlock(position);
 
     if (block !== null && block !== undefined) {
-      let destroyPosition = block.position;
+      let destroyPosition = position;
       let blockType = block.blockType;
 
       if (block.isDestroyable) {
-        this.levelView.actionPlaneBlocks[this.levelModel.yToIndex(destroyPosition[1]) + destroyPosition[0]].kill();
-        this.levelView.actionPlaneBlocks[this.levelModel.yToIndex(destroyPosition[1]) + destroyPosition[0]] = null;
-        this.levelModel.destroyBlock(destroyPosition);
         this.levelModel.computeShadingPlane();
         this.levelModel.computeFowPlane();
         switch (blockType) {
@@ -711,12 +709,14 @@ class GameController {
             blockType = "planksSpruce";
             break;
         }
-        this.levelView.playExplosionAnimation(this.levelModel.player.position, this.levelModel.player.facing, destroyPosition, blockType, () => { }, true);
+        this.levelView.destroyBlockWithoutPlayerInteraction(destroyPosition, this.levelModel.shadingPlane, this.levelModel.fowPlane);
+        this.levelView.playExplosionAnimation(this.levelModel.player.position, this.levelModel.player.facing, position, blockType, () => { }, false);
+        this.levelView.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType)
       } else if (block.isUsable) {
         switch (blockType) {
           case "sheep":
             // TODO: What to do with already sheered sheep?
-            this.levelView.playShearAnimation(this.levelModel.player.position, this.levelModel.player.facing, destroyPosition, blockType, () => { });
+            this.levelView.playShearAnimation(this.levelModel.player.position, this.levelModel.player.facing, position, blockType, () => { });
             break;
         }
       }
