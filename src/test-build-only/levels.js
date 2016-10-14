@@ -45,9 +45,9 @@ window.demoLevels = {
       afterLoad: ['playerSteve', 'playerSteve', 'grass']
     },
 
-    levelVerificationTimeout : 10000,
+    levelVerificationTimeout : 1000000,
 
-    entities: [['sheep', 3, 3, 1]],
+    entities: [['sheep', 3, 3, 1],['chicken', 5, 4, 1],['cow', 4, 3, 1],['creeper', 5, 3, 1],['ironGolem', 6, 3, 1],['zombie', 2, 3, 1]],
 
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
