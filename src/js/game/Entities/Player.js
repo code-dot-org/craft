@@ -144,7 +144,7 @@ export default class Player extends BaseEntity {
     } else {
       this.controller.levelView.playFailureAnimation(this.position, this.facing, this.isOnBlock, () => {
         callbackCommand.failed();
-        this.controller.handleEndState();
+        this.controller.handleEndState(false);
       });
     }
   }

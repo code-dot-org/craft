@@ -176,6 +176,7 @@ class GameController {
     this.levelEntity.tick();
     this.player.updateMovement();
     this.levelView.update();
+    this.checkSolution();
   }
 
   addCheatKeys() {
@@ -262,11 +263,11 @@ class GameController {
     });
   }
 
-  handleEndState() {
+  handleEndState(result) {
     // report back to the code.org side the pass/fail result
     //     then clear the callback so we dont keep calling it
     if (this.OnCompleteCallback) {
-      this.OnCompleteCallback(this.timeoutResult, this.levelModel);
+      this.OnCompleteCallback(result, this.levelModel);
       this.OnCompleteCallback = null;
     }
   }
@@ -1052,86 +1053,31 @@ class GameController {
     });
   }
 
-  checkSolution(commandQueueItem) {
+  checkSolution() {
+    if (!this.attemptRunning) {
+      return;
+    }
     let player = this.levelModel.player;
-    this.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]);
-
     // check the final state to see if its solved
     if (this.levelModel.isSolved()) {
-      if (this.checkHouseBuiltEndAnimation()) {
-        var houseBottomRight = this.levelModel.getHouseBottomRight();
-        var inFrontOfDoor = [houseBottomRight[0] - 1, houseBottomRight[1] + 2];
-        var bedPosition = [houseBottomRight[0], houseBottomRight[1]];
-        var doorPosition = [houseBottomRight[0] - 1, houseBottomRight[1] + 1];
-        this.levelModel.moveTo(inFrontOfDoor);
-        this.levelView.playSuccessHouseBuiltAnimation(
-          player.position,
-          player.facing,
-          player.isOnBlock,
-          this.levelModel.houseGroundToFloorBlocks(houseBottomRight),
-          [bedPosition, doorPosition],
-          () => {
-            commandQueueItem.succeeded();
-          },
-          () => {
-            this.levelModel.destroyBlock(bedPosition);
-            this.levelModel.destroyBlock(doorPosition);
-            this.levelModel.computeShadingPlane();
-            this.levelModel.computeFowPlane();
-            this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
-            this.levelView.updateFowPlane(this.levelModel.fowPlane);
-          }
-        );
-      } else if (this.checkMinecartLevelEndAnimation()) {
-        this.levelView.playMinecartAnimation(player.position, player.facing, player.isOnBlock,
-          () => commandQueueItem.succeeded(), this.levelModel.getMinecartTrack(), this.levelModel.getUnpoweredRails());
-      } else if (this.checkTntAnimation()) {
-        this.levelView.scaleShowWholeWorld(() => { });
-        var tnt = this.levelModel.getTnt();
-        var wasOnBlock = player.isOnBlock;
-        this.levelView.playDestroyTntAnimation(player.position, player.facing, player.isOnBlock, this.levelModel.getTnt(), this.levelModel.shadingPlane,
-          () => {
-            if (tnt.length) {
-              // Shakes camera (need to avoid contention with pan?)
-              //this.game.camera.setPosition(0, 5);
-              //this.game.add.tween(this.game.camera)
-              //    .to({y: -10}, 40, Phaser.Easing.Sinusoidal.InOut, false, 0, 3, true)
-              //    .to({y: 0}, 0)
-              //    .start();
-            }
-            for (var i in tnt) {
-              if (tnt[i].x === this.levelModel.player.position.x && tnt[i].y === this.levelModel.player.position.y) {
-                this.levelModel.player.isOnBlock = false;
-              }
-              var surroundingBlocks = this.levelModel.getAllBorderingPositionNotOfType(tnt[i], "tnt");
-              this.levelModel.destroyBlock(tnt[i]);
-              for (var b = 1; b < surroundingBlocks.length; ++b) {
-                if (surroundingBlocks[b][0]) {
-                  this.destroyBlockWithoutPlayerInteraction(surroundingBlocks[b][1]);
-                }
-              }
-            }
-            if (!player.isOnBlock && wasOnBlock) {
-              this.levelView.playPlayerJumpDownVerticalAnimation(player.position, player.facing);
-            }
-            this.levelModel.computeShadingPlane();
-            this.levelModel.computeFowPlane();
-            this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
-            this.levelView.updateFowPlane(this.levelModel.fowPlane);
-            this.delayBy(200, () => {
-              this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock, () => {
-                commandQueueItem.succeeded();
-              });
-            });
-          });
-      } else {
-        this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock,
-          () => commandQueueItem.succeeded());
-      }
+      this.endLevel(true);
+    }
+  }
+
+  endLevel(result) {
+    if (result) {
+      var player = this.levelModel.player;
+      var callbackCommand = new CallbackCommand(this, () => { }, () => {
+        this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock, () => { this.handleEndState(this.timeoutResult); });
+      }, player.identifier);
+      player.queue.startPushHighPriorityCommands();
+      player.addCommand(callbackCommand);
+      player.queue.endPushHighPriorityCommands();
     } else {
-      this.levelView.playFailureAnimation(player.position, player.facing, player.isOnBlock, () => {
-        commandQueueItem.failed();
-      });
+      var callbackCommand = new CallbackCommand(this, () => { }, () => { this.destroyEntity(callbackCommand, player.identifier) }, player.identifier);
+      player.queue.startPushHighPriorityCommands();
+      player.addCommand(callbackCommand);
+      player.queue.endPushHighPriorityCommands();
     }
   }
 
@@ -1366,19 +1312,7 @@ class GameController {
     // set timeout for timeout
     this.timeouts.push(setTimeout(() => {
       let player = this.levelModel.player;
-      if (this.timeoutResult) {
-        var callbackCommand = new CallbackCommand(this, () => { }, () => {
-          this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock, () => { this.handleEndState(); });
-        }, player.identifier);
-        player.queue.startPushHighPriorityCommands();
-        player.addCommand(callbackCommand);
-        player.queue.endPushHighPriorityCommands()
-      } else {
-        var callbackCommand = new CallbackCommand(this, () => { }, () => { this.destroyEntity(callbackCommand, player.identifier) }, player.identifier);
-        player.queue.startPushHighPriorityCommands();
-        player.addCommand(callbackCommand);
-        player.queue.endPushHighPriorityCommands()
-      }
+      this.endLevel(this.timeoutResult);
     }
       , this.timeout));
 
