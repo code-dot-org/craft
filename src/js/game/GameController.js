@@ -124,6 +124,7 @@ class GameController {
     this.levelView = new LevelView(this);
     this.specialLevelType = levelConfig.specialLevelType;
     this.timeout = levelConfig.levelVerificationTimeout;
+    this.timeoutResult = levelConfig.timeoutResult;
     this.game.state.start('levelRunner');
   }
 
@@ -264,9 +265,8 @@ class GameController {
   handleEndState() {
     // report back to the code.org side the pass/fail result
     //     then clear the callback so we dont keep calling it
-    // only reports failure since suceess state is reported by verification function
     if (this.OnCompleteCallback) {
-      this.OnCompleteCallback(false, this.levelModel);
+      this.OnCompleteCallback(this.timeoutResult, this.levelModel);
       this.OnCompleteCallback = null;
     }
   }
@@ -1231,7 +1231,7 @@ class GameController {
       } else {
         var entity = this.getEntity(target);
         if (entity.identifier === 'Player') {
-          this.codeOrgAPI.destroyBlock(()=>{}, entity.identifier);
+          this.codeOrgAPI.destroyBlock(() => { }, entity.identifier);
           commandQueueItem.succeeded();
         } else {
           entity.attack(commandQueueItem);
@@ -1249,8 +1249,7 @@ class GameController {
 
   addCommand(commandQueueItem) {
     // there is a target, push command to the specific target
-    if (commandQueueItem.target !== undefined)
-    {
+    if (commandQueueItem.target !== undefined) {
       var target = this.getEntity(commandQueueItem.target);
       target.addCommand(commandQueueItem);
     }
@@ -1367,10 +1366,19 @@ class GameController {
     // set timeout for timeout
     this.timeouts.push(setTimeout(() => {
       let player = this.levelModel.player;
-      var callbackCommand = new CallbackCommand(this, () => { }, () => { this.destroyEntity(callbackCommand, player.identifier) }, player.identifier);
-      player.queue.startPushHighPriorityCommands();
-      player.addCommand(callbackCommand);
-      player.queue.endPushHighPriorityCommands()
+      if (this.timeoutResult) {
+        var callbackCommand = new CallbackCommand(this, () => { }, () => {
+          this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock, () => { this.handleEndState(); });
+        }, player.identifier);
+        player.queue.startPushHighPriorityCommands();
+        player.addCommand(callbackCommand);
+        player.queue.endPushHighPriorityCommands()
+      } else {
+        var callbackCommand = new CallbackCommand(this, () => { }, () => { this.destroyEntity(callbackCommand, player.identifier) }, player.identifier);
+        player.queue.startPushHighPriorityCommands();
+        player.addCommand(callbackCommand);
+        player.queue.endPushHighPriorityCommands()
+      }
     }
       , this.timeout));
 

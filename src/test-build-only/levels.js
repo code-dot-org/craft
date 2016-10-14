@@ -45,7 +45,8 @@ window.demoLevels = {
       afterLoad: ['playerSteve', 'playerSteve', 'grass']
     },
 
-    levelVerificationTimeout : 1000000,
+    levelVerificationTimeout : 10000,
+    timeoutResult : true,
 
     entities: [['sheep', 3, 3, 1],['chicken', 5, 4, 1],['cow', 4, 3, 1],['creeper', 5, 3, 1],['ironGolem', 6, 3, 1],['zombie', 2, 3, 1]],
 
@@ -121,6 +122,7 @@ window.demoLevels = {
     entities: [['chicken', 3, 3, 0]],
 
     levelVerificationTimeout : 1000000,
+    timeoutResult : true,
 
     playerStartPosition: [4, 3],
 
@@ -199,6 +201,7 @@ window.demoLevels = {
     entities: [['chicken', 3, 3, 0]],
 
     levelVerificationTimeout : 1000000,
+    timeoutResult : true,
 
     playerStartPosition: [4, 3],
 
@@ -277,6 +280,7 @@ window.demoLevels = {
     entities: [['chicken', 3, 3, 0]],
 
     levelVerificationTimeout : 1000000,
+    timeoutResult : true,
 
     playerStartPosition: [6, 3],
 
@@ -355,7 +359,7 @@ window.demoLevels = {
     entities: [['sheep', 3, 3, 0]],
 
     levelVerificationTimeout : 1000000,
-
+    timeoutResult : true,
     playerStartPosition: [4, 3],
 
     playerStartDirection: 1,
@@ -435,6 +439,7 @@ window.demoLevels = {
     playerName: "Steve",
     isEventLevel: true,
     levelVerificationTimeout : 1000000,
+    timeoutResult : true,
 
     earlyLoadAssetPacks: ['allAssetsMinusPlayer'],
     earlyLoadNiceToHaveAssetPacks: ['playerSteve'],
@@ -515,6 +520,7 @@ window.demoLevels = {
     playerName: "Steve",
     isEventLevel: true,
     levelVerificationTimeout : 1000000,
+    timeoutResult : true,
 
     earlyLoadAssetPacks: ['allAssetsMinusPlayer'],
     earlyLoadNiceToHaveAssetPacks: ['playerSteve'],
