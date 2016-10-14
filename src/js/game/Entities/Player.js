@@ -141,7 +141,9 @@ export default class Player extends BaseEntity {
       callbackCommand.succeeded();
     } else {
       this.healthPoint--;
-      this.controller.levelView.playScaledSpeed(this.sprite.animations, "fail" + facingName);
+      this.controller.levelView.playFailureAnimation(this.position, this.facing, this.isOnBlock, () => {
+        callbackCommand.failed();
+      });
     }
   }
 }
