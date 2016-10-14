@@ -607,8 +607,24 @@ class GameController {
   explodeEntity(commandQueueItem) {
     var target = commandQueueItem.target;
     if (!this.isType(target)) {
-      var entity = this.getEntity(target);
-      this.levelView.playExplosionCloudAnimation(entity.position);
+      var targetEntity = this.getEntity(target);
+      this.levelView.playExplosionCloudAnimation(targetEntity.position);
+      var entities = this.levelEntity.entityMap;
+      for (var value of entities) {
+        let entity = value[1];
+        for (var i = -1; i <= 1; i++) {
+          for (var j = -1; j <= 1; j++) {
+            let position = [targetEntity.position[0] + i , targetEntity.position[1] + j];
+            this.destroyBlockWithoutPlayerInteraction(position);
+            if (entity.position[0] === targetEntity.position[0] + i && entity.position[1] === targetEntity.position[1] + j) {
+              let callbackCommand = new CallbackCommand(this, () => { }, () => { this.destroyEntity(callbackCommand, entity.identifier) }, entity.identifier);
+              entity.queue.startPushHighPriorityCommands();
+              entity.addCommand(callbackCommand);
+              entity.queue.endPushHighPriorityCommands();
+            }
+          }
+        }
+      }
       commandQueueItem.succeeded();
     } else {
       var entities = this.getEntities(target);
@@ -640,14 +656,19 @@ class GameController {
   }
 
   destroyBlockWithoutPlayerInteraction(position) {
+    if (!this.levelModel.inBounds(position[0], position[1]))
+      return;
     let block = this.levelModel.actionPlane[this.levelModel.yToIndex(position[1]) + position[0]];
     this.levelModel.destroyBlock(position);
 
-    if (block !== null) {
+    if (block !== null && block !== undefined) {
       let destroyPosition = block.position;
       let blockType = block.blockType;
 
       if (block.isDestroyable) {
+        this.levelView.actionPlaneBlocks[this.levelModel.yToIndex(destroyPosition[1]) + destroyPosition[0]].kill();
+        this.levelView.actionPlaneBlocks[this.levelModel.yToIndex(destroyPosition[1]) + destroyPosition[0]] = null;
+        this.levelModel.destroyBlock(destroyPosition);
         this.levelModel.computeShadingPlane();
         this.levelModel.computeFowPlane();
         switch (blockType) {
@@ -672,7 +693,6 @@ class GameController {
             blockType = "planksSpruce";
             break;
         }
-        this.levelView.actionPlaneBlocks[this.levelModel.yToIndex(destroyPosition[1]) + destroyPosition[0]].kill();
         this.levelView.playExplosionAnimation(this.levelModel.player.position, this.levelModel.player.facing, destroyPosition, blockType, () => { }, true);
       } else if (block.isUsable) {
         switch (blockType) {
@@ -1013,15 +1033,9 @@ class GameController {
 
   destroyEntity(commandQueueItem, target) {
     if (!this.isType(target)) {
-      if (target !== 'Player') {
-        let entity = this.getEntity(target);
-        entity.healthPoint = 1;
-        entity.takeDamage(commandQueueItem);
-      }
-      else {
-        this.printErrorMsg("Not able to destroy player\n");
-        commandQueueItem.succeeded();
-      }
+      let entity = this.getEntity(target);
+      entity.healthPoint = 1;
+      entity.takeDamage(commandQueueItem);
     }
     else {
       var entities = this.getEntities(target);

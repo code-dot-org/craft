@@ -328,7 +328,6 @@ export default class BaseEntity {
                     alpha: 0
                 }, 300, Phaser.Easing.Linear.None);
                 tween.onComplete.add(() => {
-
                     this.controller.levelEntity.destroyEntity(this.identifier);
                 });
                 tween.start();
