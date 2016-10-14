@@ -79,6 +79,8 @@ class GameController {
       gameControllerConfig.earlyLoadNiceToHaveAssetPacks || [];
 
     this.resettableTimers = [];
+    this.timeouts = [];
+    this.timeout = 0;
 
     this.events = [];
 
@@ -121,7 +123,7 @@ class GameController {
     this.levelModel = new LevelModel(this.levelData, this);
     this.levelView = new LevelView(this);
     this.specialLevelType = levelConfig.specialLevelType;
-
+    this.timeout = levelConfig.levelVerificationTimeout;
     this.game.state.start('levelRunner');
   }
 
@@ -135,6 +137,10 @@ class GameController {
     this.resettableTimers.forEach((timer) => {
       timer.stop(true);
     });
+    this.timeouts.forEach((timeout) => {
+      clearTimeout(timeout);
+    });
+    this.timeouts = [];
     this.resettableTimers.length = 0;
     this.events.length = 0;
   }
@@ -258,12 +264,9 @@ class GameController {
   handleEndState() {
     // report back to the code.org side the pass/fail result
     //     then clear the callback so we dont keep calling it
+    // only reports failure since suceess state is reported by verification function
     if (this.OnCompleteCallback) {
-      if (this.queue.isSucceeded()) {
-        this.OnCompleteCallback(true, this.levelModel);
-      } else {
-        this.OnCompleteCallback(false, this.levelModel);
-      }
+      this.OnCompleteCallback(false, this.levelModel);
       this.OnCompleteCallback = null;
     }
   }
@@ -711,7 +714,7 @@ class GameController {
         }
         this.levelView.destroyBlockWithoutPlayerInteraction(destroyPosition, this.levelModel.shadingPlane, this.levelModel.fowPlane);
         this.levelView.playExplosionAnimation(this.levelModel.player.position, this.levelModel.player.facing, position, blockType, () => { }, false);
-        this.levelView.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType)
+        this.levelView.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
       } else if (block.isUsable) {
         switch (blockType) {
           case "sheep":
@@ -1210,11 +1213,21 @@ class GameController {
     }
   }
 
-  dispatchSpawnEventAtStart() {
+  run() {
+    // dispatch when spawn event at run
     for (var value of this.levelEntity.entityMap) {
       var entity = value[1];
       this.events.forEach(e => e({ eventType: EventType.WhenSpawned, targetType: entity.type, targetIdentifier: entity.identifier }));
     }
+    // set timeout for timeout
+    this.timeouts.push(setTimeout(  () => {
+        let player = this.levelModel.player;
+        var callbackCommand = new CallbackCommand(this, () => { }, () => { this.destroyEntity(callbackCommand, player.identifier) }, player.identifier);
+        player.queue.startPushHighPriorityCommands();
+        player.addCommand(callbackCommand);
+        player.queue.endPushHighPriorityCommands()}
+    , this.timeout));
+
   }
 
   arrowDown(direction) {
