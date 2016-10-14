@@ -731,7 +731,7 @@ class GameController {
       let block = this.levelModel.destroyBlockForward();
 
       if (block !== null) {
-        let destroyPosition = block.position;
+        let destroyPosition = this.levelModel.getMoveForwardPosition(player);
         let blockType = block.blockType;
 
         if (block.isDestroyable) {
