@@ -74,6 +74,10 @@ export default class BaseEntity {
         var animName = "bump";
         var facingName = this.controller.levelView.getDirectionName(this.facing);
         this.controller.levelView.playScaledSpeed(this.sprite.animations, animName + facingName);
+        let forwardPosition = this.controller.levelModel.getMoveForwardPosition(this);
+        this.queue.startPushHighPriorityCommands();
+        this.controller.events.forEach(e => e({ eventType: EventType.WhenTouched, targetType: this.type, targetIdentifier: this.identifier, eventSenderIdentifier: this.controller.levelEntity.getEntityAt(forwardPosition).identifier }));
+        this.queue.endPushHighPriorityCommands();
         this.controller.delayPlayerMoveBy(400, 800, () => {
             commandQueueItem.succeeded();
         });
@@ -206,31 +210,30 @@ export default class BaseEntity {
                 bestPosition = [FacingDirection.Down, [this.position[0], this.position[1] + 1]];
         }
         // terminate the action since it's impossible to move
-        if (bestPosition.length === 0) {
-            commandQueueItem.succeeded();
+        if (absoluteDistanceSquare(this.position, moveTowardPosition) === 1) {
+            if (this.position[0] < moveTowardPosition[0])
+                this.facing = FacingDirection.Right;
+            else if (this.position[0] > moveTowardPosition[0])
+                this.facing = FacingDirection.Left;
+            else if (this.position[1] < moveTowardPosition[1])
+                this.facing = FacingDirection.Down;
+            else if (this.position[1] > moveTowardPosition[1])
+                this.facing = FacingDirection.Up;
+            this.updateAnimationDirection();
+            this.bump(commandQueueItem);
             return false;
-            // execute the best result
         } else {
-            if (absoluteDistanceSquare(this.position, moveTowardPosition) === 1) {
-                if (this.position[0] < moveTowardPosition[0])
-                    this.facing = FacingDirection.Right;
-                else if (this.position[0] > moveTowardPosition[0])
-                    this.facing = FacingDirection.Left;
-                else if (this.position[1] < moveTowardPosition[1])
-                    this.facing = FacingDirection.Down;
-                else if (this.position[1] > moveTowardPosition[1])
-                    this.facing = FacingDirection.Up;
-                this.updateAnimationDirection();
-                this.controller.delayPlayerMoveBy(200, 800, () => {
-                    commandQueueItem.succeeded();
-                });
+            if (bestPosition.length === 0) {
+                commandQueueItem.succeeded();
                 return false;
+                // execute the best result
             } else {
                 this.moveDirection(commandQueueItem, bestPosition[0]);
                 return true;
             }
         }
     }
+
 
     moveTo(commandQueueItem, moveTowardTo) {
 

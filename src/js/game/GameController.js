@@ -770,18 +770,7 @@ class GameController {
   wait(commandQueueItem, time) {
     var target = commandQueueItem.target;
     if (!this.isType(target)) {
-      // apply to all entities
-      if (target === undefined) {
-        var entities = this.levelEntity.entityMap;
-        for (var value of entities) {
-          let entity = value[1];
-          let callbackCommand = new CallbackCommand(this, () => { }, () => { this.wait(callbackCommand, time) }, entity.identifier);
-          entity.addCommand(callbackCommand);
-        }
-        commandQueueItem.succeeded();
-      } else {
-        setTimeout(() => { commandQueueItem.succeeded() }, time * 1000);
-      }
+      setTimeout(() => { commandQueueItem.succeeded() }, time * 1000);
     } else {
       var entities = this.getEntities(target);
       for (var i = 0; i < entities.length; i++) {
@@ -1167,10 +1156,8 @@ class GameController {
     var spawnedEntity = this.levelEntity.spawnEntityAt(type, x, y, facing);
     if (spawnedEntity !== null) {
       this.events.forEach(e => e({ eventType: EventType.WhenSpawned, targetType: type, targetIdentifier: spawnedEntity.identifier }));
-      commandQueueItem.succeeded();
     }
-    else
-      commandQueueItem.failed();
+    commandQueueItem.succeeded();
   }
 
   destroyEntity(commandQueueItem, target) {
@@ -1259,10 +1246,12 @@ class GameController {
   }
 
   addCommand(commandQueueItem) {
-    var target = this.getEntity(commandQueueItem.target);
     // there is a target, push command to the specific target
-    if (target !== undefined)
+    if (commandQueueItem.target !== undefined)
+    {
+      var target = this.getEntity(commandQueueItem.target);
       target.addCommand(commandQueueItem);
+    }
     else {
       this.queue.addCommand(commandQueueItem);
       this.queue.begin();
