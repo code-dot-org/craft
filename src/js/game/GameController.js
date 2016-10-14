@@ -783,6 +783,8 @@ class GameController {
       // if there is a entity in front of the player
     } else if (frontEntity != null) {
       // push use command to execute general use behavior of the entity before executing the event
+      const destroyPosition = this.levelModel.getMoveForwardPosition();
+      this.levelView.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
       this.levelView.onAnimationEnd(this.levelView.playPlayerAnimation("punch", player.position, player.facing, false), () => {
         var useCommand = new CallbackCommand(this, () => { }, () => { frontEntity.use(useCommand, player); }, frontEntity.identifier);
 
@@ -791,16 +793,16 @@ class GameController {
         frontEntity.queue.endPushHighPriorityCommands();
         this.levelView.playExplosionAnimation(player.position, player.facing, frontEntity.position, frontEntity.type, () => { }, false);
         this.levelView.playPlayerAnimation("idle", player.position, player.facing, false);
-        this.delayPlayerMoveBy(200, 600, () => {
+        this.delayPlayerMoveBy(0, 0, () => {
           commandQueueItem.succeeded();
         });
-        setTimeout(() => { this.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]); }, 200);
+        setTimeout(() => { this.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]); }, 0);
       });
     } else {
       this.levelView.playPunchDestroyAirAnimation(player.position, player.facing, this.levelModel.getMoveForwardPosition(), () => {
         this.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]);
         this.levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
-        this.delayPlayerMoveBy(200, 600, () => {
+        this.delayPlayerMoveBy(0, 0, () => {
           commandQueueItem.succeeded();
         });
       });
