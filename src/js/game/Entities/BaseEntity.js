@@ -44,12 +44,14 @@ export default class BaseEntity {
         levelView.playBlockSound(groundType);
         // play walk animation
         var animName = "walk" + this.controller.levelView.getDirectionName(this.facing);
+        var idleAnimName = "idle" + this.controller.levelView.getDirectionName(this.facing);
         levelView.playScaledSpeed(this.sprite.animations, animName);
         setTimeout(() => {
             tween = this.controller.levelView.addResettableTween(this.sprite).to({
                 x: (this.offset[0] + 40 * position[0]), y: (this.offset[1] + 40 * position[1])
             }, 300, Phaser.Easing.Linear.None);
             tween.onComplete.add(() => {
+                levelView.playScaledSpeed(this.sprite.animations, idleAnimName);
                 commandQueueItem.succeeded();
             });
 

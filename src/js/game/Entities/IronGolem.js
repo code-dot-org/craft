@@ -87,9 +87,7 @@ export default class IronGolem extends BaseEntity {
             });
             // walk
             frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][5][0], frameListPerDirection[i][5][1], ".png", 3);
-            this.sprite.animations.add("walk" + facingName, frameList, frameRate, false).onComplete.add(() => {
-                this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + this.controller.levelView.getDirectionName(this.facing));
-            });
+            this.sprite.animations.add("walk" + facingName, frameList, frameRate, true);
             // attack
             frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][6][0], frameListPerDirection[i][6][1], ".png", 3);
             this.sprite.animations.add("attack" + facingName, frameList, frameRate, false).onComplete.add(() => {
