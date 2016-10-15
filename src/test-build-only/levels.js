@@ -45,8 +45,10 @@ window.demoLevels = {
       afterLoad: ['playerSteve', 'playerSteve', 'grass']
     },
 
-    levelVerificationTimeout : 10000,
-    timeoutResult : true,
+    levelVerificationTimeout : 5000,
+    timeoutResult : function(verificationAPI) {
+      return verificationAPI.getTurnRandomCount() >= 1;
+    },
 
     entities: [['sheep', 8, 8, 1],['chicken', 5, 4, 1],['cow', 4, 3, 1],['creeper', 5, 3, 1],['ironGolem', 6, 3, 1],['zombie', 2, 3, 1]],
 
@@ -101,7 +103,7 @@ window.demoLevels = {
 
 
     verificationFunction: function (verificationAPI) {
-      return verificationAPI.isEntityDied("sheep", 1);
+      return false;
     },
 
     solutionCode:

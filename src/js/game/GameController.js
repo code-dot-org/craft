@@ -81,6 +81,7 @@ class GameController {
     this.resettableTimers = [];
     this.timeouts = [];
     this.timeout = 0;
+    this.turnRandomCount = 0;
 
     this.events = [];
 
@@ -144,6 +145,7 @@ class GameController {
     this.timeouts = [];
     this.resettableTimers.length = 0;
     this.events.length = 0;
+    this.turnRandomCount = 0;
   }
 
   preload() {
@@ -675,12 +677,14 @@ class GameController {
       if (target === undefined) {
         var entities = this.levelEntity.entityMap;
         for (var value of entities) {
+          this.turnRandomCount++;
           let entity = value[1];
           let callbackCommand = new CallbackCommand(this, () => { }, () => { this.turn(callbackCommand, getRandomInt(0, 1) === 0 ? 1 : -1) }, entity.identifier);
           entity.addCommand(callbackCommand);
         }
         commandQueueItem.succeeded();
       } else {
+        this.turnRandomCount++;
         var entity = this.getEntity(target);
         entity.turn(commandQueueItem, getRandomInt(0, 1) === 0 ? 1 : -1);
       }
@@ -688,6 +692,7 @@ class GameController {
     else {
       var entities = this.getEntities(target);
       for (var i = 0; i < entities.length; i++) {
+        this.turnRandomCount++;
         let callbackCommand = new CallbackCommand(this, () => { }, () => { this.turn(callbackCommand, getRandomInt(0, 1) === 0 ? 1 : -1) }, entities[i].identifier);
         entities[i].addCommand(callbackCommand);
       }
@@ -1068,12 +1073,13 @@ class GameController {
     if (result) {
       var player = this.levelModel.player;
       var callbackCommand = new CallbackCommand(this, () => { }, () => {
-        this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock, () => { this.handleEndState(this.timeoutResult); });
+        this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock, () => { this.handleEndState(true); });
       }, player.identifier);
       player.queue.startPushHighPriorityCommands();
       player.addCommand(callbackCommand);
       player.queue.endPushHighPriorityCommands();
     } else {
+      var player = this.levelModel.player;
       var callbackCommand = new CallbackCommand(this, () => { }, () => { this.destroyEntity(callbackCommand, player.identifier) }, player.identifier);
       player.queue.startPushHighPriorityCommands();
       player.addCommand(callbackCommand);
@@ -1312,7 +1318,7 @@ class GameController {
     // set timeout for timeout
     this.timeouts.push(setTimeout(() => {
       let player = this.levelModel.player;
-      this.endLevel(this.timeoutResult);
+      this.endLevel(this.timeoutResult(this.levelModel));
     }
       , this.timeout));
 

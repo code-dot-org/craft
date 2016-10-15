@@ -172,6 +172,10 @@ export default class LevelModel {
     return false;
   }
 
+  getTurnRandomCount() {
+    return this.controller.turnRandomCount;
+  }
+
   getInventoryAmount(inventoryType) {
     return this.player.inventory[inventoryType] || 0;
   }
