@@ -47,7 +47,7 @@ window.demoLevels = {
 
     levelVerificationTimeout : 100000,
     timeoutResult : function(verificationAPI) {
-      return verificationAPI.getTurnRandomCount() >= 1;
+      return verificationAPI.isEntityOnBlocktype('sheep','grass',2);
     },
 
     entities: [['sheep', 8, 8, 1],['sheep', 8, 9, 1],['chicken', 5, 4, 1],['cow', 4, 3, 1],['creeper', 5, 3, 1],['ironGolem', 6, 3, 1],['zombie', 2, 3, 1]],
@@ -103,7 +103,7 @@ window.demoLevels = {
 
 
     verificationFunction: function (verificationAPI) {
-      return false;
+      return verificationAPI.isEntityOnBlocktype('sheep','grass',2);
     },
 
     solutionCode:
