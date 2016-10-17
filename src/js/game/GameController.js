@@ -352,6 +352,9 @@ class GameController {
         var moveAwayFromEntity = this.getEntity(moveAwayFrom);
         if (moveAwayFromEntity !== undefined) {
           for (var i = 0; i < targetEntities.length; i++) {
+            // not move if it's same entity
+            if (targetEntities[i].identifier === moveAwayFromEntity.identifier)
+              continue;
             let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveAway(callbackCommand, moveAwayFrom) }, targetEntities[i].identifier);
             targetEntities[i].addCommand(callbackCommand);
           }
@@ -363,7 +366,7 @@ class GameController {
         var entity = this.getEntity(target);
         var moveAwayFromEntities = this.getEntities(moveAwayFrom);
         if (moveAwayFromEntities.length > 0) {
-          var closestTarget = [entity.getDistance(moveAwayFromEntities[0]), 0];
+          var closestTarget = [entity.getDistance(moveAwayFromEntities[0]), -1];
           for (var i = 1; i < moveAwayFromEntities.length; i++) {
             let distance = entity.getDistance(moveAwayFromEntities[i]);
             if (distance < closestTarget[0]) {
@@ -381,15 +384,21 @@ class GameController {
         if (moveAwayFromEntities.length > 0 && entities.length > 0) {
           for (var i = 0; i < entities.length; i++) {
             var entity = entities[i];
-            var closestTarget = [entity.getDistance(moveAwayFromEntities[0]), 0];
-            for (var j = 1; j < moveAwayFromEntities.length; j++) {
+            var closestTarget = [Number.MAX_VALUE, -1];
+            for (var j = 0; j < moveAwayFromEntities.length; j++) {
+              // not move if it's same entity
+              if (targetEntities[i].identifier === moveAwayFromEntity.identifier)
+                continue;
               let distance = entity.getDistance(moveAwayFromEntities[j]);
               if (distance < closestTarget[0]) {
                 closestTarget = [distance, j];
               }
             }
-            let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveAway(callbackCommand, moveAwayFromEntities[closestTarget[1]].identifier) }, entity.identifier);
-            entity.addCommand(callbackCommand);
+            if (closestTarget !== -1) {
+              let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveAway(callbackCommand, moveAwayFromEntities[closestTarget[1]].identifier) }, entity.identifier);
+              entity.addCommand(callbackCommand);
+            } else
+              commandQueueItem.succeeded();
           }
           commandQueueItem.succeeded();
         }
@@ -435,6 +444,9 @@ class GameController {
         var moveTowardToEntity = this.getEntity(moveTowardTo);
         if (moveTowardToEntity !== undefined) {
           for (var i = 0; i < targetEntities.length; i++) {
+            // not move if it's same entity
+            if (targetEntities[i].identifier === moveTowardToEntities.identifier)
+              continue;
             let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveToward(callbackCommand, moveTowardTo) }, targetEntities[i].identifier);
             targetEntities[i].addCommand(callbackCommand);
           }
@@ -446,14 +458,21 @@ class GameController {
         var entity = this.getEntity(target);
         var moveTowardToEntities = this.getEntities(moveTowardTo);
         if (moveTowardToEntities.length > 0) {
-          var closestTarget = [entity.getDistance(moveTowardToEntities[0]), 0];
-          for (var i = 1; i < moveTowardToEntities.length; i++) {
+          var closestTarget = [Number.MAX_VALUE, -1];
+          for (var i = 0; i < moveTowardToEntities.length; i++) {
+            // not move if it's same entity
+            if (moveTowardToEntities[i].identifier === entity.identifier)
+              continue;
             let distance = entity.getDistance(moveTowardToEntities[i]);
             if (distance < closestTarget[0]) {
               closestTarget = [distance, i];
             }
           }
-          entity.moveToward(commandQueueItem, moveTowardToEntities[closestTarget[1]]);
+          // there is valid target
+          if (closestTarget[1] !== -1)
+            entity.moveToward(commandQueueItem, moveTowardToEntities[closestTarget[1]]);
+          else
+            commandQueueItem.succeeded();
         } else
           commandQueueItem.succeeded();
       }
