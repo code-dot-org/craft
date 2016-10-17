@@ -153,6 +153,20 @@ export default class LevelModel {
     return false;
   }
 
+  isEntityOnBlocktype(entityType, blockType, count = 1) {
+    var entityList = this.controller.levelEntity.getEntitiesOfType(entityType);
+    var resultCount = 0;
+    for (var i = 0; i < entityList.length; i++) {
+      var entity = entityList[i];
+      var position;
+      var result = false;
+      if (this.isBlockOfType(entity.position, blockType)) {
+        resultCount++;
+      }
+    }
+    return resultCount >= count;
+  }
+
   isEntityAt(entityType, position) {
     var entityList = this.controller.levelEntity.getEntitiesOfType(entityType);
     for (var i = 0; i < entityList.length; i++) {
