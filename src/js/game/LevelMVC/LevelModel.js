@@ -184,6 +184,18 @@ export default class LevelModel {
     return false;
   }
 
+  isEntityTypeRunning(entityType) {
+    var entityList = this.controller.levelEntity.getEntitiesOfType(entityType);
+    for (var i = 0; i < entityList.length; i++) {
+      var entity = entityList[i];
+      const notStarted = !entity.queue.isStarted();
+      const notFinished = !entity.queue.isFinished();
+      if((notStarted && entity.queue.commandList_.length > 0) || notFinished)
+        return true;
+    }
+    return false;
+  }
+
   isEntityDied(entityType, count = 1) {
     var deathCount = this.controller.levelEntity.entityDeathCount;
     if (deathCount.has(entityType)) {

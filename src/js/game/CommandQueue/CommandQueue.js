@@ -61,8 +61,9 @@ export default class CommandQueue {
       if (!this.currentCommand) {
         // if command list is empty
         if (this.commandList_.length === 0) {
-          // mark this queue as a success
-          this.state = CommandState.SUCCESS;
+          // mark this queue as a success if there is no repeat command
+          if( this.repeatCommands.length === 0)
+            this.state = CommandState.SUCCESS;
           // if there are repeat command for this queue, add them
           for (var i = 0; i < this.repeatCommands.length; i++) {
             if (this.repeatCommands[i][1] > 0) {
