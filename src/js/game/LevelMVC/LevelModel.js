@@ -577,12 +577,22 @@ export default class LevelModel {
       }
       if (!this.actionPlane[blockIndex].isEmpty)
         result.push("notEmpty");
+      if (this.groundPlane[blockIndex].blockType === "water")
+        result.push("water");
+      else if(this.groundPlane[blockIndex].blockType === "lava")
+        result.push("lava");
       var frontEntity = this.getEntityAt(position);
       if (frontEntity !== undefined) {
         result.push("frontEntity");
         result.push(frontEntity);
       }
-      result[0] = (this.actionPlane[blockIndex].isWalkable || ((frontEntity !== undefined && frontEntity.isOnBlock) && !this.actionPlane[blockIndex].isEmpty)) && (frontEntity === undefined);
+      result[0] = (this.actionPlane[blockIndex].isWalkable || ((frontEntity !== undefined && frontEntity.isOnBlock) 
+      // action plane is empty
+      && !this.actionPlane[blockIndex].isEmpty)) 
+      // there is no entity 
+      && (frontEntity === undefined)
+      // no lava or water
+      && (this.groundPlane[blockIndex].blockType !== "water" && this.groundPlane[blockIndex].blockType !== "lava");
     }
     else
       result.push("outBound");
