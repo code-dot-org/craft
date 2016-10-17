@@ -33,7 +33,7 @@ export default class Player extends BaseEntity {
       } else {
         let callbackCommand = new CallbackCommand(this, () => { }, () => {
           this.lastMovement = +new Date();
-          this.controller.destroyBlock(callbackCommand);
+          this.controller.use(callbackCommand);
         }, this.identifier);
         this.addCommand(callbackCommand);
       }
