@@ -219,7 +219,7 @@ export function get(controller) {
     destroyEntity: function (highlightCallback, targetEntity) {
       var callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
         controller.destroyEntity(callbackCommand, targetEntity);
-      });
+      }, targetEntity);
       controller.addGlobalCommand(callbackCommand);
     },
 

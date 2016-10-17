@@ -45,12 +45,12 @@ window.demoLevels = {
       afterLoad: ['playerSteve', 'playerSteve', 'grass']
     },
 
-    levelVerificationTimeout : 5000,
+    levelVerificationTimeout : 100000,
     timeoutResult : function(verificationAPI) {
       return verificationAPI.getTurnRandomCount() >= 1;
     },
 
-    entities: [['sheep', 8, 8, 1],['chicken', 5, 4, 1],['cow', 4, 3, 1],['creeper', 5, 3, 1],['ironGolem', 6, 3, 1],['zombie', 2, 3, 1]],
+    entities: [['sheep', 8, 8, 1],['sheep', 8, 9, 1],['chicken', 5, 4, 1],['cow', 4, 3, 1],['creeper', 5, 3, 1],['ironGolem', 6, 3, 1],['zombie', 2, 3, 1]],
 
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
