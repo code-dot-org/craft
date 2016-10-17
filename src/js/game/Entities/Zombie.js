@@ -79,6 +79,9 @@ export default class Zombie extends BaseEntity {
         var frameList = [];
         var frameName = "Zombie_"
         this.sprite = actionPlane.create(0, 0, 'zombie', 'Zombie_001.png');
+        this.ghost = this.controller.levelView.fluffPlane.create(0, 0, `zombie`, 'Zombie_001.png');
+        this.ghost.parent = this.sprite;
+        this.ghost.alpha = 0.2;
         // update sort order and position
         this.sprite.sortOrder = this.controller.levelView.yToIndex(this.position[1]);
         this.sprite.x = this.offset[0] + 40 * this.position[0];

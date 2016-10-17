@@ -20,6 +20,9 @@ export default class Creeper extends BaseEntity {
         var frameList = [];
         var frameName = "ShadowCreeper_2016_"
         this.sprite = actionPlane.create(0, 0, 'creeper', 'ShadowCreeper_2016_000.png');
+        this.ghost = this.controller.levelView.fluffPlane.create(0, 0, `creeper`, 'ShadowCreeper_2016_000.png');
+        this.ghost.parent = this.sprite;
+        this.ghost.alpha = 0.2;
         // for normal sheep
         // [direction][[idle],[look left],[look right],[look up],[look down],[walk],[attack],[take dmg],[die],[bump]]
         var frameListPerDirection = [[[128, 128], [128, 131], [134, 137], [140, 143], [146, 149], [152, 163], [164, 167], [164, 178], [179, 184], [185, 191], [272, 279]], // down

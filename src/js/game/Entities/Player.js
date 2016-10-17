@@ -9,7 +9,6 @@ export default class Player extends BaseEntity {
     this.inventory = {};
     this.movementState = -1;
   }
-
   updateMovement() {
     if (!this.controller.attemptRunning) {
       return;

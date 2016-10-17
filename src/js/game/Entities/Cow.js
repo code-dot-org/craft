@@ -20,6 +20,9 @@ export default class Cow extends BaseEntity {
         var frameList = [];
         var frameName = "Cow"
         this.sprite = actionPlane.create(0, 0, 'cow', 'Cow0001.png');
+        this.ghost = this.controller.levelView.fluffPlane.create(0, 0, `cow`, 'Cow0001.png');
+        this.ghost.parent = this.sprite;
+        this.ghost.alpha = 0.2;
         let stillFrameName = ['Cow0222.png', 'Cow0111.png', 'Cow0001.png', 'Cow0333.png'];
         let idleDelayFrame = 20;
         // [direction][[idle],[look left],[look right],[look up],[look down],[walk],[attack],[take dmg],[die],[bump],[idle2],[eat]]

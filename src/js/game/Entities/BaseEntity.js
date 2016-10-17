@@ -18,10 +18,16 @@ export default class BaseEntity {
         this.offset = [-22, -12];
         this.identifier = identifier;
         this.healthPoint = 3;
+        this.ghost = null;
     }
 
     tick() {
         this.queue.tick();
+
+        if (this.ghost) {
+            this.ghost.frame = this.sprite.frame;
+            this.ghost.z = 1000;
+        }
     }
 
     reset() {
@@ -112,8 +118,6 @@ export default class BaseEntity {
         var forwardPositionInformation = this.controller.levelModel.canMoveForward(this);
         if (forwardPositionInformation[0]) {
             this.doMoveForward(commandQueueItem, forwardPosition);
-            // not entity moved event
-            //this.controller.events.forEach(e => e({ eventType: 'entityMoved', entityIdentifier: this.identifier }));
         } else {
             this.bump(commandQueueItem);
             this.callBumpEvents(forwardPositionInformation);

@@ -81,6 +81,9 @@ export default class Sheep extends BaseEntity {
         var frameList = [];
         var frameName = "ShadowSheep_2016";
         this.sprite = actionPlane.create(0, 0, 'sheep', 'ShadowSheep_2016001.png');
+        this.ghost = this.controller.levelView.fluffPlane.create(0, 0, `sheep`, 'ShadowSheep_2016001.png');
+        this.ghost.parent = this.sprite;
+        this.ghost.alpha = 0.2;
         let stillFrameName = ['ShadowSheep_2016217.png', 'ShadowSheep_2016109.png', 'ShadowSheep_2016001.png', 'ShadowSheep_2016325.png'];
         let idleDelayFrame = 8;
         // for normal sheep
