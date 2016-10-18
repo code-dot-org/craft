@@ -324,7 +324,7 @@ class GameController {
     if (this.commandRecord.has(commandName)) {
       // update count for command map
       let commandMap = this.commandRecord.get(commandName);
-      commandMap.set(commandName, commandMap.get("count") + 1);
+      commandMap.set("count", commandMap.get("count") + 1);
       // command map has target
       if (commandMap.has(targetType)) {
         // increment count
@@ -338,7 +338,7 @@ class GameController {
 
   getCommandCount(commandName, targetType) {
     // command record has command name and target
-    if (this.commandRecord.has(commandName) && this.commandRecord.get(commandName).has(targetType)) {
+    if (this.commandRecord.has(commandName)) {
       let commandMap = this.commandRecord.get(commandName);
       // doesn't have target so returns global count for command
       if (targetType === undefined) {
