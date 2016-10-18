@@ -20,10 +20,6 @@ export default class Chicken extends BaseEntity {
         var frameList = [];
         var frameName = "chicken"
         this.sprite = actionPlane.create(0, 0, 'chicken', 'chicken0001.png');
-
-        this.ghost = this.controller.levelView.fluffPlane.create(0, 0, `chicken`, 'chicken0001.png');
-        this.ghost.parent = this.sprite;
-        this.ghost.alpha = 0.2;
         let stillFrameName = ['chicken0222.png', 'chicken0111.png', 'chicken0001.png', 'chicken0333.png'];
         let idleDelayFrame = 8;
         // [direction][[idle],[look left],[look right],[look up],[look down],[walk],[attack],[take dmg],[die],[bump],[eat]]

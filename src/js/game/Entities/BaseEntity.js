@@ -18,16 +18,10 @@ export default class BaseEntity {
         this.offset = [-22, -12];
         this.identifier = identifier;
         this.healthPoint = 3;
-        this.ghost = null;
     }
 
     tick() {
         this.queue.tick();
-
-        if (this.ghost) {
-            this.ghost.frame = this.sprite.frame;
-            this.ghost.z = 1000;
-        }
     }
 
     reset() {
