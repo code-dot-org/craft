@@ -726,7 +726,7 @@ class GameController {
       } else {
         var entity = this.getEntity(target);
         var delay = this.levelView.flashSpriteToWhite(entity.sprite);
-        this.controller.addCommandRecord("explode",entity.type);
+        this.addCommandRecord("explode",entity.type);
         this.delayBy(delay, () => {
           commandQueueItem.succeeded();
         });
@@ -757,7 +757,7 @@ class GameController {
       } else {
         var targetEntity = this.getEntity(target);
         this.levelView.playExplosionCloudAnimation(targetEntity.position);
-        this.controller.addCommandRecord("explode",targetEntity.type);
+        this.addCommandRecord("explode",targetEntity.type);
         var entities = this.levelEntity.entityMap;
         for (var value of entities) {
           let entity = value[1];
@@ -790,7 +790,7 @@ class GameController {
     var target = commandQueueItem.target;
     if (!this.isType(target)) {
       let entity = this.getEntity(target)
-      this.controller.addCommandRecord("wait", entity.type);
+      this.addCommandRecord("wait", entity.type);
       setTimeout(() => { commandQueueItem.succeeded() }, time * 1000);
     } else {
       var entities = this.getEntities(target);
@@ -810,7 +810,7 @@ class GameController {
   }
 
   spawnEntity(commandQueueItem, type, spawnDirection) {
-    this.controller.addCommandRecord("spawn", type);
+    this.addCommandRecord("spawn", type);
     var spawnedEntity = this.levelEntity.spawnEntity(type, spawnDirection);
     if (spawnedEntity !== null) {
       this.events.forEach(e => e({ eventType: EventType.WhenSpawned, targetType: type, targetIdentifier: spawnedEntity.identifier }));
@@ -838,7 +838,7 @@ class GameController {
         }
         commandQueueItem.succeeded();
       } else {
-        this.controller.addCommandRecord("destroy", this.type);
+        this.addCommandRecord("destroy", this.type);
         let entity = this.getEntity(target);
         entity.healthPoint = 1;
         entity.takeDamage(commandQueueItem);
@@ -913,7 +913,7 @@ class GameController {
   }
 
   playSound(commandQueueItem, sound) {
-    this.controller.addCommandRecord("playSound");
+    this.addCommandRecord("playSound");
     this.levelView.audioPlayer.play(sound);
     commandQueueItem.succeeded();
   }
