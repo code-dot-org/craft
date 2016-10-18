@@ -45,12 +45,12 @@ window.demoLevels = {
       afterLoad: ['playerSteve', 'playerSteve', 'grass']
     },
 
-    levelVerificationTimeout : 100000,
+    levelVerificationTimeout : -1,
     timeoutResult : function(verificationAPI) {
       return verificationAPI.isEntityOnBlocktype('sheep','grass',2);
     },
 
-    entities: [['sheep', 8, 8, 1],['sheep', 8, 9, 1],['chicken', 5, 4, 1],['cow', 4, 3, 1],['creeper', 5, 3, 1],['ironGolem', 6, 3, 1],['zombie', 2, 3, 1]],
+    entities: [['sheep', 8, 5, 1],['sheep', 3, 3, 1],['chicken', 5, 4, 1],['cow', 4, 3, 1],['creeper', 5, 3, 1],['ironGolem', 6, 3, 1],['zombie', 2, 3, 1]],
 
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -60,7 +60,7 @@ window.demoLevels = {
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "lava", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
     ],
 
@@ -103,7 +103,7 @@ window.demoLevels = {
 
 
     verificationFunction: function (verificationAPI) {
-      return verificationAPI.isEntityOnBlocktype('sheep','grass',2);
+      return verificationAPI.getCommandExecutedCount("moveForward","sheep") >= 1 && verificationAPI.getCommandExecutedCount("turnRandom","sheep") >= 1;
     },
 
     solutionCode:
@@ -123,8 +123,10 @@ window.demoLevels = {
 
     entities: [['chicken', 3, 3, 0]],
 
-    levelVerificationTimeout : 1000000,
-    timeoutResult : true,
+    levelVerificationTimeout : -1,
+    timeoutResult : function(verificationAPI) {
+      return verificationAPI.isEntityTypeRunning('sheep');
+    },
 
     playerStartPosition: [4, 3],
 
@@ -132,7 +134,7 @@ window.demoLevels = {
 
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "lava", "grass", "water", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "dirtCoarse", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "dirtCoarse", "grass", "grass", "grass", "grass", "grass",
@@ -186,7 +188,7 @@ window.demoLevels = {
 ,
 
     verificationFunction: function (verificationAPI) {
-      return verificationAPI.getInventoryAmount("wool") >= 2;
+      return false;
     }
   },
 
@@ -358,7 +360,7 @@ window.demoLevels = {
       afterLoad: []
     },
 
-    entities: [['sheep', 3, 3, 0]],
+    entities: [['sheep', 3, 3, 0],['sheep', 4, 2, 0]],
 
     levelVerificationTimeout : 1000000,
     timeoutResult : true,
@@ -399,7 +401,7 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "treeOak", "",
+      "", "", "", "", "", "", "", "", "treeJungle", "",
       "", "", "", "", "", "", "", "", "", "",
     ],
 

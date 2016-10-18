@@ -119,8 +119,6 @@ export default class Zombie extends BaseEntity {
         // update burning sprite's sort order
         this.burningSprite[0].sortOrder = this.sprite.sortOrder + 1;
         this.burningSprite[1].sortOrder = this.sprite.sortOrder - 1;
-        // turn off (default)
-        this.setBurn(this.controller.levelModel.isDaytime);
         var stillFrameName = ['Zombie_056.png', 'Zombie_166.png', 'Zombie_001.png', 'Zombie_111.png'];
         let idleDelayFrame = 8;
         // [direction][[idle],[look left],[look right],[look up],[look down],[walk],[attack],[take dmg],[die],[bump]]
@@ -206,6 +204,8 @@ export default class Zombie extends BaseEntity {
         }
         // initialize
         this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + this.controller.levelView.getDirectionName(this.facing));
+        // set burn
+        this.setBurn(this.controller.levelModel.isDaytime);
     }
 
 

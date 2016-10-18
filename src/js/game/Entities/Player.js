@@ -39,10 +39,6 @@ export default class Player extends BaseEntity {
     }
   }
 
-  moveForward(commandQueueItem) {
-    super.moveForward(commandQueueItem);
-  }
-
   doMoveForward(commandQueueItem) {
     var player = this,
       allFoundCreepers,
@@ -100,10 +96,6 @@ export default class Player extends BaseEntity {
         commandQueueItem.succeeded();
       });
     }
-  }
-
-  turn(commandQueueItem, direction) {
-    super.turn(commandQueueItem, direction);
   }
 
   updateDirection(direction) {

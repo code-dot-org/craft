@@ -205,6 +205,10 @@ export default class LevelModel {
     return false;
   }
 
+  getCommandExecutedCount(commandName, targetType) {
+    return this.controller.getCommandCount(commandName,targetType);
+  }
+
   getTurnRandomCount() {
     return this.controller.turnRandomCount;
   }
