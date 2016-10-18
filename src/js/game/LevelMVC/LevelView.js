@@ -1810,6 +1810,7 @@ export default class LevelView {
       case "treeSpruce":
         sprite = this.createBlock(plane, x, y, "log" + blockType.substring(4));
         sprite.fluff = this.createBlock(this.fluffPlane, x, y, "leaves" + blockType.substring(4));
+        sprite.fluff.alpha = 0.8;
         var spriteName = "Leaves_" + blockType.substring(4);
         this.treeFluffs.push([sprite.fluff,blockType.substring(4),[x,y]]);
         sprite.onBlockDestroy = (logSprite) => {
