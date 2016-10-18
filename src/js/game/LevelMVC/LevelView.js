@@ -98,11 +98,11 @@ export default class LevelView {
       "wool": ["blocks", "Wool_White", -13, 0],
       "wool_orange": ["blocks", "Wool_Orange", -13, 0],
 
-      "leavesAcacia": ["leavesAcacia", "Leaves_Acacia0.png", -42, 80],
-      "leavesBirch": ["leavesBirch", "Leaves_Birch0.png", -100, -10],
-      "leavesJungle": ["leavesJungle", "Leaves_Jungle0.png", -69, 43],
+      "leavesAcacia": ["leavesAcacia", "Leaves_Acacia0.png", -100, 0],
+      "leavesBirch": ["leavesBirch", "Leaves_Birch0.png", -100, 0],
+      "leavesJungle": ["leavesJungle", "Leaves_Jungle0.png", -100, 0],
       "leavesOak": ["leavesOak", "Leaves_Oak0.png", -100, 0],
-      "leavesSpruce": ["leavesSpruce", "Leaves_Spruce0.png", -76, 60],
+      "leavesSpruce": ["leavesSpruce", "Leaves_Spruce0.png",-100, 0],
 
       "watering": ["blocks", "Water_0", -13, 0],
       "cropWheat": ["blocks", "Wheat0", -13, 0],
@@ -1388,6 +1388,8 @@ export default class LevelView {
       this.game.camera.follow(this.player.sprite);
     }
     
+    this.playerGhost = this.fluffPlane.create(0, 0, `player${playerName}`, 'Player_121');
+    this.player.sprite.addChild(this.playerGhost);
 
     this.selectionIndicator = this.shadingPlane.create(24, 44, 'selectionIndicator');
 
@@ -1808,7 +1810,6 @@ export default class LevelView {
       case "treeSpruce":
         sprite = this.createBlock(plane, x, y, "log" + blockType.substring(4));
         sprite.fluff = this.createBlock(this.fluffPlane, x, y, "leaves" + blockType.substring(4));
-        sprite.fluff.alpha = 0.8;
         var spriteName = "Leaves_" + blockType.substring(4);
         this.treeFluffs.push([sprite.fluff,blockType.substring(4),[x,y]]);
         sprite.onBlockDestroy = (logSprite) => {
