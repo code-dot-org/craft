@@ -14,12 +14,6 @@ export default class Zombie extends BaseEntity {
 
     tick() {
         super.tick();
-        for (var i = 0; i < 2; i++) {
-            if (this.burningSpriteGhost[i]) {
-                this.burningSpriteGhost[i].frame = this.burningSprite[i].frame;
-                this.burningSpriteGhost[i].z = 999 + 2 * i;
-            }
-        }
     }
 
     reset() {
@@ -74,12 +68,10 @@ export default class Zombie extends BaseEntity {
         if (burn) {
             for (var i = 0; i < 2; i++) {
                 this.burningSprite[i].alpha = 1;
-                this.burningSpriteGhost[i].alpha = 0.2;
             }
         } else {
             for (var i = 0; i < 2; i++) {
                 this.burningSprite[i].alpha = 0;
-                this.burningSpriteGhost[i].alpha = 0;
             }
         }
     }
@@ -101,11 +93,7 @@ export default class Zombie extends BaseEntity {
         // add burning sprite
         this.burningSprite = [actionPlane.create(this.sprite.x + this.burningSpriteOffset[0], this.sprite.y + this.burningSpriteOffset[1], 'burningInSun', "BurningFront_001.png"),
         actionPlane.create(this.sprite.x + this.burningSpriteOffset[0], this.sprite.y + this.burningSpriteOffset[1], 'burningInSun', "BurningBehind_001.png")];
-        this.burningSpriteGhost = [fluffPlane.create(0, 0, 'burningInSun', "BurningFront_001.png"), fluffPlane.create(0, 0, 'burningInSun', "BurningBehind_001.png")];
-        for (var i = 0; i < 2; i++) {
-            this.burningSpriteGhost[i].parent = this.burningSprite[i];
-            this.burningSpriteGhost[i].alpha = 0.2;
-        }
+
         frameList = Phaser.Animation.generateFrameNames("BurningFront_", 1, 15, ".png", 3);
         this.burningSprite[0].animations.add("burn", frameList, frameRate, true);
         frameList = Phaser.Animation.generateFrameNames("BurningBehind_", 1, 15, ".png", 3);
