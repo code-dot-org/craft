@@ -408,6 +408,10 @@ class GameController {
       if (!targetIsType && !moveAwayFromIsType) {
         var entity = this.getEntity(target);
         var moveAwayFromEntity = this.getEntity(moveAwayFrom);
+        if (entity === moveAwayFromEntity) {
+          commandQueueItem.succeeded();
+          return;
+        }
         entity.moveAway(commandQueueItem, moveAwayFromEntity);
       }
       // move away type from entity
@@ -496,8 +500,7 @@ class GameController {
       var targetIsType = this.isType(target);
       var moveTowardToIsType = this.isType(moveTowardTo);
       if (target === moveTowardTo) {
-        this.printErrorMsg("Debug MoveToward: Can't move toward entity to itself\n");
-        commandQueueItem.failed();
+        commandQueueItem.succeeded();
         return;
       }
       // move toward entity to entity
@@ -726,7 +729,7 @@ class GameController {
       } else {
         var entity = this.getEntity(target);
         var delay = this.levelView.flashSpriteToWhite(entity.sprite);
-        this.addCommandRecord("explode",entity.type);
+        this.addCommandRecord("explode", entity.type);
         this.delayBy(delay, () => {
           commandQueueItem.succeeded();
         });
@@ -757,7 +760,7 @@ class GameController {
       } else {
         var targetEntity = this.getEntity(target);
         this.levelView.playExplosionCloudAnimation(targetEntity.position);
-        this.addCommandRecord("explode",targetEntity.type);
+        this.addCommandRecord("explode", targetEntity.type);
         var entities = this.levelEntity.entityMap;
         for (var value of entities) {
           let entity = value[1];
