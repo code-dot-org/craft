@@ -127,7 +127,8 @@ export default class BaseEntity {
         }
 
         frontBlockCheck(this, this.position);
-        prevBlockCheck(this, prevPosition);
+        if(prevPosition !== undefined)
+            prevBlockCheck(this, prevPosition);
     }
 
     doMoveForward(commandQueueItem, forwardPosition) {
