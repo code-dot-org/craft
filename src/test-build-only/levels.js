@@ -50,7 +50,7 @@ window.demoLevels = {
       return verificationAPI.isEntityOnBlocktype('sheep','grass',2);
     },
 
-    entities: [['sheep', 7, 8, 1]],
+    entities: [['chicken', 7, 8, 1],['sheep', 9, 8, 1],['cow', 6, 8, 1]],
 
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -521,7 +521,7 @@ window.demoLevels = {
     // up: 0, right: 1, down: 2, left: 3
     playerStartDirection: 1,
 
-    playerName: "Steve",
+    playerName: "Alex",
     isEventLevel: true,
     levelVerificationTimeout : 1000000,
     timeoutResult : true,
@@ -530,8 +530,8 @@ window.demoLevels = {
     earlyLoadNiceToHaveAssetPacks: ['playerSteve'],
 
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
-      afterLoad: ['playerSteve', 'playerSteve', 'grass']
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve', 'playerAlex'],
+      afterLoad: ['playerSteve', 'playerAlex', 'grass']
     },
 
     entities: [],

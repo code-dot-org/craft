@@ -292,7 +292,7 @@ export default class AssetLoader {
         mp3: `${this.assetRoot}audio/chickenhurt2.mp3`,
         ogg: `${this.assetRoot}audio/chickenhurt2.ogg`
       },
-      chickenBock: {
+      chickenBawk: {
         type: 'sound',
         mp3: `${this.assetRoot}audio/chickensay3.mp3`,
         ogg: `${this.assetRoot}audio/chickensay3.ogg`
@@ -479,7 +479,7 @@ export default class AssetLoader {
         'ironGolem',
         'burningInSun',
         'chickenHurt',
-        'chickenBock',
+        'chickenBawk',
         'cowHuff',
         'cowHurt',
         'cowMoo',
