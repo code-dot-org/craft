@@ -50,7 +50,7 @@ window.demoLevels = {
       return verificationAPI.isEntityOnBlocktype('sheep','grass',2);
     },
 
-    entities: [['sheep', 7, 7, 1],['sheep', 3, 3, 1],['chicken', 6, 7, 1],['cow', 5, 7, 1],['creeper', 5, 6, 1],['ironGolem', 6, 3, 1],['zombie', 2, 3, 1]],
+    entities: [['sheep', 7, 8, 1]],
 
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -60,7 +60,7 @@ window.demoLevels = {
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "water", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"
     ],
 
@@ -78,11 +78,11 @@ window.demoLevels = {
     actionPlane: ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
       "", "grass", "", "", "", "", "", "", "", "grass",
       "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "torch", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
+      "dirt", "treeJungle", "", "", "", "", "", "", "", "",
+      "", "", "grass", "grass", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "treeAcacia", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", ""
     ],
@@ -165,7 +165,7 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "treeOak", "",
+      "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
     ],
 
