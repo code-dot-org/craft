@@ -89,7 +89,7 @@ export default class LevelModel {
 
   // Verifications
   isPlayerNextTo(blockType) {
-    var position;
+    var position, blockIndex;
     var result = false;
 
     // above
