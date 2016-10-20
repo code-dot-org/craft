@@ -10,7 +10,6 @@ export default class LevelView {
     this.baseShading = null;
 
     this.player = null;
-    this.playerGhost = null;        // The ghost is a copy of the player sprite that sits on top of everything at 20% opacity, so the player can go under trees and still be seen.
     this.selectionIndicator = null;
 
     this.groundPlane = null;
@@ -165,14 +164,16 @@ export default class LevelView {
     this.trees = [];
 
     this.resetPlanes(levelModel);
+    if(levelModel.usePlayer) {
     this.preparePlayerSprite(this.player.name);
     this.player.sprite.animations.stop();
-    this.updateShadingPlane(levelModel.shadingPlane);
-    this.updateFowPlane(levelModel.fowPlane);
     this.setPlayerPosition(this.player.position[0], this.player.position[1], this.player.isOnBlock);
     this.setSelectionIndicatorPosition(this.player.position[0], this.player.position[1]);
     this.selectionIndicator.visible = true;
     this.playIdleAnimation(this.player.position, this.player.facing, this.player.isOnBlock);
+    }
+    this.updateShadingPlane(levelModel.shadingPlane);
+    this.updateFowPlane(levelModel.fowPlane);
 
     if (this.controller.followingPlayer()) {
       this.game.world.setBounds(0, 0, levelModel.planeWidth * 40, levelModel.planeHeight * 40);
@@ -189,11 +190,6 @@ export default class LevelView {
       this.toDestroy[i].destroy();
     }
     this.toDestroy = [];
-
-    if (this.playerGhost) {
-      this.playerGhost.frame = this.player.sprite.frame;
-      this.playerGhost.z = 1000;
-    }
   }
 
   render() {
@@ -1181,7 +1177,8 @@ export default class LevelView {
     this.shadingPlane.removeAll();
 
     this.shadingPlane.add(this.baseShading);
-    this.shadingPlane.add(this.selectionIndicator);
+    if(this.selectionIndicator)
+      this.shadingPlane.add(this.selectionIndicator);
 
     for (index = 0; index < shadingData.length; ++index) {
       shadowItem = shadingData[index];
@@ -1403,9 +1400,6 @@ export default class LevelView {
     if (this.controller.followingPlayer()) {
       this.game.camera.follow(this.player.sprite);
     }
-
-    this.playerGhost = this.fluffPlane.create(0, 0, `player${playerName}`, 'Player_121');
-    this.player.sprite.addChild(this.playerGhost);
 
     this.selectionIndicator = this.shadingPlane.create(24, 44, 'selectionIndicator');
 

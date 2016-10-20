@@ -179,7 +179,6 @@ class GameController {
     const isNumber = !isNaN(this.timeout);
     if (isNumber && this.timeout > 0) {
       this.timeouts.push(setTimeout(() => {
-        let player = this.levelModel.player;
         this.endLevel(this.timeoutResult(this.levelModel));
       }
         , this.timeout));
@@ -193,12 +192,15 @@ class GameController {
   update() {
     this.queue.tick();
     this.levelEntity.tick();
-    this.player.updateMovement();
+    if (this.levelModel.usePlayer)
+      this.player.updateMovement();
     this.levelView.update();
     this.checkSolution();
   }
 
   addCheatKeys() {
+    if(!this.levelModel.usePlayer)
+      return;
     this.game.input.keyboard.addKey(Phaser.Keyboard.UP).onDown.add(() => {
       this.player.movementState = FacingDirection.Up;
       this.player.updateMovement();
@@ -1205,7 +1207,6 @@ class GameController {
     if (!this.attemptRunning) {
       return;
     }
-    let player = this.levelModel.player;
     // check the final state to see if its solved
     if (this.levelModel.isSolved()) {
       this.endLevel(true);
@@ -1213,6 +1214,10 @@ class GameController {
   }
 
   endLevel(result) {
+    if (!this.levelModel.usePlayer) {
+      this.handleEndState(result);
+      return;
+    }
     if (result) {
       var player = this.levelModel.player;
       var callbackCommand = new CallbackCommand(this, () => { }, () => {
@@ -1345,22 +1350,30 @@ class GameController {
   }
 
   arrowDown(direction) {
+    if(!this.levelModel.usePlayer)
+      return;
     this.player.movementState = direction;
     this.player.updateMovement();
   }
 
   arrowUp(direction) {
+    if(!this.levelModel.usePlayer)
+      return;
     if (this.player.movementState === direction)
       this.player.movementState = -1;
     this.player.updateMovement();
   }
 
   clickDown() {
+    if(!this.levelModel.usePlayer)
+      return;
     this.player.movementState = -2;
     this.player.updateMovement();
   }
 
   clickUp() {
+    if(!this.levelModel.usePlayer)
+      return;
     if (this.player.movementState === -2)
       this.player.movementState = -1;
     this.player.updateMovement();
