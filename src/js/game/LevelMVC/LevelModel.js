@@ -102,28 +102,28 @@ export default class LevelModel {
     // above
     position = [this.player.position[0], this.player.position[1] - 1];
     blockIndex = this.yToIndex(position[1]) + position[0];
-    if (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType) {
+    if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType)) {
       return true;
     }
 
     // below
     position = [this.player.position[0], this.player.position[1] + 1];
     blockIndex = this.yToIndex(position[1]) + position[0];
-    if (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType) {
+     if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType)) {
       return true;
     }
 
     // left
     position = [this.player.position[0] + 1, this.player.position[1]];
     blockIndex = this.yToIndex(position[1]) + position[0];
-    if (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType) {
+     if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType)) {
       return true;
     }
 
     // Right
     position = [this.player.position[0] - 1, this.player.position[1]];
     blockIndex = this.yToIndex(position[1]) + position[0];
-    if (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType) {
+     if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType)) {
       return true;
     }
 
@@ -140,28 +140,28 @@ export default class LevelModel {
       // above
       position = [entity.position[0], entity.position[1] - 1];
       blockIndex = this.yToIndex(position[1]) + position[0];
-      if (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType) {
+       if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType)) {
         return true;
       }
 
       // below
       position = [entity.position[0], entity.position[1] + 1];
       blockIndex = this.yToIndex(position[1]) + position[0];
-      if (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType) {
+       if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType)) {
         return true;
       }
 
       // left
       position = [entity.position[0] + 1, entity.position[1]];
       blockIndex = this.yToIndex(position[1]) + position[0];
-      if (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType) {
+       if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType)) {
         return true;
       }
 
       // Right
       position = [entity.position[0] - 1, entity.position[1]];
       blockIndex = this.yToIndex(position[1]) + position[0];
-      if (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType) {
+       if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType)) {
         return true;
       }
     }
@@ -328,6 +328,31 @@ export default class LevelModel {
       cy = entity.position[1];
 
     switch (entity.facing) {
+      case FacingDirection.Up:
+        --cy;
+        break;
+
+      case FacingDirection.Down:
+        ++cy;
+        break;
+
+      case FacingDirection.Left:
+        --cx;
+        break;
+
+      case FacingDirection.Right:
+        ++cx;
+        break;
+    }
+
+    return [cx, cy];
+  }
+
+  getPushBackPosition(entity, pushedByFacing) {
+    var cx = entity.position[0],
+      cy = entity.position[1];
+
+    switch (pushedByFacing) {
       case FacingDirection.Up:
         --cy;
         break;
