@@ -212,8 +212,17 @@ export default class LevelModel {
     return false;
   }
 
+  getEntityCount(entityType) {
+    var entityList = this.controller.levelEntity.getEntitiesOfType(entityType);
+    return entityList.length; 
+  }
+
   getCommandExecutedCount(commandName, targetType) {
-    return this.controller.getCommandCount(commandName, targetType);
+    return this.controller.getCommandCount(commandName, targetType, false);
+  }
+
+  getRepeatCommandExecutedCount(commandName, targetType) {
+    return this.controller.getCommandCount(commandName, targetType, true);
   }
 
   getTurnRandomCount() {

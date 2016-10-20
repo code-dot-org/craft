@@ -29,8 +29,8 @@ export default class BaseEntity {
 
     }
 
-    addCommand(commandQueueItem) {
-        this.queue.addCommand(commandQueueItem);
+    addCommand(commandQueueItem, repeat = false) {
+        this.queue.addCommand(commandQueueItem, repeat);
         // execute the command
         this.queue.begin();
     }
@@ -177,7 +177,7 @@ export default class BaseEntity {
 
     moveForward(commandQueueItem, record = true) {
         if (record)
-            this.controller.addCommandRecord("moveForward", this.type);
+            this.controller.addCommandRecord("moveForward", this.type, commandQueueItem.repeat);
         let forwardPosition = this.controller.levelModel.getMoveForwardPosition(this);
         var forwardPositionInformation = this.controller.levelModel.canMoveForward(this);
         var treeCheck = function (entity) {
@@ -200,7 +200,7 @@ export default class BaseEntity {
      * @memberOf BaseEntity
      */
     moveAway(commandQueueItem, moveAwayFrom) {
-        this.controller.addCommandRecord("moveAway", this.type);
+        this.controller.addCommandRecord("moveAway", this.type, commandQueueItem.repeat);
         var moveAwayPosition = moveAwayFrom.position;
         var bestPosition = [];
         let absoluteDistanceSquare = function (position1, position2) {
@@ -252,7 +252,7 @@ export default class BaseEntity {
      * @memberOf BaseEntity
      */
     moveToward(commandQueueItem, moveTowardTo) {
-        this.controller.addCommandRecord("moveToward", this.type);
+        this.controller.addCommandRecord("moveToward", this.type, commandQueueItem.repeat);
         var moveTowardPosition = moveTowardTo.position;
         var bestPosition = [];
         let absoluteDistanceSquare = function (position1, position2) {
@@ -342,7 +342,7 @@ export default class BaseEntity {
 
     turn(commandQueueItem, direction, record = true) {
         if (record)
-            this.controller.addCommandRecord("turn", this.type);
+            this.controller.addCommandRecord("turn", this.type, commandQueueItem.repeat);
         // update entity direction
         if (direction === -1) {
             this.controller.levelModel.turnLeft(this);
@@ -359,7 +359,7 @@ export default class BaseEntity {
     }
 
     turnRandom(commandQueueItem) {
-        this.controller.addCommandRecord("turnRandom", this.type);
+        this.controller.addCommandRecord("turnRandom", this.type, commandQueueItem.repeat);
         var getRandomInt = function (min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
@@ -376,7 +376,7 @@ export default class BaseEntity {
     }
 
     drop(commandQueueItem, itemType) {
-        this.controller.addCommandRecord("drop", this.type);
+        this.controller.addCommandRecord("drop", this.type, commandQueueItem.repeat);
         var sprite = this.controller.levelView.createMiniBlock(this.position[0], this.position[1], itemType);
         sprite.sortOrder = this.controller.levelView.yToIndex(this.position[1]) + 2;
         this.controller.levelView.playScaledSpeed(sprite.animations, "animate");
@@ -384,7 +384,7 @@ export default class BaseEntity {
     }
 
     attack(commandQueueItem) {
-        this.controller.addCommandRecord("attack", this.type);
+        this.controller.addCommandRecord("attack", this.type, commandQueueItem.repeat);
         let facingName = this.controller.levelView.getDirectionName(this.facing);
         this.controller.levelView.playScaledSpeed(this.sprite.animations, "attack" + facingName);
         setTimeout(() => {
