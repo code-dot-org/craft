@@ -232,7 +232,15 @@ export default class LevelModel {
   getInventoryAmount(inventoryType) {
     if (!this.usePlayer)
       return 0;
-    return this.player.inventory[inventoryType] || 0;
+    if(inventoryType === "all" || inventoryType === "All") {
+      var inventory = this.player.inventory;
+      var count = 0;
+      for(var key in inventory) {
+        count += inventory[key];
+      }
+      return count;
+    }
+    return this.player.inventory[inventoryType];
   }
 
   getInventoryTypes() {
