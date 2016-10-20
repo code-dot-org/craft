@@ -102,7 +102,7 @@ export default class Player extends BaseEntity {
         frontEntity.queue.endPushHighPriorityCommands();
       }
     }
-    this.controller.delayPlayerMoveBy(400, 800, () => {
+    this.controller.delayPlayerMoveBy(200, 400, () => {
       commandQueueItem.succeeded();
     });
   }
