@@ -1315,16 +1315,16 @@ class GameController {
 
   initiateDayNightCycle(firstDelay, delayInSecond, startTime) {
     if (startTime === "day" || startTime === "Day") {
-      setTimeout(() => {
+      this.timeouts.push(setTimeout(() => {
         this.startDay(null);
         this.setDayNightCycle(delayInSecond, "night");
-      }, firstDelay * 1000)
+      }, firstDelay * 1000));
     }
     else if (startTime === "night" || startTime === "Night") {
-      setTimeout(() => {
+      this.timeouts.push(setTimeout(() => {
         this.startNight(null);
         this.setDayNightCycle(delayInSecond, "day");
-      }, firstDelay * 1000)
+      }, firstDelay * 1000));
     }
   }
 
@@ -1332,20 +1332,20 @@ class GameController {
     if (!this.dayNightCycle)
       return;
     if (startTime === "day" || startTime === "Day") {
-      setTimeout(() => {
+      this.timeouts.push(setTimeout(() => {
         if (!this.dayNightCycle)
           return;
         this.startDay(null);
         this.setDayNightCycle(delayInSecond, "night");
-      }, delayInSecond * 1000)
+      }, delayInSecond * 1000));
     }
     else if (startTime === "night" || startTime === "Night") {
-      setTimeout(() => {
+      this.timeouts.push(setTimeout(() => {
         if (!this.dayNightCycle)
           return;
         this.startNight(null);
         this.setDayNightCycle(delayInSecond, "day");
-      }, delayInSecond * 1000)
+      }, delayInSecond * 1000));
     }
   }
 
