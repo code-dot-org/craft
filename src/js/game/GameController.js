@@ -1238,6 +1238,11 @@ class GameController {
 
   endLevel(result) {
     if (!this.levelModel.usePlayer) {
+      if (result) {
+        this.levelView.audioPlayer.play("success");
+      } else {
+        this.levelView.audioPlayer.play("failure");
+      }
       this.handleEndState(result);
       return;
     }
