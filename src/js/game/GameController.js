@@ -879,8 +879,13 @@ class GameController {
       } else {
         this.addCommandRecord("destroy", this.type, commandQueueItem.repeat);
         let entity = this.getEntity(target);
-        entity.healthPoint = 1;
-        entity.takeDamage(commandQueueItem);
+        if (entity !== undefined) {
+          entity.healthPoint = 1;
+          entity.takeDamage(commandQueueItem);
+        }
+        else {
+          commandQueueItem.succeeded();
+        }
       }
     }
     else {
