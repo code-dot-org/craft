@@ -223,7 +223,7 @@ class GameController {
       this.scorePanel = this.game.add.sprite(200, 0, 'scorePanel');
       this.scorePanel.scale.setTo(2 / 3, 2 / 3);
       this.scorePanel.anchor.x = 0.5;
-      this.scoreText = this.game.add.text(200, -2, 'Score:' + this.score, { fontSize: '12px', fill: '#FFFFFF' });
+      this.scoreText = this.game.add.text(200, -2, 'Score: ' + this.score, { fontSize: '12px', fill: '#FFFFFF' });
       this.scoreText.anchor.x = 0.5;
       this.scoreText.fontWeight = 'bold';
     }
@@ -1319,7 +1319,7 @@ class GameController {
       this.score += score;
 
       if (this.scoreText) {
-        this.scoreText.text = 'Score:' + this.score;
+        this.scoreText.text = 'Score: ' + this.score;
       }
     }
     commandQueueItem.succeeded();
