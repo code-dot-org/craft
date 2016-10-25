@@ -1318,7 +1318,7 @@ class GameController {
       this.score += score;
 
       if (this.scoreText) {
-        this.scoreText.text = 'Score:' + this.score;
+        this.scoreText.text = 'Score: ' + this.score;
       }
     }
     commandQueueItem.succeeded();
