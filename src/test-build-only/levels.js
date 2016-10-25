@@ -104,7 +104,7 @@ window.demoLevels = {
 
 
     verificationFunction: function (verificationAPI) {
-      return verificationAPI.getInventoryAmount("all") >= 1 ;
+      return verificationAPI.getCommandExecutedCount("addScore") >= 1 ;
     },
 
     solutionCode:
