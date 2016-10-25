@@ -170,7 +170,8 @@
       startNight: codeOrgAPI.startNight.bind(null,function(){}),
       setDayNightCycle: codeOrgAPI.setDayNightCycle.bind(null),
       wait: codeOrgAPI.wait.bind(null,function(){}),
-      attack: codeOrgAPI.attack.bind(null, function(){})
+      attack: codeOrgAPI.attack.bind(null, function(){}) ,
+      addScore: codeOrgAPI.addScore.bind(null, function(){})
     });
     codeOrgAPI.startAttempt(function (result) {
       $('#level-feedback').html(result ? "Success!" : "Failure").css("color", result ? "green" : "red");

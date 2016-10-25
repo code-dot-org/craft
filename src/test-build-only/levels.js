@@ -34,6 +34,7 @@ window.demoLevels = {
     // up: 0, right: 1, down: 2, left: 3
     playerStartDirection: 1,
 
+    useScore: true,
     playerName: "Steve",
     isEventLevel: true,
 
@@ -47,7 +48,7 @@ window.demoLevels = {
 
     levelVerificationTimeout : -1,
     timeoutResult : function(verificationAPI) {
-      return verificationAPI.isEntityOnBlocktype('sheep','grass',2);
+      return false;
     },
 
     entities: [['chicken', 7, 8, 1],['sheep', 9, 8, 1],['cow', 6, 8, 1]],
@@ -103,7 +104,7 @@ window.demoLevels = {
 
 
     verificationFunction: function (verificationAPI) {
-      return verificationAPI.getCommandExecutedCount("moveForward","sheep") >= 1 && verificationAPI.getCommandExecutedCount("turnRandom","sheep") >= 1;
+      return verificationAPI.getInventoryAmount("all") >= 1 ;
     },
 
     solutionCode:
@@ -125,7 +126,7 @@ window.demoLevels = {
 
     levelVerificationTimeout : -1,
     timeoutResult : function(verificationAPI) {
-      return verificationAPI.isEntityTypeRunning('sheep');
+      return !verificationAPI.isEntityTypeRunning('chicken');
     },
 
     playerStartPosition: [4, 3],
@@ -204,8 +205,9 @@ window.demoLevels = {
 
     entities: [['chicken', 3, 3, 0]],
 
-    levelVerificationTimeout : 1000000,
-    timeoutResult : true,
+    levelVerificationTimeout : 1000,
+    timeoutResult : () =>{return false;},
+    usePlayer: false,
 
     playerStartPosition: [4, 3],
 
@@ -584,14 +586,12 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", ""
     ],
 
-
-
     verificationFunction: function (verificationAPI) {
       return verificationAPI.isPlayerNextTo("sheep");
     },
 
     solutionCode:
-    "setDayNightCycle(5,'night');\nregisterEventCallback(function (event) \n{\n  // when night time\n  if(isEventTriggered(event,4))\n  {\n    for(var i = 2 ; i < 7 ; i++)\n     spawnEntity("+"'zombie'"+",'middle');\n  }\n  // when target type is sheep\n  if(event.targetType === 'zombie')\n  {\n    // when spawned\n    if(isEventTriggered(event,2))\n    {\n	  // repeat forever\n      repeat(function() {\n	                     // move spawned entity towards to the player\n                       moveToward(event.targetIdentifier ,'Player');\n                       } ,-1, event.targetIdentifier);\n    }\n  }\n})"
+    "setDayNightCycle(1,1,'night');\nregisterEventCallback(function (event) \n{\n  // when night time\n  if(isEventTriggered(event,6))\n  {\n    for(var i = 2 ; i < 4 ; i++)\n     spawnEntity("+"'zombie'"+",'middle');\n  }\n  // when target type is sheep\n  if(event.targetType === 'zombie')\n  {\n    // when spawned\n    if(isEventTriggered(event,2))\n    {\n	  // repeat forever\n      repeat(function() {\n	                     // move spawned entity towards to the player\n                       moveToward(event.targetIdentifier ,'Player');\n                       } ,-1, event.targetIdentifier);\n    }\n  }\n})"
   
   },
 
