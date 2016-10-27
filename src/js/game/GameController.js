@@ -198,9 +198,11 @@ class GameController {
         let scale = 400 / 552;
         this.scorePanel = this.game.add.sprite(216 * scale, 0, 'scorePanel');
         this.scorePanel.scale.setTo(scale, scale);
+        this.scorePanel.fixedToCamera = true;
         this.scoreText = this.game.add.text(280 * scale, -2, 'Score: ' + this.score, { fontSize: '14px', fill: '#FFFFFF' });
         this.scoreText.anchor.x = 0.5;
         this.scoreText.fontWeight = 'bold';
+        this.scoreText.fixedToCamera = true;
       }
     });
     this.levelEntity.loadData(this.levelData);
