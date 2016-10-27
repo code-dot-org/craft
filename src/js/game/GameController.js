@@ -819,6 +819,7 @@ class GameController {
         var targetEntity = this.getEntity(target);
         this.levelView.playExplosionCloudAnimation(targetEntity.position);
         this.addCommandRecord("explode", targetEntity.type, commandQueueItem.repeat);
+        this.levelView.audioPlayer.play("explode");
         var entities = this.levelEntity.entityMap;
         for (var value of entities) {
           let entity = value[1];
