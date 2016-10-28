@@ -210,6 +210,7 @@ class GameController {
     // dispatch when spawn event at run
     for (var value of this.levelEntity.entityMap) {
       var entity = value[1];
+      this.events.forEach(e => e({ eventType: EventType.WhenRun, targetIdentifier: entity.identifier }));
       this.events.forEach(e => e({ eventType: EventType.WhenSpawned, targetType: entity.type, targetIdentifier: entity.identifier }));
     }
     // set timeout for timeout
