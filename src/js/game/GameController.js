@@ -212,6 +212,7 @@ class GameController {
       var entity = value[1];
       this.events.forEach(e => e({ eventType: EventType.WhenRun, targetIdentifier: entity.identifier }));
       this.events.forEach(e => e({ eventType: EventType.WhenSpawned, targetType: entity.type, targetIdentifier: entity.identifier }));
+      entity.queue.begin();
     }
     // set timeout for timeout
     const isNumber = !isNaN(this.timeout);
