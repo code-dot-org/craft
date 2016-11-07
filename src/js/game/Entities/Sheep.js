@@ -82,12 +82,12 @@ export default class Sheep extends BaseEntity {
         [[144, 153], [112, 114], [120, 123], [168, 171], [162, 167], [174, 185], [186, 197], [198, 209], [210, 215], [126, 135], [872, 879]], // right
         [[36, 45], [3, 6], [12, 15], [60, 63], [54, 59], [66, 77], [78, 89], [90, 101], [102, 108], [18, 26], [864, 871]], // down
         [[360, 369], [328, 330], [336, 339], [384, 387], [378, 383], [390, 401], [402, 413], [414, 425], [426, 431], [342, 351], [888, 895]]]; // left
-        for (var i = 0; i < 4; i++) {
-            var facingName = this.controller.levelView.getDirectionName(i);
+        for (let i = 0; i < 4; i++) {
+            let facingName = this.controller.levelView.getDirectionName(i);
             // idle sequence
             frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][0][0], frameListPerDirection[i][0][1], ".png", 3);
             // idle delay
-            for (var j = 0; j < idleDelayFrame; j++) {
+            for (let j = 0; j < idleDelayFrame; j++) {
                 frameList.push(stillFrameName[i]);
             }
             this.sprite.animations.add("idle" + facingName, frameList, frameRate, false).onComplete.add(() => {
@@ -186,13 +186,13 @@ export default class Sheep extends BaseEntity {
         [[468, 477], [436, 438], [444, 447], [492, 495], [486, 491], [498, 509], [510, 521], [522, 533], [534, 539], [450, 459], [896, 903]], // down
         [[792, 801], [760, 762], [768, 771], [816, 819], [810, 815], [822, 833], [834, 845], [846, 857], [858, 863], [774, 783], [920, 927]]]; // left
         stillFrameName = ['ShadowSheep_2016649.png', 'ShadowSheep_2016541.png', 'ShadowSheep_2016433.png', 'ShadowSheep_2016757.png'];
-        for (var i = 0; i < 4; i++) {
-            var facingName = this.controller.levelView.getDirectionName(i);
+        for (let i = 0; i < 4; i++) {
+            let facingName = this.controller.levelView.getDirectionName(i);
 
             // idle sequence
             frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][0][0], frameListPerDirection[i][0][1], ".png", 3);
             // idle delay
-            for (var j = 0; j < idleDelayFrame; j++) {
+            for (let j = 0; j < idleDelayFrame; j++) {
                 frameList.push(stillFrameName[i]);
             }
             this.sprite.animations.add("naked_idle" + facingName, frameList, frameRate, false).onComplete.add(() => {

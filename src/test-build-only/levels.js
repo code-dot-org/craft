@@ -82,7 +82,7 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "torch", "",
       "", "", "", "", "", "", "", "", "", "",
       "dirt", "treeJungle", "", "", "", "", "", "", "", "",
-      "", "", "grass", "grass", "", "", "", "", "", "",
+      "", "", "grass", "door", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "treeAcacia", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", ""
@@ -101,10 +101,12 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", ""
     ],
 
-
+    failureCheckFunction: function (verificationAPI) {
+      return false;
+    },
 
     verificationFunction: function (verificationAPI) {
-      return verificationAPI.getCommandExecutedCount("addScore") >= 1 ;
+      return false;
     },
 
     solutionCode:
@@ -184,7 +186,7 @@ window.demoLevels = {
     isEventLevel: true,
 
     solutionCode:
-       registerEventCallback(checkTargetType('chicken') + ifEventTriggered(2,"moveForward(event.targetIdentifier);\nmoveForward(event.targetIdentifier);\nturnRight(event.targetIdentifier);\nmoveForward(event.targetIdentifier);" ))
+       registerEventCallback(ifEventTriggered(8,repeat(-1, "drop('wool', event.targetIdentifier);")))
  
 ,
 
@@ -343,7 +345,7 @@ window.demoLevels = {
     isEventLevel: true,
 
     solutionCode:
-    registerEventCallback(checkTargetType('chicken') + ifEventTriggered(2,repeat(-1,repeatRandom("moveForward(event.targetIdentifier);\n" ) + "turnRandom(event.targetIdentifier);\n")))
+    registerEventCallback(checkTargetType('chicken') + ifEventTriggered(2,"explodeEntity(event.targetIdentifier);"))
     
 ,
 
