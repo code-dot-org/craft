@@ -1034,7 +1034,7 @@ class GameController {
     let frontEntity = this.levelEntity.getEntityAt(frontPosition);
     const frontIndex = this.levelModel.yToIndex(frontPosition[1]) + frontPosition[0];
     let frontBlock = this.levelModel.actionPlane[frontIndex];
-    const isFrontBlockDoor = frontBlock.blockType === "door";
+    const isFrontBlockDoor = frontBlock === undefined ? false : frontBlock.blockType === "door";
     if (frontEntity != null) {
       // push use command to execute general use behavior of the entity before executing the event
       this.levelView.setSelectionIndicatorPosition(frontPosition[0], frontPosition[1]);
