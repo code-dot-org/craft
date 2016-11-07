@@ -857,7 +857,7 @@ export default class LevelView {
     this.playExplosionAnimation(playerPosition, facing, entity.position, entity.type, completionHandler, false);
   }
 
-  destroyBlockWithoutPlayerInteraction(destroyPosition, newShadingPlaneData, newFowPlaneData) {
+  destroyBlockWithoutPlayerInteraction(destroyPosition) {
     let blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
     let blockToDestroy = this.actionPlaneBlocks[blockIndex];
 
@@ -874,22 +874,20 @@ export default class LevelView {
       destroyOverlay.kill();
       this.toDestroy.push(blockToDestroy);
       this.toDestroy.push(destroyOverlay);
-      this.updateShadingPlane(newShadingPlaneData);
-      this.updateFowPlane(newFowPlaneData);
       this.audioPlayer.play('dig_wood1');
     });
 
     this.playScaledSpeed(destroyOverlay.animations, "destroy");
   }
 
-  playDestroyBlockAnimation(playerPosition, facing, destroyPosition, blockType, newShadingPlaneData, newFowPlaneData, completionHandler) {
+  playDestroyBlockAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
 
     var playerAnimation =
       blockType.match(/(ore|stone|clay|bricks|bedrock)/) ? "mine" : "punchDestroy";
     this.playPlayerAnimation(playerAnimation, playerPosition, facing, false);
     this.playMiningParticlesAnimation(facing, destroyPosition);
-    this.playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, newShadingPlaneData, newFowPlaneData, completionHandler);
+    this.playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler);
   }
 
   playPunchDestroyAirAnimation(playerPosition, facing, destroyPosition, completionHandler) {
@@ -907,7 +905,7 @@ export default class LevelView {
     });
   }
 
-  playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, newShadingPlaneData, newFowPlaneData, completionHandler) {
+  playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
     let blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
     let blockToDestroy = this.actionPlaneBlocks[blockIndex];
     let direction = this.getDirectionName(facing);
@@ -925,8 +923,6 @@ export default class LevelView {
       destroyOverlay.kill();
       this.toDestroy.push(blockToDestroy);
       this.toDestroy.push(destroyOverlay);
-      this.updateShadingPlane(newShadingPlaneData);
-      this.updateFowPlane(newFowPlaneData);
 
       this.setSelectionIndicatorPosition(playerPosition[0], playerPosition[1]);
 

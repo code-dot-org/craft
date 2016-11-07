@@ -882,6 +882,8 @@ class GameController {
         }
       }
       commandQueueItem.succeeded();
+      this.updateFowPlane();
+      this.updateShadingPlane();
     } else {
       var entities = this.getEntities(target);
       for (var i = 0; i < entities.length; i++) {
@@ -1118,8 +1120,10 @@ class GameController {
               break;
           }
 
-          this.levelView.playDestroyBlockAnimation(player.position, player.facing, destroyPosition, blockType, this.levelModel.shadingPlane, this.levelModel.fowPlane, () => {
+          this.levelView.playDestroyBlockAnimation(player.position, player.facing, destroyPosition, blockType, () => {
             commandQueueItem.succeeded();
+            this.updateFowPlane();
+            this.updateShadingPlane();
           });
         }
         else if (block.isUsable) {
@@ -1162,8 +1166,6 @@ class GameController {
       let blockType = block.blockType;
 
       if (block.isDestroyable) {
-        this.levelModel.computeShadingPlane();
-        this.levelModel.computeFowPlane();
         switch (blockType) {
           case "logAcacia":
           case "treeAcacia":
@@ -1186,9 +1188,11 @@ class GameController {
             blockType = "planksSpruce";
             break;
         }
-        this.levelView.destroyBlockWithoutPlayerInteraction(destroyPosition, this.levelModel.shadingPlane, this.levelModel.fowPlane);
+        this.levelView.destroyBlockWithoutPlayerInteraction(destroyPosition);
         this.levelView.playExplosionAnimation(this.levelModel.player.position, this.levelModel.player.facing, position, blockType, () => { }, false);
         this.levelView.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
+        this.updateFowPlane();
+        this.updateShadingPlane();
       } else if (block.isUsable) {
         switch (blockType) {
           case "sheep":
@@ -1531,6 +1535,16 @@ class GameController {
     if (this.player.movementState === -2)
       this.player.movementState = -1;
     this.player.updateMovement();
+  }
+
+  updateFowPlane() {
+    this.levelModel.computeFowPlane();
+    this.levelView.updateFowPlane(this.levelModel.fowPlane);
+  }
+
+  updateShadingPlane() {
+    this.levelModel.computeShadingPlane();
+    this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
   }
 }
 
