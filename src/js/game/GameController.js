@@ -208,9 +208,9 @@ class GameController {
 
   run() {
     // dispatch when spawn event at run
+    this.events.forEach(e => e({ eventType: EventType.WhenRun, targetIdentifier: undefined }));
     for (var value of this.levelEntity.entityMap) {
       var entity = value[1];
-      this.events.forEach(e => e({ eventType: EventType.WhenRun, targetIdentifier: entity.identifier }));
       this.events.forEach(e => e({ eventType: EventType.WhenSpawned, targetType: entity.type, targetIdentifier: entity.identifier }));
       entity.queue.begin();
     }
