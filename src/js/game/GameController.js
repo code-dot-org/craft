@@ -477,8 +477,8 @@ class GameController {
     let entity = this.levelEntity.entityMap.get(target);
     if (entity === undefined) {
       console.log("Debug GetEntity: there is no entity : " + target + "\n");
-      return entity;
     }
+    return entity;
   }
 
   getEntities(type) {
