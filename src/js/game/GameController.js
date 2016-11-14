@@ -143,6 +143,7 @@ class GameController {
 
   reset() {
     this.dayNightCycle = false;
+    this.queue.reset();
     this.levelEntity.reset();
     this.levelModel.reset();
     this.levelView.reset(this.levelModel);
