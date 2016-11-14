@@ -285,7 +285,7 @@ window.demoLevels = {
       afterLoad: []
     },
 
-    entities: [['chicken', 3, 3, 0]],
+    entities: [['chicken', 3, 3, 0],['sheep', 2, 3, 0],['ironGolem', 3, 2, 0]],
 
     levelVerificationTimeout : 1000000,
     timeoutResult : true,
@@ -321,9 +321,9 @@ window.demoLevels = {
     actionPlane: [
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "dirt", "dirt", "", "", "", "", "",
-      "", "", "dirt", "", "", "dirt", "", "", "", "",
-      "", "", "", "dirt", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
@@ -345,7 +345,7 @@ window.demoLevels = {
     isEventLevel: true,
 
     solutionCode:
-    registerEventCallback(checkTargetType('chicken') + ifEventTriggered(2,"explodeEntity(event.targetIdentifier);"))
+    registerEventCallback(checkTargetType('chicken') + ifEventTriggered(1,"explodeEntity(event.targetIdentifier);"))
     
 ,
 
