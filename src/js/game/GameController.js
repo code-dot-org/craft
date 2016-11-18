@@ -71,6 +71,7 @@ class GameController {
       gameControllerConfig.earlyLoadNiceToHaveAssetPacks || [];
 
     this.resettableTimers = [];
+    this.resettableTweens = [];
     this.timeouts = [];
     this.timeout = 0;
     this.initializeCommandRecord();
@@ -153,6 +154,7 @@ class GameController {
     this.timerSprite = null;
     this.timeouts = [];
     this.resettableTimers.length = 0;
+    this.resettableTweens.length = 0;
     this.events.length = 0;
 
     this.score = 0;
@@ -215,6 +217,7 @@ class GameController {
       var tween = this.levelView.addResettableTween(this.timerSprite).to({
         x: -450, alpha: 0.5
       }, this.timeout, Phaser.Easing.Linear.None);
+      this.resettableTweens.push(tween);
 
       tween.start();
       tween = this.levelView.addResettableTween().to({
@@ -224,6 +227,7 @@ class GameController {
         this.endLevel(this.timeoutResult(this.levelModel));
       });
       tween.start();
+      this.resettableTweens.push(tween);
     }
   }
 
@@ -1357,6 +1361,9 @@ class GameController {
   }
 
   endLevel(result) {
+    this.resettableTweens.forEach((tween) => {
+      tween.stop(false);
+    });
     if (!this.levelModel.usePlayer) {
       if (result) {
         this.levelView.audioPlayer.play("success");
