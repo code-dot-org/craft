@@ -1,5 +1,4 @@
 import BaseEntity from "./BaseEntity.js";
-import FacingDirection from "../LevelMVC/FacingDirection.js";
 import CallbackCommand from "../CommandQueue/CallbackCommand.js";
 
 export default class Player extends BaseEntity {

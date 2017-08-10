@@ -506,19 +506,19 @@ export default class BaseEntity {
 
     blowUp(commandQueueItem, explosionPosition) {
         let pushBackDirection = FacingDirection.Down;
-        if(explosionPosition[0] > this.position[0]) {
+        if (explosionPosition[0] > this.position[0]) {
             pushBackDirection = FacingDirection.Left;
             this.facing = FacingDirection.Right;
             this.updateAnimationDirection();
-        } else if(explosionPosition[0] < this.position[0]) {
+        } else if (explosionPosition[0] < this.position[0]) {
             pushBackDirection = FacingDirection.Right;
             this.facing = FacingDirection.Left;
             this.updateAnimationDirection();
-        } else if(explosionPosition[1] > this.position[1]) {
+        } else if (explosionPosition[1] > this.position[1]) {
             pushBackDirection = FacingDirection.Up;
             this.facing = FacingDirection.Down;
             this.updateAnimationDirection();
-        } else if(explosionPosition[1] < this.position[1]) {
+        } else if (explosionPosition[1] < this.position[1]) {
             pushBackDirection = FacingDirection.Down;
             this.facing = FacingDirection.Up;
             this.updateAnimationDirection();
