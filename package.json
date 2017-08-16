@@ -1,21 +1,21 @@
 {
-  "name": "phaser-grunt-boilerplate",
+  "name": "craft",
   "version": "0.0.1",
-  "description": "Minimal phaser development starter app",
+  "description": "Top-down 2D game engine for the Craft app type. See NOTICE for restrictions on use.",
   "main": "build/js/app.bundled.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run lint",
     "lint": "eslint --ext .js,.jsx src/js"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:bcjordan/phaser-grunt-boilerplate.git"
+    "url": "git@github.com:code-dot-org/craft.git"
   },
   "author": "Code.org Contributors",
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "browserify-shim": {
   },
-  "dependencies": {
+  "devDependencies": {
     "babelify": "^6.3.0",
     "browserify": "^10.2.4",
     "browserify-shim": "^3.8.9",
