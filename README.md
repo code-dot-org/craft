@@ -1,6 +1,6 @@
-# Minecraft Hour of Code development repository
+# Craft development repository
 
-_Note: this repository is currently private and being periodically manually integrated with https://github.com/code-dot-org/code-dot-org — but consider commits to this repository as public in the future (though proprietary materials fall under different rules, per the [LICENSE](https://github.com/code-dot-org/code-dot-org/blob/staging/LICENSE))._
+_Note: proprietary materials fall under different rules, per the [LICENSE](https://github.com/code-dot-org/code-dot-org/blob/staging/LICENSE)._
 
 ## Local Setup (all platforms)
 
@@ -12,8 +12,8 @@ You will need to first install [Node.js](http://nodejs.org/download/) and the gr
 
 Check this project out from source:
 
-    git clone git@github.com:code-dot-org/craft-private.git
-    cd craft-private
+    git clone git@github.com:code-dot-org/craft.git
+    cd craft
 
 Next, inside the project, you need to install the project's various NPM dependencies:
 
