@@ -4,7 +4,8 @@
   "description": "Top-down 2D game engine for the Craft app type. See NOTICE for restrictions on use.",
   "main": "build/js/app.bundled.js",
   "scripts": {
-    "test": "npm run lint",
+    "tap": "./node_modules/.bin/tap ./test/**/*.js",
+    "test": "npm run lint && npm run tap",
     "lint": "eslint --ext .js,.jsx src/js"
   },
   "repository": {
@@ -31,6 +32,7 @@
     "grunt-contrib-uglify": "^0.9.2",
     "grunt-contrib-watch": "*",
     "grunt-ejs": "^0.3.0",
-    "grunt-open": "*"
+    "grunt-open": "*",
+    "tap": "10.7.2"
   }
 }
