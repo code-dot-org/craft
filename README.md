@@ -1,5 +1,3 @@
-# Craft development repository
-
 _Note: proprietary materials fall under different rules, per the [LICENSE](https://github.com/code-dot-org/code-dot-org/blob/staging/LICENSE)._
 
 ## Local Setup (all platforms)
