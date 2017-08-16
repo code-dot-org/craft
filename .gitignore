@@ -36,3 +36,6 @@ Icon?
 
 # Build files
 /build/*
+
+# VScode settings
+/.vscode

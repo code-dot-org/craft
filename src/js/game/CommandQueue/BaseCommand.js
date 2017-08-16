@@ -1,11 +1,13 @@
 import CommandState from "./CommandState.js";
 
 export default class BaseCommand {
-  constructor(gameController, highlightCallback) {
+  constructor(gameController, highlightCallback, targetEntity) {
     this.GameController = gameController;
     this.Game = gameController.game;
     this.HighlightCallback = highlightCallback;
     this.state = CommandState.NOT_STARTED;
+    this.target = targetEntity;
+    this.repeat = false;
   }
 
   tick() {

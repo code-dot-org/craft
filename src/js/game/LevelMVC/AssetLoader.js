@@ -40,6 +40,16 @@ export default class AssetLoader {
         pngPath: `${this.assetRoot}images/Alex1013.png`,
         jsonPath: `${this.assetRoot}images/Alex1013.json`
       },
+      playerSteveEvents: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/Steve_2016.png`,
+        jsonPath: `${this.assetRoot}images/Steve_2016.json`
+      },
+      playerAlexEvents: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/DevAlex.png`,
+        jsonPath: `${this.assetRoot}images/DevAlex.json`
+      },
       AO: {
         type: 'atlasJSON',
         pngPath: `${this.assetRoot}images/AO.png`,
@@ -87,13 +97,8 @@ export default class AssetLoader {
       },
       sheep: {
         type: 'atlasJSON',
-        pngPath: `${this.assetRoot}images/Sheep.png`,
-        jsonPath: `${this.assetRoot}images/Sheep.json`
-      },
-      creeper: {
-        type: 'atlasJSON',
-        pngPath: `${this.assetRoot}images/Creeper.png`,
-        jsonPath: `${this.assetRoot}images/Creeper.json`
+        pngPath: `${this.assetRoot}images/Sheep_2016.png`,
+        jsonPath: `${this.assetRoot}images/Sheep_2016.json`
       },
       crops: {
         type: 'atlasJSON',
@@ -159,6 +164,36 @@ export default class AssetLoader {
         type: 'atlasJSON',
         pngPath: `${this.assetRoot}images/TNT.png`,
         jsonPath: `${this.assetRoot}images/TNT.json`
+      },
+      burningInSun: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/BurningInSun.png`,
+        jsonPath: `${this.assetRoot}images/BurningInSun.json`
+      },
+      zombie: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/Zombie.png`,
+        jsonPath: `${this.assetRoot}images/Zombie.json`
+      },
+      ironGolem: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/Iron_Golem.png`,
+        jsonPath: `${this.assetRoot}images/Iron_Golem.json`
+      },
+      creeper: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/Creeper_2016.png`,
+        jsonPath: `${this.assetRoot}images/Creeper_2016.json`
+      },
+      cow: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/Cow.png`,
+        jsonPath: `${this.assetRoot}images/Cow.json`
+      },
+      chicken: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/Chicken.png`,
+        jsonPath: `${this.assetRoot}images/Chicken.json`
       },
       dig_wood1: {
         type: 'sound',
@@ -261,73 +296,127 @@ export default class AssetLoader {
         type: 'sound',
         mp3: `${this.assetRoot}audio/say3.mp3`,
         ogg: `${this.assetRoot}audio/say3.ogg`
-      }
+      },
+      chickenHurt: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/chickenhurt2.mp3`,
+        ogg: `${this.assetRoot}audio/chickenhurt2.ogg`
+      },
+      chickenBawk: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/chickensay3.mp3`,
+        ogg: `${this.assetRoot}audio/chickensay3.ogg`
+      },
+      cowHuff: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/cowhuff.mp3`,
+        ogg: `${this.assetRoot}audio/cowhuff.ogg`
+      },
+      cowHurt: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/cowhurt.mp3`,
+        ogg: `${this.assetRoot}audio/cowhurt.ogg`
+      },
+      cowMoo: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/cowmoo1.mp3`,
+        ogg: `${this.assetRoot}audio/cowmoo1.ogg`
+      },
+      cowMooLong: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/cowmoolong.mp3`,
+        ogg: `${this.assetRoot}audio/cowmoolong.ogg`
+      },
+      creeperHiss: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/creeper.mp3`,
+        ogg: `${this.assetRoot}audio/creeper.ogg`
+      },
+      ironGolemHit: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/irongolemhit.mp3`,
+        ogg: `${this.assetRoot}audio/irongolemhit.ogg`
+      },
+      metalWhack: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/metalwhack.mp3`,
+        ogg: `${this.assetRoot}audio/metalwhack.ogg`
+      },
+      zombieBrains: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/zombiebrains.mp3`,
+        ogg: `${this.assetRoot}audio/zombiebrains.ogg`
+      },
+      zombieGroan: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/zombiegroan.mp3`,
+        ogg: `${this.assetRoot}audio/zombiegroan.ogg`
+      },
+      zombieHurt: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/zombiehurt1.mp3`,
+        ogg: `${this.assetRoot}audio/zombiehurt1.ogg`
+      },
+      zombieHurt2: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/zombiehurt2.mp3`,
+        ogg: `${this.assetRoot}audio/zombiehurt2.ogg`
+      },
     };
 
+    const ALL_SOUND_ASSETS = [
+      'dig_wood1',
+      'stepGrass',
+      'stepWood',
+      'stepStone',
+      'stepGravel',
+      'stepFarmland',
+      'failure',
+      'success',
+      'fall',
+      'fuse',
+      'explode',
+      'placeBlock',
+      'collectedBlock',
+      'bump',
+      'punch',
+      'fizz',
+      'doorOpen',
+      'minecart',
+      'sheepBaa',
+      'chickenHurt',
+      'chickenBawk',
+      'cowHuff',
+      'cowHurt',
+      'cowMoo',
+      'cowMooLong',
+      'creeperHiss',
+      'ironGolemHit',
+      'metalWhack',
+      'zombieBrains',
+      'zombieGroan',
+      'zombieHurt',
+    ];
+
+    const CHICKEN_LEVEL_ASSETS = [
+      'chicken',
+      'entityShadow',
+      'selectionIndicator',
+      'shadeLayer',
+      'AO',
+      'blockShadows',
+      'tallGrass',
+      'blocks',
+      'miniBlocks',
+      'stepGrass',
+      'failure',
+      'success',
+    ].concat(ALL_SOUND_ASSETS);
+
     this.assetPacks = {
-      levelOneAssets: [
-        'entityShadow',
-        'selectionIndicator',
-        'shadeLayer',
-        'AO',
-        'blockShadows',
-        'leavesOak',
-        'leavesBirch',
-        'tallGrass',
-        'blocks',
-        'sheep',
-        'bump',
-        'stepGrass',
-        'failure',
-        'success'
-      ],
-      levelTwoAssets: [
-        'entityShadow',
-        'selectionIndicator',
-        'shadeLayer',
-        'AO',
-        'blockShadows',
-        'leavesSpruce',
-        'tallGrass',
-        'blocks',
-        'sheep',
-        'bump',
-        'stepGrass',
-        'failure',
-        'playerSteve',
-        'success',
-        'miniBlocks',
-        'blockExplode',
-        'miningParticles',
-        'destroyOverlay',
-        'dig_wood1',
-        'collectedBlock',
-        'punch',
-      ],
-      levelThreeAssets: [
-        'entityShadow',
-        'selectionIndicator',
-        'shadeLayer',
-        'AO',
-        'blockShadows',
-        'leavesOak',
-        'tallGrass',
-        'blocks',
-        'sheep',
-        'bump',
-        'stepGrass',
-        'failure',
-        'playerSteve',
-        'success',
-        'miniBlocks',
-        'blockExplode',
-        'miningParticles',
-        'destroyOverlay',
-        'dig_wood1',
-        'collectedBlock',
-        'sheepBaa',
-        'punch',
-      ],
+      levelOneAssets: CHICKEN_LEVEL_ASSETS,
+      levelTwoAssets: CHICKEN_LEVEL_ASSETS,
+      levelThreeAssets: CHICKEN_LEVEL_ASSETS,
       allAssetsMinusPlayer: [
         'entityShadow',
         'selectionIndicator',
@@ -378,13 +467,37 @@ export default class AssetLoader {
         'doorOpen',
         'houseSuccess',
         'minecart',
-        'sheepBaa'
+        'sheepBaa',
+        'zombie',
+        'cow',
+        'chicken',
+        'ironGolem',
+        'burningInSun',
+        'chickenHurt',
+        'chickenBawk',
+        'cowHuff',
+        'cowHurt',
+        'cowMoo',
+        'cowMooLong',
+        'creeperHiss',
+        'ironGolemHit',
+        'metalWhack',
+        'zombieBrains',
+        'zombieGroan',
+        'zombieHurt',
+        'zombieHurt2',
       ],
       playerSteve: [
         'playerSteve'
       ],
       playerAlex: [
         'playerAlex'
+      ],
+      playerSteveEvents: [
+        'playerSteveEvents'
+      ],
+      playerAlexEvents: [
+        'playerAlexEvents'
       ],
       grass: [
         'tallGrass'

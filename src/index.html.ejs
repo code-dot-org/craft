@@ -144,15 +144,34 @@
     codeOrgAPI.startCommandCollection();
     runCodeWithParams(code, {
       codeOrgAPI: codeOrgAPI,
+      isEventTriggered : codeOrgAPI.isEventTriggered.bind(null),
       placeBlock: codeOrgAPI.placeBlock.bind(null, function(){}),
       moveForward: codeOrgAPI.moveForward.bind(null, function(){}),
+      moveAway: codeOrgAPI.moveAway.bind(null, function(){}),
+      moveToward: codeOrgAPI.moveToward.bind(null, function(){}),
+      turnRandom: codeOrgAPI.turnRandom.bind(null, function(){}),
       turnLeft: codeOrgAPI.turnLeft.bind(null, function(){}),
       turnRight: codeOrgAPI.turnRight.bind(null, function(){}),
       destroyBlock: codeOrgAPI.destroyBlock.bind(null, function(){}),
+      playSound: codeOrgAPI.playSound.bind(null, function(){}),
       ifBlockAhead: codeOrgAPI.ifBlockAhead.bind(null, function(){}),
       ifLavaAhead: codeOrgAPI.ifBlockAhead.bind(null, function(){}, "lava"),
       whileAhead: codeOrgAPI.whilePathAhead.bind(null, function(){}),
-      placeInFront: codeOrgAPI.placeInFront.bind(null, function(){})
+      repeat: codeOrgAPI.repeat.bind(null, function(){}),
+      repeatRandom: codeOrgAPI.repeatRandom.bind(null, function(){}),
+      registerEventCallback: codeOrgAPI.registerEventCallback.bind(null, function(){}),
+      placeInFront: codeOrgAPI.placeInFront.bind(null, function(){}),
+      spawnEntity: codeOrgAPI.spawnEntity.bind(null, function(){}),
+      destroyEntity: codeOrgAPI.destroyEntity.bind(null, function(){}),
+      flashEntity: codeOrgAPI.flashEntity.bind(null,function(){}),
+      explodeEntity: codeOrgAPI.explodeEntity.bind(null,function(){}),
+      drop: codeOrgAPI.drop.bind(null,function(){}),
+      startDay: codeOrgAPI.startDay.bind(null,function(){}),
+      startNight: codeOrgAPI.startNight.bind(null,function(){}),
+      setDayNightCycle: codeOrgAPI.setDayNightCycle.bind(null),
+      wait: codeOrgAPI.wait.bind(null,function(){}),
+      attack: codeOrgAPI.attack.bind(null, function(){}) ,
+      addScore: codeOrgAPI.addScore.bind(null, function(){})
     });
     codeOrgAPI.startAttempt(function (result) {
       $('#level-feedback').html(result ? "Success!" : "Failure").css("color", result ? "green" : "red");
