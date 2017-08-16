@@ -1,12 +1,12 @@
-import PlaceBlockCommand from "../CommandQueue/PlaceBlockCommand.js";
-import PlaceInFrontCommand from "../CommandQueue/PlaceInFrontCommand.js";
-import MoveForwardCommand from "../CommandQueue/MoveForwardCommand.js";
-import WhileCommand from "../CommandQueue/WhileCommand.js";
-import IfBlockAheadCommand from "../CommandQueue/IfBlockAheadCommand.js";
-import CallbackCommand from "../CommandQueue/CallbackCommand.js";
-import RepeatCommand from "../CommandQueue/RepeatCommand.js";
+const PlaceBlockCommand = require("../CommandQueue/PlaceBlockCommand.js");
+const PlaceInFrontCommand = require("../CommandQueue/PlaceInFrontCommand.js");
+const MoveForwardCommand = require("../CommandQueue/MoveForwardCommand.js");
+const WhileCommand = require("../CommandQueue/WhileCommand.js");
+const IfBlockAheadCommand = require("../CommandQueue/IfBlockAheadCommand.js");
+const CallbackCommand = require("../CommandQueue/CallbackCommand.js");
+const RepeatCommand = require("../CommandQueue/RepeatCommand.js");
 
-export function get(controller) {
+module.exports.get = function (controller) {
   return {
     /**
      * Called before a list of user commands will be issued.
@@ -267,4 +267,4 @@ export function get(controller) {
       controller.clickUp();
     }
   };
-}
+};

@@ -1,4 +1,4 @@
-export default class LevelBlock {
+module.exports = class LevelBlock {
   constructor(blockType) {
     this.blockType = blockType;
 
@@ -102,4 +102,4 @@ export default class LevelBlock {
   getIsEmptyOrEntity() {
     return this.isEmpty || this.isEntity;
   }
-}
+};

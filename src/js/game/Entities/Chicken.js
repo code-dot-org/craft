@@ -1,5 +1,5 @@
-import BaseEntity from "./BaseEntity.js";
-export default class Chicken extends BaseEntity {
+const BaseEntity = require("./BaseEntity.js");
+module.exports = class Chicken extends BaseEntity {
     constructor(controller, type, identifier, x, y, facing) {
         super(controller, type, identifier, x, y, facing);
         var zOrderYIndex = this.position[1];
@@ -119,4 +119,4 @@ export default class Chicken extends BaseEntity {
         this.sprite.x = this.offset[0] + 40 * this.position[0];
         this.sprite.y = this.offset[1] + 40 * this.position[1];
     }
-}
+};

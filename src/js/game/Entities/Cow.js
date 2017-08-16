@@ -1,5 +1,5 @@
-import BaseEntity from "./BaseEntity.js";
-export default class Cow extends BaseEntity {
+const BaseEntity = require("./BaseEntity.js");
+module.exports = class Cow extends BaseEntity {
     constructor(controller, type, identifier, x, y, facing) {
         super(controller, type, identifier, x, y, facing);
         var zOrderYIndex = this.position[1];
@@ -176,4 +176,4 @@ export default class Cow extends BaseEntity {
         this.controller.levelView.playScaledSpeed(this.sprite.animations, animationName);
         this.controller.printErrorMsg(this.type + " calls animation : " + animationName + "\n");
     }
-}
+};

@@ -1,8 +1,8 @@
-import CommandState from "./CommandState.js";
-import CommandQueue from "./CommandQueue.js";
-import BaseCommand from "./BaseCommand.js";
+const CommandState = require("./CommandState.js");
+const CommandQueue = require("./CommandQueue.js");
+const BaseCommand = require("./BaseCommand.js");
 
-export default class WhileCommand extends BaseCommand {
+module.exports = class WhileCommand extends BaseCommand {
   constructor(gameController, highlightCallback, blockType, targetEntity, callback) {
     super(gameController, highlightCallback, targetEntity);
 
@@ -57,5 +57,4 @@ export default class WhileCommand extends BaseCommand {
       console.log(`While command: Iterationsleft   ${this.iterationsLeft} `);
     }
   }
-}
-
+};

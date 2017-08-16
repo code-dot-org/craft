@@ -1,13 +1,13 @@
-import CommandQueue from "./CommandQueue/CommandQueue.js";
-import CallbackCommand from "./CommandQueue/CallbackCommand.js";
+const CommandQueue = require("./CommandQueue/CommandQueue.js");
+const CallbackCommand = require("./CommandQueue/CallbackCommand.js");
 
-import EventType from "./Event/EventType.js";
-import FacingDirection from "./LevelMVC/FacingDirection.js";
+const EventType = require("./Event/EventType.js");
+const FacingDirection = require("./LevelMVC/FacingDirection.js");
 
-import LevelModel from "./LevelMVC/LevelModel.js";
-import LevelView from "./LevelMVC/LevelView.js";
-import LevelEntity from "./LevelMVC/LevelEntity.js";
-import AssetLoader from "./LevelMVC/AssetLoader.js";
+const LevelModel = require("./LevelMVC/LevelModel.js");
+const LevelView = require("./LevelMVC/LevelView.js");
+const LevelEntity = require("./LevelMVC/LevelEntity.js");
+const AssetLoader = require("./LevelMVC/AssetLoader.js");
 
 import * as CodeOrgAPI from "./API/CodeOrgAPI.js";
 
@@ -1639,4 +1639,4 @@ class GameController {
 
 window.GameController = GameController;
 
-export default GameController;
+module.exports = GameController;

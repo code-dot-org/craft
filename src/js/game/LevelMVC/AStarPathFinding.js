@@ -1,4 +1,4 @@
-export default class AStarPathFinding {
+module.exports = class AStarPathFinding {
   constructor(model) {
     this.levelModel = model;
 
@@ -147,4 +147,4 @@ export default class AStarPathFinding {
     // No path could be found, return empty array.
     return [];
   }
-}
+};

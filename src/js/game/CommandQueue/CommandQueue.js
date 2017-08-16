@@ -1,6 +1,6 @@
-import CommandState from "./CommandState.js";
+const CommandState = require("./CommandState.js");
 
-export default class CommandQueue {
+module.exports = class CommandQueue {
   constructor(gameController) {
     this.gameController = gameController;
     this.game = gameController.game;
@@ -153,5 +153,4 @@ export default class CommandQueue {
     this.repeatCommands.push([codeBlock, iteration]);
     this.begin();
   }
-}
-
+};

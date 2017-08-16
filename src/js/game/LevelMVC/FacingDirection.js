@@ -1,4 +1,4 @@
-export default Object.freeze({
+module.exports = Object.freeze({
   Up: 0,
   Right: 1,
   Down: 2,

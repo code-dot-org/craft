@@ -1,4 +1,4 @@
-import FacingDirection from "./FacingDirection.js";
+const FacingDirection = require("./FacingDirection.js");
 
 /**
  * Converts entities found within the levelConfig.actionPlane to a
@@ -8,7 +8,7 @@ import FacingDirection from "./FacingDirection.js";
  *
  * @param levelConfig
  */
-export const convertActionPlaneEntitiesToConfig = function (levelConfig) {
+module.exports.convertActionPlaneEntitiesToConfig = function (levelConfig) {
   const [width, height] = levelConfig.gridWidth && levelConfig.gridHeight ?
     [levelConfig.gridWidth, levelConfig.gridHeight] : [10, 10];
 

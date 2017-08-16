@@ -1,6 +1,6 @@
-import FacingDirection from "./FacingDirection.js";
+const FacingDirection = require("./FacingDirection.js");
 
-export default class LevelView {
+module.exports = class LevelView {
   constructor(controller) {
     this.controller = controller;
     this.audioPlayer = controller.audioPlayer;
@@ -2062,6 +2062,4 @@ export default class LevelView {
     this.resettableTweens.push(tween);
     return tween;
   }
-
-
-}
+};

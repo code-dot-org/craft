@@ -1,9 +1,9 @@
-import CommandQueue from "../CommandQueue/CommandQueue.js";
-import FacingDirection from "../LevelMVC/FacingDirection.js";
-import EventType from "../Event/EventType.js";
-import CallbackCommand from "../CommandQueue/CallbackCommand.js";
+const CommandQueue = require("../CommandQueue/CommandQueue.js");
+const FacingDirection = require("../LevelMVC/FacingDirection.js");
+const EventType = require("../Event/EventType.js");
+const CallbackCommand = require("../CommandQueue/CallbackCommand.js");
 
-export default class BaseEntity {
+module.exports = class BaseEntity {
     constructor(controller, type, identifier, x, y, facing) {
         this.queue = new CommandQueue(controller);
         this.controller = controller;
@@ -538,4 +538,4 @@ export default class BaseEntity {
 
     }
 
-}
+};

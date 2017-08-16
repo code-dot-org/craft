@@ -1,6 +1,6 @@
-import BaseEntity from "./BaseEntity.js";
-import FacingDirection from "../LevelMVC/FacingDirection.js";
-export default class Zombie extends BaseEntity {
+const BaseEntity = require("./BaseEntity.js");
+const FacingDirection = require("../LevelMVC/FacingDirection.js");
+module.exports = class Zombie extends BaseEntity {
     constructor(controller, type, identifier, x, y, facing) {
         super(controller, type, identifier, x, y, facing);
         this.offset = [-43, -45];
@@ -224,4 +224,4 @@ export default class Zombie extends BaseEntity {
             }, 1500);
         }
     }
-}
+};
