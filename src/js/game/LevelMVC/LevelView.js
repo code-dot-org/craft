@@ -1141,7 +1141,6 @@ export default class LevelView {
           }
         }
 
-        //pelican
         sprite = null;
         if (!levelData.actionPlane[blockIndex].isEmpty) {
           blockType = levelData.actionPlane[blockIndex].blockType;
@@ -1990,22 +1989,6 @@ export default class LevelView {
         break;
 
       case "tnt":
-        atlas = this.blocks[blockType][0];
-        frame = this.blocks[blockType][1];
-        xOffset = this.blocks[blockType][2];
-        yOffset = this.blocks[blockType][3];
-        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
-        frameList = Phaser.Animation.generateFrameNames("TNTexplosion", 0, 8, "", 0);
-        sprite.animations.add("explode", frameList, 7, false).onComplete.add(() => {
-          this.playExplosionCloudAnimation([x, y]);
-          sprite.kill();
-          this.toDestroy.push(sprite);
-          this.actionPlaneBlocks[this.coordinatesToIndex([x, y])] = null;
-        });
-        break;
-
-      //pelican
-      case "redstone_dust":
         atlas = this.blocks[blockType][0];
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
