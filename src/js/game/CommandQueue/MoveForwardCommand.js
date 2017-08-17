@@ -1,6 +1,6 @@
-import BaseCommand from "./BaseCommand.js";
+const BaseCommand = require("./BaseCommand.js");
 
-export default class MoveForwardCommand extends BaseCommand {
+module.exports = class MoveForwardCommand extends BaseCommand {
   constructor(gameController, highlightCallback, targetEntity) {
     super(gameController, highlightCallback, targetEntity);
   }
@@ -13,5 +13,4 @@ export default class MoveForwardCommand extends BaseCommand {
     super.begin();
     this.GameController.moveForward(this);
   }
-}
-
+};

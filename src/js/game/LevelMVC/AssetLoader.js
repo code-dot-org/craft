@@ -1,4 +1,4 @@
-export default class AssetLoader {
+module.exports = class AssetLoader {
   constructor(controller) {
     this.controller = controller;
     this.audioPlayer = controller.audioPlayer;
@@ -542,4 +542,4 @@ export default class AssetLoader {
         throw `Asset ${key} needs config.type set in configuration.`;
     }
   }
-}
+};

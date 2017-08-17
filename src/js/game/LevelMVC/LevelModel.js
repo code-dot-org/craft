@@ -1,10 +1,10 @@
-import LevelBlock from "./LevelBlock.js";
-import FacingDirection from "./FacingDirection.js";
-import Player from "../Entities/Player.js";
+const LevelBlock = require("./LevelBlock.js");
+const FacingDirection = require("./FacingDirection.js");
+const Player = require("../Entities/Player.js");
 
 // for blocks on the action plane, we need an actual "block" object, so we can model
 
-export default class LevelModel {
+module.exports = class LevelModel {
   constructor(levelData, controller) {
     this.planeWidth = levelData.gridDimensions ?
       levelData.gridDimensions[0] : 10;
@@ -1238,4 +1238,4 @@ export default class LevelModel {
       }
     }
   }
-}
+};

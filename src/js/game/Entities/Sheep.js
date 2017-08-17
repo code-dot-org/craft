@@ -1,8 +1,8 @@
-import BaseEntity from "./BaseEntity.js";
-import FacingDirection from "../LevelMVC/FacingDirection.js";
-import EventType from "../Event/EventType.js";
+const BaseEntity = require("./BaseEntity.js");
+const FacingDirection = require("../LevelMVC/FacingDirection.js");
+const EventType = require("../Event/EventType.js");
 
-export default class Sheep extends BaseEntity {
+module.exports = class Sheep extends BaseEntity {
     constructor(controller, type, identifier, x, y, facing) {
         super(controller, type, identifier, x, y, facing);
         var zOrderYIndex = this.position[1];
@@ -370,4 +370,4 @@ export default class Sheep extends BaseEntity {
     getNakedSuffix() {
         return this.naked ? "naked_" : "";
     }
-}
+};

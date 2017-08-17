@@ -1,6 +1,6 @@
-import BaseCommand from "./BaseCommand.js";
+const BaseCommand = require("./BaseCommand.js");
 
-export default class PlaceInFrontCommand extends BaseCommand {
+module.exports = class PlaceInFrontCommand extends BaseCommand {
   constructor(gameController, highlightCallback, blockType, targetEntity) {
     super(gameController, highlightCallback, targetEntity);
 
@@ -15,5 +15,4 @@ export default class PlaceInFrontCommand extends BaseCommand {
     super.begin();
     this.GameController.placeBlockForward(this, this.BlockType);
   }
-}
-
+};

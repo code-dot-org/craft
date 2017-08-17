@@ -1,16 +1,16 @@
-import BaseEntity from "../Entities/BaseEntity.js";
-import Sheep from "../Entities/Sheep.js";
-import Zombie from "../Entities/Zombie.js";
-import IronGolem from "../Entities/IronGolem.js";
-import Creeper from "../Entities/Creeper.js";
-import Cow from "../Entities/Cow.js";
-import Chicken from "../Entities/Chicken.js";
+const BaseEntity = require("../Entities/BaseEntity.js");
+const Sheep = require("../Entities/Sheep.js");
+const Zombie = require("../Entities/Zombie.js");
+const IronGolem = require("../Entities/IronGolem.js");
+const Creeper = require("../Entities/Creeper.js");
+const Cow = require("../Entities/Cow.js");
+const Chicken = require("../Entities/Chicken.js");
 
 
 /**
  * Handling non-player entities inside of the level
  */
-export default class LevelEntity {
+module.exports = class LevelEntity {
     constructor(controller) {
         this.controller = controller;
         this.game = controller.game;
@@ -276,4 +276,4 @@ export default class LevelEntity {
         this.entityMap.clear();
         this.entityDeathCount = new Map();
     }
-}
+};

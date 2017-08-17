@@ -1,7 +1,7 @@
-import BaseEntity from "./BaseEntity.js";
-import CallbackCommand from "../CommandQueue/CallbackCommand.js";
+const BaseEntity = require("./BaseEntity.js");
+const CallbackCommand = require("../CommandQueue/CallbackCommand.js");
 
-export default class Player extends BaseEntity {
+module.exports = class Player extends BaseEntity {
   constructor(controller, type, x, y, name, isOnBlock, facing) {
     super(controller, type, 'Player', x, y, facing);
     this.offset = [-18, -32];
@@ -153,5 +153,4 @@ export default class Player extends BaseEntity {
       });
     }
   }
-}
-
+};

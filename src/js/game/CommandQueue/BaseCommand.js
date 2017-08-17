@@ -1,6 +1,6 @@
-import CommandState from "./CommandState.js";
+const CommandState = require("./CommandState.js");
 
-export default class BaseCommand {
+module.exports = class BaseCommand {
   constructor(gameController, highlightCallback, targetEntity) {
     this.GameController = gameController;
     this.Game = gameController.game;
@@ -60,5 +60,4 @@ export default class BaseCommand {
   failed() {
     this.state = CommandState.FAILURE;
   }
-}
-
+};
