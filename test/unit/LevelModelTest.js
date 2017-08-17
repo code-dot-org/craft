@@ -26,9 +26,19 @@ const mockGameController = {
 };
 
 test('sanity', t => {
-  const levelDefinition = makeLevelDefinition(10, 10);
+  const levelDefinition = makeLevelDefinition(5, 5);
   const model = new LevelModel(levelDefinition, mockGameController);
 
-  t.equal(model.planeArea(), 100);
+  t.equal(model.planeArea(), 25);
+
+  t.assert(model.inBounds(2, 4));
+  t.assertNot(model.inBounds(-1, 1));
+  t.assertNot(model.inBounds(5, 3));
+  t.assertNot(model.inBounds(3, 5));
+
+  t.equal(model.yToIndex(2), 10);
+
+  t.assert(model.isPlayerAt([0, 2]));
+
   t.done();
 });
