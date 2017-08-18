@@ -2088,34 +2088,32 @@ export default class LevelView {
                 //purely horizontal, no above or below
                 this.blocks[blockType][1] = "Redstone_Dust_Horizontal";
             } else {
-                this.blocks[blockType][1] = "Redstone_Dust_Corner";
                 //we have a corner and will need to rotate
                 if (foundBelow) {
                     //if we have a blow, the other has to be right or left
                     if (foundLeft) {
-                        //rotate  corner if e can rotate, or reference bottom|left corner sprite
+                        this.blocks[blockType][1] = "Redstone_Dust_Corner_DownLeft";
                     } else {
-                        //rotate  corner if e can rotate, or reference bottom|right corner sprite
+                        this.blocks[blockType][1] = "Redstone_Dust_Corner_DownRight";
                     }
                 } else {
                     //if not below, then above + left or right
                     if (foundLeft) {
-                        //rotate  corner if e can rotate, or reference top|left corner sprite
+                        this.blocks[blockType][1] = "Redstone_Dust_Corner_UpLeft";
                     } else {
-                        //rotate  corner if e can rotate, or reference top|right corner sprite
+                        this.blocks[blockType][1] = "Redstone_Dust_Corner_UpRight";
                     }
                 }
             }
         } else if (borderCount === 3) {
-            this.blocks[blockType][1] = "Redstone_Dust_T";
             if (!foundBelow) {
-                //rotate T or use no-below T sprite
+                this.blocks[blockType][1] = "Redstone_Dust_TUp";
             } else if (!foundAbove) {
-                //rotate T or use no-above T sprite
+                this.blocks[blockType][1] = "Redstone_Dust_TDown";
             } else if (!foundLeft) {
-                //rotate T or use no-left T sprite
+                this.blocks[blockType][1] = "Redstone_Dust_TRight";
             } else if (!foundRight) {
-                //rotate T or use no-right T sprite
+                this.blocks[blockType][1] = "Redstone_Dust_TLeft";
             }
         } else if (borderCount === 4) {
             //all four sides connected: Cross
