@@ -2034,9 +2034,9 @@ module.exports = class LevelView {
         let aboveIndex = (this.yToIndex(y - 1)) + x;
         let leftIndex = (this.yToIndex(y)) + x - 1;
         let rightIndex = (this.yToIndex(y)) + x + 1;
-        
+
         let borderCount = 0;
-        
+
         //need to ensure these are in bounds
         if (y === levelData.planeHeight) {
             foundBelow = false;
@@ -2070,8 +2070,8 @@ module.exports = class LevelView {
                 ++borderCount;
             }
         }
-        
-        if(borderCount === 0) {
+
+        if (borderCount === 0) {
             //no connecting redstone wire
             this.blocks[blockType][1] = "Redstone_Dust";
         } else if (borderCount === 1) {
