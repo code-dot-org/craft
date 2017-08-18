@@ -93,7 +93,7 @@ export default class LevelBlock {
       this.isDestroyable = false;
       this.isTransparent = true;
     }
-    
+
     if (blockType === "redstone_dust") {
       this.isEntity = true;
       this.isWalkable = true;

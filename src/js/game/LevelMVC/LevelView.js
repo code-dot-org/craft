@@ -127,7 +127,7 @@ export default class LevelView {
       "railsPoweredHorizontal": ["blocks", "Rails_PoweredHorizontal", -13, 0],
       "railsPoweredVertical": ["blocks", "Rails_PoweredVertical", -13, 0],
       "railsRedstoneTorch": ["blocks", "Rails_RedstoneTorch", -12, 9],
-      
+
       "redstone_dust": ["blocks", "Redstone_Dust_Vertical", -13, 0],
     };
 
