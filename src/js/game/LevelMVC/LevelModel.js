@@ -643,7 +643,7 @@ module.exports = class LevelModel {
     } else {
         return this.isPositionEmpty(blockForwardPosition, false);
     }
-    
+
   }
 
   isPositionEmpty(position, isAgent = true) {
