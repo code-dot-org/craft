@@ -93,6 +93,14 @@ module.exports = class LevelBlock {
       this.isDestroyable = false;
       this.isTransparent = true;
     }
+
+    if (blockType === "redstone_wire") {
+      this.isEntity = true;
+      this.isWalkable = true;
+      this.isUsable = true;
+      this.isDestroyable = true;
+      this.isTransparent = true;
+    }
   }
 
   getIsTree() {

@@ -1,6 +1,7 @@
-const FacingDirection = require("./FacingDirection.js");
+import FacingDirection from "./FacingDirection.js";
+import LevelModel from "./LevelModel.js";
 
-module.exports = class LevelView {
+export default class LevelView {
   constructor(controller) {
     this.controller = controller;
     this.audioPlayer = controller.audioPlayer;
@@ -127,6 +128,9 @@ module.exports = class LevelView {
       "railsPoweredHorizontal": ["blocks", "Rails_PoweredHorizontal", -13, 0],
       "railsPoweredVertical": ["blocks", "Rails_PoweredVertical", -13, 0],
       "railsRedstoneTorch": ["blocks", "Rails_RedstoneTorch", -12, 9],
+      
+      "redstone_wire": ["blocks", "Redstone_Dust_Vertical", -13, 0],
+      "piston": ["blocks", "Emerald_Ore", -13, 0],
     };
 
     this.actionPlaneBlocks = [];
@@ -912,9 +916,6 @@ module.exports = class LevelView {
       this.toDestroy.push(blockToDestroy);
       this.toDestroy.push(destroyOverlay);
 
-      this.controller.updateShadingPlane();
-      this.controller.updateFowPlane();
-
       this.setSelectionIndicatorPosition(playerPosition[0], playerPosition[1]);
 
       this.audioPlayer.play('dig_wood1');
@@ -1016,30 +1017,19 @@ module.exports = class LevelView {
       this.toDestroy.push(explodeAnim);
 
       if (placeBlock) {
-        if (!this.controller.levelData.isEventLevel) {
-          this.playPlayerAnimation("idle", playerPosition, facing, false);
-        }
-        this.playItemDropAnimation(destroyPosition, blockType, completionHandler);
+        this.playItemDropAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler);
       }
     });
     this.playScaledSpeed(explodeAnim.animations, "explode");
-    if (this.controller.levelData.isEventLevel ^ !placeBlock) {
-      completionHandler();
-    }
+    completionHandler();
   }
 
-  playItemDropAnimation(destroyPosition, blockType, completionHandler) {
+  playItemDropAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
     var sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
     sprite.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
-
-    if (this.controller.levelData.isEventLevel) {
-      completionHandler();
-    } else {
-      this.onAnimationEnd(this.playScaledSpeed(sprite.animations, "animate"), () => {
-        const player = this.controller.levelModel.player;
-        this.playItemAcquireAnimation(player.position, player.facing, sprite, completionHandler, blockType);
-      });
-    }
+    this.onAnimationEnd(this.playScaledSpeed(sprite.animations, "animate"), () => {
+      this.playItemAcquireAnimation(playerPosition, facing, sprite, completionHandler, blockType);
+    });
   }
 
   playScaledSpeed(animationManager, name) {
@@ -1064,8 +1054,7 @@ module.exports = class LevelView {
     }, 200, Phaser.Easing.Linear.None);
 
     tween.onComplete.add(() => {
-      const caughtUpToPlayer = this.player.position[0] === playerPosition[0] && this.player.position[1] === playerPosition[1];
-      if (sprite.alive && caughtUpToPlayer) {
+      if (this.player.position[0] === playerPosition[0] && this.player.position[1] === playerPosition[1]) {
         this.audioPlayer.play("collectedBlock");
         this.player.inventory[blockType] =
           (this.player.inventory[blockType] || 0) + 1;
@@ -1139,10 +1128,11 @@ module.exports = class LevelView {
           }
         }
 
+        //pelican
         sprite = null;
         if (!levelData.actionPlane[blockIndex].isEmpty) {
           blockType = levelData.actionPlane[blockIndex].blockType;
-          sprite = this.createBlock(this.actionPlane, x, y, blockType);
+          sprite = this.createBlock(this.actionPlane, x, y, blockType, levelData);
           if (sprite !== null) {
             sprite.sortOrder = this.yToIndex(y);
           }
@@ -1689,6 +1679,9 @@ module.exports = class LevelView {
       case "tnt":
         frame = "gunPowder";
         break;
+      case "redstone_wire":
+        frame = "redstoneDust";
+        break;
       default:
         frame = blockType;
         break;
@@ -1702,25 +1695,23 @@ module.exports = class LevelView {
     let yOffset = 0 - 20 + Math.random() * 40;
 
     frameList = Phaser.Animation.generateFrameNames(framePrefix, frameStart, frameEnd, ".png", 3);
+
+    var distanceBetween = function (position, position2) {
+      return Math.sqrt(Math.pow(position[0] - position2[0], 2) + Math.pow(position[1] - position2[1], 2));
+    };
+    // todo : acquire after animation
     sprite = this.actionPlane.create(xOffset + 40 * x, yOffset + this.actionPlane.yOffset + 40 * y, atlas, "");
+    let collectiblePosition = this.controller.levelModel.spritePositionToIndex([xOffset, yOffset], [sprite.x, sprite.y]);
     var anim = sprite.animations.add("animate", frameList, 10, false);
-
-    if (this.controller.levelData.isEventLevel) {
-      var distanceBetween = function (position, position2) {
-        return Math.sqrt(Math.pow(position[0] - position2[0], 2) + Math.pow(position[1] - position2[1], 2));
-      };
-
-      let collectiblePosition = this.controller.levelModel.spritePositionToIndex([xOffset, yOffset], [sprite.x, sprite.y]);
-      anim.onComplete.add(() => {
-        if (this.controller.levelModel.usePlayer) {
-          if (distanceBetween(this.player.position, collectiblePosition) < 2) {
-            this.playItemAcquireAnimation(this.player.position, this.player.facing, sprite, () => { }, blockType);
-          } else {
-            this.collectibleItems.push([sprite, [xOffset, yOffset], blockType]);
-          }
+    anim.onComplete.add(() => {
+      if (this.controller.levelModel.usePlayer) {
+        if (distanceBetween(this.player.position, collectiblePosition) < 2) {
+          this.playItemAcquireAnimation(this.player.position, this.player.facing, sprite, () => { }, blockType);
+        } else {
+          this.collectibleItems.push([sprite, [xOffset, yOffset], blockType]);
         }
-      });
-    }
+      }
+    });
     this.playScaledSpeed(sprite.animations, "animate");
     return sprite;
   }
@@ -1805,8 +1796,8 @@ module.exports = class LevelView {
       default:
     }
   }
-
-  createBlock(plane, x, y, blockType) {
+//pelican
+  createBlock(plane, x, y, blockType, levelData = null) {
     var i,
       sprite = null,
       frameList,
@@ -2001,7 +1992,29 @@ module.exports = class LevelView {
         });
         break;
 
+      //pelican
+      case "redstone_wire":
+        this.determineRedstoneSprite(x, y, blockType, levelData);
+      
+      
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("TNTexplosion", 0, 8, "", 0);
+        sprite.animations.add("explode", frameList, 7, false).onComplete.add(() => {
+          this.playExplosionCloudAnimation([x, y]);
+          sprite.kill();
+          this.toDestroy.push(sprite);
+          this.actionPlaneBlocks[this.coordinatesToIndex([x, y])] = null;
+        });
+        break;
+
       default:
+        if (this.blocks[blockType] === undefined) {
+            console.log("what?");
+        }
         atlas = this.blocks[blockType][0];
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
@@ -2009,8 +2022,105 @@ module.exports = class LevelView {
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         break;
     }
-
     return sprite;
+  }
+  
+  determineRedstoneSprite(x, y, blockType, levelData) {
+        let foundAbove = false;
+        let foundBelow = false;
+        let foundRight = false;
+        let foundLeft = false;
+        let belowIndex = (this.yToIndex(y + 1)) + x;
+        let aboveIndex = (this.yToIndex(y - 1)) + x;
+        let leftIndex = (this.yToIndex(y)) + x - 1;
+        let rightIndex = (this.yToIndex(y)) + x + 1;
+        
+        let borderCount = 0;
+        
+        //need to ensure these are in bounds
+        if (y === levelData.planeHeight) {
+            foundBelow = false;
+        } else {
+            if (levelData.actionPlane[belowIndex].blockType === "redstone_wire") {
+                foundBelow = true;
+                ++borderCount;
+            }
+        }
+        if (y === 0) {
+            foundAbove = false;
+        } else {
+            if (levelData.actionPlane[aboveIndex].blockType === "redstone_wire") {
+                foundAbove = true;
+                ++borderCount;
+            }
+        }
+        if (x === levelData.planeWidth) {
+            foundRight = false;
+        } else {
+            if (levelData.actionPlane[rightIndex].blockType === "redstone_wire") {
+                foundRight = true;
+                ++borderCount;
+            }
+        }
+        if (x === 0) {
+            foundLeft = false;
+        } else {
+            if (levelData.actionPlane[leftIndex].blockType === "redstone_wire") {
+                foundLeft = true;
+                ++borderCount;
+            }
+        }
+        
+        if(borderCount === 0) {
+            //no connecting redstone wire
+            this.blocks[blockType][1] = "Redstone_Dust";
+        } else if (borderCount === 1) {
+            if (foundBelow || foundAbove) {
+                this.blocks[blockType][1] = "Redstone_Dust_Vertical";
+            } else if (foundLeft || foundRight) {
+                this.blocks[blockType][1] = "Redstone_Dust_Horizontal";
+            }
+        } else if (borderCount === 2) {
+            if ((foundBelow || foundAbove) && !foundRight && !foundLeft){
+                //purely vertical, no left or right
+                this.blocks[blockType][1] = "Redstone_Dust_Vertical";
+            } else if ((foundRight || foundLeft) && !foundBelow && !foundAbove){
+                //purely horizontal, no above or below
+                this.blocks[blockType][1] = "Redstone_Dust_Horizontal";
+            } else {
+                this.blocks[blockType][1] = "Redstone_Dust_Corner";
+                //we have a corner and will need to rotate
+                if (foundBelow) {
+                    //if we have a blow, the other has to be right or left
+                    if (foundLeft) {
+                        //rotate  corner if e can rotate, or reference bottom|left corner sprite
+                    } else {
+                        //rotate  corner if e can rotate, or reference bottom|right corner sprite
+                    }
+                } else {
+                    //if not below, then above + left or right
+                    if (foundLeft) {
+                        //rotate  corner if e can rotate, or reference top|left corner sprite
+                    } else {
+                        //rotate  corner if e can rotate, or reference top|right corner sprite
+                    }
+                }
+            }
+        } else if (borderCount === 3) {
+            this.blocks[blockType][1] = "Redstone_Dust_T";
+            if (!foundBelow) {
+                //rotate T or use no-below T sprite
+            } else if (!foundAbove) {
+                //rotate T or use no-above T sprite
+            } else if (!foundLeft) {
+                //rotate T or use no-left T sprite
+            } else if (!foundRight) {
+                //rotate T or use no-right T sprite
+            }
+        } else if (borderCount === 4) {
+            //all four sides connected: Cross
+            this.blocks[blockType][1] = "Redstone_Dust_Cross";
+        }
   }
 
   isUnderTree(treeIndex, position) {
@@ -2058,8 +2168,9 @@ module.exports = class LevelView {
 
   addResettableTween(sprite) {
     var tween = this.game.add.tween(sprite);
-    tween.timeScale = this.controller.tweenTimeScale;
     this.resettableTweens.push(tween);
     return tween;
   }
-};
+
+
+}

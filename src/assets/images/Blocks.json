@@ -736,6 +736,62 @@
 	"spriteSourceSize": {"x":13,"y":2,"w":40,"h":60},
 	"sourceSize": {"w":64,"h":64}
 },
+"Redstone_Dust_Vertical":
+{
+	"frame": {"x":558,"y":0,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":22,"w":41,"h":40},
+	"sourceSize": {"w":64,"h":64}
+},
+"Redstone_Dust_Horizontal":
+{
+	"frame": {"x":558,"y":60,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":22,"w":41,"h":40},
+	"sourceSize": {"w":64,"h":64}
+},
+"Redstone_Dust_Corner":
+{
+	"frame": {"x":558,"y":120,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":22,"w":41,"h":40},
+	"sourceSize": {"w":64,"h":64}
+},
+"Redstone_Dust_Cross":
+{
+	"frame": {"x":558,"y":180,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":22,"w":41,"h":40},
+	"sourceSize": {"w":64,"h":64}
+},
+"Redstone_Dust_T":
+{
+	"frame": {"x":558,"y":240,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":22,"w":41,"h":40},
+	"sourceSize": {"w":64,"h":64}
+},
+"Redstone_Dust":
+{
+	"frame": {"x":558,"y":300,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":22,"w":41,"h":40},
+	"sourceSize": {"w":64,"h":64}
+},
+"Redstone_Dust_Line":
+{
+	"frame": {"x":558,"y":360,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":22,"w":41,"h":40},
+	"sourceSize": {"w":64,"h":64}
+},
 "Reeds":
 {
 	"frame": {"x":0,"y":0,"w":58,"h":79},
