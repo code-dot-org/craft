@@ -744,6 +744,94 @@
 	"spriteSourceSize": {"x":12,"y":22,"w":41,"h":40},
 	"sourceSize": {"w":64,"h":64}
 },
+"Redstone_Dust_Horizontal":
+{
+	"frame": {"x":558,"y":60,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":22,"w":41,"h":40},
+	"sourceSize": {"w":64,"h":64}
+},
+"Redstone_Dust_Corner_UpRight":
+{
+	"frame": {"x":558,"y":120,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":22,"w":41,"h":40},
+	"sourceSize": {"w":64,"h":64}
+},
+"Redstone_Dust_Cross":
+{
+	"frame": {"x":558,"y":180,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":22,"w":41,"h":40},
+	"sourceSize": {"w":64,"h":64}
+},
+"Redstone_Dust_TDown":
+{
+	"frame": {"x":558,"y":240,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":22,"w":41,"h":40},
+	"sourceSize": {"w":64,"h":64}
+},
+"Redstone_Dust":
+{
+	"frame": {"x":558,"y":300,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":22,"w":41,"h":40},
+	"sourceSize": {"w":64,"h":64}
+},
+"Redstone_Dust_Corner_DownRight":
+{
+	"frame": {"x":558,"y":360,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":22,"w":41,"h":40},
+	"sourceSize": {"w":64,"h":64}
+},
+"Redstone_Dust_Corner_DownLeft":
+{
+	"frame": {"x":558,"y":420,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":22,"w":41,"h":40},
+	"sourceSize": {"w":64,"h":64}
+},
+"Redstone_Dust_Corner_UpLeft":
+{
+	"frame": {"x":558,"y":480,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":22,"w":41,"h":40},
+	"sourceSize": {"w":64,"h":64}
+},
+"Redstone_Dust_TLeft":
+{
+	"frame": {"x":608,"y":0,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":22,"w":41,"h":40},
+	"sourceSize": {"w":64,"h":64}
+},
+"Redstone_Dust_TUp":
+{
+	"frame": {"x":608,"y":60,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":22,"w":41,"h":40},
+	"sourceSize": {"w":64,"h":64}
+},
+"Redstone_Dust_TRight":
+{
+	"frame": {"x":608,"y":120,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":22,"w":41,"h":40},
+	"sourceSize": {"w":64,"h":64}
+},
 "Reeds":
 {
 	"frame": {"x":0,"y":0,"w":58,"h":79},
