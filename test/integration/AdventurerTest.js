@@ -63,7 +63,10 @@ const attempt = (level, commands) => {
     afterAssetsLoaded: () => {
       const api = gameController.codeOrgAPI;
       api.resetAttempt();
-      commands(api);
+      commands(api).then(() => {
+        // Clean up.
+        gameController.game.destroy();
+      });
     },
   });
 
@@ -71,17 +74,19 @@ const attempt = (level, commands) => {
 };
 
 test('Adventurer 1: Move to Sheep (fail)', t => {
-  attempt(1, api => {
+  attempt(1, api => new Promise(resolve => {
     api.startAttempt((success, levelModel) => {
       t.deepEqual(levelModel.player.position, [3, 4]);
       t.false(success);
       t.end();
+
+      resolve();
     });
-  });
+  }));
 });
 
 test('Adventurer 1: Move to Sheep (pass)', t => {
-  attempt(1, api => {
+  attempt(1, api => new Promise(resolve => {
     api.moveForward(null, 'Player');
     api.moveForward(null, 'Player');
 
@@ -89,12 +94,14 @@ test('Adventurer 1: Move to Sheep (pass)', t => {
       t.deepEqual(levelModel.player.position, [5, 4]);
       t.assert(success);
       t.end();
+
+      resolve();
     });
-  });
+  }));
 });
 
 test('Adventurer 2: Chop Tree', t => {
-  attempt(2, api => {
+  attempt(2, api => new Promise(resolve => {
     api.moveForward(null, 'Player');
     api.moveForward(null, 'Player');
     api.destroyBlock(null, 'Player');
@@ -103,12 +110,14 @@ test('Adventurer 2: Chop Tree', t => {
       t.deepEqual(levelModel.player.position, [4, 5]);
       t.assert(success);
       t.end();
+
+      resolve();
     });
-  });
+  }));
 });
 
 test('Adventurer 3: Shear Sheep', t => {
-  attempt(3, api => {
+  attempt(3, api => new Promise(resolve => {
     api.moveForward(null, 'Player');
     api.moveForward(null, 'Player');
     api.use(null, 'Player');
@@ -120,12 +129,14 @@ test('Adventurer 3: Shear Sheep', t => {
       t.deepEqual(levelModel.player.position, [4, 4]);
       t.assert(success);
       t.end();
+
+      resolve();
     });
-  });
+  }));
 });
 
 test('Adventurer 4: Chop Trees', t => {
-  attempt(4, api => {
+  attempt(4, api => new Promise(resolve => {
     for (let i = 0; i < 3; i++) {
       api.moveForward(null, 'Player');
       api.moveForward(null, 'Player');
@@ -138,6 +149,8 @@ test('Adventurer 4: Chop Trees', t => {
       t.deepEqual(levelModel.player.position, [3, 4]);
       t.assert(success);
       t.end();
+
+      resolve();
     });
-  });
+  }));
 });
