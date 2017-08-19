@@ -9,7 +9,7 @@ const LevelView = require("./LevelMVC/LevelView.js");
 const LevelEntity = require("./LevelMVC/LevelEntity.js");
 const AssetLoader = require("./LevelMVC/AssetLoader.js");
 
-import * as CodeOrgAPI from "./API/CodeOrgAPI.js";
+const CodeOrgAPI = require("./API/CodeOrgAPI.js");
 
 var GAME_WIDTH = 400;
 var GAME_HEIGHT = 400;

@@ -5,8 +5,8 @@
   "main": "build/js/app.bundled.js",
   "scripts": {
     "test:unit": "./node_modules/.bin/tape ./test/unit/*.js | ./node_modules/.bin/tap-diff",
-    "test:unit": "./node_modules/.bin/tape ./test/unit/*.js",
-    "test": "npm run lint && npm run test:unit",
+    "test:integration": "./node_modules/.bin/karma start",
+    "test": "npm run lint && npm run test:unit && npm run test:integration",
     "lint": "eslint --ext .js,.jsx src/js"
   },
   "repository": {
@@ -34,6 +34,10 @@
     "grunt-contrib-watch": "*",
     "grunt-ejs": "^0.3.0",
     "grunt-open": "*",
+    "karma": "^1.7.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-browserify": "^5.1.1",
+    "karma-tap": "^3.1.1",
     "tap-diff": "^0.1.1",
     "tape": "^4.8.0"
   }
