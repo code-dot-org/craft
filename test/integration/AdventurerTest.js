@@ -16,7 +16,7 @@ const levels = [{
   groundPlane: ["grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
   groundDecorationPlane: ["","","","","","","","","","","","","","","","","","","flowerRose","","","tallGrass","","","","","","","","tallGrass","","","tallGrass","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","tallGrass","flowerRose","","","","","","","",""],
   actionPlane: ["grass","grass","","","","","","","grass","grass","grass","grass","","","","","","","","grass","grass","","","treeOak","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","treeBirch","","",""],
-  entities: [['sheep', 5, 4, 1]],
+  entities: [['sheep', 6, 4, 1]],
   playerStartPosition: [3, 4],
   playerStartDirection: 1,
   verificationFunction: verificationAPI => {
@@ -24,7 +24,7 @@ const levels = [{
   },
 }];
 
-const attempt = (levelData, check) => {
+const attempt = (levelData, runCommands, check) => {
   const gameController = new GameController({
     Phaser: window.Phaser,
     assetRoot: '/base/src/assets/',
@@ -37,6 +37,7 @@ const attempt = (levelData, check) => {
     afterAssetsLoaded: () => {
       const api = gameController.codeOrgAPI;
       api.resetAttempt();
+      runCommands(api);
       api.startAttempt(check);
     },
   });
@@ -45,9 +46,21 @@ const attempt = (levelData, check) => {
 };
 
 test('Adventurer 1: Move to Sheep (fail)', t => {
-  attempt(levels[0], (success, levelModel) => {
+  attempt(levels[0], api => {
+  }, (success, levelModel) => {
     t.deepEqual(levelModel.player.position, [3, 4]);
     t.false(success);
+    t.end();
+  });
+});
+
+test('Adventurer 1: Move to Sheep (pass)', t => {
+  attempt(levels[0], api => {
+    api.moveForward(null, 'Player');
+    api.moveForward(null, 'Player');
+  }, (success, levelModel) => {
+    t.deepEqual(levelModel.player.position, [5, 4]);
+    t.assert(success);
     t.end();
   });
 });
