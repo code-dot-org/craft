@@ -19,12 +19,38 @@ const levels = [{
   entities: [['sheep', 6, 4, 1]],
   playerStartPosition: [3, 4],
   playerStartDirection: 1,
-  verificationFunction: verificationAPI => {
-    return verificationAPI.isPlayerNextTo("sheep");
-  },
+  verificationFunction: verificationAPI =>
+    verificationAPI.isPlayerNextTo("sheep"),
+}, {
+  groundPlane: ["grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
+  groundDecorationPlane: ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","tallGrass","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","tallGrass","","","","","","","","",""],
+  actionPlane: ["","","","","","","grass","grass","grass","grass","grass","grass","","","","","","","","","grass","grass","","","","","","","","","grass","grass","","","","","","","","","grass","grass","","","treeSpruce","","","","","","grass","","","","","","","","","","grass","","","","","","","","","","","","","","","","","","","grass","","","","","","","","","grass","grass","grass","grass","","","","","","","grass","grass"],
+  playerStartPosition: [4, 7],
+  playerStartDirection: 0,
+  verificationFunction: verificationAPI =>
+    verificationAPI.countOfTypeOnMap("treeSpruce") === 0,
+}, {
+  groundPlane: ["grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","dirt","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","dirt","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt"],
+  groundDecorationPlane: ["","","","","","","","","","","","flowerRose","","","tallGrass","","","","","","","","","tallGrass","","","","","tallGrass","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","flowerDandelion","","","","","","","","","tallGrass","","","","tallGrass","","tallGrass","flowerRose","","","","","tallGrass",""],
+  actionPlane: ["grass","grass","grass","grass","","","","","","","","","grass","grass","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","grass","","","","","","","","","","grass","","treeOak","","","","","","","","grass","","","","","","","","",""],
+  entities: [["sheep", 5, 3, 3], ["sheep", 4, 5, 3]],
+  playerStartPosition: [2, 3],
+  playerStartDirection: 1,
+  verificationFunction: verificationAPI =>
+    verificationAPI.getInventoryAmount("wool") >= 2,
+}, {
+  groundPlane: ["grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","dirt","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
+  groundDecorationPlane: ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","tallGrass","","","","","","","","","","","flowerOxeeye","","","","","","","","","flowerDandelion","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","tallGrass","","","","","","","","flowerRose","","tallGrass","tallGrass","","","","","","tallGrass","","flowerOxeeye"],
+  actionPlane: ["","grass","grass","grass","grass","grass","grass","grass","grass","grass","","","","","grass","grass","grass","grass","grass","grass","","","","","","","","","","","","","","","","","treeSpruce","","","","","","treeOak","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","treeBirch","","","","","","","","","","","","","","","","","","","","","",""],
+  playerStartPosition: [3, 7],
+  playerStartDirection: 1,
+  verificationFunction: verificationAPI =>
+    verificationAPI.getInventoryAmount("planksBirch") === 1 &&
+    verificationAPI.getInventoryAmount("planksSpruce") === 1 &&
+    verificationAPI.getInventoryAmount("planksOak") === 1,
 }];
 
-const attempt = (levelData, runCommands, check) => {
+const attempt = (level, commands) => {
   const gameController = new GameController({
     Phaser: window.Phaser,
     assetRoot: '/base/src/assets/',
@@ -37,30 +63,81 @@ const attempt = (levelData, runCommands, check) => {
     afterAssetsLoaded: () => {
       const api = gameController.codeOrgAPI;
       api.resetAttempt();
-      runCommands(api);
-      api.startAttempt(check);
+      commands(api);
     },
   });
 
-  gameController.loadLevel(Object.assign({}, defaults, levelData));
+  gameController.loadLevel(Object.assign({}, defaults, levels[level - 1]));
 };
 
 test('Adventurer 1: Move to Sheep (fail)', t => {
-  attempt(levels[0], api => {
-  }, (success, levelModel) => {
-    t.deepEqual(levelModel.player.position, [3, 4]);
-    t.false(success);
-    t.end();
+  attempt(1, api => {
+    api.startAttempt((success, levelModel) => {
+      t.deepEqual(levelModel.player.position, [3, 4]);
+      t.false(success);
+      t.end();
+    });
   });
 });
 
 test('Adventurer 1: Move to Sheep (pass)', t => {
-  attempt(levels[0], api => {
+  attempt(1, api => {
     api.moveForward(null, 'Player');
     api.moveForward(null, 'Player');
-  }, (success, levelModel) => {
-    t.deepEqual(levelModel.player.position, [5, 4]);
-    t.assert(success);
-    t.end();
+
+    api.startAttempt((success, levelModel) => {
+      t.deepEqual(levelModel.player.position, [5, 4]);
+      t.assert(success);
+      t.end();
+    });
+  });
+});
+
+test('Adventurer 2: Chop Tree', t => {
+  attempt(2, api => {
+    api.moveForward(null, 'Player');
+    api.moveForward(null, 'Player');
+    api.destroyBlock(null, 'Player');
+
+    api.startAttempt((success, levelModel) => {
+      t.deepEqual(levelModel.player.position, [4, 5]);
+      t.assert(success);
+      t.end();
+    });
+  });
+});
+
+test('Adventurer 3: Shear Sheep', t => {
+  attempt(3, api => {
+    api.moveForward(null, 'Player');
+    api.moveForward(null, 'Player');
+    api.use(null, 'Player');
+    api.turnRight(null, 'Player');
+    api.moveForward(null, 'Player');
+    api.use(null, 'Player');
+
+    api.startAttempt((success, levelModel) => {
+      t.deepEqual(levelModel.player.position, [4, 4]);
+      t.assert(success);
+      t.end();
+    });
+  });
+});
+
+test('Adventurer 4: Chop Trees', t => {
+  attempt(4, api => {
+    for (let i = 0; i < 3; i++) {
+      api.moveForward(null, 'Player');
+      api.moveForward(null, 'Player');
+      api.moveForward(null, 'Player');
+      api.destroyBlock(null, 'Player');
+      api.turnLeft(null, 'Player');
+    }
+
+    api.startAttempt((success, levelModel) => {
+      t.deepEqual(levelModel.player.position, [3, 4]);
+      t.assert(success);
+      t.end();
+    });
   });
 });

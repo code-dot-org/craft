@@ -131,6 +131,7 @@ class GameController {
     this.timeoutResult = levelConfig.timeoutResult;
     this.onDayCallback = levelConfig.onDayCallback;
     this.onNightCallback = levelConfig.onNightCallback;
+
     this.game.state.start('levelRunner');
   }
 
@@ -159,6 +160,18 @@ class GameController {
     this.score = 0;
     if (this.useScore) {
       this.updateScore();
+    }
+
+    if (!this.levelData.isEventLevel) {
+      this.events.push(event => {
+        if (event.eventType === EventType.WhenUsed && event.targetType === 'sheep') {
+          this.codeOrgAPI.drop(null, 'wool', event.targetIdentifier);
+        }
+        if (event.eventType === EventType.WhenTouched && event.targetType === 'creeper') {
+          this.codeOrgAPI.flashEntity(null, event.targetIdentifier);
+          this.codeOrgAPI.explodeEntity(null, event.targetIdentifier);
+        }
+      });
     }
 
     this.initializeCommandRecord();
