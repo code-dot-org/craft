@@ -1,9 +1,31 @@
 const test = require("tape");
-
 const GameController = require("../../src/js/game/GameController");
 
-test('Adventurer 1: Move to Sheep', t => {
-  gameController = new GameController({
+const defaults = {
+  assetPacks: {
+    beforeLoad: ['allAssetsMinusPlayer', 'playerAlex'],
+    afterLoad: [],
+  },
+  gridDimensions: [10, 10],
+  fluffPlane: ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],
+  playerName: 'Alex',
+  verificationFunction: verificationAPI => {},
+};
+
+const levels = [{
+  groundPlane: ["grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
+  groundDecorationPlane: ["","","","","","","","","","","","","","","","","","","flowerRose","","","tallGrass","","","","","","","","tallGrass","","","tallGrass","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","tallGrass","flowerRose","","","","","","","",""],
+  actionPlane: ["grass","grass","","","","","","","grass","grass","grass","grass","","","","","","","","grass","grass","","","treeOak","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","treeBirch","","",""],
+  entities: [['sheep', 5, 4, 1]],
+  playerStartPosition: [3, 4],
+  playerStartDirection: 1,
+  verificationFunction: verificationAPI => {
+    return verificationAPI.isPlayerNextTo("sheep");
+  },
+}];
+
+const attempt = (levelData, check) => {
+  const gameController = new GameController({
     Phaser: window.Phaser,
     assetRoot: '/base/src/assets/',
     audioPlayer: {
@@ -15,29 +37,17 @@ test('Adventurer 1: Move to Sheep', t => {
     afterAssetsLoaded: () => {
       const api = gameController.codeOrgAPI;
       api.resetAttempt();
-      api.startAttempt((success, levelModel) => {
-        t.false(success);
-        t.end();
-      });
-    }
+      api.startAttempt(check);
+    },
   });
 
-  gameController.loadLevel({
-    assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerAlex'],
-      afterLoad: [],
-    },
-    gridDimensions: [10, 10],
-    groundPlane: ["grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
-    groundDecorationPlane: ["","","","","","","","","","","","","","","","","","","flowerRose","","","tallGrass","","","","","","","","tallGrass","","","tallGrass","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","tallGrass","flowerRose","","","","","","","",""],
-    actionPlane: ["grass","grass","","","","","","","grass","grass","grass","grass","","","","","","","","grass","grass","","","treeOak","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","treeBirch","","",""],
-    fluffPlane: ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],
-    entities: [['sheep', 5, 4, 1]],
-    playerStartPosition: [3, 4],
-    playerStartDirection: 1,
-    playerName: 'Alex',
-    verificationFunction: verificationAPI => {
-      return verificationAPI.isPlayerNextTo("sheep");
-    },
+  gameController.loadLevel(Object.assign({}, defaults, levelData));
+};
+
+test('Adventurer 1: Move to Sheep (fail)', t => {
+  attempt(levels[0], (success, levelModel) => {
+    t.deepEqual(levelModel.player.position, [3, 4]);
+    t.false(success);
+    t.end();
   });
 });
