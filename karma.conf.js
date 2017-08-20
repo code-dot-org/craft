@@ -30,7 +30,6 @@ module.exports = config => {
     coverageReporter: {
       dir: 'coverage/integration',
       reporters: [
-        {type: 'html'},
         {type: 'lcovonly'},
       ],
     },
