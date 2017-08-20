@@ -31,6 +31,9 @@ Icon?
 # nodejs npm modules
 /node_modules
 
+# Code coverage
+/coverage
+
 # ZSH Cake plugin cache
 /.cake_task_cache
 
