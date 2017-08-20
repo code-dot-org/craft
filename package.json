@@ -21,6 +21,7 @@
   "devDependencies": {
     "babelify": "^6.3.0",
     "browserify": "^10.2.4",
+    "browserify-istanbul": "^2.0.0",
     "browserify-shim": "^3.8.9",
     "codecov": "^2.3.0",
     "eslint": "^2.8.0",
@@ -37,8 +38,9 @@
     "grunt-ejs": "^0.3.0",
     "grunt-open": "*",
     "karma": "^1.7.0",
-    "karma-chrome-launcher": "^2.2.0",
     "karma-browserify": "^5.1.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "^1.1.1",
     "karma-tap": "^3.1.1",
     "istanbul": "^0.4.5",
     "tape": "^4.8.0"
