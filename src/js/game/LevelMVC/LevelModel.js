@@ -638,10 +638,15 @@ module.exports = class LevelModel {
 
   canMoveForward(entity = this.player) {
     let blockForwardPosition = this.getMoveForwardPosition(entity);
-    return this.isPositionEmpty(blockForwardPosition);
+    if (entity.type === "Agent") {
+        return this.isPositionEmpty(blockForwardPosition);
+    } else {
+        return this.isPositionEmpty(blockForwardPosition, false);
+    }
+
   }
 
-  isPositionEmpty(position) {
+  isPositionEmpty(position, isAgent = true) {
     var result = [false,];
     let blockIndex = this.yToIndex(position[1]) + position[0];
     let [x, y] = [position[0], position[1]];
@@ -651,37 +656,25 @@ module.exports = class LevelModel {
         result.push("notWalkable");
       }
       if (!this.actionPlane[blockIndex].isEmpty) {
-        if (this.player.isOnBlock) {
-          return [true];
-        }
         result.push("notEmpty");
       }
-      // Only prevent walking into water/lava in "Events" levels.
       if (this.groundPlane[blockIndex].blockType === "water") {
-        if (this.controller.levelData.isEventLevel) {
-          result.push("water");
-        } else {
-          return [true];
-        }
+        result.push("water");
       } else if (this.groundPlane[blockIndex].blockType === "lava") {
-        if (this.controller.levelData.isEventLevel) {
-          result.push("lava");
-        } else {
-          return [true];
-        }
+        result.push("lava");
       }
       var frontEntity = this.getEntityAt(position);
       if (frontEntity !== undefined) {
         result.push("frontEntity");
         result.push(frontEntity);
       }
-      result[0] = (this.actionPlane[blockIndex].isWalkable || ((frontEntity !== undefined && frontEntity.isOnBlock)
+      result[0] = (((this.actionPlane[blockIndex].isWalkable || (frontEntity !== undefined && frontEntity.isOnBlock))
         // action plane is empty
-        && !this.actionPlane[blockIndex].isEmpty))
+        || this.actionPlane[blockIndex].isEmpty)
         // there is no entity
         && (frontEntity === undefined)
         // no lava or water
-        && (this.groundPlane[blockIndex].blockType !== "water" && this.groundPlane[blockIndex].blockType !== "lava");
+        && (isAgent || (this.groundPlane[blockIndex].blockType !== "water" && this.groundPlane[blockIndex].blockType !== "lava")));
     } else {
       result.push("outBound");
     }
