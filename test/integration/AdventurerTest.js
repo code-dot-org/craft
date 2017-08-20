@@ -127,6 +127,62 @@ const levels = [{
   verificationFunction: verificationAPI =>
     verificationAPI.getInventoryAmount("oreCoal") >= 2 &&
     verificationAPI.countOfTypeOnMap("torch") >= 2,
+}, {
+  groundPlane: ["stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","lava","stone","stone","stone","stone","stone","lava","stone","stone","lava","lava","lava","lava","lava","lava","lava","lava","lava","lava","stone","stone","stone","stone","stone","stone","stone","lava","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone"],
+  groundDecorationPlane: ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","lavaPop","","","torch","","","","","","","","","","lavaPop","","","","lavaPop","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],
+  actionPlane: ["stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","oreIron","oreIron","oreIron","stone","stone","stone","stone","stone","stone","stone","oreIron","oreIron","oreIron","stone","stone","stone","stone","stone","","","","","","","","","stone","","","","","","","","","","","stone","stone","stone","","","","","","stone","stone","","","","","","stone","stone","","stone","stone","stone","","","","","","","","stone","stone","stone","stone","","","","","","","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone"],
+  playerStartPosition: [3, 6],
+  playerStartDirection: 0,
+  verificationFunction: verificationAPI =>
+    verificationAPI.getInventoryAmount("oreIron") >= 2,
+}, {
+  groundPlane: ["stone","stone","stone","stone","stone","stone","stone","lava","stone","stone","stone","stone","stone","stone","stone","stone","lava","lava","stone","stone","stone","stone","stone","stone","stone","stone","lava","lava","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","lava","stone","lava","lava","stone","stone","lava","stone","stone","lava","stone","lava","stone","stone","lava","lava","stone","lava","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone"],
+  groundDecorationPlane: ["","","","","","","","","","","","","","","","","","lavaPop","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","lavaPop","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],
+  actionPlane: ["stone","stone","stone","stone","stone","stone","stone","","stone","stone","stone","stone","","","","","","","stone","stone","stone","","","","","","","","stone","stone","stone","","","","","","","","stone","stone","stone","","stone","stone","oreCoal","oreCoal","stone","oreIron","oreIron","stone","stone","","","","","","","","","","stone","","","","","","stone","","stone","stone","stone","stone","","","stone","","","","stone","stone","stone","stone","","","stone","stone","","","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone"],
+  playerStartPosition: [1, 4],
+  playerStartDirection: 1,
+  verificationFunction: verificationAPI =>
+    verificationAPI.countOfTypeOnMap("oreIron") === 0 &&
+    verificationAPI.countOfTypeOnMap("oreCoal") === 0,
+}, {
+  groundPlane: ["stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","lava","stone","lava","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","lava","stone","stone","stone","stone","lava","lava","lava","lava","stone","stone","stone","stone","stone","stone","lava","lava","lava","lava","stone","lava","stone","stone","stone","stone","lava","stone","stone","stone","lava","stone","stone","stone","stone","lava","lava","stone","stone","stone","stone","lava","stone","stone","lava","lava","stone","stone","stone","stone","stone","stone","stone","stone","lava","lava","stone","stone","stone","stone","stone","stone","stone","stone","lava","lava","stone","stone","stone","stone","stone","stone","stone","stone"],
+  groundDecorationPlane: ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","lavaPop","","","","","","","","","","","","","","","","","","","","","","","","","","","lavaPop","","","","","","","","lavaPop","","","","","","","","","","","","","","","","","","","","","lavaPop","","","","","","","",""],
+  actionPlane: ["stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","","stone","oreRedstone","oreDiamond","stone","oreRedstone","stone","stone","stone","","","oreRedstone","","","oreRedstone","oreRedstone","stone","stone","stone","","","","","","","oreDiamond","stone","stone","","","","","","","","stone","stone","stone","","","","","","","oreRedstone","stone","stone","stone","","","","stone","stone","stone","oreRedstone","stone","stone","stone","","","","","","","","","stone","stone","","","","","","","","","stone","stone","","","stone","stone","stone","stone","stone","stone","stone","stone"],
+  playerStartPosition: [3, 5],
+  playerStartDirection: 1,
+  verificationFunction: verificationAPI =>
+    verificationAPI.getInventoryAmount("oreRedstone") >= 3,
+}, {
+  specialLevelType: "minecart",
+  groundPlane: ["grass","grass","planksBirch","grass","grass","planksBirch","grass","grass","grass","grass","grass","grass","planksBirch","planksBirch","planksBirch","planksBirch","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","water","dirt","water","water","grass","grass","grass","grass","grass","grass","water","dirt","water","water","water","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","dirt","dirt","dirt","dirt","dirt","dirt","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
+  groundDecorationPlane: ["tallGrass","tallGrass","","","","","","tallGrass","","","","flowerOxeeye","","","","","tallGrass","","","","","","","","","","","","tallGrass","flowerDandelion","","tallGrass","","","","","","","","","tallGrass","","","","","","tallGrass","","","","","","","","","","","","","","","","tallGrass","","","tallGrass","","","","","","","","","","","","","","","","","","","","","tallGrass","","","tallGrass","","","","","","","","","tallGrass","flowerRose"],
+  actionPlane: ["","","planksBirch","","","planksBirch","","","","","","","planksBirch","","planksBirch","planksBirch","","","","","","","railsRedstoneTorch","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","treeOak","","","","","","","","","","","","","","","","","","","","","","treeBirch","","","","","","","","","","","","","","","","","","",""],
+  playerStartPosition: [9, 7],
+  playerStartDirection: 2,
+  verificationFunction: verificationAPI =>
+    verificationAPI.solutionMapMatchesResultMap([
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "any", "", "", "", "", "", "",
+      "", "", "", "any", "", "", "", "", "", "",
+      "", "", "", "any", "", "", "", "", "", "",
+      "", "", "", "any", "", "", "", "", "", "",
+      "", "", "", "any", "", "", "", "", "", "",
+      "", "", "", "any", "any", "any", "any", "any", "any", "any",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", ""
+    ]),
+}, {
+  specialLevelType: "freeplay",
+  gridDimensions: [20, 20],
+  groundPlane: ["grass","grass","grass","grass","dirt","dirt","grass","grass","grass","water","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","water","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","water","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","water","water","water","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","water","grass","water","water","water","water","grass","grass","water","water","water","water","water","grass","grass","grass","grass","grass","grass","water","water","grass","grass","grass","grass","water","water","water","water","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","water","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","water","water","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","water","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","dirt","water","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","dirt","dirt","dirt","grass","grass","grass","grass","grass","water","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","dirt","dirt","dirt","grass","dirt","grass","grass","grass","water","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","dirt","dirt","dirt","grass","grass","grass","grass","grass","water","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","dirt","dirt","dirt","grass","dirt","dirt","grass","grass","water","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","water","water","water","water","water","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","dirt","grass","dirt","grass","water","grass","grass","grass","water","water","water","water","water","water","water","stone","lava","lava","lava","grass","grass","grass","grass","grass","water","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","lava","grass","grass","grass","grass","grass","dirt","grass","grass","water","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","lava","grass","grass","grass","dirt","grass","grass","grass","grass","water","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","lava","grass","grass","grass","grass","grass","grass","grass","grass","water","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","lava","grass","grass","grass"],
+  groundDecorationPlane: ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],
+  actionPlane: ["oreLapis","oreLapis","stone","stone","stone","stone","stone","oreIron","oreIron","","oreRedstone","oreRedstone","oreRedstone","stone","","stone","stone","oreIron","oreGold","oreGold","oreLapis","oreCoal","","stone","oreIron","oreIron","","stone","","","stone","oreRedstone","stone","stone","","","","stone","stone","oreGold","oreCoal","stone","","","","","","","","","","stone","","stone","","","","","","","stone","","","","","","treeOak","","","","","","","","","","treeOak","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","treeBirch","","","","","","","","","","treeBirch","","","","","","","","","","","","","","","","treeSpruce","","","","","","","","","","treeSpruce","","","","","","","","","oreIron","","","","","","","","","","","","","","treeOak","","","","","","stone","oreIron","","","","","","","","","","","","","","","treeSpruce","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","treeOak","","","","","","treeBirch","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","treeBirch","","","","","","","","oreDiamond","","","","","","","","treeSpruce","","","","","","","","","","","oreDiamond","oreDiamond","","","","","","","","","","","","","","","","","","","oreEmerald","oreLapis"],
+  fluffPlane: ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],
+  entities: [["sheep", 0, 18, 1], ["sheep", 1, 14, 1], ["sheep", 2, 17, 1], ["sheep", 3, 15, 1], ["sheep", 4, 18, 1]],
+  playerStartPosition: [10, 10],
+  playerStartDirection: 0,
+  verificationFunction: verificationAPI => true,
 }];
 
 const attempt = (level, commands) => {
@@ -344,6 +400,123 @@ test('Adventurer 9: Mining Coal', t => {
 
     api.startAttempt((success, levelModel) => {
       t.deepEqual(levelModel.player.position, [3, 6]);
+      t.assert(success);
+      t.end();
+
+      resolve();
+    });
+  }));
+});
+
+test('Adventurer 10: Iron (fail)', t => {
+  attempt(10, api => new Promise(resolve => {
+    api.moveForward(null, 'Player');
+    api.moveForward(null, 'Player');
+
+    api.startAttempt((success, levelModel) => {
+      t.deepEqual(levelModel.player.position, [3, 4]);
+      t.assert(levelModel.isPlayerStandingInLava());
+      t.assert(!success);
+      t.end();
+
+      resolve();
+    });
+  }));
+});
+
+test('Adventurer 10: Iron (pass)', t => {
+  attempt(10, api => new Promise(resolve => {
+    api.moveForward(null, 'Player');
+    api.placeInFront(null, 'cobblestone', 'Player');
+    for (let i = 0; i < 3; i++) {
+      api.moveForward(null, 'Player');
+      api.destroyBlock(null, 'Player');
+    }
+
+    api.startAttempt((success, levelModel) => {
+      t.deepEqual(levelModel.player.position, [3, 2]);
+      t.assert(success);
+      t.end();
+
+      resolve();
+    });
+  }));
+});
+
+test('Adventurer 11: Avoiding Lava', t => {
+  attempt(11, api => new Promise(resolve => {
+    for (let i = 0; i < 7; i++) {
+      api.destroyBlock(null, 'Player');
+      api.ifBlockAhead(null, 'lava', 'Player', () => {
+        api.placeInFront(null, 'cobblestone', 'Player');
+      });
+      api.moveForward(null, 'Player');
+    }
+
+    api.startAttempt((success, levelModel) => {
+      t.deepEqual(levelModel.player.position, [8, 4]);
+      t.assert(success);
+      t.end();
+
+      resolve();
+    });
+  }));
+});
+
+test('Adventurer 12: If Statements', t => {
+  attempt(12, api => new Promise(resolve => {
+    for (let i = 0; i < 3; i++) {
+      api.moveForward(null, 'Player');
+      api.moveForward(null, 'Player');
+      api.destroyBlock(null, 'Player');
+      api.ifBlockAhead(null, 'lava', 'Player', () => {
+        api.placeInFront(null, 'cobblestone', 'Player');
+      });
+      api.moveForward(null, 'Player');
+      api.turnLeft(null, 'Player');
+    }
+
+    api.startAttempt((success, levelModel) => {
+      t.deepEqual(levelModel.player.position, [3, 2]);
+      t.assert(success);
+      t.end();
+
+      resolve();
+    });
+  }));
+});
+
+test('Adventurer 13: Powered Minecart', t => {
+  attempt(13, api => new Promise(resolve => {
+    for (let i = 0; i < 2; i++) {
+      api.turnRight(null, 'Player');
+      for (let j = 0; j < 6; j++) {
+        api.placeBlock(null, 'rail', 'Player');
+        api.moveForward(null, 'Player');
+      }
+    }
+
+    api.startAttempt((success, levelModel) => {
+      t.deepEqual(levelModel.player.position, [3, 1]);
+      t.assert(success);
+      t.end();
+
+      resolve();
+    });
+  }));
+});
+
+test('Adventurer 14: Free Play 20x20', t => {
+  attempt(14, api => new Promise(resolve => {
+    api.moveForward(null, 'Player');
+    api.turnLeft(null, 'Player');
+    api.moveForward(null, 'Player');
+    api.moveForward(null, 'Player');
+    api.moveForward(null, 'Player');
+    api.placeBlock(null, 'tnt', 'Player');
+
+    api.startAttempt((success, levelModel) => {
+      t.deepEqual(levelModel.player.position, [7, 9]);
       t.assert(success);
       t.end();
 
