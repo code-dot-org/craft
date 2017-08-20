@@ -10,9 +10,16 @@ module.exports = config => {
     preprocessors: {
       'test/integration/*.js': ['browserify']
     },
+
+    // Run headless unless WATCH=1.
     browsers: [
       process.env['WATCH'] ? 'Chrome' : 'ChromeHeadless'
     ],
-    singleRun: !process.env['WATCH']
+
+    // Run and exit unless WATCH=1.
+    singleRun: !process.env['WATCH'],
+
+    // 30 seconds.
+    browserNoActivityTimeout: 30 * 1000,
   })
 };
