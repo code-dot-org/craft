@@ -9,7 +9,7 @@ const LevelView = require("./LevelMVC/LevelView.js");
 const LevelEntity = require("./LevelMVC/LevelEntity.js");
 const AssetLoader = require("./LevelMVC/AssetLoader.js");
 
-import * as CodeOrgAPI from "./API/CodeOrgAPI.js";
+const CodeOrgAPI = require("./API/CodeOrgAPI.js");
 
 var GAME_WIDTH = 400;
 var GAME_HEIGHT = 400;
@@ -131,6 +131,7 @@ class GameController {
     this.timeoutResult = levelConfig.timeoutResult;
     this.onDayCallback = levelConfig.onDayCallback;
     this.onNightCallback = levelConfig.onNightCallback;
+
     this.game.state.start('levelRunner');
   }
 
@@ -159,6 +160,18 @@ class GameController {
     this.score = 0;
     if (this.useScore) {
       this.updateScore();
+    }
+
+    if (!this.levelData.isEventLevel) {
+      this.events.push(event => {
+        if (event.eventType === EventType.WhenUsed && event.targetType === 'sheep') {
+          this.codeOrgAPI.drop(null, 'wool', event.targetIdentifier);
+        }
+        if (event.eventType === EventType.WhenTouched && event.targetType === 'creeper') {
+          this.codeOrgAPI.flashEntity(null, event.targetIdentifier);
+          this.codeOrgAPI.explodeEntity(null, event.targetIdentifier);
+        }
+      });
     }
 
     this.initializeCommandRecord();
