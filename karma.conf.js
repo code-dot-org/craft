@@ -8,8 +8,12 @@ module.exports = config => {
       {pattern: 'src/assets/**/*.*', watched: false, included: false},
     ],
     preprocessors: {
-      'test/integration/*.js': ['browserify']
+      'test/integration/*.js': ['browserify'],
     },
+    browserify: {
+      transform: ["browserify-istanbul"]
+    },
+    reporters: ['dots', 'coverage'],
 
     // Run headless unless WATCH=1.
     browsers: [
@@ -21,5 +25,13 @@ module.exports = config => {
 
     // 30 seconds.
     browserNoActivityTimeout: 30 * 1000,
-  })
+
+    // Code coverage.
+    coverageReporter: {
+      dir: 'coverage/integration',
+      reporters: [
+        {type: 'lcovonly'},
+      ],
+    },
+  });
 };
