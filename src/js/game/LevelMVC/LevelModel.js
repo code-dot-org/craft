@@ -1,3 +1,4 @@
+const LevelPlane = require("./LevelPlane.js");
 const LevelBlock = require("./LevelBlock.js");
 const FacingDirection = require("./FacingDirection.js");
 const Player = require("../Entities/Player.js");
@@ -41,11 +42,11 @@ module.exports = class LevelModel {
   }
 
   reset() {
-    this.groundPlane = this.constructPlane(this.initialLevelData.groundPlane, false);
-    this.groundDecorationPlane = this.constructPlane(this.initialLevelData.groundDecorationPlane, false);
+    this.groundPlane = new LevelPlane(this.initialLevelData.groundPlane, false);
+    this.groundDecorationPlane = new LevelPlane(this.initialLevelData.groundDecorationPlane, false);
     this.shadingPlane = [];
-    this.actionPlane = this.constructPlane(this.initialLevelData.actionPlane, true);
-    this.fluffPlane = this.constructPlane(this.initialLevelData.fluffPlane, false);
+    this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, true);
+    this.fluffPlane = new LevelPlane(this.initialLevelData.fluffPlane, false);
     this.fowPlane = [];
     this.isDaytime = this.initialLevelData.isDaytime === undefined || this.initialLevelData.isDaytime;
 
@@ -68,21 +69,6 @@ module.exports = class LevelModel {
 
   yToIndex(y) {
     return y * this.planeWidth;
-  }
-
-  constructPlane(planeData, isActionPlane) {
-    var index,
-      result = [],
-      block;
-
-    for (index = 0; index < planeData.length; ++index) {
-      block = new LevelBlock(planeData[index]);
-      // TODO(bjordan): put this truth in constructor like other attrs
-      block.isWalkable = block.isWalkable || !isActionPlane;
-      result.push(block);
-    }
-
-    return result;
   }
 
   isSolved() {
