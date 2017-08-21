@@ -42,16 +42,16 @@ module.exports = class LevelModel {
   }
 
   reset() {
-    this.groundPlane = new LevelPlane(this.initialLevelData.groundPlane, false);
-    this.groundDecorationPlane = new LevelPlane(this.initialLevelData.groundDecorationPlane, false);
+    this.groundPlane = new LevelPlane(this.initialLevelData.groundPlane, this.planeWidth, this.planeHeight);
+    this.groundDecorationPlane = new LevelPlane(this.initialLevelData.groundDecorationPlane, this.planeWidth, this.planeHeight);
     this.shadingPlane = [];
-    this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, true);
-    this.fluffPlane = new LevelPlane(this.initialLevelData.fluffPlane, false);
+    this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, true);
+    this.fluffPlane = new LevelPlane(this.initialLevelData.fluffPlane, this.planeWidth, this.planeHeight);
     this.fowPlane = [];
     this.isDaytime = this.initialLevelData.isDaytime === undefined || this.initialLevelData.isDaytime;
 
     let levelData = Object.create(this.initialLevelData);
-    let [x, y] = [levelData.playerStartPosition[0], levelData.playerStartPosition[1]];
+    let [x, y] = levelData.playerStartPosition;
     if (this.initialLevelData.usePlayer !== undefined) {
       this.usePlayer = this.initialLevelData.usePlayer;
     } else {
@@ -92,33 +92,29 @@ module.exports = class LevelModel {
     if (!this.usePlayer) {
       return false;
     }
-    var position, blockIndex;
+    var position;
 
     // above
     position = [this.player.position[0], this.player.position[1] - 1];
-    blockIndex = this.yToIndex(position[1]) + position[0];
-    if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType)) {
+    if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
       return true;
     }
 
     // below
     position = [this.player.position[0], this.player.position[1] + 1];
-    blockIndex = this.yToIndex(position[1]) + position[0];
-    if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType)) {
+    if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
       return true;
     }
 
     // left
     position = [this.player.position[0] + 1, this.player.position[1]];
-    blockIndex = this.yToIndex(position[1]) + position[0];
-    if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType)) {
+    if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
       return true;
     }
 
     // Right
     position = [this.player.position[0] - 1, this.player.position[1]];
-    blockIndex = this.yToIndex(position[1]) + position[0];
-    if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType)) {
+    if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
       return true;
     }
 
@@ -129,33 +125,29 @@ module.exports = class LevelModel {
     var entityList = this.controller.levelEntity.getEntitiesOfType(entityType);
     for (var i = 0; i < entityList.length; i++) {
       var entity = entityList[i];
-      var position, blockIndex;
+      var position;
 
       // above
       position = [entity.position[0], entity.position[1] - 1];
-      blockIndex = this.yToIndex(position[1]) + position[0];
-      if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType)) {
+      if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
         return true;
       }
 
       // below
       position = [entity.position[0], entity.position[1] + 1];
-      blockIndex = this.yToIndex(position[1]) + position[0];
-      if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType)) {
+      if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
         return true;
       }
 
       // left
       position = [entity.position[0] + 1, entity.position[1]];
-      blockIndex = this.yToIndex(position[1]) + position[0];
-      if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType)) {
+      if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
         return true;
       }
 
       // Right
       position = [entity.position[0] - 1, entity.position[1]];
-      blockIndex = this.yToIndex(position[1]) + position[0];
-      if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane[blockIndex].blockType === blockType)) {
+      if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
         return true;
       }
     }
@@ -167,8 +159,7 @@ module.exports = class LevelModel {
     var resultCount = 0;
     for (var i = 0; i < entityList.length; i++) {
       var entity = entityList[i];
-      let blockIndex = this.yToIndex(entity.position[1]) + entity.position[0];
-      if (this.isBlockOfType(entity.position, blockType) || this.groundPlane[blockIndex].blockType === blockType) {
+      if (this.isBlockOfType(entity.position, blockType) || this.groundPlane.getBlockAt(entity.position).blockType === blockType) {
         resultCount++;
       }
     }
@@ -405,8 +396,7 @@ module.exports = class LevelModel {
 
   getForwardBlock() {
     let blockForwardPosition = this.getMoveForwardPosition();
-    let blockIndex = this.yToIndex(blockForwardPosition[1]) + blockForwardPosition[0];
-    return this.actionPlane[blockIndex];
+    return this.actionPlane.getBlockAt(blockForwardPosition);
   }
 
   isBlockOfType(position, blockType) {
@@ -425,15 +415,15 @@ module.exports = class LevelModel {
   isBlockOfTypeOnPlane(position, blockType, plane) {
     var result = false;
 
-    let blockIndex = this.yToIndex(position[1]) + position[0];
-    if (blockIndex >= 0 && blockIndex < this.planeArea()) {
+    let [x, y] = position;
+    if (this.inBounds(x, y)) {
 
       if (blockType === "empty") {
-        result = plane[blockIndex].isEmpty;
+        result = plane.getBlockAt(position).isEmpty;
       } else if (blockType === "tree") {
-        result = plane[blockIndex].getIsTree();
+        result = plane.getBlockAt(position).getIsTree();
       } else {
-        result = (blockType === plane[blockIndex].blockType);
+        result = (blockType === plane.getBlockAt(position).blockType);
       }
     }
 
@@ -441,13 +431,11 @@ module.exports = class LevelModel {
   }
 
   isPlayerStandingInWater() {
-    let blockIndex = this.yToIndex(this.player.position[1]) + this.player.position[0];
-    return this.groundPlane[blockIndex].blockType === "water";
+    return this.groundPlane.getBlockAt(this.player.position).blockType === "water";
   }
 
   isPlayerStandingInLava() {
-    let blockIndex = this.yToIndex(this.player.position[1]) + this.player.position[0];
-    return this.groundPlane[blockIndex].blockType === "lava";
+    return this.groundPlane.getBlockAt(this.player.position).blockType === "lava";
   }
 
   coordinatesToIndex(coordinates) {
@@ -455,7 +443,7 @@ module.exports = class LevelModel {
   }
 
   checkPositionForTypeAndPush(blockType, position, objectArray) {
-    if ((!blockType && (this.actionPlane[this.coordinatesToIndex(position)].blockType !== "")) || this.isBlockOfType(position, blockType)) {
+    if ((!blockType && (this.actionPlane.getBlockAt(position).blockType !== "")) || this.isBlockOfType(position, blockType)) {
       objectArray.push([true, position]);
       return true;
     } else {
@@ -629,27 +617,26 @@ module.exports = class LevelModel {
 
   isPositionEmpty(position) {
     var result = [false,];
-    let blockIndex = this.yToIndex(position[1]) + position[0];
-    let [x, y] = [position[0], position[1]];
+    let [x, y] = position;
 
     if (this.inBounds(x, y)) {
-      if (!this.actionPlane[blockIndex].isWalkable) {
+      if (!this.actionPlane.getBlockAt(position).isWalkable) {
         result.push("notWalkable");
       }
-      if (!this.actionPlane[blockIndex].isEmpty) {
+      if (!this.actionPlane.getBlockAt(position).isEmpty) {
         if (this.player.isOnBlock) {
           return [true];
         }
         result.push("notEmpty");
       }
       // Only prevent walking into water/lava in "Events" levels.
-      if (this.groundPlane[blockIndex].blockType === "water") {
+      if (this.groundPlane.getBlockAt(position).blockType === "water") {
         if (this.controller.levelData.isEventLevel) {
           result.push("water");
         } else {
           return [true];
         }
-      } else if (this.groundPlane[blockIndex].blockType === "lava") {
+      } else if (this.groundPlane.getBlockAt(position).blockType === "lava") {
         if (this.controller.levelData.isEventLevel) {
           result.push("lava");
         } else {
@@ -661,13 +648,13 @@ module.exports = class LevelModel {
         result.push("frontEntity");
         result.push(frontEntity);
       }
-      result[0] = (this.actionPlane[blockIndex].isWalkable || ((frontEntity !== undefined && frontEntity.isOnBlock)
+      result[0] = (this.actionPlane.getBlockAt(position).isWalkable || ((frontEntity !== undefined && frontEntity.isOnBlock)
         // action plane is empty
-        && !this.actionPlane[blockIndex].isEmpty))
+        && !this.actionPlane.getBlockAt(position).isEmpty))
         // there is no entity
         && (frontEntity === undefined)
         // no lava or water
-        && (this.groundPlane[blockIndex].blockType !== "water" && this.groundPlane[blockIndex].blockType !== "lava");
+        && (this.groundPlane.getBlockAt(position).blockType !== "water" && this.groundPlane.getBlockAt(position).blockType !== "lava");
     } else {
       result.push("outBound");
     }
@@ -697,14 +684,13 @@ module.exports = class LevelModel {
     return this.getPlaneToPlaceOn(this.getMoveForwardPosition()) !== null;
   }
 
-  getPlaneToPlaceOn(coordinates) {
-    let blockIndex = this.yToIndex(coordinates[1]) + coordinates[0];
-    let [x, y] = [coordinates[0], coordinates[1]];
+  getPlaneToPlaceOn(position) {
+    let [x, y] = position;
 
     if (this.inBounds(x, y)) {
-      let actionBlock = this.actionPlane[blockIndex];
+      let actionBlock = this.actionPlane.getBlockAt(position);
       if (actionBlock.isPlacable) {
-        let groundBlock = this.groundPlane[blockIndex];
+        let groundBlock = this.groundPlane.getBlockAt(position);
         if (groundBlock.isPlacable) {
           return this.groundPlane;
         }
@@ -720,11 +706,10 @@ module.exports = class LevelModel {
 
     if (!this.player.isOnBlock) {
       let blockForwardPosition = this.getMoveForwardPosition();
-      let blockIndex = this.yToIndex(blockForwardPosition[1]) + blockForwardPosition[0];
-      let [x, y] = [blockForwardPosition[0], blockForwardPosition[1]];
+      let [x, y] = blockForwardPosition;
 
       if (this.inBounds(x, y)) {
-        let block = this.actionPlane[blockIndex];
+        let block = this.actionPlane.getBlockAt(blockForwardPosition);
         result = !block.isEmpty && (block.isDestroyable || block.isUsable);
       }
     }
@@ -738,10 +723,9 @@ module.exports = class LevelModel {
   }
 
   moveTo(position, entity = this.player) {
-    let blockIndex = this.yToIndex(position[1]) + position[0];
-
     entity.position = position;
-    if (this.actionPlane[blockIndex].isEmpty) {
+
+    if (this.actionPlane.getBlockAt(position).isEmpty) {
       entity.isOnBlock = false;
     }
   }
@@ -797,13 +781,12 @@ module.exports = class LevelModel {
   }
 
   placeBlock(blockType) {
-    let blockPosition = this.player.position;
-    let blockIndex = this.yToIndex(blockPosition[1]) + blockPosition[0];
+    const position = this.player.position;
     var shouldPlace = false;
 
     switch (blockType) {
       case "cropWheat":
-        shouldPlace = this.groundPlane[blockIndex].blockType === "farmlandWet";
+        shouldPlace = this.groundPlane.getBlockAt(position).blockType === "farmlandWet";
         break;
 
       default:
@@ -814,7 +797,7 @@ module.exports = class LevelModel {
     if (shouldPlace === true) {
       var block = new LevelBlock(blockType);
 
-      this.actionPlane[blockIndex] = block;
+      this.actionPlane.setBlockAt(position, block);
       this.player.isOnBlock = !block.isWalkable;
     }
 
@@ -823,7 +806,6 @@ module.exports = class LevelModel {
 
   placeBlockForward(blockType, targetPlane) {
     let blockPosition = this.getMoveForwardPosition();
-    let blockIndex = this.yToIndex(blockPosition[1]) + blockPosition[0];
 
     //for placing wetland for crops in free play
     if (blockType === "watering") {
@@ -831,23 +813,20 @@ module.exports = class LevelModel {
       targetPlane = this.groundPlane;
     }
 
-    targetPlane[blockIndex] = new LevelBlock(blockType);
+    targetPlane.setBlockAt(blockPosition, new LevelBlock(blockType));
   }
 
   destroyBlock(position) {
     var block = null;
-
-    let blockPosition = position;
-    let blockIndex = this.yToIndex(blockPosition[1]) + blockPosition[0];
-    let [x, y] = [blockPosition[0], blockPosition[1]];
+    let [x, y] = [position[0], position[1]];
 
     if (this.inBounds(x, y)) {
-      block = this.actionPlane[blockIndex];
+      block = this.actionPlane.getBlockAt(position);
       if (block !== null) {
         block.position = [x, y];
 
         if (block.isDestroyable) {
-          this.actionPlane[blockIndex] = new LevelBlock("");
+          this.actionPlane.setBlockAt(position, new LevelBlock(""));
         }
       }
     }
@@ -859,15 +838,14 @@ module.exports = class LevelModel {
     var block = null;
 
     let blockForwardPosition = this.getMoveForwardPosition(entity);
-    let blockIndex = this.yToIndex(blockForwardPosition[1]) + blockForwardPosition[0];
-    let [x, y] = [blockForwardPosition[0], blockForwardPosition[1]];
+    let [x, y] = blockForwardPosition;
 
     if (this.inBounds(x, y)) {
-      block = this.actionPlane[blockIndex];
+      block = this.actionPlane.getBlockAt(blockForwardPosition);
       if (block !== null) {
 
         if (block.isDestroyable) {
-          this.actionPlane[blockIndex] = new LevelBlock("");
+          this.actionPlane.setBlockAt(blockForwardPosition, new LevelBlock(""));
         }
       }
     }
@@ -1099,10 +1077,11 @@ module.exports = class LevelModel {
 
       for (y = 0; y < this.planeHeight; ++y) {
         for (x = 0; x < this.planeWidth; ++x) {
-          let blockIndex = this.yToIndex(y) + x;
+          const groundBlock = this.groundPlane.getBlockAt([x, y]);
+          const actionBlock = this.actionPlane.getBlockAt([x, y]);
 
-          if (this.groundPlane[blockIndex].isEmissive && this.actionPlane[blockIndex].isEmpty ||
-            (!this.actionPlane[blockIndex].isEmpty && this.actionPlane[blockIndex].isEmissive)) {
+          if (groundBlock.isEmissive && actionBlock.isEmpty ||
+            (!actionBlock.isEmpty && actionBlock.isEmissive)) {
             this.clearFowAround(x, y);
           }
         }
