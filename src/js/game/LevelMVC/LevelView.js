@@ -1659,6 +1659,10 @@ module.exports = class LevelView {
     var frame = "",
       sprite = null,
       frameList;
+      
+    if (blockType.substring(0,12) === "redstoneWire") {
+      blockType = "redstoneWire";
+    }
 
     switch (blockType) {
       case "treeAcacia":
@@ -1700,6 +1704,9 @@ module.exports = class LevelView {
         break;
       case "tnt":
         frame = "gunPowder";
+        break;
+      case "redstoneWire":
+        frame = "redstoneDust";
         break;
       default:
         frame = blockType;
