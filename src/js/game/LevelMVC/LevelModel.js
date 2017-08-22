@@ -874,6 +874,7 @@ module.exports = class LevelModel {
     console.log("index " + index + " is: " + this.actionPlane[index].blockType);
     
     this.controller.levelView.reset(this);
+    return newBlock.blockType;
   }
 
   destroyBlock(position) {

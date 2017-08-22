@@ -1285,6 +1285,8 @@ class GameController {
     } else {
       commandQueueItem.failed();
     }
+    
+    
   }
 
   setPlayerActionDelayByQueueLength() {
@@ -1324,6 +1326,7 @@ class GameController {
   }
 
   placeBlockForward(commandQueueItem, blockType) {
+    console.log(this.levelView.actionPlane);
     let forwardPosition,
       placementPlane,
       soundEffect = () => { };
@@ -1341,7 +1344,7 @@ class GameController {
     if (this.levelModel.isBlockOfTypeOnPlane(forwardPosition, "lava", placementPlane)) {
       soundEffect = () => this.levelView.audioPlayer.play("fizz");
     }
-    this.levelModel.placeBlockForward(blockType, placementPlane);
+    blockType = this.levelModel.placeBlockForward(blockType, placementPlane);
     this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.getMoveForwardPosition(), placementPlane, blockType, () => {
       this.levelModel.computeShadingPlane();
       this.levelModel.computeFowPlane();
