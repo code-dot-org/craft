@@ -94,7 +94,7 @@ module.exports = class LevelBlock {
       this.isTransparent = true;
     }
 
-    if (blockType === "redstone_wire") {
+    if (blockType.substring(0, 12) === "redstoneWire") {
       this.isEntity = true;
       this.isWalkable = true;
       this.isUsable = true;

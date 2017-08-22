@@ -128,8 +128,18 @@ module.exports = class LevelView {
       "railsPoweredVertical": ["blocks", "Rails_PoweredVertical", -13, 0],
       "railsRedstoneTorch": ["blocks", "Rails_RedstoneTorch", -12, 9],
 
-      "redstone_wire": ["blocks", "Redstone_Dust_Vertical", -13, 0],
-      "piston": ["blocks", "Emerald_Ore", -13, 0],
+      "redstoneWire": ["blocks", "redstone_dust_dot_off", -13, 0],
+      "redstoneWireHorizontal": ["blocks", "redstone_dust_line_h_off", -13, 0],
+      "redstoneWireVertical": ["blocks", "redstone_dust_line_v_off", -13, 0],
+      "redstoneWireUpRight": ["blocks", "redstone_dust_corner_TopRight_off", -13, 0],
+      "redstoneWireUpLeft": ["blocks", "redstone_dust_corner_TopLeft_off", -13, 0],
+      "redstoneWireDownRight": ["blocks", "redstone_dust_corner_BottomRight_off", -13, 0],
+      "redstoneWireDownLeft": ["blocks", "redstone_dust_corner_BottomLeft_off", -13, 0],
+      "redstoneWireTUp": ["blocks", "redstone_dust_cross_up_off", -13, 0],
+      "redstoneWireTDown": ["blocks", "redstone_dust_cross_down_off", -13, 0],
+      "redstoneWireTLeft": ["blocks", "redstone_dust_cross_left_off", -13, 0],
+      "redstoneWireTRight": ["blocks", "redstone_dust_cross_right_off", -13, 0],
+      "redstoneWireCross": ["blocks", "redstone_dust_cross_off", -13, 0],
     };
 
     this.actionPlaneBlocks = [];
@@ -2004,8 +2014,8 @@ module.exports = class LevelView {
         });
         break;
 
-      case "redstone_wire":
-        this.determineRedstoneSprite(x, y, blockType, levelData);
+      case "redstoneWire":
+        this.controller.levelModel.determineRedstoneSprite(x, y, blockType);
         atlas = this.blocks[blockType][0];
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
@@ -2023,102 +2033,6 @@ module.exports = class LevelView {
     }
 
     return sprite;
-  }
-
-  determineRedstoneSprite(x, y, blockType, levelData) {
-        let foundAbove = false;
-        let foundBelow = false;
-        let foundRight = false;
-        let foundLeft = false;
-        let belowIndex = (this.yToIndex(y + 1)) + x;
-        let aboveIndex = (this.yToIndex(y - 1)) + x;
-        let leftIndex = (this.yToIndex(y)) + x - 1;
-        let rightIndex = (this.yToIndex(y)) + x + 1;
-
-        let borderCount = 0;
-
-        //need to ensure these are in bounds
-        if (y === levelData.planeHeight) {
-            foundBelow = false;
-        } else {
-            if (levelData.actionPlane[belowIndex].blockType === "redstone_wire") {
-                foundBelow = true;
-                ++borderCount;
-            }
-        }
-        if (y === 0) {
-            foundAbove = false;
-        } else {
-            if (levelData.actionPlane[aboveIndex].blockType === "redstone_wire") {
-                foundAbove = true;
-                ++borderCount;
-            }
-        }
-        if (x === levelData.planeWidth) {
-            foundRight = false;
-        } else {
-            if (levelData.actionPlane[rightIndex].blockType === "redstone_wire") {
-                foundRight = true;
-                ++borderCount;
-            }
-        }
-        if (x === 0) {
-            foundLeft = false;
-        } else {
-            if (levelData.actionPlane[leftIndex].blockType === "redstone_wire") {
-                foundLeft = true;
-                ++borderCount;
-            }
-        }
-
-        if (borderCount === 0) {
-            //no connecting redstone wire
-            this.blocks[blockType][1] = "Redstone_Dust";
-        } else if (borderCount === 1) {
-            if (foundBelow || foundAbove) {
-                this.blocks[blockType][1] = "Redstone_Dust_Vertical";
-            } else if (foundLeft || foundRight) {
-                this.blocks[blockType][1] = "Redstone_Dust_Horizontal";
-            }
-        } else if (borderCount === 2) {
-            if ((foundBelow || foundAbove) && !foundRight && !foundLeft){
-                //purely vertical, no left or right
-                this.blocks[blockType][1] = "Redstone_Dust_Vertical";
-            } else if ((foundRight || foundLeft) && !foundBelow && !foundAbove){
-                //purely horizontal, no above or below
-                this.blocks[blockType][1] = "Redstone_Dust_Horizontal";
-            } else {
-                //we have a corner and will need to rotate
-                if (foundBelow) {
-                    //if we have a blow, the other has to be right or left
-                    if (foundLeft) {
-                        this.blocks[blockType][1] = "Redstone_Dust_Corner_DownLeft";
-                    } else {
-                        this.blocks[blockType][1] = "Redstone_Dust_Corner_DownRight";
-                    }
-                } else {
-                    //if not below, then above + left or right
-                    if (foundLeft) {
-                        this.blocks[blockType][1] = "Redstone_Dust_Corner_UpLeft";
-                    } else {
-                        this.blocks[blockType][1] = "Redstone_Dust_Corner_UpRight";
-                    }
-                }
-            }
-        } else if (borderCount === 3) {
-            if (!foundBelow) {
-                this.blocks[blockType][1] = "Redstone_Dust_TUp";
-            } else if (!foundAbove) {
-                this.blocks[blockType][1] = "Redstone_Dust_TDown";
-            } else if (!foundLeft) {
-                this.blocks[blockType][1] = "Redstone_Dust_TRight";
-            } else if (!foundRight) {
-                this.blocks[blockType][1] = "Redstone_Dust_TLeft";
-            }
-        } else if (borderCount === 4) {
-            //all four sides connected: Cross
-            this.blocks[blockType][1] = "Redstone_Dust_Cross";
-        }
   }
 
   isUnderTree(treeIndex, position) {

@@ -1116,6 +1116,104 @@ module.exports = class LevelModel {
     }
   }
 
+  determineRedstoneSprite(x, y, blockType) {
+        let foundAbove = false;
+        let foundBelow = false;
+        let foundRight = false;
+        let foundLeft = false;
+        let myIndex = (this.yToIndex(y) + x);
+        let belowIndex = (this.yToIndex(y + 1)) + x;
+        let aboveIndex = (this.yToIndex(y - 1)) + x;
+        let leftIndex = (this.yToIndex(y)) + x - 1;
+        let rightIndex = (this.yToIndex(y)) + x + 1;
+
+        let borderCount = 0;
+        let whatIsThis = this.actionPlane;
+
+        //need to ensure these are in bounds
+        if (y === this.planeHeight) {
+            foundBelow = false;
+        } else {
+            if (this.actionPlane[belowIndex].blockType === "redstoneWire") {
+                foundBelow = true;
+                ++borderCount;
+            }
+        }
+        if (y === 0) {
+            foundAbove = false;
+        } else {
+            if (this.actionPlane[aboveIndex].blockType === "redstoneWire") {
+                foundAbove = true;
+                ++borderCount;
+            }
+        }
+        if (x === this.planeWidth) {
+            foundRight = false;
+        } else {
+            if (this.actionPlane[rightIndex].blockType === "redstoneWire") {
+                foundRight = true;
+                ++borderCount;
+            }
+        }
+        if (x === 0) {
+            foundLeft = false;
+        } else {
+            if (this.actionPlane[leftIndex].blockType === "redstoneWire") {
+                foundLeft = true;
+                ++borderCount;
+            }
+        }
+
+        if (borderCount === 0) {
+            //no connecting redstone wire
+            this.actionPlane[myIndex] = "redstoneWire";
+        } else if (borderCount === 1) {
+            if (foundBelow || foundAbove) {
+                this.actionPlane[myIndex] = "redstoneWireVertical";
+            } else if (foundLeft || foundRight) {
+                this.actionPlane[myIndex] = "redstoneWireHorizontal";
+            }
+        } else if (borderCount === 2) {
+            if ((foundBelow || foundAbove) && !foundRight && !foundLeft){
+                //purely vertical, no left or right
+                this.actionPlane[myIndex] = "redstoneWireVertical";
+            } else if ((foundRight || foundLeft) && !foundBelow && !foundAbove){
+                //purely horizontal, no above or below
+                this.actionPlane[myIndex] = "redstoneWireHorizontal";
+            } else {
+                //we have a corner and will need to rotate
+                if (foundBelow) {
+                    //if we have a blow, the other has to be right or left
+                    if (foundLeft) {
+                        this.actionPlane[myIndex] = "redstoneWireDownLeft";
+                    } else {
+                        this.actionPlane[myIndex] = "redstoneWireDownRight";
+                    }
+                } else {
+                    //if not below, then above + left or right
+                    if (foundLeft) {
+                        this.actionPlane[myIndex] = "redstoneWireUpLeft";
+                    } else {
+                        this.actionPlane[myIndex] = "redstoneWireUpRight";
+                    }
+                }
+            }
+        } else if (borderCount === 3) {
+            if (!foundBelow) {
+                this.actionPlane[myIndex] = "redstoneWireTUp";
+            } else if (!foundAbove) {
+                this.actionPlane[myIndex] = "redstoneWireTDown";
+            } else if (!foundLeft) {
+                this.actionPlane[myIndex] = "redstoneWireTRight";
+            } else if (!foundRight) {
+                this.actionPlane[myIndex] = "redstoneWireTLeft";
+            }
+        } else if (borderCount === 4) {
+            //all four sides connected: Cross
+            this.actionPlane[myIndex] = "redstoneWireCross";
+        }
+  }
+
   computeShadingPlane() {
     var x,
       y,
