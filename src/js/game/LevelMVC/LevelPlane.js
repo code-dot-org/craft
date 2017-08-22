@@ -15,12 +15,22 @@ module.exports = class LevelPlane extends Array {
     }
   }
 
+  inBounds(position) {
+    const [x, y] = position;
+    return x >= 0 && x < this.width && y >= 0 && y < this.height;
+  }
+
   coordinatesToIndex(position) {
     return position[1] * this.width + position[0];
   }
 
-  getBlockAt(position) {
-    return this[this.coordinatesToIndex(position)];
+  getBlockAt(position, offsetX = 0, offsetY = 0) {
+    const [x, y] = position;
+    const target = [x + offsetX, y + offsetY];
+
+    if (this.inBounds(target)) {
+      return this[this.coordinatesToIndex(target)];
+    }
   }
 
   setBlockAt(position, block) {
