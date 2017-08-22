@@ -837,17 +837,6 @@ module.exports = class LevelView {
     });
   }
 
-  playShearSheepAnimationWithEntity(playerPosition, facing, entity, completionHandler) {
-    this.setSelectionIndicatorPosition(entity.position[0], entity.position[1]);
-
-    let entityDirection = this.getDirectionName(entity.facing);
-    entity.sprite.animations.stop(null, true);
-    entity.naked = true;
-    this.playScaledSpeed(entity.sprite.animations, "naked_idle" + entityDirection, () => { });
-
-    this.playExplosionAnimation(playerPosition, facing, entity.position, entity.type, completionHandler, false);
-  }
-
   destroyBlockWithoutPlayerInteraction(destroyPosition) {
     let blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
     let blockToDestroy = this.actionPlaneBlocks[blockIndex];
@@ -1308,35 +1297,15 @@ module.exports = class LevelView {
   }
 
   generatePlayerCelebrateFrames() {
-    var frameList = [],
-      i;
+    let frameList = [];
 
-    //Crouch Down
-    /* frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 29, 32, "", 3));
-     //Crouch Down
-     frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 29, 32, "", 3));
-     //turn and pause
-     for (i = 0; i < 4; ++i) {
-     frameList = frameList.concat("Player_061");
-     }
-     for (i = 0; i < 2; ++i) {
-     frameList = frameList.concat("Player_149");
-     }
-     //Crouch Up
-     frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3));
-     //Crouch Up
-     frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3));*/
-
-    ///////////////////////////Alternative Animation/////////////////////
     //Face Down
-    for (i = 0; i < 6; ++i) {
+    for (let i = 0; i < 6; ++i) {
       frameList.push("Player_001");
     }
     //Crouch Left
-    //frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 209, 212, "", 3));
     frameList = frameList.concat("Player_259");
     frameList = frameList.concat("Player_260");
-
     //Jump
     frameList.push("Player_261");
     frameList.push("Player_297");
@@ -1368,9 +1337,6 @@ module.exports = class LevelView {
     frameList.push("Player_297");
     frameList.push("Player_261");
 
-    //for (i = 0; i < 5; ++i) {
-    //  frameList.push("Player_262");
-    //
     return frameList;
   }
 
@@ -1387,13 +1353,6 @@ module.exports = class LevelView {
     return frameList.concat(Phaser.Animation.generateFrameNames(frameName, endFrame - 1, startFrame, suffix, buffer));
   }
 
-  generateReverseFramesWithBetweenDelay(frameName, startFrame, endFrame, endFrameFullName, suffix, buffer, frameDelay) {
-    var frameList = Phaser.Animation.generateFrameNames(frameName, startFrame, endFrame, suffix, buffer);
-    for (var i = 0; i < frameDelay; ++i) {
-      frameList.push(endFrameFullName);
-    }
-    return frameList.concat(Phaser.Animation.generateFrameNames(frameName, endFrame - 1, startFrame, suffix, buffer));
-  }
   preparePlayerSprite(playerName) {
     var frameList,
       i,
@@ -1730,82 +1689,6 @@ module.exports = class LevelView {
   playAnimationWithOffset(sprite, animationName, animationFrameTotal, startFrame) {
     var rand = Math.trunc(Math.random() * animationFrameTotal) + startFrame;
     this.playScaledSpeed(sprite.animations, animationName).setFrame(rand, true);
-  }
-
-  playRandomSheepAnimation(sprite) {
-    var rand = Math.trunc(Math.random() * 20 + 1);
-
-    switch (rand) {
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-      case 6:
-        //eat grass
-        sprite.play("idle");
-        break;
-      case 7:
-      case 8:
-      case 9:
-      case 10:
-        //look left
-        sprite.play("lookLeft");
-        break;
-      case 11:
-      case 12:
-      case 13:
-      case 14:
-        //look right
-        sprite.play("lookRight");
-        break;
-      case 15:
-      case 16:
-      case 17:
-        //cam
-        sprite.play("lookAtCam");
-        break;
-      case 18:
-      case 19:
-        //kick
-        sprite.play("kick");
-        break;
-      case 20:
-        //idlePause
-        sprite.play("idlePause");
-        break;
-      default:
-    }
-  }
-
-  playRandomCreeperAnimation(sprite) {
-    var rand = Math.trunc(this.yToIndex(Math.random()) + 1);
-
-    switch (rand) {
-      case 1:
-      case 2:
-      case 3:
-        //look left
-        sprite.play("lookLeft");
-        break;
-      case 4:
-      case 5:
-      case 6:
-        //look right
-        sprite.play("lookRight");
-        break;
-      case 7:
-      case 8:
-        //look at cam
-        sprite.play("lookAtCam");
-        break;
-      case 9:
-      case 10:
-        //shuffle feet
-        sprite.play("idle");
-        break;
-      default:
-    }
   }
 
   createBlock(plane, x, y, blockType) {

@@ -56,7 +56,6 @@ module.exports.get = function (controller) {
      *    evalUserCode(e.block);
      *  }
      */
-
     registerEventCallback(highlightCallback, codeBlockCallback) {
       // TODO(bjordan): maybe need to also handle top-level event block highlighting
       controller.events.push(codeBlockCallback);
@@ -66,18 +65,11 @@ module.exports.get = function (controller) {
       // (and clear out on reset)
     },
 
-    // not used
-    /*
-    isEntityMove: function (event, entityIdentifier) {
-      if (event.eventType === 'entityMoved') {
-        return event.entityIdentifier === entityIdentifier;
-      }
-      return false;
-    },*/
     // helper functions for event
     isEventTriggered: function (event, eventType) {
       return (event.eventType === eventType);
     },
+
     // command list
     moveForward: function (highlightCallback, targetEntity) {
       controller.addCommand(new MoveForwardCommand(controller, highlightCallback, targetEntity), targetEntity);
