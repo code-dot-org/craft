@@ -36,4 +36,13 @@ module.exports = class LevelPlane extends Array {
   setBlockAt(position, block) {
     this[this.coordinatesToIndex(position)] = block;
   }
+
+  getOrthogonalBlocks(position) {
+    return {
+      north: this.getBlockAt(position, 0, -1),
+      south: this.getBlockAt(position, 0, 1),
+      east: this.getBlockAt(position, 1, 0),
+      west: this.getBlockAt(position, -1, 0),
+    };
+  }
 };
