@@ -1221,13 +1221,6 @@ class GameController {
     }
   }
 
-
-  canUseTints() {
-    // TODO(bjordan): Remove
-    // all browsers appear to work with new version of Phaser
-    return true;
-  }
-
   checkTntAnimation() {
     return this.specialLevelType === 'freeplay';
   }
