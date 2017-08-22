@@ -310,9 +310,7 @@ module.exports = class LevelView {
     sprite.scale.x = scaleX;
     sprite.scale.y = scaleY;
     sprite.alpha = 0;
-    if (this.controller.canUseTints()) {
-      sprite.tint = 0x324bff;
-    }
+    sprite.tint = 0x324bff;
 
     tween = this.addResettableTween(sprite).to({
       alpha: 0.5,
@@ -337,9 +335,7 @@ module.exports = class LevelView {
     sprite.scale.x = scaleX;
     sprite.scale.y = scaleY;
     sprite.alpha = 0;
-    if (this.controller.canUseTints()) {
-      sprite.tint = 0xd1580d;
-    }
+    sprite.tint = 0xd1580d;
 
     tween = this.addResettableTween(sprite).to({
       alpha: 0.5,
@@ -837,17 +833,6 @@ module.exports = class LevelView {
     });
   }
 
-  playShearSheepAnimationWithEntity(playerPosition, facing, entity, completionHandler) {
-    this.setSelectionIndicatorPosition(entity.position[0], entity.position[1]);
-
-    let entityDirection = this.getDirectionName(entity.facing);
-    entity.sprite.animations.stop(null, true);
-    entity.naked = true;
-    this.playScaledSpeed(entity.sprite.animations, "naked_idle" + entityDirection, () => { });
-
-    this.playExplosionAnimation(playerPosition, facing, entity.position, entity.type, completionHandler, false);
-  }
-
   destroyBlockWithoutPlayerInteraction(destroyPosition) {
     let blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
     let blockToDestroy = this.actionPlaneBlocks[blockIndex];
@@ -951,65 +936,62 @@ module.exports = class LevelView {
   playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, placeBlock) {
     var explodeAnim = this.actionPlane.create(-36 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
 
-    //explodeAnim.tint = 0x324bff;
-    if (this.controller.canUseTints()) {
-      switch (blockType) {
-        case "treeAcacia":
-        case "logAcacia":
-          explodeAnim.tint = 0x6c655a;
-          break;
-        case "treeBirch":
-        case "logBirch":
-          explodeAnim.tint = 0xdad6cc;
-          break;
-        case "treeJungle":
-        case "logJungle":
-          explodeAnim.tint = 0x6a4f31;
-          break;
-        case "treeOak":
-        case "logOak":
-          explodeAnim.tint = 0x675231;
-          break;
-        case "treeSpruce":
-        case "logSpruce":
-          explodeAnim.tint = 0x4b3923;
-          break;
+    switch (blockType) {
+      case "treeAcacia":
+      case "logAcacia":
+        explodeAnim.tint = 0x6c655a;
+        break;
+      case "treeBirch":
+      case "logBirch":
+        explodeAnim.tint = 0xdad6cc;
+        break;
+      case "treeJungle":
+      case "logJungle":
+        explodeAnim.tint = 0x6a4f31;
+        break;
+      case "treeOak":
+      case "logOak":
+        explodeAnim.tint = 0x675231;
+        break;
+      case "treeSpruce":
+      case "logSpruce":
+        explodeAnim.tint = 0x4b3923;
+        break;
 
-        case "planksAcacia":
-          explodeAnim.tint = 0xba6337;
-          break;
-        case "planksBirch":
-          explodeAnim.tint = 0xd7cb8d;
-          break;
-        case "planksJungle":
-          explodeAnim.tint = 0xb88764;
-          break;
-        case "planksOak":
-          explodeAnim.tint = 0xb4905a;
-          break;
-        case "planksSpruce":
-          explodeAnim.tint = 0x805e36;
-          break;
-        case "stone":
-        case "oreCoal":
-        case "oreDiamond":
-        case "oreIron":
-        case "oreGold":
-        case "oreEmerald":
-        case "oreRedstone":
-          explodeAnim.tint = 0xC6C6C6;
-          break;
-        case "grass":
-        case "cropWheat":
-          explodeAnim.tint = 0x5d8f23;
-          break;
-        case "dirt":
-          explodeAnim.tint = 0x8a5e33;
-          break;
+      case "planksAcacia":
+        explodeAnim.tint = 0xba6337;
+        break;
+      case "planksBirch":
+        explodeAnim.tint = 0xd7cb8d;
+        break;
+      case "planksJungle":
+        explodeAnim.tint = 0xb88764;
+        break;
+      case "planksOak":
+        explodeAnim.tint = 0xb4905a;
+        break;
+      case "planksSpruce":
+        explodeAnim.tint = 0x805e36;
+        break;
+      case "stone":
+      case "oreCoal":
+      case "oreDiamond":
+      case "oreIron":
+      case "oreGold":
+      case "oreEmerald":
+      case "oreRedstone":
+        explodeAnim.tint = 0xC6C6C6;
+        break;
+      case "grass":
+      case "cropWheat":
+        explodeAnim.tint = 0x5d8f23;
+        break;
+      case "dirt":
+        explodeAnim.tint = 0x8a5e33;
+        break;
 
-        default:
-          break;
-      }
+      default:
+        break;
     }
 
     explodeAnim.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
@@ -1308,35 +1290,15 @@ module.exports = class LevelView {
   }
 
   generatePlayerCelebrateFrames() {
-    var frameList = [],
-      i;
+    let frameList = [];
 
-    //Crouch Down
-    /* frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 29, 32, "", 3));
-     //Crouch Down
-     frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 29, 32, "", 3));
-     //turn and pause
-     for (i = 0; i < 4; ++i) {
-     frameList = frameList.concat("Player_061");
-     }
-     for (i = 0; i < 2; ++i) {
-     frameList = frameList.concat("Player_149");
-     }
-     //Crouch Up
-     frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3));
-     //Crouch Up
-     frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 149, 152, "", 3));*/
-
-    ///////////////////////////Alternative Animation/////////////////////
     //Face Down
-    for (i = 0; i < 6; ++i) {
+    for (let i = 0; i < 6; ++i) {
       frameList.push("Player_001");
     }
     //Crouch Left
-    //frameList = frameList.concat(Phaser.Animation.generateFrameNames("Player_", 209, 212, "", 3));
     frameList = frameList.concat("Player_259");
     frameList = frameList.concat("Player_260");
-
     //Jump
     frameList.push("Player_261");
     frameList.push("Player_297");
@@ -1368,9 +1330,6 @@ module.exports = class LevelView {
     frameList.push("Player_297");
     frameList.push("Player_261");
 
-    //for (i = 0; i < 5; ++i) {
-    //  frameList.push("Player_262");
-    //
     return frameList;
   }
 
@@ -1387,13 +1346,6 @@ module.exports = class LevelView {
     return frameList.concat(Phaser.Animation.generateFrameNames(frameName, endFrame - 1, startFrame, suffix, buffer));
   }
 
-  generateReverseFramesWithBetweenDelay(frameName, startFrame, endFrame, endFrameFullName, suffix, buffer, frameDelay) {
-    var frameList = Phaser.Animation.generateFrameNames(frameName, startFrame, endFrame, suffix, buffer);
-    for (var i = 0; i < frameDelay; ++i) {
-      frameList.push(endFrameFullName);
-    }
-    return frameList.concat(Phaser.Animation.generateFrameNames(frameName, endFrame - 1, startFrame, suffix, buffer));
-  }
   preparePlayerSprite(playerName) {
     var frameList,
       i,
@@ -1730,82 +1682,6 @@ module.exports = class LevelView {
   playAnimationWithOffset(sprite, animationName, animationFrameTotal, startFrame) {
     var rand = Math.trunc(Math.random() * animationFrameTotal) + startFrame;
     this.playScaledSpeed(sprite.animations, animationName).setFrame(rand, true);
-  }
-
-  playRandomSheepAnimation(sprite) {
-    var rand = Math.trunc(Math.random() * 20 + 1);
-
-    switch (rand) {
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-      case 6:
-        //eat grass
-        sprite.play("idle");
-        break;
-      case 7:
-      case 8:
-      case 9:
-      case 10:
-        //look left
-        sprite.play("lookLeft");
-        break;
-      case 11:
-      case 12:
-      case 13:
-      case 14:
-        //look right
-        sprite.play("lookRight");
-        break;
-      case 15:
-      case 16:
-      case 17:
-        //cam
-        sprite.play("lookAtCam");
-        break;
-      case 18:
-      case 19:
-        //kick
-        sprite.play("kick");
-        break;
-      case 20:
-        //idlePause
-        sprite.play("idlePause");
-        break;
-      default:
-    }
-  }
-
-  playRandomCreeperAnimation(sprite) {
-    var rand = Math.trunc(this.yToIndex(Math.random()) + 1);
-
-    switch (rand) {
-      case 1:
-      case 2:
-      case 3:
-        //look left
-        sprite.play("lookLeft");
-        break;
-      case 4:
-      case 5:
-      case 6:
-        //look right
-        sprite.play("lookRight");
-        break;
-      case 7:
-      case 8:
-        //look at cam
-        sprite.play("lookAtCam");
-        break;
-      case 9:
-      case 10:
-        //shuffle feet
-        sprite.play("idle");
-        break;
-      default:
-    }
   }
 
   createBlock(plane, x, y, blockType) {
