@@ -829,18 +829,49 @@ module.exports = class LevelModel {
       targetPlane.setBlockAt(blockPosition, newBlock);
       
       //have to do it for adjacent blocks as well:
-      let upBlockType = this.determineRedstoneSprite(blockPosition[0], blockPosition[1] - 1, newBlock);
-      this.actionPlane[this.yToIndex(blockPosition[1] - 1) + blockPosition[0]].blockType = upBlockType;
-      let downBlockType = this.determineRedstoneSprite(blockPosition[0], blockPosition[1] + 1, newBlock);
-      this.actionPlane[this.yToIndex(blockPosition[1] + 1) + blockPosition[0]].blockType = downBlockType;
-      let rightBlockType = this.determineRedstoneSprite(blockPosition[0] + 1, blockPosition[1], newBlock);
-      this.actionPlane[this.yToIndex(blockPosition[1]) + blockPosition[0] + 1].blockType = rightBlockType;
-      let leftBlockType = this.determineRedstoneSprite(blockPosition[0] - 1, blockPosition[1], newBlock);
-      this.actionPlane[this.yToIndex(blockPosition[1]) + blockPosition[0] - 1].blockType = leftBlockType;
+      if (this.inBounds(blockPosition[0], blockPosition[1] - 1)) {
+        let index = this.yToIndex(blockPosition[1] - 1) + blockPosition[0];
+        if (this.actionPlane[index].blockType.substring(0,12) === "redstoneWire") {
+          let upBlockType = this.determineRedstoneSprite(blockPosition[0], blockPosition[1] - 1, newBlock);
+          this.actionPlane[this.yToIndex(blockPosition[1] - 1) + blockPosition[0]].blockType = upBlockType;
+        }
+        console.log("top index is: " + this.actionPlane[index].blockType);
+      }
+
+      if (this.inBounds(blockPosition[0], blockPosition[1] + 1)) {
+        let index = this.yToIndex(blockPosition[1] + 1) + blockPosition[0];
+        if (this.actionPlane[index].blockType.substring(0,12) === "redstoneWire") {
+          let upBlockType = this.determineRedstoneSprite(blockPosition[0], blockPosition[1] + 1, newBlock);
+          this.actionPlane[this.yToIndex(blockPosition[1] + 1) + blockPosition[0]].blockType = upBlockType;
+        }
+        console.log("bottom index is: " + this.actionPlane[index].blockType);
+      }
+      
+      if (this.inBounds(blockPosition[0] + 1, blockPosition[1])) {
+        let index = this.yToIndex(blockPosition[1]) + blockPosition[0] + 1;
+        if (this.actionPlane[index].blockType.substring(0,12) === "redstoneWire") {
+          let upBlockType = this.determineRedstoneSprite(blockPosition[0] + 1, blockPosition[1], newBlock);
+          this.actionPlane[this.yToIndex(blockPosition[1]) + blockPosition[0] + 1].blockType = upBlockType;
+        }
+        console.log("right index is: " + this.actionPlane[index].blockType);
+      }
+      
+      if (this.inBounds(blockPosition[0] - 1, blockPosition[1])) {
+        let index = this.yToIndex(blockPosition[1]) + blockPosition[0] - 1;
+        if (this.actionPlane[index].blockType.substring(0,12) === "redstoneWire") {
+          let upBlockType = this.determineRedstoneSprite(blockPosition[0] - 1, blockPosition[1], newBlock);
+          this.actionPlane[this.yToIndex(blockPosition[1]) + blockPosition[0] - 1].blockType = upBlockType;
+        }
+        console.log("left index is: " + this.actionPlane[index].blockType);
+      }
+
     }
     else {
       targetPlane.setBlockAt(blockPosition, newBlock);
     }
+    
+    let index = this.yToIndex(blockPosition[1]) + blockPosition[0];
+    console.log("index " + index + " is: " + this.actionPlane[index].blockType);
     
     this.controller.levelView.reset(this);
   }
@@ -1158,35 +1189,37 @@ module.exports = class LevelModel {
 
         let borderCount = 0;
         let whatIsThis = this.actionPlane;
+        
+        if (!this.inBounds(x, y)) {
+            return;
+        }
 
-        //need to ensure these are in bounds
-        if (y === this.planeHeight) {
-            foundBelow = false;
-        } else {
+        //below index
+        if (this.inBounds(x, y + 1)) {
             if (this.actionPlane[belowIndex].blockType.substring(0,12) === "redstoneWire") {
                 foundBelow = true;
                 ++borderCount;
             }
         }
-        if (y === 0) {
-            foundAbove = false;
-        } else {
+
+        //above index
+        if (this.inBounds(x, y - 1)) {
             if (this.actionPlane[aboveIndex].blockType.substring(0,12) === "redstoneWire") {
                 foundAbove = true;
                 ++borderCount;
             }
         }
-        if (x === this.planeWidth) {
-            foundRight = false;
-        } else {
+
+        //right index
+        if (this.inBounds(x + 1, y)) {
             if (this.actionPlane[rightIndex].blockType.substring(0,12) === "redstoneWire") {
                 foundRight = true;
                 ++borderCount;
             }
         }
-        if (x === 0) {
-            foundLeft = false;
-        } else {
+
+        //left index
+        if (this.inBounds(x - 1, y)) {
             if (this.actionPlane[leftIndex].blockType.substring(0,12) === "redstoneWire") {
                 foundLeft = true;
                 ++borderCount;
