@@ -46,6 +46,15 @@ module.exports = class LevelModel {
     this.groundDecorationPlane = new LevelPlane(this.initialLevelData.groundDecorationPlane, this.planeWidth, this.planeHeight);
     this.shadingPlane = [];
     this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, true);
+    
+    for (let i = 0; i < this.actionPlane.length; ++i) {
+      if (this.actionPlane[i].blockType.substring(0,12) === "redstoneWire") {
+        let y = Math.floor(i / this.planeHeight);
+        let x = i - (y * this.planeHeight);
+        this.determineRedstoneSprite(x, y, this.actionPlane[i]);
+      }
+    }
+    
     this.fluffPlane = new LevelPlane(this.initialLevelData.fluffPlane, this.planeWidth, this.planeHeight);
     this.fowPlane = [];
     this.isDaytime = this.initialLevelData.isDaytime === undefined || this.initialLevelData.isDaytime;
@@ -812,8 +821,28 @@ module.exports = class LevelModel {
       blockType = "farmlandWet";
       targetPlane = this.groundPlane;
     }
-
-    targetPlane.setBlockAt(blockPosition, new LevelBlock(blockType));
+    let newBlock = new LevelBlock(blockType);
+    let newBlockType = blockType;
+    if (blockType.substring(0,12) === "redstoneWire") {
+      newBlockType = this.determineRedstoneSprite(blockPosition[0], blockPosition[1], newBlock);
+      newBlock = new LevelBlock(newBlockType);
+      targetPlane.setBlockAt(blockPosition, newBlock);
+      
+      //have to do it for adjacent blocks as well:
+      let upBlockType = this.determineRedstoneSprite(blockPosition[0], blockPosition[1] - 1, newBlock);
+      this.actionPlane[this.yToIndex(blockPosition[1] - 1) + blockPosition[0]].blockType = upBlockType;
+      let downBlockType = this.determineRedstoneSprite(blockPosition[0], blockPosition[1] + 1, newBlock);
+      this.actionPlane[this.yToIndex(blockPosition[1] + 1) + blockPosition[0]].blockType = downBlockType;
+      let rightBlockType = this.determineRedstoneSprite(blockPosition[0] + 1, blockPosition[1], newBlock);
+      this.actionPlane[this.yToIndex(blockPosition[1]) + blockPosition[0] + 1].blockType = rightBlockType;
+      let leftBlockType = this.determineRedstoneSprite(blockPosition[0] - 1, blockPosition[1], newBlock);
+      this.actionPlane[this.yToIndex(blockPosition[1]) + blockPosition[0] - 1].blockType = leftBlockType;
+    }
+    else {
+      targetPlane.setBlockAt(blockPosition, newBlock);
+    }
+    
+    this.controller.levelView.reset(this);
   }
 
   destroyBlock(position) {
@@ -1134,7 +1163,7 @@ module.exports = class LevelModel {
         if (y === this.planeHeight) {
             foundBelow = false;
         } else {
-            if (this.actionPlane[belowIndex].blockType === "redstoneWire") {
+            if (this.actionPlane[belowIndex].blockType.substring(0,12) === "redstoneWire") {
                 foundBelow = true;
                 ++borderCount;
             }
@@ -1142,7 +1171,7 @@ module.exports = class LevelModel {
         if (y === 0) {
             foundAbove = false;
         } else {
-            if (this.actionPlane[aboveIndex].blockType === "redstoneWire") {
+            if (this.actionPlane[aboveIndex].blockType.substring(0,12) === "redstoneWire") {
                 foundAbove = true;
                 ++borderCount;
             }
@@ -1150,7 +1179,7 @@ module.exports = class LevelModel {
         if (x === this.planeWidth) {
             foundRight = false;
         } else {
-            if (this.actionPlane[rightIndex].blockType === "redstoneWire") {
+            if (this.actionPlane[rightIndex].blockType.substring(0,12) === "redstoneWire") {
                 foundRight = true;
                 ++borderCount;
             }
@@ -1158,7 +1187,7 @@ module.exports = class LevelModel {
         if (x === 0) {
             foundLeft = false;
         } else {
-            if (this.actionPlane[leftIndex].blockType === "redstoneWire") {
+            if (this.actionPlane[leftIndex].blockType.substring(0,12) === "redstoneWire") {
                 foundLeft = true;
                 ++borderCount;
             }
@@ -1166,52 +1195,54 @@ module.exports = class LevelModel {
 
         if (borderCount === 0) {
             //no connecting redstone wire
-            this.actionPlane[myIndex] = "redstoneWire";
+            this.actionPlane[myIndex].blockType = "redstoneWire";
         } else if (borderCount === 1) {
             if (foundBelow || foundAbove) {
-                this.actionPlane[myIndex] = "redstoneWireVertical";
+                this.actionPlane[myIndex].blockType = "redstoneWireVertical";
             } else if (foundLeft || foundRight) {
-                this.actionPlane[myIndex] = "redstoneWireHorizontal";
+                this.actionPlane[myIndex].blockType = "redstoneWireHorizontal";
             }
         } else if (borderCount === 2) {
             if ((foundBelow || foundAbove) && !foundRight && !foundLeft){
                 //purely vertical, no left or right
-                this.actionPlane[myIndex] = "redstoneWireVertical";
+                this.actionPlane[myIndex].blockType = "redstoneWireVertical";
             } else if ((foundRight || foundLeft) && !foundBelow && !foundAbove){
                 //purely horizontal, no above or below
-                this.actionPlane[myIndex] = "redstoneWireHorizontal";
+                this.actionPlane[myIndex].blockType = "redstoneWireHorizontal";
             } else {
                 //we have a corner and will need to rotate
                 if (foundBelow) {
                     //if we have a blow, the other has to be right or left
                     if (foundLeft) {
-                        this.actionPlane[myIndex] = "redstoneWireDownLeft";
+                        this.actionPlane[myIndex].blockType = "redstoneWireDownLeft";
                     } else {
-                        this.actionPlane[myIndex] = "redstoneWireDownRight";
+                        this.actionPlane[myIndex].blockType = "redstoneWireDownRight";
                     }
                 } else {
                     //if not below, then above + left or right
                     if (foundLeft) {
-                        this.actionPlane[myIndex] = "redstoneWireUpLeft";
+                        this.actionPlane[myIndex].blockType = "redstoneWireUpLeft";
                     } else {
-                        this.actionPlane[myIndex] = "redstoneWireUpRight";
+                        this.actionPlane[myIndex].blockType = "redstoneWireUpRight";
                     }
                 }
             }
         } else if (borderCount === 3) {
             if (!foundBelow) {
-                this.actionPlane[myIndex] = "redstoneWireTUp";
+                this.actionPlane[myIndex].blockType = "redstoneWireTUp";
             } else if (!foundAbove) {
-                this.actionPlane[myIndex] = "redstoneWireTDown";
+                this.actionPlane[myIndex].blockType = "redstoneWireTDown";
             } else if (!foundLeft) {
-                this.actionPlane[myIndex] = "redstoneWireTRight";
+                this.actionPlane[myIndex].blockType = "redstoneWireTRight";
             } else if (!foundRight) {
-                this.actionPlane[myIndex] = "redstoneWireTLeft";
+                this.actionPlane[myIndex].blockType = "redstoneWireTLeft";
             }
         } else if (borderCount === 4) {
             //all four sides connected: Cross
-            this.actionPlane[myIndex] = "redstoneWireCross";
+            this.actionPlane[myIndex].blockType = "redstoneWireCross";
         }
+        
+    return this.actionPlane[myIndex].blockType;
   }
 
   computeShadingPlane() {

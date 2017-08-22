@@ -131,17 +131,16 @@ module.exports = class LevelView {
       "redstoneWire": ["blocks", "redstone_dust_dot_off", -13, 0],
       "redstoneWireHorizontal": ["blocks", "redstone_dust_line_h_off", -13, 0],
       "redstoneWireVertical": ["blocks", "redstone_dust_line_v_off", -13, 0],
-      "redstoneWireUpRight": ["blocks", "redstone_dust_corner_TopRight_off", -13, 0],
-      "redstoneWireUpLeft": ["blocks", "redstone_dust_corner_TopLeft_off", -13, 0],
-      "redstoneWireDownRight": ["blocks", "redstone_dust_corner_BottomRight_off", -13, 0],
-      "redstoneWireDownLeft": ["blocks", "redstone_dust_corner_BottomLeft_off", -13, 0],
+      "redstoneWireUpRight": ["blocks", "redstone_dust_corner_BottomLeft_off", -13, 0],
+      "redstoneWireUpLeft": ["blocks", "redstone_dust_corner_BottomRight_off", -13, 0],
+      "redstoneWireDownRight": ["blocks", "redstone_dust_corner_TopLeft_off", -13, 0],
+      "redstoneWireDownLeft": ["blocks", "redstone_dust_corner_TopRight_off", -13, 0],
       "redstoneWireTUp": ["blocks", "redstone_dust_cross_up_off", -13, 0],
       "redstoneWireTDown": ["blocks", "redstone_dust_cross_down_off", -13, 0],
       "redstoneWireTLeft": ["blocks", "redstone_dust_cross_left_off", -13, 0],
       "redstoneWireTRight": ["blocks", "redstone_dust_cross_right_off", -13, 0],
       "redstoneWireCross": ["blocks", "redstone_dust_cross_off", -13, 0],
     };
-
     this.actionPlaneBlocks = [];
     this.toDestroy = [];
     this.resettableTweens = [];
