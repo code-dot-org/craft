@@ -107,7 +107,7 @@ const levels = [{
       "", "", "", "", "cropWheat", "", "cropWheat", "", "", "",
       "", "", "", "", "cropWheat", "", "cropWheat", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", ""
+      "", "", "", "", "", "", "", "", "", "",
     ]),
 }, {
   groundPlane: ["grass","grass","grass","planksBirch","grass","grass","planksBirch","grass","grass","grass","grass","grass","grass","planksBirch","planksBirch","planksBirch","planksBirch","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
@@ -166,14 +166,14 @@ const levels = [{
     verificationAPI.solutionMapMatchesResultMap([
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "any", "", "", "", "", "", "",
-      "", "", "", "any", "", "", "", "", "", "",
-      "", "", "", "any", "", "", "", "", "", "",
-      "", "", "", "any", "", "", "", "", "", "",
-      "", "", "", "any", "", "", "", "", "", "",
-      "", "", "", "any", "any", "any", "any", "any", "any", "any",
+      "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
+      "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
+      "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
+      "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
+      "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
+      "", "", "", "railsBottomLeft", "railsHorizontal", "railsHorizontal", "railsHorizontal", "railsHorizontal", "railsHorizontal", "railsHorizontal",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", ""
+      "", "", "", "", "", "", "", "", "", "",
     ]),
 }, {
   specialLevelType: "freeplay",
