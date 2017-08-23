@@ -1254,9 +1254,11 @@ class GameController {
       if (blockTypeAtPosition !== "") {
         this.levelModel.destroyBlock(blockIndex);
       }
-      if (this.levelModel.placeBlock(blockType)) {
+
+      const placedBlock = this.levelModel.placeBlock(blockType);
+      if (placedBlock) {
         this.levelModel.player.updateHidingBlock(this.levelModel.player.position);
-        this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, blockTypeAtPosition, () => {
+        this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, placedBlock.blockType, blockTypeAtPosition, () => {
           this.levelModel.computeShadingPlane();
           this.levelModel.computeFowPlane();
           this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
@@ -1334,8 +1336,8 @@ class GameController {
     if (this.levelModel.isBlockOfTypeOnPlane(forwardPosition, "lava", placementPlane)) {
       soundEffect = () => this.levelView.audioPlayer.play("fizz");
     }
-    this.levelModel.placeBlockForward(blockType, placementPlane);
-    this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.getMoveForwardPosition(), placementPlane, blockType, () => {
+    const placedBlock = this.levelModel.placeBlockForward(blockType, placementPlane);
+    this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, forwardPosition, placementPlane, placedBlock.blockType, () => {
       this.levelModel.computeShadingPlane();
       this.levelModel.computeFowPlane();
       this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
