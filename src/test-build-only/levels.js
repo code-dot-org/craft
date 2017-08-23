@@ -79,7 +79,7 @@ window.demoLevels = {
     actionPlane: ["redstoneWire", "redstoneWire", "", "", "", "", "", "", "grass", "grass",
       "redstoneWire", "grass", "", "", "", "", "", "", "", "grass",
       "", "", "", "", "", "", "", "redstoneWire", "oreRedstone", "redstoneWire",
-      "", "", "", "", "redstoneWire", "oreRedstone", "", "redstoneWire", "torch", "",
+      "", "", "", "", "redstoneWire", "", "", "redstoneWire", "torch", "",
       "", "", "", "", "", "redstoneWire", "redstoneWire", "redstoneWire", "", "",
       "dirt", "treeJungle", "", "", "redstoneWire", "", "", "redstoneWire", "", "",
       "", "", "grass", "door", "", "", "", "", "", "",

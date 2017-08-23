@@ -832,8 +832,8 @@ module.exports = class LevelModel {
       if (this.inBounds(blockPosition[0], blockPosition[1] - 1)) {
         let index = this.yToIndex(blockPosition[1] - 1) + blockPosition[0];
         if (this.actionPlane[index].blockType.substring(0,12) === "redstoneWire") {
-          let upBlockType = this.determineRedstoneSprite(blockPosition[0], blockPosition[1] - 1, newBlock);
-          this.actionPlane[this.yToIndex(blockPosition[1] - 1) + blockPosition[0]].blockType = upBlockType;
+          let downBlockType = this.determineRedstoneSprite(blockPosition[0], blockPosition[1] - 1, newBlock);
+          this.actionPlane[this.yToIndex(blockPosition[1] - 1) + blockPosition[0]].blockType = downBlockType;
         }
         console.log("top index is: " + this.actionPlane[index].blockType);
       }
@@ -850,8 +850,8 @@ module.exports = class LevelModel {
       if (this.inBounds(blockPosition[0] + 1, blockPosition[1])) {
         let index = this.yToIndex(blockPosition[1]) + blockPosition[0] + 1;
         if (this.actionPlane[index].blockType.substring(0,12) === "redstoneWire") {
-          let upBlockType = this.determineRedstoneSprite(blockPosition[0] + 1, blockPosition[1], newBlock);
-          this.actionPlane[this.yToIndex(blockPosition[1]) + blockPosition[0] + 1].blockType = upBlockType;
+          let rightBlockType = this.determineRedstoneSprite(blockPosition[0] + 1, blockPosition[1], newBlock);
+          this.actionPlane[this.yToIndex(blockPosition[1]) + blockPosition[0] + 1].blockType = rightBlockType;
         }
         console.log("right index is: " + this.actionPlane[index].blockType);
       }
@@ -859,12 +859,11 @@ module.exports = class LevelModel {
       if (this.inBounds(blockPosition[0] - 1, blockPosition[1])) {
         let index = this.yToIndex(blockPosition[1]) + blockPosition[0] - 1;
         if (this.actionPlane[index].blockType.substring(0,12) === "redstoneWire") {
-          let upBlockType = this.determineRedstoneSprite(blockPosition[0] - 1, blockPosition[1], newBlock);
-          this.actionPlane[this.yToIndex(blockPosition[1]) + blockPosition[0] - 1].blockType = upBlockType;
+          let leftBlockType = this.determineRedstoneSprite(blockPosition[0] - 1, blockPosition[1], newBlock);
+          this.actionPlane[this.yToIndex(blockPosition[1]) + blockPosition[0] - 1].blockType = leftBlockType;
         }
         console.log("left index is: " + this.actionPlane[index].blockType);
       }
-
     }
     else {
       targetPlane.setBlockAt(blockPosition, newBlock);
