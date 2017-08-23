@@ -43,6 +43,7 @@
     "karma-coverage": "^1.1.1",
     "karma-tap": "^3.1.1",
     "istanbul": "^0.4.5",
+    "sinon": "^3.2.1",
     "tape": "^4.8.0"
   }
 }

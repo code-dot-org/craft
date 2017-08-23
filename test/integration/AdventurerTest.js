@@ -1,5 +1,8 @@
 const test = require("tape");
+const sinon = require("sinon");
 const GameController = require("../../src/js/game/GameController");
+
+sinon.stub(Math, "random").returns(0.5);
 
 const defaults = {
   assetPacks: {
