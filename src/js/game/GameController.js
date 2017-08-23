@@ -1247,16 +1247,17 @@ class GameController {
     let blockIndex = (this.levelModel.yToIndex(this.levelModel.player.position[1]) + this.levelModel.player.position[0]);
     let blockTypeAtPosition = this.levelModel.actionPlane[blockIndex].blockType;
     if (this.levelModel.canPlaceBlock()) {
-      if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {
-        blockType = this.checkRailBlock(blockType);
-      }
-
       if (blockTypeAtPosition !== "") {
         this.levelModel.destroyBlock(blockIndex);
       }
-      if (this.levelModel.placeBlock(blockType)) {
+
+      const placedBlock = this.levelModel.placeBlock(blockType);
+      if (placedBlock) {
+        if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {
+          placedBlock.blockType = this.checkRailBlock(blockType);
+        }
         this.levelModel.player.updateHidingBlock(this.levelModel.player.position);
-        this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, blockTypeAtPosition, () => {
+        this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, placedBlock.blockType, blockTypeAtPosition, () => {
           this.levelModel.computeShadingPlane();
           this.levelModel.computeFowPlane();
           this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
@@ -1334,8 +1335,8 @@ class GameController {
     if (this.levelModel.isBlockOfTypeOnPlane(forwardPosition, "lava", placementPlane)) {
       soundEffect = () => this.levelView.audioPlayer.play("fizz");
     }
-    this.levelModel.placeBlockForward(blockType, placementPlane);
-    this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.getMoveForwardPosition(), placementPlane, blockType, () => {
+    const placedBlock = this.levelModel.placeBlockForward(blockType, placementPlane);
+    this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, forwardPosition, placementPlane, placedBlock.blockType, () => {
       this.levelModel.computeShadingPlane();
       this.levelModel.computeFowPlane();
       this.levelView.updateShadingPlane(this.levelModel.shadingPlane);

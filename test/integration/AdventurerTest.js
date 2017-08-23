@@ -107,7 +107,7 @@ const levels = [{
       "", "", "", "", "cropWheat", "", "cropWheat", "", "", "",
       "", "", "", "", "cropWheat", "", "cropWheat", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", ""
+      "", "", "", "", "", "", "", "", "", "",
     ]),
 }, {
   isDaytime: false,
@@ -171,14 +171,14 @@ const levels = [{
     verificationAPI.solutionMapMatchesResultMap([
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "any", "", "", "", "", "", "",
-      "", "", "", "any", "", "", "", "", "", "",
-      "", "", "", "any", "", "", "", "", "", "",
-      "", "", "", "any", "", "", "", "", "", "",
-      "", "", "", "any", "", "", "", "", "", "",
-      "", "", "", "any", "any", "any", "any", "any", "any", "any",
+      "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
+      "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
+      "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
+      "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
+      "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
+      "", "", "", "railsBottomLeft", "railsHorizontal", "railsHorizontal", "railsHorizontal", "railsHorizontal", "railsHorizontal", "railsHorizontal",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", ""
+      "", "", "", "", "", "", "", "", "", "",
     ]),
 }, {
   specialLevelType: "freeplay",
