@@ -42,3 +42,29 @@ test('get blocks', t => {
 
   t.end();
 });
+
+test('rail connections', t => {
+  const data = [
+    'railsVertical', '', 'railsVertical', '', '', 'railsVertical', '',
+    '', 'railsVertical', '', '', '', '', 'railsVertical',
+    '', '', '', '', '', 'railsVertical', '',
+    '', 'railsVertical', '', '', 'railsVertical', '', '',
+    'railsVertical', '', 'railsVertical', '', 'railsVertical', '', '',
+    '', '', '', '', '', 'railsVertical', '',
+  ];
+  const plane = new LevelPlane(data, 7, 6, true);
+
+  t.deepEqual(plane.setBlockAt([1, 0], new LevelBlock('railsHorizontal')).blockType, 'railsTopLeft');
+  t.deepEqual(plane.setBlockAt([5, 1], new LevelBlock('railsHorizontal')).blockType, 'railsTopLeft');
+  t.deepEqual(plane.setBlockAt([1, 4], new LevelBlock('railsHorizontal')).blockType, 'railsBottomLeft');
+  t.deepEqual(plane.setBlockAt([5, 4], new LevelBlock('railsHorizontal')).blockType, 'railsTopRight');
+
+  const expected = data.slice();
+  expected[1] = 'railsTopLeft';
+  expected[12] = 'railsTopLeft';
+  expected[29] = 'railsBottomLeft';
+  expected[33] = 'railsTopRight';
+  t.deepEqual(plane, new LevelPlane(expected, 7, 6, true));
+
+  t.end();
+});
