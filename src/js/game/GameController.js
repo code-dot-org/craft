@@ -1247,16 +1247,15 @@ class GameController {
     let blockIndex = (this.levelModel.yToIndex(this.levelModel.player.position[1]) + this.levelModel.player.position[0]);
     let blockTypeAtPosition = this.levelModel.actionPlane[blockIndex].blockType;
     if (this.levelModel.canPlaceBlock()) {
-      if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {
-        blockType = this.checkRailBlock(blockType);
-      }
-
       if (blockTypeAtPosition !== "") {
         this.levelModel.destroyBlock(blockIndex);
       }
 
       const placedBlock = this.levelModel.placeBlock(blockType);
       if (placedBlock) {
+        if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {
+          placedBlock.blockType = this.checkRailBlock(blockType);
+        }
         this.levelModel.player.updateHidingBlock(this.levelModel.player.position);
         this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, placedBlock.blockType, blockTypeAtPosition, () => {
           this.levelModel.computeShadingPlane();
