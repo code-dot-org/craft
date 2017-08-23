@@ -76,12 +76,21 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
       "tallGrass", "", "", "", "", "", "", "", "", ""],
 
+<<<<<<< HEAD
     actionPlane: ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
       "", "grass", "", "", "", "", "", "", "", "grass",
       "", "", "redstone_dust", "redstone_dust", "redstone_dust", "redstone_dust", "", "redstone_dust", "oreRedstone", "redstone_dust",
       "", "", "", "", "", "oreRedstone", "", "redstone_dust", "torch", "",
       "", "", "", "", "", "redstone_dust", "redstone_dust", "redstone_dust", "", "",
       "dirt", "treeJungle", "", "", "", "", "", "redstone_dust", "", "",
+=======
+    actionPlane: ["redstoneWire", "redstoneWire", "", "", "", "", "", "", "grass", "grass",
+      "redstoneWire", "grass", "", "", "", "", "", "", "", "grass",
+      "", "", "", "", "", "", "", "redstoneWire", "oreRedstone", "redstoneWire",
+      "", "", "", "", "redstoneWire", "", "", "redstoneWire", "torch", "",
+      "", "", "", "", "", "redstoneWire", "redstoneWire", "redstoneWire", "", "",
+      "dirt", "treeJungle", "", "", "redstoneWire", "", "", "redstoneWire", "", "",
+>>>>>>> 37d2c41... trying to figure out this view.actionPlane remnants
       "", "", "grass", "door", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "treeAcacia", "",
       "", "", "", "", "", "", "", "", "", "",
