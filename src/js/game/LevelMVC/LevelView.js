@@ -1173,46 +1173,15 @@ module.exports = class LevelView {
         let y = Math.floor(workingIndex / this.controller.levelModel.planeHeight);
         let x = workingIndex - (y * this.controller.levelModel.planeHeight);
 
-        let blockIndex = (this.yToIndex(y)) + x;
-
-        sprite = null;
-        if (!levelData.actionPlane[blockIndex].isEmpty) {
-          blockType = levelData.actionPlane[blockIndex].blockType;
-          sprite = this.createBlock(this.actionPlane, x, y, blockType, levelData);
-          if (sprite !== null) {
-            sprite.sortOrder = this.yToIndex(y);
-          }
+        blockType = levelData.actionPlane[workingIndex].blockType;
+        if (blockType !== "") {
+          this.createActionPlaneBlock({0: x,1: y}, blockType);
+        } else {
+          //Just a safety check to make sure that levelModel and levelView are synched
+          this.actionPlaneBlocks[workingIndex] = null;
         }
-        this.actionPlaneBlocks[workingIndex] = sprite;
       }
     }
-
-    // Save all all non-block elements.
-    let entityHolder = [];
-    for (var aPIndex in this.actionPlane.children) {
-      let workingKey = this.actionPlane.children[aPIndex].key;
-      if (workingKey !== "blocks" && workingKey !== "torch" && workingKey !== "door"){
-        entityHolder.push(this.actionPlane.children[aPIndex]);
-      }
-    }
-
-    // Empty the actionPlane.
-    this.actionPlane.children = [];
-
-    // Re-push all actionPlaneBlocks into actionPlane.
-    for (var aPBIndex in this.actionPlaneBlocks) {
-      if (this.actionPlaneBlocks[aPBIndex] !== null) {
-        this.actionPlane.children.push(this.actionPlaneBlocks[aPBIndex]);
-      }
-    }
-
-    // Re-capture all those non-blocks we saved.
-    for (var eHIndex in entityHolder) {
-      if (entityHolder[eHIndex] !== null) {
-        this.actionPlane.children.push(entityHolder[eHIndex]);
-      }
-    }
-    // We did all that to make sure everything in actionPlane is numbered sequentially.
   }
 
   updateShadingPlane(shadingData) {
