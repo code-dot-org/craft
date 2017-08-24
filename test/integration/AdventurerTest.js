@@ -1,8 +1,5 @@
 const test = require("tape");
-const sinon = require("sinon");
 const attempt = require("../helpers/RunLevel.js");
-
-sinon.stub(Math, "random").returns(0.5);
 
 test('Adventurer 1: Move to Sheep (fail)', t => {
   attempt('adventurer01', api => new Promise(resolve => {

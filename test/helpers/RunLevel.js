@@ -1,7 +1,11 @@
+const sinon = require("sinon");
 const GameController = require("../../src/js/game/GameController");
 const AdventurerLevels = require("./AdventurerLevels");
+const DesignerLevels = require("./DesignerLevels");
 
-const levels = Object.assign({}, AdventurerLevels);
+sinon.stub(Math, "random").returns(0.5);
+
+const levels = Object.assign({}, AdventurerLevels, DesignerLevels);
 
 const defaults = {
   assetPacks: {
@@ -11,6 +15,7 @@ const defaults = {
   gridDimensions: [10, 10],
   fluffPlane: ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],
   playerName: 'Alex',
+  playerStartPosition: [],
   verificationFunction: verificationAPI => {},
 };
 
