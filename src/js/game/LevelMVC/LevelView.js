@@ -17,6 +17,7 @@ module.exports = class LevelView {
     this.fluffPlane = null;
     this.fowPlane = null;
     this.collectibleItems = [];
+    this.listOfFlowers = [];
     //{sprite : sprite, type : blockType, position : [x,y]}
     this.trees = [];
 
@@ -909,60 +910,52 @@ module.exports = class LevelView {
   playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
     let blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
     let blockToDestroy = this.actionPlaneBlocks[blockIndex];
-    
-    let WhatIndex = 0;
-    for (var index in this.actionPlane.children) {
-      if (this.actionPlane.children[index] === blockToDestroy) {
-        WhatIndex = index;
+
+    if(blockType.substring(0,12) === "redstoneWire") {
+      //we need to look at the sprites around here.
+      let upIndex = blockIndex - this.controller.levelModel.actionPlane.height;
+      let downIndex = blockIndex + this.controller.levelModel.actionPlane.height;
+      let rightIndex = blockIndex + 1;
+      let leftIndex = blockIndex - 1;
+
+      let activeIndicies = {up: -1, down: -1, left: -1, right: -1, center: blockIndex};
+
+      //up index
+      if (this.controller.levelModel.inBounds(destroyPosition[0], destroyPosition[1] - 1) && this.controller.levelModel.actionPlane[upIndex].blockType.substring(0,12) === "redstoneWire") {
+        let upBlockType = this.controller.levelModel.actionPlane[upIndex].blockType;
+        upBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0], destroyPosition[1] - 1, upBlockType);
+        this.controller.levelModel.actionPlane[upIndex].blockType = upBlockType;
+        activeIndicies.up = upIndex;
       }
+      //down index
+      if (this.controller.levelModel.inBounds(destroyPosition[0], destroyPosition[1] + 1) && this.controller.levelModel.actionPlane[downIndex].blockType.substring(0,12) === "redstoneWire") {
+        let downBlockType = this.controller.levelModel.actionPlane[downIndex].blockType;
+        downBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0], destroyPosition[1] + 1, downBlockType);
+        this.controller.levelModel.actionPlane[downIndex].blockType = downBlockType;
+        activeIndicies.down = downIndex;
+      }
+      //right index
+      if (this.controller.levelModel.inBounds(destroyPosition[0] + 1, destroyPosition[1]) && this.controller.levelModel.actionPlane[rightIndex].blockType.substring(0,12) === "redstoneWire") {
+        let rightBlockType = this.controller.levelModel.actionPlane[rightIndex].blockType;
+        rightBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0] + 1, destroyPosition[1], rightBlockType);
+        this.controller.levelModel.actionPlane[rightIndex].blockType = rightBlockType;
+        activeIndicies.right = rightIndex;
+      }
+      //left index
+      if (this.controller.levelModel.inBounds(destroyPosition[0] - 1, destroyPosition[1]) && this.controller.levelModel.actionPlane[leftIndex].blockType.substring(0,12) === "redstoneWire") {
+        let leftBlockType = this.controller.levelModel.actionPlane[leftIndex].blockType;
+        leftBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0] - 1, destroyPosition[1], leftBlockType);
+        this.controller.levelModel.actionPlane[leftIndex].blockType = leftBlockType;
+        activeIndicies.left = leftIndex;
+      }
+      //pelican
+      this.refreshActionPlane(this.controller.levelModel, activeIndicies);
     }
 
     let destroyOverlay = this.actionPlane.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
     destroyOverlay.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     this.onAnimationEnd(destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false), () => {
       this.actionPlaneBlocks[blockIndex] = null;
-
-      let whatever = this.controller;
-      if(blockType.substring(0,12) === "redstoneWire") {
-        //we need to look at the sprites around here.
-        let upIndex = blockIndex - this.controller.levelModel.actionPlane.height;
-        let downIndex = blockIndex + this.controller.levelModel.actionPlane.height;
-        let rightIndex = blockIndex + 1;
-        let leftIndex = blockIndex - 1;
-        
-        let activeIndicies = {up: -1, down: -1, left: -1, right: -1};
-        
-        //up index
-        if (this.controller.levelModel.inBounds(destroyPosition[0], destroyPosition[1] - 1) && this.controller.levelModel.actionPlane[upIndex].blockType.substring(0,12) === "redstoneWire") {
-          let upBlockType = this.controller.levelModel.actionPlane[upIndex].blockType;
-          upBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0], destroyPosition[1] - 1, upBlockType);
-          this.controller.levelModel.actionPlane[upIndex].blockType = upBlockType;
-          activeIndicies.up = upIndex;
-        }
-        //down index
-        if (this.controller.levelModel.inBounds(destroyPosition[0], destroyPosition[1] + 1) && this.controller.levelModel.actionPlane[downIndex].blockType.substring(0,12) === "redstoneWire") {
-          let downBlockType = this.controller.levelModel.actionPlane[downIndex].blockType;
-          downBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0], destroyPosition[1] + 1, downBlockType);
-          this.controller.levelModel.actionPlane[downIndex].blockType = downBlockType;
-          activeIndicies.down = downIndex;
-        }
-        //right index
-        if (this.controller.levelModel.inBounds(destroyPosition[0] + 1, destroyPosition[1]) && this.controller.levelModel.actionPlane[rightIndex].blockType.substring(0,12) === "redstoneWire") {
-          let rightBlockType = this.controller.levelModel.actionPlane[rightIndex].blockType;
-          rightBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0] + 1, destroyPosition[1], rightBlockType);
-          this.controller.levelModel.actionPlane[rightIndex].blockType = rightBlockType;
-          activeIndicies.right = rightIndex;
-        }
-        //left index
-        if (this.controller.levelModel.inBounds(destroyPosition[0] - 1, destroyPosition[1]) && this.controller.levelModel.actionPlane[leftIndex].blockType.substring(0,12) === "redstoneWire") {
-          let leftBlockType = this.controller.levelModel.actionPlane[leftIndex].blockType;
-          leftBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0] - 1, destroyPosition[1], leftBlockType);
-          this.controller.levelModel.actionPlane[leftIndex].blockType = leftBlockType;
-          activeIndicies.left = leftIndex;
-        }
-        //pelican
-        this.refreshActionPlane(this.controller.levelModel, activeIndicies);
-      }
       
       if (blockToDestroy.hasOwnProperty("onBlockDestroy")) {
         blockToDestroy.onBlockDestroy(blockToDestroy);
@@ -1239,10 +1232,8 @@ module.exports = class LevelView {
   refreshActionPlane(levelData, indices) {
       var sprite,
       blockType;
-      
-    let whatever = this.actionPlaneBlocks;
-    let whatever2 = this.controller.levelModel.actionPlane;
-    for(var index in indices) {
+
+    for (var index in indices) {
       if (indices[index] >= 0) {
         let workingIndex = indices[index];
 
@@ -1254,38 +1245,13 @@ module.exports = class LevelView {
 
         let blockIndex = (this.yToIndex(y)) + x;
 
-        sprite = null;
-        if (!levelData.actionPlane[blockIndex].isEmpty) {
-          blockType = levelData.actionPlane[blockIndex].blockType;
-          sprite = this.createBlock(this.actionPlane, x, y, blockType, levelData);
-          if (sprite !== null) {
-            sprite.sortOrder = this.yToIndex(y);
-          }
+        blockType = levelData.actionPlane[workingIndex].blockType;
+        if (blockType !== "") {
+          this.createActionPlaneBlock({0: x,1: y}, blockType);
+        } else {
+          //Just a safety check to make sure that levelModel and levelView are synched
+          this.actionPlaneBlocks[workingIndex] = null;
         }
-        this.actionPlaneBlocks[workingIndex] = sprite;
-      }
-    }
-    
-    let entityHolder = [];
-    for(var index in this.actionPlane.children) {
-      let workingKey = this.actionPlane.children[index].key;
-      if(workingKey !== "blocks" && workingKey !== "torch" && workingKey !== "door"){
-        entityHolder.push(this.actionPlane.children[index]);
-      }
-    }
-    let whatamI = this.controller.levelModel.groundDecorationPlane;
-    
-    this.actionPlane.children = [];
-    
-    for(var index in this.actionPlaneBlocks) {
-      if(this.actionPlaneBlocks[index] !== null) {
-        this.actionPlane.children.push(this.actionPlaneBlocks[index]);
-      }
-    }    
-    
-    for(var index in entityHolder) {
-      if(entityHolder[index] !== null) {
-        this.actionPlane.children.push(entityHolder[index]);
       }
     }
   }
@@ -1952,6 +1918,15 @@ module.exports = class LevelView {
       levelView.trees.push({ sprite: sprite, type: blockType, position: [x, y] });
     };
 
+    if (blockType.substring(0,6) === "flower") {
+      atlas = this.blocks[blockType][0];
+      frame = this.blocks[blockType][1];
+      xOffset = this.blocks[blockType][2];
+      yOffset = this.blocks[blockType][3];
+      sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+      this.listOfFlowers.push(sprite);
+    }
+
     switch (blockType) {
       case "treeAcacia": //0,7
         buildTree(this, [0, 7]);
@@ -2133,9 +2108,6 @@ module.exports = class LevelView {
         break;
 
       default:
-        if (this.blocks[blockType] === undefined){
-          console.log("what");
-        }
         atlas = this.blocks[blockType][0];
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];

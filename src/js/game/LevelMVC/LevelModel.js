@@ -832,13 +832,15 @@ module.exports = class LevelModel {
       newBlock = new LevelBlock(newBlockType);
       targetPlane.setBlockAt(blockPosition, newBlock);
 
-      
       //have to do it for adjacent blocks as well:
       if (this.inBounds(blockPosition[0], blockPosition[1] - 1)) {
         topIndex = this.yToIndex(blockPosition[1] - 1) + blockPosition[0];
         if (this.actionPlane[topIndex].blockType.substring(0,12) === "redstoneWire") {
           let upBlockType = this.determineRedstoneSprite(blockPosition[0], blockPosition[1] - 1, newBlock);
           this.actionPlane[this.yToIndex(blockPosition[1] - 1) + blockPosition[0]].blockType = upBlockType;
+        } else {
+          // Reset topIndex to -1 because we don't care about it. It's not redstone.
+          topIndex = -1;
         }
       }
 
@@ -847,6 +849,9 @@ module.exports = class LevelModel {
         if (this.actionPlane[bottomIndex].blockType.substring(0,12) === "redstoneWire") {
           let downBlockType = this.determineRedstoneSprite(blockPosition[0], blockPosition[1] + 1, newBlock);
           this.actionPlane[this.yToIndex(blockPosition[1] + 1) + blockPosition[0]].blockType = downBlockType;
+        } else {
+          // Reset bottomIndex to -1 because we don't care about it. It's not redstone.
+          bottomIndex = -1;
         }
       }
       
@@ -855,6 +860,9 @@ module.exports = class LevelModel {
         if (this.actionPlane[rightIndex].blockType.substring(0,12) === "redstoneWire") {
           let rightBlockType = this.determineRedstoneSprite(blockPosition[0] + 1, blockPosition[1], newBlock);
           this.actionPlane[this.yToIndex(blockPosition[1]) + blockPosition[0] + 1].blockType = rightBlockType;
+        } else {
+          // Reset rightIndex to -1 because we don't care about it. It's not redstone.
+          rightIndex = -1;
         }
       }
       
@@ -863,6 +871,9 @@ module.exports = class LevelModel {
         if (this.actionPlane[leftIndex].blockType.substring(0,12) === "redstoneWire") {
           let leftBlockType = this.determineRedstoneSprite(blockPosition[0] - 1, blockPosition[1], newBlock);
           this.actionPlane[this.yToIndex(blockPosition[1]) + blockPosition[0] - 1].blockType = leftBlockType;
+        } else {
+          // Reset leftIndex to -1 because we don't care about it. It's not redstone.
+          leftIndex = -1;
         }
       }
     }
@@ -871,7 +882,7 @@ module.exports = class LevelModel {
     }
     
     let index = this.yToIndex(blockPosition[1]) + blockPosition[0];
-    let indicies = {center: index, up: topIndex, down: bottomIndex, right: rightIndex, left: leftIndex};
+    let indicies = {up: topIndex, down: bottomIndex, right: rightIndex, left: leftIndex};
     console.log("index " + index + " is: " + this.actionPlane[index].blockType);
     
     this.controller.levelView.refreshActionPlane(this, indicies);
