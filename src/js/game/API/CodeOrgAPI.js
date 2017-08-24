@@ -65,6 +65,16 @@ module.exports.get = function (controller) {
       // (and clear out on reset)
     },
 
+    onEventTriggered: function (highlightCallback, type, eventType, callback) {
+      this.registerEventCallback(highlightCallback,
+        function (event) {
+          if (event.eventType === eventType && event.targetType === type) {
+            callback(event);
+          }
+        }
+      );
+    },
+
     // helper functions for event
     isEventTriggered: function (event, eventType) {
       return (event.eventType === eventType);
