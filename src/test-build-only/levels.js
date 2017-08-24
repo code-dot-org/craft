@@ -76,7 +76,6 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
       "tallGrass", "", "", "", "", "", "", "", "", ""],
 
-
     actionPlane: ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
       "", "grass", "", "", "", "", "", "", "", "grass",
       "", "", "redstone_dust", "redstone_dust", "redstone_dust", "redstone_dust", "", "redstone_dust", "oreRedstone", "redstone_dust",
