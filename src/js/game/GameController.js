@@ -1285,8 +1285,6 @@ class GameController {
     } else {
       commandQueueItem.failed();
     }
-    
-    
   }
 
   setPlayerActionDelayByQueueLength() {
@@ -1326,7 +1324,6 @@ class GameController {
   }
 
   placeBlockForward(commandQueueItem, blockType) {
-    console.log(this.levelView.actionPlane);
     let forwardPosition,
       placementPlane,
       soundEffect = () => { };
