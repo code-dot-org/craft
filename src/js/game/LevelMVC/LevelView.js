@@ -922,7 +922,7 @@ module.exports = class LevelView {
     this.onAnimationEnd(destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false), () => {
       this.actionPlaneBlocks[blockIndex] = null;
 
-      let whatever = this.controller.levelEntity;
+      let whatever = this.controller;
       if(blockType.substring(0,12) === "redstoneWire") {
         //we need to look at the sprites around here.
         let upIndex = blockIndex - this.controller.levelModel.actionPlane.height;
@@ -937,7 +937,6 @@ module.exports = class LevelView {
           let upBlockType = this.controller.levelModel.actionPlane[upIndex].blockType;
           upBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0], destroyPosition[1] - 1, upBlockType);
           this.controller.levelModel.actionPlane[upIndex].blockType = upBlockType;
-          //this.refreshActionPlane(this.controller.levelModel);
           activeIndicies.up = upIndex;
         }
         //down index
@@ -945,7 +944,6 @@ module.exports = class LevelView {
           let downBlockType = this.controller.levelModel.actionPlane[downIndex].blockType;
           downBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0], destroyPosition[1] + 1, downBlockType);
           this.controller.levelModel.actionPlane[downIndex].blockType = downBlockType;
-          //this.refreshActionPlane(this.controller.levelModel);
           activeIndicies.down = downIndex;
         }
         //right index
@@ -953,7 +951,6 @@ module.exports = class LevelView {
           let rightBlockType = this.controller.levelModel.actionPlane[rightIndex].blockType;
           rightBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0] + 1, destroyPosition[1], rightBlockType);
           this.controller.levelModel.actionPlane[rightIndex].blockType = rightBlockType;
-          //this.refreshActionPlane(this.controller.levelModel);
           activeIndicies.right = rightIndex;
         }
         //left index
@@ -961,12 +958,10 @@ module.exports = class LevelView {
           let leftBlockType = this.controller.levelModel.actionPlane[leftIndex].blockType;
           leftBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0] - 1, destroyPosition[1], leftBlockType);
           this.controller.levelModel.actionPlane[leftIndex].blockType = leftBlockType;
-          //this.refreshActionPlane(this.controller.levelModel);
           activeIndicies.left = leftIndex;
         }
         //pelican
         this.refreshActionPlane(this.controller.levelModel, activeIndicies);
-        //this.reset(this.controller.levelModel);
       }
       
       if (blockToDestroy.hasOwnProperty("onBlockDestroy")) {
@@ -1254,8 +1249,6 @@ module.exports = class LevelView {
         sprite = this.actionPlaneBlocks[workingIndex];
         this.actionPlane.remove(sprite);
 
-        //this.actionPlane.removeAll(true);
-        //this.actionPlaneBlocks[workingIndex] = null;
         let y = Math.floor(workingIndex / this.controller.levelModel.planeHeight);
         let x = workingIndex - (y * this.controller.levelModel.planeHeight);
 
@@ -1272,13 +1265,29 @@ module.exports = class LevelView {
         this.actionPlaneBlocks[workingIndex] = sprite;
       }
     }
-  }
-  
-  convertIndexToPos(index) {
-    let y = Math.floor(index / this.controller.levelModel.planeHeight);
-    let x = index - (y * this.controller.levelModel.planeHeight);
     
+    let entityHolder = [];
+    for(var index in this.actionPlane.children) {
+      let workingKey = this.actionPlane.children[index].key;
+      if(workingKey !== "blocks" && workingKey !== "torch" && workingKey !== "door"){
+        entityHolder.push(this.actionPlane.children[index]);
+      }
+    }
+    let whatamI = this.controller.levelModel.groundDecorationPlane;
     
+    this.actionPlane.children = [];
+    
+    for(var index in this.actionPlaneBlocks) {
+      if(this.actionPlaneBlocks[index] !== null) {
+        this.actionPlane.children.push(this.actionPlaneBlocks[index]);
+      }
+    }    
+    
+    for(var index in entityHolder) {
+      if(entityHolder[index] !== null) {
+        this.actionPlane.children.push(entityHolder[index]);
+      }
+    }
   }
 
   updateShadingPlane(shadingData) {
