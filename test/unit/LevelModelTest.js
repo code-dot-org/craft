@@ -15,8 +15,6 @@ const makeLevelDefinition = (width, height) => {
     actionPlane: makePlane(size, ''),
     fluffPlane: makePlane(size, ''),
     gridDimensions: [width, height],
-    verificationFunction: function (verificationAPI) {
-    }
   };
 };
 

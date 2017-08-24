@@ -105,7 +105,7 @@ module.exports = {
     groundPlane: ["grass","grass","grass","planksBirch","grass","grass","planksBirch","grass","grass","grass","grass","grass","grass","planksBirch","planksBirch","planksBirch","planksBirch","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
     groundDecorationPlane: ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","tallGrass","flowerDandelion","","tallGrass","","","","","","","","","tallGrass","","","","","tallGrass","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","tallGrass","","","","","","","","",""],
     actionPlane: ["","","","planksBirch","","","planksBirch","","","","","","torch","planksBirch","","planksBirch","planksBirch","","","","","","","","","","","","","","","","","","","torch","","","","","","","","","","","","","","","grass","","","","","","","","","","grass","","","","","","","","","","grass","","","","","","","","","","grass","","","","","","","","","grass","","","","","","","","grass","grass","grass"],
-    entities: [["creeper", 2, 2, 2], ["creeper", 4, 3, 2], ["creeper", 3, 4, 2], ["creeper", 5, 5, 2], ["creeper", 7, 3, 2], [ "creeper", 7, 5, 2 ], [ "creeper", 6, 7, 2 ], ["creeper", 9, 4, 2]],
+    entities: [["creeper", 2, 2, 2], ["creeper", 4, 3, 2], ["creeper", 3, 4, 2], ["creeper", 5, 5, 2], ["creeper", 7, 3, 2], ["creeper", 7, 5, 2], ["creeper", 6, 7, 2], ["creeper", 9, 4, 2]],
     playerStartPosition: [2, 6],
     playerStartDirection: 1,
     verificationFunction: verificationAPI =>
@@ -187,6 +187,6 @@ module.exports = {
     entities: [["sheep", 0, 18, 1], ["sheep", 1, 14, 1], ["sheep", 2, 17, 1], ["sheep", 3, 15, 1], ["sheep", 4, 18, 1]],
     playerStartPosition: [10, 10],
     playerStartDirection: 0,
-    verificationFunction: verificationAPI => true,
+    verificationFunction: () => true,
   },
 };

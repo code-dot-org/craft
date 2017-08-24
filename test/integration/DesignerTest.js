@@ -3,7 +3,7 @@ const attempt = require("../helpers/RunLevel.js");
 
 test('Designer 1: Chicken Move (fail)', t => {
   attempt('designer01', api => new Promise(resolve => {
-    api.startAttempt((success, levelModel) => {
+    api.startAttempt(success => {
       t.assert(!success);
       t.end();
 
@@ -19,8 +19,7 @@ test('Designer 1: Chicken Move (pass)', t => {
       api.turnLeft(null, event.targetIdentifier);
     });
 
-    api.startAttempt((success, levelModel) => {
-      debugger;
+    api.startAttempt(success => {
       t.assert(success);
       t.end();
 
