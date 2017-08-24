@@ -1158,14 +1158,12 @@ module.exports = class LevelView {
       }
     }
   }
-  
+
   refreshActionPlane(levelData, indices) {
-      var sprite,
+    var sprite,
       blockType;
-      
-    let whatever = this.actionPlaneBlocks;
-    let whatever2 = this.controller.levelModel.actionPlane;
-    for(var index in indices) {
+
+    for (var index in indices) {
       if (indices[index] >= 0) {
         let workingIndex = indices[index];
 
@@ -1188,29 +1186,33 @@ module.exports = class LevelView {
         this.actionPlaneBlocks[workingIndex] = sprite;
       }
     }
-    
+
+    // Save all all non-block elements.
     let entityHolder = [];
-    for(var index in this.actionPlane.children) {
-      let workingKey = this.actionPlane.children[index].key;
-      if(workingKey !== "blocks" && workingKey !== "torch" && workingKey !== "door"){
-        entityHolder.push(this.actionPlane.children[index]);
+    for (var aPIndex in this.actionPlane.children) {
+      let workingKey = this.actionPlane.children[aPIndex].key;
+      if (workingKey !== "blocks" && workingKey !== "torch" && workingKey !== "door"){
+        entityHolder.push(this.actionPlane.children[aPIndex]);
       }
     }
-    let whatamI = this.controller.levelModel.groundDecorationPlane;
-    
+
+    // Empty the actionPlane.
     this.actionPlane.children = [];
-    
-    for(var index in this.actionPlaneBlocks) {
-      if(this.actionPlaneBlocks[index] !== null) {
-        this.actionPlane.children.push(this.actionPlaneBlocks[index]);
-      }
-    }    
-    
-    for(var index in entityHolder) {
-      if(entityHolder[index] !== null) {
-        this.actionPlane.children.push(entityHolder[index]);
+
+    // Re-push all actionPlaneBlocks into actionPlane.
+    for (var aPBIndex in this.actionPlaneBlocks) {
+      if (this.actionPlaneBlocks[aPBIndex] !== null) {
+        this.actionPlane.children.push(this.actionPlaneBlocks[aPBIndex]);
       }
     }
+
+    // Re-capture all those non-blocks we saved.
+    for (var eHIndex in entityHolder) {
+      if (entityHolder[eHIndex] !== null) {
+        this.actionPlane.children.push(entityHolder[eHIndex]);
+      }
+    }
+    // We did all that to make sure everything in actionPlane is numbered sequentially.
   }
 
   updateShadingPlane(shadingData) {
