@@ -68,13 +68,9 @@ module.exports.get = function (controller) {
     onEventTriggered: function (highlightCallback, type, eventType, callback) {
       this.registerEventCallback(highlightCallback,
         function (event) {
-          if (event.eventType !== eventType) {
-            return;
+          if (event.eventType === eventType && event.targetType === type) {
+            callback(event);
           }
-          if (event.targetType !== type) {
-            return;
-          }
-          callback(event);
         }
       );
     },
