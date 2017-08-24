@@ -823,19 +823,32 @@ module.exports = class LevelModel {
     }
     let newBlock = new LevelBlock(blockType);
     let newBlockType = blockType;
-    let topIndex = -1;
-    let bottomIndex = -1;
-    let rightIndex = -1;
-    let leftIndex = -1;
-    if (blockType.substring(0,12) === "redstoneWire") {
-      newBlockType = this.determineRedstoneSprite(blockPosition[0], blockPosition[1], newBlock);
+    
+    let connectingBlock = this.checkConnectionOnPlace("redstoneWire", blockType, targetPlane)
+    if (!connectingBlock) {
+      targetPlane.setBlockAt(blockPosition, newBlock);
+    }
+    let index = this.yToIndex(blockPosition[1]) + blockPosition[0];
+    newBlock = targetPlane[index];
+    return newBlock.blockType;
+  }
+  
+  checkConnectionOnPlace(substring, blockType, targetPlane) {
+    let newBlock = new LevelBlock(blockType);
+    if (blockType.substring(0,substring.length) === substring) {
+      let blockPosition = this.getMoveForwardPosition();
+      let topIndex = -1;
+      let bottomIndex = -1;
+      let rightIndex = -1;
+      let leftIndex = -1;
+      let newBlockType = this.determineRedstoneSprite(blockPosition[0], blockPosition[1], newBlock);
       newBlock = new LevelBlock(newBlockType);
       targetPlane.setBlockAt(blockPosition, newBlock);
 
-      //have to do it for adjacent blocks as well:
+      //We want to check adjacent blocks as well:
       if (this.inBounds(blockPosition[0], blockPosition[1] - 1)) {
         topIndex = this.yToIndex(blockPosition[1] - 1) + blockPosition[0];
-        if (this.actionPlane[topIndex].blockType.substring(0,12) === "redstoneWire") {
+        if (this.actionPlane[topIndex].blockType.substring(0,12) === substring) {
           let upBlockType = this.determineRedstoneSprite(blockPosition[0], blockPosition[1] - 1, newBlock);
           this.actionPlane[this.yToIndex(blockPosition[1] - 1) + blockPosition[0]].blockType = upBlockType;
         } else {
@@ -846,7 +859,7 @@ module.exports = class LevelModel {
 
       if (this.inBounds(blockPosition[0], blockPosition[1] + 1)) {
         bottomIndex = this.yToIndex(blockPosition[1] + 1) + blockPosition[0];
-        if (this.actionPlane[bottomIndex].blockType.substring(0,12) === "redstoneWire") {
+        if (this.actionPlane[bottomIndex].blockType.substring(0,12) === substring) {
           let downBlockType = this.determineRedstoneSprite(blockPosition[0], blockPosition[1] + 1, newBlock);
           this.actionPlane[this.yToIndex(blockPosition[1] + 1) + blockPosition[0]].blockType = downBlockType;
         } else {
@@ -854,10 +867,10 @@ module.exports = class LevelModel {
           bottomIndex = -1;
         }
       }
-      
+
       if (this.inBounds(blockPosition[0] + 1, blockPosition[1])) {
         rightIndex = this.yToIndex(blockPosition[1]) + blockPosition[0] + 1;
-        if (this.actionPlane[rightIndex].blockType.substring(0,12) === "redstoneWire") {
+        if (this.actionPlane[rightIndex].blockType.substring(0,12) === substring) {
           let rightBlockType = this.determineRedstoneSprite(blockPosition[0] + 1, blockPosition[1], newBlock);
           this.actionPlane[this.yToIndex(blockPosition[1]) + blockPosition[0] + 1].blockType = rightBlockType;
         } else {
@@ -865,10 +878,10 @@ module.exports = class LevelModel {
           rightIndex = -1;
         }
       }
-      
+
       if (this.inBounds(blockPosition[0] - 1, blockPosition[1])) {
         leftIndex = this.yToIndex(blockPosition[1]) + blockPosition[0] - 1;
-        if (this.actionPlane[leftIndex].blockType.substring(0,12) === "redstoneWire") {
+        if (this.actionPlane[leftIndex].blockType.substring(0,12) === substring) {
           let leftBlockType = this.determineRedstoneSprite(blockPosition[0] - 1, blockPosition[1], newBlock);
           this.actionPlane[this.yToIndex(blockPosition[1]) + blockPosition[0] - 1].blockType = leftBlockType;
         } else {
@@ -876,17 +889,13 @@ module.exports = class LevelModel {
           leftIndex = -1;
         }
       }
+      let index = this.yToIndex(blockPosition[1]) + blockPosition[0];
+      let indicies = {up: topIndex, down: bottomIndex, right: rightIndex, left: leftIndex};
+      this.controller.levelView.refreshActionPlane(this, indicies);
+      return true;
+    } else {
+      return false;
     }
-    else {
-      targetPlane.setBlockAt(blockPosition, newBlock);
-    }
-    
-    let index = this.yToIndex(blockPosition[1]) + blockPosition[0];
-    let indicies = {up: topIndex, down: bottomIndex, right: rightIndex, left: leftIndex};
-    console.log("index " + index + " is: " + this.actionPlane[index].blockType);
-    
-    this.controller.levelView.refreshActionPlane(this, indicies);
-    return newBlock.blockType;
   }
 
   destroyBlock(position) {
