@@ -939,10 +939,10 @@ module.exports = class LevelView {
 
     this.playScaledSpeed(destroyOverlay.animations, "destroy");
   }
-  
+
   checkConnectionsOnDestroy(substring, destroyPosition, blockType) {
     // If the block to be destroyed is one that has connections, we have work to do.
-    if(blockType.substring(0,substring.length) === substring) {
+    if (blockType.substring(0,substring.length) === substring) {
       let blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
       let upIndex = blockIndex - this.controller.levelModel.actionPlane.height;
       let downIndex = blockIndex + this.controller.levelModel.actionPlane.height;
@@ -1234,7 +1234,7 @@ module.exports = class LevelView {
       }
     }
   }
-  
+
   refreshActionPlane(levelData, indices) {
     var sprite,
       blockType;
