@@ -36,11 +36,19 @@ module.exports = class LevelPlane extends Array {
   setBlockAt(position, block) {
     this[this.coordinatesToIndex(position)] = block;
 
-    if (block.isRail) {
-      block.blockType = this.determineRailType(position);
-    }
+    this.determineRailType(position, true);
 
     return block;
+  }
+
+  getOrthogonalPositions(position) {
+    const [x, y] = position;
+    return {
+      north: [x, y - 1],
+      south: [x, y + 1],
+      east: [x + 1, y],
+      west: [x - 1, y],
+    };
   }
 
   getOrthogonalBlocks(position) {
@@ -62,7 +70,19 @@ module.exports = class LevelPlane extends Array {
     );
   }
 
-  determineRailType(position) {
+  determineRailType(position, updateTouching = false) {
+    const block = this.getBlockAt(position);
+
+    if (!block || !block.isRail) {
+      return;
+    }
+
+    if (updateTouching) {
+      Object.values(this.getOrthogonalPositions(position)).forEach(orthogonalPosition => {
+        this.determineRailType(orthogonalPosition);
+      });
+    }
+
     const mask = this.getOrthogonalMask(position, block => block && block.isRail);
     const variant = [
       "Vertical", "Vertical", "Vertical", "Vertical",
@@ -71,6 +91,6 @@ module.exports = class LevelPlane extends Array {
       "Horizontal", "BottomLeft", "TopLeft", "BottomLeft",
     ][mask];
 
-    return `rails${variant}`;
+    block.blockType = `rails${variant}`;
   }
 };
