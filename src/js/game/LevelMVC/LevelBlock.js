@@ -12,6 +12,7 @@ module.exports = class LevelBlock {
     this.isEmpty = false;
     this.isEmissive = false;
     this.isTransparent = false;
+    this.isPowered = false;
 
     if (blockType === "") {
       this.isWalkable = true;
@@ -94,12 +95,13 @@ module.exports = class LevelBlock {
       this.isTransparent = true;
     }
 
-    if (blockType === "redstone_dust") {
+    if (blockType.substring(0, 12) === "redstoneWire") {
       this.isEntity = true;
       this.isWalkable = true;
       this.isUsable = true;
       this.isDestroyable = true;
       this.isTransparent = true;
+      this.isPowered = false;
     }
   }
 

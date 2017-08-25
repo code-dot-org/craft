@@ -17,6 +17,7 @@ module.exports = class LevelView {
     this.fluffPlane = null;
     this.fowPlane = null;
     this.collectibleItems = [];
+    this.listOfFlowers = [];
     //{sprite : sprite, type : blockType, position : [x,y]}
     this.trees = [];
 
@@ -128,9 +129,32 @@ module.exports = class LevelView {
       "railsPoweredVertical": ["blocks", "Rails_PoweredVertical", -13, 0],
       "railsRedstoneTorch": ["blocks", "Rails_RedstoneTorch", -12, 9],
 
-      "redstone_dust": ["blocks", "Redstone_Dust_Vertical", -13, 0],
+      "redstoneWire": ["blocks", "redstone_dust_dot_off", -13, 0],
+      "redstoneWireHorizontal": ["blocks", "redstone_dust_line_h_off", -13, 0],
+      "redstoneWireVertical": ["blocks", "redstone_dust_line_v_off", -13, 0],
+      "redstoneWireUpRight": ["blocks", "redstone_dust_corner_BottomLeft_off", -13, 0],
+      "redstoneWireUpLeft": ["blocks", "redstone_dust_corner_BottomRight_off", -13, 0],
+      "redstoneWireDownRight": ["blocks", "redstone_dust_corner_TopLeft_off", -13, 0],
+      "redstoneWireDownLeft": ["blocks", "redstone_dust_corner_TopRight_off", -13, 0],
+      "redstoneWireTUp": ["blocks", "redstone_dust_cross_up_off", -13, 0],
+      "redstoneWireTDown": ["blocks", "redstone_dust_cross_down_off", -13, 0],
+      "redstoneWireTLeft": ["blocks", "redstone_dust_cross_left_off", -13, 0],
+      "redstoneWireTRight": ["blocks", "redstone_dust_cross_right_off", -13, 0],
+      "redstoneWireCross": ["blocks", "redstone_dust_cross_off", -13, 0],
+      
+      "redstoneWireOn": ["blocks", "redstone_dust_dot", -13, 0],
+      "redstoneWireHorizontalOn": ["blocks", "redstone_dust_line_h", -13, 0],
+      "redstoneWireVerticalOn": ["blocks", "redstone_dust_line_v", -13, 0],
+      "redstoneWireUpRightOn": ["blocks", "redstone_dust_corner_BottomLeft", -13, 0],
+      "redstoneWireUpLeftOn": ["blocks", "redstone_dust_corner_BottomRight", -13, 0],
+      "redstoneWireDownRightOn": ["blocks", "redstone_dust_corner_TopLeft", -13, 0],
+      "redstoneWireDownLeftOn": ["blocks", "redstone_dust_corner_TopRight", -13, 0],
+      "redstoneWireTUpOn": ["blocks", "redstone_dust_cross_up", -13, 0],
+      "redstoneWireTDownOn": ["blocks", "redstone_dust_cross_down", -13, 0],
+      "redstoneWireTLeftOn": ["blocks", "redstone_dust_cross_left", -13, 0],
+      "redstoneWireTRightOn": ["blocks", "redstone_dust_cross_right", -13, 0],
+      "redstoneWireCrossOn": ["blocks", "redstone_dust_cross", -13, 0],
     };
-
     this.actionPlaneBlocks = [];
     this.toDestroy = [];
     this.resettableTweens = [];
@@ -909,6 +933,9 @@ module.exports = class LevelView {
         blockToDestroy.onBlockDestroy(blockToDestroy);
       }
 
+      // We need to check if block destruction might effect connected sprites.
+      this.checkConnectionsOnDestroy("redstoneWire", destroyPosition, blockType);
+
       blockToDestroy.kill();
       destroyOverlay.kill();
       this.toDestroy.push(blockToDestroy);
@@ -924,6 +951,50 @@ module.exports = class LevelView {
     });
 
     this.playScaledSpeed(destroyOverlay.animations, "destroy");
+  }
+
+  checkConnectionsOnDestroy(substring, destroyPosition, blockType) {
+    // If the block to be destroyed is one that has connections, we have work to do.
+    if (blockType.substring(0,substring.length) === substring) {
+      let blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
+      let upIndex = blockIndex - this.controller.levelModel.actionPlane.height;
+      let downIndex = blockIndex + this.controller.levelModel.actionPlane.height;
+      let rightIndex = blockIndex + 1;
+      let leftIndex = blockIndex - 1;
+
+      let activeIndicies = [];
+
+      // Up index.
+      if (this.controller.levelModel.inBounds(destroyPosition[0], destroyPosition[1] - 1) && this.controller.levelModel.actionPlane[upIndex].blockType.substring(0,12) === "redstoneWire") {
+        let upBlockType = this.controller.levelModel.actionPlane[upIndex].blockType;
+        upBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0], destroyPosition[1] - 1, upBlockType);
+        this.controller.levelModel.actionPlane[upIndex].blockType = upBlockType;
+        activeIndicies.push(upIndex);
+      }
+      // Down index.
+      if (this.controller.levelModel.inBounds(destroyPosition[0], destroyPosition[1] + 1) && this.controller.levelModel.actionPlane[downIndex].blockType.substring(0,12) === "redstoneWire") {
+        let downBlockType = this.controller.levelModel.actionPlane[downIndex].blockType;
+        downBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0], destroyPosition[1] + 1, downBlockType);
+        this.controller.levelModel.actionPlane[downIndex].blockType = downBlockType;
+        activeIndicies.push(downIndex);
+      }
+      // Right index.
+      if (this.controller.levelModel.inBounds(destroyPosition[0] + 1, destroyPosition[1]) && this.controller.levelModel.actionPlane[rightIndex].blockType.substring(0,12) === "redstoneWire") {
+        let rightBlockType = this.controller.levelModel.actionPlane[rightIndex].blockType;
+        rightBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0] + 1, destroyPosition[1], rightBlockType);
+        this.controller.levelModel.actionPlane[rightIndex].blockType = rightBlockType;
+        activeIndicies.push(rightIndex);
+      }
+      // Left index.
+      if (this.controller.levelModel.inBounds(destroyPosition[0] - 1, destroyPosition[1]) && this.controller.levelModel.actionPlane[leftIndex].blockType.substring(0,12) === "redstoneWire") {
+        let leftBlockType = this.controller.levelModel.actionPlane[leftIndex].blockType;
+        leftBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0] - 1, destroyPosition[1], leftBlockType);
+        this.controller.levelModel.actionPlane[leftIndex].blockType = leftBlockType;
+        activeIndicies.push(leftIndex);
+      }
+      // Refresh just those indicies, so we can display the correct information.
+      // this.refreshActionPlane(this.controller.levelModel, activeIndicies);
+    }
   }
 
   playMiningParticlesAnimation(facing, destroyPosition) {
@@ -1144,7 +1215,7 @@ module.exports = class LevelView {
         sprite = null;
         if (!levelData.actionPlane[blockIndex].isEmpty) {
           blockType = levelData.actionPlane[blockIndex].blockType;
-          sprite = this.createBlock(this.actionPlane, x, y, blockType);
+          sprite = this.createBlock(this.actionPlane, x, y, blockType, levelData);
           if (sprite !== null) {
             sprite.sortOrder = this.yToIndex(y);
           }
@@ -1175,6 +1246,37 @@ module.exports = class LevelView {
         }
       }
     }
+  }
+
+  refreshActionPlane(levelData, indices) {
+    var sprite,
+      blockType;
+
+    for (let i = 0; i < indices.length; ++i) {
+      if (indices[i] >= 0) {
+        let workingIndex = indices[i];
+
+        sprite = this.actionPlaneBlocks[workingIndex];
+        this.actionPlane.remove(sprite);
+
+        let coord = this.indexToCoordinates(workingIndex);
+
+        blockType = levelData.actionPlane[workingIndex].blockType;
+        sprite = this.actionPlaneBlocks[workingIndex];
+        if (blockType !== "" && sprite !== null) {
+          this.createActionPlaneBlock(coord, blockType);
+        } else {
+          //Just a safety check to make sure that levelModel and levelView are synched
+          this.actionPlaneBlocks[workingIndex] = null;
+        }
+      }
+    }
+  }
+
+  indexToCoordinates(index) {
+    let y = Math.floor(index / this.controller.levelModel.planeHeight);
+    let x = index - (y * this.controller.levelModel.planeHeight);
+    return [x,y];
   }
 
   updateShadingPlane(shadingData) {
@@ -1650,6 +1752,11 @@ module.exports = class LevelView {
       sprite = null,
       frameList;
 
+    // Need to make sure the switch case will capture the right miniBlock for -all- redstoneWire
+    if (blockType.substring(0,12) === "redstoneWire") {
+      blockType = "redstoneWire";
+    }
+
     switch (blockType) {
       case "treeAcacia":
       case "treeBirch":
@@ -1690,6 +1797,9 @@ module.exports = class LevelView {
         break;
       case "tnt":
         frame = "gunPowder";
+        break;
+      case "redstoneWire":
+        frame = "redstoneDust";
         break;
       default:
         frame = blockType;
@@ -2003,6 +2113,14 @@ module.exports = class LevelView {
         });
         break;
 
+      case "redstoneWire":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        break;
+
       default:
         atlas = this.blocks[blockType][0];
         frame = this.blocks[blockType][1];
@@ -2011,7 +2129,6 @@ module.exports = class LevelView {
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         break;
     }
-
     return sprite;
   }
 

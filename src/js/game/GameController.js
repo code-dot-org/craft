@@ -9,7 +9,7 @@ const LevelView = require("./LevelMVC/LevelView.js");
 const LevelEntity = require("./LevelMVC/LevelEntity.js");
 const AssetLoader = require("./LevelMVC/AssetLoader.js");
 
-import * as CodeOrgAPI from "./API/CodeOrgAPI.js";
+const CodeOrgAPI = require("./API/CodeOrgAPI.js");
 
 var GAME_WIDTH = 400;
 var GAME_HEIGHT = 400;
@@ -81,6 +81,8 @@ class GameController {
     this.onScoreUpdate = gameControllerConfig.onScoreUpdate;
 
     this.events = [];
+    this.redstoneList = [];
+    this.redstoneListON = [];
 
     // Phaser "slow motion" modifier we originally tuned animations using
     this.assumedSlowMotion = 1.5;
@@ -131,6 +133,7 @@ class GameController {
     this.timeoutResult = levelConfig.timeoutResult;
     this.onDayCallback = levelConfig.onDayCallback;
     this.onNightCallback = levelConfig.onNightCallback;
+
     this.game.state.start('levelRunner');
   }
 
@@ -159,6 +162,18 @@ class GameController {
     this.score = 0;
     if (this.useScore) {
       this.updateScore();
+    }
+
+    if (!this.levelData.isEventLevel) {
+      this.events.push(event => {
+        if (event.eventType === EventType.WhenUsed && event.targetType === 'sheep') {
+          this.codeOrgAPI.drop(null, 'wool', event.targetIdentifier);
+        }
+        if (event.eventType === EventType.WhenTouched && event.targetType === 'creeper') {
+          this.codeOrgAPI.flashEntity(null, event.targetIdentifier);
+          this.codeOrgAPI.explodeEntity(null, event.targetIdentifier);
+        }
+      });
     }
 
     this.initializeCommandRecord();
@@ -190,24 +205,48 @@ class GameController {
     this.game.load.start();
   }
 
-    getRedstone() {
-    let actionPlane = this.levelData.actionPlane;
+  getRedstone() {
+    let actionPlane = this.levelModel.actionPlane;
     let dimension = Math.sqrt(actionPlane.length);
-    for (var obj in actionPlane) {
-        if (actionPlane[obj] === "redstone_wire") {
-            this.levelModel.actionPlane[obj].isPowered = false;
+    this.redstoneList = [];
+    this.redstoneListON = [];
+    for (let i = 0; i < actionPlane.length; ++i) {
+      if (actionPlane[i].blockType.substring(0,12) === "redstoneWire") {
+        if (this.levelModel.actionPlane[i].isPowered) {
+          this.levelModel.actionPlane[i].blockType = this.levelModel.actionPlane[i].blockType.substring(0,this.levelModel.actionPlane[i].blockType.length - 2);
         }
+        this.levelModel.actionPlane[i].isPowered = false;
+        this.levelView.actionPlane.remove(this.levelView.actionPlaneBlocks[i]);
+        this.redstoneList.push(i);
+      }
     }
-    for (var obj in actionPlane) {
-        if (actionPlane[obj] === "railsRedstoneTorch") {
-            //print index
-            let y = Math.floor(obj / dimension);
-            let x = obj - (y * dimension);
-            let pos = {x,y};
+    for (let i = 0; i < actionPlane.length; ++i) {
+      if (actionPlane[i].blockType === "railsRedstoneTorch") {
+          //print index
+          let y = Math.floor(i / dimension);
+          let x = i - (y * dimension);
+          let pos = {x,y};
             
-            this.redstonePropagation(pos);
-        }
+          this.redstonePropagation(pos);
+      }
     }
+
+    let indices = [];
+    for (let i = 0; i < this.levelModel.actionPlane.length; ++i) {
+      indices.push(i);
+    }
+    //review before refresh:
+    let first = this.levelModel.actionPlane;
+    let second = this.levelView.actionPlaneBlocks;
+    let third = this.levelView.actionPlane;
+    this.levelView.refreshActionPlane(this.levelModel,this.redstoneListON);
+
+    
+    for (let i = 0; i < this.redstoneList.length; ++i) {
+      let coord = this.levelView.indexToCoordinates(this.redstoneList[i])
+      this.levelModel.determineRedstoneSprite(coord[0], coord[1]);
+    }
+    this.levelView.refreshActionPlane(this.levelModel,this.redstoneList);
   }
 
   run() {
@@ -1116,36 +1155,48 @@ class GameController {
   redstonePropagation(position) {
     let block = this.levelModel.actionPlane[this.levelModel.yToIndex(position.y) + position.x];
     console.log("the position of " + block.blockType + " is " + "(" + position.x + ", " + position.y + ")");
+
+    if (block.blockType.substring(0,12) === "redstoneWire") {
+      let index = this.levelView.coordinatesToIndex([position.x, position.y]);
+      let indexToRemove = this.redstoneList.indexOf(index);
+      this.redstoneList.splice(indexToRemove,1);
+      this.redstoneListON.push(index);
+    }
+
     //below current pos check
     let adjacentBlock = this.levelModel.actionPlane[this.levelModel.yToIndex(position.y + 1) + position.x];
-    if (adjacentBlock.blockType === "redstone_wire" 
+    if (adjacentBlock.blockType.substring(0,12) === "redstoneWire" 
         && adjacentBlock.isPowered === false
         && this.levelModel.inBounds(position.x, position.y + 1)) {
         adjacentBlock.isPowered = true;
+        this.levelModel.determineRedstoneSprite(position.x, position.y + 1);
         this.redstonePropagation({x: position.x, y: position.y + 1});
     }
     //above current pos check
     adjacentBlock = this.levelModel.actionPlane[this.levelModel.yToIndex(position.y - 1) + position.x];
-    if (adjacentBlock.blockType === "redstone_wire" 
+    if (adjacentBlock.blockType.substring(0,12) === "redstoneWire" 
         && adjacentBlock.isPowered === false
         && this.levelModel.inBounds(position.x, position.y - 1)) {
         adjacentBlock.isPowered = true;
+        this.levelModel.determineRedstoneSprite(position.x, position.y - 1);
         this.redstonePropagation({x: position.x, y: position.y - 1});
     }
     //left of current pos check
     adjacentBlock = this.levelModel.actionPlane[this.levelModel.yToIndex(position.y) + position.x - 1];
-    if (adjacentBlock.blockType === "redstone_wire" 
+    if (adjacentBlock.blockType.substring(0,12) === "redstoneWire" 
         && adjacentBlock.isPowered === false
         && this.levelModel.inBounds(position.x - 1, position.y)) {
         adjacentBlock.isPowered = true;
+        this.levelModel.determineRedstoneSprite(position.x - 1, position.y);
         this.redstonePropagation({x: position.x - 1, y: position.y});
     }
     //right of current pos check
     adjacentBlock = this.levelModel.actionPlane[this.levelModel.yToIndex(position.y) + position.x + 1];
-    if (adjacentBlock.blockType === "redstone_wire" 
+    if (adjacentBlock.blockType.substring(0,12) === "redstoneWire"
         && adjacentBlock.isPowered === false
         && this.levelModel.inBounds(position.x + 1, position.y)) {
         adjacentBlock.isPowered = true;
+        this.levelModel.determineRedstoneSprite(position.x + 1, position.y);
         this.redstonePropagation({x: position.x + 1, y: position.y});
     }
   }
@@ -1386,7 +1437,7 @@ class GameController {
     if (this.levelModel.isBlockOfTypeOnPlane(forwardPosition, "lava", placementPlane)) {
       soundEffect = () => this.levelView.audioPlayer.play("fizz");
     }
-    this.levelModel.placeBlockForward(blockType, placementPlane);
+    blockType = this.levelModel.placeBlockForward(blockType, placementPlane);
     this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.getMoveForwardPosition(), placementPlane, blockType, () => {
       this.levelModel.computeShadingPlane();
       this.levelModel.computeFowPlane();
