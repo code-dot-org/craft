@@ -949,35 +949,35 @@ module.exports = class LevelView {
       let rightIndex = blockIndex + 1;
       let leftIndex = blockIndex - 1;
 
-      let activeIndicies = {up: -1, down: -1, left: -1, right: -1, center: blockIndex};
+      let activeIndicies = [];
 
       // Up index.
       if (this.controller.levelModel.inBounds(destroyPosition[0], destroyPosition[1] - 1) && this.controller.levelModel.actionPlane[upIndex].blockType.substring(0,12) === "redstoneWire") {
         let upBlockType = this.controller.levelModel.actionPlane[upIndex].blockType;
         upBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0], destroyPosition[1] - 1, upBlockType);
         this.controller.levelModel.actionPlane[upIndex].blockType = upBlockType;
-        activeIndicies.up = upIndex;
+        activeIndicies.push(upIndex);
       }
       // Down index.
       if (this.controller.levelModel.inBounds(destroyPosition[0], destroyPosition[1] + 1) && this.controller.levelModel.actionPlane[downIndex].blockType.substring(0,12) === "redstoneWire") {
         let downBlockType = this.controller.levelModel.actionPlane[downIndex].blockType;
         downBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0], destroyPosition[1] + 1, downBlockType);
         this.controller.levelModel.actionPlane[downIndex].blockType = downBlockType;
-        activeIndicies.down = downIndex;
+        activeIndicies.push(downIndex);
       }
       // Right index.
       if (this.controller.levelModel.inBounds(destroyPosition[0] + 1, destroyPosition[1]) && this.controller.levelModel.actionPlane[rightIndex].blockType.substring(0,12) === "redstoneWire") {
         let rightBlockType = this.controller.levelModel.actionPlane[rightIndex].blockType;
         rightBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0] + 1, destroyPosition[1], rightBlockType);
         this.controller.levelModel.actionPlane[rightIndex].blockType = rightBlockType;
-        activeIndicies.right = rightIndex;
+        activeIndicies.push(rightIndex);
       }
       // Left index.
       if (this.controller.levelModel.inBounds(destroyPosition[0] - 1, destroyPosition[1]) && this.controller.levelModel.actionPlane[leftIndex].blockType.substring(0,12) === "redstoneWire") {
         let leftBlockType = this.controller.levelModel.actionPlane[leftIndex].blockType;
         leftBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0] - 1, destroyPosition[1], leftBlockType);
         this.controller.levelModel.actionPlane[leftIndex].blockType = leftBlockType;
-        activeIndicies.left = leftIndex;
+        activeIndicies.push(leftIndex);
       }
       // Refresh just those indicies, so we can display the correct information.
       this.refreshActionPlane(this.controller.levelModel, activeIndicies);
@@ -1236,30 +1236,33 @@ module.exports = class LevelView {
   }
   
   refreshActionPlane(levelData, indices) {
-      var sprite,
+    var sprite,
       blockType;
 
-    for (var index in indices) {
-      if (indices[index] >= 0) {
-        let workingIndex = indices[index];
+    for (let i = 0; i < indices.length; ++i) {
+      if (indices[i] >= 0) {
+        let workingIndex = indices[i];
 
         sprite = this.actionPlaneBlocks[workingIndex];
         this.actionPlane.remove(sprite);
 
-        let y = Math.floor(workingIndex / this.controller.levelModel.planeHeight);
-        let x = workingIndex - (y * this.controller.levelModel.planeHeight);
-
-        let blockIndex = (this.yToIndex(y)) + x;
+        let coord = this.indexToCoordinates(workingIndex);
 
         blockType = levelData.actionPlane[workingIndex].blockType;
         if (blockType !== "") {
-          this.createActionPlaneBlock({0: x,1: y}, blockType);
+          this.createActionPlaneBlock(coord, blockType);
         } else {
           //Just a safety check to make sure that levelModel and levelView are synched
           this.actionPlaneBlocks[workingIndex] = null;
         }
       }
     }
+  }
+
+  indexToCoordinates(index) {
+    let y = Math.floor(index / this.controller.levelModel.planeHeight);
+    let x = index - (y * this.controller.levelModel.planeHeight);
+    return [x,y];
   }
 
   updateShadingPlane(shadingData) {
