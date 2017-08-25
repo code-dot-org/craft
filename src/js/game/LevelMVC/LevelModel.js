@@ -46,7 +46,7 @@ module.exports = class LevelModel {
     this.groundDecorationPlane = new LevelPlane(this.initialLevelData.groundDecorationPlane, this.planeWidth, this.planeHeight);
     this.shadingPlane = [];
     this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, true);
-    
+
     for (let i = 0; i < this.actionPlane.length; ++i) {
       if (this.actionPlane[i].blockType.substring(0,12) === "redstoneWire") {
         let y = Math.floor(i / this.planeHeight);
@@ -54,7 +54,7 @@ module.exports = class LevelModel {
         this.determineRedstoneSprite(x, y, this.actionPlane[i]);
       }
     }
-    
+
     this.fluffPlane = new LevelPlane(this.initialLevelData.fluffPlane, this.planeWidth, this.planeHeight);
     this.fowPlane = [];
     this.isDaytime = this.initialLevelData.isDaytime === undefined || this.initialLevelData.isDaytime;
@@ -822,9 +822,8 @@ module.exports = class LevelModel {
       targetPlane = this.groundPlane;
     }
     let newBlock = new LevelBlock(blockType);
-    let newBlockType = blockType;
 
-    let connectingBlock = this.checkConnectionOnPlace("redstoneWire", blockType, targetPlane)
+    let connectingBlock = this.checkConnectionOnPlace("redstoneWire", blockType, targetPlane);
     // If checkConnection didn't handle the placement, we'll revert to standard methods
     if (!connectingBlock) {
       targetPlane.setBlockAt(blockPosition, newBlock);
@@ -833,7 +832,7 @@ module.exports = class LevelModel {
     newBlock = targetPlane[index];
     return newBlock.blockType;
   }
-  
+
   checkConnectionOnPlace(substring, blockType, targetPlane) {
     let newBlock = new LevelBlock(blockType);
     if (blockType.substring(0,substring.length) === substring) {
@@ -847,7 +846,7 @@ module.exports = class LevelModel {
       // To future proof, we want the determination function to be based on the substring.
       var funtion_pointer = null;
       // Just add more cases here if we have more connection dependent block types.
-      switch(substring) {
+      switch (substring) {
         case "redstoneWire":
         funtion_pointer = this.determineRedstoneSprite.bind(this);
         break;
@@ -1197,7 +1196,7 @@ module.exports = class LevelModel {
     }
   }
 
-  determineRedstoneSprite(x, y, blockType) {
+  determineRedstoneSprite(x, y) {
         let foundAbove = false;
         let foundBelow = false;
         let foundRight = false;
@@ -1209,8 +1208,7 @@ module.exports = class LevelModel {
         let rightIndex = (this.yToIndex(y)) + x + 1;
 
         let borderCount = 0;
-        let whatIsThis = this.actionPlane;
-        
+
         if (!this.inBounds(x, y)) {
             // If we're looking out of bounds, just leave, you goofball.
             return;
