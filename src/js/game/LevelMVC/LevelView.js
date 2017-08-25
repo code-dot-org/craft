@@ -1168,7 +1168,7 @@ module.exports = class LevelView {
     positions.forEach(position => {
       if (position) {
         const newBlock = this.controller.levelModel.actionPlane.getBlockAt(position);
-        if (newBlock.blockType) {
+        if (newBlock && newBlock.blockType) {
           this.createActionPlaneBlock(position, newBlock.blockType);
         }
       }
