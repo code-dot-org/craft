@@ -203,7 +203,28 @@ class GameController {
     this.game.load.start();
   }
 
+    getRedstone() {
+    let actionPlane = this.levelData.actionPlane;
+    let dimension = Math.sqrt(actionPlane.length);
+    for (var obj in actionPlane) {
+        if (actionPlane[obj] === "redstone_wire") {
+            this.levelModel.actionPlane[obj].isPowered = false;
+        }
+    }
+    for (var obj in actionPlane) {
+        if (actionPlane[obj] === "railsRedstoneTorch") {
+            //print index
+            let y = Math.floor(obj / dimension);
+            let x = obj - (y * dimension);
+            let pos = {x,y};
+            
+            this.redstonePropagation(pos);
+        }
+    }
+  }
+
   run() {
+    this.getRedstone();
     // dispatch when spawn event at run
     this.events.forEach(e => e({ eventType: EventType.WhenRun, targetIdentifier: undefined }));
     for (var value of this.levelEntity.entityMap) {
@@ -1108,6 +1129,43 @@ class GameController {
           commandQueueItem.succeeded();
         });
       });
+    }
+  }
+
+  redstonePropagation(position) {
+    let block = this.levelModel.actionPlane[this.levelModel.yToIndex(position.y) + position.x];
+    console.log("the position of " + block.blockType + " is " + "(" + position.x + ", " + position.y + ")");
+    //below current pos check
+    let adjacentBlock = this.levelModel.actionPlane[this.levelModel.yToIndex(position.y + 1) + position.x];
+    if (adjacentBlock.blockType === "redstone_wire" 
+        && adjacentBlock.isPowered === false
+        && this.levelModel.inBounds(position.x, position.y + 1)) {
+        adjacentBlock.isPowered = true;
+        this.redstonePropagation({x: position.x, y: position.y + 1});
+    }
+    //above current pos check
+    adjacentBlock = this.levelModel.actionPlane[this.levelModel.yToIndex(position.y - 1) + position.x];
+    if (adjacentBlock.blockType === "redstone_wire" 
+        && adjacentBlock.isPowered === false
+        && this.levelModel.inBounds(position.x, position.y - 1)) {
+        adjacentBlock.isPowered = true;
+        this.redstonePropagation({x: position.x, y: position.y - 1});
+    }
+    //left of current pos check
+    adjacentBlock = this.levelModel.actionPlane[this.levelModel.yToIndex(position.y) + position.x - 1];
+    if (adjacentBlock.blockType === "redstone_wire" 
+        && adjacentBlock.isPowered === false
+        && this.levelModel.inBounds(position.x - 1, position.y)) {
+        adjacentBlock.isPowered = true;
+        this.redstonePropagation({x: position.x - 1, y: position.y});
+    }
+    //right of current pos check
+    adjacentBlock = this.levelModel.actionPlane[this.levelModel.yToIndex(position.y) + position.x + 1];
+    if (adjacentBlock.blockType === "redstone_wire" 
+        && adjacentBlock.isPowered === false
+        && this.levelModel.inBounds(position.x + 1, position.y)) {
+        adjacentBlock.isPowered = true;
+        this.redstonePropagation({x: position.x + 1, y: position.y});
     }
   }
 
