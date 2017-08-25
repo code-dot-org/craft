@@ -1163,25 +1163,30 @@ module.exports = class LevelView {
     var sprite,
       blockType;
 
-    for (var index in indices) {
-      if (indices[index] >= 0) {
-        let workingIndex = indices[index];
+    for (let i = 0; i < indices.length; ++i) {
+      if (indices[i] >= 0) {
+        let workingIndex = indices[i];
 
         sprite = this.actionPlaneBlocks[workingIndex];
         this.actionPlane.remove(sprite);
 
-        let y = Math.floor(workingIndex / this.controller.levelModel.planeHeight);
-        let x = workingIndex - (y * this.controller.levelModel.planeHeight);
+        let coord = this.indexToCoordinates(workingIndex);
 
         blockType = levelData.actionPlane[workingIndex].blockType;
         if (blockType !== "") {
-          this.createActionPlaneBlock({0: x,1: y}, blockType);
+          this.createActionPlaneBlock(coord, blockType);
         } else {
           //Just a safety check to make sure that levelModel and levelView are synched
           this.actionPlaneBlocks[workingIndex] = null;
         }
       }
     }
+  }
+
+  indexToCoordinates(index) {
+    let y = Math.floor(index / this.controller.levelModel.planeHeight);
+    let x = index - (y * this.controller.levelModel.planeHeight);
+    return [x,y];
   }
 
   updateShadingPlane(shadingData) {
