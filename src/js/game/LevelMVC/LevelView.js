@@ -911,9 +911,6 @@ module.exports = class LevelView {
     let blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
     let blockToDestroy = this.actionPlaneBlocks[blockIndex];
 
-    // We need to check if block destruction might effect connected sprites.
-    this.checkConnectionsOnDestroy("redstoneWire", destroyPosition, blockType);
-
     let destroyOverlay = this.actionPlane.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
     destroyOverlay.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     this.onAnimationEnd(destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false), () => {
@@ -923,6 +920,9 @@ module.exports = class LevelView {
         blockToDestroy.onBlockDestroy(blockToDestroy);
       }
 
+      // We need to check if block destruction might effect connected sprites.
+      this.checkConnectionsOnDestroy("redstoneWire", destroyPosition, blockType);
+    
       blockToDestroy.kill();
       destroyOverlay.kill();
       this.toDestroy.push(blockToDestroy);
