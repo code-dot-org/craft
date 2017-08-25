@@ -842,36 +842,49 @@ module.exports = class LevelModel {
       let bottomIndex = blockIndex + this.controller.levelModel.actionPlane.height;
       let rightIndex = blockIndex + 1;
       let leftIndex = blockIndex - 1;
-      let newBlockType = this.determineRedstoneSprite(blockPosition[0], blockPosition[1], newBlock);
+
+      // To future proof, we want the determination function to be based on the substring.
+      var funtion_pointer = null;
+      // Just add more cases here if we have more connection dependent block types.
+      switch(substring) {
+        case "redstoneWire":
+        funtion_pointer = this.determineRedstoneSprite.bind(this);
+        break;
+      }
+
+      // Extra work when placing is to determine the right sprite to draw.
+      let newBlockType = funtion_pointer(blockPosition[0], blockPosition[1], newBlock);
       newBlock = new LevelBlock(newBlockType);
       targetPlane.setBlockAt(blockPosition, newBlock);
 
       let indices = [];
+
+
       // We want to check adjacent blocks as well:
       if (this.inBounds(blockPosition[0], blockPosition[1] - 1)) {
         if (this.actionPlane[topIndex].blockType.substring(0,12) === substring) {
-          let upBlockType = this.determineRedstoneSprite(blockPosition[0], blockPosition[1] - 1, newBlock);
+          let upBlockType = funtion_pointer(blockPosition[0], blockPosition[1] - 1, newBlock);
           this.actionPlane[this.yToIndex(blockPosition[1] - 1) + blockPosition[0]].blockType = upBlockType;
           indices.push(topIndex);
         }
       }
       if (this.inBounds(blockPosition[0], blockPosition[1] + 1)) {
         if (this.actionPlane[bottomIndex].blockType.substring(0,12) === substring) {
-          let downBlockType = this.determineRedstoneSprite(blockPosition[0], blockPosition[1] + 1, newBlock);
+          let downBlockType = funtion_pointer(blockPosition[0], blockPosition[1] + 1, newBlock);
           this.actionPlane[this.yToIndex(blockPosition[1] + 1) + blockPosition[0]].blockType = downBlockType;
           indices.push(bottomIndex);
         }
       }
       if (this.inBounds(blockPosition[0] + 1, blockPosition[1])) {
         if (this.actionPlane[rightIndex].blockType.substring(0,12) === substring) {
-          let rightBlockType = this.determineRedstoneSprite(blockPosition[0] + 1, blockPosition[1], newBlock);
+          let rightBlockType = funtion_pointer(blockPosition[0] + 1, blockPosition[1], newBlock);
           this.actionPlane[this.yToIndex(blockPosition[1]) + blockPosition[0] + 1].blockType = rightBlockType;
           indices.push(rightIndex);
         }
       }
       if (this.inBounds(blockPosition[0] - 1, blockPosition[1])) {
         if (this.actionPlane[leftIndex].blockType.substring(0,12) === substring) {
-          let leftBlockType = this.determineRedstoneSprite(blockPosition[0] - 1, blockPosition[1], newBlock);
+          let leftBlockType = funtion_pointer(blockPosition[0] - 1, blockPosition[1], newBlock);
           this.actionPlane[this.yToIndex(blockPosition[1]) + blockPosition[0] - 1].blockType = leftBlockType;
           indices.push(leftIndex);
         }
