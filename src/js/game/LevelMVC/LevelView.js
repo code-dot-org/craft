@@ -922,7 +922,7 @@ module.exports = class LevelView {
 
       // We need to check if block destruction might effect connected sprites.
       this.checkConnectionsOnDestroy("redstoneWire", destroyPosition, blockType);
-    
+
       blockToDestroy.kill();
       destroyOverlay.kill();
       this.toDestroy.push(blockToDestroy);
