@@ -21405,6 +21405,7 @@ Phaser.Group.prototype.preUpdate = function () {
 Phaser.Group.prototype.update = function () {
 
     var i = this.children.length;
+
     while (i--)
     {
         this.children[i].update();
