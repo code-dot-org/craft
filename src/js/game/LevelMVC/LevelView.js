@@ -796,6 +796,11 @@ module.exports = class LevelView {
 
   createActionPlaneBlock(position, blockType) {
     let blockIndex = (this.yToIndex(position[1])) + position[0];
+
+    // Remove the old sprite at this position, if there is one.
+    this.actionPlane.remove(this.actionPlaneBlocks[blockIndex]);
+
+    // Create a new sprite.
     var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
 
     if (sprite) {
@@ -1159,34 +1164,15 @@ module.exports = class LevelView {
     }
   }
 
-  refreshActionPlane(levelData, indices) {
-    var sprite,
-      blockType;
-
-    for (let i = 0; i < indices.length; ++i) {
-      if (indices[i] >= 0) {
-        let workingIndex = indices[i];
-
-        sprite = this.actionPlaneBlocks[workingIndex];
-        this.actionPlane.remove(sprite);
-
-        let coord = this.indexToCoordinates(workingIndex);
-
-        blockType = levelData.actionPlane[workingIndex].blockType;
-        if (blockType !== "") {
-          this.createActionPlaneBlock(coord, blockType);
-        } else {
-          //Just a safety check to make sure that levelModel and levelView are synched
-          this.actionPlaneBlocks[workingIndex] = null;
+  refreshActionPlane(positions) {
+    positions.forEach(position => {
+      if (position) {
+        const newBlock = this.controller.levelModel.actionPlane.getBlockAt(position);
+        if (newBlock.blockType) {
+          this.createActionPlaneBlock(position, newBlock.blockType);
         }
       }
-    }
-  }
-
-  indexToCoordinates(index) {
-    let y = Math.floor(index / this.controller.levelModel.planeHeight);
-    let x = index - (y * this.controller.levelModel.planeHeight);
-    return [x,y];
+    });
   }
 
   updateShadingPlane(shadingData) {
