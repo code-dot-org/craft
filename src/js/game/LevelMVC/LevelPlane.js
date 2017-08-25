@@ -43,12 +43,17 @@ module.exports = class LevelPlane extends Array {
 
   getOrthogonalPositions(position) {
     const [x, y] = position;
-    return [
-      [x, y - 1],
-      [x, y + 1],
-      [x + 1, y],
-      [x - 1, y],
-    ];
+    return {
+      north: [x, y - 1],
+      south: [x, y + 1],
+      east: [x + 1, y],
+      west: [x - 1, y],
+    };
+  }
+
+  getOrthogonalPositionsArray(position) {
+    const positions = this.getOrthogonalPositions(position);
+    return Object.keys(positions).map(key => positions[key]);
   }
 
   getOrthogonalBlocks(position) {
@@ -77,20 +82,84 @@ module.exports = class LevelPlane extends Array {
       return;
     }
 
-    if (updateTouching) {
-      this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
-        this.determineRailType(orthogonalPosition);
-      });
+    const orthogonal = this.getOrthogonalPositions(position);
+    const mask = this.getOrthogonalMask(position, block => block && block.isRail);
+
+    switch (mask) {
+      case 0:
+      case 1:
+      case 2:
+      case 3:
+        block.blockType = 'railsVertical';
+        break;
+      case 4:
+      case 8:
+      case 12:
+        block.blockType = 'railsHorizontal';
+        break;
+      case 5:
+      case 13:
+      case 15:
+        block.blockType = 'railsBottomLeft';
+        break;
+      case 6:
+      case 7:
+      case 14:
+        block.blockType = 'railsTopLeft';
+        break;
+      case 10:
+      case 11:
+        block.blockType = 'railsTopRight';
+        break;
+      case 9:
+        block.blockType = 'railsBottomRight';
+        break;
     }
 
-    const mask = this.getOrthogonalMask(position, block => block && block.isRail);
-    const variant = [
-      "Vertical", "Vertical", "Vertical", "Vertical",
-      "Horizontal", "BottomLeft", "TopLeft", "TopLeft",
-      "Horizontal", "BottomRight", "TopRight", "TopRight",
-      "Horizontal", "BottomLeft", "TopLeft", "BottomLeft",
-    ][mask];
-
-    block.blockType = `rails${variant}`;
+    if (updateTouching) {
+      switch (mask) {
+        case 1:
+          this.determineRailType(orthogonal.north);
+          break;
+        case 2:
+          this.determineRailType(orthogonal.south);
+          break;
+        case 3:
+          this.determineRailType(orthogonal.north);
+          this.determineRailType(orthogonal.south);
+          break;
+        case 4:
+          this.determineRailType(orthogonal.east);
+          break;
+        case 5:
+        case 13:
+        case 15:
+          this.determineRailType(orthogonal.north);
+          this.determineRailType(orthogonal.east);
+          break;
+        case 6:
+        case 7:
+        case 14:
+          this.determineRailType(orthogonal.south);
+          this.determineRailType(orthogonal.east);
+          break;
+        case 8:
+          this.determineRailType(orthogonal.west);
+          break;
+        case 10:
+        case 11:
+          this.determineRailType(orthogonal.south);
+          this.determineRailType(orthogonal.west);
+          break;
+        case 9:
+          this.determineRailType(orthogonal.north);
+          this.determineRailType(orthogonal.west);
+          break;
+        case 12:
+          this.determineRailType(orthogonal.east);
+          this.determineRailType(orthogonal.west);
+          break;
+      }
+    }
   }
 };

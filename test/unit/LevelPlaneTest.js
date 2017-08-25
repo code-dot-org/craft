@@ -48,7 +48,7 @@ test('rail connections', t => {
     'railsVertical', '', 'railsVertical', '', '', 'railsVertical', '',
     '', 'railsVertical', '', '', '', '', 'railsVertical',
     '', '', '', '', '', 'railsVertical', '',
-    '', 'railsVertical', '', '', 'railsVertical', '', '',
+    '', 'railsVertical', '', '', '', 'railsVertical', '',
     'railsVertical', '', 'railsVertical', '', 'railsVertical', '', '',
     '', '', '', '', '', 'railsVertical', '',
   ];
@@ -61,8 +61,12 @@ test('rail connections', t => {
 
   const expected = data.slice();
   expected[1] = 'railsTopLeft';
+  expected[2] = 'railsHorizontal';
   expected[12] = 'railsTopLeft';
+  expected[13] = 'railsHorizontal';
   expected[29] = 'railsBottomLeft';
+  expected[30] = 'railsHorizontal';
+  expected[32] = 'railsHorizontal';
   expected[33] = 'railsTopRight';
   t.deepEqual(plane, new LevelPlane(expected, 7, 6, true));
 
