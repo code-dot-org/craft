@@ -823,8 +823,9 @@ module.exports = class LevelModel {
     }
     let newBlock = new LevelBlock(blockType);
     let newBlockType = blockType;
-    
+
     let connectingBlock = this.checkConnectionOnPlace("redstoneWire", blockType, targetPlane)
+    // If checkConnection didn't handle the placement, we'll revert to standard methods
     if (!connectingBlock) {
       targetPlane.setBlockAt(blockPosition, newBlock);
     }
@@ -858,7 +859,6 @@ module.exports = class LevelModel {
       targetPlane.setBlockAt(blockPosition, newBlock);
 
       let indices = [];
-
 
       // We want to check adjacent blocks as well:
       if (this.inBounds(blockPosition[0], blockPosition[1] - 1)) {
@@ -1212,34 +1212,32 @@ module.exports = class LevelModel {
         let whatIsThis = this.actionPlane;
         
         if (!this.inBounds(x, y)) {
+            // If we're looking out of bounds, just leave, you goofball.
             return;
         }
-
-        //below index
+        // If in bounds, we want to see if any redstone is around the index in question
+        // Below index
         if (this.inBounds(x, y + 1)) {
             if (this.actionPlane[belowIndex].blockType.substring(0,12) === "redstoneWire") {
                 foundBelow = true;
                 ++borderCount;
             }
         }
-
-        //above index
+        // Above index
         if (this.inBounds(x, y - 1)) {
             if (this.actionPlane[aboveIndex].blockType.substring(0,12) === "redstoneWire") {
                 foundAbove = true;
                 ++borderCount;
             }
         }
-
-        //right index
+        // Right index
         if (this.inBounds(x + 1, y)) {
             if (this.actionPlane[rightIndex].blockType.substring(0,12) === "redstoneWire") {
                 foundRight = true;
                 ++borderCount;
             }
         }
-
-        //left index
+        // Left index
         if (this.inBounds(x - 1, y)) {
             if (this.actionPlane[leftIndex].blockType.substring(0,12) === "redstoneWire") {
                 foundLeft = true;
@@ -1248,9 +1246,10 @@ module.exports = class LevelModel {
         }
 
         if (borderCount === 0) {
-            //no connecting redstone wire
+            // No connecting redstone wire.
             this.actionPlane[myIndex].blockType = "redstoneWire";
         } else if (borderCount === 1) {
+            // Only 1 connection extends a line.
             if (foundBelow || foundAbove) {
                 this.actionPlane[myIndex].blockType = "redstoneWireVertical";
             } else if (foundLeft || foundRight) {
@@ -1258,22 +1257,22 @@ module.exports = class LevelModel {
             }
         } else if (borderCount === 2) {
             if ((foundBelow || foundAbove) && !foundRight && !foundLeft){
-                //purely vertical, no left or right
+                // Purely vertical, no left or right.
                 this.actionPlane[myIndex].blockType = "redstoneWireVertical";
             } else if ((foundRight || foundLeft) && !foundBelow && !foundAbove){
-                //purely horizontal, no above or below
+                // Purely horizontal, no above or below.
                 this.actionPlane[myIndex].blockType = "redstoneWireHorizontal";
             } else {
-                //we have a corner and will need to rotate
+                // We have a corner and will need to rotate.
                 if (foundBelow) {
-                    //if we have a blow, the other has to be right or left
+                    // If we have a blow, the other has to be right or left.
                     if (foundLeft) {
                         this.actionPlane[myIndex].blockType = "redstoneWireDownLeft";
                     } else {
                         this.actionPlane[myIndex].blockType = "redstoneWireDownRight";
                     }
                 } else {
-                    //if not below, then above + left or right
+                    // If not below, then above + left or right.
                     if (foundLeft) {
                         this.actionPlane[myIndex].blockType = "redstoneWireUpLeft";
                     } else {
@@ -1282,6 +1281,7 @@ module.exports = class LevelModel {
                 }
             }
         } else if (borderCount === 3) {
+            // We are deciding between T sprite orientations.
             if (!foundBelow) {
                 this.actionPlane[myIndex].blockType = "redstoneWireTUp";
             } else if (!foundAbove) {
@@ -1292,10 +1292,9 @@ module.exports = class LevelModel {
                 this.actionPlane[myIndex].blockType = "redstoneWireTLeft";
             }
         } else if (borderCount === 4) {
-            //all four sides connected: Cross
+            // All four sides connected: Cross.
             this.actionPlane[myIndex].blockType = "redstoneWireCross";
         }
-        
     return this.actionPlane[myIndex].blockType;
   }
 

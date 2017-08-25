@@ -21390,10 +21390,6 @@ Phaser.Group.prototype.preUpdate = function () {
 
     while (i--)
     {
-      if(this.children[i] === undefined)
-      {
-        console.log("whatever");
-      }
         this.children[i].preUpdate();
     }
 
@@ -21411,10 +21407,6 @@ Phaser.Group.prototype.update = function () {
     var i = this.children.length;
     while (i--)
     {
-      if(this.children[i] === null)
-      {
-        console.log("whatever");
-      }
         this.children[i].update();
     }
 

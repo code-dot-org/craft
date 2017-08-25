@@ -1737,7 +1737,8 @@ module.exports = class LevelView {
     var frame = "",
       sprite = null,
       frameList;
-      
+
+    // Need to make sure the switch case will capture the right miniBlock for -all- redstoneWire
     if (blockType.substring(0,12) === "redstoneWire") {
       blockType = "redstoneWire";
     }
@@ -1903,7 +1904,7 @@ module.exports = class LevelView {
     }
   }
 
-  createBlock(plane, x, y, blockType, levelData = null) {
+  createBlock(plane, x, y, blockType) {
     var i,
       sprite = null,
       frameList,
@@ -1926,15 +1927,6 @@ module.exports = class LevelView {
       };
       levelView.trees.push({ sprite: sprite, type: blockType, position: [x, y] });
     };
-
-    if (blockType.substring(0,6) === "flower") {
-      atlas = this.blocks[blockType][0];
-      frame = this.blocks[blockType][1];
-      xOffset = this.blocks[blockType][2];
-      yOffset = this.blocks[blockType][3];
-      sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
-      this.listOfFlowers.push(sprite);
-    }
 
     switch (blockType) {
       case "treeAcacia": //0,7
@@ -2108,7 +2100,6 @@ module.exports = class LevelView {
         break;
 
       case "redstoneWire":
-        this.controller.levelModel.determineRedstoneSprite(x, y, blockType);
         atlas = this.blocks[blockType][0];
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
