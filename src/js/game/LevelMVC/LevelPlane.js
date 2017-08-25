@@ -43,12 +43,12 @@ module.exports = class LevelPlane extends Array {
 
   getOrthogonalPositions(position) {
     const [x, y] = position;
-    return {
-      north: [x, y - 1],
-      south: [x, y + 1],
-      east: [x + 1, y],
-      west: [x - 1, y],
-    };
+    return [
+      [x, y - 1],
+      [x, y + 1],
+      [x + 1, y],
+      [x - 1, y],
+    ];
   }
 
   getOrthogonalBlocks(position) {
@@ -78,7 +78,7 @@ module.exports = class LevelPlane extends Array {
     }
 
     if (updateTouching) {
-      Object.values(this.getOrthogonalPositions(position)).forEach(orthogonalPosition => {
+      this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
         this.determineRailType(orthogonalPosition);
       });
     }
