@@ -1,5 +1,12 @@
 const LevelBlock = require("./LevelBlock.js");
 
+const Connection = {
+  North: 1,
+  South: 2,
+  East: 4,
+  West: 8,
+};
+
 module.exports = class LevelPlane extends Array {
   constructor(planeData, width, height, isActionPlane = false) {
     super();
@@ -43,25 +50,20 @@ module.exports = class LevelPlane extends Array {
 
   getOrthogonalPositions(position) {
     const [x, y] = position;
-    return {
-      north: [x, y - 1],
-      south: [x, y + 1],
-      east: [x + 1, y],
-      west: [x - 1, y],
-    };
-  }
-
-  getOrthogonalPositionsArray(position) {
-    const positions = this.getOrthogonalPositions(position);
-    return Object.keys(positions).map(key => positions[key]);
+    return [
+      [x, y - 1],
+      [x, y + 1],
+      [x + 1, y],
+      [x - 1, y],
+    ];
   }
 
   getOrthogonalBlocks(position) {
     return {
-      north: this.getBlockAt(position, 0, -1),
-      south: this.getBlockAt(position, 0, 1),
-      east: this.getBlockAt(position, 1, 0),
-      west: this.getBlockAt(position, -1, 0),
+      north: {block: this.getBlockAt(position, 0, -1), relative: Connection.South},
+      south: {block: this.getBlockAt(position, 0, 1), relative: Connection.North},
+      east: {block: this.getBlockAt(position, 1, 0), relative: Connection.West},
+      west: {block: this.getBlockAt(position, -1, 0), relative: Connection.East},
     };
   }
 
@@ -82,84 +84,44 @@ module.exports = class LevelPlane extends Array {
       return;
     }
 
-    const orthogonal = this.getOrthogonalPositions(position);
-    const mask = this.getOrthogonalMask(position, block => block && block.isRail);
-
-    switch (mask) {
-      case 0:
-      case 1:
-      case 2:
-      case 3:
-        block.blockType = 'railsVertical';
-        break;
-      case 4:
-      case 8:
-      case 12:
-        block.blockType = 'railsHorizontal';
-        break;
-      case 5:
-      case 13:
-      case 15:
-        block.blockType = 'railsBottomLeft';
-        break;
-      case 6:
-      case 7:
-      case 14:
-        block.blockType = 'railsTopLeft';
-        break;
-      case 10:
-      case 11:
-        block.blockType = 'railsTopRight';
-        break;
-      case 9:
-        block.blockType = 'railsBottomRight';
-        break;
+    if (block.connectionA && block.connectionB) {
+      return;
     }
 
-    if (updateTouching) {
-      switch (mask) {
-        case 1:
-          this.determineRailType(orthogonal.north);
-          break;
-        case 2:
-          this.determineRailType(orthogonal.south);
-          break;
-        case 3:
-          this.determineRailType(orthogonal.north);
-          this.determineRailType(orthogonal.south);
-          break;
-        case 4:
-          this.determineRailType(orthogonal.east);
-          break;
-        case 5:
-        case 13:
-        case 15:
-          this.determineRailType(orthogonal.north);
-          this.determineRailType(orthogonal.east);
-          break;
-        case 6:
-        case 7:
-        case 14:
-          this.determineRailType(orthogonal.south);
-          this.determineRailType(orthogonal.east);
-          break;
-        case 8:
-          this.determineRailType(orthogonal.west);
-          break;
-        case 10:
-        case 11:
-          this.determineRailType(orthogonal.south);
-          this.determineRailType(orthogonal.west);
-          break;
-        case 9:
-          this.determineRailType(orthogonal.north);
-          this.determineRailType(orthogonal.west);
-          break;
-        case 12:
-          this.determineRailType(orthogonal.east);
-          this.determineRailType(orthogonal.west);
-          break;
+    const mask = this.getOrthogonalMask(position, ({block, relative}) => {
+      if (!block || !block.isRail) {
+        return false;
       }
+      const a = !block.connectionA || block.connectionA === relative;
+      const b = !block.connectionB || block.connectionB === relative;
+
+      return a || b;
+    });
+
+    const connections = [
+      [], [Connection.North], [Connection.South], [Connection.North, Connection.South],
+      [Connection.East], [Connection.North, Connection.East], [Connection.South, Connection.East], [Connection.South, Connection.East],
+      [Connection.West], [Connection.North, Connection.West], [Connection.South, Connection.West], [Connection.South, Connection.West],
+      [Connection.East, Connection.West], [Connection.North, Connection.East], [Connection.South, Connection.East], [Connection.North, Connection.East],
+    ][mask];
+
+    block.connectionA = connections[0];
+    block.connectionB = connections[1];
+
+    const directions = {
+      1: 'North',
+      2: 'South',
+      4: 'East',
+      8: 'West',
+    };
+    const a = directions[block.connectionA] || '';
+    const b = directions[block.connectionB] || '';
+    block.blockType = `rails${a}${b}`;
+
+    if (updateTouching) {
+      this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
+        this.determineRailType(orthogonalPosition)
+      });
     }
   }
 };

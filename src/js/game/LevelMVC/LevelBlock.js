@@ -33,6 +33,8 @@ module.exports = class LevelBlock {
       this.isDestroyable = false;
       this.isTransparent = true;
       this.isRail = blockType !== "railsRedstoneTorch";
+      this.connectionA = null;
+      this.connectionB = null;
     }
 
     if (blockType === "sheep") {

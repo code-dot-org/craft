@@ -1268,7 +1268,7 @@ class GameController {
           this.levelModel.computeFowPlane();
           this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
           this.levelView.updateFowPlane(this.levelModel.fowPlane);
-          this.levelView.refreshActionPlane(this.levelModel.actionPlane.getOrthogonalPositionsArray(this.levelModel.player.position));
+          this.levelView.refreshActionPlane(this.levelModel.actionPlane.getOrthogonalPositions(this.levelModel.player.position));
           this.delayBy(200, () => {
             this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
           });
@@ -1348,7 +1348,7 @@ class GameController {
       this.levelModel.computeFowPlane();
       this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
       this.levelView.updateFowPlane(this.levelModel.fowPlane);
-      this.levelView.refreshActionPlane(this.levelModel.actionPlane.getOrthogonalPositionsArray(forwardPosition));
+      this.levelView.refreshActionPlane(this.levelModel.actionPlane.getOrthogonalPositions(forwardPosition));
       soundEffect();
       this.delayBy(200, () => {
         this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
