@@ -1025,7 +1025,9 @@ module.exports = class LevelView {
 
   playItemDropAnimation(destroyPosition, blockType, completionHandler) {
     var sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
-    sprite.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
+    if (sprite) {
+      sprite.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
+    }
 
     if (this.controller.levelData.isEventLevel) {
       completionHandler();
@@ -1623,6 +1625,10 @@ module.exports = class LevelView {
     var frame = "",
       sprite = null,
       frameList;
+
+    if (blockType.startsWith("rails")) {
+      return;
+    }
 
     switch (blockType) {
       case "treeAcacia":

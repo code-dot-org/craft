@@ -30,7 +30,7 @@ module.exports = class LevelBlock {
       this.isEntity = true;
       this.isWalkable = true;
       this.isUsable = true;
-      this.isDestroyable = false;
+      this.isDestroyable = true;
       this.isTransparent = true;
       this.isRail = blockType !== "railsRedstoneTorch";
       this.connectionA = null;
