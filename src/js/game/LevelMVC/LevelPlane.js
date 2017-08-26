@@ -1,11 +1,26 @@
 const LevelBlock = require("./LevelBlock.js");
 
-const Connection = {
-  North: 1,
-  South: 2,
-  East: 4,
-  West: 8,
+const North = 1;
+const South = 2;
+const East = 4;
+const West = 8;
+
+const connectionName = function (connection) {
+  switch (connection) {
+    case 1: return 'North';
+    case 2: return 'South';
+    case 4: return 'East';
+    case 8: return 'West';
+    default: return '';
+  }
 };
+
+const ConnectionPriority = [
+  [], [North], [South], [North, South],
+  [East], [North, East], [South, East], [South, East],
+  [West], [North, West], [South, West], [South, West],
+  [East, West], [North, East], [South, East], [North, East],
+];
 
 module.exports = class LevelPlane extends Array {
   constructor(planeData, width, height, isActionPlane = false) {
@@ -60,10 +75,10 @@ module.exports = class LevelPlane extends Array {
 
   getOrthogonalBlocks(position) {
     return {
-      north: {block: this.getBlockAt(position, 0, -1), relative: Connection.South},
-      south: {block: this.getBlockAt(position, 0, 1), relative: Connection.North},
-      east: {block: this.getBlockAt(position, 1, 0), relative: Connection.West},
-      west: {block: this.getBlockAt(position, -1, 0), relative: Connection.East},
+      north: {block: this.getBlockAt(position, 0, -1), relative: South},
+      south: {block: this.getBlockAt(position, 0, 1), relative: North},
+      east: {block: this.getBlockAt(position, 1, 0), relative: West},
+      west: {block: this.getBlockAt(position, -1, 0), relative: East},
     };
   }
 
@@ -98,29 +113,13 @@ module.exports = class LevelPlane extends Array {
       return a || b;
     });
 
-    const connections = [
-      [], [Connection.North], [Connection.South], [Connection.North, Connection.South],
-      [Connection.East], [Connection.North, Connection.East], [Connection.South, Connection.East], [Connection.South, Connection.East],
-      [Connection.West], [Connection.North, Connection.West], [Connection.South, Connection.West], [Connection.South, Connection.West],
-      [Connection.East, Connection.West], [Connection.North, Connection.East], [Connection.South, Connection.East], [Connection.North, Connection.East],
-    ][mask];
+    [block.connectionA, block.connectionB] = ConnectionPriority[mask];
 
-    block.connectionA = connections[0];
-    block.connectionB = connections[1];
-
-    const directions = {
-      1: 'North',
-      2: 'South',
-      4: 'East',
-      8: 'West',
-    };
-    const a = directions[block.connectionA] || '';
-    const b = directions[block.connectionB] || '';
-    block.blockType = `rails${a}${b}`;
+    block.blockType = `rails${connectionName(block.connectionA)}${connectionName(block.connectionB)}`;
 
     if (updateTouching) {
       this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
-        this.determineRailType(orthogonalPosition)
+        this.determineRailType(orthogonalPosition);
       });
     }
   }
