@@ -43,32 +43,45 @@ test('get blocks', t => {
   t.end();
 });
 
+// Before:              After:
+//
+// ║   ║     ║          ║ ╔══     ║
+//   ║         ║          ║       ╔══
+//           ║                    ║
+//   ║       ║            ║       ║
+// ║   ║   ║            ║ ╚══   ══╗
+//           ║                    ║
+//
 test('rail connections', t => {
   const data = [
-    'railsVertical', '', 'railsVertical', '', '', 'railsVertical', '',
-    '', 'railsVertical', '', '', '', '', 'railsVertical',
-    '', '', '', '', '', 'railsVertical', '',
-    '', 'railsVertical', '', '', '', 'railsVertical', '',
-    'railsVertical', '', 'railsVertical', '', 'railsVertical', '', '',
-    '', '', '', '', '', 'railsVertical', '',
+    'rails',  '',       'rails',  '',       '',       'rails',  '',
+    '',       'rails',  '',       '',       '',       '',       'rails',
+    '',       '',       '',       '',       '',       'rails',  '',
+    '',       'rails',  '',       '',       '',       'rails',  '',
+    'rails',  '',       'rails',  '',       'rails',  '',       '',
+    '',       '',       '',       '',       '',       'rails',  '',
   ];
   const plane = new LevelPlane(data, 7, 6, true);
 
-  t.deepEqual(plane.setBlockAt([1, 0], new LevelBlock('railsHorizontal')).blockType, 'railsTopLeft');
-  t.deepEqual(plane.setBlockAt([5, 1], new LevelBlock('railsHorizontal')).blockType, 'railsTopLeft');
-  t.deepEqual(plane.setBlockAt([1, 4], new LevelBlock('railsHorizontal')).blockType, 'railsBottomLeft');
-  t.deepEqual(plane.setBlockAt([5, 4], new LevelBlock('railsHorizontal')).blockType, 'railsTopRight');
+  t.deepEqual(plane.setBlockAt([1, 0], new LevelBlock('rails')).blockType, 'railsSouthEast');
+  t.deepEqual(plane.setBlockAt([5, 1], new LevelBlock('rails')).blockType, 'railsSouthEast');
+  t.deepEqual(plane.setBlockAt([1, 4], new LevelBlock('rails')).blockType, 'railsNorthEast');
+  t.deepEqual(plane.setBlockAt([5, 4], new LevelBlock('rails')).blockType, 'railsSouthWest');
 
-  const expected = data.slice();
-  expected[1] = 'railsTopLeft';
-  expected[2] = 'railsHorizontal';
-  expected[12] = 'railsTopLeft';
-  expected[13] = 'railsHorizontal';
-  expected[29] = 'railsBottomLeft';
-  expected[30] = 'railsHorizontal';
-  expected[32] = 'railsHorizontal';
-  expected[33] = 'railsTopRight';
-  t.deepEqual(plane, new LevelPlane(expected, 7, 6, true));
+  const expected = [
+    'rails',  'railsSE','railsW', '',       '',       'rails',  '',
+    '',       'railsN', '',       '',       '',       'railsSE','railsW',
+    '',       '',       '',       '',       '',       'railsNS','',
+    '',       'railsS', '',       '',       '',       'railsN', '',
+    'rails',  'railsNE','railsW', '',       'railsE', 'railsSW','',
+    '',       '',       '',       '',       '',       'railsN', '',
+  ].map(rail => {
+    return rail.replace('N', 'North').replace('S', 'South').replace('E', 'East').replace('W', 'West');
+  });
+  expected.width = undefined;
+  expected.height = undefined;
+
+  t.deepEqual(plane.map(block => block.blockType), expected);
 
   t.end();
 });
