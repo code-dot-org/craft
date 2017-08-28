@@ -17,7 +17,6 @@ module.exports = class LevelView {
     this.fluffPlane = null;
     this.fowPlane = null;
     this.collectibleItems = [];
-    this.listOfFlowers = [];
     //{sprite : sprite, type : blockType, position : [x,y]}
     this.trees = [];
 
