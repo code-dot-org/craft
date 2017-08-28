@@ -938,28 +938,28 @@ module.exports = class LevelView {
       // Up index.
       if (this.controller.levelModel.inBounds(destroyPosition[0], destroyPosition[1] - 1) && this.controller.levelModel.actionPlane[upIndex].blockType.substring(0,12) === "redstoneWire") {
         let upBlockType = this.controller.levelModel.actionPlane[upIndex].blockType;
-        upBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0], destroyPosition[1] - 1, upBlockType);
+        upBlockType = this.controller.levelModel.actionPlane.determineRedstoneSprite([destroyPosition[0], destroyPosition[1] - 1], upIndex);
         this.controller.levelModel.actionPlane[upIndex].blockType = upBlockType;
         activeIndicies.push(upIndex);
       }
       // Down index.
       if (this.controller.levelModel.inBounds(destroyPosition[0], destroyPosition[1] + 1) && this.controller.levelModel.actionPlane[downIndex].blockType.substring(0,12) === "redstoneWire") {
         let downBlockType = this.controller.levelModel.actionPlane[downIndex].blockType;
-        downBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0], destroyPosition[1] + 1, downBlockType);
+        downBlockType = this.controller.levelModel.actionPlane.determineRedstoneSprite([destroyPosition[0], destroyPosition[1] + 1], downIndex);
         this.controller.levelModel.actionPlane[downIndex].blockType = downBlockType;
         activeIndicies.push(downIndex);
       }
       // Right index.
       if (this.controller.levelModel.inBounds(destroyPosition[0] + 1, destroyPosition[1]) && this.controller.levelModel.actionPlane[rightIndex].blockType.substring(0,12) === "redstoneWire") {
         let rightBlockType = this.controller.levelModel.actionPlane[rightIndex].blockType;
-        rightBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0] + 1, destroyPosition[1], rightBlockType);
+        rightBlockType = this.controller.levelModel.actionPlane.determineRedstoneSprite([destroyPosition[0] + 1, destroyPosition[1]], rightIndex);
         this.controller.levelModel.actionPlane[rightIndex].blockType = rightBlockType;
         activeIndicies.push(rightIndex);
       }
       // Left index.
       if (this.controller.levelModel.inBounds(destroyPosition[0] - 1, destroyPosition[1]) && this.controller.levelModel.actionPlane[leftIndex].blockType.substring(0,12) === "redstoneWire") {
         let leftBlockType = this.controller.levelModel.actionPlane[leftIndex].blockType;
-        leftBlockType = this.controller.levelModel.determineRedstoneSprite(destroyPosition[0] - 1, destroyPosition[1], leftBlockType);
+        leftBlockType = this.controller.levelModel.actionPlane.determineRedstoneSprite([destroyPosition[0] - 1, destroyPosition[1]], leftIndex);
         this.controller.levelModel.actionPlane[leftIndex].blockType = leftBlockType;
         activeIndicies.push(leftIndex);
       }

@@ -73,4 +73,153 @@ module.exports = class LevelPlane extends Array {
 
     return `rails${variant}`;
   }
+
+  checkConnectionOnPlace(substring, blockType, LevelModel) {
+    let newBlock = new LevelBlock(blockType);
+    if (blockType.substring(0,substring.length) === substring) {
+      let blockPosition = LevelModel.getMoveForwardPosition();
+      let blockIndex = LevelModel.yToIndex(blockPosition[1]) + blockPosition[0];
+      let topIndex = blockIndex - this.height;
+      let bottomIndex = blockIndex + this.height;
+      let rightIndex = blockIndex + 1;
+      let leftIndex = blockIndex - 1;
+      let OrthogonalBlocks = this.getOrthogonalBlocks(blockPosition);
+
+      // To future proof, we want the determination function to be based on the substring.
+      var funtion_pointer = null;
+      // Just add more cases here if we have more connection dependent block types.
+      switch (substring) {
+        case "redstoneWire":
+          funtion_pointer = LevelModel.determineRedstoneSprite.bind(LevelModel);
+          break;
+      }
+
+      // Extra work when placing is to determine the right sprite to draw.
+      let newBlockType = funtion_pointer(blockPosition[0], blockPosition[1], newBlock);
+      newBlock = new LevelBlock(newBlockType);
+      this.setBlockAt(blockPosition, newBlock);
+
+      let indices = [];
+
+      // We want to check adjacent blocks as well:
+      if (OrthogonalBlocks.north !== undefined) {
+        if (OrthogonalBlocks.north.blockType.startsWith(substring)) {
+          let upBlockType = funtion_pointer(blockPosition[0], blockPosition[1] - 1, newBlock);
+          this[LevelModel.yToIndex(blockPosition[1] - 1) + blockPosition[0]].blockType = upBlockType;
+          indices.push(topIndex);
+        }
+      }
+      if (OrthogonalBlocks.south !== undefined) {
+        if (OrthogonalBlocks.south.blockType.startsWith(substring)) {
+          let downBlockType = funtion_pointer(blockPosition[0], blockPosition[1] + 1, newBlock);
+          this[LevelModel.yToIndex(blockPosition[1] + 1) + blockPosition[0]].blockType = downBlockType;
+          indices.push(bottomIndex);
+        }
+      }
+      if (OrthogonalBlocks.east !== undefined) {
+        if (OrthogonalBlocks.east.blockType.startsWith(substring)) {
+          let rightBlockType = funtion_pointer(blockPosition[0] + 1, blockPosition[1], newBlock);
+          this[LevelModel.yToIndex(blockPosition[1]) + blockPosition[0] + 1].blockType = rightBlockType;
+          indices.push(rightIndex);
+        }
+      }
+      if (OrthogonalBlocks.west !== undefined) {
+        if (OrthogonalBlocks.west.blockType.startsWith(substring)) {
+          let leftBlockType = funtion_pointer(blockPosition[0] - 1, blockPosition[1], newBlock);
+          this[LevelModel.yToIndex(blockPosition[1]) + blockPosition[0] - 1].blockType = leftBlockType;
+          indices.push(leftIndex);
+        }
+      }
+      // After checking, refresh those indices
+      LevelModel.controller.levelView.refreshActionPlane(LevelModel, indices);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  determineRedstoneSprite(position, index) {
+    let foundAbove = false;
+    let foundBelow = false;
+    let foundRight = false;
+    let foundLeft = false;
+    let myIndex = index;
+    let OrthogonalBlocks = this.getOrthogonalBlocks(position);
+
+    let borderCount = 0;
+
+    // If in bounds, we want to see if any redstone is around the index in question
+    // Below index
+    if (OrthogonalBlocks.south !== undefined && OrthogonalBlocks.south.blockType.startsWith("redstoneWire")) {
+      foundBelow = true;
+      ++borderCount;
+    }
+    // Above index
+    if (OrthogonalBlocks.north !== undefined && OrthogonalBlocks.north.blockType.startsWith("redstoneWire")) {
+      foundAbove = true;
+      ++borderCount;
+    }
+    // Right index
+    if (OrthogonalBlocks.east !== undefined && OrthogonalBlocks.east.blockType.startsWith("redstoneWire")) {
+      foundRight = true;
+      ++borderCount;
+    }
+    // Left index
+    if (OrthogonalBlocks.west !== undefined && OrthogonalBlocks.west.blockType.startsWith("redstoneWire")) {
+      foundLeft = true;
+      ++borderCount;
+    }
+
+    if (borderCount === 0) {
+      // No connecting redstone wire.
+      this[myIndex].blockType = "redstoneWire";
+    } else if (borderCount === 1) {
+      // Only 1 connection extends a line.
+      if (foundBelow || foundAbove) {
+        this[myIndex].blockType = "redstoneWireVertical";
+      } else if (foundLeft || foundRight) {
+        this[myIndex].blockType = "redstoneWireHorizontal";
+      }
+    } else if (borderCount === 2) {
+      if ((foundBelow || foundAbove) && !foundRight && !foundLeft){
+        // Purely vertical, no left or right.
+        this[myIndex].blockType = "redstoneWireVertical";
+      } else if ((foundRight || foundLeft) && !foundBelow && !foundAbove){
+        // Purely horizontal, no above or below.
+        this[myIndex].blockType = "redstoneWireHorizontal";
+      } else {
+        // We have a corner and will need to rotate.
+        if (foundBelow) {
+          // If we have a blow, the other has to be right or left.
+          if (foundLeft) {
+            this[myIndex].blockType = "redstoneWireDownLeft";
+          } else {
+            this[myIndex].blockType = "redstoneWireDownRight";
+          }
+        } else {
+          // If not below, then above + left or right.
+          if (foundLeft) {
+            this[myIndex].blockType = "redstoneWireUpLeft";
+          } else {
+            this[myIndex].blockType = "redstoneWireUpRight";
+          }
+        }
+      }
+    } else if (borderCount === 3) {
+      // We are deciding between T sprite orientations.
+      if (!foundBelow) {
+        this[myIndex].blockType = "redstoneWireTUp";
+      } else if (!foundAbove) {
+        this[myIndex].blockType = "redstoneWireTDown";
+      } else if (!foundLeft) {
+        this[myIndex].blockType = "redstoneWireTRight";
+      } else if (!foundRight) {
+        this[myIndex].blockType = "redstoneWireTLeft";
+      }
+    } else if (borderCount === 4) {
+      // All four sides connected: Cross.
+      this[myIndex].blockType = "redstoneWireCross";
+    }
+    return this[myIndex].blockType;
+  }
 };

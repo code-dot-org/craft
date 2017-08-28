@@ -51,7 +51,8 @@ module.exports = class LevelModel {
       if (this.actionPlane[i].blockType.substring(0,12) === "redstoneWire") {
         let y = Math.floor(i / this.planeHeight);
         let x = i - (y * this.planeHeight);
-        this.determineRedstoneSprite(x, y, this.actionPlane[i]);
+        let position = [x,y];
+        this.actionPlane.determineRedstoneSprite(position, i);
       }
     }
 
@@ -824,77 +825,14 @@ module.exports = class LevelModel {
     }
     let newBlock = new LevelBlock(blockType);
 
-    let connectingBlock = this.checkConnectionOnPlace("redstoneWire", blockType, targetPlane);
+    let connectingBlock = targetPlane.checkConnectionOnPlace("redstoneWire", blockType, this);
     // If checkConnection didn't handle the placement, we'll revert to standard methods
     if (!connectingBlock) {
       targetPlane.setBlockAt(blockPosition, newBlock);
     }
     let index = this.yToIndex(blockPosition[1]) + blockPosition[0];
     newBlock = targetPlane[index];
-    return newBlock.blockType;
-  }
-
-  checkConnectionOnPlace(substring, blockType, targetPlane) {
-    let newBlock = new LevelBlock(blockType);
-    if (blockType.substring(0,substring.length) === substring) {
-      let blockPosition = this.getMoveForwardPosition();
-      let blockIndex = this.yToIndex(blockPosition[1]) + blockPosition[0];
-      let topIndex = blockIndex - this.controller.levelModel.actionPlane.height;
-      let bottomIndex = blockIndex + this.controller.levelModel.actionPlane.height;
-      let rightIndex = blockIndex + 1;
-      let leftIndex = blockIndex - 1;
-
-      // To future proof, we want the determination function to be based on the substring.
-      var funtion_pointer = null;
-      // Just add more cases here if we have more connection dependent block types.
-      switch (substring) {
-        case "redstoneWire":
-          funtion_pointer = this.determineRedstoneSprite.bind(this);
-          break;
-      }
-
-      // Extra work when placing is to determine the right sprite to draw.
-      let newBlockType = funtion_pointer(blockPosition[0], blockPosition[1], newBlock);
-      newBlock = new LevelBlock(newBlockType);
-      targetPlane.setBlockAt(blockPosition, newBlock);
-
-      let indices = [];
-
-      // We want to check adjacent blocks as well:
-      if (this.inBounds(blockPosition[0], blockPosition[1] - 1)) {
-        if (this.actionPlane[topIndex].blockType.substring(0,12) === substring) {
-          let upBlockType = funtion_pointer(blockPosition[0], blockPosition[1] - 1, newBlock);
-          this.actionPlane[this.yToIndex(blockPosition[1] - 1) + blockPosition[0]].blockType = upBlockType;
-          indices.push(topIndex);
-        }
-      }
-      if (this.inBounds(blockPosition[0], blockPosition[1] + 1)) {
-        if (this.actionPlane[bottomIndex].blockType.substring(0,12) === substring) {
-          let downBlockType = funtion_pointer(blockPosition[0], blockPosition[1] + 1, newBlock);
-          this.actionPlane[this.yToIndex(blockPosition[1] + 1) + blockPosition[0]].blockType = downBlockType;
-          indices.push(bottomIndex);
-        }
-      }
-      if (this.inBounds(blockPosition[0] + 1, blockPosition[1])) {
-        if (this.actionPlane[rightIndex].blockType.substring(0,12) === substring) {
-          let rightBlockType = funtion_pointer(blockPosition[0] + 1, blockPosition[1], newBlock);
-          this.actionPlane[this.yToIndex(blockPosition[1]) + blockPosition[0] + 1].blockType = rightBlockType;
-          indices.push(rightIndex);
-        }
-      }
-      if (this.inBounds(blockPosition[0] - 1, blockPosition[1])) {
-        if (this.actionPlane[leftIndex].blockType.substring(0,12) === substring) {
-          let leftBlockType = funtion_pointer(blockPosition[0] - 1, blockPosition[1], newBlock);
-          this.actionPlane[this.yToIndex(blockPosition[1]) + blockPosition[0] - 1].blockType = leftBlockType;
-          indices.push(leftIndex);
-        }
-      }
-      // After checking, refresh those indices
-      this.controller.levelView.refreshActionPlane(this, indices);
-      return true;
-    } else {
-      return false;
-    }
+    return newBlock;
   }
 
   destroyBlock(position) {
@@ -1195,106 +1133,6 @@ module.exports = class LevelModel {
         this.fowPlane[blockIndex] = "";
       }
     }
-  }
-
-  determineRedstoneSprite(x, y) {
-    let foundAbove = false;
-    let foundBelow = false;
-    let foundRight = false;
-    let foundLeft = false;
-    let myIndex = (this.yToIndex(y) + x);
-    let belowIndex = (this.yToIndex(y + 1)) + x;
-    let aboveIndex = (this.yToIndex(y - 1)) + x;
-    let leftIndex = (this.yToIndex(y)) + x - 1;
-    let rightIndex = (this.yToIndex(y)) + x + 1;
-
-    let borderCount = 0;
-
-    if (!this.inBounds(x, y)) {
-      // If we're looking out of bounds, just leave, you goofball.
-      return;
-    }
-    // If in bounds, we want to see if any redstone is around the index in question
-    // Below index
-    if (this.inBounds(x, y + 1)) {
-      if (this.actionPlane[belowIndex].blockType.substring(0,12) === "redstoneWire") {
-        foundBelow = true;
-        ++borderCount;
-      }
-    }
-    // Above index
-    if (this.inBounds(x, y - 1)) {
-      if (this.actionPlane[aboveIndex].blockType.substring(0,12) === "redstoneWire") {
-        foundAbove = true;
-        ++borderCount;
-      }
-    }
-    // Right index
-    if (this.inBounds(x + 1, y)) {
-      if (this.actionPlane[rightIndex].blockType.substring(0,12) === "redstoneWire") {
-        foundRight = true;
-        ++borderCount;
-      }
-    }
-    // Left index
-    if (this.inBounds(x - 1, y)) {
-      if (this.actionPlane[leftIndex].blockType.substring(0,12) === "redstoneWire") {
-        foundLeft = true;
-        ++borderCount;
-      }
-    }
-
-    if (borderCount === 0) {
-      // No connecting redstone wire.
-      this.actionPlane[myIndex].blockType = "redstoneWire";
-    } else if (borderCount === 1) {
-      // Only 1 connection extends a line.
-      if (foundBelow || foundAbove) {
-        this.actionPlane[myIndex].blockType = "redstoneWireVertical";
-      } else if (foundLeft || foundRight) {
-        this.actionPlane[myIndex].blockType = "redstoneWireHorizontal";
-      }
-    } else if (borderCount === 2) {
-      if ((foundBelow || foundAbove) && !foundRight && !foundLeft){
-        // Purely vertical, no left or right.
-        this.actionPlane[myIndex].blockType = "redstoneWireVertical";
-      } else if ((foundRight || foundLeft) && !foundBelow && !foundAbove){
-        // Purely horizontal, no above or below.
-        this.actionPlane[myIndex].blockType = "redstoneWireHorizontal";
-      } else {
-        // We have a corner and will need to rotate.
-        if (foundBelow) {
-          // If we have a blow, the other has to be right or left.
-          if (foundLeft) {
-            this.actionPlane[myIndex].blockType = "redstoneWireDownLeft";
-          } else {
-            this.actionPlane[myIndex].blockType = "redstoneWireDownRight";
-          }
-        } else {
-          // If not below, then above + left or right.
-          if (foundLeft) {
-            this.actionPlane[myIndex].blockType = "redstoneWireUpLeft";
-          } else {
-            this.actionPlane[myIndex].blockType = "redstoneWireUpRight";
-          }
-        }
-      }
-    } else if (borderCount === 3) {
-      // We are deciding between T sprite orientations.
-      if (!foundBelow) {
-        this.actionPlane[myIndex].blockType = "redstoneWireTUp";
-      } else if (!foundAbove) {
-        this.actionPlane[myIndex].blockType = "redstoneWireTDown";
-      } else if (!foundLeft) {
-        this.actionPlane[myIndex].blockType = "redstoneWireTRight";
-      } else if (!foundRight) {
-        this.actionPlane[myIndex].blockType = "redstoneWireTLeft";
-      }
-    } else if (borderCount === 4) {
-      // All four sides connected: Cross.
-      this.actionPlane[myIndex].blockType = "redstoneWireCross";
-    }
-    return this.actionPlane[myIndex].blockType;
   }
 
   computeShadingPlane() {
