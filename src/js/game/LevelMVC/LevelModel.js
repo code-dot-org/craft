@@ -22,7 +22,7 @@ module.exports = class LevelModel {
         "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
         "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
         "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsBottomLeft", "railsHorizontal", "railsHorizontal", "railsHorizontal", "railsHorizontal", "railsHorizontal", "railsHorizontal",
+        "", "", "", "railsNorthEast", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest",
         "", "", "", "", "", "", "", "", "", "",
         "", "", "", "", "", "", "", "", "", ""];
 
