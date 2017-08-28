@@ -52,7 +52,7 @@ test('get blocks', t => {
 // ║   ║   ║            ║ ╚══   ══╗
 //           ║                    ║
 //
-test('rail connections', t => {
+test('rail connections: T-junctions', t => {
   const data = [
     'rails',  '',       'rails',  '',       '',       'rails',  '',
     '',       'rails',  '',       '',       '',       '',       'rails',
@@ -63,10 +63,10 @@ test('rail connections', t => {
   ];
   const plane = new LevelPlane(data, 7, 6, true);
 
-  t.deepEqual(plane.setBlockAt([1, 0], new LevelBlock('rails')).blockType, 'railsSouthEast');
-  t.deepEqual(plane.setBlockAt([5, 1], new LevelBlock('rails')).blockType, 'railsSouthEast');
-  t.deepEqual(plane.setBlockAt([1, 4], new LevelBlock('rails')).blockType, 'railsNorthEast');
-  t.deepEqual(plane.setBlockAt([5, 4], new LevelBlock('rails')).blockType, 'railsSouthWest');
+  t.equal(plane.setBlockAt([1, 0], new LevelBlock('rails')).blockType, 'railsSouthEast');
+  t.equal(plane.setBlockAt([5, 1], new LevelBlock('rails')).blockType, 'railsSouthEast');
+  t.equal(plane.setBlockAt([1, 4], new LevelBlock('rails')).blockType, 'railsNorthEast');
+  t.equal(plane.setBlockAt([5, 4], new LevelBlock('rails')).blockType, 'railsSouthWest');
 
   const expected = [
     'rails',  'railsSE','railsW', '',       '',       'rails',  '',
@@ -78,6 +78,68 @@ test('rail connections', t => {
   ].map(rail => {
     return rail.replace('N', 'North').replace('S', 'South').replace('E', 'East').replace('W', 'West');
   });
+  expected.width = undefined;
+  expected.height = undefined;
+
+  t.deepEqual(plane.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+// Place four tracks in a circle.
+// 1:      2:     3:     4:
+//   ║     ═══    ╔══    ╔═╗
+//                ║      ╚═╝
+//
+test('rail connections: 4x4 loop', t => {
+  const data = new Array(4).fill('');
+  const plane = new LevelPlane(data, 2, 2, true);
+
+  t.equal(plane.setBlockAt([1, 0], new LevelBlock('rails')).blockType, 'rails');
+  t.equal(plane.setBlockAt([0, 0], new LevelBlock('rails')).blockType, 'railsEast');
+  t.equal(plane.setBlockAt([0, 1], new LevelBlock('rails')).blockType, 'railsNorth');
+  t.equal(plane.setBlockAt([1, 1], new LevelBlock('rails')).blockType, 'railsNorthWest');
+
+  const expected = [
+    'railsSouthEast', 'railsSouthWest',
+    'railsNorthEast', 'railsNorthWest',
+  ];
+  expected.width = undefined;
+  expected.height = undefined;
+
+  t.deepEqual(plane.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+// Place a longer minecart track.
+// Order:     Track:
+//  1 3       ══╗
+//    2 A B     ║ ╔══
+//    4 9 8     ║ ╚═╗
+//    5 6 7     ╚═══╝
+test('rail connections: longer track', t => {
+  const data = new Array(16).fill('');
+  const plane = new LevelPlane(data, 4, 4, true);
+
+  plane.setBlockAt([0, 0], new LevelBlock('rails'));
+  plane.setBlockAt([1, 1], new LevelBlock('rails'));
+  plane.setBlockAt([1, 0], new LevelBlock('rails'));
+  plane.setBlockAt([1, 2], new LevelBlock('rails'));
+  plane.setBlockAt([1, 3], new LevelBlock('rails'));
+  plane.setBlockAt([2, 3], new LevelBlock('rails'));
+  plane.setBlockAt([3, 3], new LevelBlock('rails'));
+  plane.setBlockAt([3, 2], new LevelBlock('rails'));
+  plane.setBlockAt([2, 2], new LevelBlock('rails'));
+  plane.setBlockAt([2, 1], new LevelBlock('rails'));
+  plane.setBlockAt([3, 1], new LevelBlock('rails'));
+
+  const expected = [
+    'railsEast',      'railsSouthWest', '',               '',
+    '',               'railsNorthSouth','railsSouthEast', 'railsWest',
+    '',               'railsNorthSouth','railsNorthEast', 'railsSouthWest',
+    '',               'railsNorthEast', 'railsEastWest',  'railsNorthWest',
+  ];
   expected.width = undefined;
   expected.height = undefined;
 
