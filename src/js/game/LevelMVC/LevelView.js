@@ -129,6 +129,9 @@ module.exports = class LevelView {
       "railsRedstoneTorch": ["blocks", "Rails_RedstoneTorch", -12, 9],
 
       "redstone_dust": ["blocks", "Redstone_Dust_Vertical", -13, 0],
+
+      "pressurePlateUp": ["blocks", "Iron_Ore", -13, 0],
+      "pressurePlateDown": ["blocks", "Lapis_Ore", -13, 0],
     };
 
     this.actionPlaneBlocks = [];
@@ -1146,14 +1149,22 @@ module.exports = class LevelView {
     }
   }
 
-  refreshGroundPlane() {
-    this.groundPlane.removeAll(true);
-    for (var y = 0; y < this.controller.levelModel.planeHeight; ++y) {
-      for (var x = 0; x < this.controller.levelModel.planeWidth; ++x) {
-        let blockIndex = (this.yToIndex(y)) + x;
-        var sprite = this.createBlock(this.groundPlane, x, y, this.controller.levelModel.groundPlane[blockIndex].blockType);
-        if (sprite) {
-          sprite.sortOrder = this.yToIndex(y);
+  refreshGroundPlane(position = -1) {
+    if (position !== -1) {
+      let blockIndex = (this.yToIndex(position[1])) + position[0];
+      let sprite = this.createBlock(this.groundPlane, position[0], position[1], this.controller.levelModel.groundPlane[blockIndex].blockType);
+      if (sprite) {
+        sprite.sortOrder = this.yToIndex(position[1]);
+      }
+    } else {
+      this.groundPlane.removeAll(true);
+      for (var y = 0; y < this.controller.levelModel.planeHeight; ++y) {
+        for (var x = 0; x < this.controller.levelModel.planeWidth; ++x) {
+          let blockIndex = (this.yToIndex(y)) + x;
+          let sprite = this.createBlock(this.groundPlane, x, y, this.controller.levelModel.groundPlane[blockIndex].blockType);
+          if (sprite) {
+            sprite.sortOrder = this.yToIndex(y);
+          }
         }
       }
     }
@@ -1910,6 +1921,9 @@ module.exports = class LevelView {
         break;
 
       default:
+        if (this.blocks[blockType] === undefined) {
+          console.log("yo?");
+        }
         atlas = this.blocks[blockType][0];
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];

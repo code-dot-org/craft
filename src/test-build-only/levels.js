@@ -55,7 +55,7 @@ window.demoLevels = {
 
     groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "pressurePlateUp", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "dirtCoarse", "dirtCoarse", "dirtCoarse", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -78,10 +78,10 @@ window.demoLevels = {
 
     actionPlane: ["grass", "grass", "", "", "", "", "", "", "grass", "grass",
       "", "grass", "", "", "", "", "", "", "", "grass",
-      "", "", "redstone_dust", "redstone_dust", "redstone_dust", "redstone_dust", "", "redstone_dust", "oreRedstone", "redstone_dust",
-      "", "", "", "", "", "oreRedstone", "", "redstone_dust", "torch", "",
-      "", "", "", "", "", "redstone_dust", "redstone_dust", "redstone_dust", "", "",
-      "dirt", "treeJungle", "", "", "", "", "", "redstone_dust", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "torch", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "dirt", "treeJungle", "", "", "", "", "", "", "", "",
       "", "", "grass", "door", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "treeAcacia", "",
       "", "", "", "", "", "", "", "", "", "",

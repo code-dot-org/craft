@@ -731,6 +731,13 @@ class GameController {
   }
 
   moveDirection(commandQueueItem, direction) {
+    let isMovingOffOf = this.levelModel.isEntityOnBlocktype("Player", "pressurePlateDown");
+    if (isMovingOffOf) {
+      let position = this.levelModel.player.position;
+      let index = this.levelModel.yToIndex(position[1]) + position[0];
+      this.levelModel.groundPlane[index].blockType = "pressurePlateUp";
+      this.levelView.refreshGroundPlane(position);
+    }
     let target = commandQueueItem.target;
     if (!this.isType(target)) {
       // apply to all entities
@@ -753,6 +760,13 @@ class GameController {
         entities[i].addCommand(callbackCommand, commandQueueItem.repeat);
       }
       commandQueueItem.succeeded();
+    }
+    let isMovingOnTo = this.levelModel.isEntityOnBlocktype("Player", "pressurePlateUp");
+    if (isMovingOnTo) {
+      let position = this.levelModel.player.position;
+      let index = this.levelModel.yToIndex(position[1]) + position[0];
+      this.levelModel.groundPlane[index].blockType = "pressurePlateDown";
+      this.levelView.refreshGroundPlane(position);
     }
   }
 
