@@ -6,8 +6,9 @@
 var devBuildConfig = require('./dev-build-config.js');
 
 module.exports = function (grunt) {
-  var deployBuild = !!(grunt.cli.tasks.length && grunt.cli.tasks[0] === 'deploy');
-  var liveReloadPort = deployBuild ? false : devBuildConfig.liveReloadPort;
+  var deployBuild = grunt.cli.tasks.some(task => task === 'deploy');
+  var publishBuild = grunt.cli.tasks.some(task => task === 'publish');
+  var liveReloadPort = (deployBuild || publishBuild) ? false : devBuildConfig.liveReloadPort;
 
   var deployName;
   if (deployBuild) {
