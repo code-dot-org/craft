@@ -44,7 +44,6 @@ test('get blocks', t => {
 });
 
 // Before:              After:
-//
 // ║   ║     ║          ║ ╔══     ║
 //   ║         ║          ║       ╔══
 //           ║                    ║
@@ -113,11 +112,11 @@ test('rail connections: 4x4 loop', t => {
 });
 
 // Place a longer minecart track.
-// Order:     Track:
-//  1 3       ══╗
-//    2 A B     ║ ╔══
-//    4 9 8     ║ ╚═╗
-//    5 6 7     ╚═══╝
+// Order:       Track:
+//  1 3         ══╗
+//    2 A B       ║ ╔══
+//    4 9 8       ║ ╚═╗
+//    5 6 7       ╚═══╝
 test('rail connections: longer track', t => {
   const data = new Array(16).fill('');
   const plane = new LevelPlane(data, 4, 4, true);
@@ -139,6 +138,37 @@ test('rail connections: longer track', t => {
     '',               'railsNorthSouth','railsSouthEast', 'railsWest',
     '',               'railsNorthSouth','railsNorthEast', 'railsSouthWest',
     '',               'railsNorthEast', 'railsEastWest',  'railsNorthWest',
+  ];
+  expected.width = undefined;
+  expected.height = undefined;
+
+  t.deepEqual(plane.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+// Destroying part of a track should leave T-junctions intact. Don't heal the
+// curved track into a straight segment.
+//
+// Before:   After:
+//    ║         ║
+// X══╗        ═╗
+//    ║         ║
+test('rail connections: destroy block', t => {
+  const data = [
+    '',               'railsNorthSouth','',
+    'railsEastWest',  'railsSouthWest', '',
+    '',               'railsNorthSouth','',
+  ];
+  const plane = new LevelPlane(data, 3, 3, true);
+
+  // Destroy track block.
+  plane.setBlockAt([0, 1], new LevelBlock(''));
+
+  const expected = [
+    '',               'railsNorthSouth','',
+    '',               'railsSouthWest', '',
+    '',               'railsNorthSouth','',
   ];
   expected.width = undefined;
   expected.height = undefined;
