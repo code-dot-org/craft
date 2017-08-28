@@ -15,15 +15,62 @@ module.exports = class LevelPlane extends Array {
     }
   }
 
+  inBounds(position) {
+    const [x, y] = position;
+    return x >= 0 && x < this.width && y >= 0 && y < this.height;
+  }
+
   coordinatesToIndex(position) {
     return position[1] * this.width + position[0];
   }
 
-  getBlockAt(position) {
-    return this[this.coordinatesToIndex(position)];
+  getBlockAt(position, offsetX = 0, offsetY = 0) {
+    const [x, y] = position;
+    const target = [x + offsetX, y + offsetY];
+
+    if (this.inBounds(target)) {
+      return this[this.coordinatesToIndex(target)];
+    }
   }
 
   setBlockAt(position, block) {
     this[this.coordinatesToIndex(position)] = block;
+
+    if (block.isRail) {
+      block.blockType = this.determineRailType(position);
+    }
+
+    return block;
+  }
+
+  getOrthogonalBlocks(position) {
+    return {
+      north: this.getBlockAt(position, 0, -1),
+      south: this.getBlockAt(position, 0, 1),
+      east: this.getBlockAt(position, 1, 0),
+      west: this.getBlockAt(position, -1, 0),
+    };
+  }
+
+  getOrthogonalMask(position, comparator) {
+    const orthogonal = this.getOrthogonalBlocks(position);
+    return (
+      (comparator(orthogonal.north) << 0) +
+      (comparator(orthogonal.south) << 1) +
+      (comparator(orthogonal.east) << 2) +
+      (comparator(orthogonal.west) << 3)
+    );
+  }
+
+  determineRailType(position) {
+    const mask = this.getOrthogonalMask(position, block => block && block.isRail);
+    const variant = [
+      "Vertical", "Vertical", "Vertical", "Vertical",
+      "Horizontal", "BottomLeft", "TopLeft", "TopLeft",
+      "Horizontal", "BottomRight", "TopRight", "TopRight",
+      "Horizontal", "BottomLeft", "TopLeft", "BottomLeft",
+    ][mask];
+
+    return `rails${variant}`;
   }
 };

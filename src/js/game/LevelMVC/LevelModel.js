@@ -791,7 +791,8 @@ module.exports = class LevelModel {
 
   placeBlock(blockType) {
     const position = this.player.position;
-    var shouldPlace = false;
+    let shouldPlace = false;
+    let placedBlock = null;
 
     switch (blockType) {
       case "cropWheat":
@@ -806,11 +807,11 @@ module.exports = class LevelModel {
     if (shouldPlace === true) {
       var block = new LevelBlock(blockType);
 
-      this.actionPlane.setBlockAt(position, block);
+      placedBlock = this.actionPlane.setBlockAt(position, block);
       this.player.isOnBlock = !block.isWalkable;
     }
 
-    return shouldPlace;
+    return placedBlock;
   }
 
   placeBlockForward(blockType, targetPlane) {
@@ -893,7 +894,7 @@ module.exports = class LevelModel {
       return true;
     } else {
       return false;
-    }
+    }  
   }
 
   destroyBlock(position) {

@@ -4,11 +4,11 @@
   "description": "Top-down 2D game engine for the Craft app type. See NOTICE for restrictions on use.",
   "main": "build/js/app.bundled.js",
   "scripts": {
-    "codecov": "./node_modules/.bin/codecov",
-    "test:unit": "./node_modules/.bin/istanbul cover ./test/unit/*.js --report lcovonly --dir ./coverage/unit",
-    "test:integration": "./node_modules/.bin/karma start",
+    "codecov": "codecov",
+    "test:unit": "istanbul cover tape ./test/unit/*.js --report lcovonly --dir ./coverage/unit",
+    "test:integration": "karma start",
     "test": "npm run lint && npm run test:unit && npm run test:integration",
-    "lint": "eslint --ext .js,.jsx src/js"
+    "lint": "eslint --ext .js src/js test"
   },
   "repository": {
     "type": "git",
@@ -43,6 +43,7 @@
     "karma-coverage": "^1.1.1",
     "karma-tap": "^3.1.1",
     "istanbul": "^0.4.5",
+    "sinon": "^3.2.1",
     "tape": "^4.8.0"
   }
 }

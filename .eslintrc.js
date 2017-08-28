@@ -14,7 +14,6 @@ module.exports = {
   "env": {
     "browser": true,
     "node": true,
-    "mocha": true,
     "es6": true
   },
   "parserOptions": {
@@ -36,6 +35,7 @@ module.exports = {
     "eqeqeq": "error",
     "jsx-quotes": "error", // autofixable
     "keyword-spacing": "error",
+    "indent": ["error", 2, {"SwitchCase": 1}],
     "no-array-constructor": "error",
     "no-console": "off",
     "no-duplicate-imports": "error",

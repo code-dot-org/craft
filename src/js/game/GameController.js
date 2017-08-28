@@ -219,13 +219,19 @@ class GameController {
         x: -450, alpha: 0.5
       }, this.timeout, Phaser.Easing.Linear.None);
 
+      // Timeout should run at normal speed, even under integration tests.
+      tween.timeScale = 1;
       tween.start();
+
       tween = this.levelView.addResettableTween().to({
       }, this.timeout, Phaser.Easing.Linear.None);
 
       tween.onComplete.add(() => {
         this.endLevel(this.timeoutResult(this.levelModel));
       });
+
+      // Timeout should run at normal speed, even under integration tests.
+      tween.timeScale = 1;
       tween.start();
     }
   }
@@ -1221,13 +1227,6 @@ class GameController {
     }
   }
 
-
-  canUseTints() {
-    // TODO(bjordan): Remove
-    // all browsers appear to work with new version of Phaser
-    return true;
-  }
-
   checkTntAnimation() {
     return this.specialLevelType === 'freeplay';
   }
@@ -1254,16 +1253,17 @@ class GameController {
     let blockIndex = (this.levelModel.yToIndex(this.levelModel.player.position[1]) + this.levelModel.player.position[0]);
     let blockTypeAtPosition = this.levelModel.actionPlane[blockIndex].blockType;
     if (this.levelModel.canPlaceBlock()) {
-      if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {
-        blockType = this.checkRailBlock(blockType);
-      }
-
       if (blockTypeAtPosition !== "") {
         this.levelModel.destroyBlock(blockIndex);
       }
-      if (this.levelModel.placeBlock(blockType)) {
+
+      const placedBlock = this.levelModel.placeBlock(blockType);
+      if (placedBlock) {
+        if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {
+          placedBlock.blockType = this.checkRailBlock(blockType);
+        }
         this.levelModel.player.updateHidingBlock(this.levelModel.player.position);
-        this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, blockTypeAtPosition, () => {
+        this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, placedBlock.blockType, blockTypeAtPosition, () => {
           this.levelModel.computeShadingPlane();
           this.levelModel.computeFowPlane();
           this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
@@ -1341,8 +1341,10 @@ class GameController {
     if (this.levelModel.isBlockOfTypeOnPlane(forwardPosition, "lava", placementPlane)) {
       soundEffect = () => this.levelView.audioPlayer.play("fizz");
     }
-    blockType = this.levelModel.placeBlockForward(blockType, placementPlane);
-    this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.getMoveForwardPosition(), placementPlane, blockType, () => {
+
+    const placedBlock = this.levelModel.placeBlockForward(blockType, placementPlane);
+    this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, forwardPosition, placementPlane, placedBlock.blockType, () => {
+
       this.levelModel.computeShadingPlane();
       this.levelModel.computeFowPlane();
       this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
