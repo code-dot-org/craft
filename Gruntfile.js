@@ -186,4 +186,11 @@ module.exports = function (grunt) {
     'aws_s3:test',
     'open:deployed'
   ]);
+
+  grunt.registerTask('publish', [
+    'clean',
+    'browserify',
+    'ejs',
+    'copy'
+  ]);
 };
