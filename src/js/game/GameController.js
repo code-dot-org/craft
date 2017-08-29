@@ -1350,6 +1350,9 @@ class GameController {
       this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
       this.levelView.updateFowPlane(this.levelModel.fowPlane);
       soundEffect();
+      this.levelModel.actionPlane.getOrthogonalPositions(forwardPosition).forEach(orthogonalPosition => {
+        this.levelView.refreshActionPlane(this.levelModel, [this.levelModel.actionPlane.coordinatesToIndex(orthogonalPosition)]);
+      });
       this.delayBy(200, () => {
         this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
       });

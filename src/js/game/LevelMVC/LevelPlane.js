@@ -43,7 +43,7 @@ module.exports = class LevelPlane extends Array {
         const orthogonalBlock = this.getBlockAt(orthogonalPosition);
         if (orthogonalBlock && orthogonalBlock.isRedstone) {
           this.determineRedstoneSprite(orthogonalPosition);
-          this.levelModel.controller.levelView.refreshActionPlane(this.levelModel, [this.coordinatesToIndex(orthogonalPosition)]);
+          //this.levelModel.controller.levelView.refreshActionPlane(this.levelModel, [this.coordinatesToIndex(orthogonalPosition)]);
         }
       });
     }
