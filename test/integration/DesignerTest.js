@@ -27,3 +27,21 @@ test('Designer 1: Chicken Move (pass)', t => {
     });
   }));
 });
+
+test('Designer 2: Four Chicken Move', t => {
+  attempt('designer02', api => new Promise(resolve => {
+    api.onEventTriggered(null, 'chicken', 2, event => {
+      api.repeat(null, () => {
+        api.moveForward(null, event.targetIdentifier);
+        api.turnLeft(null, event.targetIdentifier);
+      }, -1, event.targetIdentifier);
+    });
+
+    api.startAttempt(success => {
+      t.assert(success);
+      t.end();
+
+      resolve();
+    });
+  }));
+});
