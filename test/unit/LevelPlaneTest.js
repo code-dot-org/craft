@@ -52,6 +52,7 @@ test('redstone wires', t => {
   const data = new Array(24).fill('');
   const plane = new LevelPlane(data, 6, 4, null, true);
 
+  // Place the test pattern.
   plane.setBlockAt([0, 0], new LevelBlock('redstoneWire'));
   plane.setBlockAt([2, 0], new LevelBlock('redstoneWire'));
   plane.setBlockAt([3, 0], new LevelBlock('redstoneWire'));
@@ -68,11 +69,29 @@ test('redstone wires', t => {
   plane.setBlockAt([4, 3], new LevelBlock('redstoneWire'));
   plane.setBlockAt([5, 3], new LevelBlock('redstoneWire'));
 
-  const expected = [
-    '',          null,        'DownRight','Horizontal','DownLeft',  null,
-    null,        'DownRight', 'TLeft',    null,        'Vertical',  null,
-    'Horizontal','Cross',     'TUp',      'Horizontal',null,        'Vertical',
-    null,        'Vertical',  null,       null,        'Horizontal','UpLeft',
+  let expected = [
+    '',          null,        'DownRight', 'Horizontal','DownLeft',  null,
+    null,        'DownRight', 'TLeft',     null,        'Vertical',  null,
+    'Horizontal','Cross',     'TUp',       'Horizontal',null,        'Vertical',
+    null,        'Vertical',  null,        null,        'Horizontal','UpLeft',
+  ].map(wire => wire === null ? '' : `redstoneWire${wire}`);
+  expected.width = undefined;
+  expected.height = undefined;
+  expected.levelModel = null;
+
+  t.deepEqual(plane.map(block => block.blockType), expected);
+
+  // Destroy a few wires.
+  plane.setBlockAt([2, 1], new LevelBlock(''));
+  plane.setBlockAt([3, 0], new LevelBlock(''));
+  plane.setBlockAt([0, 2], new LevelBlock(''));
+  plane.setBlockAt([5, 3], new LevelBlock(''));
+
+  expected = [
+    '',          null,        '',          null,        'Vertical',   null,
+    null,        'Vertical',  null,        null,        'Vertical',   null,
+    null,        'TRight',    'Horizontal','Horizontal',null,         '',
+    null,        'Vertical',  null,        null,        '',           null,
   ].map(wire => wire === null ? '' : `redstoneWire${wire}`);
   expected.width = undefined;
   expected.height = undefined;
