@@ -87,6 +87,9 @@ class GameController {
     this.initialSlowMotion = gameControllerConfig.customSlowMotion || this.assumedSlowMotion;
     this.tweenTimeScale = 1.5 / this.initialSlowMotion;
 
+    // Timeout should run at semi-normal speed, even under integration tests.
+    this.timerTimeScale = Math.pow(this.tweenTimeScale, 0.25);
+
     this.playerDelayFactor = 1.0;
     this.dayNightCycle = false;
     this.player = null;
@@ -219,8 +222,7 @@ class GameController {
         x: -450, alpha: 0.5
       }, this.timeout, Phaser.Easing.Linear.None);
 
-      // Timeout should run at normal speed, even under integration tests.
-      tween.timeScale = 1;
+      tween.timeScale = this.timerTimeScale;
       tween.start();
 
       tween = this.levelView.addResettableTween().to({
@@ -230,8 +232,7 @@ class GameController {
         this.endLevel(this.timeoutResult(this.levelModel));
       });
 
-      // Timeout should run at normal speed, even under integration tests.
-      tween.timeScale = 1;
+      tween.timeScale = this.timerTimeScale;
       tween.start();
     }
   }

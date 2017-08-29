@@ -32,9 +32,10 @@ module.exports = (level, commands) => {
       const api = gameController.codeOrgAPI;
       api.resetAttempt();
       commands(api).then(() => {
-        // Clean up. Defer until next tick to prevent "undefined time"
-        // exception in animations that are currently running.
-        setTimeout(() => gameController.game.destroy(), 0);
+        // Clean up.
+        //debugger;
+        gameController.game.destroy();
+        gameController.game.time = {};
       });
     },
   });
