@@ -33,7 +33,7 @@ module.exports = (level, commands) => {
       api.resetAttempt();
       commands(api).then(() => {
         // Clean up.
-        gameController.game.destroy();
+        setTimeout(() => gameController.game.destroy(), 0);
       });
     },
   });
