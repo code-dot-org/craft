@@ -50,7 +50,7 @@ test('Designer 3: Four Chicken Random Move', t => {
   attempt('designer03', api => new Promise(resolve => {
     api.onEventTriggered(null, 'chicken', 2, event => {
       api.repeat(null, () => {
-        // Movement isn't actually random, because we've stubbed `Math.random()`
+        // Movement isn't actually random because we've stubbed `Math.random()`
         // for integration tests.
         api.wait(null, 'random', event.targetIdentifier);
         api.moveForward(null, event.targetIdentifier);
@@ -74,6 +74,27 @@ test('Designer 4: Move Player Inside House', t => {
     }
     api.use(null, 'Player');
     api.moveForward(null, 'Player');
+
+    api.startAttempt(success => {
+      t.assert(success);
+      t.end();
+
+      resolve();
+    });
+  }));
+});
+
+test('Designer 5: Add Shear Sheep Behavior', t => {
+  attempt('designer05', api => new Promise(resolve => {
+    api.onEventTriggered(null, 'sheep', 2, event => {
+      api.drop(null, 'wool', event.targetIdentifier);
+    });
+    for (let i = 0; i < 4; i++) {
+      api.moveForward(null, 'Player');
+    }
+    api.turnRight(null, 'Player');
+    api.moveForward(null, 'Player');
+    api.use(null, 'Player');
 
     api.startAttempt(success => {
       t.assert(success);

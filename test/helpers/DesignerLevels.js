@@ -65,7 +65,22 @@ module.exports = {
     levelVerificationTimeout: 20000,
     timeoutResult: () => false,
     verificationFunction: verificationAPI => (
-      verificationAPI.isEntityOnBlocktype("Player","planksOak")
+      verificationAPI.isEntityOnBlocktype("Player", "planksOak")
+    ),
+  },
+  designer05: {
+    isEventLevel: true,
+    groundPlane: houseGroundPlane,
+    groundDecorationPlane: houseDecorationPlane,
+    actionPlane: houseActionPlane,
+    entities: [["sheep", 6, 3, 1]],
+    usePlayer: true,
+    playerStartPosition: [4, 7],
+    playerStartDirection: 0,
+    levelVerificationTimeout: 20000,
+    timeoutResult: () => false,
+    verificationFunction: verificationAPI => (
+      verificationAPI.getInventoryAmount("all") >= 1
     ),
   },
 };
