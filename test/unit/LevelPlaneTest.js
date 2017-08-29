@@ -9,7 +9,7 @@ test('get blocks', t => {
     'water', 'lava', 'water', 'lava',
     'grass', 'dirt', 'stone', 'sand',
   ];
-  const plane = new LevelPlane(data, 4, 3, true);
+  const plane = new LevelPlane(data, 4, 3, true, null);
 
   t.equal(plane.getBlockAt([0, 0]).blockType, 'grass');
   t.equal(plane.getBlockAt([1, 1], 1).blockType, 'water');
@@ -50,7 +50,7 @@ test('get blocks', t => {
 // 3   │     ──┘
 test('redstone wires', t => {
   const data = new Array(24).fill('');
-  const plane = new LevelPlane(data, 6, 4, null, true);
+  const plane = new LevelPlane(data, 6, 4, true, null);
 
   // Place the test pattern.
   plane.setBlockAt([0, 0], new LevelBlock('redstoneWire'));
@@ -111,7 +111,7 @@ test('rail connections', t => {
     'railsVertical', '', 'railsVertical', '', 'railsVertical', '', '',
     '', '', '', '', '', 'railsVertical', '',
   ];
-  const plane = new LevelPlane(data, 7, 6, true);
+  const plane = new LevelPlane(data, 7, 6, true, null);
 
   t.deepEqual(plane.setBlockAt([1, 0], new LevelBlock('railsHorizontal')).blockType, 'railsTopLeft');
   t.deepEqual(plane.setBlockAt([5, 1], new LevelBlock('railsHorizontal')).blockType, 'railsTopLeft');
@@ -123,7 +123,7 @@ test('rail connections', t => {
   expected[12] = 'railsTopLeft';
   expected[29] = 'railsBottomLeft';
   expected[33] = 'railsTopRight';
-  t.deepEqual(plane, new LevelPlane(expected, 7, 6, true));
+  t.deepEqual(plane, new LevelPlane(expected, 7, 6, true, null));
 
   t.end();
 });
