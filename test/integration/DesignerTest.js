@@ -45,3 +45,41 @@ test('Designer 2: Four Chicken Move', t => {
     });
   }));
 });
+
+test('Designer 3: Four Chicken Random Move', t => {
+  attempt('designer03', api => new Promise(resolve => {
+    api.onEventTriggered(null, 'chicken', 2, event => {
+      api.repeat(null, () => {
+        // Movement isn't actually random, because we've stubbed `Math.random()`
+        // for integration tests.
+        api.wait(null, 'random', event.targetIdentifier);
+        api.moveForward(null, event.targetIdentifier);
+        api.turnRandom(null, event.targetIdentifier);
+      }, -1, event.targetIdentifier);
+    });
+
+    api.startAttempt(success => {
+      t.assert(success);
+      t.end();
+
+      resolve();
+    });
+  }));
+});
+
+test('Designer 4: Move Player Inside House', t => {
+  attempt('designer04', api => new Promise(resolve => {
+    for (let i = 0; i < 5; i++) {
+      api.moveForward(null, 'Player');
+    }
+    api.use(null, 'Player');
+    api.moveForward(null, 'Player');
+
+    api.startAttempt(success => {
+      t.assert(success);
+      t.end();
+
+      resolve();
+    });
+  }));
+});
