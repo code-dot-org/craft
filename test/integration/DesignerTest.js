@@ -84,7 +84,25 @@ test('Designer 4: Move Player Inside House', t => {
   }));
 });
 
-test('Designer 5: Add Shear Sheep Behavior', t => {
+test('Designer 5: Add Shear Sheep Behavior (fail)', t => {
+  attempt('designer05', api => new Promise(resolve => {
+    for (let i = 0; i < 4; i++) {
+      api.moveForward(null, 'Player');
+    }
+    api.turnRight(null, 'Player');
+    api.moveForward(null, 'Player');
+    api.use(null, 'Player');
+
+    api.startAttempt(success => {
+      t.assert(!success);
+      t.end();
+
+      resolve();
+    });
+  }));
+});
+
+test('Designer 5: Add Shear Sheep Behavior (pass)', t => {
   attempt('designer05', api => new Promise(resolve => {
     api.onEventTriggered(null, 'sheep', 2, event => {
       api.drop(null, 'wool', event.targetIdentifier);
