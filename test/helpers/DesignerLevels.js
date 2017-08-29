@@ -28,6 +28,6 @@ module.exports = {
     timeoutResult: verificationAPI => (
       verificationAPI.getRepeatCommandExecutedCount('moveForward') > 0
     ),
-    verificationFunction: verificationAPI => false,
+    verificationFunction: () => false,
   },
 };
