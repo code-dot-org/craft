@@ -86,6 +86,7 @@ test('Designer 4: Move Player Inside House', t => {
 
 test('Designer 5: Add Shear Sheep Behavior (fail)', t => {
   attempt('designer05', api => new Promise(resolve => {
+    // Move to the sheep without defining the sheep `use` behavior.
     for (let i = 0; i < 4; i++) {
       api.moveForward(null, 'Player');
     }
@@ -104,15 +105,42 @@ test('Designer 5: Add Shear Sheep Behavior (fail)', t => {
 
 test('Designer 5: Add Shear Sheep Behavior (pass)', t => {
   attempt('designer05', api => new Promise(resolve => {
+    // Set up the sheep `use` behavior to drop wool.
     api.onEventTriggered(null, 'sheep', 2, event => {
       api.drop(null, 'wool', event.targetIdentifier);
     });
+
+    // Move to the sheep then `use`.
     for (let i = 0; i < 4; i++) {
       api.moveForward(null, 'Player');
     }
     api.turnRight(null, 'Player');
     api.moveForward(null, 'Player');
     api.use(null, 'Player');
+
+    api.startAttempt(success => {
+      t.assert(success);
+      t.end();
+
+      resolve();
+    });
+  }));
+});
+
+test('Designer 6: Lead Cows to Grass', t => {
+  attempt('designer06', api => new Promise(resolve => {
+    // Define cow follow behavior as user code.
+    api.onEventTriggered(null, 'cow', 2, event => {
+      api.repeat(null, () => {
+        api.moveToward(null, event.targetIdentifier, 'Player');
+      }, -1, event.targetIdentifier);
+    });
+
+    // Move player into grassy area.
+    api.moveForward(null, 'Player');
+    api.turnLeft(null, 'Player');
+    api.moveForward(null, 'Player');
+    api.moveForward(null, 'Player');
 
     api.startAttempt(success => {
       t.assert(success);

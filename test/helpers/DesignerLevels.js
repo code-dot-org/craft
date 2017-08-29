@@ -83,4 +83,26 @@ module.exports = {
       verificationAPI.getInventoryAmount("all") >= 1
     ),
   },
+  designer06: {
+    isEventLevel: true,
+    groundPlane: ["dirt", "dirt", "dirtCoarse", "dirt", "gravel", "dirtCoarse", "water", "water", "dirt", "dirt", "dirt", "dirtCoarse", "dirtCoarse", "dirt", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirt", "dirtCoarse", "dirtCoarse", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirtCoarse", "dirt", "dirtCoarse", "dirtCoarse", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirt", "dirt", "dirt", "dirt", "dirtCoarse", "dirtCoarse", "dirt", "dirt", "dirt", "dirtCoarse", "dirtCoarse", "dirt", "dirt", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirt", "water", "water", "dirt", "dirt", "dirt", "dirtCoarse", "grass", "grass", "grass", "dirtCoarse", "water", "water", "dirt", "dirt", "dirtCoarse", "grass", "grass", "grass", "grass", "grass", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "grass", "grass", "grass", "grass", "dirt", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "grass", "grass", "grass", "grass", "grass"],
+    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+    actionPlane: ["stone", "stone", "", "stone", "stone", "", "", "", "stone", "stone", "stone", "", "", "", "", "", "", "", "", "stone", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "stone", "stone", "", "", "", "", "", "stone", "", "", "", "stone", "", "", "", "", "", "stone", "stone", "", "", "", "", "stone", "", "", "", "", "", "", "", "", "stone", "stone", "", "", "", "", "", "", "", "", "", "", "stone", "", "", "", "stone", "", "", "", "", "grass", "stone", "", "", "stone", "stone", "", "", "", "grass", "grass"],
+    entities: [["cow", 6, 1, 1], ["cow", 1, 2, 1]],
+    usePlayer: true,
+    playerStartPosition: [5, 6],
+    playerStartDirection: 2,
+    levelVerificationTimeout: 60000,
+    timeoutResult: () => false,
+    verificationFunction: verificationAPI => {
+      const grassPositions = [[6, 6], [7, 6], [8, 6], [5, 7], [6, 7], [7, 7], [8, 7], [9, 7], [6, 8], [7, 8], [8, 8], [9, 8], [5, 9], [6, 9], [7, 9], [8, 9], [9, 9]];
+      let cowOnGrassCount = 0;
+      for (let i = 0; i < grassPositions.length; i++) {
+        if (verificationAPI.isEntityAt("cow", grassPositions[i])) {
+          cowOnGrassCount++;
+        }
+      }
+      return cowOnGrassCount >= 2;
+    },
+  },
 };
