@@ -102,28 +102,28 @@ module.exports = class LevelPlane extends Array {
     let foundRight = false;
     let foundLeft = false;
     let myIndex = this.coordinatesToIndex(position);
-    let OrthogonalBlocks = this.getOrthogonalBlocks(position);
+    let orthogonalBlocks = this.getOrthogonalBlocks(position);
 
     let borderCount = 0;
 
     // If in bounds, we want to see if any redstone is around the index in question
     // Below index
-    if (OrthogonalBlocks.south !== undefined && OrthogonalBlocks.south.blockType.startsWith("redstoneWire")) {
+    if (orthogonalBlocks.south !== undefined && orthogonalBlocks.south.blockType.startsWith("redstoneWire")) {
       foundBelow = true;
       ++borderCount;
     }
     // Above index
-    if (OrthogonalBlocks.north !== undefined && OrthogonalBlocks.north.blockType.startsWith("redstoneWire")) {
+    if (orthogonalBlocks.north !== undefined && orthogonalBlocks.north.blockType.startsWith("redstoneWire")) {
       foundAbove = true;
       ++borderCount;
     }
     // Right index
-    if (OrthogonalBlocks.east !== undefined && OrthogonalBlocks.east.blockType.startsWith("redstoneWire")) {
+    if (orthogonalBlocks.east !== undefined && orthogonalBlocks.east.blockType.startsWith("redstoneWire")) {
       foundRight = true;
       ++borderCount;
     }
     // Left index
-    if (OrthogonalBlocks.west !== undefined && OrthogonalBlocks.west.blockType.startsWith("redstoneWire")) {
+    if (orthogonalBlocks.west !== undefined && orthogonalBlocks.west.blockType.startsWith("redstoneWire")) {
       foundLeft = true;
       ++borderCount;
     }
