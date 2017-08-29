@@ -42,10 +42,10 @@ module.exports = class LevelModel {
   }
 
   reset() {
-    this.groundPlane = new LevelPlane(this.initialLevelData.groundPlane, this.planeWidth, this.planeHeight);
-    this.groundDecorationPlane = new LevelPlane(this.initialLevelData.groundDecorationPlane, this.planeWidth, this.planeHeight);
+    this.groundPlane = new LevelPlane(this.initialLevelData.groundPlane, this.planeWidth, this.planeHeight, this.controller, this);
+    this.groundDecorationPlane = new LevelPlane(this.initialLevelData.groundDecorationPlane, this.planeWidth, this.planeHeight, this.controller, this);
     this.shadingPlane = [];
-    this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, true);
+    this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, this.controller, this, true);
 
     for (let i = 0; i < this.actionPlane.length; ++i) {
       if (this.actionPlane[i].blockType.substring(0,12) === "redstoneWire") {
@@ -823,16 +823,7 @@ module.exports = class LevelModel {
       blockType = "farmlandWet";
       targetPlane = this.groundPlane;
     }
-    let newBlock = new LevelBlock(blockType);
-
-    let connectingBlock = targetPlane.checkConnectionOnPlace("redstoneWire", blockType, this);
-    // If checkConnection didn't handle the placement, we'll revert to standard methods
-    if (!connectingBlock) {
-      targetPlane.setBlockAt(blockPosition, newBlock);
-    }
-    let index = this.yToIndex(blockPosition[1]) + blockPosition[0];
-    newBlock = targetPlane[index];
-    return newBlock;
+    return targetPlane.setBlockAt(blockPosition, new LevelBlock(blockType));
   }
 
   destroyBlock(position) {

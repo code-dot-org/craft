@@ -1,11 +1,12 @@
 const LevelBlock = require("./LevelBlock.js");
 
 module.exports = class LevelPlane extends Array {
-  constructor(planeData, width, height, isActionPlane = false) {
+  constructor(planeData, width, height, isActionPlane = false, LevelModel = null) {
     super();
 
     this.width = width;
     this.height = height;
+    this.levelModel = LevelModel;
 
     for (let index = 0; index < planeData.length; ++index) {
       let block = new LevelBlock(planeData[index]);
@@ -36,11 +37,32 @@ module.exports = class LevelPlane extends Array {
   setBlockAt(position, block) {
     this[this.coordinatesToIndex(position)] = block;
 
+    if (block.isRedstone) {
+      this.determineRedstoneSprite(position);
+      this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
+        const orthogonalBlock = this.getBlockAt(orthogonalPosition);
+        if (orthogonalBlock && orthogonalBlock.isRedstone) {
+          this.determineRedstoneSprite(orthogonalPosition);
+          this.levelModel.controller.levelView.refreshActionPlane(this.levelModel, [this.coordinatesToIndex(orthogonalPosition)]);
+        }
+      });
+    }
+
     if (block.isRail) {
       block.blockType = this.determineRailType(position);
     }
 
     return block;
+  }
+
+  getOrthogonalPositions(position) {
+    const [x, y] = position;
+    return [
+      [x, y - 1],
+      [x, y + 1],
+      [x + 1, y],
+      [x - 1, y],
+    ];
   }
 
   getOrthogonalBlocks(position) {
@@ -90,12 +112,12 @@ module.exports = class LevelPlane extends Array {
       // Just add more cases here if we have more connection dependent block types.
       switch (substring) {
         case "redstoneWire":
-          funtion_pointer = LevelModel.determineRedstoneSprite.bind(LevelModel);
+          funtion_pointer = this.determineRedstoneSprite.bind(this);
           break;
       }
 
       // Extra work when placing is to determine the right sprite to draw.
-      let newBlockType = funtion_pointer(blockPosition[0], blockPosition[1], newBlock);
+      let newBlockType = funtion_pointer([blockPosition[0], blockPosition[1]], blockIndex);
       newBlock = new LevelBlock(newBlockType);
       this.setBlockAt(blockPosition, newBlock);
 
@@ -104,28 +126,28 @@ module.exports = class LevelPlane extends Array {
       // We want to check adjacent blocks as well:
       if (OrthogonalBlocks.north !== undefined) {
         if (OrthogonalBlocks.north.blockType.startsWith(substring)) {
-          let upBlockType = funtion_pointer(blockPosition[0], blockPosition[1] - 1, newBlock);
+          let upBlockType = funtion_pointer([blockPosition[0], blockPosition[1] - 1], topIndex);
           this[LevelModel.yToIndex(blockPosition[1] - 1) + blockPosition[0]].blockType = upBlockType;
           indices.push(topIndex);
         }
       }
       if (OrthogonalBlocks.south !== undefined) {
         if (OrthogonalBlocks.south.blockType.startsWith(substring)) {
-          let downBlockType = funtion_pointer(blockPosition[0], blockPosition[1] + 1, newBlock);
+          let downBlockType = funtion_pointer([blockPosition[0], blockPosition[1] + 1], bottomIndex);
           this[LevelModel.yToIndex(blockPosition[1] + 1) + blockPosition[0]].blockType = downBlockType;
           indices.push(bottomIndex);
         }
       }
       if (OrthogonalBlocks.east !== undefined) {
         if (OrthogonalBlocks.east.blockType.startsWith(substring)) {
-          let rightBlockType = funtion_pointer(blockPosition[0] + 1, blockPosition[1], newBlock);
+          let rightBlockType = funtion_pointer([blockPosition[0] + 1, blockPosition[1]], rightIndex);
           this[LevelModel.yToIndex(blockPosition[1]) + blockPosition[0] + 1].blockType = rightBlockType;
           indices.push(rightIndex);
         }
       }
       if (OrthogonalBlocks.west !== undefined) {
         if (OrthogonalBlocks.west.blockType.startsWith(substring)) {
-          let leftBlockType = funtion_pointer(blockPosition[0] - 1, blockPosition[1], newBlock);
+          let leftBlockType = funtion_pointer([blockPosition[0] - 1, blockPosition[1]], leftIndex);
           this[LevelModel.yToIndex(blockPosition[1]) + blockPosition[0] - 1].blockType = leftBlockType;
           indices.push(leftIndex);
         }
@@ -138,12 +160,12 @@ module.exports = class LevelPlane extends Array {
     }
   }
 
-  determineRedstoneSprite(position, index) {
+  determineRedstoneSprite(position) {
     let foundAbove = false;
     let foundBelow = false;
     let foundRight = false;
     let foundLeft = false;
-    let myIndex = index;
+    let myIndex = this.coordinatesToIndex(position);
     let OrthogonalBlocks = this.getOrthogonalBlocks(position);
 
     let borderCount = 0;
@@ -220,6 +242,7 @@ module.exports = class LevelPlane extends Array {
       // All four sides connected: Cross.
       this[myIndex].blockType = "redstoneWireCross";
     }
+
     return this[myIndex].blockType;
   }
 };

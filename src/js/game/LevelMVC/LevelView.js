@@ -1183,7 +1183,7 @@ module.exports = class LevelView {
         sprite = null;
         if (!levelData.actionPlane[blockIndex].isEmpty) {
           blockType = levelData.actionPlane[blockIndex].blockType;
-          sprite = this.createBlock(this.actionPlane, x, y, blockType, levelData);
+          sprite = this.createBlock(this.actionPlane, x, y, blockType);
           if (sprite !== null) {
             sprite.sortOrder = this.yToIndex(y);
           }
@@ -1689,9 +1689,10 @@ module.exports = class LevelView {
       sprite = null,
       frameList;
 
+    let saveType = blockType;
     // Need to make sure the switch case will capture the right miniBlock for -all- redstoneWire
     if (blockType.substring(0,12) === "redstoneWire") {
-      blockType = "redstoneWire";
+      blockType = "redstoneDust";
     }
 
     switch (blockType) {
@@ -1735,13 +1736,12 @@ module.exports = class LevelView {
       case "tnt":
         frame = "gunPowder";
         break;
-      case "redstoneWire":
-        frame = "redstoneDust";
-        break;
       default:
         frame = blockType;
         break;
     }
+    //blockType is used later in this function, so reset to original
+    blockType = saveType;
 
     let atlas = "miniBlocks";
     let framePrefix = this.miniBlocks[frame][0];
@@ -1972,14 +1972,6 @@ module.exports = class LevelView {
           this.toDestroy.push(sprite);
           this.actionPlaneBlocks[this.coordinatesToIndex([x, y])] = null;
         });
-        break;
-
-      case "redstoneWire":
-        atlas = this.blocks[blockType][0];
-        frame = this.blocks[blockType][1];
-        xOffset = this.blocks[blockType][2];
-        yOffset = this.blocks[blockType][3];
-        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         break;
 
       default:
