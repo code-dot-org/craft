@@ -1115,7 +1115,7 @@ class GameController {
     let player = this.levelModel.player;
     // if there is a destroyable block in front of the player
     if (this.levelModel.canDestroyBlockForward()) {
-      let block = this.levelModel.destroyBlockForward();
+      let block = this.levelModel.actionPlane.getBlockAt(this.levelModel.getMoveForwardPosition(player));
 
       if (block !== null) {
         let destroyPosition = this.levelModel.getMoveForwardPosition(player);
@@ -1146,9 +1146,7 @@ class GameController {
           }
           this.levelView.playDestroyBlockAnimation(player.position, player.facing, destroyPosition, blockType, () => {
             commandQueueItem.succeeded();
-            this.levelModel.actionPlane.getOrthogonalPositions(destroyPosition).forEach(orthogonalPosition => {
-              this.levelView.refreshActionPlane(this.levelModel, [this.levelModel.actionPlane.coordinatesToIndex(orthogonalPosition)]);
-            });
+            this.levelModel.destroyBlockForward();
           });
         } else if (block.isUsable) {
           switch (blockType) {
@@ -1344,17 +1342,13 @@ class GameController {
       soundEffect = () => this.levelView.audioPlayer.play("fizz");
     }
 
-    const placedBlock = this.levelModel.placeBlockForward(blockType, placementPlane);
-    this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, forwardPosition, placementPlane, placedBlock.blockType, () => {
-
+    this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, forwardPosition, placementPlane, blockType, () => {
       this.levelModel.computeShadingPlane();
       this.levelModel.computeFowPlane();
       this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
       this.levelView.updateFowPlane(this.levelModel.fowPlane);
       soundEffect();
-      this.levelModel.actionPlane.getOrthogonalPositions(forwardPosition).forEach(orthogonalPosition => {
-        this.levelView.refreshActionPlane(this.levelModel, [this.levelModel.actionPlane.coordinatesToIndex(orthogonalPosition)]);
-      });
+      this.levelModel.placeBlockForward(blockType, placementPlane);
       this.delayBy(200, () => {
         this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
       });
