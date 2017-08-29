@@ -840,7 +840,6 @@ module.exports = class LevelModel {
         }
       }
     }
-
     return block;
   }
 
@@ -859,7 +858,6 @@ module.exports = class LevelModel {
         }
       }
     }
-
     return block;
   }
 

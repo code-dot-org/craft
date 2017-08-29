@@ -1144,9 +1144,11 @@ class GameController {
               blockType = "planksSpruce";
               break;
           }
-
           this.levelView.playDestroyBlockAnimation(player.position, player.facing, destroyPosition, blockType, () => {
             commandQueueItem.succeeded();
+            this.levelModel.actionPlane.getOrthogonalPositions(destroyPosition).forEach(orthogonalPosition => {
+              this.levelView.refreshActionPlane(this.levelModel, [this.levelModel.actionPlane.coordinatesToIndex(orthogonalPosition)]);
+            });
           });
         } else if (block.isUsable) {
           switch (blockType) {

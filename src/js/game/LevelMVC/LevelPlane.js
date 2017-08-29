@@ -48,6 +48,15 @@ module.exports = class LevelPlane extends Array {
       });
     }
 
+    if (block.blockType === "") {
+      this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
+        const orthogonalBlock = this.getBlockAt(orthogonalPosition);
+        if (orthogonalBlock && orthogonalBlock.isRedstone) {
+          this.determineRedstoneSprite(orthogonalPosition);
+        }
+      });
+    }
+
     if (block.isRail) {
       block.blockType = this.determineRailType(position);
     }

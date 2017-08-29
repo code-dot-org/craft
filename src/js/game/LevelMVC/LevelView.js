@@ -904,9 +904,6 @@ module.exports = class LevelView {
         blockToDestroy.onBlockDestroy(blockToDestroy);
       }
 
-      // We need to check if block destruction might effect connected sprites.
-      this.checkConnectionsOnDestroy("redstoneWire", destroyPosition, blockType);
-
       blockToDestroy.kill();
       destroyOverlay.kill();
       this.toDestroy.push(blockToDestroy);
@@ -922,50 +919,6 @@ module.exports = class LevelView {
     });
 
     this.playScaledSpeed(destroyOverlay.animations, "destroy");
-  }
-
-  checkConnectionsOnDestroy(substring, destroyPosition, blockType) {
-    // If the block to be destroyed is one that has connections, we have work to do.
-    if (blockType.substring(0,substring.length) === substring) {
-      let blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
-      let upIndex = blockIndex - this.controller.levelModel.actionPlane.height;
-      let downIndex = blockIndex + this.controller.levelModel.actionPlane.height;
-      let rightIndex = blockIndex + 1;
-      let leftIndex = blockIndex - 1;
-
-      let activeIndicies = [];
-
-      // Up index.
-      if (this.controller.levelModel.inBounds(destroyPosition[0], destroyPosition[1] - 1) && this.controller.levelModel.actionPlane[upIndex].blockType.substring(0,12) === "redstoneWire") {
-        let upBlockType = this.controller.levelModel.actionPlane[upIndex].blockType;
-        upBlockType = this.controller.levelModel.actionPlane.determineRedstoneSprite([destroyPosition[0], destroyPosition[1] - 1], upIndex);
-        this.controller.levelModel.actionPlane[upIndex].blockType = upBlockType;
-        activeIndicies.push(upIndex);
-      }
-      // Down index.
-      if (this.controller.levelModel.inBounds(destroyPosition[0], destroyPosition[1] + 1) && this.controller.levelModel.actionPlane[downIndex].blockType.substring(0,12) === "redstoneWire") {
-        let downBlockType = this.controller.levelModel.actionPlane[downIndex].blockType;
-        downBlockType = this.controller.levelModel.actionPlane.determineRedstoneSprite([destroyPosition[0], destroyPosition[1] + 1], downIndex);
-        this.controller.levelModel.actionPlane[downIndex].blockType = downBlockType;
-        activeIndicies.push(downIndex);
-      }
-      // Right index.
-      if (this.controller.levelModel.inBounds(destroyPosition[0] + 1, destroyPosition[1]) && this.controller.levelModel.actionPlane[rightIndex].blockType.substring(0,12) === "redstoneWire") {
-        let rightBlockType = this.controller.levelModel.actionPlane[rightIndex].blockType;
-        rightBlockType = this.controller.levelModel.actionPlane.determineRedstoneSprite([destroyPosition[0] + 1, destroyPosition[1]], rightIndex);
-        this.controller.levelModel.actionPlane[rightIndex].blockType = rightBlockType;
-        activeIndicies.push(rightIndex);
-      }
-      // Left index.
-      if (this.controller.levelModel.inBounds(destroyPosition[0] - 1, destroyPosition[1]) && this.controller.levelModel.actionPlane[leftIndex].blockType.substring(0,12) === "redstoneWire") {
-        let leftBlockType = this.controller.levelModel.actionPlane[leftIndex].blockType;
-        leftBlockType = this.controller.levelModel.actionPlane.determineRedstoneSprite([destroyPosition[0] - 1, destroyPosition[1]], leftIndex);
-        this.controller.levelModel.actionPlane[leftIndex].blockType = leftBlockType;
-        activeIndicies.push(leftIndex);
-      }
-      // Refresh just those indicies, so we can display the correct information.
-      this.refreshActionPlane(this.controller.levelModel, activeIndicies);
-    }
   }
 
   playMiningParticlesAnimation(facing, destroyPosition) {
