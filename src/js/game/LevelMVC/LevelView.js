@@ -1617,7 +1617,6 @@ module.exports = class LevelView {
       sprite = null,
       frameList;
 
-    let saveType = blockType;
     // Need to make sure the switch case will capture the right miniBlock for -all- redstoneWire
     if (blockType.substring(0,12) === "redstoneWire") {
       blockType = "redstoneDust";
@@ -1668,8 +1667,6 @@ module.exports = class LevelView {
         frame = blockType;
         break;
     }
-    //blockType is used later in this function, so reset to original
-    blockType = saveType;
 
     let atlas = "miniBlocks";
     let framePrefix = this.miniBlocks[frame][0];
