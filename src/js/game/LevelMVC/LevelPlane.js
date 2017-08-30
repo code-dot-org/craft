@@ -1,5 +1,27 @@
 const LevelBlock = require("./LevelBlock.js");
 
+const North = 1;
+const South = 2;
+const East = 4;
+const West = 8;
+
+const connectionName = function (connection) {
+  switch (connection) {
+    case 1: return 'North';
+    case 2: return 'South';
+    case 4: return 'East';
+    case 8: return 'West';
+    default: return '';
+  }
+};
+
+const ConnectionPriority = [
+  [], [North], [South], [North, South],
+  [East], [North, East], [South, East], [South, East],
+  [West], [North, West], [South, West], [South, West],
+  [East, West], [North, East], [South, East], [North, East],
+];
+
 module.exports = class LevelPlane extends Array {
   constructor(planeData, width, height, isActionPlane = false, LevelModel = null) {
     super();
@@ -34,26 +56,13 @@ module.exports = class LevelPlane extends Array {
     }
   }
 
-  setBlockAt(position, block, oldBlock = {}, force = false) {
+  setBlockAt(position, block, force = false) {
     this[this.coordinatesToIndex(position)] = block;
 
     if (block.isRedstone) {
       this.determineRedstoneSprite(position);
     }
-    if (block.isRedstone || oldBlock.isRedstone) {
-      this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
-        const orthogonalBlock = this.getBlockAt(orthogonalPosition);
-        if (orthogonalBlock && orthogonalBlock.isRedstone) {
-          this.determineRedstoneSprite(orthogonalPosition);
-          if (this.levelModel) {
-            this.levelModel.controller.levelView.refreshActionPlane(
-              this.levelModel, [this.coordinatesToIndex(orthogonalPosition)]);
-          }
-        }
-      });
-    }
-
-    if (block.blockType === "") {
+    if (block.isRedstone || block.blockType === '') {
       this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
         const orthogonalBlock = this.getBlockAt(orthogonalPosition);
         if (orthogonalBlock && orthogonalBlock.isRedstone) {
@@ -62,13 +71,13 @@ module.exports = class LevelPlane extends Array {
       });
     }
 
-    if (block.isRail && !force) {
-      block.blockType = this.determineRailType(position);
+    if (!force) {
+      this.determineRailType(position, true);
     }
 
     if (this.levelModel) {
-      this.levelModel.controller.levelView.refreshActionPlane(this.levelModel,
-        [this.coordinatesToIndex(position)]);
+      const positionAndTouching = this.getOrthogonalPositions(position).concat([position]);
+      this.levelModel.controller.levelView.refreshActionPlane(positionAndTouching);
     }
 
     return block;
@@ -86,10 +95,10 @@ module.exports = class LevelPlane extends Array {
 
   getOrthogonalBlocks(position) {
     return {
-      north: this.getBlockAt(position, 0, -1),
-      south: this.getBlockAt(position, 0, 1),
-      east: this.getBlockAt(position, 1, 0),
-      west: this.getBlockAt(position, -1, 0),
+      north: {block: this.getBlockAt(position, 0, -1), relative: South},
+      south: {block: this.getBlockAt(position, 0, 1), relative: North},
+      east: {block: this.getBlockAt(position, 1, 0), relative: West},
+      west: {block: this.getBlockAt(position, -1, 0), relative: East},
     };
   }
 
@@ -103,16 +112,36 @@ module.exports = class LevelPlane extends Array {
     );
   }
 
-  determineRailType(position) {
-    const mask = this.getOrthogonalMask(position, block => block && block.isRail);
-    const variant = [
-      "Vertical", "Vertical", "Vertical", "Vertical",
-      "Horizontal", "BottomLeft", "TopLeft", "TopLeft",
-      "Horizontal", "BottomRight", "TopRight", "TopRight",
-      "Horizontal", "BottomLeft", "TopLeft", "BottomLeft",
-    ][mask];
+  determineRailType(position, updateTouching = false) {
+    const block = this.getBlockAt(position);
 
-    return `rails${variant}`;
+    if (!block || !block.isRail) {
+      return;
+    }
+
+    if (block.connectionA && block.connectionB) {
+      return;
+    }
+
+    const mask = this.getOrthogonalMask(position, ({block, relative}) => {
+      if (!block || !block.isRail) {
+        return false;
+      }
+      const a = !block.connectionA || block.connectionA === relative;
+      const b = !block.connectionB || block.connectionB === relative;
+
+      return a || b;
+    });
+
+    [block.connectionA, block.connectionB] = ConnectionPriority[mask];
+
+    block.blockType = `rails${connectionName(block.connectionA)}${connectionName(block.connectionB)}`;
+
+    if (updateTouching) {
+      this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
+        this.determineRailType(orthogonalPosition);
+      });
+    }
   }
 
   determineRedstoneSprite(position) {
@@ -127,22 +156,22 @@ module.exports = class LevelPlane extends Array {
 
     // If in bounds, we want to see if any redstone is around the index in question
     // Below index
-    if (orthogonalBlocks.south !== undefined && orthogonalBlocks.south.blockType.startsWith("redstoneWire")) {
+    if (orthogonalBlocks.south.block !== undefined && orthogonalBlocks.south.block.blockType.startsWith("redstoneWire")) {
       foundBelow = true;
       ++borderCount;
     }
     // Above index
-    if (orthogonalBlocks.north !== undefined && orthogonalBlocks.north.blockType.startsWith("redstoneWire")) {
+    if (orthogonalBlocks.north.block !== undefined && orthogonalBlocks.north.block.blockType.startsWith("redstoneWire")) {
       foundAbove = true;
       ++borderCount;
     }
     // Right index
-    if (orthogonalBlocks.east !== undefined && orthogonalBlocks.east.blockType.startsWith("redstoneWire")) {
+    if (orthogonalBlocks.east.block !== undefined && orthogonalBlocks.east.block.blockType.startsWith("redstoneWire")) {
       foundRight = true;
       ++borderCount;
     }
     // Left index
-    if (orthogonalBlocks.west !== undefined && orthogonalBlocks.west.blockType.startsWith("redstoneWire")) {
+    if (orthogonalBlocks.west.block !== undefined && orthogonalBlocks.west.block.blockType.startsWith("redstoneWire")) {
       foundLeft = true;
       ++borderCount;
     }

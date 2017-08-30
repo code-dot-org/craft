@@ -116,14 +116,20 @@ module.exports = class LevelView {
 
       "door": ["door", "", -12, -15],
 
-      "railsBottomLeft": ["blocks", "Rails_BottomLeft", -13, 0],
-      "railsBottomRight": ["blocks", "Rails_BottomRight", -13, 0],
-      "railsHorizontal": ["blocks", "Rails_Horizontal", -13, 0],
-      "railsTopLeft": ["blocks", "Rails_TopLeft", -13, 0],
-      "railsTopRight": ["blocks", "Rails_TopRight", -13, 0],
+      "rails": ["blocks", "Rails_Vertical", -13, -0],
+      "railsNorthEast": ["blocks", "Rails_BottomLeft", -13, 0],
+      "railsNorthWest": ["blocks", "Rails_BottomRight", -13, 0],
+      "railsEast": ["blocks", "Rails_Horizontal", -13, 0],
+      "railsWest": ["blocks", "Rails_Horizontal", -13, 0],
+      "railsEastWest": ["blocks", "Rails_Horizontal", -13, 0],
+      "railsSouthEast": ["blocks", "Rails_TopLeft", -13, 0],
+      "railsSouthWest": ["blocks", "Rails_TopRight", -13, 0],
+      "railsNorth": ["blocks", "Rails_Vertical", -13, -0],
+      "railsSouth": ["blocks", "Rails_Vertical", -13, -0],
+      "railsNorthSouth": ["blocks", "Rails_Vertical", -13, -0],
+
       "railsUnpoweredHorizontal": ["blocks", "Rails_UnpoweredHorizontal", -13, 0],
       "railsUnpoweredVertical": ["blocks", "Rails_UnpoweredVertical", -13, 0],
-      "railsVertical": ["blocks", "Rails_Vertical", -13, -0],
       "railsPoweredHorizontal": ["blocks", "Rails_PoweredHorizontal", -13, 0],
       "railsPoweredVertical": ["blocks", "Rails_PoweredVertical", -13, 0],
       "railsRedstoneTorch": ["blocks", "Rails_RedstoneTorch", -12, 9],
@@ -784,6 +790,11 @@ module.exports = class LevelView {
 
   createActionPlaneBlock(position, blockType) {
     let blockIndex = (this.yToIndex(position[1])) + position[0];
+
+    // Remove the old sprite at this position, if there is one.
+    this.actionPlane.remove(this.actionPlaneBlocks[blockIndex]);
+
+    // Create a new sprite.
     var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
 
     if (sprite) {
@@ -999,7 +1010,9 @@ module.exports = class LevelView {
 
   playItemDropAnimation(destroyPosition, blockType, completionHandler) {
     var sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
-    sprite.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
+    if (sprite) {
+      sprite.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
+    }
 
     if (this.controller.levelData.isEventLevel) {
       completionHandler();
@@ -1144,34 +1157,19 @@ module.exports = class LevelView {
     }
   }
 
-  refreshActionPlane(levelData, indices) {
-    var sprite,
-      blockType;
-
-    for (let i = 0; i < indices.length; ++i) {
-      if (indices[i] >= 0) {
-        let workingIndex = indices[i];
-
-        sprite = this.actionPlaneBlocks[workingIndex];
-        this.actionPlane.remove(sprite);
-
-        let coord = this.indexToCoordinates(workingIndex);
-
-        blockType = levelData.actionPlane[workingIndex].blockType;
-        if (blockType !== "") {
-          this.createActionPlaneBlock(coord, blockType);
+  refreshActionPlane(positions) {
+    positions.forEach(position => {
+      if (position) {
+        const newBlock = this.controller.levelModel.actionPlane.getBlockAt(position);
+        if (newBlock && newBlock.blockType) {
+          this.createActionPlaneBlock(position, newBlock.blockType);
         } else {
-          //Just a safety check to make sure that levelModel and levelView are synched
-          this.actionPlaneBlocks[workingIndex] = null;
+          // Remove the old sprite at this position, if there is one.
+          const index = this.coordinatesToIndex(position);
+          this.actionPlane.remove(this.actionPlaneBlocks[index]);
         }
       }
-    }
-  }
-
-  indexToCoordinates(index) {
-    let y = Math.floor(index / this.controller.levelModel.planeHeight);
-    let x = index - (y * this.controller.levelModel.planeHeight);
-    return [x,y];
+    });
   }
 
   updateShadingPlane(shadingData) {
@@ -1616,6 +1614,11 @@ module.exports = class LevelView {
     var frame = "",
       sprite = null,
       frameList;
+
+    // We don't have rails miniblock assets yet.
+    if (blockType.startsWith("rails")) {
+      return;
+    }
 
     // Need to make sure the switch case will capture the right miniBlock for -all- redstoneWire
     if (blockType.substring(0,12) === "redstoneWire") {
