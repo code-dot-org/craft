@@ -5,6 +5,7 @@
   "main": "build/js/app.bundled.js",
   "scripts": {
     "codecov": "codecov",
+    "publish": "grunt publish",
     "test:unit": "istanbul cover tape ./test/unit/*.js --report lcovonly --dir ./coverage/unit",
     "test:integration": "karma start",
     "test": "npm run lint && npm run test:unit && npm run test:integration",
@@ -29,6 +30,7 @@
     "grunt-aws-s3-gzip": "^0.10.1",
     "grunt-browserify": "*",
     "grunt-cache-bust": "^0.4.13",
+    "grunt-cli": "^1.2.0",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-connect": "^0.10.1",
     "grunt-contrib-copy": "^0.8.0",

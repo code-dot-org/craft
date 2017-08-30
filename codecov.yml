@@ -2,3 +2,6 @@ coverage:
   status:
     patch: off
     project: off
+
+fixes:
+  - "src/js/game/::"

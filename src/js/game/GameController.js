@@ -47,6 +47,7 @@ class GameController {
      * @property {Phaser.Game}
      */
     this.game = new Phaser.Game({
+      forceSetTimeOut: gameControllerConfig.forceSetTimeOut,
       width: GAME_WIDTH,
       height: GAME_HEIGHT,
       renderer: Phaser.CANVAS,
@@ -219,19 +220,10 @@ class GameController {
         x: -450, alpha: 0.5
       }, this.timeout, Phaser.Easing.Linear.None);
 
-      // Timeout should run at normal speed, even under integration tests.
-      tween.timeScale = 1;
-      tween.start();
-
-      tween = this.levelView.addResettableTween().to({
-      }, this.timeout, Phaser.Easing.Linear.None);
-
       tween.onComplete.add(() => {
         this.endLevel(this.timeoutResult(this.levelModel));
       });
 
-      // Timeout should run at normal speed, even under integration tests.
-      tween.timeScale = 1;
       tween.start();
     }
   }
