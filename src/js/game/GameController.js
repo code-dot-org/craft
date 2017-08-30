@@ -47,6 +47,7 @@ class GameController {
      * @property {Phaser.Game}
      */
     this.game = new Phaser.Game({
+      forceSetTimeOut: gameControllerConfig.forceSetTimeOut,
       width: GAME_WIDTH,
       height: GAME_HEIGHT,
       renderer: Phaser.CANVAS,

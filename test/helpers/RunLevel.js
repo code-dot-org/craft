@@ -20,6 +20,7 @@ const defaults = {
 
 module.exports = (level, commands) => {
   const gameController = new GameController({
+    forceSetTimeOut: true,
     Phaser: window.Phaser,
     assetRoot: '/base/src/assets/',
     audioPlayer: {
