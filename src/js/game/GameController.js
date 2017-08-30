@@ -1257,13 +1257,14 @@ class GameController {
         this.levelModel.destroyBlock(blockIndex);
       }
 
-      const placedBlock = this.levelModel.placeBlock(blockType);
-      if (placedBlock) {
+      if (blockType !== "cropWheat" || this.levelModel.groundPlane.getBlockAt((this.levelModel.player.position)) === "farmlandWet") {
         if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {
-          placedBlock.blockType = this.checkRailBlock(blockType);
+          blockType = this.checkRailBlock(blockType);
         }
         this.levelModel.player.updateHidingBlock(this.levelModel.player.position);
-        this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, placedBlock.blockType, blockTypeAtPosition, () => {
+        this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, blockTypeAtPosition, () => {
+          this.levelModel.placeBlock(blockType);
+
           this.levelModel.computeShadingPlane();
           this.levelModel.computeFowPlane();
           this.levelView.updateShadingPlane(this.levelModel.shadingPlane);

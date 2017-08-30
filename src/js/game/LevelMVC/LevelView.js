@@ -741,16 +741,7 @@ module.exports = class LevelView {
       this.setSelectionIndicatorPosition(position[0], position[1]);
 
       var signalDetacher = this.playPlayerAnimation("punch", position, facing, false).onComplete.add(() => {
-        var sprite;
         signalDetacher.detach();
-        let blockIndex = (this.yToIndex(position[1])) + position[0];
-        sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
-
-        if (sprite) {
-          sprite.sortOrder = this.yToIndex(position[1]);
-        }
-
-        this.actionPlaneBlocks[blockIndex] = sprite;
         completionHandler();
       });
     } else {
@@ -777,13 +768,6 @@ module.exports = class LevelView {
         if (blockTypeAtPosition !== "") {
           this.actionPlaneBlocks[blockIndex].kill();
         }
-        var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
-
-        if (sprite) {
-          sprite.sortOrder = this.yToIndex(position[1]);
-        }
-
-        this.actionPlaneBlocks[blockIndex] = sprite;
         completionHandler();
       });
       placementTween.start();

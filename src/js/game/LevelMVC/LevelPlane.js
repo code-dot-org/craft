@@ -49,10 +49,6 @@ module.exports = class LevelPlane extends Array {
           }
         }
       });
-      if (this.levelModel) {
-        this.levelModel.controller.levelView.refreshActionPlane(this.levelModel,
-          [this.coordinatesToIndex(position)]);
-      }
     }
 
     if (block.blockType === "") {
@@ -60,16 +56,17 @@ module.exports = class LevelPlane extends Array {
         const orthogonalBlock = this.getBlockAt(orthogonalPosition);
         if (orthogonalBlock && orthogonalBlock.isRedstone) {
           this.determineRedstoneSprite(orthogonalPosition);
-          if (this.levelModel) {
-            this.levelModel.controller.levelView.refreshActionPlane(
-              this.levelModel, [this.coordinatesToIndex(orthogonalPosition)]);
-          }
         }
       });
     }
 
     if (block.isRail) {
       block.blockType = this.determineRailType(position);
+    }
+
+    if (this.levelModel) {
+      this.levelModel.controller.levelView.refreshActionPlane(this.levelModel,
+        [this.coordinatesToIndex(position)]);
     }
 
     return block;
