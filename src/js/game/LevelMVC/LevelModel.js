@@ -841,7 +841,7 @@ module.exports = class LevelModel {
         block.position = [x, y];
 
         if (block.isDestroyable) {
-          this.actionPlane.setBlockAt(position, new LevelBlock(""));
+          this.actionPlane.setBlockAt(position, new LevelBlock(""), block);
         }
       }
     }
@@ -859,7 +859,7 @@ module.exports = class LevelModel {
       if (block !== null) {
 
         if (block.isDestroyable) {
-          this.actionPlane.setBlockAt(blockForwardPosition, new LevelBlock(""));
+          this.actionPlane.setBlockAt(blockForwardPosition, new LevelBlock(""), block);
         }
       }
     }
