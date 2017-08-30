@@ -20,6 +20,7 @@ const defaults = {
 
 module.exports = (level, commands) => {
   const gameController = new GameController({
+    forceSetTimeOut: true,
     Phaser: window.Phaser,
     assetRoot: '/base/src/assets/',
     audioPlayer: {
@@ -27,13 +28,14 @@ module.exports = (level, commands) => {
       play: () => {},
     },
     debug: false,
-    customSlowMotion: 0.01,
+    customSlowMotion: 0.1,
     afterAssetsLoaded: () => {
       const api = gameController.codeOrgAPI;
       api.resetAttempt();
       commands(api).then(() => {
         // Clean up.
         gameController.game.destroy();
+        gameController.game.time = {};
       });
     },
   });
