@@ -737,20 +737,11 @@ module.exports = class LevelView {
     var jumpAnimName;
     let blockIndex = this.yToIndex(position[1]) + position[0];
 
-    if (blockType === "cropWheat" || blockType === "torch" || blockType.substring(0, 5) === "rails") {
+    if (blockType === "cropWheat" || blockType === "torch" || blockType.startsWith("rail") || blockType.startsWith("redstoneWire")) {
       this.setSelectionIndicatorPosition(position[0], position[1]);
 
       var signalDetacher = this.playPlayerAnimation("punch", position, facing, false).onComplete.add(() => {
-        var sprite;
         signalDetacher.detach();
-        let blockIndex = (this.yToIndex(position[1])) + position[0];
-        sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
-
-        if (sprite) {
-          sprite.sortOrder = this.yToIndex(position[1]);
-        }
-
-        this.actionPlaneBlocks[blockIndex] = sprite;
         completionHandler();
       });
     } else {
@@ -777,29 +768,16 @@ module.exports = class LevelView {
         if (blockTypeAtPosition !== "") {
           this.actionPlaneBlocks[blockIndex].kill();
         }
-        var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
-
-        if (sprite) {
-          sprite.sortOrder = this.yToIndex(position[1]);
-        }
-
-        this.actionPlaneBlocks[blockIndex] = sprite;
         completionHandler();
       });
       placementTween.start();
     }
   }
 
-  playPlaceBlockInFrontAnimation(playerPosition, facing, blockPosition, plane, blockType, completionHandler) {
+  playPlaceBlockInFrontAnimation(playerPosition, facing, blockPosition, completionHandler) {
     this.setSelectionIndicatorPosition(blockPosition[0], blockPosition[1]);
 
     this.playPlayerAnimation("punch", playerPosition, facing, false).onComplete.addOnce(() => {
-      if (plane === this.controller.levelModel.actionPlane) {
-        this.createActionPlaneBlock(blockPosition, blockType);
-      } else {
-        // re-lay ground tiles based on model
-        this.refreshGroundPlane();
-      }
       completionHandler();
     });
   }
@@ -898,17 +876,14 @@ module.exports = class LevelView {
     let destroyOverlay = this.actionPlane.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
     destroyOverlay.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     this.onAnimationEnd(destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false), () => {
-      this.actionPlaneBlocks[blockIndex] = null;
-
       if (blockToDestroy.hasOwnProperty("onBlockDestroy")) {
         blockToDestroy.onBlockDestroy(blockToDestroy);
       }
 
-      blockToDestroy.kill();
       destroyOverlay.kill();
-      this.toDestroy.push(blockToDestroy);
       this.toDestroy.push(destroyOverlay);
 
+      this.controller.levelModel.destroyBlockForward();
       this.controller.updateShadingPlane();
       this.controller.updateFowPlane();
 

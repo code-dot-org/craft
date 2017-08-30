@@ -34,11 +34,13 @@ module.exports = class LevelPlane extends Array {
     }
   }
 
-  setBlockAt(position, block) {
+  setBlockAt(position, block, oldBlock = {}, force = false) {
     this[this.coordinatesToIndex(position)] = block;
 
     if (block.isRedstone) {
       this.determineRedstoneSprite(position);
+    }
+    if (block.isRedstone || oldBlock.isRedstone) {
       this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
         const orthogonalBlock = this.getBlockAt(orthogonalPosition);
         if (orthogonalBlock && orthogonalBlock.isRedstone) {
@@ -49,10 +51,6 @@ module.exports = class LevelPlane extends Array {
           }
         }
       });
-      if (this.levelModel) {
-        this.levelModel.controller.levelView.refreshActionPlane(this.levelModel,
-          [this.coordinatesToIndex(position)]);
-      }
     }
 
     if (block.blockType === "") {
@@ -60,16 +58,17 @@ module.exports = class LevelPlane extends Array {
         const orthogonalBlock = this.getBlockAt(orthogonalPosition);
         if (orthogonalBlock && orthogonalBlock.isRedstone) {
           this.determineRedstoneSprite(orthogonalPosition);
-          if (this.levelModel) {
-            this.levelModel.controller.levelView.refreshActionPlane(
-              this.levelModel, [this.coordinatesToIndex(orthogonalPosition)]);
-          }
         }
       });
     }
 
-    if (block.isRail) {
+    if (block.isRail && !force) {
       block.blockType = this.determineRailType(position);
+    }
+
+    if (this.levelModel) {
+      this.levelModel.controller.levelView.refreshActionPlane(this.levelModel,
+        [this.coordinatesToIndex(position)]);
     }
 
     return block;
