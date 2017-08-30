@@ -128,7 +128,7 @@ module.exports = class LevelView {
       "railsPoweredVertical": ["blocks", "Rails_PoweredVertical", -13, 0],
       "railsRedstoneTorch": ["blocks", "Rails_RedstoneTorch", -12, 9],
 
-      "redstone_dust": ["blocks", "Redstone_Dust_Vertical", -13, 0],
+      "redstoneWire": ["blocks", "redstone_dust_dot_off", -13, 0],
     };
 
     this.actionPlaneBlocks = [];
