@@ -686,11 +686,16 @@ module.exports = class LevelModel {
     return true;
   }
 
-  canPlaceBlockForward() {
+  canPlaceBlockForward(blockType = "") {
     if (this.player.isOnBlock) {
       return false;
     }
-
+    let plane = this.getPlaneToPlaceOn(this.getMoveForwardPosition());
+    if (plane === this.groundPlane) {
+      if (blockType === "redstoneWire" || blockType.substring(0,5) === "rails" && this.groundPlane[this.groundPlane.coordinatesToIndex(this.getMoveForwardPosition())]) {
+        return false;
+      }
+    }
     return this.getPlaneToPlaceOn(this.getMoveForwardPosition()) !== null;
   }
 

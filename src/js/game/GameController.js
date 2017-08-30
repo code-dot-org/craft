@@ -1328,7 +1328,7 @@ class GameController {
       placementPlane,
       soundEffect = () => { };
 
-    if (!this.levelModel.canPlaceBlockForward()) {
+    if (!this.levelModel.canPlaceBlockForward(blockType)) {
       this.levelView.playPunchAirAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.position, () => {
         this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
         commandQueueItem.succeeded();
