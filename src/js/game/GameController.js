@@ -1260,12 +1260,14 @@ class GameController {
       }
 
       if (blockType !== "cropWheat" || this.levelModel.groundPlane.getBlockAt((this.levelModel.player.position)) === "farmlandWet") {
-        if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {
-          blockType = this.checkRailBlock(blockType);
-        }
         this.levelModel.player.updateHidingBlock(this.levelModel.player.position);
         this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, blockTypeAtPosition, () => {
-          this.levelModel.placeBlock(blockType);
+          let force = false;
+          if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {
+            blockType = this.checkRailBlock(blockType);
+            force = true;
+          }
+          this.levelModel.placeBlock(blockType, force);
 
           this.levelModel.computeShadingPlane();
           this.levelModel.computeFowPlane();

@@ -34,7 +34,7 @@ module.exports = class LevelPlane extends Array {
     }
   }
 
-  setBlockAt(position, block, oldBlock = {}) {
+  setBlockAt(position, block, oldBlock = {}, force = false) {
     this[this.coordinatesToIndex(position)] = block;
 
     if (block.isRedstone) {
@@ -62,7 +62,7 @@ module.exports = class LevelPlane extends Array {
       });
     }
 
-    if (block.isRail) {
+    if (block.isRail && !force) {
       block.blockType = this.determineRailType(position);
     }
 
