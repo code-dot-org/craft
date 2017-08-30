@@ -1249,7 +1249,7 @@ class GameController {
         this.levelModel.destroyBlock(blockIndex);
       }
 
-      if (blockType !== "cropWheat" || this.levelModel.groundPlane.getBlockAt((this.levelModel.player.position)) === "farmlandWet") {
+      if (blockType !== "cropWheat" || this.levelModel.groundPlane.getBlockAt((this.levelModel.player.position)).blockType === "farmlandWet") {
         this.levelModel.player.updateHidingBlock(this.levelModel.player.position);
         this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, blockTypeAtPosition, () => {
           let force = false;
