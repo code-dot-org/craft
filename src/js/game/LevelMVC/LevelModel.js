@@ -42,10 +42,20 @@ module.exports = class LevelModel {
   }
 
   reset() {
-    this.groundPlane = new LevelPlane(this.initialLevelData.groundPlane, this.planeWidth, this.planeHeight);
-    this.groundDecorationPlane = new LevelPlane(this.initialLevelData.groundDecorationPlane, this.planeWidth, this.planeHeight);
+    this.groundPlane = new LevelPlane(this.initialLevelData.groundPlane, this.planeWidth, this.planeHeight, this.controller, this);
+    this.groundDecorationPlane = new LevelPlane(this.initialLevelData.groundDecorationPlane, this.planeWidth, this.planeHeight, this.controller, this);
     this.shadingPlane = [];
-    this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, true);
+    this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, this.controller, this, true);
+
+    for (let i = 0; i < this.actionPlane.length; ++i) {
+      if (this.actionPlane[i].blockType.substring(0,12) === "redstoneWire") {
+        let y = Math.floor(i / this.planeHeight);
+        let x = i - (y * this.planeHeight);
+        let position = [x,y];
+        this.actionPlane.determineRedstoneSprite(position, i);
+      }
+    }
+
     this.fluffPlane = new LevelPlane(this.initialLevelData.fluffPlane, this.planeWidth, this.planeHeight);
     this.fowPlane = [];
     this.isDaytime = this.initialLevelData.isDaytime === undefined || this.initialLevelData.isDaytime;
@@ -676,11 +686,16 @@ module.exports = class LevelModel {
     return true;
   }
 
-  canPlaceBlockForward() {
+  canPlaceBlockForward(blockType = "") {
     if (this.player.isOnBlock) {
       return false;
     }
-
+    let plane = this.getPlaneToPlaceOn(this.getMoveForwardPosition());
+    if (plane === this.groundPlane) {
+      if (blockType === "redstoneWire" || blockType.substring(0,5) === "rails" && this.groundPlane[this.groundPlane.coordinatesToIndex(this.getMoveForwardPosition())]) {
+        return false;
+      }
+    }
     return this.getPlaneToPlaceOn(this.getMoveForwardPosition()) !== null;
   }
 
@@ -780,7 +795,7 @@ module.exports = class LevelModel {
     this.moveForward();
   }
 
-  placeBlock(blockType) {
+  placeBlock(blockType, force = false) {
     const position = this.player.position;
     let shouldPlace = false;
     let placedBlock = null;
@@ -798,7 +813,7 @@ module.exports = class LevelModel {
     if (shouldPlace === true) {
       var block = new LevelBlock(blockType);
 
-      placedBlock = this.actionPlane.setBlockAt(position, block);
+      placedBlock = this.actionPlane.setBlockAt(position, block, {}, force);
       this.player.isOnBlock = !block.isWalkable;
     }
 
@@ -813,7 +828,6 @@ module.exports = class LevelModel {
       blockType = "farmlandWet";
       targetPlane = this.groundPlane;
     }
-
     return targetPlane.setBlockAt(blockPosition, new LevelBlock(blockType));
   }
 
@@ -827,11 +841,10 @@ module.exports = class LevelModel {
         block.position = [x, y];
 
         if (block.isDestroyable) {
-          this.actionPlane.setBlockAt(position, new LevelBlock(""));
+          this.actionPlane.setBlockAt(position, new LevelBlock(""), block);
         }
       }
     }
-
     return block;
   }
 
@@ -846,11 +859,10 @@ module.exports = class LevelModel {
       if (block !== null) {
 
         if (block.isDestroyable) {
-          this.actionPlane.setBlockAt(blockForwardPosition, new LevelBlock(""));
+          this.actionPlane.setBlockAt(blockForwardPosition, new LevelBlock(""), block);
         }
       }
     }
-
     return block;
   }
 

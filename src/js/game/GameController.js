@@ -1107,7 +1107,7 @@ class GameController {
     let player = this.levelModel.player;
     // if there is a destroyable block in front of the player
     if (this.levelModel.canDestroyBlockForward()) {
-      let block = this.levelModel.destroyBlockForward();
+      let block = this.levelModel.actionPlane.getBlockAt(this.levelModel.getMoveForwardPosition(player));
 
       if (block !== null) {
         let destroyPosition = this.levelModel.getMoveForwardPosition(player);
@@ -1136,7 +1136,6 @@ class GameController {
               blockType = "planksSpruce";
               break;
           }
-
           this.levelView.playDestroyBlockAnimation(player.position, player.facing, destroyPosition, blockType, () => {
             commandQueueItem.succeeded();
           });
@@ -1173,8 +1172,6 @@ class GameController {
       return;
     }
     let block = this.levelModel.actionPlane[this.levelModel.yToIndex(position[1]) + position[0]];
-    // clear the block in level model (block info in 2d grid)
-    this.levelModel.destroyBlock(position);
 
     if (block !== null && block !== undefined) {
       let destroyPosition = position;
@@ -1217,6 +1214,9 @@ class GameController {
         }
       }
     }
+
+    // clear the block in level model (block info in 2d grid)
+    this.levelModel.destroyBlock(position);
   }
 
   checkTntAnimation() {
@@ -1249,13 +1249,16 @@ class GameController {
         this.levelModel.destroyBlock(blockIndex);
       }
 
-      const placedBlock = this.levelModel.placeBlock(blockType);
-      if (placedBlock) {
-        if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {
-          placedBlock.blockType = this.checkRailBlock(blockType);
-        }
+      if (blockType !== "cropWheat" || this.levelModel.groundPlane.getBlockAt((this.levelModel.player.position)).blockType === "farmlandWet") {
         this.levelModel.player.updateHidingBlock(this.levelModel.player.position);
-        this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, placedBlock.blockType, blockTypeAtPosition, () => {
+        this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, blockTypeAtPosition, () => {
+          let force = false;
+          if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {
+            blockType = this.checkRailBlock(blockType);
+            force = true;
+          }
+          this.levelModel.placeBlock(blockType, force);
+
           this.levelModel.computeShadingPlane();
           this.levelModel.computeFowPlane();
           this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
@@ -1320,7 +1323,7 @@ class GameController {
       placementPlane,
       soundEffect = () => { };
 
-    if (!this.levelModel.canPlaceBlockForward()) {
+    if (!this.levelModel.canPlaceBlockForward(blockType)) {
       this.levelView.playPunchAirAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.position, () => {
         this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
         commandQueueItem.succeeded();
@@ -1333,8 +1336,11 @@ class GameController {
     if (this.levelModel.isBlockOfTypeOnPlane(forwardPosition, "lava", placementPlane)) {
       soundEffect = () => this.levelView.audioPlayer.play("fizz");
     }
-    const placedBlock = this.levelModel.placeBlockForward(blockType, placementPlane);
-    this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, forwardPosition, placementPlane, placedBlock.blockType, () => {
+
+    this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, forwardPosition, () => {
+      this.levelModel.placeBlockForward(blockType, placementPlane);
+      this.levelView.refreshGroundPlane();
+
       this.levelModel.computeShadingPlane();
       this.levelModel.computeFowPlane();
       this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
