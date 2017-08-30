@@ -737,7 +737,7 @@ module.exports = class LevelView {
     var jumpAnimName;
     let blockIndex = this.yToIndex(position[1]) + position[0];
 
-    if (blockType === "cropWheat" || blockType === "torch" || blockType.startsWith("rails") || blockType.startsWith("redstoneWire")) {
+    if (blockType === "cropWheat" || blockType === "torch" || blockType.startsWith("rail") || blockType.startsWith("redstoneWire")) {
       this.setSelectionIndicatorPosition(position[0], position[1]);
 
       var signalDetacher = this.playPlayerAnimation("punch", position, facing, false).onComplete.add(() => {
