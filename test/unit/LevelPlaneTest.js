@@ -9,7 +9,7 @@ test('get blocks', t => {
     'water', 'lava', 'water', 'lava',
     'grass', 'dirt', 'stone', 'sand',
   ];
-  const plane = new LevelPlane(data, 4, 3, true);
+  const plane = new LevelPlane(data, 4, 3, true, null);
 
   t.equal(plane.getBlockAt([0, 0]).blockType, 'grass');
   t.equal(plane.getBlockAt([1, 1], 1).blockType, 'water');
@@ -43,6 +43,65 @@ test('get blocks', t => {
   t.end();
 });
 
+//   0 1 2 3 4 5
+// 0 *   ┌───┐
+// 1   ┌─┤   │
+// 2 ──┼─┴──   │
+// 3   │     ──┘
+test('redstone wires', t => {
+  const data = new Array(24).fill('');
+  const plane = new LevelPlane(data, 6, 4, true, null);
+
+  // Place the test pattern.
+  plane.setBlockAt([0, 0], new LevelBlock('redstoneWire'));
+  plane.setBlockAt([2, 0], new LevelBlock('redstoneWire'));
+  plane.setBlockAt([3, 0], new LevelBlock('redstoneWire'));
+  plane.setBlockAt([4, 0], new LevelBlock('redstoneWire'));
+  plane.setBlockAt([1, 1], new LevelBlock('redstoneWire'));
+  plane.setBlockAt([2, 1], new LevelBlock('redstoneWire'));
+  plane.setBlockAt([4, 1], new LevelBlock('redstoneWire'));
+  plane.setBlockAt([0, 2], new LevelBlock('redstoneWire'));
+  plane.setBlockAt([1, 2], new LevelBlock('redstoneWire'));
+  plane.setBlockAt([2, 2], new LevelBlock('redstoneWire'));
+  plane.setBlockAt([3, 2], new LevelBlock('redstoneWire'));
+  plane.setBlockAt([5, 2], new LevelBlock('redstoneWire'));
+  plane.setBlockAt([1, 3], new LevelBlock('redstoneWire'));
+  plane.setBlockAt([4, 3], new LevelBlock('redstoneWire'));
+  plane.setBlockAt([5, 3], new LevelBlock('redstoneWire'));
+
+  let expected = [
+    '',          null,        'DownRight', 'Horizontal','DownLeft',  null,
+    null,        'DownRight', 'TLeft',     null,        'Vertical',  null,
+    'Horizontal','Cross',     'TUp',       'Horizontal',null,        'Vertical',
+    null,        'Vertical',  null,        null,        'Horizontal','UpLeft',
+  ].map(wire => wire === null ? '' : `redstoneWire${wire}`);
+  expected.width = undefined;
+  expected.height = undefined;
+  expected.levelModel = null;
+
+  t.deepEqual(plane.map(block => block.blockType), expected);
+
+  // Destroy a few wires.
+  plane.setBlockAt([2, 1], new LevelBlock(''));
+  plane.setBlockAt([3, 0], new LevelBlock(''));
+  plane.setBlockAt([0, 2], new LevelBlock(''));
+  plane.setBlockAt([5, 3], new LevelBlock(''));
+
+  expected = [
+    '',          null,        '',          null,        'Vertical',   null,
+    null,        'Vertical',  null,        null,        'Vertical',   null,
+    null,        'TRight',    'Horizontal','Horizontal',null,         '',
+    null,        'Vertical',  null,        null,        '',           null,
+  ].map(wire => wire === null ? '' : `redstoneWire${wire}`);
+  expected.width = undefined;
+  expected.height = undefined;
+  expected.levelModel = null;
+
+  t.deepEqual(plane.map(block => block.blockType), expected);
+
+  t.end();
+});
+
 // Before:              After:
 // ║   ║     ║          ║ ╔══     ║
 //   ║         ║          ║       ╔══
@@ -60,7 +119,7 @@ test('rail connections: T-junctions', t => {
     'rails',  '',       'rails',  '',       'rails',  '',       '',
     '',       '',       '',       '',       '',       'rails',  '',
   ];
-  const plane = new LevelPlane(data, 7, 6, true);
+  const plane = new LevelPlane(data, 7, 6, true, null);
 
   t.equal(plane.setBlockAt([1, 0], new LevelBlock('rails')).blockType, 'railsSouthEast');
   t.equal(plane.setBlockAt([5, 1], new LevelBlock('rails')).blockType, 'railsSouthEast');
@@ -79,6 +138,7 @@ test('rail connections: T-junctions', t => {
   });
   expected.width = undefined;
   expected.height = undefined;
+  expected.levelModel = null;
 
   t.deepEqual(plane.map(block => block.blockType), expected);
 
@@ -105,6 +165,7 @@ test('rail connections: 4x4 loop', t => {
   ];
   expected.width = undefined;
   expected.height = undefined;
+  expected.levelModel = null;
 
   t.deepEqual(plane.map(block => block.blockType), expected);
 
@@ -141,6 +202,7 @@ test('rail connections: longer track', t => {
   ];
   expected.width = undefined;
   expected.height = undefined;
+  expected.levelModel = null;
 
   t.deepEqual(plane.map(block => block.blockType), expected);
 
@@ -172,6 +234,7 @@ test('rail connections: destroy block', t => {
   ];
   expected.width = undefined;
   expected.height = undefined;
+  expected.levelModel = null;
 
   t.deepEqual(plane.map(block => block.blockType), expected);
 

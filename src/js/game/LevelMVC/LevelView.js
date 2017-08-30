@@ -134,9 +134,19 @@ module.exports = class LevelView {
       "railsPoweredVertical": ["blocks", "Rails_PoweredVertical", -13, 0],
       "railsRedstoneTorch": ["blocks", "Rails_RedstoneTorch", -12, 9],
 
-      "redstone_dust": ["blocks", "Redstone_Dust_Vertical", -13, 0],
+      "redstoneWire": ["blocks", "redstone_dust_dot_off", -13, 0],
+      "redstoneWireHorizontal": ["blocks", "redstone_dust_line_h_off", -13, 0],
+      "redstoneWireVertical": ["blocks", "redstone_dust_line_v_off", -13, 0],
+      "redstoneWireUpRight": ["blocks", "redstone_dust_corner_BottomLeft_off", -13, 0],
+      "redstoneWireUpLeft": ["blocks", "redstone_dust_corner_BottomRight_off", -13, 0],
+      "redstoneWireDownRight": ["blocks", "redstone_dust_corner_TopLeft_off", -13, 0],
+      "redstoneWireDownLeft": ["blocks", "redstone_dust_corner_TopRight_off", -13, 0],
+      "redstoneWireTUp": ["blocks", "redstone_dust_cross_up_off", -13, 0],
+      "redstoneWireTDown": ["blocks", "redstone_dust_cross_down_off", -13, 0],
+      "redstoneWireTLeft": ["blocks", "redstone_dust_cross_left_off", -13, 0],
+      "redstoneWireTRight": ["blocks", "redstone_dust_cross_right_off", -13, 0],
+      "redstoneWireCross": ["blocks", "redstone_dust_cross_off", -13, 0],
     };
-
     this.actionPlaneBlocks = [];
     this.toDestroy = [];
     this.resettableTweens = [];
@@ -733,20 +743,11 @@ module.exports = class LevelView {
     var jumpAnimName;
     let blockIndex = this.yToIndex(position[1]) + position[0];
 
-    if (blockType === "cropWheat" || blockType === "torch" || blockType.substring(0, 5) === "rails") {
+    if (blockType === "cropWheat" || blockType === "torch" || blockType.startsWith("rail") || blockType.startsWith("redstoneWire")) {
       this.setSelectionIndicatorPosition(position[0], position[1]);
 
       var signalDetacher = this.playPlayerAnimation("punch", position, facing, false).onComplete.add(() => {
-        var sprite;
         signalDetacher.detach();
-        let blockIndex = (this.yToIndex(position[1])) + position[0];
-        sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
-
-        if (sprite) {
-          sprite.sortOrder = this.yToIndex(position[1]);
-        }
-
-        this.actionPlaneBlocks[blockIndex] = sprite;
         completionHandler();
       });
     } else {
@@ -773,29 +774,16 @@ module.exports = class LevelView {
         if (blockTypeAtPosition !== "") {
           this.actionPlaneBlocks[blockIndex].kill();
         }
-        var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
-
-        if (sprite) {
-          sprite.sortOrder = this.yToIndex(position[1]);
-        }
-
-        this.actionPlaneBlocks[blockIndex] = sprite;
         completionHandler();
       });
       placementTween.start();
     }
   }
 
-  playPlaceBlockInFrontAnimation(playerPosition, facing, blockPosition, plane, blockType, completionHandler) {
+  playPlaceBlockInFrontAnimation(playerPosition, facing, blockPosition, completionHandler) {
     this.setSelectionIndicatorPosition(blockPosition[0], blockPosition[1]);
 
     this.playPlayerAnimation("punch", playerPosition, facing, false).onComplete.addOnce(() => {
-      if (plane === this.controller.levelModel.actionPlane) {
-        this.createActionPlaneBlock(blockPosition, blockType);
-      } else {
-        // re-lay ground tiles based on model
-        this.refreshGroundPlane();
-      }
       completionHandler();
     });
   }
@@ -899,17 +887,14 @@ module.exports = class LevelView {
     let destroyOverlay = this.actionPlane.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
     destroyOverlay.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     this.onAnimationEnd(destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false), () => {
-      this.actionPlaneBlocks[blockIndex] = null;
-
       if (blockToDestroy.hasOwnProperty("onBlockDestroy")) {
         blockToDestroy.onBlockDestroy(blockToDestroy);
       }
 
-      blockToDestroy.kill();
       destroyOverlay.kill();
-      this.toDestroy.push(blockToDestroy);
       this.toDestroy.push(destroyOverlay);
 
+      this.controller.levelModel.destroyBlockForward();
       this.controller.updateShadingPlane();
       this.controller.updateFowPlane();
 
@@ -1178,6 +1163,10 @@ module.exports = class LevelView {
         const newBlock = this.controller.levelModel.actionPlane.getBlockAt(position);
         if (newBlock && newBlock.blockType) {
           this.createActionPlaneBlock(position, newBlock.blockType);
+        } else {
+          // Remove the old sprite at this position, if there is one.
+          const index = this.coordinatesToIndex(position);
+          this.actionPlane.remove(this.actionPlaneBlocks[index]);
         }
       }
     });
@@ -1626,8 +1615,14 @@ module.exports = class LevelView {
       sprite = null,
       frameList;
 
+    // We don't have rails miniblock assets yet.
     if (blockType.startsWith("rails")) {
       return;
+    }
+
+    // Need to make sure the switch case will capture the right miniBlock for -all- redstoneWire
+    if (blockType.substring(0,12) === "redstoneWire") {
+      blockType = "redstoneDust";
     }
 
     switch (blockType) {

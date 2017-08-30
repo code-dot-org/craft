@@ -23,11 +23,12 @@ const ConnectionPriority = [
 ];
 
 module.exports = class LevelPlane extends Array {
-  constructor(planeData, width, height, isActionPlane = false) {
+  constructor(planeData, width, height, isActionPlane = false, LevelModel = null) {
     super();
 
     this.width = width;
     this.height = height;
+    this.levelModel = LevelModel;
 
     for (let index = 0; index < planeData.length; ++index) {
       let block = new LevelBlock(planeData[index]);
@@ -55,10 +56,29 @@ module.exports = class LevelPlane extends Array {
     }
   }
 
-  setBlockAt(position, block) {
+  setBlockAt(position, block, oldBlock = {}, force = false) {
     this[this.coordinatesToIndex(position)] = block;
 
-    this.determineRailType(position, true);
+    if (block.isRedstone) {
+      this.determineRedstoneSprite(position);
+    }
+    if (block.isRedstone || oldBlock.isRedstone) {
+      this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
+        const orthogonalBlock = this.getBlockAt(orthogonalPosition);
+        if (orthogonalBlock && orthogonalBlock.isRedstone) {
+          this.determineRedstoneSprite(orthogonalPosition);
+        }
+      });
+    }
+
+    if (!force) {
+      this.determineRailType(position, true);
+    }
+
+    if (this.levelModel) {
+      const positionAndTouching = this.getOrthogonalPositions(position).concat([position]);
+      this.levelModel.controller.levelView.refreshActionPlane(positionAndTouching);
+    }
 
     return block;
   }
@@ -122,5 +142,91 @@ module.exports = class LevelPlane extends Array {
         this.determineRailType(orthogonalPosition);
       });
     }
+  }
+
+  determineRedstoneSprite(position) {
+    let foundAbove = false;
+    let foundBelow = false;
+    let foundRight = false;
+    let foundLeft = false;
+    let myIndex = this.coordinatesToIndex(position);
+    let orthogonalBlocks = this.getOrthogonalBlocks(position);
+
+    let borderCount = 0;
+
+    // If in bounds, we want to see if any redstone is around the index in question
+    // Below index
+    if (orthogonalBlocks.south.block !== undefined && orthogonalBlocks.south.block.blockType.startsWith("redstoneWire")) {
+      foundBelow = true;
+      ++borderCount;
+    }
+    // Above index
+    if (orthogonalBlocks.north.block !== undefined && orthogonalBlocks.north.block.blockType.startsWith("redstoneWire")) {
+      foundAbove = true;
+      ++borderCount;
+    }
+    // Right index
+    if (orthogonalBlocks.east.block !== undefined && orthogonalBlocks.east.block.blockType.startsWith("redstoneWire")) {
+      foundRight = true;
+      ++borderCount;
+    }
+    // Left index
+    if (orthogonalBlocks.west.block !== undefined && orthogonalBlocks.west.block.blockType.startsWith("redstoneWire")) {
+      foundLeft = true;
+      ++borderCount;
+    }
+
+    if (borderCount === 0) {
+      // No connecting redstone wire.
+      this[myIndex].blockType = "redstoneWire";
+    } else if (borderCount === 1) {
+      // Only 1 connection extends a line.
+      if (foundBelow || foundAbove) {
+        this[myIndex].blockType = "redstoneWireVertical";
+      } else if (foundLeft || foundRight) {
+        this[myIndex].blockType = "redstoneWireHorizontal";
+      }
+    } else if (borderCount === 2) {
+      if ((foundBelow || foundAbove) && !foundRight && !foundLeft){
+        // Purely vertical, no left or right.
+        this[myIndex].blockType = "redstoneWireVertical";
+      } else if ((foundRight || foundLeft) && !foundBelow && !foundAbove){
+        // Purely horizontal, no above or below.
+        this[myIndex].blockType = "redstoneWireHorizontal";
+      } else {
+        // We have a corner and will need to rotate.
+        if (foundBelow) {
+          // If we have a blow, the other has to be right or left.
+          if (foundLeft) {
+            this[myIndex].blockType = "redstoneWireDownLeft";
+          } else {
+            this[myIndex].blockType = "redstoneWireDownRight";
+          }
+        } else {
+          // If not below, then above + left or right.
+          if (foundLeft) {
+            this[myIndex].blockType = "redstoneWireUpLeft";
+          } else {
+            this[myIndex].blockType = "redstoneWireUpRight";
+          }
+        }
+      }
+    } else if (borderCount === 3) {
+      // We are deciding between T sprite orientations.
+      if (!foundBelow) {
+        this[myIndex].blockType = "redstoneWireTUp";
+      } else if (!foundAbove) {
+        this[myIndex].blockType = "redstoneWireTDown";
+      } else if (!foundLeft) {
+        this[myIndex].blockType = "redstoneWireTRight";
+      } else if (!foundRight) {
+        this[myIndex].blockType = "redstoneWireTLeft";
+      }
+    } else if (borderCount === 4) {
+      // All four sides connected: Cross.
+      this[myIndex].blockType = "redstoneWireCross";
+    }
+
+    return this[myIndex].blockType;
   }
 };
