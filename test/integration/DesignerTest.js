@@ -106,7 +106,7 @@ test('Designer 5: Add Shear Sheep Behavior (fail)', t => {
 test('Designer 5: Add Shear Sheep Behavior (pass)', t => {
   attempt('designer05', api => new Promise(resolve => {
     // Set up the sheep `use` behavior to drop wool.
-    api.onEventTriggered(null, 'sheep', 2, event => {
+    api.onEventTriggered(null, 'sheep', 1, event => {
       api.drop(null, 'wool', event.targetIdentifier);
     });
 
