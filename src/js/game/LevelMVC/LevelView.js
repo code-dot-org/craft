@@ -876,17 +876,14 @@ module.exports = class LevelView {
     let destroyOverlay = this.actionPlane.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
     destroyOverlay.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     this.onAnimationEnd(destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false), () => {
-      this.actionPlaneBlocks[blockIndex] = null;
-
       if (blockToDestroy.hasOwnProperty("onBlockDestroy")) {
         blockToDestroy.onBlockDestroy(blockToDestroy);
       }
 
-      blockToDestroy.kill();
       destroyOverlay.kill();
-      this.toDestroy.push(blockToDestroy);
       this.toDestroy.push(destroyOverlay);
 
+      this.controller.levelModel.destroyBlockForward();
       this.controller.updateShadingPlane();
       this.controller.updateFowPlane();
 
