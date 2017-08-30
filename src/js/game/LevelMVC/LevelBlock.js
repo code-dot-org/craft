@@ -95,7 +95,7 @@ module.exports = class LevelBlock {
       this.isTransparent = true;
     }
 
-    if (blockType === "redstone_dust") {
+    if (blockType.startsWith("redstoneWire")) {
       this.isEntity = true;
       this.isWalkable = true;
       this.isUsable = true;
