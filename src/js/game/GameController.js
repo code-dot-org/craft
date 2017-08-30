@@ -1147,6 +1147,7 @@ class GameController {
           this.levelView.playDestroyBlockAnimation(player.position, player.facing, destroyPosition, blockType, () => {
             commandQueueItem.succeeded();
             this.levelModel.destroyBlockForward();
+            this.updateShadingPlane();
           });
         } else if (block.isUsable) {
           switch (blockType) {
