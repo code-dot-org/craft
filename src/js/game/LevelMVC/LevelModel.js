@@ -813,7 +813,7 @@ module.exports = class LevelModel {
     if (shouldPlace === true) {
       var block = new LevelBlock(blockType);
 
-      placedBlock = this.actionPlane.setBlockAt(position, block, {}, force);
+      placedBlock = this.actionPlane.setBlockAt(position, block, force);
       this.player.isOnBlock = !block.isWalkable;
     }
 
@@ -841,7 +841,7 @@ module.exports = class LevelModel {
         block.position = [x, y];
 
         if (block.isDestroyable) {
-          this.actionPlane.setBlockAt(position, new LevelBlock(""), block);
+          this.actionPlane.setBlockAt(position, new LevelBlock(""));
         }
       }
     }
@@ -859,7 +859,7 @@ module.exports = class LevelModel {
       if (block !== null) {
 
         if (block.isDestroyable) {
-          this.actionPlane.setBlockAt(blockForwardPosition, new LevelBlock(""), block);
+          this.actionPlane.setBlockAt(blockForwardPosition, new LevelBlock(""));
         }
       }
     }

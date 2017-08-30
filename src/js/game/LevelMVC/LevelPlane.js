@@ -56,13 +56,13 @@ module.exports = class LevelPlane extends Array {
     }
   }
 
-  setBlockAt(position, block, oldBlock = {}, force = false) {
+  setBlockAt(position, block, force = false) {
     this[this.coordinatesToIndex(position)] = block;
 
     if (block.isRedstone) {
       this.determineRedstoneSprite(position);
     }
-    if (block.isRedstone || oldBlock.isRedstone) {
+    if (block.isRedstone || block.blockType === '') {
       this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
         const orthogonalBlock = this.getBlockAt(orthogonalPosition);
         if (orthogonalBlock && orthogonalBlock.isRedstone) {
