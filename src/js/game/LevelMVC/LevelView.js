@@ -790,16 +790,10 @@ module.exports = class LevelView {
     }
   }
 
-  playPlaceBlockInFrontAnimation(playerPosition, facing, blockPosition, plane, blockType, completionHandler) {
+  playPlaceBlockInFrontAnimation(playerPosition, facing, blockPosition, completionHandler) {
     this.setSelectionIndicatorPosition(blockPosition[0], blockPosition[1]);
 
     this.playPlayerAnimation("punch", playerPosition, facing, false).onComplete.addOnce(() => {
-      if (plane === this.controller.levelModel.actionPlane) {
-        this.createActionPlaneBlock(blockPosition, blockType);
-      } else {
-        // re-lay ground tiles based on model
-        this.refreshGroundPlane();
-      }
       completionHandler();
     });
   }

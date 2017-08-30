@@ -1342,14 +1342,15 @@ class GameController {
       soundEffect = () => this.levelView.audioPlayer.play("fizz");
     }
 
-    this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, forwardPosition, placementPlane, blockType, () => {
+    this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, forwardPosition, () => {
+      this.levelModel.placeBlockForward(blockType, placementPlane);
+      this.levelView.refreshGroundPlane();
+
       this.levelModel.computeShadingPlane();
       this.levelModel.computeFowPlane();
       this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
       this.levelView.updateFowPlane(this.levelModel.fowPlane);
       soundEffect();
-      this.levelModel.placeBlockForward(blockType, placementPlane);
-      this.levelView.refreshGroundPlane();
       this.delayBy(200, () => {
         this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
       });
