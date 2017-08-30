@@ -1181,8 +1181,6 @@ class GameController {
       return;
     }
     let block = this.levelModel.actionPlane[this.levelModel.yToIndex(position[1]) + position[0]];
-    // clear the block in level model (block info in 2d grid)
-    this.levelModel.destroyBlock(position);
 
     if (block !== null && block !== undefined) {
       let destroyPosition = position;
@@ -1225,6 +1223,9 @@ class GameController {
         }
       }
     }
+
+    // clear the block in level model (block info in 2d grid)
+    this.levelModel.destroyBlock(position);
   }
 
   checkTntAnimation() {
