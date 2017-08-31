@@ -9,56 +9,28 @@
   <script src="test-build-only/jquery-1.7.min.js"></script>
   <script src="test-build-only/soundEffects.js"></script>
   <script src="test-build-only/levels.js"></script>
-  <style>
-    .description {
-      font-size: small;
-      color: gray;
-      margin-left: 15px;
-    }
-    pre {
-      margin: 0;
-    }
-  </style>
-  <title>Phaser App Playground</title>
+  <title>2-D Craft Playground</title>
 </head>
 <body>
 
-<div id="phaser-game" style="float:left;"></div>
+<div id="phaser-game"></div>
 
-<textarea id="test-code-area" style="float:left; width:300px; height:300px;"></textarea>
-<div style="margin:10px; clear:both;"></div>
-<button id="run-button">Run</button>
-<button id="reset-button">Reset</button>
-<div style="margin:10px; clear:both;"></div>
-<input type="range" min=".01" max="5" step=".1" name="speed-slider" id="speed-slider"/>
-<p id="speed-display">1.5</p>
-<div style="margin:10px; clear:both;"></div>
-<button id="previous-level">Previous level</button>
-<button id="refresh-button">Refresh</button>
-<button id="next-level">Next level</button>
-<div style="margin:10px; clear:both;"></div>
-<div>Level instructions: <span id="level-instructions" style="font-weight:bold;"></span></div>
-<div>Level feedback: <span id="level-feedback" style="font-weight:bold;"></span></div>
-<div>
-  <h2>Using test commands:</h2>
-  <ul>
-    <tt><pre>placeBlock('logOak');</pre></tt> <span class="description">places logOak block at player's feet</span>
-    <tt><pre>moveForward();</pre></tt> <span class="description">moves player forward </span>
-    <tt><pre>turnLeft();</pre></tt> <span class="description">turns player left</span>
-    <tt><pre>turnRight();</pre></tt> <span class="description">turns player right</span>
-    <tt><pre>destroyBlock();</pre></tt> <span class="description">destroys targeted block</span>
-    <tt><pre>whileAhead('', do{<br>  moveForward();<br>  moveForward();<br>});</pre></tt> <span class="description">moves forward while block ahead is <tt>''</tt> (air)</span>
-    <tt><pre>for (var i = 0; i < 99; i++) {<br>  moveForward();<br>  moveForward();<br>}</pre></tt> <span class="description">repeat loop: change 99 to # of times to repeat</span>
-  </ul>
-  <h2>Implemented block types:</h2>
-  <ul>
-    <li><tt>logOak</tt></li>
-    <li><tt>tallGrass</tt></li>
-    <li><tt>grass</tt></li>
-    <li><tt>coarseDirt</tt></li>
-    <li><tt>planksOak</tt></li>
-  </ul>
-</div>
+<p><button id="reset-button">Reset</button></p>
+
+<p id="speed-display">Speed: 1x</p>
+<input type="range" min="0" value="1" max="5" step=".01" name="speed-slider" id="speed-slider" style="width: 200px"/>
+
+<p>
+  Currently placing:
+  <select id="block-type">
+    <option>rails</option>
+    <option>redstoneWire</option>
+    <option>grass</option>
+    <option>cobblestone</option>
+  </select>
+</p>
+
+<p>Move with <kbd>w</kbd> <kbd>a</kbd> <kbd>s</kbd> <kbd>d</kbd>. Place blocks with <kbd>Enter</kbd>. Destroy blocks with <kbd>Backspace</kbd>.</p>
 
 <script>
   var demoLevels = window.demoLevels;
@@ -81,7 +53,10 @@
     audioPlayer: new Sounds(),
     debug: true,
     earlyLoadAssetPacks: testLevelToLoad.earlyLoadAssetPacks,
-    earlyLoadNiceToHaveAssetPacks: testLevelToLoad.earlyLoadNiceToHaveAssetPacks
+    earlyLoadNiceToHaveAssetPacks: testLevelToLoad.earlyLoadNiceToHaveAssetPacks,
+    afterAssetsLoaded: () => {
+      gameController.codeOrgAPI.startAttempt(() => {});
+    },
   });
 
   if (levelNumber === 1) {
@@ -96,110 +71,25 @@
     gameController.loadLevel(testLevelToLoad);
   }
 
-  $('#test-code-area').val(testLevelToLoad.solutionCode);
-  $('#level-instructions').html(testLevelToLoad.instructions);
-
-  var replacements = {
-    "do{": "function(){"
-  };
-
-  function isFunction(functionToCheck) {
-     var getType = {};
-     return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
-  }
-
-  function shortHandToApiCalls(shortHandCode) {
-    $.each(replacements, function(key, value) {
-      shortHandCode = shortHandCode.split(key).join(value);
-    });
-    return shortHandCode;
-  }
-
-  function runCodeWithParams(code, options) {
-    // execute JS code "natively"
-    var params = [];
-    var args = [];
-    for (var k in options) {
-      params.push(k);
-      args.push(options[k]);
-    }
-    params.push(code);
-    var ctor = function() {
-      return Function.apply(this, params);
-    };
-    ctor.prototype = Function.prototype;
-    return new ctor().apply(null, args);
-  }
-
   $('input[type=range]').on('input', function () {
-    $("#speed-display").html($(this).val());
-    gameController.game.time.slowMotion = parseFloat($(this).val(), 10);
-  });
-
-  $('#run-button').click(function () {
-    var shortHandCode = $('#test-code-area').val();
-    var code = shortHandToApiCalls(shortHandCode);
-
-    var codeOrgAPI = gameController.codeOrgAPI;
-    codeOrgAPI.startCommandCollection();
-    runCodeWithParams(code, {
-      codeOrgAPI: codeOrgAPI,
-      isEventTriggered : codeOrgAPI.isEventTriggered.bind(null),
-      placeBlock: codeOrgAPI.placeBlock.bind(null, function(){}),
-      moveForward: codeOrgAPI.moveForward.bind(null, function(){}),
-      moveAway: codeOrgAPI.moveAway.bind(null, function(){}),
-      moveToward: codeOrgAPI.moveToward.bind(null, function(){}),
-      turnRandom: codeOrgAPI.turnRandom.bind(null, function(){}),
-      turnLeft: codeOrgAPI.turnLeft.bind(null, function(){}),
-      turnRight: codeOrgAPI.turnRight.bind(null, function(){}),
-      destroyBlock: codeOrgAPI.destroyBlock.bind(null, function(){}),
-      playSound: codeOrgAPI.playSound.bind(null, function(){}),
-      ifBlockAhead: codeOrgAPI.ifBlockAhead.bind(null, function(){}),
-      ifLavaAhead: codeOrgAPI.ifBlockAhead.bind(null, function(){}, "lava"),
-      whileAhead: codeOrgAPI.whilePathAhead.bind(null, function(){}),
-      repeat: codeOrgAPI.repeat.bind(null, function(){}),
-      repeatRandom: codeOrgAPI.repeatRandom.bind(null, function(){}),
-      registerEventCallback: codeOrgAPI.registerEventCallback.bind(null, function(){}),
-      placeInFront: codeOrgAPI.placeInFront.bind(null, function(){}),
-      spawnEntity: codeOrgAPI.spawnEntity.bind(null, function(){}),
-      destroyEntity: codeOrgAPI.destroyEntity.bind(null, function(){}),
-      flashEntity: codeOrgAPI.flashEntity.bind(null,function(){}),
-      explodeEntity: codeOrgAPI.explodeEntity.bind(null,function(){}),
-      drop: codeOrgAPI.drop.bind(null,function(){}),
-      startDay: codeOrgAPI.startDay.bind(null,function(){}),
-      startNight: codeOrgAPI.startNight.bind(null,function(){}),
-      setDayNightCycle: codeOrgAPI.setDayNightCycle.bind(null),
-      wait: codeOrgAPI.wait.bind(null,function(){}),
-      attack: codeOrgAPI.attack.bind(null, function(){}) ,
-      addScore: codeOrgAPI.addScore.bind(null, function(){})
-    });
-    codeOrgAPI.startAttempt(function (result) {
-      $('#level-feedback').html(result ? "Success!" : "Failure").css("color", result ? "green" : "red");
-    });
+    $("#speed-display").html('Speed: ' + $(this).val() + 'x');
+    gameController.game.time.slowMotion = 1.5 / parseFloat($(this).val(), 10);
   });
 
   $('#reset-button').click(function () {
     gameController.codeOrgAPI.resetAttempt();
+    gameController.codeOrgAPI.startAttempt(() => {});
   });
 
-  $("#refresh-button").click(function() {
-    window.location.reload();
-  });
-
-  if (!demoLevels[levelNumber - 1]) {
-    $('#previous-level').hide();
-  }
-
-  if (!demoLevels[levelNumber + 1]) {
-    $('#next-level').hide();
-  }
-
-  $('#next-level').click(function() {
-    window.location.href = window.location.href.split("?")[0] + "?level=" + (levelNumber + 1);
-  });
-
-  $('#previous-level').click(function() {
-    window.location.href = window.location.href.split("?")[0] + "?level=" + (levelNumber - 1);
+  $(window).on('keydown', e => {
+    switch (e.keyCode) {
+      case 8:
+      case 46:
+        gameController.codeOrgAPI.destroyBlock(null, 'Player');
+        break;
+      case 13:
+        gameController.codeOrgAPI.placeInFront(null, $('#block-type').val(), 'Player');
+    }
   });
 
   window.gameController = gameController;

@@ -172,7 +172,7 @@ module.exports = {
         "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
         "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
         "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsBottomLeft", "railsHorizontal", "railsHorizontal", "railsHorizontal", "railsHorizontal", "railsHorizontal", "railsHorizontal",
+        "", "", "", "railsNorthEast", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest",
         "", "", "", "", "", "", "", "", "", "",
         "", "", "", "", "", "", "", "", "", "",
       ]),

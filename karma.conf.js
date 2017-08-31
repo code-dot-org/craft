@@ -11,7 +11,7 @@ module.exports = config => {
       'test/integration/*.js': ['browserify'],
     },
     browserify: {
-      transform: ["browserify-istanbul"]
+      transform: process.env['WATCH'] ? [] : ["browserify-istanbul"]
     },
     reporters: ['dots', 'coverage'],
 
