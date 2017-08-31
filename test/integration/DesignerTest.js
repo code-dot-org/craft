@@ -151,7 +151,7 @@ test('Designer 6: Lead Cows to Grass', t => {
   }));
 });
 
-test.only('Designer 7: Explode Stone Wall', t => {
+test('Designer 7: Explode Stone Wall', t => {
   attempt('designer07', api => new Promise(resolve => {
     // Make the creeper move towards the sheep.
     api.onEventTriggered(null, 'creeper', 2, event => {
@@ -168,11 +168,12 @@ test.only('Designer 7: Explode Stone Wall', t => {
     // Define creeper explode behavior as user code.
     api.onEventTriggered(null, 'creeper', 0, event => {
       api.flashEntity(null, event.targetIdentifier);
+      api.wait(null, '2', event.targetIdentifier);
       api.explodeEntity(null, event.targetIdentifier);
     });
 
     // Move player to touch the creeper, then away.
-    api.wait(null, '3', 'Player');
+    api.wait(null, '5', 'Player');
     api.moveForward(null, 'Player');
     api.moveForward(null, 'Player');
     api.turnLeft(null, 'Player');
@@ -184,7 +185,7 @@ test.only('Designer 7: Explode Stone Wall', t => {
     api.turnRight(null, 'Player');
     api.moveForward(null, 'Player');
     api.moveForward(null, 'Player');
-    api.wait(null, '2', 'Player');
+    api.wait(null, '5', 'Player');
 
     // Move player to the sheep.
     api.turnLeft(null, 'Player');

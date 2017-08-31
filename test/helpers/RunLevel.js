@@ -28,7 +28,7 @@ module.exports = (level, commands) => {
       play: () => {},
     },
     debug: false,
-    customSlowMotion: 0.1,
+    customSlowMotion: 0.2,
     afterAssetsLoaded: () => {
       const api = gameController.codeOrgAPI;
       api.resetAttempt();
