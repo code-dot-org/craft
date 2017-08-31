@@ -78,6 +78,8 @@ test('redstone wires', t => {
   expected.width = undefined;
   expected.height = undefined;
   expected.levelModel = null;
+  expected.redstoneList = [];
+  expected.redstoneListON = [];
 
   t.deepEqual(plane.map(block => block.blockType), expected);
 
@@ -96,6 +98,8 @@ test('redstone wires', t => {
   expected.width = undefined;
   expected.height = undefined;
   expected.levelModel = null;
+  expected.redstoneList = [];
+  expected.redstoneListON = [];
 
   t.deepEqual(plane.map(block => block.blockType), expected);
 
@@ -139,6 +143,8 @@ test('rail connections: T-junctions', t => {
   expected.width = undefined;
   expected.height = undefined;
   expected.levelModel = null;
+  expected.redstoneList = [];
+  expected.redstoneListON = [];
 
   t.deepEqual(plane.map(block => block.blockType), expected);
 
@@ -166,6 +172,8 @@ test('rail connections: 4x4 loop', t => {
   expected.width = undefined;
   expected.height = undefined;
   expected.levelModel = null;
+  expected.redstoneList = [];
+  expected.redstoneListON = [];
 
   t.deepEqual(plane.map(block => block.blockType), expected);
 
@@ -203,6 +211,8 @@ test('rail connections: longer track', t => {
   expected.width = undefined;
   expected.height = undefined;
   expected.levelModel = null;
+  expected.redstoneList = [];
+  expected.redstoneListON = [];
 
   t.deepEqual(plane.map(block => block.blockType), expected);
 
@@ -235,6 +245,8 @@ test('rail connections: destroy block', t => {
   expected.width = undefined;
   expected.height = undefined;
   expected.levelModel = null;
+  expected.redstoneList = [];
+  expected.redstoneListON = [];
 
   t.deepEqual(plane.map(block => block.blockType), expected);
 

@@ -239,13 +239,19 @@ module.exports = class LevelPlane extends Array {
     for (let i = 0; i < this.length; ++i) {
       if (this[i].blockType.substring(0,12) === "redstoneWire") {
         this[i].isPowered = false;
-        let position = this.levelModel.controller.levelView.indexToCoordinates(i);
+        let position = [];
+        if (this.levelModel !== null) {
+          position = this.levelModel.controller.levelView.indexToCoordinates(i);
+        }
         this.redstoneList.push(position);
       }
     }
     for (let i = 0; i < this.length; ++i) {
       if (this[i].blockType === "railsRedstoneTorch") {
-        let position = this.levelModel.controller.levelView.indexToCoordinates(i);
+        let position = [];
+        if (this.levelModel !== null) {
+          position = this.levelModel.controller.levelView.indexToCoordinates(i);
+        }
         this.redstonePropagation(position);
       }
     }
