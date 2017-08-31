@@ -78,6 +78,8 @@ test('redstone wires', t => {
   expected.width = undefined;
   expected.height = undefined;
   expected.levelModel = null;
+  expected.redstoneList = [];
+  expected.redstoneListON = [];
 
   t.deepEqual(plane.map(block => block.blockType), expected);
 
@@ -96,6 +98,8 @@ test('redstone wires', t => {
   expected.width = undefined;
   expected.height = undefined;
   expected.levelModel = null;
+  expected.redstoneList = [];
+  expected.redstoneListON = [];
 
   t.deepEqual(plane.map(block => block.blockType), expected);
 

@@ -205,6 +205,7 @@ class GameController {
   }
 
   run() {
+    this.levelModel.actionPlane.getRedstone();
     // dispatch when spawn event at run
     this.events.forEach(e => e({ eventType: EventType.WhenRun, targetIdentifier: undefined }));
     for (var value of this.levelEntity.entityMap) {
@@ -1258,7 +1259,6 @@ class GameController {
             force = true;
           }
           this.levelModel.placeBlock(blockType, force);
-
           this.levelModel.computeShadingPlane();
           this.levelModel.computeFowPlane();
           this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
