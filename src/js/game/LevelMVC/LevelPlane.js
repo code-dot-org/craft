@@ -148,8 +148,8 @@ module.exports = class LevelPlane extends Array {
   }
 
   indexToCoordinates(index) {
-    let y = Math.floor(index / this.height);
-    let x = index - (y * this.height);
+    let y = Math.floor(index / this.width);
+    let x = index - (y * this.width);
     return [x,y];
   }
 
