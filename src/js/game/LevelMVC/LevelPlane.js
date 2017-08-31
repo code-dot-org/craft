@@ -258,18 +258,18 @@ module.exports = class LevelPlane extends Array {
 
     for (let obj in this.redstoneList) {
       if (this.levelModel !== null) {
-        console.log("The block at index: " + this.redstoneList[obj] + " is a " + this[this.levelModel.controller.levelView.coordinatesToIndex(this.redstoneList[obj])].blockType + ". This block is NOT charged.");
+        console.log("The block at index: " + this.redstoneList[obj] + " is a " + this[this.coordinatesToIndex(this.redstoneList[obj])].blockType + ". This block is NOT charged.");
       }
     }
     for (let obj in this.redstoneListON) {
       if (this.levelModel !== null) {
-        console.log("The block at index: " + this.redstoneListON[obj] + " is a " + this[this.levelModel.controller.levelView.coordinatesToIndex(this.redstoneListON[obj])].blockType + ". This block IS charged.");
+        console.log("The block at index: " + this.redstoneListON[obj] + " is a " + this[this.coordinatesToIndex(this.redstoneListON[obj])].blockType + ". This block IS charged.");
       }
     }
   }
 
   redstonePropagation(position) {
-    let block = this[this.levelModel.yToIndex(position[1]) + position[0]];
+    let block = this[this.coordinatesToIndex(position)];
     if (block.blockType.substring(0, 12) === "redstoneWire") {
       let indexToRemove = this.redstoneList.indexOf(position);
       this.redstoneList.splice(indexToRemove,1);
