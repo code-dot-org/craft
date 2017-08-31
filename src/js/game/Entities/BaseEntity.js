@@ -55,7 +55,7 @@ module.exports = class BaseEntity {
             });
 
             tween.start();
-        }, 50);
+        }, 50 / this.controller.tweenTimeScale);
         // smooth movement using tween
 
     }

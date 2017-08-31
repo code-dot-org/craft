@@ -105,4 +105,25 @@ module.exports = {
       return cowOnGrassCount >= 2;
     },
   },
+  designer07: {
+    isEventLevel: true,
+    isDaytime: false,
+    groundPlane: ["stone", "stone", "stone", "stone", "lava", "lava", "stone", "grass", "grass", "grass", "stone", "stone", "stone", "stone", "lava", "lava", "stone", "grass", "grass", "grass", "stone", "stone", "stone", "stone", "stone", "lava", "stone", "grass", "grass", "grass", "gravel", "stone", "stone", "stone", "stone", "stone", "stone", "grass", "grass", "grass", "stone", "stone", "gravel", "gravel", "gravel", "gravel", "gravel", "dirtCoarse", "dirtCoarse", "dirtCoarse", "stone", "gravel", "gravel", "stone", "gravel", "gravel", "gravel", "dirtCoarse", "dirtCoarse", "dirtCoarse", "gravel", "gravel", "gravel", "stone", "stone", "stone", "stone", "grass", "grass", "grass", "stone", "gravel", "stone", "stone", "stone", "stone", "stone", "grass", "grass", "grass", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "grass", "grass", "grass", "lava", "lava", "stone", "gravel", "stone", "stone", "stone", "grass", "grass", "grass"],
+    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "lavaPop", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "tallGrass", "", "lavaPop", "", "", "", "", "", "", "", ""],
+    actionPlane: ["stone", "stone", "", "", "stone", "stone", "stone", "oreCoal", "stone", "stone", "oreCoal", "stone", "", "", "", "", "stone", "stone", "stone", "", "stone", "", "", "", "", "", "stone", "stone", "", "treeBirch", "", "", "", "", "", "", "stone", "stone", "", "", "", "", "", "", "", "", "stone", "", "", "", "", "", "", "", "", "", "stone", "", "", "", "", "", "", "", "", "", "stone", "stone", "", "", "", "", "", "", "", "stone", "stone", "stone", "", "", "", "", "", "", "stone", "stone", "stone", "stone", "stone", "", "", "", "", "", "stone", "stone", "stone", "oreDiamond", "stone", "stone"],
+    entities: [["sheep", 8, 4, 1], ["creeper", 2, 8, 1]],
+    usePlayer: true,
+    playerStartPosition: [3, 1],
+    playerStartDirection: 2,
+    levelVerificationTimeout: 40000,
+    timeoutResult: () => false,
+    verificationFunction: verificationAPI  => {
+      const successPositions = [[7, 4] , [7, 5]];
+      for (let i = 0; i < successPositions.length; i++) {
+        if (verificationAPI.isEntityAt("Player" , successPositions[i])) {
+          return true;
+        }
+      }
+    },
+  },
 };
