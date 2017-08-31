@@ -223,10 +223,14 @@ module.exports = class LevelPlane extends Array {
     }
 
     for (let obj in this.redstoneList) {
-      console.log("The block at index: " + this.levelModel.controller.levelView.indexToCoordinates(this.redstoneList[obj]) + " is a " + this[this.redstoneList[obj]].blockType + ". This block is NOT charged.");
+      if (this.levelModel !== null) {
+        console.log("The block at index: " + this.levelModel.controller.levelView.indexToCoordinates(this.redstoneList[obj]) + " is a " + this[this.redstoneList[obj]].blockType + ". This block is NOT charged.");
+      }
     }
     for (let obj in this.redstoneListON) {
-      console.log("The block at index: " + this.levelModel.controller.levelView.indexToCoordinates(this.redstoneListON[obj]) + " is a " + this[this.redstoneListON[obj]].blockType + ". This block IS charged.");
+      if (this.levelModel !== null) {
+        console.log("The block at index: " + this.levelModel.controller.levelView.indexToCoordinates(this.redstoneListON[obj]) + " is a " + this[this.redstoneListON[obj]].blockType + ". This block IS charged.");
+      }
     }
   }
 
