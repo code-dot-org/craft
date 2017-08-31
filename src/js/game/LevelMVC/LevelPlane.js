@@ -7,6 +7,8 @@ module.exports = class LevelPlane extends Array {
     this.width = width;
     this.height = height;
     this.levelModel = LevelModel;
+    this.redstoneList = [];
+    this.redstoneListON = [];
 
     for (let index = 0; index < planeData.length; ++index) {
       let block = new LevelBlock(planeData[index]);
@@ -51,6 +53,7 @@ module.exports = class LevelPlane extends Array {
           }
         }
       });
+      this.getRedstone();
     }
 
     if (block.blockType === "") {
@@ -199,5 +202,76 @@ module.exports = class LevelPlane extends Array {
     }
 
     return this[myIndex].blockType;
+  }
+
+  getRedstone() {
+    this.redstoneList = [];
+    this.redstoneListON = [];
+    for (let i = 0; i < this.length; ++i) {
+      if (this[i].blockType.substring(0,12) === "redstoneWire") {
+        this[i].isPowered = false;
+        this.redstoneList.push(i);
+      }
+    }
+    for (let i = 0; i < this.length; ++i) {
+      if (this[i].blockType === "railsRedstoneTorch") {
+        let y = Math.floor(i / this.height);
+        let x = i - (y * this.height);
+        let pos = [x,y];
+        this.redstonePropagation(pos);
+      }
+    }
+
+    for (let obj in this.redstoneList) {
+      console.log("The block at index: " + this.levelModel.controller.levelView.indexToCoordinates(this.redstoneList[obj]) + " is a " + this[this.redstoneList[obj]].blockType + ". This block is NOT charged.");
+    }
+    for (let obj in this.redstoneListON) {
+      console.log("The block at index: " + this.levelModel.controller.levelView.indexToCoordinates(this.redstoneListON[obj]) + " is a " + this[this.redstoneListON[obj]].blockType + ". This block IS charged.");
+    }
+  }
+
+  redstonePropagation(position) {
+    let block = this[this.levelModel.yToIndex(position[1]) + position[0]];
+    //console.log("the position of " + block.blockType + " is " + "(" + position.x + ", " + position.y + "). This block is charged!");
+
+    if (block.blockType.substring(0,12) === "redstoneWire") {
+      let index = this.levelModel.controller.levelView.coordinatesToIndex(position);
+      let indexToRemove = this.redstoneList.indexOf(index);
+      this.redstoneList.splice(indexToRemove,1);
+      this.redstoneListON.push(index);
+    }
+
+    //below current pos check
+    let adjacentBlock = this[this.levelModel.yToIndex(position[1] + 1) + position[0]];
+    if (this.levelModel.inBounds(position[0], position[1] + 1)
+      && adjacentBlock.isPowered === false
+      && adjacentBlock.blockType.substring(0,12) === "redstoneWire") {
+      adjacentBlock.isPowered = true;
+      this.redstonePropagation([position[0],position[1] + 1]);
+    }
+    //above current pos check
+    adjacentBlock = this[this.levelModel.yToIndex(position[1] - 1) + position[0]];
+    if (this.levelModel.inBounds(position[0], position[1] - 1)
+      && adjacentBlock.isPowered === false
+      && adjacentBlock.blockType.substring(0,12) === "redstoneWire") {
+      adjacentBlock.isPowered = true;
+      this.redstonePropagation([position[0],position[1] - 1]);
+    }
+    //left of current pos check
+    adjacentBlock = this[this.levelModel.yToIndex(position[1]) + position[0] - 1];
+    if (this.levelModel.inBounds(position[0] - 1, position[1])
+      && adjacentBlock.isPowered === false
+      && adjacentBlock.blockType.substring(0,12) === "redstoneWire") {
+      adjacentBlock.isPowered = true;
+      this.redstonePropagation([position[0] - 1,position[1]]);
+    }
+    //right of current pos check
+    adjacentBlock = this[this.levelModel.yToIndex(position[1]) + position[0] + 1];
+    if (this.levelModel.inBounds(position[0] + 1, position[1])
+      && adjacentBlock.isPowered === false
+      && adjacentBlock.blockType.substring(0,12) === "redstoneWire") {
+      adjacentBlock.isPowered = true;
+      this.redstonePropagation([position[0] + 1,position[1]]);
+    }
   }
 };
