@@ -150,7 +150,7 @@ module.exports = class LevelPlane extends Array {
   indexToCoordinates(index) {
     let y = Math.floor(index / this.width);
     let x = index - (y * this.width);
-    return [x,y];
+    return [x, y];
   }
 
   determineRedstoneSprite(position) {
@@ -264,18 +264,27 @@ module.exports = class LevelPlane extends Array {
     }
   }
 
+  findPositionInArray(position, array) {
+    for (let i = 0; array.length; ++i) {
+      if (position[0] === array[i][0]) {
+        if (position[1] === array[i][1]) {
+          return i;
+        }
+      }
+    }
+  }
+
   redstonePropagation(position) {
     let block = this[this.coordinatesToIndex(position)];
     if (block.blockType.substring(0, 12) === "redstoneWire") {
-      let indexToRemove = this.redstoneList.indexOf(position);
+      let indexToRemove = this.findPositionInArray(position, this.redstoneList);
       this.redstoneList.splice(indexToRemove,1);
       this.redstoneListON.push(position);
     }
 
-    this.blockPropagation([position[0], position[1] + 1]);
-    this.blockPropagation([position[0], position[1] - 1]);
-    this.blockPropagation([position[0] + 1, position[1]]);
-    this.blockPropagation([position[0] - 1, position[1]]);
+    this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
+      this.blockPropagation(orthogonalPosition);
+    });
   }
 
   blockPropagation(position) {
