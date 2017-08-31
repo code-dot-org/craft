@@ -140,4 +140,20 @@ module.exports = {
     timeoutResult: () => false,
     verificationFunction: verificationAPI  => verificationAPI.isEntityDied("zombie", 1),
   },
+  designer09: {
+    isEventLevel: true,
+    groundPlane: ["dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirt", "dirt", "dirt", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirt", "stone", "dirt", "dirt", "stone", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirt", "stone", "dirt", "dirt", "stone", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirt", "dirt", "dirt", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirt", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirt", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse"],
+    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+    actionPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "", "", "", "", "grass", "grass", "grass", "grass", "grass", "", "", "", "", "", "", "grass", "grass", "grass", "", "", "", "", "", "", "", "", "grass", "grass", "", "", "", "", "", "", "", "", "grass", "grass", "", "", "", "", "", "", "", "", "grass", "grass", "", "", "", "", "", "", "", "", "grass", "grass", "", "", "", "", "", "", "", "", "grass", "grass", "grass", "", "", "", "", "", "", "grass", "grass", "grass", "grass", "grass", "", "", "", "", "grass", "grass", "grass"],
+    usePlayer: true,
+    playerStartPosition: [4, 8],
+    playerStartDirection: 0,
+    levelVerificationTimeout: 60000,
+    timeoutResult: () => false,
+    verificationFunction: verificationAPI  => (
+      (verificationAPI.getEntityCount("all") >= 1 && !verificationAPI.isEntityTypeRunning("all")) ||
+      verificationAPI.isEntityDied("zombie") ||
+      verificationAPI.isEntityDied("creeper")
+    ),
+  },
 };

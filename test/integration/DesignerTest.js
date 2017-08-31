@@ -221,3 +221,19 @@ test('Designer 8: Trapped by Zombies', t => {
     });
   }));
 });
+
+test('Designer 8: Trapped by Zombies', t => {
+  attempt('designer09', api => new Promise(resolve => {
+    api.spawnEntity(null, 'sheep', 'middle');
+    api.onEventTriggered(null, 'sheep', 2, event => {
+      api.moveToward(null, event.targetIdentifier, 'Player');
+    });
+
+    api.startAttempt(success => {
+      t.assert(success);
+      t.end();
+
+      resolve();
+    });
+  }));
+});
