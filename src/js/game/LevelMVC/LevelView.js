@@ -481,12 +481,6 @@ module.exports = class LevelView {
     return (this.yToIndex(coordinates[1])) + coordinates[0];
   }
 
-  indexToCoordinates(index) {
-    let y = Math.floor(index / this.controller.levelModel.actionPlane.height);
-    let x = index - (y * this.controller.levelModel.actionPlane.height);
-    return [x,y];
-  }
-
   playMinecartTurnAnimation(position, facing, isOnBlock, completionHandler, turnDirection) {
     var animation = this.playPlayerAnimation("mineCart_turn" + turnDirection, position, FacingDirection.Down, false);
     return animation;

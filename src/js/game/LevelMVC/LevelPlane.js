@@ -147,6 +147,12 @@ module.exports = class LevelPlane extends Array {
     }
   }
 
+  indexToCoordinates(index) {
+    let y = Math.floor(index / this.height);
+    let x = index - (y * this.height);
+    return [x,y];
+  }
+
   determineRedstoneSprite(position) {
     let foundAbove = false;
     let foundBelow = false;
@@ -237,21 +243,15 @@ module.exports = class LevelPlane extends Array {
     this.redstoneList = [];
     this.redstoneListON = [];
     for (let i = 0; i < this.length; ++i) {
-      if (this[i].blockType.substring(0,12) === "redstoneWire") {
+      if (this[i].blockType.substring(0, 12) === "redstoneWire") {
         this[i].isPowered = false;
-        let position = [];
-        if (this.levelModel !== null) {
-          position = this.levelModel.controller.levelView.indexToCoordinates(i);
-        }
+        let position = this.indexToCoordinates(i);
         this.redstoneList.push(position);
       }
     }
     for (let i = 0; i < this.length; ++i) {
       if (this[i].blockType === "railsRedstoneTorch") {
-        let position = [];
-        if (this.levelModel !== null) {
-          position = this.levelModel.controller.levelView.indexToCoordinates(i);
-        }
+        let position = this.indexToCoordinates(i);
         this.redstonePropagation(position);
       }
     }
@@ -270,45 +270,26 @@ module.exports = class LevelPlane extends Array {
 
   redstonePropagation(position) {
     let block = this[this.levelModel.yToIndex(position[1]) + position[0]];
-    //console.log("the position of " + block.blockType + " is " + "(" + position.x + ", " + position.y + "). This block is charged!");
-
-    if (block.blockType.substring(0,12) === "redstoneWire") {
+    if (block.blockType.substring(0, 12) === "redstoneWire") {
       let indexToRemove = this.redstoneList.indexOf(position);
       this.redstoneList.splice(indexToRemove,1);
       this.redstoneListON.push(position);
     }
 
-    //below current pos check
-    let adjacentBlock = this[this.levelModel.yToIndex(position[1] + 1) + position[0]];
-    if (this.levelModel.inBounds(position[0], position[1] + 1)
-      && adjacentBlock.isPowered === false
-      && adjacentBlock.blockType.substring(0,12) === "redstoneWire") {
+    this.blockPropagation([position[0], position[1] + 1]);
+    this.blockPropagation([position[0], position[1] - 1]);
+    this.blockPropagation([position[0] + 1, position[1]]);
+    this.blockPropagation([position[0] - 1, position[1]]);
+  }
+
+  blockPropagation(position) {
+    let adjacentBlock = this[this.levelModel.yToIndex(position[1]) + position[0]];
+    if (this.levelModel.inBounds(position[0], position[1]) &&
+      adjacentBlock.isPowered === false &&
+      adjacentBlock.blockType.substring(0, 12) === "redstoneWire") {
       adjacentBlock.isPowered = true;
-      this.redstonePropagation([position[0],position[1] + 1]);
-    }
-    //above current pos check
-    adjacentBlock = this[this.levelModel.yToIndex(position[1] - 1) + position[0]];
-    if (this.levelModel.inBounds(position[0], position[1] - 1)
-      && adjacentBlock.isPowered === false
-      && adjacentBlock.blockType.substring(0,12) === "redstoneWire") {
-      adjacentBlock.isPowered = true;
-      this.redstonePropagation([position[0],position[1] - 1]);
-    }
-    //left of current pos check
-    adjacentBlock = this[this.levelModel.yToIndex(position[1]) + position[0] - 1];
-    if (this.levelModel.inBounds(position[0] - 1, position[1])
-      && adjacentBlock.isPowered === false
-      && adjacentBlock.blockType.substring(0,12) === "redstoneWire") {
-      adjacentBlock.isPowered = true;
-      this.redstonePropagation([position[0] - 1,position[1]]);
-    }
-    //right of current pos check
-    adjacentBlock = this[this.levelModel.yToIndex(position[1]) + position[0] + 1];
-    if (this.levelModel.inBounds(position[0] + 1, position[1])
-      && adjacentBlock.isPowered === false
-      && adjacentBlock.blockType.substring(0,12) === "redstoneWire") {
-      adjacentBlock.isPowered = true;
-      this.redstonePropagation([position[0] + 1,position[1]]);
+      this.redstonePropagation([position[0],position[1]]);
     }
   }
+
 };
