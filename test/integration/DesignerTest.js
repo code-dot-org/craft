@@ -202,3 +202,22 @@ test('Designer 7: Explode Stone Wall', t => {
     });
   }));
 });
+
+test('Designer 8: Trapped by Zombies', t => {
+  attempt('designer08', api => new Promise(resolve => {
+    // Define iron golem behavior as user code.
+    api.onEventTriggered(null, 'ironGolem', 2, event => {
+      api.repeat(null, () => {
+        api.moveToward(null, event.targetIdentifier, 'zombie');
+        api.attack(null, event.targetIdentifier);
+      }, -1, event.targetIdentifier);
+    });
+
+    api.startAttempt(success => {
+      t.assert(success);
+      t.end();
+
+      resolve();
+    });
+  }));
+});

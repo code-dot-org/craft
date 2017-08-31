@@ -200,7 +200,7 @@ module.exports = class Zombie extends BaseEntity {
             setTimeout(() => {
                 this.healthPoint--;
                 callbackCommand.succeeded();
-            }, 1500);
+            }, 1500 / this.controller.tweenTimeScale);
         } else {
             this.healthPoint--;
             this.controller.levelView.playScaledSpeed(this.sprite.animations, "die" + facingName);
@@ -221,7 +221,7 @@ module.exports = class Zombie extends BaseEntity {
                     }, 500, Phaser.Easing.Linear.None);
                     tween.start();
                 }
-            }, 1500);
+            }, 1500 / this.controller.tweenTimeScale);
         }
     }
 };

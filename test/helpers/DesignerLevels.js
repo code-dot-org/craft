@@ -126,4 +126,18 @@ module.exports = {
       }
     },
   },
+  designer08: {
+    isEventLevel: true,
+    isDaytime: false,
+    groundPlane: ["grass", "dirt", "dirt", "dirt", "grass", "grass", "grass", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "grass", "grass", "grass", "grass", "grass", "dirt", "dirt", "grass", "dirt", "dirt", "bricks", "bricks", "bricks", "bricks", "bricks", "grass", "grass", "grass", "grass", "dirt", "bricks", "planksSpruce", "planksSpruce", "planksSpruce", "bricks", "grass", "grass", "grass", "grass", "grass", "bricks", "planksSpruce", "planksSpruce", "planksSpruce", "bricks", "grass", "grass", "grass", "grass", "grass", "bricks", "planksSpruce", "planksSpruce", "planksSpruce", "bricks", "grass", "grass", "grass", "grass", "grass", "bricks", "planksSpruce", "planksSpruce", "planksSpruce", "bricks", "grass", "dirt", "grass", "grass", "grass", "grass", "grass", "planksSpruce", "grass", "grass", "grass", "dirt", "grass", "grass", "grass", "grass", "grass", "gravel", "grass", "grass", "dirt", "dirt", "grass", "grass", "grass", "grass", "grass", "gravel", "grass", "dirt", "dirt", "dirt"],
+    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "tallGrass", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "tallGrass", "", "", "", "", "", "", "", "tallGrass", "", "tallGrass", "tallGrass", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+    actionPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "bricks", "bricks", "glass", "bricks", "bricks", "", "", "", "", "", "bricks", "", "", "", "bricks", "", "", "", "", "", "glass", "", "torch", "", "glass", "", "", "", "", "", "bricks", "", "", "", "bricks", "", "", "", "", "", "bricks", "bricks", "door", "bricks", "bricks", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+    entities: [["zombie", 5, 7, 1], ["ironGolem", 5, 9, 1]],
+    usePlayer: true,
+    playerStartPosition: [5, 3],
+    playerStartDirection: 2,
+    levelVerificationTimeout: -1,
+    timeoutResult: () => false,
+    verificationFunction: verificationAPI  => verificationAPI.isEntityDied("zombie", 1),
+  },
 };
