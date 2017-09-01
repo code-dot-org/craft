@@ -492,10 +492,8 @@ module.exports = class LevelView {
     //if we loop the sfx that might be better?
     this.audioPlayer.play("minecart");
     this.playPlayerAnimation("mineCart", position, facing, false);
-    tween = this.addResettableTween(this.player.sprite).to({
-      x: (-18 + 40 * nextPosition[0]),
-      y: (-32 + 40 * nextPosition[1]),
-    }, speed, Phaser.Easing.Linear.None);
+    tween = this.addResettableTween(this.player.sprite).to(
+      this.positionToScreen(nextPosition), speed, Phaser.Easing.Linear.None);
     tween.start();
     this.player.sprite.sortOrder = this.yToIndex(nextPosition[1]) + 10;
 
@@ -666,50 +664,24 @@ module.exports = class LevelView {
     }
   }
 
-  playMoveForwardAnimation(position, facing, shouldJumpDown, isOnBlock, groundType, completionHandler) {
-    var tween,
-      oldPosition,
-      newPosVec,
-      animName,
-      yOffset = -32;
+  playMoveForwardAnimation(position, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, completionHandler) {
+    let tween;
 
     //stepping on stone sfx
     this.playBlockSound(groundType);
-
-    let direction = this.getDirectionName(facing);
 
     this.setSelectionIndicatorPosition(position[0], position[1]);
     //make sure to render high for when moving up after placing a block
     var zOrderYIndex = position[1] + (facing === FacingDirection.Up ? 1 : 0);
     this.player.sprite.sortOrder = this.yToIndex(zOrderYIndex) + 5;
-    oldPosition = [Math.trunc((this.player.sprite.position.x + 18) / 40), Math.ceil((this.player.sprite.position.y + 32) / 40)];
-    newPosVec = [position[0] - oldPosition[0], position[1] - oldPosition[1]];
-
-    //change offset for moving on top of blocks
-    if (isOnBlock) {
-      yOffset -= 22;
-    }
 
     if (!shouldJumpDown) {
-      animName = "walk" + direction;
+      const animName = "walk" + this.getDirectionName(facing);
       this.playScaledSpeed(this.player.sprite.animations, animName);
-      tween = this.addResettableTween(this.player.sprite).to({
-        x: (-18 + 40 * position[0]),
-        y: (yOffset + 40 * position[1])
-      }, 180, Phaser.Easing.Linear.None);
+      tween = this.addResettableTween(this.player.sprite).to(
+        this.positionToScreen(position, isOnBlock), 180, Phaser.Easing.Linear.None);
     } else {
-      animName = "jumpDown" + direction;
-      this.playScaledSpeed(this.player.sprite.animations, animName);
-      tween = this.addResettableTween(this.player.sprite).to({
-        x: [-18 + 40 * oldPosition[0], -18 + 40 * (oldPosition[0] + newPosVec[0]), -18 + 40 * position[0]],
-        y: [-32 + 40 * oldPosition[1], -32 + 40 * (oldPosition[1] + newPosVec[1]) - 50, -32 + 40 * position[1]]
-      }, 300, Phaser.Easing.Linear.None).interpolation((v, k) => {
-        return Phaser.Math.bezierInterpolation(v, k);
-      });
-
-      tween.onComplete.add(() => {
-        this.audioPlayer.play("fall");
-      });
+      tween = this.playPlayerJumpDownVerticalAnimation(facing, position, oldPosition);
     }
 
     tween.onComplete.add(() => {
@@ -717,16 +689,24 @@ module.exports = class LevelView {
     });
 
     tween.start();
-
-    return tween;
   }
 
-  playPlayerJumpDownVerticalAnimation(position, direction) {
-    var animName = "jumpDown" + this.getDirectionName(direction);
+  /**
+   * Animate the player jumping down from on top of a block to ground level.
+   * @param {FacingDirection} facing
+   * @param {Array<int>}position
+   * @param {?Array<int>} oldPosition
+   * @return {Phaser.Tween}
+   */
+  playPlayerJumpDownVerticalAnimation(facing, position, oldPosition = position) {
+    var animName = "jumpDown" + this.getDirectionName(facing);
     this.playScaledSpeed(this.player.sprite.animations, animName);
-    var tween = this.addResettableTween(this.player.sprite).to({
-      x: [-18 + 40 * position[0], -18 + 40 * position[0], -18 + 40 * position[0]],
-      y: [-32 + 40 * position[1], -32 + 40 * position[1] - 50, -32 + 40 * position[1]]
+
+    const start = this.positionToScreen(oldPosition);
+    const end = this.positionToScreen(position);
+    const tween = this.addResettableTween(this.player.sprite).to({
+      x: [start.x, end.x, end.x],
+      y: [start.y, end.y - 50, end.y],
     }, 300, Phaser.Easing.Linear.None).interpolation((v, k) => {
       return Phaser.Math.bezierInterpolation(v, k);
     });
@@ -734,6 +714,8 @@ module.exports = class LevelView {
       this.audioPlayer.play("fall");
     });
     tween.start();
+
+    return tween;
   }
 
   playPlaceBlockAnimation(position, facing, blockType, blockTypeAtPosition, completionHandler) {
@@ -1037,10 +1019,8 @@ module.exports = class LevelView {
   playItemAcquireAnimation(playerPosition, facing, sprite, completionHandler, blockType) {
     var tween;
 
-    tween = this.addResettableTween(sprite).to({
-      x: (-18 + 40 * playerPosition[0]),
-      y: (-32 + 40 * playerPosition[1])
-    }, 200, Phaser.Easing.Linear.None);
+    tween = this.addResettableTween(sprite).to(
+      this.positionToScreen(playerPosition), 200, Phaser.Easing.Linear.None);
 
     tween.onComplete.add(() => {
       const caughtUpToPlayer = this.player.position[0] === playerPosition[0] && this.player.position[1] === playerPosition[1];
@@ -1059,10 +1039,25 @@ module.exports = class LevelView {
     tween.start();
   }
 
+  /**
+   * Convert a grid coordinate position to a screen X/Y location.
+   * @param {Array<int>} position
+   * @param {?boolean} isOnBlock
+   * @return {{x: number, y: number}}
+   */
+  positionToScreen(position, isOnBlock = false) {
+    const [x, y] = position;
+    return {
+      x: -18 + 40 * x,
+      y: -32 + (isOnBlock ? -23 : 0) + 40 * y,
+    };
+  }
+
   setPlayerPosition(x, y, isOnBlock) {
-    this.player.sprite.x = -18 + 40 * x;
-    this.player.sprite.y = -32 + (isOnBlock ? -23 : 0) + 40 * y;
-    this.player.sprite.sortOrder = this.yToIndex(y) + 5;
+    const screen = this.positionToScreen([x, y], isOnBlock);
+    this.player.sprite.x = screen.x;
+    this.player.sprite.y = screen.y;
+    this.player.sprite.sortOrder = this.yToIndex(screen.y) + 5;
   }
 
   setSelectionIndicatorPosition(x, y) {

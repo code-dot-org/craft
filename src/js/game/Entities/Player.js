@@ -70,7 +70,7 @@ module.exports = class Player extends BaseEntity {
       groundType = levelModel.groundPlane[levelModel.yToIndex(player.position[1]) + player.position[0]].blockType;
     }
 
-    levelView.playMoveForwardAnimation(player.position, player.facing, jumpOff, player.isOnBlock, groundType, () => {
+    levelView.playMoveForwardAnimation(player.position, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, () => {
       levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
 
       if (levelModel.isPlayerStandingInWater()) {
