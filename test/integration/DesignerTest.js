@@ -151,7 +151,7 @@ test('Designer 6: Lead Cows to Grass', t => {
   }));
 });
 
-test('Designer 7: Explode Stone Wall', t => {
+test.skip('Designer 7: Explode Stone Wall', t => {
   attempt('designer07', api => new Promise(resolve => {
     // Make the creeper move towards the sheep.
     api.onEventTriggered(null, 'creeper', 2, event => {
