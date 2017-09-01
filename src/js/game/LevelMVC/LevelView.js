@@ -497,7 +497,7 @@ module.exports = class LevelView {
       y: (-32 + 40 * nextPosition[1]),
     }, speed, Phaser.Easing.Linear.None);
     tween.start();
-    this.player.sprite.sortOrder = this.yToIndex(nextPosition[1]) + 5;
+    this.player.sprite.sortOrder = this.yToIndex(nextPosition[1]) + 10;
 
     return tween;
   }
@@ -538,14 +538,11 @@ module.exports = class LevelView {
       //turn
       if (arraydirection.substring(0, 4) === "turn") {
         direction = arraydirection.substring(5);
-        this.playMinecartTurnAnimation(position, facing, isOnBlock, completionHandler, direction).onComplete.add(() => {
-          this.playMinecartMoveForwardAnimation(position, facing, isOnBlock, completionHandler, nextPosition, speed).onComplete.add(() => {
-            position = nextPosition;
-            this.playTrack(position, facing, isOnBlock, completionHandler, minecartTrack);
-          });
+        this.onAnimationEnd(this.playMinecartTurnAnimation(position, facing, isOnBlock, completionHandler, direction), () => {
+          this.playTrack(position, facing, isOnBlock, completionHandler, minecartTrack);
         });
       } else {
-        this.playMinecartMoveForwardAnimation(position, facing, isOnBlock, completionHandler, nextPosition, speed).onComplete.add(() => {
+        this.onAnimationEnd(this.playMinecartMoveForwardAnimation(position, facing, isOnBlock, completionHandler, nextPosition, speed), () => {
           this.playTrack(position, facing, isOnBlock, completionHandler, minecartTrack);
         });
       }
@@ -1163,7 +1160,7 @@ module.exports = class LevelView {
         const newBlock = this.controller.levelModel.actionPlane.getBlockAt(position);
         if (newBlock && newBlock.blockType) {
           this.createActionPlaneBlock(position, newBlock.blockType);
-        } else {
+        } else if (newBlock) {
           // Remove the old sprite at this position, if there is one.
           const index = this.coordinatesToIndex(position);
           this.actionPlane.remove(this.actionPlaneBlocks[index]);
