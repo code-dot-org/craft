@@ -684,20 +684,7 @@ module.exports = class LevelView {
       tween = this.addResettableTween(this.player.sprite).to(
         this.positionToScreen(position, isOnBlock), 180, Phaser.Easing.Linear.None);
     } else {
-      animName = "jumpDown" + direction;
-      this.playScaledSpeed(this.player.sprite.animations, animName);
-      const start = this.positionToScreen(oldPosition);
-      const end = this.positionToScreen(position);
-      tween = this.addResettableTween(this.player.sprite).to({
-        x: [start.x, end.x, end.x],
-        y: [start.y, end.y - 50, end.y],
-      }, 300, Phaser.Easing.Linear.None).interpolation((v, k) => {
-        return Phaser.Math.bezierInterpolation(v, k);
-      });
-
-      tween.onComplete.add(() => {
-        this.audioPlayer.play("fall");
-      });
+      tween = this.playPlayerJumpDownVerticalAnimation(position, oldPosition, direction);
     }
 
     tween.onComplete.add(() => {
@@ -705,8 +692,6 @@ module.exports = class LevelView {
     });
 
     tween.start();
-
-    return tween;
   }
 
   playPlayerJumpDownVerticalAnimation(position, oldPosition, direction) {
@@ -724,6 +709,8 @@ module.exports = class LevelView {
       this.audioPlayer.play("fall");
     });
     tween.start();
+
+    return tween;
   }
 
   playPlaceBlockAnimation(position, facing, blockType, blockTypeAtPosition, completionHandler) {
@@ -1052,7 +1039,7 @@ module.exports = class LevelView {
     return {
       x: -18 + 40 * x,
       y: -32 + (isOnBlock ? -23 : 0) + 40 * y,
-    }
+    };
   }
 
   setPlayerPosition(x, y, isOnBlock) {
