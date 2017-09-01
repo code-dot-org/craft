@@ -917,7 +917,7 @@ class GameController {
     if (!this.isType(target)) {
       let entity = this.getEntity(target);
       this.addCommandRecord("wait", entity.type, commandQueueItem.repeat);
-      setTimeout(() => { commandQueueItem.succeeded(); }, time * 1000);
+      setTimeout(() => { commandQueueItem.succeeded(); }, time * 1000 / this.tweenTimeScale);
     } else {
       let entities = this.getEntities(target);
       for (let i = 0; i < entities.length; i++) {
@@ -1411,7 +1411,7 @@ class GameController {
               }
             }
             if (!player.isOnBlock && wasOnBlock) {
-              this.levelView.playPlayerJumpDownVerticalAnimation(player.position, player.facing);
+              this.levelView.playPlayerJumpDownVerticalAnimation(player.position, player.position, player.facing);
             }
             this.levelModel.computeShadingPlane();
             this.levelModel.computeFowPlane();
