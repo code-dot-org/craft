@@ -1160,7 +1160,7 @@ module.exports = class LevelView {
         const newBlock = this.controller.levelModel.actionPlane.getBlockAt(position);
         if (newBlock && newBlock.blockType) {
           this.createActionPlaneBlock(position, newBlock.blockType);
-        } else {
+        } else if (newBlock) {
           // Remove the old sprite at this position, if there is one.
           const index = this.coordinatesToIndex(position);
           this.actionPlane.remove(this.actionPlaneBlocks[index]);
