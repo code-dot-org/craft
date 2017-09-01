@@ -1411,7 +1411,7 @@ class GameController {
               }
             }
             if (!player.isOnBlock && wasOnBlock) {
-              this.levelView.playPlayerJumpDownVerticalAnimation(player.position, player.position, player.facing);
+              this.levelView.playPlayerJumpDownVerticalAnimation(player.facing, player.position);
             }
             this.levelModel.computeShadingPlane();
             this.levelModel.computeFowPlane();

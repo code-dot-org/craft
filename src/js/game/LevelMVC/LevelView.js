@@ -665,13 +665,10 @@ module.exports = class LevelView {
   }
 
   playMoveForwardAnimation(position, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, completionHandler) {
-    var tween,
-      animName;
+    let tween;
 
     //stepping on stone sfx
     this.playBlockSound(groundType);
-
-    let direction = this.getDirectionName(facing);
 
     this.setSelectionIndicatorPosition(position[0], position[1]);
     //make sure to render high for when moving up after placing a block
@@ -679,12 +676,12 @@ module.exports = class LevelView {
     this.player.sprite.sortOrder = this.yToIndex(zOrderYIndex) + 5;
 
     if (!shouldJumpDown) {
-      animName = "walk" + direction;
+      const animName = "walk" + this.getDirectionName(facing);
       this.playScaledSpeed(this.player.sprite.animations, animName);
       tween = this.addResettableTween(this.player.sprite).to(
         this.positionToScreen(position, isOnBlock), 180, Phaser.Easing.Linear.None);
     } else {
-      tween = this.playPlayerJumpDownVerticalAnimation(position, oldPosition, direction);
+      tween = this.playPlayerJumpDownVerticalAnimation(facing, position, oldPosition);
     }
 
     tween.onComplete.add(() => {
@@ -694,9 +691,17 @@ module.exports = class LevelView {
     tween.start();
   }
 
-  playPlayerJumpDownVerticalAnimation(position, oldPosition, direction) {
-    var animName = "jumpDown" + direction;
+  /**
+   * Animate the player jumping down from on top of a block to ground level.
+   * @param {FacingDirection} facing
+   * @param {Array<int>}position
+   * @param {?Array<int>} oldPosition
+   * @return {Phaser.Tween}
+   */
+  playPlayerJumpDownVerticalAnimation(facing, position, oldPosition = position) {
+    var animName = "jumpDown" + this.getDirectionName(facing);
     this.playScaledSpeed(this.player.sprite.animations, animName);
+
     const start = this.positionToScreen(oldPosition);
     const end = this.positionToScreen(position);
     const tween = this.addResettableTween(this.player.sprite).to({
@@ -1034,6 +1039,12 @@ module.exports = class LevelView {
     tween.start();
   }
 
+  /**
+   * Convert a grid coordinate position to a screen X/Y location.
+   * @param {Array<int>} position
+   * @param {?boolean} isOnBlock
+   * @return {{x: number, y: number}}
+   */
   positionToScreen(position, isOnBlock = false) {
     const [x, y] = position;
     return {
