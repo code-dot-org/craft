@@ -204,3 +204,38 @@ test.skip('Designer 7: Explode Stone Wall', t => {
     });
   }), 0.5);
 });
+
+test('Designer 8: Trapped by Zombies', t => {
+  attempt('designer08', api => new Promise(resolve => {
+    // Define iron golem behavior as user code.
+    api.onEventTriggered(null, 'ironGolem', 2, event => {
+      api.repeat(null, () => {
+        api.moveToward(null, event.targetIdentifier, 'zombie');
+        api.attack(null, event.targetIdentifier);
+      }, -1, event.targetIdentifier);
+    });
+
+    api.startAttempt(success => {
+      t.assert(success);
+      t.end();
+
+      resolve();
+    });
+  }));
+});
+
+test('Designer 8: Trapped by Zombies', t => {
+  attempt('designer09', api => new Promise(resolve => {
+    api.spawnEntity(null, 'sheep', 'middle');
+    api.onEventTriggered(null, 'sheep', 2, event => {
+      api.moveToward(null, event.targetIdentifier, 'Player');
+    });
+
+    api.startAttempt(success => {
+      t.assert(success);
+      t.end();
+
+      resolve();
+    });
+  }));
+});
