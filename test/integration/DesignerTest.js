@@ -194,7 +194,8 @@ test('Designer 7: Explode Stone Wall', t => {
       api.moveForward(null, 'Player');
     }
 
-    api.startAttempt(success => {
+    api.startAttempt((success, levelModel) => {
+      t.deepEqual(levelModel.player.position, [7, 4]);
       t.assert(success);
       t.end();
 
