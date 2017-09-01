@@ -200,5 +200,5 @@ test('Designer 7: Explode Stone Wall', t => {
 
       resolve();
     });
-  }));
+  }), 0.5);
 });
