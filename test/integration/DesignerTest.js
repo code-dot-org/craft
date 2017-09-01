@@ -173,7 +173,7 @@ test('Designer 7: Explode Stone Wall', t => {
     });
 
     // Move player to touch the creeper, then away.
-    api.wait(null, '5', 'Player');
+    api.wait(null, '7', 'Player');
     api.moveForward(null, 'Player');
     api.moveForward(null, 'Player');
     api.turnLeft(null, 'Player');
@@ -186,7 +186,7 @@ test('Designer 7: Explode Stone Wall', t => {
     api.moveForward(null, 'Player');
     api.moveForward(null, 'Player');
     api.moveForward(null, 'Player');
-    api.wait(null, '5', 'Player');
+    api.wait(null, '7', 'Player');
 
     // Move player to the sheep.
     api.turnLeft(null, 'Player');
@@ -202,5 +202,5 @@ test('Designer 7: Explode Stone Wall', t => {
 
       resolve();
     });
-  }), 1);
+  }), 0.5);
 });
