@@ -185,12 +185,13 @@ test('Designer 7: Explode Stone Wall', t => {
     api.turnRight(null, 'Player');
     api.moveForward(null, 'Player');
     api.moveForward(null, 'Player');
+    api.moveForward(null, 'Player');
     api.wait(null, '5', 'Player');
 
     // Move player to the sheep.
     api.turnLeft(null, 'Player');
     api.turnLeft(null, 'Player');
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 6; i++) {
       api.moveForward(null, 'Player');
     }
 
@@ -201,5 +202,5 @@ test('Designer 7: Explode Stone Wall', t => {
 
       resolve();
     });
-  }), 0.5);
+  }), 1);
 });
