@@ -681,7 +681,6 @@ module.exports = class LevelView {
     //make sure to render high for when moving up after placing a block
     var zOrderYIndex = position[1] + (facing === FacingDirection.Up ? 1 : 0);
     this.player.sprite.sortOrder = this.yToIndex(zOrderYIndex) + 5;
-    newPosVec = [position[0] - oldPosition[0], position[1] - oldPosition[1]];
 
     //change offset for moving on top of blocks
     if (isOnBlock) {
@@ -699,8 +698,8 @@ module.exports = class LevelView {
       animName = "jumpDown" + direction;
       this.playScaledSpeed(this.player.sprite.animations, animName);
       tween = this.addResettableTween(this.player.sprite).to({
-        x: [-18 + 40 * oldPosition[0], -18 + 40 * (oldPosition[0] + newPosVec[0]), -18 + 40 * position[0]],
-        y: [-32 + 40 * oldPosition[1], -32 + 40 * (oldPosition[1] + newPosVec[1]) - 50, -32 + 40 * position[1]]
+        x: [-18 + 40 * oldPosition[0], -18 + 40 * position[0], -18 + 40 * position[0]],
+        y: [-32 + 40 * oldPosition[1], -32 + 40 * position[1] - 50, -32 + 40 * position[1]]
       }, 300, Phaser.Easing.Linear.None).interpolation((v, k) => {
         return Phaser.Math.bezierInterpolation(v, k);
       });
