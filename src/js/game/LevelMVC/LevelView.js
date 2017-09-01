@@ -1368,10 +1368,17 @@ module.exports = class LevelView {
 
     this.selectionIndicator = this.shadingPlane.create(24, 44, 'selectionIndicator');
 
-    this.generateAnimations(FacingDirection.Down, 0);
-    this.generateAnimations(FacingDirection.Right, 60);
-    this.generateAnimations(FacingDirection.Up, 120);
-    this.generateAnimations(FacingDirection.Left, 180);
+    if (playerName === 'Agent') {
+      this.generateAnimations(FacingDirection.Down, -1);
+      this.generateAnimations(FacingDirection.Right, 65);
+      this.generateAnimations(FacingDirection.Up, 130);
+      this.generateAnimations(FacingDirection.Left, 195);
+    } else {
+      this.generateAnimations(FacingDirection.Down, 0);
+      this.generateAnimations(FacingDirection.Right, 60);
+      this.generateAnimations(FacingDirection.Up, 120);
+      this.generateAnimations(FacingDirection.Left, 180);
+    }
 
     const frameRate = 20;
     const idleFrameRate = 10;
