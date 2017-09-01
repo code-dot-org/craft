@@ -666,9 +666,8 @@ module.exports = class LevelView {
     }
   }
 
-  playMoveForwardAnimation(position, facing, shouldJumpDown, isOnBlock, groundType, completionHandler) {
+  playMoveForwardAnimation(position, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, completionHandler) {
     var tween,
-      oldPosition,
       newPosVec,
       animName,
       yOffset = -32;
@@ -682,7 +681,6 @@ module.exports = class LevelView {
     //make sure to render high for when moving up after placing a block
     var zOrderYIndex = position[1] + (facing === FacingDirection.Up ? 1 : 0);
     this.player.sprite.sortOrder = this.yToIndex(zOrderYIndex) + 5;
-    oldPosition = [Math.trunc((this.player.sprite.position.x + 18) / 40), Math.ceil((this.player.sprite.position.y + 32) / 40)];
     newPosVec = [position[0] - oldPosition[0], position[1] - oldPosition[1]];
 
     //change offset for moving on top of blocks
