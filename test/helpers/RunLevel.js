@@ -18,7 +18,7 @@ const defaults = {
   playerStartPosition: [],
 };
 
-module.exports = (level, commands) => {
+module.exports = (level, commands, step = 0.1) => {
   const gameController = new GameController({
     forceSetTimeOut: true,
     Phaser: window.Phaser,
@@ -28,7 +28,7 @@ module.exports = (level, commands) => {
       play: () => {},
     },
     debug: false,
-    customSlowMotion: 0.1,
+    customSlowMotion: step,
     afterAssetsLoaded: () => {
       const api = gameController.codeOrgAPI;
       api.resetAttempt();
