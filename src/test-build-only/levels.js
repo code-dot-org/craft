@@ -34,14 +34,14 @@ window.demoLevels = {
     // up: 0, right: 1, down: 2, left: 3
     playerStartDirection: 1,
 
-    playerName: "Steve",
+    playerName: "Agent",
     isEventLevel: true,
     earlyLoadAssetPacks: ['allAssetsMinusPlayer'],
-    earlyLoadNiceToHaveAssetPacks: ['playerSteve'],
+    earlyLoadNiceToHaveAssetPacks: ['playerAgent'],
 
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteve'],
-      afterLoad: ['playerSteve', 'playerSteve', 'grass']
+      beforeLoad: ['allAssetsMinusPlayer', 'playerAgent'],
+      afterLoad: [],
     },
 
     levelVerificationTimeout : -1,
