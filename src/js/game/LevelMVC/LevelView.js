@@ -1411,16 +1411,18 @@ module.exports = class LevelView {
     return Phaser.Animation.generateFrameNames("Player_", n, n, "", 3);
   }
 
+  /**
+   * Create action animations for Alex, Steve and the Agent from the sprite
+   * sheet and JSON map.
+   * @param {FacingDirection} facing
+   * @param {int} offset
+   */
   generateAnimations(facing, offset) {
     const direction = this.getDirectionName(facing);
-    var frameList,
-      i,
-      singlePunch,
-      idleFrameRate = 10;
-
+    const idleFrameRate = 10;
     let frameRate = 20;
 
-    frameList = [];
+    let frameList = [];
 
     frameList.push(this.playerFrameName(offset + 1));
     frameList.push(this.playerFrameName(offset + 3));
@@ -1428,7 +1430,7 @@ module.exports = class LevelView {
     frameList.push(this.playerFrameName(offset + 7));
     frameList.push(this.playerFrameName(offset + 9));
     frameList.push(this.playerFrameName(offset + 7));
-    for (i = 0; i < 5; ++i) {
+    for (let i = 0; i < 5; ++i) {
       frameList.push(this.playerFrameName(offset + 1));
     }
 
@@ -1446,7 +1448,7 @@ module.exports = class LevelView {
       this.playScaledSpeed(this.player.sprite.animations, "idlePause" + direction);
     });
     frameList = [];
-    for (i = 0; i < 13; ++i) {
+    for (let i = 0; i < 13; ++i) {
       frameList.push(this.playerFrameName(offset + 1));
     }
     this.player.sprite.animations.add('idlePause' + direction, frameList, frameRate / 3, false).onComplete.add(() => {
@@ -1454,7 +1456,7 @@ module.exports = class LevelView {
     });
 
     this.player.sprite.animations.add('walk' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 13, offset + 20, "", 3), frameRate, true);
-    singlePunch = Phaser.Animation.generateFrameNames("Player_", offset + 21, offset + 24, "", 3);
+    const singlePunch = Phaser.Animation.generateFrameNames("Player_", offset + 21, offset + 24, "", 3);
     this.player.sprite.animations.add('punch' + direction, singlePunch, frameRate, false).onComplete.add(() => {
       this.audioPlayer.play("punch");
     });
