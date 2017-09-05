@@ -255,6 +255,10 @@ test('rail connections: destroy block', t => {
 
 //Placing/destroying redstoneWire should update charge propagation throughout
 //a line of wire connected to a redstone torch
+// Before:   After:
+//    T        T║
+//              ║
+//           X  ║
 test('redstone charge: place block', t => {
   const data = [
     '','railsRedstoneTorch',      '',
@@ -280,8 +284,106 @@ test('redstone charge: place block', t => {
   expected.redstoneList = [];
   expected.redstoneListON = [];
 
-  //the setBlockAt() calls should have run getRedstone() so the ON list ought to have
-  //3 elements while the not-ON list ought to have only a single element.
+  t.deepEqual(plane.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+//Placing/destroying redstoneWire should update charge propagation throughout
+//a line of wire connected to a redstone torch
+// Before:   After:
+//    T║       T
+//     ║        ║
+//  X  ║     X  ║
+test('redstone charge: destroy block', t => {
+  const data = [
+    '',         'railsRedstoneTorch','redstoneWireVerticalOn',
+    '',                  '',         'redstoneWireVerticalOn',
+    'redstoneWire',      '',         'redstoneWireVerticalOn',
+  ];
+  const plane = new LevelPlane(data, 3, 3, true);
+
+  plane.setBlockAt([2, 0], new LevelBlock(''));
+
+  const expected = [
+    '',         'railsRedstoneTorch',            '',
+    '',                  '',         'redstoneWireVertical',
+    'redstoneWire',      '',         'redstoneWireVertical',
+  ];
+
+  expected.width = undefined;
+  expected.height = undefined;
+  expected.levelModel = null;
+  expected.redstoneList = [];
+  expected.redstoneListON = [];
+
+  t.deepEqual(plane.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+//Placing/destroying redstoneWire should update charge propagation throughout
+//a line of wire connected to a redstone torch
+// Before:   After:
+//    T║        ║
+//     ║        ║
+//  X  ║     X  ║
+test('torch charge: destroy block', t => {
+  const data = [
+    '',         'railsRedstoneTorch','redstoneWireVerticalOn',
+    '',                  '',         'redstoneWireVerticalOn',
+    'redstoneWire',      '',         'redstoneWireVerticalOn',
+  ];
+  const plane = new LevelPlane(data, 3, 3, true);
+
+  plane.setBlockAt([1, 0], new LevelBlock(''));
+
+  const expected = [
+    '',                  '',         'redstoneWireVertical',
+    '',                  '',         'redstoneWireVertical',
+    'redstoneWire',      '',         'redstoneWireVertical',
+  ];
+
+  expected.width = undefined;
+  expected.height = undefined;
+  expected.levelModel = null;
+  expected.redstoneList = [];
+  expected.redstoneListON = [];
+
+  t.deepEqual(plane.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+//Placing/destroying redstoneWire should update charge propagation throughout
+//a line of wire connected to a redstone torch
+// Before:   After:
+// X   ║     X  T║
+//     ║         ║
+//     ║         ║
+test('torch charge: place block', t => {
+  const data = [
+    'redstoneWire','',      'redstoneWireVertical',
+    '',            '',      'redstoneWireVertical',
+    '',            '',      'redstoneWireVertical',
+  ];
+  const plane = new LevelPlane(data, 3, 3, true);
+
+  plane.setBlockAt([1, 2], new LevelBlock('railsRedstoneTorch'));
+
+
+  const expected = [
+    'redstoneWire',         '',         'redstoneWireVerticalOn',
+    '',                     '',         'redstoneWireVerticalOn',
+    '',            'railsRedstoneTorch','redstoneWireVerticalOn',
+  ];
+
+  expected.width = undefined;
+  expected.height = undefined;
+  expected.levelModel = null;
+  expected.redstoneList = [];
+  expected.redstoneListON = [];
+
   t.deepEqual(plane.map(block => block.blockType), expected);
 
   t.end();

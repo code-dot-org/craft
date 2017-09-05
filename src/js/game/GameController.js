@@ -133,6 +133,7 @@ class GameController {
     this.onDayCallback = levelConfig.onDayCallback;
     this.onNightCallback = levelConfig.onNightCallback;
 
+    //this.levelModel.actionPlane.getRedstone();
     this.game.state.start('levelRunner');
   }
 
