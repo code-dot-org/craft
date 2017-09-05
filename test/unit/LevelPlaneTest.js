@@ -273,7 +273,7 @@ test('redstone charge: place block', t => {
   plane.setBlockAt([0, 2], new LevelBlock('redstoneWire'));
 
   const expected = [
-    '',         'railsRedstoneTorch','redstoneWireVerticalOn',
+    '',         'railsRedstoneTorch','redstoneWireDownLeftOn',
     '',                  '',         'redstoneWireVerticalOn',
     'redstoneWire',      '',         'redstoneWireVerticalOn',
   ];
@@ -297,7 +297,7 @@ test('redstone charge: place block', t => {
 //  X  ║     X  ║
 test('redstone charge: destroy block', t => {
   const data = [
-    '',         'railsRedstoneTorch','redstoneWireVerticalOn',
+    '',         'railsRedstoneTorch','redstoneWireDownLeftOn',
     '',                  '',         'redstoneWireVerticalOn',
     'redstoneWire',      '',         'redstoneWireVerticalOn',
   ];
@@ -330,7 +330,7 @@ test('redstone charge: destroy block', t => {
 //  X  ║     X  ║
 test('torch charge: destroy block', t => {
   const data = [
-    '',         'railsRedstoneTorch','redstoneWireVerticalOn',
+    '',         'railsRedstoneTorch','redstoneWireDownLeftOn',
     '',                  '',         'redstoneWireVerticalOn',
     'redstoneWire',      '',         'redstoneWireVerticalOn',
   ];
@@ -375,7 +375,7 @@ test('torch charge: place block', t => {
   const expected = [
     'redstoneWire',         '',         'redstoneWireVerticalOn',
     '',                     '',         'redstoneWireVerticalOn',
-    '',            'railsRedstoneTorch','redstoneWireVerticalOn',
+    '',            'railsRedstoneTorch','redstoneWireUpLeftOn',
   ];
 
   expected.width = undefined;
