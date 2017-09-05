@@ -13,6 +13,9 @@ module.exports = class LevelBlock {
     this.isEmissive = false;
     this.isTransparent = false;
     this.isRedstone = false;
+    this.isPowered = false;
+    this.isConnectedToRedstone = false;
+    this.isRedstoneBattery = false;
 
     if (blockType === "") {
       this.isWalkable = true;
@@ -34,6 +37,8 @@ module.exports = class LevelBlock {
       this.isDestroyable = true;
       this.isTransparent = true;
       this.isRail = blockType !== "railsRedstoneTorch";
+      this.isConnectedToRedstone = blockType === "railsRedstoneTorch";
+      this.isRedstoneBattery = blockType === "railsRedstoneTorch";
       this.connectionA = undefined;
       this.connectionB = undefined;
     }

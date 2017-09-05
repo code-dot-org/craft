@@ -48,6 +48,12 @@ module.exports = class LevelModel {
     this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, this.controller, this, true);
 
     for (let i = 0; i < this.actionPlane.length; ++i) {
+      if (this.actionPlane[i].blockType === "railsRedstoneTorch") {
+        let position = this.actionPlane.indexToCoordinates(i);
+        this.actionPlane.redstonePropagation(position);
+      }
+    }
+    for (let i = 0; i < this.actionPlane.length; ++i) {
       if (this.actionPlane[i].blockType.substring(0,12) === "redstoneWire") {
         let y = Math.floor(i / this.planeHeight);
         let x = i - (y * this.planeHeight);

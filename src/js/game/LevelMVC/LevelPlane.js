@@ -29,6 +29,8 @@ module.exports = class LevelPlane extends Array {
     this.width = width;
     this.height = height;
     this.levelModel = LevelModel;
+    this.redstoneList = [];
+    this.redstoneListON = [];
 
     for (let index = 0; index < planeData.length; ++index) {
       let block = new LevelBlock(planeData[index]);
@@ -38,15 +40,33 @@ module.exports = class LevelPlane extends Array {
     }
   }
 
+  /**
+  * Determines whether the position in question is within the bounds of the plane.
+  */
   inBounds(position) {
     const [x, y] = position;
     return x >= 0 && x < this.width && y >= 0 && y < this.height;
   }
 
+  /**
+  * Converts coordinates to a index
+  */
   coordinatesToIndex(position) {
     return position[1] * this.width + position[0];
   }
 
+  /**
+  * Determines the positional coordinates given a specific index.
+  */
+  indexToCoordinates(index) {
+    let y = Math.floor(index / this.width);
+    let x = index - (y * this.width);
+    return [x, y];
+  }
+
+  /**
+  * Gets the block at the desired index within the plane.
+  */
   getBlockAt(position, offsetX = 0, offsetY = 0) {
     const [x, y] = position;
     const target = [x + offsetX, y + offsetY];
@@ -56,19 +76,16 @@ module.exports = class LevelPlane extends Array {
     }
   }
 
+  /**
+  * Changes the block at a desired position to the desired block.
+  * Important note: This is the cornerstone of block placing/destroying.
+  */
   setBlockAt(position, block, force = false) {
     this[this.coordinatesToIndex(position)] = block;
 
-    if (block.isRedstone) {
-      this.determineRedstoneSprite(position);
-    }
-    if (block.isRedstone || block.blockType === '') {
-      this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
-        const orthogonalBlock = this.getBlockAt(orthogonalPosition);
-        if (orthogonalBlock && orthogonalBlock.isRedstone) {
-          this.determineRedstoneSprite(orthogonalPosition);
-        }
-      });
+    let redstoneToRefresh = [];
+    if (block.isRedstone || block.blockType === '' || block.isConnectedToRedstone) {
+      redstoneToRefresh = this.getRedstone();
     }
 
     if (!force) {
@@ -76,13 +93,18 @@ module.exports = class LevelPlane extends Array {
     }
 
     if (this.levelModel) {
-      const positionAndTouching = this.getOrthogonalPositions(position).concat([position]);
+      let positionAndTouching = this.getOrthogonalPositions(position).concat([position]);
       this.levelModel.controller.levelView.refreshActionPlane(positionAndTouching);
+      this.levelModel.controller.levelView.refreshActionPlane(redstoneToRefresh);
     }
 
     return block;
   }
 
+  /**
+  * Gets the orthogonal positions around a given position.
+  * Important note: This isn't doing bounds checking.
+  */
   getOrthogonalPositions(position) {
     const [x, y] = position;
     return [
@@ -93,6 +115,10 @@ module.exports = class LevelPlane extends Array {
     ];
   }
 
+  /**
+  * Gets the blocks within orthogonal positions around a given position.
+  * Important note: This DOES to bounds checking. Will be undefined if OOB.
+  */
   getOrthogonalBlocks(position) {
     return {
       north: {block: this.getBlockAt(position, 0, -1), relative: South},
@@ -102,6 +128,9 @@ module.exports = class LevelPlane extends Array {
     };
   }
 
+  /**
+  * Gets the mask of the orthogonal indices around the given position.
+  */
   getOrthogonalMask(position, comparator) {
     const orthogonal = this.getOrthogonalBlocks(position);
     return (
@@ -112,6 +141,10 @@ module.exports = class LevelPlane extends Array {
     );
   }
 
+  /**
+  * Determines which rail object should be placed given the context of surrounding
+  * indices.
+  */
   determineRailType(position, updateTouching = false) {
     const block = this.getBlockAt(position);
 
@@ -144,6 +177,10 @@ module.exports = class LevelPlane extends Array {
     }
   }
 
+  /**
+  * Determines which redstoneWire variant should be placed given the context of
+  * surrounding indices and Powered state.
+  */
   determineRedstoneSprite(position) {
     let foundAbove = false;
     let foundBelow = false;
@@ -154,24 +191,32 @@ module.exports = class LevelPlane extends Array {
 
     let borderCount = 0;
 
-    // If in bounds, we want to see if any redstone is around the index in question
+    // If in bounds, we want to see if any redstone is around the index in question.
     // Below index
-    if (orthogonalBlocks.south.block !== undefined && orthogonalBlocks.south.block.blockType.startsWith("redstoneWire")) {
+    if (orthogonalBlocks.south.block !== undefined &&
+    (orthogonalBlocks.south.block.isRedstone ||
+    orthogonalBlocks.south.block.isConnectedToRedstone)) {
       foundBelow = true;
       ++borderCount;
     }
     // Above index
-    if (orthogonalBlocks.north.block !== undefined && orthogonalBlocks.north.block.blockType.startsWith("redstoneWire")) {
+    if (orthogonalBlocks.north.block !== undefined &&
+    (orthogonalBlocks.north.block.isRedstone ||
+    orthogonalBlocks.north.block.isConnectedToRedstone)) {
       foundAbove = true;
       ++borderCount;
     }
     // Right index
-    if (orthogonalBlocks.east.block !== undefined && orthogonalBlocks.east.block.blockType.startsWith("redstoneWire")) {
+    if (orthogonalBlocks.east.block !== undefined &&
+    (orthogonalBlocks.east.block.isRedstone ||
+    orthogonalBlocks.east.block.isConnectedToRedstone)) {
       foundRight = true;
       ++borderCount;
     }
     // Left index
-    if (orthogonalBlocks.west.block !== undefined && orthogonalBlocks.west.block.blockType.startsWith("redstoneWire")) {
+    if (orthogonalBlocks.west.block !== undefined &&
+    (orthogonalBlocks.west.block.isRedstone ||
+    orthogonalBlocks.west.block.isConnectedToRedstone)) {
       foundLeft = true;
       ++borderCount;
     }
@@ -227,6 +272,91 @@ module.exports = class LevelPlane extends Array {
       this[myIndex].blockType = "redstoneWireCross";
     }
 
+    if (this[myIndex].isPowered) {
+      this[myIndex].blockType += "On";
+    }
+
     return this[myIndex].blockType;
   }
+
+  /**
+  * Updates the state and sprites of all redstoneWire on the plane.
+  * Important note: This is what kicks off redstone charge propagation and is called
+  * on place/destroy/run/load.... wherever updating charge is important.
+  */
+  getRedstone() {
+    this.redstoneList = [];
+    this.redstoneListON = [];
+    for (let i = 0; i < this.length; ++i) {
+      if (this[i].isRedstone) {
+        this[i].isPowered = false;
+        let position = this.indexToCoordinates(i);
+        this.redstoneList.push(position);
+      }
+    }
+    for (let i = 0; i < this.length; ++i) {
+      if (this[i].blockType === "railsRedstoneTorch") {
+        let position = this.indexToCoordinates(i);
+        this.redstonePropagation(position);
+      }
+    }
+
+    let posToRefresh = [];
+    for (let i = 0; i < this.redstoneList.length; ++i) {
+      this.determineRedstoneSprite(this.redstoneList[i]);
+      posToRefresh.push(this.redstoneList[i]);
+    }
+    for (let i = 0; i < this.redstoneListON.length; ++i) {
+      this.determineRedstoneSprite(this.redstoneListON[i]);
+      posToRefresh.push(this.redstoneListON[i]);
+    }
+
+    return posToRefresh;
+  }
+
+  /**
+  * Silly helper to get the index of a specific position in an array of positions.
+  */
+  findPositionInArray(position, array) {
+    for (let i = 0; array.length; ++i) {
+      if (position[0] === array[i][0]) {
+        if (position[1] === array[i][1]) {
+          return i;
+        }
+      }
+    }
+  }
+
+  /**
+  * If the block at the given position is redstone, this tracks the position, and
+  * propagates power to the surrounding indices.
+  */
+  redstonePropagation(position) {
+    let block = this[this.coordinatesToIndex(position)];
+    if (block.isRedstone) {
+      let indexToRemove = this.findPositionInArray(position, this.redstoneList);
+      this.redstoneList.splice(indexToRemove,1);
+      this.redstoneListON.push(position);
+      this[this.coordinatesToIndex(position)].isPowered = true;
+    }
+
+    this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
+      this.blockPropagation(orthogonalPosition);
+    });
+  }
+
+  /**
+  * The actual recursive propagation functionality for updating Powered state and sending
+  * the propagation call to surrounding indices.
+  */
+  blockPropagation(position) {
+    let adjacentBlock = this[position[1] * this.width + position[0]];
+    if (this.inBounds(position) &&
+      adjacentBlock.isPowered === false &&
+      adjacentBlock.isRedstone) {
+      adjacentBlock.isPowered = true;
+      this.redstonePropagation([position[0],position[1]]);
+    }
+  }
+
 };

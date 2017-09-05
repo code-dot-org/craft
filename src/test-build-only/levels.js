@@ -76,11 +76,11 @@ window.demoLevels = {
 
     actionPlane: [
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "railsSouthEast", "railsEastWest", "railsEastWest", "railsSouthWest", "", "", "", "",
-      "", "", "railsNorthSouth", "", "", "railsNorthSouth", "", "", "", "",
-      "", "", "railsNorthSouth", "", "", "railsNorthSouth", "", "", "", "",
-      "", "", "railsNorthEast", "railsEastWest", "railsEastWest", "railsNorthWest", "", "", "", "",
+      "", "", "", "", "redstoneWire", "", "", "", "", "",
+      "", "", "", "", "railsRedstoneTorch", "", "", "", "", "",
+      "", "", "", "", "redstoneWire", "redstoneWire", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "redstoneWire", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
