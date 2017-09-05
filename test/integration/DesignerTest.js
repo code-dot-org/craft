@@ -84,6 +84,28 @@ test('Designer 4: Move Player Inside House', t => {
   }));
 });
 
+test('Designer 5: Add Shear Sheep Behavior (push back)', t => {
+  attempt('designer05', api => new Promise(resolve => {
+    // Move to the sheep and push it back 1 space.
+    for (let i = 0; i < 4; i++) {
+      api.moveForward(null, 'Player');
+    }
+    api.turnRight(null, 'Player');
+    api.moveForward(null, 'Player');
+    api.moveForward(null, 'Player');
+
+    api.startAttempt((success, levelModel) => {
+      t.deepEqual(levelModel.player.position, [5, 3]);
+      t.equal(levelModel.getEntityAt([6, 3]), undefined);
+      t.equal(levelModel.getEntityAt([7, 3]).type, 'sheep');
+      t.assert(!success);
+      t.end();
+
+      resolve();
+    });
+  }));
+});
+
 test('Designer 5: Add Shear Sheep Behavior (fail)', t => {
   attempt('designer05', api => new Promise(resolve => {
     // Move to the sheep without defining the sheep `use` behavior.
@@ -224,7 +246,7 @@ test('Designer 8: Trapped by Zombies', t => {
   }));
 });
 
-test('Designer 8: Trapped by Zombies', t => {
+test('Designer 9: Spawn Entity', t => {
   attempt('designer09', api => new Promise(resolve => {
     api.spawnEntity(null, 'sheep', 'middle');
     api.onEventTriggered(null, 'sheep', 2, event => {
