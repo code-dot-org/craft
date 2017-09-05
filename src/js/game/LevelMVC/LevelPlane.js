@@ -288,7 +288,7 @@ module.exports = class LevelPlane extends Array {
   }
 
   blockPropagation(position) {
-    let adjacentBlock = this[this.levelModel.yToIndex(position[1]) + position[0]];
+    let adjacentBlock = this[position[1] * this.width + position[0]];
     if (this.levelModel.inBounds(position[0], position[1]) &&
       adjacentBlock.isPowered === false &&
       adjacentBlock.blockType.substring(0, 12) === "redstoneWire") {

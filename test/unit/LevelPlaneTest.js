@@ -252,3 +252,43 @@ test('rail connections: destroy block', t => {
 
   t.end();
 });
+
+//Placing/destroying redstoneWire should update charge propagation throughout
+//a line of wire connected to a redstone torch
+test('redstone charge: place block', t => {
+  const data = [
+    '','railsRedstoneTorch',      '',
+    '','',                        '',
+    '','',                        '',
+  ];
+  const plane = new LevelPlane(data, 3, 3, true);
+
+  plane.setBlockAt([2, 0], new LevelBlock('redstoneWire'));
+  plane.setBlockAt([2, 1], new LevelBlock('redstoneWire'));
+  plane.setBlockAt([2, 2], new LevelBlock('redstoneWire'));
+  plane.setBlockAt([0, 2], new LevelBlock('redstoneWire'));
+
+  const expected = [
+    '',         'railsRedstoneTorch','redstoneWire',
+    '',                  '',         'redstoneWire',
+    'redstoneWire',      '',         'redstoneWire',
+  ];
+
+  expected.width = undefined;
+  expected.height = undefined;
+  expected.levelModel = null;
+  expected.redstoneList = [];
+  expected.redstoneList.push([0,2]);
+
+  expected.redstoneListON = [];
+  expected.redstoneListOn.push([2,0]);
+  expected.redstoneListOn.push([2,1]);
+  expected.redstoneListOn.push([2,2]);
+
+  //the setBlockAt() calls should have run getRedstone() so the ON list ought to have
+  //3 elements while the not-ON list ought to have only a single element.
+  t.deepEqual(plane.redstoneList, expected.redstoneList);
+  t.deepEqual(plane.redstoneListOn, expected.redstoneListOn);
+
+  t.end();
+});
