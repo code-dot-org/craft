@@ -13,6 +13,7 @@ module.exports = class LevelBlock {
     this.isEmissive = false;
     this.isTransparent = false;
     this.isRedstone = false;
+    this.isPowered = false;
 
     if (blockType === "") {
       this.isWalkable = true;

@@ -269,26 +269,20 @@ test('redstone charge: place block', t => {
   plane.setBlockAt([0, 2], new LevelBlock('redstoneWire'));
 
   const expected = [
-    '',         'railsRedstoneTorch','redstoneWire',
-    '',                  '',         'redstoneWire',
-    'redstoneWire',      '',         'redstoneWire',
+    '',         'railsRedstoneTorch','redstoneWireVerticalOn',
+    '',                  '',         'redstoneWireVerticalOn',
+    'redstoneWire',      '',         'redstoneWireVerticalOn',
   ];
 
   expected.width = undefined;
   expected.height = undefined;
   expected.levelModel = null;
   expected.redstoneList = [];
-  expected.redstoneList.push([0,2]);
-
   expected.redstoneListON = [];
-  expected.redstoneListOn.push([2,0]);
-  expected.redstoneListOn.push([2,1]);
-  expected.redstoneListOn.push([2,2]);
 
   //the setBlockAt() calls should have run getRedstone() so the ON list ought to have
   //3 elements while the not-ON list ought to have only a single element.
-  t.deepEqual(plane.redstoneList, expected.redstoneList);
-  t.deepEqual(plane.redstoneListOn, expected.redstoneListOn);
+  t.deepEqual(plane.map(block => block.blockType), expected);
 
   t.end();
 });

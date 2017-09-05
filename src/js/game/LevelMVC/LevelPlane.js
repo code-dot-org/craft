@@ -61,16 +61,9 @@ module.exports = class LevelPlane extends Array {
   setBlockAt(position, block, force = false) {
     this[this.coordinatesToIndex(position)] = block;
 
-    if (block.isRedstone) {
-      this.determineRedstoneSprite(position);
-    }
     if (block.isRedstone || block.blockType === '') {
-      this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
-        const orthogonalBlock = this.getBlockAt(orthogonalPosition);
-        if (orthogonalBlock && orthogonalBlock.isRedstone) {
-          this.determineRedstoneSprite(orthogonalPosition);
-        }
-      });
+      //Now that On/Off sprite swapping is implemented
+      //all redstone refreshing is handled in getRedstone()
       this.getRedstone();
     }
 
@@ -236,6 +229,10 @@ module.exports = class LevelPlane extends Array {
       this[myIndex].blockType = "redstoneWireCross";
     }
 
+    if (this[myIndex].isPowered) {
+      this[myIndex].blockType += "On";
+    }
+
     return this[myIndex].blockType;
   }
 
@@ -256,11 +253,18 @@ module.exports = class LevelPlane extends Array {
       }
     }
 
-    for (let obj in this.redstoneList) {
-      console.log("The block at index: " + this.redstoneList[obj] + " is a " + this[this.coordinatesToIndex(this.redstoneList[obj])].blockType + ". This block is NOT charged.");
+    for (let i = 0; i < this.redstoneList.length; ++i) {
+      this.determineRedstoneSprite(this.redstoneList[i]);
     }
-    for (let obj in this.redstoneListON) {
-      console.log("The block at index: " + this.redstoneListON[obj] + " is a " + this[this.coordinatesToIndex(this.redstoneListON[obj])].blockType + ". This block IS charged.");
+    if (this.levelModel !== null) {
+      this.levelModel.controller.levelView.refreshActionPlane(this.redstoneList);
+    }
+
+    for (let i = 0; i < this.redstoneListON.length; ++i) {
+      this.determineRedstoneSprite(this.redstoneListON[i]);
+    }
+    if (this.levelModel !== null) {
+      this.levelModel.controller.levelView.refreshActionPlane(this.redstoneListON);
     }
   }
 
@@ -280,6 +284,7 @@ module.exports = class LevelPlane extends Array {
       let indexToRemove = this.findPositionInArray(position, this.redstoneList);
       this.redstoneList.splice(indexToRemove,1);
       this.redstoneListON.push(position);
+      this[this.coordinatesToIndex(position)].isPowered = true;
     }
 
     this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
@@ -289,7 +294,7 @@ module.exports = class LevelPlane extends Array {
 
   blockPropagation(position) {
     let adjacentBlock = this[position[1] * this.width + position[0]];
-    if (this.levelModel.inBounds(position[0], position[1]) &&
+    if (this.inBounds(position) &&
       adjacentBlock.isPowered === false &&
       adjacentBlock.blockType.substring(0, 12) === "redstoneWire") {
       adjacentBlock.isPowered = true;
