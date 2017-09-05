@@ -111,6 +111,16 @@ module.exports = class LevelBlock {
       this.isTransparent = true;
       this.isRedstone = true;
     }
+
+    if (blockType.startsWith("pressurePlate")) {
+      this.isEntity = true;
+      this.isWalkable = true;
+      this.isUsable = true;
+      this.isDestroyable = false;
+      this.isTransparent = true;
+      this.isConnectedToRedstone = true;
+      this.isRedstoneBattery = blockType === 'pressurePlateUp' ? false : true;
+    }
   }
 
   getIsTree() {

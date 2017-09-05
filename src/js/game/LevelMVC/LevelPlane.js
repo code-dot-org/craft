@@ -295,7 +295,7 @@ module.exports = class LevelPlane extends Array {
       }
     }
     for (let i = 0; i < this.length; ++i) {
-      if (this[i].blockType === "railsRedstoneTorch") {
+      if (this[i].isRedstoneBattery) {
         let position = this.indexToCoordinates(i);
         this.redstonePropagation(position);
       }
