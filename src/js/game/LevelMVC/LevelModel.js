@@ -598,14 +598,6 @@ module.exports = class LevelModel {
     return allFoundObjects;
   }
 
-  getAllBorderingPlayer(blockType) {
-    return this.getAllBorderingPosition(this.player.position, blockType);
-  }
-
-  isPlayerStandingNearCreeper() {
-    return this.getAllBorderingPlayer("creeper");
-  }
-
   getMinecartTrack() {
     var track = [];
     track.push(["down", [3, 2], FacingDirection.Down, 300]);
