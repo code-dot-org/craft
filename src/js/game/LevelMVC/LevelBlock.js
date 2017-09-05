@@ -5,7 +5,6 @@ module.exports = class LevelBlock {
     // Default values apply to simple, action-plane destroyable blocks
     this.isEntity = false;
     this.isWalkable = false;
-    this.isDeadly = false;
     this.isPlacable = false; // whether another block can be placed in this block's spot
     this.isDestroyable = true;
     this.isUsable = true;
@@ -59,7 +58,6 @@ module.exports = class LevelBlock {
     if (blockType === "lava") {
       this.isEmissive = true;
       this.isWalkable = true;
-      this.isDeadly = true;
       this.isPlacable = true;
     }
 
