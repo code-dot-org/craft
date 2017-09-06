@@ -4,9 +4,12 @@
   "description": "Top-down 2D game engine for the Craft app type. See NOTICE for restrictions on use.",
   "main": "build/js/app.bundled.js",
   "scripts": {
-    "tap": "./node_modules/.bin/tap ./test/**/*.js",
-    "test": "npm run lint && npm run tap",
-    "lint": "eslint --ext .js,.jsx src/js"
+    "codecov": "codecov",
+    "publish": "grunt publish",
+    "test:unit": "istanbul cover tape ./test/unit/*.js --report lcovonly --dir ./coverage/unit",
+    "test:integration": "karma start",
+    "test": "npm run lint && npm run test:unit && npm run test:integration",
+    "lint": "eslint --ext .js src/js test"
   },
   "repository": {
     "type": "git",
@@ -19,12 +22,15 @@
   "devDependencies": {
     "babelify": "^6.3.0",
     "browserify": "^10.2.4",
+    "browserify-istanbul": "^2.0.0",
     "browserify-shim": "^3.8.9",
+    "codecov": "^2.3.0",
     "eslint": "^2.8.0",
     "grunt": "^0.4.5",
     "grunt-aws-s3-gzip": "^0.10.1",
     "grunt-browserify": "*",
     "grunt-cache-bust": "^0.4.13",
+    "grunt-cli": "^1.2.0",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-connect": "^0.10.1",
     "grunt-contrib-copy": "^0.8.0",
@@ -33,6 +39,13 @@
     "grunt-contrib-watch": "*",
     "grunt-ejs": "^0.3.0",
     "grunt-open": "*",
-    "tap": "10.7.2"
+    "karma": "^1.7.0",
+    "karma-browserify": "^5.1.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "^1.1.1",
+    "karma-tap": "^3.1.1",
+    "istanbul": "^0.4.5",
+    "sinon": "^3.2.1",
+    "tape": "^4.8.0"
   }
 }
