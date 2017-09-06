@@ -8,6 +8,7 @@ const LevelModel = require("./LevelMVC/LevelModel.js");
 const LevelView = require("./LevelMVC/LevelView.js");
 const LevelEntity = require("./LevelMVC/LevelEntity.js");
 const AssetLoader = require("./LevelMVC/AssetLoader.js");
+const LevelBlock = require("./LevelMVC/LevelBlock.js");
 
 const CodeOrgAPI = require("./API/CodeOrgAPI.js");
 
@@ -723,6 +724,12 @@ class GameController {
   }
 
   moveDirection(commandQueueItem, direction) {
+    let isMovingOffOf = this.levelModel.isEntityOnBlocktype("Player", "pressurePlateDown");
+    if (isMovingOffOf) {
+      let position = this.levelModel.player.position;
+      let block = new LevelBlock('pressurePlateUp');
+      this.levelModel.actionPlane.setBlockAt(position, block);
+    }
     let target = commandQueueItem.target;
     if (!this.isType(target)) {
       // apply to all entities
@@ -745,6 +752,12 @@ class GameController {
         entities[i].addCommand(callbackCommand, commandQueueItem.repeat);
       }
       commandQueueItem.succeeded();
+    }
+    let isMovingOnTo = this.levelModel.isEntityOnBlocktype("Player", "pressurePlateUp");
+    if (isMovingOnTo) {
+      let position = this.levelModel.player.position;
+      let block = new LevelBlock('pressurePlateDown');
+      this.levelModel.actionPlane.setBlockAt(position, block);
     }
   }
 

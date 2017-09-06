@@ -159,6 +159,9 @@ module.exports = class LevelView {
       "redstoneWireTLeftOn": ["blocks", "redstone_dust_cross_left", -13, 0],
       "redstoneWireTRightOn": ["blocks", "redstone_dust_cross_right", -13, 0],
       "redstoneWireCrossOn": ["blocks", "redstone_dust_cross", -13, 0],
+
+      "pressurePlateUp": ["blocks", "PressurePlate_Up", -13, 0],
+      "pressurePlateDown": ["blocks", "PressurePlate_Down", -13, 0],
     };
     this.actionPlaneBlocks = [];
     this.toDestroy = [];
