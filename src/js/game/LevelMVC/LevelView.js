@@ -1919,9 +1919,6 @@ module.exports = class LevelView {
         break;
 
       default:
-        if (this.blocks[blockType] === undefined) {
-          console.log("what?");
-        }
         atlas = this.blocks[blockType][0];
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
