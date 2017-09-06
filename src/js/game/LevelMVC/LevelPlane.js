@@ -311,7 +311,36 @@ module.exports = class LevelPlane extends Array {
       posToRefresh.push(this.redstoneListON[i]);
     }
 
+    //once we're done updating redstoneWire states, check to see if doors should open/close
+    for (let i = 0; i < this.length; ++i) {
+      if (this[i].blockType === "doorIron") {
+        this[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
+        if (this[i].isPowered && !this[i].isOpen) {
+          this.animateDoor(i, true);
+        } else if (!this[i].isPowered && this[i].isOpen) {
+          this.animateDoor(i, false);
+        }
+      }
+    }
+
     return posToRefresh;
+  }
+
+  /**
+  * Animate Door and set the status
+  */
+  animateDoor(index, Open) {
+    this[index].isOpen = Open;
+    let player = this.levelModel.player;
+    this.levelModel.controller.levelView.setSelectionIndicatorPosition(this.indexToCoordinates(index)[0], this.indexToCoordinates(index)[1]);
+    this.levelModel.controller.audioPlayer.play("doorOpen");
+    // if it's not walable, then open otherwise, close
+    const canOpen = !this[index].isWalkable;
+    this.levelModel.controller.levelView.playDoorAnimation(this.indexToCoordinates(index), canOpen, () => {
+      this[index].isWalkable = !this[index].isWalkable;
+      this.levelModel.controller.levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
+      this.levelModel.controller.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]);
+    });
   }
 
   /**
@@ -357,6 +386,20 @@ module.exports = class LevelPlane extends Array {
       adjacentBlock.isPowered = true;
       this.redstonePropagation([position[0],position[1]]);
     }
+  }
+
+  /**
+  * Checking power state for objects that are powered by redstone.
+  */
+  powerCheck(position) {
+    let amIPowered = false;
+    this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
+      if (this[this.coordinatesToIndex(orthogonalPosition)].isRedstone && this[this.coordinatesToIndex(orthogonalPosition)].isPowered) {
+        amIPowered = true;
+      }
+    });
+
+    return amIPowered;
   }
 
 };

@@ -451,6 +451,7 @@ module.exports = class AssetLoader {
         'bubbles',
         'explosion',
         'door',
+        'doorIron',
         'rails',
         'tnt',
         'dig_wood1',
