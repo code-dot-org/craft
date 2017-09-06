@@ -155,6 +155,11 @@ module.exports = class AssetLoader {
         pngPath: `${this.assetRoot}images/Door.png`,
         jsonPath: `${this.assetRoot}images/Door.json`
       },
+      doorIron: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/Door_Iron.png`,
+        jsonPath: `${this.assetRoot}images/Door_Iron.json`
+      },
       rails: {
         type: 'atlasJSON',
         pngPath: `${this.assetRoot}images/Rails.png`,

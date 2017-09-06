@@ -115,6 +115,7 @@ module.exports = class LevelView {
       "explosion": ["explosion", "", -70, 60],
 
       "door": ["door", "", -12, -15],
+      "doorIron": ["doorIron", "", -12, -15],
 
       "rails": ["blocks", "Rails_Vertical", -13, -0],
       "railsNorthEast": ["blocks", "Rails_BottomLeft", -13, 0],
@@ -1900,6 +1901,31 @@ module.exports = class LevelView {
           frameList.push("Door3");
         }
         frameList = frameList.concat(animationFrames);
+        sprite.animations.add("close", frameList, 5, false);
+        break;
+
+      case "doorIron":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+
+        frameList = [];
+        var animationFramesIron = Phaser.Animation.generateFrameNames("DoorIron", 0, 3, "", 1);
+        for (let j = 0; j < 5; ++j) {
+          frameList.push("DoorIron0");
+        }
+        frameList = frameList.concat(animationFramesIron);
+
+        sprite.animations.add("open", frameList, 5, false);
+
+        frameList = [];
+        animationFramesIron = Phaser.Animation.generateFrameNames("DoorIron", 3, 0, "", 1);
+        for (let j = 0; j < 5; ++j) {
+          frameList.push("DoorIron3");
+        }
+        frameList = frameList.concat(animationFramesIron);
         sprite.animations.add("close", frameList, 5, false);
         break;
 
