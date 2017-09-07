@@ -728,8 +728,11 @@ class GameController {
     if (isMovingOffOf) {
       let position = this.levelModel.player.position;
       let block = new LevelBlock('pressurePlateUp');
-      this.levelModel.actionPlane.setBlockAt(position, block);
+      this.levelModel.actionPlane.setBlockAt(position, block, false, direction);
     }
+    let OutOfDoor = this.levelModel.isEntityOnBlocktype("Player", "doorIron");
+    let oldPlayerPosition = this.levelModel.player.position;
+
     let target = commandQueueItem.target;
     if (!this.isType(target)) {
       // apply to all entities
@@ -757,7 +760,12 @@ class GameController {
     if (isMovingOnTo) {
       let position = this.levelModel.player.position;
       let block = new LevelBlock('pressurePlateDown');
-      this.levelModel.actionPlane.setBlockAt(position, block);
+      direction = (direction + 2) % 4;
+      this.levelModel.actionPlane.setBlockAt(position, block, false, direction);
+    } else {
+      if (OutOfDoor) {
+        this.levelModel.actionPlane.animateDoor(this.levelModel.actionPlane.coordinatesToIndex(oldPlayerPosition, false));
+      }
     }
   }
 

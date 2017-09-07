@@ -1178,6 +1178,13 @@ module.exports = class LevelView {
     positions.forEach(position => {
       if (position) {
         const newBlock = this.controller.levelModel.actionPlane.getBlockAt(position);
+
+        //we don't want to refresh doors. They're not destroyable, and refreshing
+        //will lead to bad animation states
+        if (newBlock.blockType.startsWith("door")) {
+          return;
+        }
+
         if (newBlock && newBlock.blockType) {
           this.createActionPlaneBlock(position, newBlock.blockType);
         } else {

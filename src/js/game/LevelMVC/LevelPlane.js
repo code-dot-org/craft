@@ -80,12 +80,42 @@ module.exports = class LevelPlane extends Array {
   * Changes the block at a desired position to the desired block.
   * Important note: This is the cornerstone of block placing/destroying.
   */
-  setBlockAt(position, block, force = false) {
+  setBlockAt(position, block, force = false, direction = null) {
     this[this.coordinatesToIndex(position)] = block;
+    let offset = [0,0];
+
+    // Direction will ever only not be null if we're calling this as a
+    // function of player movement.
+    switch (direction) {
+      case 0: {
+        offset[1] = -1;
+        break;
+      }
+      case 1: {
+        offset[0] = 1;
+        break;
+      }
+      case 2: {
+        offset[1] = 1;
+        break;
+      }
+      case 3: {
+        offset[0] = -1;
+        break;
+      }
+    }
+
+    // This will either be the pos the player is leaving or entering, depending on situation
+    let positionInQuestion = [this.levelModel.player.position[0] + offset[0], this.levelModel.player.position[1] + offset[1]];
+    let wasOnADoor = false;
+    // If the questionable position was a door, we want to do a few things differently.
+    if (this[this.coordinatesToIndex(positionInQuestion)].blockType === "doorIron") {
+      wasOnADoor = true;
+    }
 
     let redstoneToRefresh = [];
     if (block.isRedstone || block.blockType === '' || block.isConnectedToRedstone) {
-      redstoneToRefresh = this.getRedstone();
+      redstoneToRefresh = this.getRedstone(wasOnADoor, positionInQuestion);
     }
 
     if (!force) {
@@ -284,7 +314,7 @@ module.exports = class LevelPlane extends Array {
   * Important note: This is what kicks off redstone charge propagation and is called
   * on place/destroy/run/load.... wherever updating charge is important.
   */
-  getRedstone() {
+  getRedstone(OnDoor = false, DoorPosition = null) {
     this.redstoneList = [];
     this.redstoneListON = [];
     for (let i = 0; i < this.length; ++i) {
@@ -311,9 +341,28 @@ module.exports = class LevelPlane extends Array {
       posToRefresh.push(this.redstoneListON[i]);
     }
 
-    //once we're done updating redstoneWire states, check to see if doors should open/close
+    // Once we're done updating redstoneWire states, check to see if doors should open/close.
+    // Do things a bit different
+    if (OnDoor) {
+      this.findDoorToAnimate(this.coordinatesToIndex(DoorPosition));
+    } else {
+      this.findDoorToAnimate(-1);
+    }
+    return posToRefresh;
+  }
+
+  positionEquivalence(lhs, rhs) {
+    if (lhs[0] === rhs[0]) {
+      if (lhs[1] === rhs[1]) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  findDoorToAnimate(notOffendingIndex) {
     for (let i = 0; i < this.length; ++i) {
-      if (this[i].blockType === "doorIron") {
+      if (this[i].blockType === "doorIron" && notOffendingIndex !== i) {
         this[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
         if (this[i].isPowered && !this[i].isOpen) {
           this.animateDoor(i, true);
@@ -322,8 +371,6 @@ module.exports = class LevelPlane extends Array {
         }
       }
     }
-
-    return posToRefresh;
   }
 
   /**
@@ -334,7 +381,7 @@ module.exports = class LevelPlane extends Array {
     let player = this.levelModel.player;
     this.levelModel.controller.levelView.setSelectionIndicatorPosition(this.indexToCoordinates(index)[0], this.indexToCoordinates(index)[1]);
     this.levelModel.controller.audioPlayer.play("doorOpen");
-    // if it's not walable, then open otherwise, close
+    // If it's not walable, then open otherwise, close.
     const canOpen = !this[index].isWalkable;
     this.levelModel.controller.levelView.playDoorAnimation(this.indexToCoordinates(index), canOpen, () => {
       this[index].isWalkable = !this[index].isWalkable;
@@ -394,7 +441,9 @@ module.exports = class LevelPlane extends Array {
   powerCheck(position) {
     let amIPowered = false;
     this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
-      if (this[this.coordinatesToIndex(orthogonalPosition)].isRedstone && this[this.coordinatesToIndex(orthogonalPosition)].isPowered) {
+      if ((this[this.coordinatesToIndex(orthogonalPosition)].isRedstone &&
+      this[this.coordinatesToIndex(orthogonalPosition)].isPowered) ||
+      this[this.coordinatesToIndex(orthogonalPosition)].isRedstoneBattery) {
         amIPowered = true;
       }
     });
