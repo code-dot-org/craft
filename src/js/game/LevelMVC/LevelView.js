@@ -128,10 +128,22 @@ module.exports = class LevelView {
       "railsSouth": ["blocks", "Rails_Vertical", -13, -0],
       "railsNorthSouth": ["blocks", "Rails_Vertical", -13, -0],
 
-      "railsUnpoweredHorizontal": ["blocks", "Rails_UnpoweredHorizontal", -13, 0],
-      "railsUnpoweredVertical": ["blocks", "Rails_UnpoweredVertical", -13, 0],
-      "railsPoweredHorizontal": ["blocks", "Rails_PoweredHorizontal", -13, 0],
-      "railsPoweredVertical": ["blocks", "Rails_PoweredVertical", -13, 0],
+      "railsUnpowered": ["blocks", "Rails_UnpoweredVertical", -13, 0],
+      "railsUnpoweredNorth": ["blocks", "Rails_UnpoweredVertical", -13, 0],
+      "railsUnpoweredSouth": ["blocks", "Rails_UnpoweredVertical", -13, 0],
+      "railsUnpoweredNorthSouth": ["blocks", "Rails_UnpoweredVertical", -13, 0],
+      "railsUnpoweredEast": ["blocks", "Rails_UnpoweredHorizontal", -13, 0],
+      "railsUnpoweredWest": ["blocks", "Rails_UnpoweredHorizontal", -13, 0],
+      "railsUnpoweredEastWest": ["blocks", "Rails_UnpoweredHorizontal", -13, 0],
+
+      "railsPowered": ["blocks", "Rails_PoweredVertical", -13, 0],
+      "railsPoweredNorth": ["blocks", "Rails_PoweredVertical", -13, 0],
+      "railsPoweredSouth": ["blocks", "Rails_PoweredVertical", -13, 0],
+      "railsPoweredNorthSouth": ["blocks", "Rails_PoweredVertical", -13, 0],
+      "railsPoweredEast": ["blocks", "Rails_PoweredHorizontal", -13, 0],
+      "railsPoweredWest": ["blocks", "Rails_PoweredHorizontal", -13, 0],
+      "railsPoweredEastWest": ["blocks", "Rails_PoweredHorizontal", -13, 0],
+
       "railsRedstoneTorch": ["blocks", "Rails_RedstoneTorch", -12, 9],
 
       "redstoneWire": ["blocks", "redstone_dust_dot_off", -13, 0],

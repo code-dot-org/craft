@@ -15,11 +15,18 @@ const connectionName = function (connection) {
   }
 };
 
-const ConnectionPriority = [
+const RailConnectionPriority = [
   [], [North], [South], [North, South],
   [East], [North, East], [South, East], [South, East],
   [West], [North, West], [South, West], [South, West],
   [East, West], [North, East], [South, East], [North, East],
+];
+
+const PoweredRailConnectionPriority = [
+  [], [North], [South], [North, South],
+  [East], [East, West], [East, West], [East, West],
+  [West], [East, West], [East, West], [East, West],
+  [East, West], [East, West], [East, West], [East, West],
 ];
 
 module.exports = class LevelPlane extends Array {
@@ -166,9 +173,18 @@ module.exports = class LevelPlane extends Array {
       return a || b;
     });
 
-    [block.connectionA, block.connectionB] = ConnectionPriority[mask];
+    let powerState = '';
+    let priority = RailConnectionPriority;
+    if (block.isConnectedToRedstone) {
+      powerState = 'Unpowered';
+      priority = PoweredRailConnectionPriority;
+    }
 
-    block.blockType = `rails${connectionName(block.connectionA)}${connectionName(block.connectionB)}`;
+    // Look up what type of connection to create, based on the surrounding tracks.
+    [block.connectionA, block.connectionB] = priority[mask];
+    const variant = connectionName(block.connectionA) + connectionName(block.connectionB);
+
+    block.blockType = `rails${powerState}${variant}`;
 
     if (updateTouching) {
       this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
