@@ -1256,6 +1256,7 @@ class GameController {
         this.levelModel.player.updateHidingBlock(this.levelModel.player.position);
         this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, blockTypeAtPosition, () => {
           if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {
+            // Special 'minecart' level places a mix of regular and powered tracks, depending on location.
             if (this.levelModel.player.position[1] < 7) {
               blockType = "railsUnpoweredVertical";
             } else {
