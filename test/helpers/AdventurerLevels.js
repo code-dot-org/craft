@@ -172,7 +172,7 @@ module.exports = {
         "", "", "", "railsUnpoweredNorthSouth", "", "", "", "", "", "",
         "", "", "", "railsUnpoweredNorthSouth", "", "", "", "", "", "",
         "", "", "", "railsUnpoweredNorthSouth", "", "", "", "", "", "",
-        "", "", "", "railsNorthEast", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest",
+        "", "", "", "railsNorthEast", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest", "railsWest",
         "", "", "", "", "", "", "", "", "", "",
         "", "", "", "", "", "", "", "", "", "",
       ]),
