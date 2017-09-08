@@ -1255,7 +1255,6 @@ class GameController {
       if (blockType !== "cropWheat" || this.levelModel.groundPlane.getBlockAt((this.levelModel.player.position)).blockType === "farmlandWet") {
         this.levelModel.player.updateHidingBlock(this.levelModel.player.position);
         this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, blockTypeAtPosition, () => {
-          let force = false;
           if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {
             if (this.levelModel.player.position[1] < 7) {
               blockType = "railsUnpoweredVertical";
@@ -1263,7 +1262,7 @@ class GameController {
               blockType = "rails";
             }
           }
-          this.levelModel.placeBlock(blockType, force);
+          this.levelModel.placeBlock(blockType);
 
           this.levelModel.computeShadingPlane();
           this.levelModel.computeFowPlane();

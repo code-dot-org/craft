@@ -781,7 +781,7 @@ module.exports = class LevelModel {
     this.moveForward();
   }
 
-  placeBlock(blockType, force = false) {
+  placeBlock(blockType) {
     const position = this.player.position;
     let shouldPlace = false;
     let placedBlock = null;
@@ -799,7 +799,7 @@ module.exports = class LevelModel {
     if (shouldPlace === true) {
       var block = new LevelBlock(blockType);
 
-      placedBlock = this.actionPlane.setBlockAt(position, block, force);
+      placedBlock = this.actionPlane.setBlockAt(position, block);
       this.player.isOnBlock = !block.isWalkable;
     }
 
