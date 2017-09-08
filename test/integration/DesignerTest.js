@@ -32,6 +32,7 @@ test('Designer 2: Four Chicken Move', t => {
   attempt('designer02', api => new Promise(resolve => {
     api.onEventTriggered(null, 'chicken', 2, event => {
       api.repeat(null, () => {
+        api.drop(null, 'diamond', event.targetIdentifier);
         api.moveForward(null, event.targetIdentifier);
         api.turnLeft(null, event.targetIdentifier);
       }, -1, event.targetIdentifier);
