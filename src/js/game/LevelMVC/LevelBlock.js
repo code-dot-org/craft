@@ -5,13 +5,16 @@ module.exports = class LevelBlock {
     // Default values apply to simple, action-plane destroyable blocks
     this.isEntity = false;
     this.isWalkable = false;
-    this.isDeadly = false;
     this.isPlacable = false; // whether another block can be placed in this block's spot
     this.isDestroyable = true;
     this.isUsable = true;
     this.isEmpty = false;
     this.isEmissive = false;
     this.isTransparent = false;
+    this.isRedstone = false;
+    this.isPowered = false;
+    this.isConnectedToRedstone = false;
+    this.isRedstoneBattery = false;
 
     if (blockType === "") {
       this.isWalkable = true;
@@ -30,8 +33,13 @@ module.exports = class LevelBlock {
       this.isEntity = true;
       this.isWalkable = true;
       this.isUsable = true;
-      this.isDestroyable = false;
+      this.isDestroyable = true;
       this.isTransparent = true;
+      this.isRail = blockType !== "railsRedstoneTorch";
+      this.isConnectedToRedstone = blockType === "railsRedstoneTorch";
+      this.isRedstoneBattery = blockType === "railsRedstoneTorch";
+      this.connectionA = undefined;
+      this.connectionB = undefined;
     }
 
     if (blockType === "sheep") {
@@ -55,7 +63,6 @@ module.exports = class LevelBlock {
     if (blockType === "lava") {
       this.isEmissive = true;
       this.isWalkable = true;
-      this.isDeadly = true;
       this.isPlacable = true;
     }
 
@@ -92,6 +99,25 @@ module.exports = class LevelBlock {
       this.isUsable = true;
       this.isDestroyable = false;
       this.isTransparent = true;
+    }
+
+    if (blockType.startsWith("redstoneWire")) {
+      this.isEntity = true;
+      this.isWalkable = true;
+      this.isUsable = true;
+      this.isDestroyable = true;
+      this.isTransparent = true;
+      this.isRedstone = true;
+    }
+
+    if (blockType.startsWith("pressurePlate")) {
+      this.isEntity = true;
+      this.isWalkable = true;
+      this.isUsable = true;
+      this.isDestroyable = false;
+      this.isTransparent = true;
+      this.isConnectedToRedstone = true;
+      this.isRedstoneBattery = blockType === 'pressurePlateUp' ? false : true;
     }
   }
 

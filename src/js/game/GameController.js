@@ -8,8 +8,9 @@ const LevelModel = require("./LevelMVC/LevelModel.js");
 const LevelView = require("./LevelMVC/LevelView.js");
 const LevelEntity = require("./LevelMVC/LevelEntity.js");
 const AssetLoader = require("./LevelMVC/AssetLoader.js");
+const LevelBlock = require("./LevelMVC/LevelBlock.js");
 
-import * as CodeOrgAPI from "./API/CodeOrgAPI.js";
+const CodeOrgAPI = require("./API/CodeOrgAPI.js");
 
 var GAME_WIDTH = 400;
 var GAME_HEIGHT = 400;
@@ -47,6 +48,7 @@ class GameController {
      * @property {Phaser.Game}
      */
     this.game = new Phaser.Game({
+      forceSetTimeOut: gameControllerConfig.forceSetTimeOut,
       width: GAME_WIDTH,
       height: GAME_HEIGHT,
       renderer: Phaser.CANVAS,
@@ -131,6 +133,7 @@ class GameController {
     this.timeoutResult = levelConfig.timeoutResult;
     this.onDayCallback = levelConfig.onDayCallback;
     this.onNightCallback = levelConfig.onNightCallback;
+
     this.game.state.start('levelRunner');
   }
 
@@ -159,6 +162,18 @@ class GameController {
     this.score = 0;
     if (this.useScore) {
       this.updateScore();
+    }
+
+    if (!this.levelData.isEventLevel) {
+      this.events.push(event => {
+        if (event.eventType === EventType.WhenUsed && event.targetType === 'sheep') {
+          this.codeOrgAPI.drop(null, 'wool', event.targetIdentifier);
+        }
+        if (event.eventType === EventType.WhenTouched && event.targetType === 'creeper') {
+          this.codeOrgAPI.flashEntity(null, event.targetIdentifier);
+          this.codeOrgAPI.explodeEntity(null, event.targetIdentifier);
+        }
+      });
     }
 
     this.initializeCommandRecord();
@@ -206,13 +221,10 @@ class GameController {
         x: -450, alpha: 0.5
       }, this.timeout, Phaser.Easing.Linear.None);
 
-      tween.start();
-      tween = this.levelView.addResettableTween().to({
-      }, this.timeout, Phaser.Easing.Linear.None);
-
       tween.onComplete.add(() => {
         this.endLevel(this.timeoutResult(this.levelModel));
       });
+
       tween.start();
     }
   }
@@ -712,6 +724,12 @@ class GameController {
   }
 
   moveDirection(commandQueueItem, direction) {
+    let isMovingOffOf = this.levelModel.isEntityOnBlocktype("Player", "pressurePlateDown");
+    if (isMovingOffOf) {
+      let position = this.levelModel.player.position;
+      let block = new LevelBlock('pressurePlateUp');
+      this.levelModel.actionPlane.setBlockAt(position, block);
+    }
     let target = commandQueueItem.target;
     if (!this.isType(target)) {
       // apply to all entities
@@ -734,6 +752,12 @@ class GameController {
         entities[i].addCommand(callbackCommand, commandQueueItem.repeat);
       }
       commandQueueItem.succeeded();
+    }
+    let isMovingOnTo = this.levelModel.isEntityOnBlocktype("Player", "pressurePlateUp");
+    if (isMovingOnTo) {
+      let position = this.levelModel.player.position;
+      let block = new LevelBlock('pressurePlateDown');
+      this.levelModel.actionPlane.setBlockAt(position, block);
     }
   }
 
@@ -906,7 +930,7 @@ class GameController {
     if (!this.isType(target)) {
       let entity = this.getEntity(target);
       this.addCommandRecord("wait", entity.type, commandQueueItem.repeat);
-      setTimeout(() => { commandQueueItem.succeeded(); }, time * 1000);
+      setTimeout(() => { commandQueueItem.succeeded(); }, time * 1000 / this.tweenTimeScale);
     } else {
       let entities = this.getEntities(target);
       for (let i = 0; i < entities.length; i++) {
@@ -1096,7 +1120,7 @@ class GameController {
     let player = this.levelModel.player;
     // if there is a destroyable block in front of the player
     if (this.levelModel.canDestroyBlockForward()) {
-      let block = this.levelModel.destroyBlockForward();
+      let block = this.levelModel.actionPlane.getBlockAt(this.levelModel.getMoveForwardPosition(player));
 
       if (block !== null) {
         let destroyPosition = this.levelModel.getMoveForwardPosition(player);
@@ -1125,7 +1149,6 @@ class GameController {
               blockType = "planksSpruce";
               break;
           }
-
           this.levelView.playDestroyBlockAnimation(player.position, player.facing, destroyPosition, blockType, () => {
             commandQueueItem.succeeded();
           });
@@ -1162,8 +1185,6 @@ class GameController {
       return;
     }
     let block = this.levelModel.actionPlane[this.levelModel.yToIndex(position[1]) + position[0]];
-    // clear the block in level model (block info in 2d grid)
-    this.levelModel.destroyBlock(position);
 
     if (block !== null && block !== undefined) {
       let destroyPosition = position;
@@ -1206,13 +1227,9 @@ class GameController {
         }
       }
     }
-  }
 
-
-  canUseTints() {
-    // TODO(bjordan): Remove
-    // all browsers appear to work with new version of Phaser
-    return true;
+    // clear the block in level model (block info in 2d grid)
+    this.levelModel.destroyBlock(position);
   }
 
   checkTntAnimation() {
@@ -1241,16 +1258,20 @@ class GameController {
     let blockIndex = (this.levelModel.yToIndex(this.levelModel.player.position[1]) + this.levelModel.player.position[0]);
     let blockTypeAtPosition = this.levelModel.actionPlane[blockIndex].blockType;
     if (this.levelModel.canPlaceBlock()) {
-      if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {
-        blockType = this.checkRailBlock(blockType);
-      }
-
       if (blockTypeAtPosition !== "") {
         this.levelModel.destroyBlock(blockIndex);
       }
-      if (this.levelModel.placeBlock(blockType)) {
+
+      if (blockType !== "cropWheat" || this.levelModel.groundPlane.getBlockAt((this.levelModel.player.position)).blockType === "farmlandWet") {
         this.levelModel.player.updateHidingBlock(this.levelModel.player.position);
         this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, blockTypeAtPosition, () => {
+          let force = false;
+          if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {
+            blockType = this.checkRailBlock(blockType);
+            force = true;
+          }
+          this.levelModel.placeBlock(blockType, force);
+
           this.levelModel.computeShadingPlane();
           this.levelModel.computeFowPlane();
           this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
@@ -1315,7 +1336,7 @@ class GameController {
       placementPlane,
       soundEffect = () => { };
 
-    if (!this.levelModel.canPlaceBlockForward()) {
+    if (!this.levelModel.canPlaceBlockForward(blockType)) {
       this.levelView.playPunchAirAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.position, () => {
         this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
         commandQueueItem.succeeded();
@@ -1328,8 +1349,11 @@ class GameController {
     if (this.levelModel.isBlockOfTypeOnPlane(forwardPosition, "lava", placementPlane)) {
       soundEffect = () => this.levelView.audioPlayer.play("fizz");
     }
-    this.levelModel.placeBlockForward(blockType, placementPlane);
-    this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.getMoveForwardPosition(), placementPlane, blockType, () => {
+
+    this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, forwardPosition, () => {
+      this.levelModel.placeBlockForward(blockType, placementPlane);
+      this.levelView.refreshGroundPlane();
+
       this.levelModel.computeShadingPlane();
       this.levelModel.computeFowPlane();
       this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
@@ -1400,7 +1424,7 @@ class GameController {
               }
             }
             if (!player.isOnBlock && wasOnBlock) {
-              this.levelView.playPlayerJumpDownVerticalAnimation(player.position, player.facing);
+              this.levelView.playPlayerJumpDownVerticalAnimation(player.facing, player.position);
             }
             this.levelModel.computeShadingPlane();
             this.levelModel.computeFowPlane();

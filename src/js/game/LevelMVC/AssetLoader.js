@@ -50,6 +50,11 @@ module.exports = class AssetLoader {
         pngPath: `${this.assetRoot}images/DevAlex.png`,
         jsonPath: `${this.assetRoot}images/DevAlex.json`
       },
+      playerAgent: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/Agent.png`,
+        jsonPath: `${this.assetRoot}images/Agent.json`
+      },
       AO: {
         type: 'atlasJSON',
         pngPath: `${this.assetRoot}images/AO.png`,
@@ -613,6 +618,9 @@ module.exports = class AssetLoader {
       ],
       playerAlexEvents: [
         'playerAlexEvents'
+      ],
+      playerAgent: [
+        'playerAgent'
       ],
       grass: [
         'tallGrass'

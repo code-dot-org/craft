@@ -55,7 +55,7 @@ module.exports = class BaseEntity {
             });
 
             tween.start();
-        }, 50);
+        }, 50 / this.controller.tweenTimeScale);
         // smooth movement using tween
 
     }
@@ -416,8 +416,8 @@ module.exports = class BaseEntity {
                     frontEntity.queue.endPushHighPriorityCommands();
                 }
                 commandQueueItem.succeeded();
-            }, 300, entity.controller, frontEntity, entity);
-        }, 200, this);
+            }, 300 / this.controller.tweenTimeScale, entity.controller, frontEntity, entity);
+        }, 200 / this.controller.tweenTimeScale, this);
     }
 
     pushBack(commandQueueItem, pushDirection, movementTime, completionHandler) {
@@ -437,7 +437,7 @@ module.exports = class BaseEntity {
                     if (completionHandler !== undefined) {
                         completionHandler(this);
                     }
-                }, movementTime);
+                }, movementTime  / this.controller.tweenTimeScale);
             });
             tween.start();
         } else {
@@ -456,7 +456,7 @@ module.exports = class BaseEntity {
             setTimeout(() => {
                 this.healthPoint--;
                 callbackCommand.succeeded();
-            }, 1500);
+            }, 1500 / this.controller.tweenTimeScale);
         } else {
             this.healthPoint--;
             this.sprite.animations.stop(null, true);
@@ -469,7 +469,7 @@ module.exports = class BaseEntity {
                     this.controller.levelEntity.destroyEntity(this.identifier);
                 });
                 tween.start();
-            }, 1500);
+            }, 1500 / this.controller.tweenTimeScale);
         }
     }
 
