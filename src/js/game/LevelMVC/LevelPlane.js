@@ -105,8 +105,11 @@ module.exports = class LevelPlane extends Array {
       }
     }
 
+    let positionInQuestion = [0,0];
     // This will either be the pos the player is leaving or entering, depending on situation
-    let positionInQuestion = [this.levelModel.player.position[0] + offset[0], this.levelModel.player.position[1] + offset[1]];
+    if (this.levelModel) {
+      positionInQuestion = [this.levelModel.player.position[0] + offset[0], this.levelModel.player.position[1] + offset[1]];
+    }
     let wasOnADoor = false;
     // If the questionable position was a door, we want to do a few things differently.
     if (this[this.coordinatesToIndex(positionInQuestion)].blockType === "doorIron") {
