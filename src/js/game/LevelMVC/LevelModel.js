@@ -17,11 +17,11 @@ module.exports = class LevelModel {
     this.railMap =
       ["", "", "", "", "", "", "", "", "", "",
         "", "", "", "", "", "", "", "", "", "",
-        "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
+        "", "", "", "railsUnpoweredSouth", "", "", "", "", "", "",
+        "", "", "", "railsUnpoweredNorthSouth", "", "", "", "", "", "",
+        "", "", "", "railsUnpoweredNorthSouth", "", "", "", "", "", "",
+        "", "", "", "railsUnpoweredNorthSouth", "", "", "", "", "", "",
+        "", "", "", "railsUnpoweredNorthSouth", "", "", "", "", "", "",
         "", "", "", "railsNorthEast", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest",
         "", "", "", "", "", "", "", "", "", "",
         "", "", "", "", "", "", "", "", "", ""];

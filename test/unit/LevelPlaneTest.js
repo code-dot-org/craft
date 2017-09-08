@@ -151,6 +151,51 @@ test('rail connections: T-junctions', t => {
   t.end();
 });
 
+// Before:              After:
+// ║   ║     ║          ═════     ║
+//   ║         ║          ║       ═══
+//           ║                    ║
+//   ║       ║            ║       ║
+// ║   ║   ║            ═════   ═══
+//           ║                    ║
+//
+test.only('rail connections: unpowered T-junctions', t => {
+  const data = [
+    'rails',  '',       'rails',  '',       '',       'rails',  '',
+    '',       'rails',  '',       '',       '',       '',       'rails',
+    '',       '',       '',       '',       '',       'rails',  '',
+    '',       'rails',  '',       '',       '',       'rails',  '',
+    'rails',  '',       'rails',  '',       'rails',  '',       '',
+    '',       '',       '',       '',       '',       'rails',  '',
+  ];
+  const plane = new LevelPlane(data, 7, 6, true, null);
+
+  t.equal(plane.setBlockAt([1, 0], new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
+  t.equal(plane.setBlockAt([5, 1], new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
+  t.equal(plane.setBlockAt([1, 4], new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
+  t.equal(plane.setBlockAt([5, 4], new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
+
+  const expected = [
+    'railsE',  'railsUEW','railsW',  '',        '',        'rails',   '',
+    '',        'rails',   '',        '',        '',        'railsUEW','railsW',
+    '',        '',        '',        '',        '',        'railsS',  '',
+    '',        'rails',   '',        '',        '',        'railsN',  '',
+    'railsE',  'railsUEW','railsW',  '',        'railsE',  'railsUEW','',
+    '',        '',        '',        '',        '',        'rails',   '',
+  ].map(rail => {
+    return rail.replace('U', 'Unpowered').replace('N', 'North').replace('S', 'South').replace('E', 'East').replace('W', 'West');
+  });
+  expected.width = undefined;
+  expected.height = undefined;
+  expected.levelModel = null;
+  expected.redstoneList = [];
+  expected.redstoneListON = [];
+
+  t.deepEqual(plane.map(block => block.blockType), expected);
+
+  t.end();
+});
+
 // Place four tracks in a circle.
 // 1:      2:     3:     4:
 //   ║     ═══    ╔══    ╔═╗
