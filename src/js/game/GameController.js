@@ -764,7 +764,7 @@ class GameController {
       this.levelModel.actionPlane.setBlockAt(position, block, false, direction);
     } else {
       if (OutOfDoor) {
-        this.levelModel.actionPlane.animateDoor(this.levelModel.actionPlane.coordinatesToIndex(oldPlayerPosition, false));
+        this.levelView.animateDoor(this.levelModel.actionPlane.coordinatesToIndex(oldPlayerPosition, false));
       }
     }
   }

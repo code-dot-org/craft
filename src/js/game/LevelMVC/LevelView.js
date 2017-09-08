@@ -1997,4 +1997,22 @@ module.exports = class LevelView {
     this.resettableTweens.push(tween);
     return tween;
   }
+
+  /**
+  * Animate Door and set the status
+  */
+  animateDoor(index, Open) {
+    this.controller.levelModel.actionPlane[index].isOpen = Open;
+    let player = this.controller.levelModel.player;
+    this.setSelectionIndicatorPosition(this.controller.levelModel.actionPlane.indexToCoordinates(index)[0], this.controller.levelModel.actionPlane.indexToCoordinates(index)[1]);
+    this.controller.audioPlayer.play("doorOpen");
+    // If it's not walable, then open otherwise, close.
+    const canOpen = !this.controller.levelModel.actionPlane[index].isWalkable;
+    this.playDoorAnimation(this.controller.levelModel.actionPlane.indexToCoordinates(index), canOpen, () => {
+      this.controller.levelModel.actionPlane[index].isWalkable = !this.controller.levelModel.actionPlane[index].isWalkable;
+      this.playIdleAnimation(player.position, player.facing, player.isOnBlock);
+      this.setSelectionIndicatorPosition(player.position[0], player.position[1]);
+    });
+  }
+
 };

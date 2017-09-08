@@ -363,34 +363,20 @@ module.exports = class LevelPlane extends Array {
     return false;
   }
 
+  /**
+  * Find a door to animate
+  */
   findDoorToAnimate(notOffendingIndex) {
     for (let i = 0; i < this.length; ++i) {
       if (this[i].blockType === "doorIron" && notOffendingIndex !== i) {
         this[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
         if (this[i].isPowered && !this[i].isOpen) {
-          this.animateDoor(i, true);
+          this.levelModel.controller.levelView.animateDoor(i, true);
         } else if (!this[i].isPowered && this[i].isOpen) {
-          this.animateDoor(i, false);
+          this.levelModel.controller.levelView.animateDoor(i, false);
         }
       }
     }
-  }
-
-  /**
-  * Animate Door and set the status
-  */
-  animateDoor(index, Open) {
-    this[index].isOpen = Open;
-    let player = this.levelModel.player;
-    this.levelModel.controller.levelView.setSelectionIndicatorPosition(this.indexToCoordinates(index)[0], this.indexToCoordinates(index)[1]);
-    this.levelModel.controller.audioPlayer.play("doorOpen");
-    // If it's not walable, then open otherwise, close.
-    const canOpen = !this[index].isWalkable;
-    this.levelModel.controller.levelView.playDoorAnimation(this.indexToCoordinates(index), canOpen, () => {
-      this[index].isWalkable = !this[index].isWalkable;
-      this.levelModel.controller.levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
-      this.levelModel.controller.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]);
-    });
   }
 
   /**
