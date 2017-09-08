@@ -14,18 +14,6 @@ module.exports = class LevelModel {
     this.controller = controller;
     this.player = {};
 
-    this.railMap =
-      ["", "", "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "", "", "",
-        "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsNorthEast", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest",
-        "", "", "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "", "", ""];
-
     this.initialLevelData = Object.create(levelData);
 
     this.reset();
