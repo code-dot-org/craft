@@ -118,7 +118,13 @@ module.exports = class LevelPlane extends Array {
 
     let redstoneToRefresh = [];
     if (block.isRedstone || block.blockType === '' || block.isConnectedToRedstone) {
-      redstoneToRefresh = this.getRedstone(wasOnADoor, positionInQuestion);
+      redstoneToRefresh = this.getRedstone();
+      // Once we're done updating redstoneWire states, check to see if doors should open/close.
+      if (wasOnADoor) {
+        this.findDoorToAnimate(this.coordinatesToIndex(positionInQuestion));
+      } else {
+        this.findDoorToAnimate(-1);
+      }
     }
 
     if (!force) {
@@ -317,7 +323,7 @@ module.exports = class LevelPlane extends Array {
   * Important note: This is what kicks off redstone charge propagation and is called
   * on place/destroy/run/load.... wherever updating charge is important.
   */
-  getRedstone(OnDoor = false, DoorPosition = null) {
+  getRedstone() {
     this.redstoneList = [];
     this.redstoneListON = [];
     for (let i = 0; i < this.length; ++i) {
@@ -344,23 +350,7 @@ module.exports = class LevelPlane extends Array {
       posToRefresh.push(this.redstoneListON[i]);
     }
 
-    // Once we're done updating redstoneWire states, check to see if doors should open/close.
-    // Do things a bit different
-    if (OnDoor) {
-      this.findDoorToAnimate(this.coordinatesToIndex(DoorPosition));
-    } else {
-      this.findDoorToAnimate(-1);
-    }
     return posToRefresh;
-  }
-
-  positionEquivalence(lhs, rhs) {
-    if (lhs[0] === rhs[0]) {
-      if (lhs[1] === rhs[1]) {
-        return true;
-      }
-    }
-    return false;
   }
 
   /**

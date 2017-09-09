@@ -1181,7 +1181,7 @@ module.exports = class LevelView {
 
         //we don't want to refresh doors. They're not destroyable, and refreshing
         //will lead to bad animation states
-        if (newBlock.blockType.startsWith("door")) {
+        if (newBlock && this.isDoor(newBlock)) {
           return;
         }
 
@@ -1194,6 +1194,10 @@ module.exports = class LevelView {
         }
       }
     });
+  }
+
+  isDoor(block) {
+    return block.blockType.startsWith("door");
   }
 
   updateShadingPlane(shadingData) {
@@ -2001,14 +2005,13 @@ module.exports = class LevelView {
   /**
   * Animate Door and set the status
   */
-  animateDoor(index, Open) {
-    this.controller.levelModel.actionPlane[index].isOpen = Open;
+  animateDoor(index, open) {
+    this.controller.levelModel.actionPlane[index].isOpen = open;
     let player = this.controller.levelModel.player;
     this.setSelectionIndicatorPosition(this.controller.levelModel.actionPlane.indexToCoordinates(index)[0], this.controller.levelModel.actionPlane.indexToCoordinates(index)[1]);
     this.controller.audioPlayer.play("doorOpen");
     // If it's not walable, then open otherwise, close.
-    const canOpen = !this.controller.levelModel.actionPlane[index].isWalkable;
-    this.playDoorAnimation(this.controller.levelModel.actionPlane.indexToCoordinates(index), canOpen, () => {
+    this.playDoorAnimation(this.controller.levelModel.actionPlane.indexToCoordinates(index), open, () => {
       this.controller.levelModel.actionPlane[index].isWalkable = !this.controller.levelModel.actionPlane[index].isWalkable;
       this.playIdleAnimation(player.position, player.facing, player.isOnBlock);
       this.setSelectionIndicatorPosition(player.position[0], player.position[1]);

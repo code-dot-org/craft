@@ -730,7 +730,7 @@ class GameController {
       let block = new LevelBlock('pressurePlateUp');
       this.levelModel.actionPlane.setBlockAt(position, block, false, direction);
     }
-    let OutOfDoor = this.levelModel.isEntityOnBlocktype("Player", "doorIron");
+    let outOfDoor = this.levelModel.isEntityOnBlocktype("Player", "doorIron");
     let oldPlayerPosition = this.levelModel.player.position;
 
     let target = commandQueueItem.target;
@@ -763,7 +763,7 @@ class GameController {
       direction = (direction + 2) % 4;
       this.levelModel.actionPlane.setBlockAt(position, block, false, direction);
     } else {
-      if (OutOfDoor) {
+      if (outOfDoor) {
         this.levelView.animateDoor(this.levelModel.actionPlane.coordinatesToIndex(oldPlayerPosition, false));
       }
     }
