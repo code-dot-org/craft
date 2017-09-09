@@ -15,11 +15,18 @@ const connectionName = function (connection) {
   }
 };
 
-const ConnectionPriority = [
+const RailConnectionPriority = [
   [], [North], [South], [North, South],
   [East], [North, East], [South, East], [South, East],
   [West], [North, West], [South, West], [South, West],
   [East, West], [North, East], [South, East], [North, East],
+];
+
+const PoweredRailConnectionPriority = [
+  [], [North], [South], [North, South],
+  [East], [East, West], [East, West], [East, West],
+  [West], [East, West], [East, West], [East, West],
+  [East, West], [East, West], [East, West], [East, West],
 ];
 
 module.exports = class LevelPlane extends Array {
@@ -80,7 +87,7 @@ module.exports = class LevelPlane extends Array {
   * Changes the block at a desired position to the desired block.
   * Important note: This is the cornerstone of block placing/destroying.
   */
-  setBlockAt(position, block, force = false, direction = null) {
+  setBlockAt(position, block, direction = null) {
     this[this.coordinatesToIndex(position)] = block;
     let offset = [0,0];
 
@@ -127,9 +134,7 @@ module.exports = class LevelPlane extends Array {
       }
     }
 
-    if (!force) {
-      this.determineRailType(position, true);
-    }
+    this.determineRailType(position, true);
 
     if (this.levelModel) {
       let positionAndTouching = this.getOrthogonalPositions(position).concat([position]);
@@ -205,9 +210,18 @@ module.exports = class LevelPlane extends Array {
       return a || b;
     });
 
-    [block.connectionA, block.connectionB] = ConnectionPriority[mask];
+    let powerState = '';
+    let priority = RailConnectionPriority;
+    if (block.isConnectedToRedstone) {
+      powerState = 'Unpowered';
+      priority = PoweredRailConnectionPriority;
+    }
 
-    block.blockType = `rails${connectionName(block.connectionA)}${connectionName(block.connectionB)}`;
+    // Look up what type of connection to create, based on the surrounding tracks.
+    [block.connectionA, block.connectionB] = priority[mask];
+    const variant = connectionName(block.connectionA) + connectionName(block.connectionB);
+
+    block.blockType = `rails${powerState}${variant}`;
 
     if (updateTouching) {
       this.getOrthogonalPositions(position).forEach(orthogonalPosition => {

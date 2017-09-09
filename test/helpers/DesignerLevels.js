@@ -105,4 +105,55 @@ module.exports = {
       return cowOnGrassCount >= 2;
     },
   },
+  designer07: {
+    isEventLevel: true,
+    isDaytime: false,
+    groundPlane: ["stone", "stone", "stone", "stone", "lava", "lava", "stone", "grass", "grass", "grass", "stone", "stone", "stone", "stone", "lava", "lava", "stone", "grass", "grass", "grass", "stone", "stone", "stone", "stone", "stone", "lava", "stone", "grass", "grass", "grass", "gravel", "stone", "stone", "stone", "stone", "stone", "stone", "grass", "grass", "grass", "stone", "stone", "gravel", "gravel", "gravel", "gravel", "gravel", "dirtCoarse", "dirtCoarse", "dirtCoarse", "stone", "gravel", "gravel", "stone", "gravel", "gravel", "gravel", "dirtCoarse", "dirtCoarse", "dirtCoarse", "gravel", "gravel", "gravel", "stone", "stone", "stone", "stone", "grass", "grass", "grass", "stone", "gravel", "stone", "stone", "stone", "stone", "stone", "grass", "grass", "grass", "lava", "stone", "stone", "stone", "stone", "stone", "stone", "grass", "grass", "grass", "lava", "lava", "stone", "gravel", "stone", "stone", "stone", "grass", "grass", "grass"],
+    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "lavaPop", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "tallGrass", "", "lavaPop", "", "", "", "", "", "", "", ""],
+    actionPlane: ["stone", "stone", "", "", "stone", "stone", "stone", "oreCoal", "stone", "stone", "oreCoal", "stone", "", "", "", "", "stone", "stone", "stone", "", "stone", "", "", "", "", "", "stone", "stone", "", "treeBirch", "", "", "", "", "", "", "stone", "stone", "", "", "", "", "", "", "", "", "stone", "", "", "", "", "", "", "", "", "", "stone", "", "", "", "", "", "", "", "", "", "stone", "stone", "", "", "", "", "", "", "", "stone", "stone", "stone", "", "", "", "", "", "", "stone", "stone", "stone", "stone", "stone", "", "", "", "", "", "stone", "stone", "stone", "oreDiamond", "stone", "stone"],
+    entities: [["sheep", 8, 4, 1], ["creeper", 2, 8, 1]],
+    usePlayer: true,
+    playerStartPosition: [3, 1],
+    playerStartDirection: 2,
+    levelVerificationTimeout: -1,
+    timeoutResult: () => false,
+    verificationFunction: verificationAPI  => {
+      const successPositions = [[7, 4] , [7, 5]];
+      for (let i = 0; i < successPositions.length; i++) {
+        if (verificationAPI.isEntityAt("Player" , successPositions[i])) {
+          return true;
+        }
+      }
+    },
+  },
+  designer08: {
+    isEventLevel: true,
+    isDaytime: false,
+    groundPlane: ["grass", "dirt", "dirt", "dirt", "grass", "grass", "grass", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "grass", "grass", "grass", "grass", "grass", "dirt", "dirt", "grass", "dirt", "dirt", "bricks", "bricks", "bricks", "bricks", "bricks", "grass", "grass", "grass", "grass", "dirt", "bricks", "planksSpruce", "planksSpruce", "planksSpruce", "bricks", "grass", "grass", "grass", "grass", "grass", "bricks", "planksSpruce", "planksSpruce", "planksSpruce", "bricks", "grass", "grass", "grass", "grass", "grass", "bricks", "planksSpruce", "planksSpruce", "planksSpruce", "bricks", "grass", "grass", "grass", "grass", "grass", "bricks", "planksSpruce", "planksSpruce", "planksSpruce", "bricks", "grass", "dirt", "grass", "grass", "grass", "grass", "grass", "planksSpruce", "grass", "grass", "grass", "dirt", "grass", "grass", "grass", "grass", "grass", "gravel", "grass", "grass", "dirt", "dirt", "grass", "grass", "grass", "grass", "grass", "gravel", "grass", "dirt", "dirt", "dirt"],
+    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "tallGrass", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "tallGrass", "", "", "", "", "", "", "", "tallGrass", "", "tallGrass", "tallGrass", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+    actionPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "bricks", "bricks", "glass", "bricks", "bricks", "", "", "", "", "", "bricks", "", "", "", "bricks", "", "", "", "", "", "glass", "", "torch", "", "glass", "", "", "", "", "", "bricks", "", "", "", "bricks", "", "", "", "", "", "bricks", "bricks", "door", "bricks", "bricks", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+    entities: [["zombie", 5, 7, 1], ["ironGolem", 5, 9, 1]],
+    usePlayer: true,
+    playerStartPosition: [5, 3],
+    playerStartDirection: 2,
+    levelVerificationTimeout: -1,
+    timeoutResult: () => false,
+    verificationFunction: verificationAPI  => verificationAPI.isEntityDied("zombie", 1),
+  },
+  designer09: {
+    isEventLevel: true,
+    groundPlane: ["dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirt", "dirt", "dirt", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirt", "stone", "dirt", "dirt", "stone", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirt", "stone", "dirt", "dirt", "stone", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirt", "dirt", "dirt", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirt", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirt", "dirt", "dirtCoarse", "dirtCoarse", "dirtCoarse", "dirtCoarse"],
+    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+    actionPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "", "", "", "", "grass", "grass", "grass", "grass", "grass", "", "", "", "", "", "", "grass", "grass", "grass", "", "", "", "", "", "", "", "", "grass", "grass", "", "", "", "", "", "", "", "", "grass", "grass", "", "", "", "", "", "", "", "", "grass", "grass", "", "", "", "", "", "", "", "", "grass", "grass", "", "", "", "", "", "", "", "", "grass", "grass", "grass", "", "", "", "", "", "", "grass", "grass", "grass", "grass", "grass", "", "", "", "", "grass", "grass", "grass"],
+    usePlayer: true,
+    playerStartPosition: [4, 8],
+    playerStartDirection: 0,
+    levelVerificationTimeout: 60000,
+    timeoutResult: () => false,
+    verificationFunction: verificationAPI  => (
+      (verificationAPI.getEntityCount("all") >= 1 && !verificationAPI.isEntityTypeRunning("all")) ||
+      verificationAPI.isEntityDied("zombie") ||
+      verificationAPI.isEntityDied("creeper")
+    ),
+  },
 };

@@ -14,18 +14,6 @@ module.exports = class LevelModel {
     this.controller = controller;
     this.player = {};
 
-    this.railMap =
-      ["", "", "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "", "", "",
-        "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsNorthEast", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest",
-        "", "", "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "", "", ""];
-
     this.initialLevelData = Object.create(levelData);
 
     this.reset();
@@ -598,14 +586,6 @@ module.exports = class LevelModel {
     return allFoundObjects;
   }
 
-  getAllBorderingPlayer(blockType) {
-    return this.getAllBorderingPosition(this.player.position, blockType);
-  }
-
-  isPlayerStandingNearCreeper() {
-    return this.getAllBorderingPlayer("creeper");
-  }
-
   getMinecartTrack() {
     var track = [];
     track.push(["down", [3, 2], FacingDirection.Down, 300]);
@@ -801,7 +781,7 @@ module.exports = class LevelModel {
     this.moveForward();
   }
 
-  placeBlock(blockType, force = false) {
+  placeBlock(blockType) {
     const position = this.player.position;
     let shouldPlace = false;
     let placedBlock = null;
@@ -819,7 +799,7 @@ module.exports = class LevelModel {
     if (shouldPlace === true) {
       var block = new LevelBlock(blockType);
 
-      placedBlock = this.actionPlane.setBlockAt(position, block, force);
+      placedBlock = this.actionPlane.setBlockAt(position, block);
       this.player.isOnBlock = !block.isWalkable;
     }
 

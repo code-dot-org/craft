@@ -5,7 +5,6 @@ module.exports = class LevelBlock {
     // Default values apply to simple, action-plane destroyable blocks
     this.isEntity = false;
     this.isWalkable = false;
-    this.isDeadly = false;
     this.isPlacable = false; // whether another block can be placed in this block's spot
     this.isDestroyable = true;
     this.isUsable = true;
@@ -14,7 +13,7 @@ module.exports = class LevelBlock {
     this.isTransparent = false;
     this.isRedstone = false;
     this.isPowered = false;
-    this.isConnectedToRedstone = false;
+    this.isConnectedToRedstone = false; // can this block connect to nearby redstone wire
     this.isRedstoneBattery = false;
     this.isOpen = false;
 
@@ -38,7 +37,7 @@ module.exports = class LevelBlock {
       this.isDestroyable = true;
       this.isTransparent = true;
       this.isRail = blockType !== "railsRedstoneTorch";
-      this.isConnectedToRedstone = blockType === "railsRedstoneTorch";
+      this.isConnectedToRedstone = /^rails(RedstoneTorch|Unpowered|Powered)/.test(blockType);
       this.isRedstoneBattery = blockType === "railsRedstoneTorch";
       this.connectionA = undefined;
       this.connectionB = undefined;
@@ -65,7 +64,6 @@ module.exports = class LevelBlock {
     if (blockType === "lava") {
       this.isEmissive = true;
       this.isWalkable = true;
-      this.isDeadly = true;
       this.isPlacable = true;
     }
 
