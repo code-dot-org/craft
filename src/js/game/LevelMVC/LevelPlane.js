@@ -87,7 +87,7 @@ module.exports = class LevelPlane extends Array {
   * Changes the block at a desired position to the desired block.
   * Important note: This is the cornerstone of block placing/destroying.
   */
-  setBlockAt(position, block, force = false) {
+  setBlockAt(position, block) {
     this[this.coordinatesToIndex(position)] = block;
 
     let redstoneToRefresh = [];
@@ -95,9 +95,7 @@ module.exports = class LevelPlane extends Array {
       redstoneToRefresh = this.getRedstone();
     }
 
-    if (!force) {
-      this.determineRailType(position, true);
-    }
+    this.determineRailType(position, true);
 
     if (this.levelModel) {
       let positionAndTouching = this.getOrthogonalPositions(position).concat([position]);

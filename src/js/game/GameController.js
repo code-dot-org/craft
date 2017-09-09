@@ -1244,16 +1244,6 @@ class GameController {
     return this.specialLevelType === 'houseBuild';
   }
 
-  checkRailBlock(blockType) {
-    let checkRailBlock = this.levelModel.railMap[this.levelModel.yToIndex(this.levelModel.player.position[1]) + this.levelModel.player.position[0]];
-    if (checkRailBlock !== "") {
-      blockType = checkRailBlock;
-    } else {
-      blockType = "railsVertical";
-    }
-    return blockType;
-  }
-
   placeBlock(commandQueueItem, blockType) {
     let blockIndex = (this.levelModel.yToIndex(this.levelModel.player.position[1]) + this.levelModel.player.position[0]);
     let blockTypeAtPosition = this.levelModel.actionPlane[blockIndex].blockType;
@@ -1265,12 +1255,15 @@ class GameController {
       if (blockType !== "cropWheat" || this.levelModel.groundPlane.getBlockAt((this.levelModel.player.position)).blockType === "farmlandWet") {
         this.levelModel.player.updateHidingBlock(this.levelModel.player.position);
         this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, blockTypeAtPosition, () => {
-          let force = false;
           if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {
-            blockType = this.checkRailBlock(blockType);
-            force = true;
+            // Special 'minecart' level places a mix of regular and powered tracks, depending on location.
+            if (this.levelModel.player.position[1] < 7) {
+              blockType = "railsUnpoweredVertical";
+            } else {
+              blockType = "rails";
+            }
           }
-          this.levelModel.placeBlock(blockType, force);
+          this.levelModel.placeBlock(blockType);
 
           this.levelModel.computeShadingPlane();
           this.levelModel.computeFowPlane();
