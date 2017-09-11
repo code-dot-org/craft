@@ -436,16 +436,16 @@ test('torch charge: place block', t => {
 
 test('iron door open: place block', t => {
   const data = [
+    'redstoneWireVertical','doorIron',      '',
     'redstoneWireVertical','',      '',
-    'redstoneWireVertical','',      '',
-    'doorIron',            '',      '',
+    'doorIron',            '',      'doorIron',
   ];
   const plane = new LevelPlane(data, 3, 3, true);
 
   plane.setBlockAt([0, 0], new LevelBlock('railsRedstoneTorch'));
 
   const expected = [
-    false,false,false,
+    false,true,false,
     false,false,false,
     true,false,false,
   ];
@@ -463,16 +463,17 @@ test('iron door open: place block', t => {
 
 test('iron door close: destroy block', t => {
   const data = [
-    'railsRedstoneTorch',    '','',
+    'railsRedstoneTorch',    'doorIron','',
     'redstoneWireVerticalOn','','',
-    'doorIron',              '','',
+    'doorIron',              '','doorIron',
   ];
   const plane = new LevelPlane(data, 3, 3, true);
 
   plane.setBlockAt([0, 0], new LevelBlock(''));
+  plane.setBlockAt([2, 0], new LevelBlock('railsRedstoneTorch'));
 
   const expected = [
-    false,false,false,
+    false,true,false,
     false,false,false,
     false,false,false,
   ];
