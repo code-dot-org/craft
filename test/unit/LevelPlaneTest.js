@@ -159,7 +159,7 @@ test('rail connections: T-junctions', t => {
 // ║   ║   ║            ═════   ═══
 //           ║                    ║
 //
-test.only('rail connections: unpowered T-junctions', t => {
+test('rail connections: unpowered T-junctions', t => {
   const data = [
     'rails',  '',       'rails',  '',       '',       'rails',  '',
     '',       'rails',  '',       '',       '',       '',       'rails',
