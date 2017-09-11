@@ -410,19 +410,27 @@ module.exports = class LevelPlane extends Array {
 
     switch (this[this.coordinatesToIndex(position)].blockType) {
       case "pistonUp": {
-        this.setBlockAt(neighborPosition[0], emptyBlock, false, true);
+        if (this[this.coordinatesToIndex(neighborPosition[0])].blockType === "pistonArm") {
+          this.setBlockAt(neighborPosition[0], emptyBlock, false, true);
+        }
         break;
       }
       case "pistonDown": {
-        this.setBlockAt(neighborPosition[1], emptyBlock, false, true);
+        if (this[this.coordinatesToIndex(neighborPosition[1])].blockType === "pistonArm") {
+          this.setBlockAt(neighborPosition[1], emptyBlock, false, true);
+        }
         break;
       }
       case "pistonRight": {
-        this.setBlockAt(neighborPosition[2], emptyBlock, false, true);
+        if (this[this.coordinatesToIndex(neighborPosition[2])].blockType === "pistonArm") {
+          this.setBlockAt(neighborPosition[2], emptyBlock, false, true);
+        }
         break;
       }
       case "pistonLeft": {
-        this.setBlockAt(neighborPosition[3], emptyBlock, false, true);
+        if (this[this.coordinatesToIndex(neighborPosition[3])].blockType === "pistonArm") {
+          this.setBlockAt(neighborPosition[3], emptyBlock, false, true);
+        }
         break;
       }
     }
