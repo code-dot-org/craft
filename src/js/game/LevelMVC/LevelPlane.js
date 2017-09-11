@@ -467,12 +467,14 @@ module.exports = class LevelPlane {
   * Checking power state for objects that are powered by redstone.
   */
   powerCheck(position) {
-    return this.getOrthogonalPositions(position).some(orthogonalPosition => {
-      const block = this._data[this.coordinatesToIndex(orthogonalPosition)];
-      if (block) {
-        return (block.isRedstone && block.isPowered) || block.isRedstoneBattery;
+    let amIPowered = false;
+    this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
+      if (this[this.coordinatesToIndex(orthogonalPosition)].isRedstone && this[this.coordinatesToIndex(orthogonalPosition)].isPowered) {
+        amIPowered = true;
       }
     });
+
+    return amIPowered;
   }
 
 };
