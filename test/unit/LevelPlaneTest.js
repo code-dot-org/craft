@@ -433,3 +433,36 @@ test('torch charge: place block', t => {
 
   t.end();
 });
+
+test('piston activate: block block', t => {
+  const data = [
+    '','','grass','pistonLeft','','pistonRight','grass','',
+    '','','','redstoneWireVertical','','redstoneWireVertical','','',
+    '','','grass','redstoneWireVertical','','redstoneWireVertical','','',
+    '','','pistonUp','redstoneWireUpLeft','','redstoneWireUpRight','pistonDown','',
+    '','','','','','','grass','',
+    '','','','','','','','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true);
+
+  plane.setBlockAt([4, 2], new LevelBlock('railsRedstoneTorch'));
+
+  const expected = [
+    '','grass','pistonArm','pistonLeft','','pistonRight','pistonArm','grass',
+    '','','grass','redstoneWireVerticalOn','','redstoneWireVerticalOn','','',
+    '','','pistonArm','redstoneWireTRightOn','railsRedstoneTorch','redstoneWireTLeftOn','','',
+    '','','pistonUp','redstoneWireUpLeftOn','','redstoneWireUpRightOn','pistonDown','',
+    '','','','','','','pistonArm','',
+    '','','','','','','grass','',
+  ];
+
+  expected.width = undefined;
+  expected.height = undefined;
+  expected.levelModel = null;
+  expected.redstoneList = [];
+  expected.redstoneListON = [];
+
+  t.deepEqual(plane.map(block => block.blockType), expected);
+
+  t.end();
+});
