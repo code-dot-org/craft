@@ -603,6 +603,7 @@ module.exports = class LevelModel {
     track.push(["right", [9, 7], FacingDirection.Right, 400]);
     track.push(["right", [10, 7], FacingDirection.Right, 400]);
     track.push(["right", [11, 7], FacingDirection.Right, 400]);
+    track.push(["right", [12, 7], FacingDirection.Right, 400]);
     return track;
   }
 
