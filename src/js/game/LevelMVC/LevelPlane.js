@@ -340,12 +340,16 @@ module.exports = class LevelPlane extends Array {
         this[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
         if (this[i].isPowered) {
           this.activatePiston(this.indexToCoordinates(i));
-          this.levelModel.controller.updateFowPlane();
-          this.levelModel.controller.updateShadingPlane();
+          if (this.levelModel) {
+            this.levelModel.controller.updateFowPlane();
+            this.levelModel.controller.updateShadingPlane();
+          }
         } else if (!this[i].isPowered) {
           this.deactivatePiston(this.indexToCoordinates(i));
-          this.levelModel.controller.updateFowPlane();
-          this.levelModel.controller.updateShadingPlane();
+          if (this.levelModel) {
+            this.levelModel.controller.updateFowPlane();
+            this.levelModel.controller.updateShadingPlane();
+          }
         }
       }
     }
@@ -514,8 +518,10 @@ module.exports = class LevelPlane extends Array {
   powerCheck(position) {
     let amIPowered = false;
     this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
-      if (this[this.coordinatesToIndex(orthogonalPosition)].isRedstone && this[this.coordinatesToIndex(orthogonalPosition)].isPowered) {
-        amIPowered = true;
+      if (this[this.coordinatesToIndex(orthogonalPosition)]) {
+        if (this[this.coordinatesToIndex(orthogonalPosition)].isRedstone && this[this.coordinatesToIndex(orthogonalPosition)].isPowered) {
+          amIPowered = true;
+        }
       }
     });
 

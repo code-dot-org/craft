@@ -159,7 +159,7 @@ test('rail connections: T-junctions', t => {
 // ║   ║   ║            ═════   ═══
 //           ║                    ║
 //
-test.only('rail connections: unpowered T-junctions', t => {
+test('rail connections: unpowered T-junctions', t => {
   const data = [
     'rails',  '',       'rails',  '',       '',       'rails',  '',
     '',       'rails',  '',       '',       '',       '',       'rails',
@@ -434,7 +434,7 @@ test('torch charge: place block', t => {
   t.end();
 });
 
-test('piston activate: block block', t => {
+test('piston activate: place block', t => {
   const data = [
     '','','grass','pistonLeft','','pistonRight','grass','',
     '','','','redstoneWireVertical','','redstoneWireVertical','','',
@@ -453,6 +453,39 @@ test('piston activate: block block', t => {
     '','','pistonArm','redstoneWireTRightOn','railsRedstoneTorch','redstoneWireTLeftOn','','',
     '','','pistonUp','redstoneWireUpLeftOn','','redstoneWireUpRightOn','pistonDown','',
     '','','','','','','pistonArm','',
+    '','','','','','','grass','',
+  ];
+
+  expected.width = undefined;
+  expected.height = undefined;
+  expected.levelModel = null;
+  expected.redstoneList = [];
+  expected.redstoneListON = [];
+
+  t.deepEqual(plane.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+test('piston deactivate: block block', t => {
+  const data = [
+    '','grass','pistonArm','pistonLeft','','pistonRight','pistonArm','grass',
+    '','','grass','redstoneWireVerticalOn','','redstoneWireVerticalOn','','',
+    '','','pistonArm','redstoneWireTRightOn','railsRedstoneTorch','redstoneWireTLeftOn','','',
+    '','','pistonUp','redstoneWireUpLeftOn','','redstoneWireUpRightOn','pistonDown','',
+    '','','','','','','pistonArm','',
+    '','','','','','','grass','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true);
+
+  plane.setBlockAt([4, 2], new LevelBlock(''));
+
+  const expected = [
+    '','grass','','pistonLeft','','pistonRight','','grass',
+    '','','grass','redstoneWireVertical','','redstoneWireVertical','','',
+    '','','','redstoneWireVertical','','redstoneWireVertical','','',
+    '','','pistonUp','redstoneWireUpLeft','','redstoneWireUpRight','pistonDown','',
+    '','','','','','','','',
     '','','','','','','grass','',
   ];
 
