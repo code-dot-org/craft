@@ -433,3 +433,57 @@ test('torch charge: place block', t => {
 
   t.end();
 });
+
+test('iron door open: place block', t => {
+  const data = [
+    'redstoneWireVertical','',      '',
+    'redstoneWireVertical','',      '',
+    'doorIron',            '',      '',
+  ];
+  const plane = new LevelPlane(data, 3, 3, true);
+
+  plane.setBlockAt([0, 0], new LevelBlock('railsRedstoneTorch'));
+
+  const expected = [
+    false,false,false,
+    false,false,false,
+    true,false,false,
+  ];
+
+  expected.width = undefined;
+  expected.height = undefined;
+  expected.levelModel = null;
+  expected.redstoneList = [];
+  expected.redstoneListON = [];
+
+  t.deepEqual(plane.map(block => block.isOpen), expected);
+
+  t.end();
+});
+
+test('iron door close: destroy block', t => {
+  const data = [
+    'railsRedstoneTorch',    '','',
+    'redstoneWireVerticalOn','','',
+    'doorIron',              '','',
+  ];
+  const plane = new LevelPlane(data, 3, 3, true);
+
+  plane.setBlockAt([0, 0], new LevelBlock(''));
+
+  const expected = [
+    false,false,false,
+    false,false,false,
+    false,false,false,
+  ];
+
+  expected.width = undefined;
+  expected.height = undefined;
+  expected.levelModel = null;
+  expected.redstoneList = [];
+  expected.redstoneListON = [];
+
+  t.deepEqual(plane.map(block => block.isOpen), expected);
+
+  t.end();
+});

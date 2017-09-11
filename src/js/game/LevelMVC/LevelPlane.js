@@ -375,9 +375,15 @@ module.exports = class LevelPlane extends Array {
       if (this[i].blockType === "doorIron" && notOffendingIndex !== i) {
         this[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
         if (this[i].isPowered && !this[i].isOpen) {
-          this.levelModel.controller.levelView.animateDoor(i, true);
+          this[i].isOpen = true;
+          if (this.levelModel) {
+            this.levelModel.controller.levelView.animateDoor(i, true);
+          }
         } else if (!this[i].isPowered && this[i].isOpen) {
-          this.levelModel.controller.levelView.animateDoor(i, false);
+          this[i].isOpen = false;
+          if (this.levelModel) {
+            this.levelModel.controller.levelView.animateDoor(i, false);
+          }
         }
       }
     }
@@ -433,8 +439,10 @@ module.exports = class LevelPlane extends Array {
   */
   powerCheck(position) {
     return this.getOrthogonalPositions(position).some(orthogonalPosition => {
-      const block = this[this.coordinatesToIndex(orthogonalPosition)];
-      return (block.isRedstone && block.isPowered) || block.isRedstoneBattery;
+      if (this[this.coordinatesToIndex(orthogonalPosition)]) {
+        const block = this[this.coordinatesToIndex(orthogonalPosition)];
+        return (block.isRedstone && block.isPowered) || block.isRedstoneBattery;
+      }
     });
   }
 

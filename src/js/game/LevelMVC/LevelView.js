@@ -1893,7 +1893,6 @@ module.exports = class LevelView {
   * Animate Door and set the status
   */
   animateDoor(index, open) {
-    this.controller.levelModel.actionPlane[index].isOpen = open;
     let player = this.controller.levelModel.player;
     this.setSelectionIndicatorPosition(this.controller.levelModel.actionPlane.indexToCoordinates(index)[0], this.controller.levelModel.actionPlane.indexToCoordinates(index)[1]);
     this.controller.audioPlayer.play("doorOpen");
