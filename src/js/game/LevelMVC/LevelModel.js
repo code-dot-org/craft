@@ -607,8 +607,11 @@ module.exports = class LevelModel {
   }
 
   canMoveForward(entity = this.player) {
-    let blockForwardPosition = this.getMoveForwardPosition(entity);
-    return this.isPositionEmpty(blockForwardPosition);
+    const [x, y] = this.getMoveForwardPosition(entity);
+    if (!this.controller.followingPlayer() && (x > 9 || y > 9)) {
+      return false;
+    }
+    return this.isPositionEmpty([x, y]);
   }
 
   isPositionEmpty(position) {
