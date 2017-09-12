@@ -224,6 +224,8 @@ module.exports = class LevelView {
       this.game.camera.follow(this.player.sprite);
       this.game.world.scale.x = 1;
       this.game.world.scale.y = 1;
+    } else {
+      this.game.world.setBounds(0, 0, 400, 400);
     }
   }
 
