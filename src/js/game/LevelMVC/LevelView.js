@@ -558,6 +558,9 @@ module.exports = class LevelView {
     const track = this.controller.levelModel.actionPlane.getMinecartTrack(position, facing);
 
     if (!track) {
+      if (completionHandler) {
+        completionHandler();
+      }
       return;
     }
 

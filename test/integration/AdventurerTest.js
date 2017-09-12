@@ -290,7 +290,7 @@ test('Adventurer 13: Powered Minecart', t => {
     }
 
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.player.position, [3, 1]);
+      t.deepEqual(levelModel.player.position, [11, 7]);
       t.assert(success);
       t.end();
 
