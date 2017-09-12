@@ -368,7 +368,7 @@ module.exports = class LevelPlane extends Array {
   }
 
   /**
-  * Find a door to animate
+  * Find all iron doors in a level and evaluate if they need to be animated based on state
   */
   findDoorToAnimate(notOffendingIndex) {
     for (let i = 0; i < this.length; ++i) {
@@ -439,8 +439,8 @@ module.exports = class LevelPlane extends Array {
   */
   powerCheck(position) {
     return this.getOrthogonalPositions(position).some(orthogonalPosition => {
-      if (this[this.coordinatesToIndex(orthogonalPosition)]) {
-        const block = this[this.coordinatesToIndex(orthogonalPosition)];
+      const block = this[this.coordinatesToIndex(orthogonalPosition)];
+      if (block) {
         return (block.isRedstone && block.isPowered) || block.isRedstoneBattery;
       }
     });

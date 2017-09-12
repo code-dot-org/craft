@@ -159,7 +159,7 @@ test('rail connections: T-junctions', t => {
 // ║   ║   ║            ═════   ═══
 //           ║                    ║
 //
-test.only('rail connections: unpowered T-junctions', t => {
+test('rail connections: unpowered T-junctions', t => {
   const data = [
     'rails',  '',       'rails',  '',       '',       'rails',  '',
     '',       'rails',  '',       '',       '',       '',       'rails',
@@ -456,7 +456,8 @@ test('iron door open: place block', t => {
   expected.redstoneList = [];
   expected.redstoneListON = [];
 
-  t.deepEqual(plane.map(block => block.isOpen), expected);
+  t.true(plane.getBlockAt([1, 0]).isOpen);
+  t.true(plane.getBlockAt([0, 2]).isOpen);
 
   t.end();
 });
@@ -484,7 +485,9 @@ test('iron door close: destroy block', t => {
   expected.redstoneList = [];
   expected.redstoneListON = [];
 
-  t.deepEqual(plane.map(block => block.isOpen), expected);
+  t.true(plane.getBlockAt([1, 0]).isOpen);
+  t.false(plane.getBlockAt([1, 2]).isOpen);
+  t.false(plane.getBlockAt([2, 2]).isOpen);
 
   t.end();
 });

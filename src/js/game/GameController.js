@@ -728,10 +728,9 @@ class GameController {
     if (isMovingOffOf) {
       let position = this.levelModel.player.position;
       let block = new LevelBlock('pressurePlateUp');
-      this.levelModel.actionPlane.setBlockAt(position, block, false, direction);
+      this.levelModel.actionPlane.setBlockAt(position, block, direction);
     }
     let outOfDoor = this.levelModel.isEntityOnBlocktype("Player", "doorIron");
-    let oldPlayerPosition = this.levelModel.player.position;
 
     let target = commandQueueItem.target;
     if (!this.isType(target)) {
@@ -756,15 +755,15 @@ class GameController {
       }
       commandQueueItem.succeeded();
     }
-    let isMovingOnTo = this.levelModel.isEntityOnBlocktype("Player", "pressurePlateUp");
-    if (isMovingOnTo) {
+    let isMovingOnToPlate = this.levelModel.isEntityOnBlocktype("Player", "pressurePlateUp");
+    if (isMovingOnToPlate) {
       let position = this.levelModel.player.position;
       let block = new LevelBlock('pressurePlateDown');
       direction = (direction + 2) % 4;
-      this.levelModel.actionPlane.setBlockAt(position, block, false, direction);
+      this.levelModel.actionPlane.setBlockAt(position, block, direction);
     } else {
       if (outOfDoor) {
-        this.levelView.animateDoor(this.levelModel.actionPlane.coordinatesToIndex(oldPlayerPosition, false));
+        this.levelModel.actionPlane.findDoorToAnimate(-1);
       }
     }
   }
