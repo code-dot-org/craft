@@ -9,6 +9,7 @@ module.exports = class LevelView {
     this.baseShading = null;
 
     this.player = null;
+    this.agent = null;
     this.selectionIndicator = null;
 
     this.groundPlane = null;
@@ -199,6 +200,7 @@ module.exports = class LevelView {
 
   reset(levelModel) {
     this.player = levelModel.player;
+    this.agent = levelModel.agent;
 
     this.resettableTweens.forEach((tween) => {
       tween.stop(false);
@@ -222,6 +224,24 @@ module.exports = class LevelView {
     if (this.controller.followingPlayer()) {
       this.game.world.setBounds(0, 0, levelModel.planeWidth * 40, levelModel.planeHeight * 40);
       this.game.camera.follow(this.player.sprite);
+      this.game.world.scale.x = 1;
+      this.game.world.scale.y = 1;
+    }
+
+    if (levelModel.usePlayer) {
+      this.preparePlayerSprite(this.agent.name);
+      this.agent.sprite.animations.stop();
+      this.setPlayerPosition(this.agent.position[0], this.agent.position[1], this.agent.isOnBlock);
+      this.setSelectionIndicatorPosition(this.agent.position[0], this.agent.position[1]);
+      this.selectionIndicator.visible = true;
+      this.playIdleAnimation(this.agent.position, this.agent.facing, this.agent.isOnBlock);
+    }
+    this.updateShadingPlane(levelModel.shadingPlane);
+    this.updateFowPlane(levelModel.fowPlane);
+
+    if (this.controller.followingPlayer()) {
+      this.game.world.setBounds(0, 0, levelModel.planeWidth * 40, levelModel.planeHeight * 40);
+      this.game.camera.follow(this.agent.sprite);
       this.game.world.scale.x = 1;
       this.game.world.scale.y = 1;
     }

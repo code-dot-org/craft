@@ -92,6 +92,7 @@ class GameController {
     this.playerDelayFactor = 1.0;
     this.dayNightCycle = false;
     this.player = null;
+    this.agent = null;
 
     this.timerSprite = null;
 
