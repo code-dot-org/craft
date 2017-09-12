@@ -168,21 +168,23 @@ module.exports = class LevelPlane extends Array {
       return;
     }
 
+    const speed = 300;
+
     const cardinal = facingToCardinal(facing);
     if (block.connectionA === cardinal || block.connectionB === cardinal) {
-      return ["", this.forwardPosition(position, cardinal), facing, 200];
+      return ["", this.forwardPosition(position, cardinal), facing, speed];
     }
 
     const incomming = opposite(cardinal);
     if (block.connectionA === incomming && block.connectionB) {
       const rotation = turnDirection(cardinal, block.connectionB);
       const newFacing = turn(facing, rotation);
-      return [`turn_${rotation}`, position, newFacing, 200];
+      return [`turn_${rotation}`, position, newFacing, speed];
     }
     if (block.connectionB === incomming && block.connectionA) {
       const rotation = turnDirection(cardinal, block.connectionA);
       const newFacing = turn(facing, rotation);
-      return [`turn_${rotation}`, position, newFacing, 200];
+      return [`turn_${rotation}`, position, newFacing, speed];
     }
   }
 
