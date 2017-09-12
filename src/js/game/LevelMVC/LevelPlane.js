@@ -87,7 +87,7 @@ module.exports = class LevelPlane extends Array {
   * Changes the block at a desired position to the desired block.
   * Important note: This is the cornerstone of block placing/destroying.
   */
-  setBlockAt(position, block, offsetX, offsetY) {
+  setBlockAt(position, block, offsetX = 0, offsetY = 0) {
     this[this.coordinatesToIndex(position)] = block;
     let offset = [offsetX,offsetY];
 
