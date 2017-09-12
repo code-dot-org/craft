@@ -586,27 +586,6 @@ module.exports = class LevelModel {
     return allFoundObjects;
   }
 
-  getMinecartTrack() {
-    var track = [];
-    track.push(["down", [3, 2], FacingDirection.Down, 300]);
-    track.push(["down", [3, 3], FacingDirection.Down, 300]);
-    track.push(["down", [3, 4], FacingDirection.Down, 300]);
-    track.push(["down", [3, 5], FacingDirection.Down, 300]);
-    track.push(["down", [3, 6], FacingDirection.Down, 300]);
-    track.push(["down", [3, 7], FacingDirection.Down, 300]);
-    track.push(["turn_left", [3, 7], FacingDirection.Right, 400]);
-    track.push(["right", [4, 7], FacingDirection.Right, 400]);
-    track.push(["right", [5, 7], FacingDirection.Right, 400]);
-    track.push(["right", [6, 7], FacingDirection.Right, 400]);
-    track.push(["right", [7, 7], FacingDirection.Right, 400]);
-    track.push(["right", [8, 7], FacingDirection.Right, 400]);
-    track.push(["right", [9, 7], FacingDirection.Right, 400]);
-    track.push(["right", [10, 7], FacingDirection.Right, 400]);
-    track.push(["right", [11, 7], FacingDirection.Right, 400]);
-    track.push(["right", [12, 7], FacingDirection.Right, 400]);
-    return track;
-  }
-
   canMoveForward(entity = this.player) {
     const [x, y] = this.getMoveForwardPosition(entity);
     if (!this.controller.followingPlayer() && (x > 9 || y > 9)) {

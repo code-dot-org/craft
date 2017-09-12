@@ -536,21 +536,19 @@ module.exports = class LevelView {
     }
   }
 
-  playMinecartAnimation(position, facing, isOnBlock, completionHandler, minecartTrack, unpoweredRails) {
-    var animation;
-
+  playMinecartAnimation(isOnBlock, completionHandler, unpoweredRails) {
     //start at 3,2
     this.setPlayerPosition(3, 2, isOnBlock);
-    position = [3, 2];
+    const position = [3, 2];
     this.player.facing = 2;
 
-    animation = this.playLevelEndAnimation(position, this.player.facing, isOnBlock, completionHandler, false);
+    const animation = this.playLevelEndAnimation(position, this.player.facing, isOnBlock, completionHandler, false);
     this.game.world.setBounds(0, 0, 440, 400);
     this.game.camera.follow(this.player.sprite);
 
     animation.onComplete.add(() => {
       this.activateUnpoweredRails(unpoweredRails);
-      this.playTrack(position, this.player.facing, isOnBlock, completionHandler, minecartTrack);
+      this.playTrack(position, this.player.facing, isOnBlock, completionHandler);
     });
   }
 
