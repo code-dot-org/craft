@@ -538,46 +538,43 @@ module.exports = class LevelView {
 
   playMinecartAnimation(position, facing, isOnBlock, completionHandler, minecartTrack, unpoweredRails) {
     var animation;
-    this.track = minecartTrack;
-    this.i = 0;
 
     //start at 3,2
     this.setPlayerPosition(3, 2, isOnBlock);
     position = [3, 2];
+    this.player.facing = 2;
 
-    animation = this.playLevelEndAnimation(position, facing, isOnBlock, completionHandler, false);
+    animation = this.playLevelEndAnimation(position, this.player.facing, isOnBlock, completionHandler, false);
     this.game.world.setBounds(0, 0, 440, 400);
     this.game.camera.follow(this.player.sprite);
 
     animation.onComplete.add(() => {
       this.activateUnpoweredRails(unpoweredRails);
-      this.playTrack(position, facing, isOnBlock, completionHandler, minecartTrack);
+      this.playTrack(position, this.player.facing, isOnBlock, completionHandler, minecartTrack);
     });
   }
 
-  playTrack(position, facing, isOnBlock, completionHandler, minecartTrack) {
-    if (this.i < this.track.length) {
-      var direction,
-        arraydirection = this.track[this.i][0],
-        nextPosition = this.track[this.i][1],
-        speed = this.track[this.i][3];
-      facing = this.track[this.i][2];
+  playTrack(position, facing, isOnBlock, completionHandler) {
+    const track = this.controller.levelModel.actionPlane.getMinecartTrack(position, facing);
 
-      //turn
-      if (arraydirection.substring(0, 4) === "turn") {
-        direction = arraydirection.substring(5);
-        this.onAnimationEnd(this.playMinecartTurnAnimation(position, facing, isOnBlock, completionHandler, direction), () => {
-          this.playTrack(position, facing, isOnBlock, completionHandler, minecartTrack);
-        });
-      } else {
-        this.onAnimationEnd(this.playMinecartMoveForwardAnimation(position, facing, isOnBlock, completionHandler, nextPosition, speed), () => {
-          this.playTrack(position, facing, isOnBlock, completionHandler, minecartTrack);
-        });
-      }
-      this.i++;
+    if (!track) {
+      return;
+    }
+
+    let direction;
+    const [arraydirection, nextPosition, nextFacing, speed] = track;
+    this.player.position = nextPosition;
+
+    //turn
+    if (arraydirection.substring(0, 4) === "turn") {
+      direction = arraydirection.substring(5);
+      this.onAnimationEnd(this.playMinecartTurnAnimation(position, facing, isOnBlock, completionHandler, direction), () => {
+        this.playTrack(nextPosition, nextFacing, isOnBlock, completionHandler);
+      });
     } else {
-      this.playSuccessAnimation(position, facing, isOnBlock, function () { });
-      completionHandler();
+      this.onAnimationEnd(this.playMinecartMoveForwardAnimation(position, facing, isOnBlock, completionHandler, nextPosition, speed), () => {
+        this.playTrack(nextPosition, nextFacing, isOnBlock, completionHandler);
+      });
     }
   }
 

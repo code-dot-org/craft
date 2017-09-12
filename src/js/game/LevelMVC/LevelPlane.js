@@ -1,9 +1,14 @@
 const LevelBlock = require("./LevelBlock.js");
-
-const North = 1;
-const South = 2;
-const East = 4;
-const West = 8;
+const {
+  North,
+  South,
+  East,
+  West,
+  opposite,
+  turnDirection,
+  facingToCardinal,
+  turn,
+} = require("./FacingDirection.js");
 
 const connectionName = function (connection) {
   switch (connection) {
@@ -144,6 +149,41 @@ module.exports = class LevelPlane extends Array {
       (comparator(orthogonal.east) << 2) +
       (comparator(orthogonal.west) << 3)
     );
+  }
+
+  forwardPosition(position, cardinal) {
+    const [x, y] = position;
+    switch (cardinal) {
+      case North: return [x, y - 1];
+      case South: return [x, y + 1];
+      case East: return [x + 1, y];
+      case West: return [x - 1, y];
+    }
+  }
+
+  getMinecartTrack(position, facing) {
+    const block = this.getBlockAt(position);
+
+    if (!block.isRail) {
+      return;
+    }
+
+    const cardinal = facingToCardinal(facing);
+    if (block.connectionA === cardinal || block.connectionB === cardinal) {
+      return ["", this.forwardPosition(position, cardinal), facing, 200];
+    }
+
+    const incomming = opposite(cardinal);
+    if (block.connectionA === incomming && block.connectionB) {
+      const rotation = turnDirection(cardinal, block.connectionB);
+      const newFacing = turn(facing, rotation);
+      return [`turn_${rotation}`, position, newFacing, 200];
+    }
+    if (block.connectionB === incomming && block.connectionA) {
+      const rotation = turnDirection(cardinal, block.connectionA);
+      const newFacing = turn(facing, rotation);
+      return [`turn_${rotation}`, position, newFacing, 200];
+    }
   }
 
   /**
