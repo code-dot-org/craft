@@ -15,6 +15,13 @@ const connectionName = function (connection) {
   }
 };
 
+const RedstoneCircuitConnections = [
+  "", "Vertical", "Vertical", "Vertical",
+  "Horizontal", "UpRight", "DownRight", "TRight",
+  "Horizontal", "UpLeft", "DownLeft", "TLeft",
+  "Horizontal", "TUp", "TDown", "Cross",
+];
+
 const RailConnectionPriority = [
   [], [North], [South], [North, South],
   [East], [North, East], [South, East], [South, East],
@@ -214,101 +221,21 @@ module.exports = class LevelPlane extends Array {
   * surrounding indices and Powered state.
   */
   determineRedstoneSprite(position) {
-    let foundAbove = false;
-    let foundBelow = false;
-    let foundRight = false;
-    let foundLeft = false;
-    let myIndex = this.coordinatesToIndex(position);
-    let orthogonalBlocks = this.getOrthogonalBlocks(position);
+    const block = this.getBlockAt(position);
 
-    let borderCount = 0;
-
-    // If in bounds, we want to see if any redstone is around the index in question.
-    // Below index
-    if (orthogonalBlocks.south.block !== undefined &&
-    (orthogonalBlocks.south.block.isRedstone ||
-    orthogonalBlocks.south.block.isConnectedToRedstone)) {
-      foundBelow = true;
-      ++borderCount;
-    }
-    // Above index
-    if (orthogonalBlocks.north.block !== undefined &&
-    (orthogonalBlocks.north.block.isRedstone ||
-    orthogonalBlocks.north.block.isConnectedToRedstone)) {
-      foundAbove = true;
-      ++borderCount;
-    }
-    // Right index
-    if (orthogonalBlocks.east.block !== undefined &&
-    (orthogonalBlocks.east.block.isRedstone ||
-    orthogonalBlocks.east.block.isConnectedToRedstone)) {
-      foundRight = true;
-      ++borderCount;
-    }
-    // Left index
-    if (orthogonalBlocks.west.block !== undefined &&
-    (orthogonalBlocks.west.block.isRedstone ||
-    orthogonalBlocks.west.block.isConnectedToRedstone)) {
-      foundLeft = true;
-      ++borderCount;
+    if (!block || !block.isRedstone) {
+      return;
     }
 
-    if (borderCount === 0) {
-      // No connecting redstone wire.
-      this[myIndex].blockType = "redstoneWire";
-    } else if (borderCount === 1) {
-      // Only 1 connection extends a line.
-      if (foundBelow || foundAbove) {
-        this[myIndex].blockType = "redstoneWireVertical";
-      } else if (foundLeft || foundRight) {
-        this[myIndex].blockType = "redstoneWireHorizontal";
-      }
-    } else if (borderCount === 2) {
-      if ((foundBelow || foundAbove) && !foundRight && !foundLeft){
-        // Purely vertical, no left or right.
-        this[myIndex].blockType = "redstoneWireVertical";
-      } else if ((foundRight || foundLeft) && !foundBelow && !foundAbove){
-        // Purely horizontal, no above or below.
-        this[myIndex].blockType = "redstoneWireHorizontal";
-      } else {
-        // We have a corner and will need to rotate.
-        if (foundBelow) {
-          // If we have a blow, the other has to be right or left.
-          if (foundLeft) {
-            this[myIndex].blockType = "redstoneWireDownLeft";
-          } else {
-            this[myIndex].blockType = "redstoneWireDownRight";
-          }
-        } else {
-          // If not below, then above + left or right.
-          if (foundLeft) {
-            this[myIndex].blockType = "redstoneWireUpLeft";
-          } else {
-            this[myIndex].blockType = "redstoneWireUpRight";
-          }
-        }
-      }
-    } else if (borderCount === 3) {
-      // We are deciding between T sprite orientations.
-      if (!foundBelow) {
-        this[myIndex].blockType = "redstoneWireTUp";
-      } else if (!foundAbove) {
-        this[myIndex].blockType = "redstoneWireTDown";
-      } else if (!foundLeft) {
-        this[myIndex].blockType = "redstoneWireTRight";
-      } else if (!foundRight) {
-        this[myIndex].blockType = "redstoneWireTLeft";
-      }
-    } else if (borderCount === 4) {
-      // All four sides connected: Cross.
-      this[myIndex].blockType = "redstoneWireCross";
-    }
+    const mask = this.getOrthogonalMask(position, ({block}) => {
+      return block && (block.isRedstone || block.isConnectedToRedstone);
+    });
 
-    if (this[myIndex].isPowered) {
-      this[myIndex].blockType += "On";
-    }
+    const variant = RedstoneCircuitConnections[mask];
+    const powerState = block.isPowered ? 'On' : '';
+    block.blockType = `redstoneWire${variant}${powerState}`;
 
-    return this[myIndex].blockType;
+    return `redstoneWire${variant}`;
   }
 
   /**
