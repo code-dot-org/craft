@@ -146,6 +146,7 @@ class GameController {
     this.levelView.reset(this.levelModel);
     this.levelEntity.loadData(this.levelData);
     this.player = this.levelModel.player;
+    this.agent = this.levelModel.agent;
     this.resettableTimers.forEach((timer) => {
       timer.stop(true);
     });

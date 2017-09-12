@@ -68,11 +68,10 @@ module.exports = class LevelModel {
       this.controller.levelEntity.pushEntity(this.player);
       this.controller.player = this.player;
 
-      this.agent = new Agent(this.controller, "Agent", 1, 1, "Agent", !this.actionPlane[this.yToIndex(y) + x].getIsEmptyOrEntity(), levelData.playerStartDirection);
+      this.agent = new Agent(this.controller, "Agent", 7, 7, "Agent", !this.actionPlane[this.yToIndex(y) + x].getIsEmptyOrEntity(), levelData.playerStartDirection);
       this.controller.levelEntity.pushEntity(this.agent);
       this.controller.agent = this.agent;
     }
-
     this.computeShadingPlane();
     this.computeFowPlane();
   }

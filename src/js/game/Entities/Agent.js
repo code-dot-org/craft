@@ -1,7 +1,7 @@
 const BaseEntity = require("./BaseEntity.js");
 const CallbackCommand = require("../CommandQueue/CallbackCommand.js");
 
-module.exports = class Player extends BaseEntity {
+module.exports = class Agent extends BaseEntity {
   constructor(controller, type, x, y, name, isOnBlock, facing) {
     super(controller, type, 'Agent', x, y, facing);
     this.offset = (name === 'Agent') ? [-5, -15] : [-18, -32];

@@ -239,12 +239,10 @@ module.exports = class LevelView {
     this.updateShadingPlane(levelModel.shadingPlane);
     this.updateFowPlane(levelModel.fowPlane);
 
-    if (this.controller.followingPlayer()) {
-      this.game.world.setBounds(0, 0, levelModel.planeWidth * 40, levelModel.planeHeight * 40);
-      this.game.camera.follow(this.agent.sprite);
-      this.game.world.scale.x = 1;
-      this.game.world.scale.y = 1;
-    }
+    this.actionPlane.children[1].position.x = 100;
+    this.actionPlane.children[1].position.y = 100;
+    console.log("agent position is: " + this.agent.position);
+    console.log("player position is: " + this.player.position);
   }
 
   update() {
