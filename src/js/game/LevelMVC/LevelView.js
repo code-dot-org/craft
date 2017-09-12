@@ -546,6 +546,8 @@ module.exports = class LevelView {
     position = [3, 2];
 
     animation = this.playLevelEndAnimation(position, facing, isOnBlock, completionHandler, false);
+    this.game.world.setBounds(0, 0, 440, 400);
+    this.game.camera.follow(this.player.sprite);
 
     animation.onComplete.add(() => {
       this.activateUnpoweredRails(unpoweredRails);

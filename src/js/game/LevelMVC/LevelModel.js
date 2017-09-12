@@ -603,12 +603,16 @@ module.exports = class LevelModel {
     track.push(["right", [9, 7], FacingDirection.Right, 400]);
     track.push(["right", [10, 7], FacingDirection.Right, 400]);
     track.push(["right", [11, 7], FacingDirection.Right, 400]);
+    track.push(["right", [12, 7], FacingDirection.Right, 400]);
     return track;
   }
 
   canMoveForward(entity = this.player) {
-    let blockForwardPosition = this.getMoveForwardPosition(entity);
-    return this.isPositionEmpty(blockForwardPosition);
+    const [x, y] = this.getMoveForwardPosition(entity);
+    if (!this.controller.followingPlayer() && (x > 9 || y > 9)) {
+      return false;
+    }
+    return this.isPositionEmpty([x, y]);
   }
 
   isPositionEmpty(position) {

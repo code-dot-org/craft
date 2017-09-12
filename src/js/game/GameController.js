@@ -230,7 +230,7 @@ class GameController {
   }
 
   followingPlayer() {
-    return !!this.levelData.gridDimensions;
+    return !!this.levelData.gridDimensions && !this.checkMinecartLevelEndAnimation();
   }
 
   update() {
