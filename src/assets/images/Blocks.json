@@ -162,6 +162,15 @@
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
+"Piston_Arm":
+{
+	"frame": {"x":1340,"y":0,"w":40,"h":36},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":4,"w":39,"h":36},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
 "Glass":
 {
 	"frame": {"x":641,"y":0,"w":40,"h":60},

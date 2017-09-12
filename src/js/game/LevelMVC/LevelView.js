@@ -174,6 +174,12 @@ module.exports = class LevelView {
 
       "pressurePlateUp": ["blocks", "PressurePlate_Up", -13, 0],
       "pressurePlateDown": ["blocks", "PressurePlate_Down", -13, 0],
+
+      "pistonUp": ["blocks", "Bricks", -13, 0],
+      "pistonDown": ["blocks", "Bricks", -13, 0],
+      "pistonLeft": ["blocks", "Bricks", -13, 0],
+      "pistonRight": ["blocks", "Bricks", -13, 0],
+      "pistonArm": ["blocks", "Piston_Arm", -13, 20],
     };
     this.actionPlaneBlocks = [];
     this.toDestroy = [];
@@ -1179,6 +1185,16 @@ module.exports = class LevelView {
   }
 
   refreshActionPlane(positions) {
+    // We need to add indices to refresh if there are other blocks in the action plane that might
+    // conflict with the drawing of refreshed blocks.
+    for (let i = 0; i < positions.length; ++i) {
+      if (positions[i][1] + 1 < this.controller.levelModel.actionPlane.height &&
+      this.controller.levelModel.actionPlane[this.controller.levelModel.actionPlane.coordinatesToIndex([positions[i][0], positions[i][1] + 1])].blockType !== "") {
+        positions.push([positions[i][0], positions[i][1] + 1]);
+      }
+    }
+
+    // Once all blocks that need to be refreshed are accounted for, go in and actually refresh.
     positions.forEach(position => {
       if (position) {
         const newBlock = this.controller.levelModel.actionPlane.getBlockAt(position);

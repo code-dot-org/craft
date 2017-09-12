@@ -76,14 +76,14 @@ window.demoLevels = {
 
     actionPlane: [
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "redstoneWire", "", "", "", "", "",
-      "", "", "", "", "pressurePlateUp", "", "", "", "", "",
-      "", "", "", "", "redstoneWire", "redstoneWire", "", "", "", "",
+      "", "pistonRight", "oreDiamond", "grass", "oreDiamond", "", "redstoneWire", "pistonDown", "", "",
+      "", "", "redstoneWire", "redstoneWire", "pressurePlateUp", "redstoneWire", "redstoneWire", "oreDiamond", "", "",
+      "", "", "", "", "redstoneWire", "", "", "grass", "oreDiamond", "",
+      "", "redstoneWire", "redstoneWire", "redstoneWire", "redstoneWire", "", "", "", "grass", "",
+      "", "", "", "", "redstoneWire", "", "", "", "grass", "",
+      "", "grass", "", "redstoneWire", "redstoneWire", "redstoneWire", "redstoneWire", "", "pistonUp", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
+      "", "grass", "oreDiamond", "pistonLeft", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
     ],
 
