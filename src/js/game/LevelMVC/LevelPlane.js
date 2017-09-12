@@ -87,12 +87,30 @@ module.exports = class LevelPlane extends Array {
   * Changes the block at a desired position to the desired block.
   * Important note: This is the cornerstone of block placing/destroying.
   */
-  setBlockAt(position, block) {
+  setBlockAt(position, block, offsetX = 0, offsetY = 0) {
     this[this.coordinatesToIndex(position)] = block;
+    let offset = [offsetX,offsetY];
+
+    let positionInQuestion = [0,0];
+    // This will either be the pos the player is leaving or entering, depending on situation
+    if (this.levelModel) {
+      positionInQuestion = [this.levelModel.player.position[0] + offset[0], this.levelModel.player.position[1] + offset[1]];
+    }
+    let wasOnADoor = false;
+    // If the questionable position was a door, we want to do a few things differently.
+    if (this.getBlockAt(positionInQuestion).blockType === "doorIron") {
+      wasOnADoor = true;
+    }
 
     let redstoneToRefresh = [];
     if (block.isRedstone || block.blockType === '' || block.isConnectedToRedstone) {
       redstoneToRefresh = this.getRedstone();
+      // Once we're done updating redstoneWire states, check to see if doors should open/close.
+      if (wasOnADoor) {
+        this.findDoorToAnimate(positionInQuestion);
+      } else {
+        this.findDoorToAnimate([-1,-1]);
+      }
     }
 
     this.determineRailType(position, true);
@@ -329,6 +347,29 @@ module.exports = class LevelPlane extends Array {
   }
 
   /**
+  * Find all iron doors in a level and evaluate if they need to be animated based on state
+  */
+  findDoorToAnimate(positionInQuestion) {
+    let notOffendingIndex = this.coordinatesToIndex(positionInQuestion);
+    for (let i = 0; i < this.length; ++i) {
+      if (this[i].blockType === "doorIron" && notOffendingIndex !== i) {
+        this[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
+        if (this[i].isPowered && !this[i].isOpen) {
+          this[i].isOpen = true;
+          if (this.levelModel) {
+            this.levelModel.controller.levelView.animateDoor(i, true);
+          }
+        } else if (!this[i].isPowered && this[i].isOpen) {
+          this[i].isOpen = false;
+          if (this.levelModel) {
+            this.levelModel.controller.levelView.animateDoor(i, false);
+          }
+        }
+      }
+    }
+  }
+
+  /**
   * Silly helper to get the index of a specific position in an array of positions.
   */
   findPositionInArray(position, array) {
@@ -371,6 +412,18 @@ module.exports = class LevelPlane extends Array {
       adjacentBlock.isPowered = true;
       this.redstonePropagation([position[0],position[1]]);
     }
+  }
+
+  /**
+  * Checking power state for objects that are powered by redstone.
+  */
+  powerCheck(position) {
+    return this.getOrthogonalPositions(position).some(orthogonalPosition => {
+      const block = this[this.coordinatesToIndex(orthogonalPosition)];
+      if (block) {
+        return (block.isRedstone && block.isPowered) || block.isRedstoneBattery;
+      }
+    });
   }
 
 };

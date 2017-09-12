@@ -115,6 +115,7 @@ module.exports = class LevelView {
       "explosion": ["explosion", "", -70, 60],
 
       "door": ["door", "", -12, -15],
+      "doorIron": ["doorIron", "", -12, -15],
 
       "rails": ["blocks", "Rails_Vertical", -13, -0],
       "railsNorthEast": ["blocks", "Rails_BottomLeft", -13, 0],
@@ -1184,6 +1185,13 @@ module.exports = class LevelView {
     positions.forEach(position => {
       if (position) {
         const newBlock = this.controller.levelModel.actionPlane.getBlockAt(position);
+
+        //we don't want to refresh doors. They're not destroyable, and refreshing
+        //will lead to bad animation states
+        if (newBlock && this.isDoor(newBlock)) {
+          return;
+        }
+
         if (newBlock && newBlock.blockType) {
           this.createActionPlaneBlock(position, newBlock.blockType);
         } else if (newBlock) {
@@ -1193,6 +1201,10 @@ module.exports = class LevelView {
         }
       }
     });
+  }
+
+  isDoor(block) {
+    return block.blockType.startsWith("door");
   }
 
   updateShadingPlane(shadingData) {
@@ -1636,6 +1648,33 @@ module.exports = class LevelView {
       levelView.trees.push({ sprite: sprite, type: blockType, position: [x, y] });
     };
 
+    const buildDoor = (levelView, type) => {
+      atlas = this.blocks[blockType][0];
+      frame = this.blocks[blockType][1];
+      xOffset = this.blocks[blockType][2];
+      yOffset = this.blocks[blockType][3];
+      sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+
+      frameList = [];
+      var animationFramesIron = Phaser.Animation.generateFrameNames(type, 0, 3, "", 1);
+      for (let j = 0; j < 5; ++j) {
+        frameList.push(`${type}0`);
+      }
+      frameList = frameList.concat(animationFramesIron);
+
+      sprite.animations.add("open", frameList, 5, false);
+
+      frameList = [];
+      animationFramesIron = Phaser.Animation.generateFrameNames(type, 3, 0, "", 1);
+      for (let j = 0; j < 5; ++j) {
+        frameList.push(`${type}3`);
+      }
+      frameList = frameList.concat(animationFramesIron);
+      sprite.animations.add("close", frameList, 5, false);
+
+      return sprite;
+    };
+
     switch (blockType) {
       case "treeAcacia": //0,7
         buildTree(this, [0, 7]);
@@ -1768,28 +1807,11 @@ module.exports = class LevelView {
         break;
 
       case "door":
-        atlas = this.blocks[blockType][0];
-        frame = this.blocks[blockType][1];
-        xOffset = this.blocks[blockType][2];
-        yOffset = this.blocks[blockType][3];
-        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        sprite = buildDoor(this, "Door");
+        break;
 
-        frameList = [];
-        var animationFrames = Phaser.Animation.generateFrameNames("Door", 0, 3, "", 1);
-        for (let j = 0; j < 5; ++j) {
-          frameList.push("Door0");
-        }
-        frameList = frameList.concat(animationFrames);
-
-        sprite.animations.add("open", frameList, 5, false);
-
-        frameList = [];
-        animationFrames = Phaser.Animation.generateFrameNames("Door", 3, 0, "", 1);
-        for (let j = 0; j < 5; ++j) {
-          frameList.push("Door3");
-        }
-        frameList = frameList.concat(animationFrames);
-        sprite.animations.add("close", frameList, 5, false);
+      case "doorIron":
+        sprite = buildDoor(this, "DoorIron");
         break;
 
       case "tnt":
@@ -1868,4 +1890,20 @@ module.exports = class LevelView {
     this.resettableTweens.push(tween);
     return tween;
   }
+
+  /**
+  * Animate Door and set the status
+  */
+  animateDoor(index, open) {
+    let player = this.controller.levelModel.player;
+    this.setSelectionIndicatorPosition(this.controller.levelModel.actionPlane.indexToCoordinates(index)[0], this.controller.levelModel.actionPlane.indexToCoordinates(index)[1]);
+    this.controller.audioPlayer.play("doorOpen");
+    // If it's not walable, then open otherwise, close.
+    this.playDoorAnimation(this.controller.levelModel.actionPlane.indexToCoordinates(index), open, () => {
+      this.controller.levelModel.actionPlane[index].isWalkable = !this.controller.levelModel.actionPlane[index].isWalkable;
+      this.playIdleAnimation(player.position, player.facing, player.isOnBlock);
+      this.setSelectionIndicatorPosition(player.position[0], player.position[1]);
+    });
+  }
+
 };

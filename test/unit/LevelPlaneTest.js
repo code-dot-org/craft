@@ -433,3 +433,37 @@ test('torch charge: place block', t => {
 
   t.end();
 });
+
+test('iron door open: place block', t => {
+  const data = [
+    'redstoneWireVertical','doorIron',      '',
+    'redstoneWireVertical','',      '',
+    'doorIron',            '',      'doorIron',
+  ];
+  const plane = new LevelPlane(data, 3, 3, true);
+
+  plane.setBlockAt([0, 0], new LevelBlock('railsRedstoneTorch'));
+
+  t.true(plane.getBlockAt([1, 0]).isOpen);
+  t.true(plane.getBlockAt([0, 2]).isOpen);
+
+  t.end();
+});
+
+test('iron door close: destroy block', t => {
+  const data = [
+    'railsRedstoneTorch',    'doorIron','',
+    'redstoneWireVerticalOn','','',
+    'doorIron',              '','doorIron',
+  ];
+  const plane = new LevelPlane(data, 3, 3, true);
+
+  plane.setBlockAt([0, 0], new LevelBlock(''));
+  plane.setBlockAt([2, 0], new LevelBlock('railsRedstoneTorch'));
+
+  t.true(plane.getBlockAt([1, 0]).isOpen);
+  t.false(plane.getBlockAt([1, 2]).isOpen);
+  t.false(plane.getBlockAt([2, 2]).isOpen);
+
+  t.end();
+});
