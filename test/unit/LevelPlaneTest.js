@@ -443,7 +443,7 @@ test('piston activate: place block', t => {
   t.end();
 });
 
-test('piston deactivate: block block', t => {
+test('piston deactivate: destroy block', t => {
   const data = [
     '','grass','pistonArm','pistonLeft','','pistonRight','pistonArm','grass',
     '','','grass','redstoneWireVerticalOn','','redstoneWireVerticalOn','','',
