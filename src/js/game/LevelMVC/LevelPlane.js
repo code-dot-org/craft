@@ -86,8 +86,9 @@ module.exports = class LevelPlane extends Array {
   /**
   * Changes the block at a desired position to the desired block.
   * Important note: This is the cornerstone of block placing/destroying.
+  * @param {boolean} skipRedstone: if for some reason we want to place a block and bypass the redstone evaluation.
   */
-  setBlockAt(position, block, force = false, skipRedstone = false) {
+  setBlockAt(position, block, skipRedstone = false) {
     this[this.coordinatesToIndex(position)] = block;
 
     let redstoneToRefresh = [];
@@ -325,37 +326,53 @@ module.exports = class LevelPlane extends Array {
       posToRefresh.push(this.redstoneListON[i]);
     }
 
-    //once we're done updating redstoneWire states, check to see if doors should open/close
+    // Once we're done updating redstoneWire states, check to see if doors and pistons should open/close.
     for (let i = 0; i < this.length; ++i) {
-      if (this[i].blockType === "doorIron") {
-        this[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
-        if (this[i].isPowered && !this[i].isOpen) {
-          this.animateDoor(i, true);
-        } else if (!this[i].isPowered && this[i].isOpen) {
-          this.animateDoor(i, false);
-        }
-      }
-
-      if (this[i].blockType.startsWith("piston")) {
-        this[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
-        if (this[i].isPowered) {
-          this.activatePiston(this.indexToCoordinates(i));
-          if (this.levelModel) {
-            this.levelModel.controller.updateFowPlane();
-            this.levelModel.controller.updateShadingPlane();
-          }
-        } else if (!this[i].isPowered) {
-          this.deactivatePiston(this.indexToCoordinates(i));
-          if (this.levelModel) {
-            this.levelModel.controller.updateFowPlane();
-            this.levelModel.controller.updateShadingPlane();
-          }
-        }
-      }
+      this.getIronDoors(i);
+      this.getPistonState(i);
     }
     return posToRefresh;
   }
 
+  /**
+  * Evaluates what state Iron Doors on the map should be in.
+  */
+  getIronDoors(index) {
+    if (this[index].blockType === "doorIron") {
+      this[index].isPowered = this.powerCheck(this.indexToCoordinates(index));
+      if (this[index].isPowered && !this[index].isOpen) {
+        this.animateDoor(index, true);
+      } else if (!this[index].isPowered && this[index].isOpen) {
+        this.animateDoor(index, false);
+      }
+    }
+  }
+
+  /**
+  * Evaluates what state Pistons on the map should be in.
+  */
+  getPistonState(index) {
+    if (this[index].blockType.startsWith("piston")) {
+      this[index].isPowered = this.powerCheck(this.indexToCoordinates(index));
+      if (this[index].isPowered) {
+        this.activatePiston(this.indexToCoordinates(index));
+        if (this.levelModel) {
+          this.levelModel.controller.updateFowPlane();
+          this.levelModel.controller.updateShadingPlane();
+        }
+      } else if (!this[index].isPowered) {
+        this.deactivatePiston(this.indexToCoordinates(index));
+        if (this.levelModel) {
+          this.levelModel.controller.updateFowPlane();
+          this.levelModel.controller.updateShadingPlane();
+        }
+      }
+    }
+  }
+
+  /**
+  * Activates a piston at a given position to push blocks away from it depending on type.
+  */
   activatePiston(position) {
     let neighbors = this.getOrthogonalBlocks(position);
     let neighborPosition = this.getOrthogonalPositions(position);
@@ -364,8 +381,8 @@ module.exports = class LevelPlane extends Array {
       case "pistonUp": {
         if (neighbors.north.block.blockType !== "" && neighbors.north.block.blockType !== "pistonArm" ) {
           let offset = [0,-1];
-          let blocksPositions = this.getBlocksToPush(neighborPosition[0], offset);
-          this.pushBlocks(blocksPositions, offset);
+          let blocksPositions = this.getBlocksToPush(neighborPosition[0], offset[0], offset[1]);
+          this.pushBlocks(blocksPositions, offset[0], offset[1]);
         } else if (neighbors.north.block.blockType === "") {
           let armBlock = new LevelBlock("pistonArm");
           this.setBlockAt(neighborPosition[0], armBlock);
@@ -375,8 +392,8 @@ module.exports = class LevelPlane extends Array {
       case "pistonDown": {
         if (neighbors.south.block.blockType !== "" && neighbors.south.block.blockType !== "pistonArm") {
           let offset = [0,1];
-          let blocksPositions = this.getBlocksToPush(neighborPosition[1], offset);
-          this.pushBlocks(blocksPositions, offset);
+          let blocksPositions = this.getBlocksToPush(neighborPosition[1], offset[0], offset[1]);
+          this.pushBlocks(blocksPositions, offset[0], offset[1]);
         } else if (neighbors.south.block.blockType === "") {
           let armBlock = new LevelBlock("pistonArm");
           this.setBlockAt(neighborPosition[1], armBlock);
@@ -386,8 +403,8 @@ module.exports = class LevelPlane extends Array {
       case "pistonRight": {
         if (neighbors.east.block.blockType !== "" && neighbors.east.block.blockType !== "pistonArm") {
           let offset = [1,0];
-          let blocksPositions = this.getBlocksToPush(neighborPosition[2], offset);
-          this.pushBlocks(blocksPositions, offset);
+          let blocksPositions = this.getBlocksToPush(neighborPosition[2], offset[0], offset[1]);
+          this.pushBlocks(blocksPositions, offset[0], offset[1]);
         } else if (neighbors.east.block.blockType === "") {
           let armBlock = new LevelBlock("pistonArm");
           this.setBlockAt(neighborPosition[2], armBlock);
@@ -397,8 +414,8 @@ module.exports = class LevelPlane extends Array {
       case "pistonLeft": {
         if (neighbors.west.block.blockType !== "" && neighbors.west.block.blockType !== "pistonArm") {
           let offset = [-1,0];
-          let blocksPositions = this.getBlocksToPush(neighborPosition[3], offset);
-          this.pushBlocks(blocksPositions, offset);
+          let blocksPositions = this.getBlocksToPush(neighborPosition[3], offset[0], offset[1]);
+          this.pushBlocks(blocksPositions, offset[0], offset[1]);
         } else if (neighbors.west.block.blockType === "") {
           let armBlock = new LevelBlock("pistonArm");
           this.setBlockAt(neighborPosition[3], armBlock);
@@ -408,48 +425,48 @@ module.exports = class LevelPlane extends Array {
     }
   }
 
+  /**
+  * Deactivates a piston at a given position by determining what the arm orientation is.
+  */
   deactivatePiston(position) {
     let neighborPosition = this.getOrthogonalPositions(position);
-    let emptyBlock = new LevelBlock("");
-
     switch (this[this.coordinatesToIndex(position)].blockType) {
       case "pistonUp": {
-        if (this[this.coordinatesToIndex(neighborPosition[0])].blockType === "pistonArm") {
-          this.setBlockAt(neighborPosition[0], emptyBlock, false, true);
-        }
+        this.retractArm(neighborPosition[0]);
         break;
       }
       case "pistonDown": {
-        if (this[this.coordinatesToIndex(neighborPosition[1])].blockType === "pistonArm") {
-          this.setBlockAt(neighborPosition[1], emptyBlock, false, true);
-        }
+        this.retractArm(neighborPosition[1]);
         break;
       }
       case "pistonRight": {
-        if (this[this.coordinatesToIndex(neighborPosition[2])].blockType === "pistonArm") {
-          this.setBlockAt(neighborPosition[2], emptyBlock, false, true);
-        }
+        this.retractArm(neighborPosition[2]);
         break;
       }
       case "pistonLeft": {
-        if (this[this.coordinatesToIndex(neighborPosition[3])].blockType === "pistonArm") {
-          this.setBlockAt(neighborPosition[3], emptyBlock, false, true);
-        }
+        this.retractArm(neighborPosition[3]);
         break;
       }
     }
   }
 
-  pushBlocks(blocksPositions, offset) {
-    let armBlock = new LevelBlock("pistonArm");
-    // Need to check if the last index is up against the edge of the map, and break out if that's the case.
-    if (!this.inBounds([blocksPositions[blocksPositions.length - 1][0] + offset[0], blocksPositions[blocksPositions.length - 1][1] + offset[1]])) {
-      // Apparently me might NOT want this check? Or might? Design undecided.
-      //break;
+  /**
+  * Does the actual retraction of the arm of a piston.
+  */
+  retractArm(position) {
+    let emptyBlock = new LevelBlock("");
+    if (this[this.coordinatesToIndex(position)].blockType === "pistonArm") {
+      this.setBlockAt(position, emptyBlock, true);
     }
+  }
 
+  /**
+  * Goes through a list of blocks and shuffles them over 1 index in a given direction.
+  */
+  pushBlocks(blocksPositions, offsetX = 0, offsetY = 0) {
+    let armBlock = new LevelBlock("pistonArm");
     for (let i = blocksPositions.length - 1; i >= 0; --i) {
-      let destination = [blocksPositions[i][0] + offset[0], blocksPositions[i][1] + offset[1]];
+      let destination = [blocksPositions[i][0] + offsetX, blocksPositions[i][1] + offsetY];
       this.setBlockAt(destination, this.getBlockAt(blocksPositions[i]));
       if (i === 0) {
         this.setBlockAt(blocksPositions[i], armBlock);
@@ -457,12 +474,15 @@ module.exports = class LevelPlane extends Array {
     }
   }
 
-  getBlocksToPush(position, offset) {
+  /**
+  * Returns a list of blocks in a given direction to be shuffled over later.
+  */
+  getBlocksToPush(position, offsetX = 0, offsetY = 0) {
     let pushingBlocks = [];
     let workingPosition = position;
     while (this.inBounds(workingPosition) && this.getBlockAt(workingPosition).blockType !== "") {
       pushingBlocks.push(workingPosition);
-      workingPosition = [workingPosition[0] + offset[0], workingPosition[1] + offset[1]];
+      workingPosition = [workingPosition[0] + offsetX, workingPosition[1] + offsetY];
     }
     return pushingBlocks;
   }
