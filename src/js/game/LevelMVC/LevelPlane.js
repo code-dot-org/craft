@@ -538,7 +538,9 @@ module.exports = class LevelPlane extends Array {
   powerCheck(position) {
     return this.getOrthogonalPositions(position).some(orthogonalPosition => {
       const block = this[this.coordinatesToIndex(orthogonalPosition)];
-      return block.isRedstone && block.isPowered;
+      if (block) {
+        return (block.isRedstone && block.isPowered) || block.isRedstoneBattery;
+      }
     });
   }
 
