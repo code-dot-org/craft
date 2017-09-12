@@ -75,13 +75,8 @@ test('redstone wires', t => {
     'Horizontal','Cross',     'TUp',       'Horizontal',null,        'Vertical',
     null,        'Vertical',  null,        null,        'Horizontal','UpLeft',
   ].map(wire => wire === null ? '' : `redstoneWire${wire}`);
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
 
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   // Destroy a few wires.
   plane.setBlockAt([2, 1], new LevelBlock(''));
@@ -95,13 +90,8 @@ test('redstone wires', t => {
     null,        'TRight',    'Horizontal','Horizontal',null,         '',
     null,        'Vertical',  null,        null,        '',           null,
   ].map(wire => wire === null ? '' : `redstoneWire${wire}`);
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
 
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });
@@ -140,13 +130,8 @@ test('rail connections: T-junctions', t => {
   ].map(rail => {
     return rail.replace('N', 'North').replace('S', 'South').replace('E', 'East').replace('W', 'West');
   });
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
 
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });
@@ -185,13 +170,8 @@ test('rail connections: unpowered T-junctions', t => {
   ].map(rail => {
     return rail.replace('U', 'Unpowered').replace('N', 'North').replace('S', 'South').replace('E', 'East').replace('W', 'West');
   });
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
 
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });
@@ -214,13 +194,8 @@ test('rail connections: 4x4 loop', t => {
     'railsSouthEast', 'railsSouthWest',
     'railsNorthEast', 'railsNorthWest',
   ];
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
 
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });
@@ -253,13 +228,8 @@ test('rail connections: longer track', t => {
     '',               'railsNorthSouth','railsNorthEast', 'railsSouthWest',
     '',               'railsNorthEast', 'railsEastWest',  'railsNorthWest',
   ];
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
 
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });
@@ -287,13 +257,8 @@ test('rail connections: destroy block', t => {
     '',               'railsSouthWest', '',
     '',               'railsNorthSouth','',
   ];
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
 
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });
@@ -323,13 +288,7 @@ test('redstone charge: place block', t => {
     'redstoneWire',      '',         'redstoneWireVerticalOn',
   ];
 
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
-
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });
@@ -356,13 +315,7 @@ test('redstone charge: destroy block', t => {
     'redstoneWire',      '',         'redstoneWireVertical',
   ];
 
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
-
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });
@@ -389,13 +342,7 @@ test('torch charge: destroy block', t => {
     'redstoneWire',      '',         'redstoneWireVertical',
   ];
 
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
-
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });
@@ -423,13 +370,7 @@ test('torch charge: place block', t => {
     '',            'railsRedstoneTorch','redstoneWireUpLeftOn',
   ];
 
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
-
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });

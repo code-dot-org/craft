@@ -38,7 +38,7 @@ const PoweredRailConnectionPriority = [
 
 module.exports = class LevelPlane {
   constructor(planeData, width, height, isActionPlane = false, LevelModel = null) {
-    this.data = [];
+    this._data = [];
     this.width = width;
     this.height = height;
     this.levelModel = LevelModel;
@@ -49,7 +49,7 @@ module.exports = class LevelPlane {
       let block = new LevelBlock(planeData[index]);
       // TODO(bjordan): put this truth in constructor like other attrs
       block.isWalkable = block.isWalkable || !isActionPlane;
-      this.data.push(block);
+      this._data.push(block);
     }
   }
 
@@ -85,7 +85,7 @@ module.exports = class LevelPlane {
     const target = [x + offsetX, y + offsetY];
 
     if (this.inBounds(target)) {
-      return this.data[this.coordinatesToIndex(target)];
+      return this._data[this.coordinatesToIndex(target)];
     }
   }
 
@@ -94,7 +94,7 @@ module.exports = class LevelPlane {
   * Important note: This is the cornerstone of block placing/destroying.
   */
   setBlockAt(position, block, offsetX = 0, offsetY = 0) {
-    this.data[this.coordinatesToIndex(position)] = block;
+    this._data[this.coordinatesToIndex(position)] = block;
     let offset = [offsetX,offsetY];
 
     let positionInQuestion = [0,0];
@@ -245,15 +245,15 @@ module.exports = class LevelPlane {
   getRedstone() {
     this.redstoneList = [];
     this.redstoneListON = [];
-    for (let i = 0; i < this.length; ++i) {
-      if (this.data[i].isRedstone) {
-        this.data[i].isPowered = false;
+    for (let i = 0; i < this._data.length; ++i) {
+      if (this._data[i].isRedstone) {
+        this._data[i].isPowered = false;
         let position = this.indexToCoordinates(i);
         this.redstoneList.push(position);
       }
     }
-    for (let i = 0; i < this.length; ++i) {
-      if (this.data[i].isRedstoneBattery) {
+    for (let i = 0; i < this._data.length; ++i) {
+      if (this._data[i].isRedstoneBattery) {
         let position = this.indexToCoordinates(i);
         this.redstonePropagation(position);
       }
@@ -277,16 +277,16 @@ module.exports = class LevelPlane {
   */
   findDoorToAnimate(positionInQuestion) {
     let notOffendingIndex = this.coordinatesToIndex(positionInQuestion);
-    for (let i = 0; i < this.length; ++i) {
-      if (this.data[i].blockType === "doorIron" && notOffendingIndex !== i) {
-        this.data[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
-        if (this.data[i].isPowered && !this.data[i].isOpen) {
-          this.data[i].isOpen = true;
+    for (let i = 0; i < this._data.length; ++i) {
+      if (this._data[i].blockType === "doorIron" && notOffendingIndex !== i) {
+        this._data[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
+        if (this._data[i].isPowered && !this._data[i].isOpen) {
+          this._data[i].isOpen = true;
           if (this.levelModel) {
             this.levelModel.controller.levelView.animateDoor(i, true);
           }
-        } else if (!this.data[i].isPowered && this.data[i].isOpen) {
-          this.data[i].isOpen = false;
+        } else if (!this._data[i].isPowered && this._data[i].isOpen) {
+          this._data[i].isOpen = false;
           if (this.levelModel) {
             this.levelModel.controller.levelView.animateDoor(i, false);
           }
@@ -313,12 +313,12 @@ module.exports = class LevelPlane {
   * propagates power to the surrounding indices.
   */
   redstonePropagation(position) {
-    let block = this.data[this.coordinatesToIndex(position)];
+    let block = this._data[this.coordinatesToIndex(position)];
     if (block.isRedstone) {
       let indexToRemove = this.findPositionInArray(position, this.redstoneList);
       this.redstoneList.splice(indexToRemove,1);
       this.redstoneListON.push(position);
-      this.data[this.coordinatesToIndex(position)].isPowered = true;
+      this._data[this.coordinatesToIndex(position)].isPowered = true;
     }
 
     this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
@@ -331,7 +331,7 @@ module.exports = class LevelPlane {
   * the propagation call to surrounding indices.
   */
   blockPropagation(position) {
-    let adjacentBlock = this.data[position[1] * this.width + position[0]];
+    let adjacentBlock = this._data[position[1] * this.width + position[0]];
     if (this.inBounds(position) &&
       adjacentBlock.isPowered === false &&
       adjacentBlock.isRedstone) {
@@ -345,7 +345,7 @@ module.exports = class LevelPlane {
   */
   powerCheck(position) {
     return this.getOrthogonalPositions(position).some(orthogonalPosition => {
-      const block = this.data[this.coordinatesToIndex(orthogonalPosition)];
+      const block = this._data[this.coordinatesToIndex(orthogonalPosition)];
       if (block) {
         return (block.isRedstone && block.isPowered) || block.isRedstoneBattery;
       }
