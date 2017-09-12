@@ -509,8 +509,9 @@ module.exports = class LevelView {
     return (this.yToIndex(coordinates[1])) + coordinates[0];
   }
 
-  playMinecartTurnAnimation(position, facing, isOnBlock, completionHandler, turnDirection) {
-    var animation = this.playPlayerAnimation("mineCart_turn" + turnDirection, position, FacingDirection.Down, false);
+  playMinecartTurnAnimation(position, isUp, isOnBlock, completionHandler, turnDirection) {
+    const facing = isUp ? FacingDirection.Up : FacingDirection.Down;
+    var animation = this.playPlayerAnimation("mineCart_turn" + turnDirection, position, facing, false);
     return animation;
   }
 
@@ -569,7 +570,8 @@ module.exports = class LevelView {
     //turn
     if (arraydirection.substring(0, 4) === "turn") {
       direction = arraydirection.substring(5);
-      this.onAnimationEnd(this.playMinecartTurnAnimation(position, facing, isOnBlock, completionHandler, direction), () => {
+      const isUp = facing === FacingDirection.Up || nextFacing === FacingDirection.Up;
+      this.onAnimationEnd(this.playMinecartTurnAnimation(position, isUp, isOnBlock, completionHandler, direction), () => {
         this.playTrack(nextPosition, nextFacing, isOnBlock, completionHandler);
       });
     } else {
