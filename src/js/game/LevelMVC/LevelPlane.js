@@ -87,30 +87,9 @@ module.exports = class LevelPlane extends Array {
   * Changes the block at a desired position to the desired block.
   * Important note: This is the cornerstone of block placing/destroying.
   */
-  setBlockAt(position, block, direction = null) {
+  setBlockAt(position, block, offsetX, offsetY) {
     this[this.coordinatesToIndex(position)] = block;
-    let offset = [0,0];
-
-    // Direction will ever only not be null if we're calling this as a
-    // function of player movement.
-    switch (direction) {
-      case 0: {
-        offset[1] = -1;
-        break;
-      }
-      case 1: {
-        offset[0] = 1;
-        break;
-      }
-      case 2: {
-        offset[1] = 1;
-        break;
-      }
-      case 3: {
-        offset[0] = -1;
-        break;
-      }
-    }
+    let offset = [offsetX,offsetY];
 
     let positionInQuestion = [0,0];
     // This will either be the pos the player is leaving or entering, depending on situation

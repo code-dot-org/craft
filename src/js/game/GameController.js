@@ -728,7 +728,8 @@ class GameController {
     if (isMovingOffOf) {
       let position = this.levelModel.player.position;
       let block = new LevelBlock('pressurePlateUp');
-      this.levelModel.actionPlane.setBlockAt(position, block, direction);
+      let offset = this.directionToOffet(direction);
+      this.levelModel.actionPlane.setBlockAt(position, block, offset[0], offset[1]);
     }
     let outOfDoor = this.levelModel.isEntityOnBlocktype("Player", "doorIron");
 
@@ -760,12 +761,38 @@ class GameController {
       let position = this.levelModel.player.position;
       let block = new LevelBlock('pressurePlateDown');
       direction = (direction + 2) % 4;
-      this.levelModel.actionPlane.setBlockAt(position, block, direction);
+      let offset = this.directionToOffet(direction);
+      this.levelModel.actionPlane.setBlockAt(position, block, offset[0], offset[1]);
     } else {
       if (outOfDoor) {
         this.levelModel.actionPlane.findDoorToAnimate([-1, -1]);
       }
     }
+  }
+
+  directionToOffet(direction) {
+    let offset = [0,0];
+    // Direction will ever only not be null if we're calling this as a
+    // function of player movement.
+    switch (direction) {
+      case 0: {
+        offset[1] = -1;
+        break;
+      }
+      case 1: {
+        offset[0] = 1;
+        break;
+      }
+      case 2: {
+        offset[1] = 1;
+        break;
+      }
+      case 3: {
+        offset[0] = -1;
+        break;
+      }
+    }
+    return offset;
   }
 
   moveRandom(commandQueueItem) {
