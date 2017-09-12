@@ -119,7 +119,7 @@ module.exports = class LevelPlane extends Array {
     }
     let wasOnADoor = false;
     // If the questionable position was a door, we want to do a few things differently.
-    if (this[this.coordinatesToIndex(positionInQuestion)].blockType === "doorIron") {
+    if (this.getBlockAt(positionInQuestion).blockType === "doorIron") {
       wasOnADoor = true;
     }
 
@@ -128,9 +128,9 @@ module.exports = class LevelPlane extends Array {
       redstoneToRefresh = this.getRedstone();
       // Once we're done updating redstoneWire states, check to see if doors should open/close.
       if (wasOnADoor) {
-        this.findDoorToAnimate(this.coordinatesToIndex(positionInQuestion));
+        this.findDoorToAnimate(positionInQuestion);
       } else {
-        this.findDoorToAnimate(-1);
+        this.findDoorToAnimate([-1,-1]);
       }
     }
 
@@ -370,7 +370,8 @@ module.exports = class LevelPlane extends Array {
   /**
   * Find all iron doors in a level and evaluate if they need to be animated based on state
   */
-  findDoorToAnimate(notOffendingIndex) {
+  findDoorToAnimate(positionInQuestion) {
+    let notOffendingIndex = this.coordinatesToIndex(positionInQuestion);
     for (let i = 0; i < this.length; ++i) {
       if (this[i].blockType === "doorIron" && notOffendingIndex !== i) {
         this[i].isPowered = this.powerCheck(this.indexToCoordinates(i));

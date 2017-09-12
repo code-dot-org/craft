@@ -763,7 +763,7 @@ class GameController {
       this.levelModel.actionPlane.setBlockAt(position, block, direction);
     } else {
       if (outOfDoor) {
-        this.levelModel.actionPlane.findDoorToAnimate(-1);
+        this.levelModel.actionPlane.findDoorToAnimate([-1, -1]);
       }
     }
   }
