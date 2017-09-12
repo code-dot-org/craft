@@ -444,18 +444,6 @@ test('iron door open: place block', t => {
 
   plane.setBlockAt([0, 0], new LevelBlock('railsRedstoneTorch'));
 
-  const expected = [
-    false,true,false,
-    false,false,false,
-    true,false,false,
-  ];
-
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
-
   t.true(plane.getBlockAt([1, 0]).isOpen);
   t.true(plane.getBlockAt([0, 2]).isOpen);
 
@@ -472,18 +460,6 @@ test('iron door close: destroy block', t => {
 
   plane.setBlockAt([0, 0], new LevelBlock(''));
   plane.setBlockAt([2, 0], new LevelBlock('railsRedstoneTorch'));
-
-  const expected = [
-    false,true,false,
-    false,false,false,
-    false,false,false,
-  ];
-
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
 
   t.true(plane.getBlockAt([1, 0]).isOpen);
   t.false(plane.getBlockAt([1, 2]).isOpen);
