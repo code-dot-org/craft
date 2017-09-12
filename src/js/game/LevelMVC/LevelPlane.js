@@ -425,7 +425,7 @@ module.exports = class LevelPlane extends Array {
     let south = 1;
     let east = 2;
     let west = 3;
-    
+
     switch (this[this.coordinatesToIndex(position)].blockType) {
       case "pistonUp": {
         this.retractArm(neighborPosition[north]);
