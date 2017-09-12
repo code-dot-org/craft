@@ -77,7 +77,7 @@ window.demoLevels = {
     actionPlane: [
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "redstoneWire", "redstoneWire", "redstoneWire", "", "", "", "", "",
+      "", "pressurePlateUp", "redstoneWire", "redstoneWire", "redstoneWire", "", "", "", "", "",
       "", "redstoneWire", "", "grass", "doorIron", "grass", "", "", "", "",
       "", "redstoneWire", "", "", "pressurePlateUp", "", "", "", "", "",
       "", "redstoneWire", "", "grass", "doorIron", "grass", "", "", "", "",
