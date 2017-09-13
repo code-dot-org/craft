@@ -239,7 +239,10 @@ class GameController {
     this.queue.tick();
     this.levelEntity.tick();
     if (this.levelModel.usePlayer) {
-      this.player.updateMovement();
+      //this.player.updateMovement();
+      this.agent.updateMovement();
+      console.log("Agent position is: " + this.agent.position);
+      console.log("Player position is: " + this.player.position);
     }
     this.levelView.update();
 
