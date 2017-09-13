@@ -30,17 +30,18 @@ window.demoLevels = {
     instructions: "Nighttime is boring with no zombies (sheep at this time). Get the Zombies spawning at night, and get them to chase you.",
 
     playerStartPosition: [3, 4],
+    agentStartPosition: [2, 2],
 
     // up: 0, right: 1, down: 2, left: 3
     playerStartDirection: 1,
 
-    playerName: "Agent",
+    playerName: "SteveEvents",
     isEventLevel: true,
     earlyLoadAssetPacks: ['allAssetsMinusPlayer'],
-    earlyLoadNiceToHaveAssetPacks: ['playerAgent'],
+    earlyLoadNiceToHaveAssetPacks: ['playerSteveEvents', 'playerAgent'],
 
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerAgent'],
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteveEvents', 'playerAgent'],
       afterLoad: [],
     },
 

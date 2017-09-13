@@ -2,6 +2,7 @@ const LevelPlane = require("./LevelPlane.js");
 const LevelBlock = require("./LevelBlock.js");
 const FacingDirection = require("./FacingDirection.js");
 const Player = require("../Entities/Player.js");
+const Agent = require("../Entities/Agent.js");
 
 // for blocks on the action plane, we need an actual "block" object, so we can model
 
@@ -13,12 +14,14 @@ module.exports = class LevelModel {
       levelData.gridDimensions[1] : 10;
     this.controller = controller;
     this.player = {};
+    this.agent = {};
 
     this.initialLevelData = Object.create(levelData);
 
     this.reset();
 
     this.initialPlayerState = Object.create(this.player);
+    this.initialAgentState = Object.create(this.agent);
   }
 
   planeArea() {
@@ -65,6 +68,11 @@ module.exports = class LevelModel {
       this.player = new Player(this.controller, "Player", x, y, this.initialLevelData.playerName || "Steve", !this.actionPlane._data[this.yToIndex(y) + x].getIsEmptyOrEntity(), levelData.playerStartDirection);
       this.controller.levelEntity.pushEntity(this.player);
       this.controller.player = this.player;
+
+      [x, y] = levelData.agentStartPosition;
+      this.agent = new Agent(this.controller, "PlayerAgent", x, y, "Agent", !this.actionPlane._data[this.yToIndex(y) + x].getIsEmptyOrEntity(), levelData.agentStartDirection);
+      this.controller.levelEntity.pushEntity(this.agent);
+      this.controller.agent = this.agent;
     }
 
     this.computeShadingPlane();
