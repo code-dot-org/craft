@@ -239,10 +239,11 @@ class GameController {
     this.queue.tick();
     this.levelEntity.tick();
     if (this.levelModel.usePlayer) {
-      //this.player.updateMovement();
+      this.player.updateMovement();
       this.agent.updateMovement();
-      console.log("Agent position is: " + this.agent.position);
-      console.log("Player position is: " + this.player.position);
+      //pelican
+      //console.log("Agent position is: " + this.agent.position);
+      //console.log("Player position is: " + this.player.position);
     }
     this.levelView.update();
 
@@ -260,9 +261,12 @@ class GameController {
     this.game.input.keyboard.addKey(Phaser.Keyboard.UP).onDown.add(() => {
       this.player.movementState = FacingDirection.Up;
       this.player.updateMovement();
+      this.agent.updateMovement();
       if (this.isEdge()) {
         this.player.movementState = -1;
         this.player.updateMovement();
+        this.agent.movementState = -1;
+        this.agent.updateMovement();
       }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.UP).onUp.add(() => {
@@ -478,6 +482,8 @@ class GameController {
   // command processors
 
   getEntity(target) {
+    console.log(this.agent.position);
+    console.log(this.player.position);
     if (target === undefined) {
       target = 'Player';
     }
@@ -748,7 +754,14 @@ class GameController {
         commandQueueItem.succeeded();
       } else {
         let entity = this.getEntity(target);
+        let entityAgent = null;
+        if (target === "Player") {
+          entityAgent = this.getEntity("Agent");
+        }
+
         entity.moveDirection(commandQueueItem, direction);
+        commandQueueItem.target = "Agent";
+        entityAgent.moveDirection(commandQueueItem, direction);
       }
     } else {
       let entities = this.getEntities(target);
