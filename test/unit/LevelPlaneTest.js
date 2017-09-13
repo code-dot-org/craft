@@ -21,24 +21,24 @@ test('get blocks', t => {
   t.equal(plane.getBlockAt([2, 3]), undefined);
 
   t.deepEqual(plane.getOrthogonalBlocks([1, 1]), {
-    north: {block: new LevelBlock('dirt'), relative: FacingDirection.Down},
-    south: {block: new LevelBlock('dirt'), relative: FacingDirection.Up},
-    east: {block: new LevelBlock('water'), relative: FacingDirection.Left},
-    west: {block: new LevelBlock('water'), relative: FacingDirection.Right},
+    north: {block: new LevelBlock('dirt'), relative: FacingDirection.South},
+    south: {block: new LevelBlock('dirt'), relative: FacingDirection.North},
+    east: {block: new LevelBlock('water'), relative: FacingDirection.West},
+    west: {block: new LevelBlock('water'), relative: FacingDirection.East},
   });
 
   t.deepEqual(plane.getOrthogonalBlocks([2, 0]), {
-    north: {block: undefined, relative: FacingDirection.Down},
-    south: {block: new LevelBlock('water'), relative: FacingDirection.Up},
-    east: {block: new LevelBlock('sand'), relative: FacingDirection.Left},
-    west: {block: new LevelBlock('dirt'), relative: FacingDirection.Right},
+    north: {block: undefined, relative: FacingDirection.South},
+    south: {block: new LevelBlock('water'), relative: FacingDirection.North},
+    east: {block: new LevelBlock('sand'), relative: FacingDirection.West},
+    west: {block: new LevelBlock('dirt'), relative: FacingDirection.East},
   });
 
   t.deepEqual(plane.getOrthogonalBlocks([2, 3]), {
-    north: {block: new LevelBlock('stone'), relative: FacingDirection.Down},
-    south: {block: undefined, relative: FacingDirection.Up},
-    east: {block: undefined, relative: FacingDirection.Left},
-    west: {block: undefined, relative: FacingDirection.Right},
+    north: {block: new LevelBlock('stone'), relative: FacingDirection.South},
+    south: {block: undefined, relative: FacingDirection.North},
+    east: {block: undefined, relative: FacingDirection.West},
+    west: {block: undefined, relative: FacingDirection.East},
   });
 
   t.end();

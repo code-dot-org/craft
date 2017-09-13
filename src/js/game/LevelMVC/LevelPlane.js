@@ -1,10 +1,5 @@
 const LevelBlock = require("./LevelBlock.js");
-const FacingDirection = require("./FacingDirection.js");
-
-const North = FacingDirection.Up;
-const South = FacingDirection.Down;
-const East = FacingDirection.Right;
-const West = FacingDirection.Left;
+const {North, South, East, West} = require("./FacingDirection.js");
 
 const connectionName = function (connection) {
   switch (connection) {
