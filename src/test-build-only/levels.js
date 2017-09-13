@@ -80,7 +80,7 @@ window.demoLevels = {
       "", "redstoneWire", "redstoneWire", "redstoneWire", "pressurePlateUp", "redstoneWire", "redstoneWire", "oreDiamond", "", "",
       "", "", "", "", "redstoneWire", "", "", "grass", "oreDiamond", "",
       "", "", "", "", "redstoneWire", "", "", "", "grass", "",
-      "", "", "", "", "redstoneWire", "", "", "", "grass", "",
+      "", "", "", "", "redstoneWire", "", "", "", "grass", "grass",
       "", "", "", "redstoneWire", "redstoneWire", "redstoneWire", "redstoneWire", "redstoneWire", "pistonUp", "",
       "", "", "", "redstoneWire", "", "", "", "", "", "",
       "", "grass", "oreDiamond", "pistonLeft", "", "", "", "", "", "",
