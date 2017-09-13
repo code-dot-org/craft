@@ -230,7 +230,7 @@ class GameController {
   }
 
   followingPlayer() {
-    return !!this.levelData.gridDimensions;
+    return !!this.levelData.gridDimensions && !this.checkMinecartLevelEndAnimation();
   }
 
   update() {
@@ -1099,7 +1099,7 @@ class GameController {
     let frontPosition = this.levelModel.getMoveForwardPosition(player);
     let frontEntity = this.levelEntity.getEntityAt(frontPosition);
     const frontIndex = this.levelModel.yToIndex(frontPosition[1]) + frontPosition[0];
-    let frontBlock = this.levelModel.actionPlane[frontIndex];
+    let frontBlock = this.levelModel.actionPlane._data[frontIndex];
     const isFrontBlockDoor = frontBlock === undefined ? false : frontBlock.blockType === "door";
     if (frontEntity !== null) {
       // push use command to execute general use behavior of the entity before executing the event
@@ -1219,7 +1219,7 @@ class GameController {
     if (!this.levelModel.inBounds(position[0], position[1])) {
       return;
     }
-    let block = this.levelModel.actionPlane[this.levelModel.yToIndex(position[1]) + position[0]];
+    let block = this.levelModel.actionPlane._data[this.levelModel.yToIndex(position[1]) + position[0]];
 
     if (block !== null && block !== undefined) {
       let destroyPosition = position;
@@ -1281,7 +1281,7 @@ class GameController {
 
   placeBlock(commandQueueItem, blockType) {
     let blockIndex = (this.levelModel.yToIndex(this.levelModel.player.position[1]) + this.levelModel.player.position[0]);
-    let blockTypeAtPosition = this.levelModel.actionPlane[blockIndex].blockType;
+    let blockTypeAtPosition = this.levelModel.actionPlane._data[blockIndex].blockType;
     if (this.levelModel.canPlaceBlock()) {
       if (blockTypeAtPosition !== "") {
         this.levelModel.destroyBlock(blockIndex);

@@ -547,6 +547,8 @@ module.exports = class LevelView {
     position = [3, 2];
 
     animation = this.playLevelEndAnimation(position, facing, isOnBlock, completionHandler, false);
+    this.game.world.setBounds(0, 0, 440, 400);
+    this.game.camera.follow(this.player.sprite);
 
     animation.onComplete.add(() => {
       this.activateUnpoweredRails(unpoweredRails);
@@ -616,7 +618,7 @@ module.exports = class LevelView {
       for (var i = 0; i < createFloor.length; ++i) {
         xCoord = createFloor[i][1];
         yCoord = createFloor[i][2];
-        /*this.groundPlane[this.coordinatesToIndex([xCoord,yCoord])].kill();*/
+        /*this.groundPlane._data[this.coordinatesToIndex([xCoord,yCoord])].kill();*/
         sprite = this.createBlock(this.groundPlane, xCoord, yCoord, "wool_orange");
         sprite.sortOrder = this.yToIndex(yCoord);
       }
@@ -1136,16 +1138,16 @@ module.exports = class LevelView {
         let blockIndex = (this.yToIndex(y)) + x;
         sprite = null;
 
-        if (!levelData.groundDecorationPlane[blockIndex].isEmpty) {
-          sprite = this.createBlock(this.actionPlane, x, y, levelData.groundDecorationPlane[blockIndex].blockType);
+        if (!levelData.groundDecorationPlane._data[blockIndex].isEmpty) {
+          sprite = this.createBlock(this.actionPlane, x, y, levelData.groundDecorationPlane._data[blockIndex].blockType);
           if (sprite) {
             sprite.sortOrder = this.yToIndex(y);
           }
         }
 
         sprite = null;
-        if (!levelData.actionPlane[blockIndex].isEmpty) {
-          blockType = levelData.actionPlane[blockIndex].blockType;
+        if (!levelData.actionPlane._data[blockIndex].isEmpty) {
+          blockType = levelData.actionPlane._data[blockIndex].blockType;
           sprite = this.createBlock(this.actionPlane, x, y, blockType);
           if (sprite !== null) {
             sprite.sortOrder = this.yToIndex(y);
@@ -1159,8 +1161,8 @@ module.exports = class LevelView {
     for (y = 0; y < this.controller.levelModel.planeHeight; ++y) {
       for (x = 0; x < this.controller.levelModel.planeWidth; ++x) {
         let blockIndex = (this.yToIndex(y)) + x;
-        if (!levelData.fluffPlane[blockIndex].isEmpty) {
-          sprite = this.createBlock(this.fluffPlane, x, y, levelData.fluffPlane[blockIndex].blockType);
+        if (!levelData.fluffPlane._data[blockIndex].isEmpty) {
+          sprite = this.createBlock(this.fluffPlane, x, y, levelData.fluffPlane._data[blockIndex].blockType);
         }
       }
     }
@@ -1171,7 +1173,7 @@ module.exports = class LevelView {
     for (var y = 0; y < this.controller.levelModel.planeHeight; ++y) {
       for (var x = 0; x < this.controller.levelModel.planeWidth; ++x) {
         let blockIndex = (this.yToIndex(y)) + x;
-        var sprite = this.createBlock(this.groundPlane, x, y, this.controller.levelModel.groundPlane[blockIndex].blockType);
+        var sprite = this.createBlock(this.groundPlane, x, y, this.controller.levelModel.groundPlane._data[blockIndex].blockType);
         if (sprite) {
           sprite.sortOrder = this.yToIndex(y);
         }
@@ -1898,7 +1900,7 @@ module.exports = class LevelView {
     this.controller.audioPlayer.play("doorOpen");
     // If it's not walable, then open otherwise, close.
     this.playDoorAnimation(this.controller.levelModel.actionPlane.indexToCoordinates(index), open, () => {
-      this.controller.levelModel.actionPlane[index].isWalkable = !this.controller.levelModel.actionPlane[index].isWalkable;
+      this.controller.levelModel.actionPlane._data[index].isWalkable = !this.controller.levelModel.actionPlane._data[index].isWalkable;
       this.playIdleAnimation(player.position, player.facing, player.isOnBlock);
       this.setSelectionIndicatorPosition(player.position[0], player.position[1]);
     });
