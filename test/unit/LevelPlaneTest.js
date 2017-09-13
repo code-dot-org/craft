@@ -448,11 +448,11 @@ test('piston activate: place block', t => {
   plane.setBlockAt([4, 2], new LevelBlock('railsRedstoneTorch'));
 
   const expected = [
-    '','grass','pistonArm','pistonLeft','','pistonRight','pistonArm','grass',
+    '','grass','pistonArmLeft','pistonLeftOn','','pistonRightOn','pistonArmRight','grass',
     '','','grass','redstoneWireVerticalOn','','redstoneWireVerticalOn','','',
-    '','','pistonArm','redstoneWireTRightOn','railsRedstoneTorch','redstoneWireTLeftOn','','',
-    '','','pistonUp','redstoneWireUpLeftOn','','redstoneWireUpRightOn','pistonDown','',
-    '','','','','','','pistonArm','',
+    '','','pistonArmUp','redstoneWireTRightOn','railsRedstoneTorch','redstoneWireTLeftOn','','',
+    '','','pistonUpOn','redstoneWireUpLeftOn','','redstoneWireUpRightOn','pistonDownOn','',
+    '','','','','','','pistonArmDown','',
     '','','','','','','grass','',
   ];
 
@@ -469,11 +469,11 @@ test('piston activate: place block', t => {
 
 test('piston deactivate: destroy block', t => {
   const data = [
-    '','grass','pistonArm','pistonLeft','','pistonRight','pistonArm','grass',
+    '','grass','pistonArmLeft','pistonLeftOn','','pistonRightOn','pistonArmRight','grass',
     '','','grass','redstoneWireVerticalOn','','redstoneWireVerticalOn','','',
-    '','','pistonArm','redstoneWireTRightOn','railsRedstoneTorch','redstoneWireTLeftOn','','',
-    '','','pistonUp','redstoneWireUpLeftOn','','redstoneWireUpRightOn','pistonDown','',
-    '','','','','','','pistonArm','',
+    '','','pistonArmUp','redstoneWireTRightOn','railsRedstoneTorch','redstoneWireTLeftOn','','',
+    '','','pistonUpOn','redstoneWireUpLeftOn','','redstoneWireUpRightOn','pistonDownOn','',
+    '','','','','','','pistonArmDown','',
     '','','','','','','grass','',
   ];
   const plane = new LevelPlane(data, 8, 6, true);
