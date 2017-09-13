@@ -88,7 +88,6 @@ module.exports = class LevelPlane {
   /**
   * Changes the block at a desired position to the desired block.
   * Important note: This is the cornerstone of block placing/destroying.
-  * @param {boolean} skipRedstone: if for some reason we want to place a block and bypass the redstone evaluation.
   */
   setBlockAt(position, block, offsetX = 0, offsetY = 0) {
     this._data[this.coordinatesToIndex(position)] = block;
@@ -297,15 +296,14 @@ module.exports = class LevelPlane {
       if (this[index].isPowered) {
         this.activatePiston(this.indexToCoordinates(index));
         if (this.levelModel) {
-          this.levelModel.controller.updateFowPlane();
-          this.levelModel.controller.updateShadingPlane();
         }
       } else if (!this[index].isPowered) {
         this.deactivatePiston(this.indexToCoordinates(index));
-        if (this.levelModel) {
-          this.levelModel.controller.updateFowPlane();
-          this.levelModel.controller.updateShadingPlane();
-        }
+      }
+
+      if (this.levelModel) {
+        this.levelModel.controller.updateFowPlane();
+        this.levelModel.controller.updateShadingPlane();
       }
     }
   }
