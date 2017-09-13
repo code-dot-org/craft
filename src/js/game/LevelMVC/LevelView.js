@@ -176,11 +176,19 @@ module.exports = class LevelView {
       "pressurePlateUp": ["blocks", "PressurePlate_Up", -13, 0],
       "pressurePlateDown": ["blocks", "PressurePlate_Down", -13, 0],
 
-      "pistonUp": ["blocks", "Bricks", -13, 0],
-      "pistonDown": ["blocks", "Bricks", -13, 0],
-      "pistonLeft": ["blocks", "Bricks", -13, 0],
-      "pistonRight": ["blocks", "Bricks", -13, 0],
-      "pistonArm": ["blocks", "Piston_Arm", -13, 20],
+      "pistonUp": ["blocks", "piston_up", -13, 0],
+      "pistonDown": ["blocks", "piston_down", -13, 0],
+      "pistonLeft": ["blocks", "piston_left", -13, 0],
+      "pistonRight": ["blocks", "piston_right", -13, 0],
+      "pistonUpOn": ["blocks", "piston_base_up", -26, -13],
+      "pistonDownOn": ["blocks", "piston_base_down", -26, -13],
+      "pistonLeftOn": ["blocks", "piston_base_left", -26, -13],
+      "pistonRightOn": ["blocks", "piston_base_right", -26, -13],
+
+      "pistonArmLeft": ["blocks", "piston_arm_left", -26, -13],
+      "pistonArmRight": ["blocks", "piston_arm_right", -26, -13],
+      "pistonArmUp": ["blocks", "piston_arm_up", -26, -13],
+      "pistonArmDown": ["blocks", "piston_arm_down", -26, -13],
     };
     this.actionPlaneBlocks = [];
     this.toDestroy = [];
