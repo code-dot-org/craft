@@ -757,6 +757,7 @@ class GameController {
       commandQueueItem.succeeded();
     }
     let isMovingOnToPlate = this.levelModel.isEntityOnBlocktype("Player", "pressurePlateUp");
+    let destinationBlock = this.levelModel.actionPlane.getBlockAt(this.levelModel.player.position);
     if (isMovingOnToPlate) {
       let position = this.levelModel.player.position;
       let block = new LevelBlock('pressurePlateDown');
@@ -764,7 +765,7 @@ class GameController {
       let offset = this.directionToOffet(direction);
       this.levelModel.actionPlane.setBlockAt(position, block, offset[0], offset[1]);
     } else {
-      if (outOfDoor) {
+      if (outOfDoor && destinationBlock.blockType !== "doorIron") {
         this.levelModel.actionPlane.findDoorToAnimate([-1, -1]);
       }
     }
