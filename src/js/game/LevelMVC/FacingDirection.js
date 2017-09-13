@@ -1,11 +1,11 @@
 const FacingDirection = Object.freeze({
-  North: 1,
+  North: 0,
+  East: 1,
   South: 2,
-  East: 4,
-  West: 8,
+  West: 3,
 
-  opposite: function (cardinal) {
-    switch (cardinal) {
+  opposite: function (facing) {
+    switch (facing) {
       case FacingDirection.North: return FacingDirection.South;
       case FacingDirection.South: return FacingDirection.North;
       case FacingDirection.East: return FacingDirection.West;
@@ -19,26 +19,6 @@ const FacingDirection = Object.freeze({
       case FacingDirection.South: return to === FacingDirection.West ? 'right' : 'left';
       case FacingDirection.East: return to === FacingDirection.South ? 'right' : 'left';
       case FacingDirection.West: return to === FacingDirection.North ? 'right' : 'left';
-    }
-  },
-
-  // TODO: unify with N/S/E/W above.
-  Up: 0,
-  Right: 1,
-  Down: 2,
-  Left: 3,
-
-  /**
-   * Convert a direction (Up/Down/Right/Left) to a cardinal (North/South/East/West).
-   * @param facing
-   * @return {number}
-   */
-  facingToCardinal: function (facing) {
-    switch (facing) {
-      case FacingDirection.Up: return FacingDirection.North;
-      case FacingDirection.Down: return FacingDirection.South;
-      case FacingDirection.Right: return FacingDirection.East;
-      case FacingDirection.Left: return FacingDirection.West;
     }
   },
 

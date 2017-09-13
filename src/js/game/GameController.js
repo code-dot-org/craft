@@ -253,7 +253,7 @@ class GameController {
       return;
     }
     this.game.input.keyboard.addKey(Phaser.Keyboard.UP).onDown.add(() => {
-      this.player.movementState = FacingDirection.Up;
+      this.player.movementState = FacingDirection.North;
       this.player.updateMovement();
       if (this.isEdge()) {
         this.player.movementState = -1;
@@ -261,13 +261,13 @@ class GameController {
       }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.UP).onUp.add(() => {
-      if (this.player.movementState === FacingDirection.Up) {
+      if (this.player.movementState === FacingDirection.North) {
         this.player.movementState = -1;
       }
       this.player.updateMovement();
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.W).onDown.add(() => {
-      this.player.movementState = FacingDirection.Up;
+      this.player.movementState = FacingDirection.North;
       this.player.updateMovement();
       if (this.isEdge()) {
         this.player.movementState = -1;
@@ -275,13 +275,13 @@ class GameController {
       }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.W).onUp.add(() => {
-      if (this.player.movementState === FacingDirection.Up) {
+      if (this.player.movementState === FacingDirection.North) {
         this.player.movementState = -1;
       }
       this.player.updateMovement();
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onDown.add(() => {
-      this.player.movementState = FacingDirection.Right;
+      this.player.movementState = FacingDirection.East;
       this.player.updateMovement();
       if (this.isEdge()) {
         this.player.movementState = -1;
@@ -289,13 +289,13 @@ class GameController {
       }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onUp.add(() => {
-      if (this.player.movementState === FacingDirection.Right) {
+      if (this.player.movementState === FacingDirection.East) {
         this.player.movementState = -1;
       }
       this.player.updateMovement();
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.D).onDown.add(() => {
-      this.player.movementState = FacingDirection.Right;
+      this.player.movementState = FacingDirection.East;
       this.player.updateMovement();
       if (this.isEdge()) {
         this.player.movementState = -1;
@@ -303,13 +303,13 @@ class GameController {
       }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.D).onUp.add(() => {
-      if (this.player.movementState === FacingDirection.Right) {
+      if (this.player.movementState === FacingDirection.East) {
         this.player.movementState = -1;
       }
       this.player.updateMovement();
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN).onDown.add(() => {
-      this.player.movementState = FacingDirection.Down;
+      this.player.movementState = FacingDirection.South;
       this.player.updateMovement();
       if (this.isEdge()) {
         this.player.movementState = -1;
@@ -317,13 +317,13 @@ class GameController {
       }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN).onUp.add(() => {
-      if (this.player.movementState === FacingDirection.Down) {
+      if (this.player.movementState === FacingDirection.South) {
         this.player.movementState = -1;
       }
       this.player.updateMovement();
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.S).onDown.add(() => {
-      this.player.movementState = FacingDirection.Down;
+      this.player.movementState = FacingDirection.South;
       this.player.updateMovement();
       if (this.isEdge()) {
         this.player.movementState = -1;
@@ -331,13 +331,13 @@ class GameController {
       }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.S).onUp.add(() => {
-      if (this.player.movementState === FacingDirection.Down) {
+      if (this.player.movementState === FacingDirection.South) {
         this.player.movementState = -1;
       }
       this.player.updateMovement();
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT).onDown.add(() => {
-      this.player.movementState = FacingDirection.Left;
+      this.player.movementState = FacingDirection.West;
       this.player.updateMovement();
       if (this.isEdge()) {
         this.player.movementState = -1;
@@ -345,13 +345,13 @@ class GameController {
       }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT).onUp.add(() => {
-      if (this.player.movementState === FacingDirection.Left) {
+      if (this.player.movementState === FacingDirection.West) {
         this.player.movementState = -1;
       }
       this.player.updateMovement();
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.A).onDown.add(() => {
-      this.player.movementState = FacingDirection.Left;
+      this.player.movementState = FacingDirection.West;
       this.player.updateMovement();
       if (this.isEdge()) {
         this.player.movementState = -1;
@@ -359,7 +359,7 @@ class GameController {
       }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.A).onUp.add(() => {
-      if (this.player.movementState === FacingDirection.Left) {
+      if (this.player.movementState === FacingDirection.West) {
         this.player.movementState = -1;
       }
       this.player.updateMovement();
@@ -728,8 +728,11 @@ class GameController {
     if (isMovingOffOf) {
       let position = this.levelModel.player.position;
       let block = new LevelBlock('pressurePlateUp');
-      this.levelModel.actionPlane.setBlockAt(position, block);
+      let offset = this.directionToOffet(direction);
+      this.levelModel.actionPlane.setBlockAt(position, block, offset[0], offset[1]);
     }
+    let outOfDoor = this.levelModel.isEntityOnBlocktype("Player", "doorIron");
+
     let target = commandQueueItem.target;
     if (!this.isType(target)) {
       // apply to all entities
@@ -753,12 +756,44 @@ class GameController {
       }
       commandQueueItem.succeeded();
     }
-    let isMovingOnTo = this.levelModel.isEntityOnBlocktype("Player", "pressurePlateUp");
-    if (isMovingOnTo) {
+    let isMovingOnToPlate = this.levelModel.isEntityOnBlocktype("Player", "pressurePlateUp");
+    let destinationBlock = this.levelModel.actionPlane.getBlockAt(this.levelModel.player.position);
+    if (isMovingOnToPlate) {
       let position = this.levelModel.player.position;
       let block = new LevelBlock('pressurePlateDown');
-      this.levelModel.actionPlane.setBlockAt(position, block);
+      direction = (direction + 2) % 4;
+      let offset = this.directionToOffet(direction);
+      this.levelModel.actionPlane.setBlockAt(position, block, offset[0], offset[1]);
+    } else {
+      if (outOfDoor && destinationBlock.blockType !== "doorIron") {
+        this.levelModel.actionPlane.findDoorToAnimate([-1, -1]);
+      }
     }
+  }
+
+  directionToOffet(direction) {
+    let offset = [0,0];
+    // Direction will ever only not be null if we're calling this as a
+    // function of player movement.
+    switch (direction) {
+      case 0: {
+        offset[1] = -1;
+        break;
+      }
+      case 1: {
+        offset[0] = 1;
+        break;
+      }
+      case 2: {
+        offset[1] = 1;
+        break;
+      }
+      case 3: {
+        offset[0] = -1;
+        break;
+      }
+    }
+    return offset;
   }
 
   moveRandom(commandQueueItem) {
@@ -1064,7 +1099,7 @@ class GameController {
     let frontPosition = this.levelModel.getMoveForwardPosition(player);
     let frontEntity = this.levelEntity.getEntityAt(frontPosition);
     const frontIndex = this.levelModel.yToIndex(frontPosition[1]) + frontPosition[0];
-    let frontBlock = this.levelModel.actionPlane[frontIndex];
+    let frontBlock = this.levelModel.actionPlane._data[frontIndex];
     const isFrontBlockDoor = frontBlock === undefined ? false : frontBlock.blockType === "door";
     if (frontEntity !== null) {
       // push use command to execute general use behavior of the entity before executing the event
@@ -1184,7 +1219,7 @@ class GameController {
     if (!this.levelModel.inBounds(position[0], position[1])) {
       return;
     }
-    let block = this.levelModel.actionPlane[this.levelModel.yToIndex(position[1]) + position[0]];
+    let block = this.levelModel.actionPlane._data[this.levelModel.yToIndex(position[1]) + position[0]];
 
     if (block !== null && block !== undefined) {
       let destroyPosition = position;
@@ -1246,7 +1281,7 @@ class GameController {
 
   placeBlock(commandQueueItem, blockType) {
     let blockIndex = (this.levelModel.yToIndex(this.levelModel.player.position[1]) + this.levelModel.player.position[0]);
-    let blockTypeAtPosition = this.levelModel.actionPlane[blockIndex].blockType;
+    let blockTypeAtPosition = this.levelModel.actionPlane._data[blockIndex].blockType;
     if (this.levelModel.canPlaceBlock()) {
       if (blockTypeAtPosition !== "") {
         this.levelModel.destroyBlock(blockIndex);
@@ -1256,6 +1291,7 @@ class GameController {
         this.levelModel.player.updateHidingBlock(this.levelModel.player.position);
         this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, blockTypeAtPosition, () => {
           if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {
+            // Special 'minecart' level places a mix of regular and powered tracks, depending on location.
             if (this.levelModel.player.position[1] < 7) {
               blockType = "railsUnpoweredVertical";
             } else {
