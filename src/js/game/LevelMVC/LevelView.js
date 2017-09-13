@@ -1177,7 +1177,13 @@ module.exports = class LevelView {
         sprite = null;
         if (!levelData.actionPlane.getBlockAt(position).isEmpty) {
           blockType = levelData.actionPlane.getBlockAt(position).blockType;
-          sprite = this.createBlock(this.actionPlane, x, y, blockType);
+
+          if (blockType.endsWith("Miniblock")) {
+            sprite = this.createMiniBlock(x, y, blockType.replace("Miniblock", ""));
+          } else {
+            sprite = this.createBlock(this.actionPlane, x, y, blockType);
+          }
+
           if (sprite !== null) {
             sprite.sortOrder = this.yToIndex(y);
           }

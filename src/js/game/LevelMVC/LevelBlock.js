@@ -25,6 +25,15 @@ module.exports = class LevelBlock {
       this.isUsable = false;
     }
 
+    if (blockType.endsWith("Miniblock")) {
+      this.isEntity = true;
+      this.isWalkable = true;
+      this.isDestroyable = false;
+      this.isPlacable = true;
+      this.isUsable = false;
+      this.isTransparent = true;
+    }
+
     if (blockType.match('torch')) {
       this.isWalkable = true;
       this.isPlacable = true;
