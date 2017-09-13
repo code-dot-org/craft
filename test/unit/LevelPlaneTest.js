@@ -2,6 +2,7 @@ const test = require('tape');
 
 const LevelPlane = require('../../src/js/game/LevelMVC/LevelPlane');
 const LevelBlock = require('../../src/js/game/LevelMVC/LevelBlock');
+const FacingDirection = require('../../src/js/game/LevelMVC/FacingDirection');
 
 test('get blocks', t => {
   const data = [
@@ -20,24 +21,24 @@ test('get blocks', t => {
   t.equal(plane.getBlockAt([2, 3]), undefined);
 
   t.deepEqual(plane.getOrthogonalBlocks([1, 1]), {
-    north: {block: new LevelBlock('dirt'), relative: 2},
-    south: {block: new LevelBlock('dirt'), relative: 1},
-    east: {block: new LevelBlock('water'), relative: 8},
-    west: {block: new LevelBlock('water'), relative: 4},
+    north: {block: new LevelBlock('dirt'), relative: FacingDirection.Down},
+    south: {block: new LevelBlock('dirt'), relative: FacingDirection.Up},
+    east: {block: new LevelBlock('water'), relative: FacingDirection.Left},
+    west: {block: new LevelBlock('water'), relative: FacingDirection.Right},
   });
 
   t.deepEqual(plane.getOrthogonalBlocks([2, 0]), {
-    north: {block: undefined, relative: 2},
-    south: {block: new LevelBlock('water'), relative: 1},
-    east: {block: new LevelBlock('sand'), relative: 8},
-    west: {block: new LevelBlock('dirt'), relative: 4},
+    north: {block: undefined, relative: FacingDirection.Down},
+    south: {block: new LevelBlock('water'), relative: FacingDirection.Up},
+    east: {block: new LevelBlock('sand'), relative: FacingDirection.Left},
+    west: {block: new LevelBlock('dirt'), relative: FacingDirection.Right},
   });
 
   t.deepEqual(plane.getOrthogonalBlocks([2, 3]), {
-    north: {block: new LevelBlock('stone'), relative: 2},
-    south: {block: undefined, relative: 1},
-    east: {block: undefined, relative: 8},
-    west: {block: undefined, relative: 4},
+    north: {block: new LevelBlock('stone'), relative: FacingDirection.Down},
+    south: {block: undefined, relative: FacingDirection.Up},
+    east: {block: undefined, relative: FacingDirection.Left},
+    west: {block: undefined, relative: FacingDirection.Right},
   });
 
   t.end();
@@ -181,7 +182,7 @@ test('rail connections: unpowered T-junctions', t => {
 //   ║     ═══    ╔══    ╔═╗
 //                ║      ╚═╝
 //
-test('rail connections: 4x4 loop', t => {
+test('rail connections: 2x2 loop', t => {
   const data = new Array(4).fill('');
   const plane = new LevelPlane(data, 2, 2, true);
 

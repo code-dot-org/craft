@@ -1,16 +1,17 @@
 const LevelBlock = require("./LevelBlock.js");
+const FacingDirection = require("./FacingDirection.js");
 
-const North = 1;
-const South = 2;
-const East = 4;
-const West = 8;
+const North = FacingDirection.Up;
+const South = FacingDirection.Down;
+const East = FacingDirection.Right;
+const West = FacingDirection.Left;
 
 const connectionName = function (connection) {
   switch (connection) {
-    case 1: return 'North';
+    case 0: return 'North';
     case 2: return 'South';
-    case 4: return 'East';
-    case 8: return 'West';
+    case 1: return 'East';
+    case 3: return 'West';
     default: return '';
   }
 };
@@ -181,7 +182,7 @@ module.exports = class LevelPlane {
       return;
     }
 
-    if (block.connectionA && block.connectionB) {
+    if (block.connectionA !== undefined && block.connectionB !== undefined) {
       return;
     }
 
@@ -189,8 +190,8 @@ module.exports = class LevelPlane {
       if (!block || !block.isRail) {
         return false;
       }
-      const a = !block.connectionA || block.connectionA === relative;
-      const b = !block.connectionB || block.connectionB === relative;
+      const a = block.connectionA === undefined || block.connectionA === relative;
+      const b = block.connectionB === undefined || block.connectionB === relative;
 
       return a || b;
     });
