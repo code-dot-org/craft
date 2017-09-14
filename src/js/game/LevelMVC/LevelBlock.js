@@ -25,7 +25,7 @@ module.exports = class LevelBlock {
       this.isUsable = false;
     }
 
-    if (blockType.endsWith("Miniblock")) {
+    if (this.getIsMiniblock()) {
       this.isEntity = true;
       this.isWalkable = true;
       this.isDestroyable = false;
@@ -144,6 +144,10 @@ module.exports = class LevelBlock {
         this.isEntity = true;
       }
     }
+  }
+
+  getIsMiniblock() {
+    return this.blockType.endsWith("Miniblock")
   }
 
   getIsTree() {

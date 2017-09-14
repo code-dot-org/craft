@@ -1175,13 +1175,12 @@ module.exports = class LevelView {
         }
 
         sprite = null;
-        if (!levelData.actionPlane.getBlockAt(position).isEmpty) {
-          blockType = levelData.actionPlane.getBlockAt(position).blockType;
-
-          if (blockType.endsWith("Miniblock")) {
-            sprite = this.createMiniBlock(x, y, blockType.replace("Miniblock", ""));
+        const actionBlock = levelData.actionPlane.getBlockAt(position);
+        if (!actionBlock.isEmpty) {
+          if (actionBlock.getIsMiniblock()) {
+            sprite = this.createMiniBlock(x, y, actionBlock.blockType);
           } else {
-            sprite = this.createBlock(this.actionPlane, x, y, blockType);
+            sprite = this.createBlock(this.actionPlane, x, y, actionBlock.blockType);
           }
 
           if (sprite !== null) {
