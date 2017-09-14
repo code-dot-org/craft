@@ -60,7 +60,7 @@ module.exports = class Player extends BaseEntity {
     let wasOnBlock = player.isOnBlock;
     let prevPosition = this.position;
     // update position
-    levelModel.moveForward();
+    levelModel.moveForward(this);
     // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
 
     jumpOff = wasOnBlock && wasOnBlock !== player.isOnBlock;
@@ -70,8 +70,8 @@ module.exports = class Player extends BaseEntity {
       groundType = levelModel.groundPlane._data[levelModel.yToIndex(player.position[1]) + player.position[0]].blockType;
     }
 
-    levelView.playMoveForwardAnimation(player.position, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, () => {
-      levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
+    levelView.playMoveForwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, () => {
+      levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock, "Agent");
 
       if (levelModel.isPlayerStandingInWater()) {
         levelView.playDrownFailureAnimation(player.position, player.facing, player.isOnBlock, () => {

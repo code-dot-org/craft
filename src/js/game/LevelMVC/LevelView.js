@@ -212,6 +212,9 @@ module.exports = class LevelView {
 
     this.resetPlanes(levelModel);
     if (levelModel.usePlayer) {
+      console.log(this.player);
+      console.log(this.agent);
+
       this.preparePlayerSprite(this.player.name);
       this.player.sprite.animations.stop();
       this.setPlayerPosition(this.player.position[0], this.player.position[1], this.player.isOnBlock);
@@ -316,20 +319,12 @@ module.exports = class LevelView {
     });
   }
 
-  playPlayerAnimation(animationName, position, facing) {
+  playPlayerAnimation(animationName, position, facing, isOnBlock = false, entity = this.player) {
     let direction = this.getDirectionName(facing);
-    this.player.sprite.sortOrder = this.yToIndex(position[1]) + 5;
+    entity.sprite.sortOrder = this.yToIndex(position[1]) + 5;
 
     let animName = animationName + direction;
-    return this.playScaledSpeed(this.player.sprite.animations, animName);
-  }
-
-  playAgentAnimation(animationName, position, facing) {
-    let direction = this.getDirectionName(facing);
-    this.agent.sprite.sortOrder = this.yToIndex(position[1]) + 5;
-
-    let animName = animationName + direction;
-    return this.playScaledSpeed(this.agent.sprite.animations, animName);
+    return this.playScaledSpeed(entity.sprite.animations, animName);
   }
 
   playIdleAnimation(position, facing, isOnBlock, entity = "") {
@@ -341,7 +336,7 @@ module.exports = class LevelView {
           this.playPlayerAnimation("idle", position, facing, isOnBlock);
           break;
         case "Agent":
-          this.playAgentAnimation("idle", position, facing, isOnBlock);
+          this.playPlayerAnimation("idle", position, facing, isOnBlock, this.agent);
           break;
       }
     }
@@ -725,8 +720,9 @@ module.exports = class LevelView {
     }
   }
 
-  playMoveForwardAnimation(position, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, completionHandler) {
+  playMoveForwardAnimation(entity, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, completionHandler) {
     let tween;
+    let position = entity.position;
 
     //stepping on stone sfx
     this.playBlockSound(groundType);
@@ -734,12 +730,12 @@ module.exports = class LevelView {
     this.setSelectionIndicatorPosition(position[0], position[1]);
     //make sure to render high for when moving up after placing a block
     var zOrderYIndex = position[1] + (facing === FacingDirection.Up ? 1 : 0);
-    this.player.sprite.sortOrder = this.yToIndex(zOrderYIndex) + 5;
+    entity.sprite.sortOrder = this.yToIndex(zOrderYIndex) + 5;
 
     if (!shouldJumpDown) {
       const animName = "walk" + this.getDirectionName(facing);
-      this.playScaledSpeed(this.player.sprite.animations, animName);
-      tween = this.addResettableTween(this.player.sprite).to(
+      this.playScaledSpeed(entity.sprite.animations, animName);
+      tween = this.addResettableTween(entity.sprite).to(
         this.positionToScreen(position, isOnBlock), 180, Phaser.Easing.Linear.None);
     } else {
       tween = this.playPlayerJumpDownVerticalAnimation(facing, position, oldPosition);
