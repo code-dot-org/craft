@@ -66,7 +66,7 @@ module.exports = class LevelModel {
       this.usePlayer = true;
     }
     if (this.usePlayer) {
-      this.player = new Player(this.controller, "Player", x, y, this.initialLevelData.playerName || "Steve", !this.actionPlane.getBlock(this.yToIndex(y) + x).getIsEmptyOrEntity(), levelData.playerStartDirection);
+      this.player = new Player(this.controller, "Player", x, y, this.initialLevelData.playerName || "Steve", !this.actionPlane.getBlockAt([x, y]).getIsEmptyOrEntity(), levelData.playerStartDirection);
       this.controller.levelEntity.pushEntity(this.player);
       this.controller.player = this.player;
 
@@ -540,7 +540,7 @@ module.exports = class LevelModel {
   getAllBorderingPositionNotOfType(position, blockType) {
     var surroundingBlocks = this.getAllBorderingPosition(position, null);
     for (var b = 1; b < surroundingBlocks.length; ++b) {
-      if (surroundingBlocks[b][0] && this.actionPlane.getBlock(this.coordinatesToIndex(surroundingBlocks[b][1])).blockType === blockType) {
+      if (surroundingBlocks[b][0] && this.actionPlane.getBlockAt(surroundingBlocks[b][1]).blockType === blockType) {
         surroundingBlocks[b][0] = false;
       }
     }
@@ -673,7 +673,7 @@ module.exports = class LevelModel {
     }
     let plane = this.getPlaneToPlaceOn(this.getMoveForwardPosition(entity));
     if (plane === this.groundPlane) {
-      if (blockType === "redstoneWire" || blockType.substring(0,5) === "rails" && this.groundPlane.getBlock(this.groundPlane.coordinatesToIndex(this.getMoveForwardPosition()))) {
+      if (blockType === "redstoneWire" || blockType.substring(0,5) === "rails" && this.groundPlane.getBlockAt(this.getMoveForwardPosition())) {
         return false;
       }
     }

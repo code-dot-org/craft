@@ -139,7 +139,7 @@ module.exports = class BaseEntity {
         var prevPosition = this.position;
         this.position = forwardPosition;
         // play sound effect
-        let groundType = levelModel.groundPlane.getBlock(levelModel.yToIndex(this.position[1]) + this.position[0]).blockType;
+        let groundType = levelModel.groundPlane.getBlockAt(this.position).blockType;
         // play move forward animation and play idle after that
         this.playMoveForwardAnimation(forwardPosition, this.facing, commandQueueItem, groundType, () => {
         });

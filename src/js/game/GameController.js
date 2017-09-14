@@ -1281,7 +1281,7 @@ class GameController {
     if (!this.levelModel.inBounds(position[0], position[1])) {
       return;
     }
-    let block = this.levelModel.actionPlane.getBlock(this.levelModel.yToIndex(position[1]) + position[0]);
+    let block = this.levelModel.actionPlane.getBlockAt(position);
 
     if (block !== null && block !== undefined) {
       let destroyPosition = position;
@@ -1349,7 +1349,7 @@ class GameController {
         this.levelModel.destroyBlock(blockIndex);
       }
 
-      if (blockType !== "cropWheat" || this.levelModel.groundPlane.getBlockAt((this.levelModel.player.position)).blockType === "farmlandWet") {
+      if (blockType !== "cropWheat" || this.levelModel.groundPlane.getBlockAt(this.levelModel.player.position).blockType === "farmlandWet") {
         this.levelModel.player.updateHidingBlock(this.levelModel.player.position);
         this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, blockTypeAtPosition, () => {
           if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {

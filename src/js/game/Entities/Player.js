@@ -65,9 +65,9 @@ module.exports = class Player extends BaseEntity {
 
     jumpOff = wasOnBlock && wasOnBlock !== player.isOnBlock;
     if (player.isOnBlock || jumpOff) {
-      groundType = levelModel.actionPlane.getBlock(levelModel.yToIndex(player.position[1]) + player.position[0]).blockType;
+      groundType = levelModel.actionPlane.getBlockAt(player.position).blockType;
     } else {
-      groundType = levelModel.groundPlane.getBlock(levelModel.yToIndex(player.position[1]) + player.position[0]).blockType;
+      groundType = levelModel.groundPlane.getBlockAt(player.position).blockType;
     }
 
     levelView.playMoveForwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, () => {
