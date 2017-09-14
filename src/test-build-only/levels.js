@@ -34,6 +34,7 @@ window.demoLevels = {
 
     // up: 0, right: 1, down: 2, left: 3
     playerStartDirection: 1,
+    agentStartDirection: 1,
 
     playerName: "SteveEvents",
     isEventLevel: true,
