@@ -122,11 +122,17 @@ module.exports = class LevelBlock {
     if (blockType.startsWith("pressurePlate")) {
       this.isEntity = true;
       this.isWalkable = true;
-      this.isUsable = true;
       this.isDestroyable = false;
       this.isTransparent = true;
       this.isConnectedToRedstone = true;
       this.isRedstoneBattery = blockType === 'pressurePlateUp' ? false : true;
+    }
+
+    if (blockType.startsWith("piston")) {
+      this.isEntity = true;
+      this.isDestroyable = false;
+      this.isTransparent = true;
+      this.isConnectedToRedstone = blockType !== "pistonArm";
     }
   }
 
