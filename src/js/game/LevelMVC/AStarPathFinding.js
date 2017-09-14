@@ -7,7 +7,7 @@ module.exports = class AStarPathFinding {
 
   createGrid() {
     let tempGrid = [];
-    for (let i = 0; i < this.levelModel.actionPlane._data.length; i++) {
+    for (let i = 0; i < this.levelModel.actionPlane.getBlockCount(); i++) {
       let coordinates = this.levelModel.indexToXY(i);
       // Push node objects.
       tempGrid.push({
@@ -41,7 +41,7 @@ module.exports = class AStarPathFinding {
   getNode(position) {
     const index = this.levelModel.coordinatesToIndex(position);
     if (this.levelModel.inBounds(position[0], position[1]) &&   // is the node within bounds
-        this.levelModel.actionPlane._data[index].isEmpty &&           // is the node empty
+        this.levelModel.actionPlane.getBlock(index).isEmpty &&  // is the node empty
         !this.grid[index].closed) {                             // has the node already been processed.
       return this.grid[index];
     }
