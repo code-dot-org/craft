@@ -19,10 +19,10 @@ module.exports.convertActionPlaneEntitiesToConfig = function (levelConfig) {
 
       if (item.match(/sheep|zombie|ironGolem|creeper|cow|chicken/)) {
         const suffixToDirection = {
-          Up: FacingDirection.Up,
-          Down: FacingDirection.Down,
-          Left: FacingDirection.Left,
-          Right: FacingDirection.Right,
+          Up: FacingDirection.North,
+          Down: FacingDirection.South,
+          Left: FacingDirection.West,
+          Right: FacingDirection.East,
         };
 
         levelConfig.entities = levelConfig.entities || [];
@@ -31,7 +31,7 @@ module.exports.convertActionPlaneEntitiesToConfig = function (levelConfig) {
 
         const directionMatch = item.match(/(.*)(Right|Left|Up|Down)/);
         const directionToUse = directionMatch ?
-          suffixToDirection[directionMatch[2]] : FacingDirection.Right;
+          suffixToDirection[directionMatch[2]] : FacingDirection.East;
         const entityToUse = directionMatch ? directionMatch[1] : item;
         levelConfig.entities.push([entityToUse, x, y, directionToUse]);
         plane[i] = '';

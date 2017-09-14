@@ -25,7 +25,7 @@ module.exports = class Sheep extends BaseEntity {
         var levelView = this.controller.levelView;
         var tween;
         // update z order
-        var zOrderYIndex = position[1] + (facing === FacingDirection.Up ? 1 : 0);
+        var zOrderYIndex = position[1] + (facing === FacingDirection.North ? 1 : 0);
         this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex) + 1;
         // stepping sound
         levelView.playBlockSound(groundType);
