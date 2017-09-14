@@ -176,7 +176,7 @@ module.exports = class LevelBlock {
    * @return {boolean}
    */
   static isMiniblock(blockType) {
-    return blockType.endsWith("Miniblock")
+    return blockType.endsWith("Miniblock");
   }
 
   /**

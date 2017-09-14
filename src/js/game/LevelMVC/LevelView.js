@@ -1142,8 +1142,7 @@ module.exports = class LevelView {
   resetPlanes(levelData) {
     var sprite,
       x,
-      y,
-      blockType;
+      y;
 
     this.groundPlane.removeAll(true);
     this.actionPlane.removeAll(true);
@@ -1587,7 +1586,7 @@ module.exports = class LevelView {
    */
   createMiniBlock(x, y, blockType) {
     let sprite = null,
-        frameList;
+      frameList;
 
     const frame = LevelBlock.getMiniblockFrame(blockType);
     const atlas = "miniBlocks";
