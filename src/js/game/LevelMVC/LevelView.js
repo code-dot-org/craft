@@ -1,3 +1,4 @@
+const LevelBlock = require("./LevelBlock.js");
 const FacingDirection = require("./FacingDirection.js");
 
 module.exports = class LevelView {
