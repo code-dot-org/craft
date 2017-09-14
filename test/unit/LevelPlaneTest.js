@@ -2,6 +2,7 @@ const test = require('tape');
 
 const LevelPlane = require('../../src/js/game/LevelMVC/LevelPlane');
 const LevelBlock = require('../../src/js/game/LevelMVC/LevelBlock');
+const FacingDirection = require('../../src/js/game/LevelMVC/FacingDirection');
 
 test('get blocks', t => {
   const data = [
@@ -20,24 +21,24 @@ test('get blocks', t => {
   t.equal(plane.getBlockAt([2, 3]), undefined);
 
   t.deepEqual(plane.getOrthogonalBlocks([1, 1]), {
-    north: {block: new LevelBlock('dirt'), relative: 2},
-    south: {block: new LevelBlock('dirt'), relative: 1},
-    east: {block: new LevelBlock('water'), relative: 8},
-    west: {block: new LevelBlock('water'), relative: 4},
+    north: {block: new LevelBlock('dirt'), relative: FacingDirection.South},
+    south: {block: new LevelBlock('dirt'), relative: FacingDirection.North},
+    east: {block: new LevelBlock('water'), relative: FacingDirection.West},
+    west: {block: new LevelBlock('water'), relative: FacingDirection.East},
   });
 
   t.deepEqual(plane.getOrthogonalBlocks([2, 0]), {
-    north: {block: undefined, relative: 2},
-    south: {block: new LevelBlock('water'), relative: 1},
-    east: {block: new LevelBlock('sand'), relative: 8},
-    west: {block: new LevelBlock('dirt'), relative: 4},
+    north: {block: undefined, relative: FacingDirection.South},
+    south: {block: new LevelBlock('water'), relative: FacingDirection.North},
+    east: {block: new LevelBlock('sand'), relative: FacingDirection.West},
+    west: {block: new LevelBlock('dirt'), relative: FacingDirection.East},
   });
 
   t.deepEqual(plane.getOrthogonalBlocks([2, 3]), {
-    north: {block: new LevelBlock('stone'), relative: 2},
-    south: {block: undefined, relative: 1},
-    east: {block: undefined, relative: 8},
-    west: {block: undefined, relative: 4},
+    north: {block: new LevelBlock('stone'), relative: FacingDirection.South},
+    south: {block: undefined, relative: FacingDirection.North},
+    east: {block: undefined, relative: FacingDirection.West},
+    west: {block: undefined, relative: FacingDirection.East},
   });
 
   t.end();
@@ -75,13 +76,8 @@ test('redstone wires', t => {
     'Horizontal','Cross',     'TUp',       'Horizontal',null,        'Vertical',
     null,        'Vertical',  null,        null,        'Horizontal','UpLeft',
   ].map(wire => wire === null ? '' : `redstoneWire${wire}`);
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
 
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   // Destroy a few wires.
   plane.setBlockAt([2, 1], new LevelBlock(''));
@@ -95,13 +91,8 @@ test('redstone wires', t => {
     null,        'TRight',    'Horizontal','Horizontal',null,         '',
     null,        'Vertical',  null,        null,        '',           null,
   ].map(wire => wire === null ? '' : `redstoneWire${wire}`);
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
 
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });
@@ -140,13 +131,8 @@ test('rail connections: T-junctions', t => {
   ].map(rail => {
     return rail.replace('N', 'North').replace('S', 'South').replace('E', 'East').replace('W', 'West');
   });
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
 
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });
@@ -185,13 +171,8 @@ test('rail connections: unpowered T-junctions', t => {
   ].map(rail => {
     return rail.replace('U', 'Unpowered').replace('N', 'North').replace('S', 'South').replace('E', 'East').replace('W', 'West');
   });
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
 
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });
@@ -201,7 +182,7 @@ test('rail connections: unpowered T-junctions', t => {
 //   ║     ═══    ╔══    ╔═╗
 //                ║      ╚═╝
 //
-test('rail connections: 4x4 loop', t => {
+test('rail connections: 2x2 loop', t => {
   const data = new Array(4).fill('');
   const plane = new LevelPlane(data, 2, 2, true);
 
@@ -214,13 +195,8 @@ test('rail connections: 4x4 loop', t => {
     'railsSouthEast', 'railsSouthWest',
     'railsNorthEast', 'railsNorthWest',
   ];
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
 
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });
@@ -253,13 +229,8 @@ test('rail connections: longer track', t => {
     '',               'railsNorthSouth','railsNorthEast', 'railsSouthWest',
     '',               'railsNorthEast', 'railsEastWest',  'railsNorthWest',
   ];
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
 
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });
@@ -287,13 +258,8 @@ test('rail connections: destroy block', t => {
     '',               'railsSouthWest', '',
     '',               'railsNorthSouth','',
   ];
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
 
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });
@@ -323,13 +289,7 @@ test('redstone charge: place block', t => {
     'redstoneWire',      '',         'redstoneWireVerticalOn',
   ];
 
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
-
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });
@@ -356,13 +316,7 @@ test('redstone charge: destroy block', t => {
     'redstoneWire',      '',         'redstoneWireVertical',
   ];
 
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
-
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });
@@ -389,13 +343,7 @@ test('torch charge: destroy block', t => {
     'redstoneWire',      '',         'redstoneWireVertical',
   ];
 
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
-
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });
@@ -423,13 +371,41 @@ test('torch charge: place block', t => {
     '',            'railsRedstoneTorch','redstoneWireUpLeftOn',
   ];
 
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.end();
+});
+
+test('iron door open: place block', t => {
+  const data = [
+    'redstoneWireVertical','doorIron',      '',
+    'redstoneWireVertical','',      '',
+    'doorIron',            '',      'doorIron',
+  ];
+  const plane = new LevelPlane(data, 3, 3, true);
+
+  plane.setBlockAt([0, 0], new LevelBlock('railsRedstoneTorch'));
+
+  t.true(plane.getBlockAt([1, 0]).isOpen);
+  t.true(plane.getBlockAt([0, 2]).isOpen);
+
+  t.end();
+});
+
+test('iron door close: destroy block', t => {
+  const data = [
+    'railsRedstoneTorch',    'doorIron','',
+    'redstoneWireVerticalOn','','',
+    'doorIron',              '','doorIron',
+  ];
+  const plane = new LevelPlane(data, 3, 3, true);
+
+  plane.setBlockAt([0, 0], new LevelBlock(''));
+  plane.setBlockAt([2, 0], new LevelBlock('railsRedstoneTorch'));
+
+  t.true(plane.getBlockAt([1, 0]).isOpen);
+  t.false(plane.getBlockAt([1, 2]).isOpen);
+  t.false(plane.getBlockAt([2, 2]).isOpen);
 
   t.end();
 });

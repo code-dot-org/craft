@@ -85,6 +85,7 @@ window.demoLevels = {
       "", "", "", "redstoneWire", "", "", "", "", "", "",
       "", "grass", "oreDiamond", "pistonLeft", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "doorIron", "", "", "", "", "", "",
     ],
 
     fluffPlane: [

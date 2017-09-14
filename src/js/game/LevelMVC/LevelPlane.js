@@ -1,19 +1,22 @@
 const LevelBlock = require("./LevelBlock.js");
-
-const North = 1;
-const South = 2;
-const East = 4;
-const West = 8;
+const {North, South, East, West} = require("./FacingDirection.js");
 
 const connectionName = function (connection) {
   switch (connection) {
-    case 1: return 'North';
+    case 0: return 'North';
     case 2: return 'South';
-    case 4: return 'East';
-    case 8: return 'West';
+    case 1: return 'East';
+    case 3: return 'West';
     default: return '';
   }
 };
+
+const RedstoneCircuitConnections = [
+  "", "Vertical", "Vertical", "Vertical",
+  "Horizontal", "UpRight", "DownRight", "TRight",
+  "Horizontal", "UpLeft", "DownLeft", "TLeft",
+  "Horizontal", "TUp", "TDown", "Cross",
+];
 
 const RailConnectionPriority = [
   [], [North], [South], [North, South],
@@ -29,10 +32,9 @@ const PoweredRailConnectionPriority = [
   [East, West], [East, West], [East, West], [East, West],
 ];
 
-module.exports = class LevelPlane extends Array {
+module.exports = class LevelPlane {
   constructor(planeData, width, height, isActionPlane = false, LevelModel = null) {
-    super();
-
+    this._data = [];
     this.width = width;
     this.height = height;
     this.levelModel = LevelModel;
@@ -43,7 +45,7 @@ module.exports = class LevelPlane extends Array {
       let block = new LevelBlock(planeData[index]);
       // TODO(bjordan): put this truth in constructor like other attrs
       block.isWalkable = block.isWalkable || !isActionPlane;
-      this.push(block);
+      this._data.push(block);
     }
   }
 
@@ -79,7 +81,7 @@ module.exports = class LevelPlane extends Array {
     const target = [x + offsetX, y + offsetY];
 
     if (this.inBounds(target)) {
-      return this[this.coordinatesToIndex(target)];
+      return this._data[this.coordinatesToIndex(target)];
     }
   }
 
@@ -87,12 +89,30 @@ module.exports = class LevelPlane extends Array {
   * Changes the block at a desired position to the desired block.
   * Important note: This is the cornerstone of block placing/destroying.
   */
-  setBlockAt(position, block) {
-    this[this.coordinatesToIndex(position)] = block;
+  setBlockAt(position, block, offsetX = 0, offsetY = 0) {
+    this._data[this.coordinatesToIndex(position)] = block;
+    let offset = [offsetX,offsetY];
+
+    let positionInQuestion = [0,0];
+    // This will either be the pos the player is leaving or entering, depending on situation
+    if (this.levelModel) {
+      positionInQuestion = [this.levelModel.player.position[0] + offset[0], this.levelModel.player.position[1] + offset[1]];
+    }
+    let wasOnADoor = false;
+    // If the questionable position was a door, we want to do a few things differently.
+    if (this.getBlockAt(positionInQuestion).blockType === "doorIron") {
+      wasOnADoor = true;
+    }
 
     let redstoneToRefresh = [];
     if (block.isRedstone || block.blockType === '' || (block.isConnectedToRedstone && !block.blockType.startsWith("piston"))) {
       redstoneToRefresh = this.getRedstone();
+      // Once we're done updating redstoneWire states, check to see if doors should open/close.
+      if (wasOnADoor) {
+        this.findDoorToAnimate(positionInQuestion);
+      } else {
+        this.findDoorToAnimate([-1,-1]);
+      }
     }
 
     this.determineRailType(position, true);
@@ -157,7 +177,7 @@ module.exports = class LevelPlane extends Array {
       return;
     }
 
-    if (block.connectionA && block.connectionB) {
+    if (block.connectionA !== undefined && block.connectionB !== undefined) {
       return;
     }
 
@@ -165,8 +185,8 @@ module.exports = class LevelPlane extends Array {
       if (!block || !block.isRail) {
         return false;
       }
-      const a = !block.connectionA || block.connectionA === relative;
-      const b = !block.connectionB || block.connectionB === relative;
+      const a = block.connectionA === undefined || block.connectionA === relative;
+      const b = block.connectionB === undefined || block.connectionB === relative;
 
       return a || b;
     });
@@ -196,101 +216,21 @@ module.exports = class LevelPlane extends Array {
   * surrounding indices and Powered state.
   */
   determineRedstoneSprite(position) {
-    let foundAbove = false;
-    let foundBelow = false;
-    let foundRight = false;
-    let foundLeft = false;
-    let myIndex = this.coordinatesToIndex(position);
-    let orthogonalBlocks = this.getOrthogonalBlocks(position);
+    const block = this.getBlockAt(position);
 
-    let borderCount = 0;
-
-    // If in bounds, we want to see if any redstone is around the index in question.
-    // Below index
-    if (orthogonalBlocks.south.block !== undefined &&
-    (orthogonalBlocks.south.block.isRedstone ||
-    orthogonalBlocks.south.block.isConnectedToRedstone)) {
-      foundBelow = true;
-      ++borderCount;
-    }
-    // Above index
-    if (orthogonalBlocks.north.block !== undefined &&
-    (orthogonalBlocks.north.block.isRedstone ||
-    orthogonalBlocks.north.block.isConnectedToRedstone)) {
-      foundAbove = true;
-      ++borderCount;
-    }
-    // Right index
-    if (orthogonalBlocks.east.block !== undefined &&
-    (orthogonalBlocks.east.block.isRedstone ||
-    orthogonalBlocks.east.block.isConnectedToRedstone)) {
-      foundRight = true;
-      ++borderCount;
-    }
-    // Left index
-    if (orthogonalBlocks.west.block !== undefined &&
-    (orthogonalBlocks.west.block.isRedstone ||
-    orthogonalBlocks.west.block.isConnectedToRedstone)) {
-      foundLeft = true;
-      ++borderCount;
+    if (!block || !block.isRedstone) {
+      return;
     }
 
-    if (borderCount === 0) {
-      // No connecting redstone wire.
-      this[myIndex].blockType = "redstoneWire";
-    } else if (borderCount === 1) {
-      // Only 1 connection extends a line.
-      if (foundBelow || foundAbove) {
-        this[myIndex].blockType = "redstoneWireVertical";
-      } else if (foundLeft || foundRight) {
-        this[myIndex].blockType = "redstoneWireHorizontal";
-      }
-    } else if (borderCount === 2) {
-      if ((foundBelow || foundAbove) && !foundRight && !foundLeft){
-        // Purely vertical, no left or right.
-        this[myIndex].blockType = "redstoneWireVertical";
-      } else if ((foundRight || foundLeft) && !foundBelow && !foundAbove){
-        // Purely horizontal, no above or below.
-        this[myIndex].blockType = "redstoneWireHorizontal";
-      } else {
-        // We have a corner and will need to rotate.
-        if (foundBelow) {
-          // If we have a blow, the other has to be right or left.
-          if (foundLeft) {
-            this[myIndex].blockType = "redstoneWireDownLeft";
-          } else {
-            this[myIndex].blockType = "redstoneWireDownRight";
-          }
-        } else {
-          // If not below, then above + left or right.
-          if (foundLeft) {
-            this[myIndex].blockType = "redstoneWireUpLeft";
-          } else {
-            this[myIndex].blockType = "redstoneWireUpRight";
-          }
-        }
-      }
-    } else if (borderCount === 3) {
-      // We are deciding between T sprite orientations.
-      if (!foundBelow) {
-        this[myIndex].blockType = "redstoneWireTUp";
-      } else if (!foundAbove) {
-        this[myIndex].blockType = "redstoneWireTDown";
-      } else if (!foundLeft) {
-        this[myIndex].blockType = "redstoneWireTRight";
-      } else if (!foundRight) {
-        this[myIndex].blockType = "redstoneWireTLeft";
-      }
-    } else if (borderCount === 4) {
-      // All four sides connected: Cross.
-      this[myIndex].blockType = "redstoneWireCross";
-    }
+    const mask = this.getOrthogonalMask(position, ({block}) => {
+      return block && (block.isRedstone || block.isConnectedToRedstone);
+    });
 
-    if (this[myIndex].isPowered) {
-      this[myIndex].blockType += "On";
-    }
+    const variant = RedstoneCircuitConnections[mask];
+    const powerState = block.isPowered ? 'On' : '';
+    block.blockType = `redstoneWire${variant}${powerState}`;
 
-    return this[myIndex].blockType;
+    return `redstoneWire${variant}`;
   }
 
   /**
@@ -301,15 +241,15 @@ module.exports = class LevelPlane extends Array {
   getRedstone() {
     this.redstoneList = [];
     this.redstoneListON = [];
-    for (let i = 0; i < this.length; ++i) {
-      if (this[i].isRedstone) {
-        this[i].isPowered = false;
+    for (let i = 0; i < this._data.length; ++i) {
+      if (this._data[i].isRedstone) {
+        this._data[i].isPowered = false;
         let position = this.indexToCoordinates(i);
         this.redstoneList.push(position);
       }
     }
-    for (let i = 0; i < this.length; ++i) {
-      if (this[i].isRedstoneBattery) {
+    for (let i = 0; i < this._data.length; ++i) {
+      if (this._data[i].isRedstoneBattery) {
         let position = this.indexToCoordinates(i);
         this.redstonePropagation(position);
       }
@@ -373,16 +313,16 @@ module.exports = class LevelPlane extends Array {
   */
   findDoorToAnimate(positionInQuestion) {
     let notOffendingIndex = this.coordinatesToIndex(positionInQuestion);
-    for (let i = 0; i < this.length; ++i) {
-      if (this[i].blockType === "doorIron" && notOffendingIndex !== i) {
-        this[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
-        if (this[i].isPowered && !this[i].isOpen) {
-          this[i].isOpen = true;
+    for (let i = 0; i < this._data.length; ++i) {
+      if (this._data[i].blockType === "doorIron" && notOffendingIndex !== i) {
+        this._data[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
+        if (this._data[i].isPowered && !this._data[i].isOpen) {
+          this._data[i].isOpen = true;
           if (this.levelModel) {
             this.levelModel.controller.levelView.animateDoor(i, true);
           }
-        } else if (!this[i].isPowered && this[i].isOpen) {
-          this[i].isOpen = false;
+        } else if (!this._data[i].isPowered && this._data[i].isOpen) {
+          this._data[i].isOpen = false;
           if (this.levelModel) {
             this.levelModel.controller.levelView.animateDoor(i, false);
           }
@@ -550,12 +490,12 @@ module.exports = class LevelPlane extends Array {
   * propagates power to the surrounding indices.
   */
   redstonePropagation(position) {
-    let block = this[this.coordinatesToIndex(position)];
+    let block = this._data[this.coordinatesToIndex(position)];
     if (block.isRedstone) {
       let indexToRemove = this.findPositionInArray(position, this.redstoneList);
       this.redstoneList.splice(indexToRemove,1);
       this.redstoneListON.push(position);
-      this[this.coordinatesToIndex(position)].isPowered = true;
+      this._data[this.coordinatesToIndex(position)].isPowered = true;
     }
 
     this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
@@ -568,7 +508,7 @@ module.exports = class LevelPlane extends Array {
   * the propagation call to surrounding indices.
   */
   blockPropagation(position) {
-    let adjacentBlock = this[position[1] * this.width + position[0]];
+    let adjacentBlock = this._data[position[1] * this.width + position[0]];
     if (this.inBounds(position) &&
       adjacentBlock.isPowered === false &&
       adjacentBlock.isRedstone) {
@@ -582,7 +522,7 @@ module.exports = class LevelPlane extends Array {
   */
   powerCheck(position) {
     return this.getOrthogonalPositions(position).some(orthogonalPosition => {
-      const block = this[this.coordinatesToIndex(orthogonalPosition)];
+      const block = this._data[this.coordinatesToIndex(orthogonalPosition)];
       if (block) {
         return (block.isRedstone && block.isPowered) || block.isRedstoneBattery;
       }

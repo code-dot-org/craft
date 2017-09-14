@@ -115,6 +115,7 @@ module.exports = class LevelView {
       "explosion": ["explosion", "", -70, 60],
 
       "door": ["door", "", -12, -15],
+      "doorIron": ["doorIron", "", -12, -15],
 
       "rails": ["blocks", "Rails_Vertical", -13, -0],
       "railsNorthEast": ["blocks", "Rails_BottomLeft", -13, 0],
@@ -238,6 +239,8 @@ module.exports = class LevelView {
       this.game.camera.follow(this.player.sprite);
       this.game.world.scale.x = 1;
       this.game.world.scale.y = 1;
+    } else {
+      this.game.world.setBounds(0, 0, 400, 400);
     }
   }
 
@@ -281,19 +284,19 @@ module.exports = class LevelView {
     var direction;
 
     switch (facing) {
-      case FacingDirection.Up:
+      case FacingDirection.North:
         direction = "_up";
         break;
 
-      case FacingDirection.Right:
+      case FacingDirection.East:
         direction = "_right";
         break;
 
-      case FacingDirection.Down:
+      case FacingDirection.South:
         direction = "_down";
         break;
 
-      case FacingDirection.Left:
+      case FacingDirection.West:
         direction = "_left";
         break;
     }
@@ -524,7 +527,7 @@ module.exports = class LevelView {
   }
 
   playMinecartTurnAnimation(position, facing, isOnBlock, completionHandler, turnDirection) {
-    var animation = this.playPlayerAnimation("mineCart_turn" + turnDirection, position, FacingDirection.Down, false);
+    var animation = this.playPlayerAnimation("mineCart_turn" + turnDirection, position, FacingDirection.South, false);
     return animation;
   }
 
@@ -560,6 +563,8 @@ module.exports = class LevelView {
     position = [3, 2];
 
     animation = this.playLevelEndAnimation(position, facing, isOnBlock, completionHandler, false);
+    this.game.world.setBounds(0, 0, 440, 400);
+    this.game.camera.follow(this.player.sprite);
 
     animation.onComplete.add(() => {
       this.activateUnpoweredRails(unpoweredRails);
@@ -629,7 +634,7 @@ module.exports = class LevelView {
       for (var i = 0; i < createFloor.length; ++i) {
         xCoord = createFloor[i][1];
         yCoord = createFloor[i][2];
-        /*this.groundPlane[this.coordinatesToIndex([xCoord,yCoord])].kill();*/
+        /*this.groundPlane._data[this.coordinatesToIndex([xCoord,yCoord])].kill();*/
         sprite = this.createBlock(this.groundPlane, xCoord, yCoord, "wool_orange");
         sprite.sortOrder = this.yToIndex(yCoord);
       }
@@ -714,7 +719,7 @@ module.exports = class LevelView {
 
     this.setSelectionIndicatorPosition(position[0], position[1]);
     //make sure to render high for when moving up after placing a block
-    var zOrderYIndex = position[1] + (facing === FacingDirection.Up ? 1 : 0);
+    var zOrderYIndex = position[1] + (facing === FacingDirection.North ? 1 : 0);
     this.player.sprite.sortOrder = this.yToIndex(zOrderYIndex) + 5;
 
     if (!shouldJumpDown) {
@@ -1149,16 +1154,16 @@ module.exports = class LevelView {
         let blockIndex = (this.yToIndex(y)) + x;
         sprite = null;
 
-        if (!levelData.groundDecorationPlane[blockIndex].isEmpty) {
-          sprite = this.createBlock(this.actionPlane, x, y, levelData.groundDecorationPlane[blockIndex].blockType);
+        if (!levelData.groundDecorationPlane._data[blockIndex].isEmpty) {
+          sprite = this.createBlock(this.actionPlane, x, y, levelData.groundDecorationPlane._data[blockIndex].blockType);
           if (sprite) {
             sprite.sortOrder = this.yToIndex(y);
           }
         }
 
         sprite = null;
-        if (!levelData.actionPlane[blockIndex].isEmpty) {
-          blockType = levelData.actionPlane[blockIndex].blockType;
+        if (!levelData.actionPlane._data[blockIndex].isEmpty) {
+          blockType = levelData.actionPlane._data[blockIndex].blockType;
           sprite = this.createBlock(this.actionPlane, x, y, blockType);
           if (sprite !== null) {
             sprite.sortOrder = this.yToIndex(y);
@@ -1172,8 +1177,8 @@ module.exports = class LevelView {
     for (y = 0; y < this.controller.levelModel.planeHeight; ++y) {
       for (x = 0; x < this.controller.levelModel.planeWidth; ++x) {
         let blockIndex = (this.yToIndex(y)) + x;
-        if (!levelData.fluffPlane[blockIndex].isEmpty) {
-          sprite = this.createBlock(this.fluffPlane, x, y, levelData.fluffPlane[blockIndex].blockType);
+        if (!levelData.fluffPlane._data[blockIndex].isEmpty) {
+          sprite = this.createBlock(this.fluffPlane, x, y, levelData.fluffPlane._data[blockIndex].blockType);
         }
       }
     }
@@ -1184,7 +1189,7 @@ module.exports = class LevelView {
     for (var y = 0; y < this.controller.levelModel.planeHeight; ++y) {
       for (var x = 0; x < this.controller.levelModel.planeWidth; ++x) {
         let blockIndex = (this.yToIndex(y)) + x;
-        var sprite = this.createBlock(this.groundPlane, x, y, this.controller.levelModel.groundPlane[blockIndex].blockType);
+        var sprite = this.createBlock(this.groundPlane, x, y, this.controller.levelModel.groundPlane._data[blockIndex].blockType);
         if (sprite) {
           sprite.sortOrder = this.yToIndex(y);
         }
@@ -1213,6 +1218,13 @@ module.exports = class LevelView {
     positions.forEach(position => {
       if (position) {
         const newBlock = this.controller.levelModel.actionPlane.getBlockAt(position);
+
+        //we don't want to refresh doors. They're not destroyable, and refreshing
+        //will lead to bad animation states
+        if (newBlock && this.isDoor(newBlock)) {
+          return;
+        }
+
         if (newBlock && newBlock.blockType) {
           this.createActionPlaneBlock(position, newBlock.blockType);
         } else if (newBlock) {
@@ -1222,6 +1234,10 @@ module.exports = class LevelView {
         }
       }
     });
+  }
+
+  isDoor(block) {
+    return block.blockType.startsWith("door");
   }
 
   updateShadingPlane(shadingData) {
@@ -1421,15 +1437,15 @@ module.exports = class LevelView {
     this.selectionIndicator = this.shadingPlane.create(24, 44, 'selectionIndicator');
 
     if (playerName === 'Agent') {
-      this.generateAnimations(FacingDirection.Down, -1);
-      this.generateAnimations(FacingDirection.Right, 65);
-      this.generateAnimations(FacingDirection.Up, 130);
-      this.generateAnimations(FacingDirection.Left, 195);
+      this.generateAnimations(FacingDirection.South, -1);
+      this.generateAnimations(FacingDirection.East, 65);
+      this.generateAnimations(FacingDirection.North, 130);
+      this.generateAnimations(FacingDirection.West, 195);
     } else {
-      this.generateAnimations(FacingDirection.Down, 0);
-      this.generateAnimations(FacingDirection.Right, 60);
-      this.generateAnimations(FacingDirection.Up, 120);
-      this.generateAnimations(FacingDirection.Left, 180);
+      this.generateAnimations(FacingDirection.South, 0);
+      this.generateAnimations(FacingDirection.East, 60);
+      this.generateAnimations(FacingDirection.North, 120);
+      this.generateAnimations(FacingDirection.West, 180);
     }
 
     const frameRate = 20;
@@ -1522,7 +1538,7 @@ module.exports = class LevelView {
       frameList.push(this.playerFrameName(offset + 1));
     }
     this.player.sprite.animations.add('idlePause' + direction, frameList, frameRate / 3, false).onComplete.add(() => {
-      this.playRandomPlayerIdle(FacingDirection.Down);
+      this.playRandomPlayerIdle(FacingDirection.South);
     });
 
     this.player.sprite.animations.add('walk' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 13, offset + 20, "", 3), frameRate, true);
@@ -1665,6 +1681,33 @@ module.exports = class LevelView {
       levelView.trees.push({ sprite: sprite, type: blockType, position: [x, y] });
     };
 
+    const buildDoor = (levelView, type) => {
+      atlas = this.blocks[blockType][0];
+      frame = this.blocks[blockType][1];
+      xOffset = this.blocks[blockType][2];
+      yOffset = this.blocks[blockType][3];
+      sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+
+      frameList = [];
+      var animationFramesIron = Phaser.Animation.generateFrameNames(type, 0, 3, "", 1);
+      for (let j = 0; j < 5; ++j) {
+        frameList.push(`${type}0`);
+      }
+      frameList = frameList.concat(animationFramesIron);
+
+      sprite.animations.add("open", frameList, 5, false);
+
+      frameList = [];
+      animationFramesIron = Phaser.Animation.generateFrameNames(type, 3, 0, "", 1);
+      for (let j = 0; j < 5; ++j) {
+        frameList.push(`${type}3`);
+      }
+      frameList = frameList.concat(animationFramesIron);
+      sprite.animations.add("close", frameList, 5, false);
+
+      return sprite;
+    };
+
     switch (blockType) {
       case "treeAcacia": //0,7
         buildTree(this, [0, 7]);
@@ -1797,28 +1840,11 @@ module.exports = class LevelView {
         break;
 
       case "door":
-        atlas = this.blocks[blockType][0];
-        frame = this.blocks[blockType][1];
-        xOffset = this.blocks[blockType][2];
-        yOffset = this.blocks[blockType][3];
-        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        sprite = buildDoor(this, "Door");
+        break;
 
-        frameList = [];
-        var animationFrames = Phaser.Animation.generateFrameNames("Door", 0, 3, "", 1);
-        for (let j = 0; j < 5; ++j) {
-          frameList.push("Door0");
-        }
-        frameList = frameList.concat(animationFrames);
-
-        sprite.animations.add("open", frameList, 5, false);
-
-        frameList = [];
-        animationFrames = Phaser.Animation.generateFrameNames("Door", 3, 0, "", 1);
-        for (let j = 0; j < 5; ++j) {
-          frameList.push("Door3");
-        }
-        frameList = frameList.concat(animationFrames);
-        sprite.animations.add("close", frameList, 5, false);
+      case "doorIron":
+        sprite = buildDoor(this, "DoorIron");
         break;
 
       case "tnt":
@@ -1897,4 +1923,20 @@ module.exports = class LevelView {
     this.resettableTweens.push(tween);
     return tween;
   }
+
+  /**
+  * Animate Door and set the status
+  */
+  animateDoor(index, open) {
+    let player = this.controller.levelModel.player;
+    this.setSelectionIndicatorPosition(this.controller.levelModel.actionPlane.indexToCoordinates(index)[0], this.controller.levelModel.actionPlane.indexToCoordinates(index)[1]);
+    this.controller.audioPlayer.play("doorOpen");
+    // If it's not walable, then open otherwise, close.
+    this.playDoorAnimation(this.controller.levelModel.actionPlane.indexToCoordinates(index), open, () => {
+      this.controller.levelModel.actionPlane._data[index].isWalkable = !this.controller.levelModel.actionPlane._data[index].isWalkable;
+      this.playIdleAnimation(player.position, player.facing, player.isOnBlock);
+      this.setSelectionIndicatorPosition(player.position[0], player.position[1]);
+    });
+  }
+
 };

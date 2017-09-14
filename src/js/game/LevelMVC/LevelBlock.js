@@ -15,6 +15,7 @@ module.exports = class LevelBlock {
     this.isPowered = false;
     this.isConnectedToRedstone = false; // can this block connect to nearby redstone wire
     this.isRedstoneBattery = false;
+    this.isOpen = false;
 
     if (blockType === "") {
       this.isWalkable = true;
@@ -99,6 +100,14 @@ module.exports = class LevelBlock {
       this.isUsable = true;
       this.isDestroyable = false;
       this.isTransparent = true;
+    }
+
+    if (blockType === "doorIron") {
+      this.isEntity = true;
+      this.isWalkable = false;
+      this.isDestroyable = false;
+      this.isTransparent = true;
+      this.isConnectedToRedstone = true;
     }
 
     if (blockType.startsWith("redstoneWire")) {
