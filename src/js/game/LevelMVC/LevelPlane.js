@@ -308,7 +308,7 @@ module.exports = class LevelPlane {
     }
   }
 
-    /**
+  /**
   * Find all iron doors in a level and evaluate if they need to be animated based on state
   */
   findDoorToAnimate(positionInQuestion) {
@@ -470,29 +470,6 @@ module.exports = class LevelPlane {
       workingPosition = [workingPosition[0] + offsetX, workingPosition[1] + offsetY];
     }
     return pushingBlocks;
-  }
-
-  /**
-  * Find all iron doors in a level and evaluate if they need to be animated based on state
-  */
-  findDoorToAnimate(positionInQuestion) {
-    let notOffendingIndex = this.coordinatesToIndex(positionInQuestion);
-    for (let i = 0; i < this._data.length; ++i) {
-      if (this._data[i].blockType === "doorIron" && notOffendingIndex !== i) {
-        this._data[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
-        if (this._data[i].isPowered && !this._data[i].isOpen) {
-          this._data[i].isOpen = true;
-          if (this.levelModel) {
-            this.levelModel.controller.levelView.animateDoor(i, true);
-          }
-        } else if (!this._data[i].isPowered && this._data[i].isOpen) {
-          this._data[i].isOpen = false;
-          if (this.levelModel) {
-            this.levelModel.controller.levelView.animateDoor(i, false);
-          }
-        }
-      }
-    }
   }
 
   /**
