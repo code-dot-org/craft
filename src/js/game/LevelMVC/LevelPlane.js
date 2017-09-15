@@ -280,14 +280,14 @@ module.exports = class LevelPlane {
     if (this._data[index].blockType === "doorIron") {
       this._data[index].isPowered = this.powerCheck(this.indexToCoordinates(index));
       if (this._data[index].isPowered && !this._data[index].isOpen) {
+        this._data[index].isOpen = true;
         if (this.levelModel) {
           this.levelModel.controller.levelView.animateDoor(index, true);
-          this._data[index].isOpen = true;
         }
       } else if (!this._data[index].isPowered && this._data[index].isOpen) {
+        this._data[index].isOpen = false;
         if (this.levelModel) {
           this.levelModel.controller.levelView.animateDoor(index, false);
-          this._data[index].isOpen = false;
         }
       }
     }
