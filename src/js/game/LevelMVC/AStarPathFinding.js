@@ -6,18 +6,15 @@ module.exports = class AStarPathFinding {
   }
 
   createGrid() {
-    let tempGrid = [];
-    for (let i = 0; i < this.levelModel.actionPlane.getBlockCount(); i++) {
-      let coordinates = this.levelModel.indexToXY(i);
-      // Push node objects.
-      tempGrid.push({
-        x: coordinates.x,
-        y: coordinates.y,
+    return this.levelModel.actionPlane.getAllPositions().map((position) => {
+      const [x, y] = position;
+      return {
+        x: x,
+        y: y,
         cost: 1,    // cost is 1 so that all blocks are treated the same but could do something with lava, water.
         f: 0, g: 0, h: 0, visited: false, closed: false, parent: null
-      });
-    }
-    return tempGrid;
+      };
+    });
   }
 
   reset() {
