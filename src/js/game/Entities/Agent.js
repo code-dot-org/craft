@@ -71,7 +71,7 @@ module.exports = class Agent extends BaseEntity {
     }
 
     levelView.playMoveForwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, () => {
-      levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock, "Agent");
+      levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock, player);
 
       if (levelModel.isPlayerStandingInWater()) {
         levelView.playDrownFailureAnimation(player.position, player.facing, player.isOnBlock, () => {
@@ -97,7 +97,7 @@ module.exports = class Agent extends BaseEntity {
   bump(commandQueueItem) {
     var levelView = this.controller.levelView,
       levelModel = this.controller.levelModel;
-    levelView.playBumpAnimation(this.position, this.facing, false);
+    levelView.playBumpAnimation(this.position, this.facing, false, this);
     let frontEntity = this.controller.levelEntity.getEntityAt(levelModel.getMoveForwardPosition(this));
     if (frontEntity !== null) {
       const isFriendlyEntity = this.controller.levelEntity.isFriendlyEntity(frontEntity.type);

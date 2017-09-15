@@ -220,14 +220,14 @@ module.exports = class LevelView {
       this.setPlayerPosition(this.player.position[0], this.player.position[1], this.player.isOnBlock, this.player);
       this.setSelectionIndicatorPosition(this.player.position[0], this.player.position[1]);
       this.selectionIndicator.visible = true;
-      this.playIdleAnimation(this.player.position, this.player.facing, this.player.isOnBlock, "Player");
+      this.playIdleAnimation(this.player.position, this.player.facing, this.player.isOnBlock, this.player);
 
       this.preparePlayerSprite(this.agent.name, this.agent);
       this.agent.sprite.animations.stop();
       this.setPlayerPosition(this.agent.position[0], this.agent.position[1], this.agent.isOnBlock, this.agent);
       this.setSelectionIndicatorPosition(this.agent.position[0], this.agent.position[1]);
       this.selectionIndicator.visible = true;
-      this.playIdleAnimation(this.agent.position, this.agent.facing, this.agent.isOnBlock, "Agent");
+      this.playIdleAnimation(this.agent.position, this.agent.facing, this.agent.isOnBlock, this.agent);
     }
     this.updateShadingPlane(levelModel.shadingPlane);
     this.updateFowPlane(levelModel.fowPlane);
@@ -327,41 +327,30 @@ module.exports = class LevelView {
     return this.playScaledSpeed(entity.sprite.animations, animName);
   }
 
-  playIdleAnimation(position, facing, isOnBlock, entity = "") {
-    if (entity === "") {
-      this.playPlayerAnimation("idle", position, facing, isOnBlock);
-    } else {
-      switch (entity) {
-        case "Player":
-          this.playPlayerAnimation("idle", position, facing, isOnBlock);
-          break;
-        case "Agent":
-          this.playPlayerAnimation("idle", position, facing, isOnBlock, this.agent);
-          break;
-      }
-    }
+  playIdleAnimation(position, facing, isOnBlock, entity = this.player) {
+    this.playPlayerAnimation("idle", position, facing, isOnBlock, entity);
   }
 
-  playSuccessAnimation(position, facing, isOnBlock, completionHandler) {
+  playSuccessAnimation(position, facing, isOnBlock, completionHandler, entity = this.player) {
     this.controller.delayBy(250, () => {
       this.audioPlayer.play("success");
-      this.onAnimationEnd(this.playPlayerAnimation("celebrate", position, facing, isOnBlock), () => {
+      this.onAnimationEnd(this.playPlayerAnimation("celebrate", position, facing, isOnBlock, entity), () => {
         completionHandler();
       });
     });
   }
 
-  playFailureAnimation(position, facing, isOnBlock, completionHandler) {
+  playFailureAnimation(position, facing, isOnBlock, completionHandler, entity = this.player) {
     this.controller.delayBy(500, () => {
       this.audioPlayer.play("failure");
-      this.onAnimationEnd(this.playPlayerAnimation("fail", position, facing, isOnBlock), () => {
+      this.onAnimationEnd(this.playPlayerAnimation("fail", position, facing, isOnBlock, entity), () => {
         this.controller.delayBy(800, completionHandler);
       });
     });
   }
 
-  playBumpAnimation(position, facing, isOnBlock) {
-    var animation = this.playPlayerAnimation("bump", position, facing, isOnBlock);
+  playBumpAnimation(position, facing, isOnBlock, entity = this.player) {
+    var animation = this.playPlayerAnimation("bump", position, facing, isOnBlock, entity);
     animation.onComplete.add(() => {
       this.playIdleAnimation(position, facing, isOnBlock);
     });
@@ -737,7 +726,7 @@ module.exports = class LevelView {
       const animName = "walk" + this.getDirectionName(facing);
       this.playScaledSpeed(entity.sprite.animations, animName);
       tween = this.addResettableTween(entity.sprite).to(
-        this.positionToScreen(position, isOnBlock), 180, Phaser.Easing.Linear.None);
+        this.positionToScreen(position, isOnBlock, entity), 180, Phaser.Easing.Linear.None);
     } else {
       tween = this.playPlayerJumpDownVerticalAnimation(facing, position, oldPosition);
     }
@@ -1103,9 +1092,9 @@ module.exports = class LevelView {
    * @param {?boolean} isOnBlock
    * @return {{x: number, y: number}}
    */
-  positionToScreen(position, isOnBlock = false) {
+  positionToScreen(position, isOnBlock = false, entity = this.player) {
     const [x, y] = position;
-    const [xOffset, yOffset] = this.player.offset;
+    const [xOffset, yOffset] = entity.offset;
     return {
       x: xOffset + 40 * x,
       y: yOffset + (isOnBlock ? -23 : 0) + 40 * y,
@@ -1113,7 +1102,7 @@ module.exports = class LevelView {
   }
 
   setPlayerPosition(x, y, isOnBlock, entity = this.player) {
-    const screen = this.positionToScreen([x, y], isOnBlock);
+    const screen = this.positionToScreen([x, y], isOnBlock, entity);
     entity.sprite.x = screen.x;
     entity.sprite.y = screen.y;
     entity.sprite.sortOrder = this.yToIndex(screen.y) + 5;
