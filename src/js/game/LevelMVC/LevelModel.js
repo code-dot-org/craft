@@ -287,18 +287,19 @@ module.exports = class LevelModel {
   solutionMapMatchesResultMap(solutionMap) {
     for (var i = 0; i < this.planeArea(); i++) {
       var solutionItemType = solutionMap[i];
+      let position = this.actionPlane.indexToCoordinates(i);
 
       // "" on the solution map means we dont care what's at that spot
       if (solutionItemType !== "") {
         if (solutionItemType === "empty") {
-          if (!this.actionPlane.getBlock(i).isEmpty) {
+          if (!this.actionPlane.getBlockAt(position).isEmpty) {
             return false;
           }
         } else if (solutionItemType === "any") {
-          if (this.actionPlane.getBlock(i).isEmpty) {
+          if (this.actionPlane.getBlockAt(position).isEmpty) {
             return false;
           }
-        } else if (this.actionPlane.getBlock(i).blockType !== solutionItemType) {
+        } else if (this.actionPlane.getBlockAt(position).blockType !== solutionItemType) {
           return false;
         }
       }
@@ -310,8 +311,7 @@ module.exports = class LevelModel {
     var tnt = [];
     for (var x = 0; x < this.planeWidth; ++x) {
       for (var y = 0; y < this.planeHeight; ++y) {
-        var index = this.coordinatesToIndex([x, y]);
-        var block = this.actionPlane.getBlock(index);
+        var block = this.actionPlane.getBlockAt([x, y]);
         if (block.blockType === "tnt") {
           tnt.push([x, y]);
         }
@@ -324,10 +324,9 @@ module.exports = class LevelModel {
     var unpoweredRails = [];
     for (var x = 0; x < this.planeWidth; ++x) {
       for (var y = 0; y < this.planeHeight; ++y) {
-        var index = this.coordinatesToIndex([x, y]);
-        var block = this.actionPlane.getBlock(index);
+        var block = this.actionPlane.getBlockAt([x, y]);
         if (block.blockType.substring(0, 7) === "railsUn") {
-          unpoweredRails.push([x, y], "railsPowered" + this.actionPlane.getBlock(index).blockType.substring(14));
+          unpoweredRails.push([x, y], "railsPowered" + block.blockType.substring(14));
         }
       }
     }
@@ -494,7 +493,7 @@ module.exports = class LevelModel {
     posLeft = [0, position[1] - 1, position[2]];
     posRight[0] = this.yToIndex(posRight[2]) + posRight[1];
 
-    checkActionBlock = this.actionPlane.getBlock(index);
+    checkActionBlock = this.actionPlane.getBlockAt(this.actionPlane.indexToCoordinates(index));
     for (var i = 0; i < array.length; ++i) {
       if (array[i][0] === index) {
         checkIndex = -1;
@@ -979,8 +978,8 @@ module.exports = class LevelModel {
     var emissives = [];
     for (var y = 0; y < this.planeHeight; ++y) {
       for (var x = 0; x < this.planeWidth; ++x) {
-        var index = this.coordinatesToIndex([x, y]);
-        if (!this.actionPlane.getBlock(index).isEmpty && this.actionPlane.getBlock(index).isEmissive || this.groundPlane.getBlock(index).isEmissive && this.actionPlane.getBlock(index).isEmpty) {
+        let position = [x, y];
+        if (!this.actionPlane.getBlockAt(position).isEmpty && this.actionPlane.getBlockAt(position).isEmissive || this.groundPlane.getBlockAt(position).isEmissive && this.actionPlane.getBlockAt(position).isEmpty) {
           emissives.push([x, y]);
         }
       }
@@ -1124,7 +1123,7 @@ module.exports = class LevelModel {
 
       hasRight = false;
 
-      if (this.actionPlane.getBlock(index).isEmpty || this.actionPlane.getBlock(index).isTransparent) {
+      if (this.actionPlane.getBlockAt([x, y]).isEmpty || this.actionPlane.getBlockAt([x, y]).isTransparent) {
         if (y === 0) {
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Bottom' });
         }
@@ -1141,12 +1140,12 @@ module.exports = class LevelModel {
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Left' });
         }
 
-        if (x < this.planeWidth - 1 && !this.actionPlane.getBlock(this.yToIndex(y) + x + 1).getIsEmptyOrEntity()) {
+        if (x < this.planeWidth - 1 && !this.actionPlane.getBlockAt([x + 1, y]).getIsEmptyOrEntity()) {
           // needs a left side AO shadow
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Left' });
         }
 
-        if (x > 0 && !this.actionPlane.getBlock(this.yToIndex(y) + x - 1).getIsEmptyOrEntity()) {
+        if (x > 0 && !this.actionPlane.getBlockAt([x - 1, y]).getIsEmptyOrEntity()) {
           // needs a right side AO shadow
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Right' });
           this.shadingPlane.push({
@@ -1155,7 +1154,7 @@ module.exports = class LevelModel {
             type: 'Shadow_Parts_Fade_base.png'
           });
 
-          if (y > 0 && x > 0 && this.actionPlane.getBlock(this.yToIndex(y - 1) + x - 1).getIsEmptyOrEntity()) {
+          if (y > 0 && x > 0 && this.actionPlane.getBlockAt([x - 1, y - 1]).getIsEmptyOrEntity()) {
             this.shadingPlane.push({
               x: x,
               y: y,
@@ -1166,30 +1165,30 @@ module.exports = class LevelModel {
           hasRight = true;
         }
 
-        if (y > 0 && !this.actionPlane.getBlock(this.yToIndex(y - 1) + x).getIsEmptyOrEntity()) {
+        if (y > 0 && !this.actionPlane.getBlockAt([x, y - 1]).getIsEmptyOrEntity()) {
           // needs a bottom side AO shadow
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Bottom' });
         } else if (y > 0) {
-          if (x < this.planeWidth - 1 && !this.actionPlane.getBlock(this.yToIndex(y - 1) + x + 1).getIsEmptyOrEntity() &&
-            this.actionPlane.getBlock(this.yToIndex(y) + x + 1).getIsEmptyOrEntity()) {
+          if (x < this.planeWidth - 1 && !this.actionPlane.getBlockAt([x + 1, y - 1]).getIsEmptyOrEntity() &&
+            this.actionPlane.getBlockAt([x + 1, y]).getIsEmptyOrEntity()) {
             // needs a bottom left side AO shadow
             this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_BottomLeft' });
           }
 
-          if (!hasRight && x > 0 && !this.actionPlane.getBlock(this.yToIndex(y - 1) + x - 1).getIsEmptyOrEntity()) {
+          if (!hasRight && x > 0 && !this.actionPlane.getBlockAt([x - 1, y - 1]).getIsEmptyOrEntity()) {
             // needs a bottom right side AO shadow
             this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_BottomRight' });
           }
         }
 
         if (y < this.planeHeight - 1) {
-          if (x < this.planeWidth - 1 && !this.actionPlane.getBlock(this.yToIndex(y + 1) + x + 1).getIsEmptyOrEntity() &&
-            this.actionPlane.getBlock(this.yToIndex(y) + x + 1).getIsEmptyOrEntity()) {
+          if (x < this.planeWidth - 1 && !this.actionPlane.getBlockAt([x + 1, y + 1]).getIsEmptyOrEntity() &&
+            this.actionPlane.getBlockAt([x + 1, y]).getIsEmptyOrEntity()) {
             // needs a bottom left side AO shadow
             this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_TopLeft' });
           }
 
-          if (!hasRight && x > 0 && !this.actionPlane.getBlock(this.yToIndex(y + 1) + x - 1).getIsEmptyOrEntity()) {
+          if (!hasRight && x > 0 && !this.actionPlane.getBlockAt([x - 1, y + 1]).getIsEmptyOrEntity()) {
             // needs a bottom right side AO shadow
             this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_TopRight' });
           }

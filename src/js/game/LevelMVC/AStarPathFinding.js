@@ -40,9 +40,9 @@ module.exports = class AStarPathFinding {
 
   getNode(position) {
     const index = this.levelModel.coordinatesToIndex(position);
-    if (this.levelModel.inBounds(position[0], position[1]) &&   // is the node within bounds
-        this.levelModel.actionPlane.getBlock(index).isEmpty &&  // is the node empty
-        !this.grid[index].closed) {                             // has the node already been processed.
+    if (this.levelModel.inBounds(position[0], position[1]) &&        // is the node within bounds
+        this.levelModel.actionPlane.getBlockAt(position).isEmpty &&  // is the node empty
+        !this.grid[index].closed) {                                  // has the node already been processed.
       return this.grid[index];
     }
     return null;

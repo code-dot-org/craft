@@ -1160,8 +1160,8 @@ class GameController {
     let player = this.levelModel.player;
     let frontPosition = this.levelModel.getMoveForwardPosition(player);
     let frontEntity = this.levelEntity.getEntityAt(frontPosition);
-    const frontIndex = this.levelModel.yToIndex(frontPosition[1]) + frontPosition[0];
-    let frontBlock = this.levelModel.actionPlane.getBlock(frontIndex);
+    let frontBlock = this.levelModel.actionPlane.getBlockAt(frontPosition);
+
     const isFrontBlockDoor = frontBlock === undefined ? false : frontBlock.blockType === "door";
     if (frontEntity !== null) {
       // push use command to execute general use behavior of the entity before executing the event
@@ -1342,11 +1342,12 @@ class GameController {
   }
 
   placeBlock(commandQueueItem, blockType) {
-    let blockIndex = (this.levelModel.yToIndex(this.levelModel.player.position[1]) + this.levelModel.player.position[0]);
-    let blockTypeAtPosition = this.levelModel.actionPlane.getBlock(blockIndex).blockType;
+    const position = this.levelModel.player.position;
+    let blockTypeAtPosition = this.levelModel.actionPlane.getBlockAt(position).blockType;
+
     if (this.levelModel.canPlaceBlock()) {
       if (blockTypeAtPosition !== "") {
-        this.levelModel.destroyBlock(blockIndex);
+        this.levelModel.destroyBlock(position);
       }
 
       if (blockType !== "cropWheat" || this.levelModel.groundPlane.getBlockAt(this.levelModel.player.position).blockType === "farmlandWet") {
