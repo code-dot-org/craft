@@ -266,7 +266,7 @@ module.exports = class LevelPlane {
     }
 
     // Once we're done updating redstoneWire states, check to see if doors and pistons should open/close.
-    for (let i = 0; i < this.length; ++i) {
+    for (let i = 0; i < this._data.length; ++i) {
       this.getIronDoors(i);
       this.getPistonState(i);
     }
@@ -277,11 +277,11 @@ module.exports = class LevelPlane {
   * Evaluates what state Iron Doors on the map should be in.
   */
   getIronDoors(index) {
-    if (this[index].blockType === "doorIron") {
-      this[index].isPowered = this.powerCheck(this.indexToCoordinates(index));
-      if (this[index].isPowered && !this[index].isOpen) {
+    if (this._data[index].blockType === "doorIron") {
+      this._data[index].isPowered = this.powerCheck(this.indexToCoordinates(index));
+      if (this._data[index].isPowered && !this._data[index].isOpen) {
         this.animateDoor(index, true);
-      } else if (!this[index].isPowered && this[index].isOpen) {
+      } else if (!this._data[index].isPowered && this._data[index].isOpen) {
         this.animateDoor(index, false);
       }
     }
@@ -291,13 +291,13 @@ module.exports = class LevelPlane {
   * Evaluates what state Pistons on the map should be in.
   */
   getPistonState(index) {
-    if (this[index].blockType.startsWith("piston") && !this[index].blockType.startsWith("pistonArm")) {
-      this[index].isPowered = this.powerCheck(this.indexToCoordinates(index));
-      if (this[index].isPowered) {
+    if (this._data[index].blockType.startsWith("piston") && !this._data[index].blockType.startsWith("pistonArm")) {
+      this._data[index].isPowered = this.powerCheck(this.indexToCoordinates(index));
+      if (this._data[index].isPowered) {
         this.activatePiston(this.indexToCoordinates(index));
         if (this.levelModel) {
         }
-      } else if (!this[index].isPowered) {
+      } else if (!this._data[index].isPowered) {
         this.deactivatePiston(this.indexToCoordinates(index));
       }
 
@@ -397,7 +397,7 @@ module.exports = class LevelPlane {
     let east = 2;
     let west = 3;
 
-    switch (this[this.coordinatesToIndex(position)].blockType) {
+    switch (this._data[this.coordinatesToIndex(position)].blockType) {
       case "pistonUpOn": {
         this.retractArm(neighborPosition[north], position);
         break;
