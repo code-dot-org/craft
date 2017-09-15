@@ -39,20 +39,17 @@ module.exports = class LevelModel {
     this.shadingPlane = [];
     this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, this.controller, this, true);
 
-    for (let i = 0; i < this.actionPlane.getBlockCount(); ++i) {
-      if (this.actionPlane.getBlock(i).blockType === "railsRedstoneTorch") {
-        let position = this.actionPlane.indexToCoordinates(i);
+    this.actionPlane.getAllPositions().forEach((position) => {
+      if (this.actionPlane.getBlockAt(position).blockType === "railsRedstoneTorch") {
         this.actionPlane.redstonePropagation(position);
       }
-    }
-    for (let i = 0; i < this.actionPlane.getBlockCount(); ++i) {
-      if (this.actionPlane.getBlock(i).blockType.substring(0,12) === "redstoneWire") {
-        let y = Math.floor(i / this.planeHeight);
-        let x = i - (y * this.planeHeight);
-        let position = [x,y];
-        this.actionPlane.determineRedstoneSprite(position, i);
+    });
+
+    this.actionPlane.getAllPositions().forEach((position) => {
+      if (this.actionPlane.getBlockAt(position).blockType.substring(0,12) === "redstoneWire") {
+        this.actionPlane.determineRedstoneSprite(position);
       }
-    }
+    });
 
     this.fluffPlane = new LevelPlane(this.initialLevelData.fluffPlane, this.planeWidth, this.planeHeight);
     this.fowPlane = [];
@@ -260,15 +257,11 @@ module.exports = class LevelModel {
   }
 
   countOfTypeOnMap(blockType) {
-    var count = 0,
-      i;
+    const blocksOfType = this.actionPlane.getAllPositions().filter((position) => {
+      return this.actionPlane.getBlockAt(position).blockType === blockType;
+    });
 
-    for (i = 0; i < this.planeArea(); ++i) {
-      if (blockType === this.actionPlane.getBlock(i).blockType) {
-        ++count;
-      }
-    }
-    return count;
+    return blocksOfType.length;
   }
 
   isPlayerAt(position) {
