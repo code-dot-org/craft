@@ -82,22 +82,14 @@ module.exports = class LevelPlane {
   }
 
   /**
-   * get the total number of blocks in this place
+   * Retrieve all the [x, y] coordinates within this plane
    *
-   * @return {Number}
+   * @return {[Number, Number][]}
    */
-  getBlockCount() {
-    return this._data.length;
-  }
-
-  /**
-   * Gets the block at the desired index within the plane.
-   *
-   * @param {Number} index
-   * @return {LevelBlock}
-   */
-  getBlock(index) {
-    return this._data[index];
+  getAllPositions() {
+    return this._data.map((_, i) => {
+      return this.indexToCoordinates(i);
+    });
   }
 
   /**
