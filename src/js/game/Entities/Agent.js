@@ -1,10 +1,10 @@
 const BaseEntity = require("./BaseEntity.js");
 const CallbackCommand = require("../CommandQueue/CallbackCommand.js");
 
-module.exports = class Player extends BaseEntity {
+module.exports = class Agent extends BaseEntity {
   constructor(controller, type, x, y, name, isOnBlock, facing) {
     super(controller, type, 'PlayerAgent', x, y, facing);
-    this.offset = (name === 'Agent') ? [-18, -32] : [-18, -32];
+    this.offset = [-5, -15];
     this.name = name;
     this.isOnBlock = isOnBlock;
     this.inventory = {};
@@ -65,9 +65,9 @@ module.exports = class Player extends BaseEntity {
 
     jumpOff = wasOnBlock && wasOnBlock !== player.isOnBlock;
     if (player.isOnBlock || jumpOff) {
-      groundType = levelModel.actionPlane._data[levelModel.yToIndex(player.position[1]) + player.position[0]].blockType;
+      groundType = levelModel.actionPlane.getBlockAt(player.position).blockType;
     } else {
-      groundType = levelModel.groundPlane._data[levelModel.yToIndex(player.position[1]) + player.position[0]].blockType;
+      groundType = levelModel.actionPlane.getBlockAt(player.position).blockType;
     }
 
     levelView.playMoveForwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, () => {

@@ -222,7 +222,7 @@ module.exports = class LevelView {
       this.selectionIndicator.visible = true;
       this.playIdleAnimation(this.player.position, this.player.facing, this.player.isOnBlock, "Player");
 
-      this.prepareAgentSprite(this.agent.name);
+      this.preparePlayerSprite(this.agent.name, this.agent);
       this.agent.sprite.animations.stop();
       this.setAgentPosition(this.agent.position[0], this.agent.position[1], this.agent.isOnBlock);
       this.setSelectionIndicatorPosition(this.agent.position[0], this.agent.position[1]);
@@ -1428,20 +1428,20 @@ module.exports = class LevelView {
     return frameList.concat(Phaser.Animation.generateFrameNames(frameName, endFrame - 1, startFrame, suffix, buffer));
   }
 
-  preparePlayerSprite(playerName) {
+  preparePlayerSprite(playerName, entity = this.player) {
 
-    this.player.sprite = this.actionPlane.create(0, 0, `player${playerName}`, 'Player_121');
-    if (this.controller.followingPlayer()) {
-      this.game.camera.follow(this.player.sprite);
+    entity.sprite = this.actionPlane.create(0, 0, `player${playerName}`, 'Player_121');
+    if (this.controller.followingPlayer() && entity === this.player) {
+      this.game.camera.follow(entity.sprite);
     }
 
     this.selectionIndicator = this.shadingPlane.create(24, 44, 'selectionIndicator');
 
     if (playerName === 'Agent') {
-      this.generateAnimations(FacingDirection.Down, -1);
-      this.generateAnimations(FacingDirection.Right, 65);
-      this.generateAnimations(FacingDirection.Up, 130);
-      this.generateAnimations(FacingDirection.Left, 195);
+      this.generateAnimations(FacingDirection.Down, -1, this.agent);
+      this.generateAnimations(FacingDirection.Right, 65, this.agent);
+      this.generateAnimations(FacingDirection.Up, 130, this.agent);
+      this.generateAnimations(FacingDirection.Left, 195, this.agent);
     } else {
       this.generateAnimations(FacingDirection.Down, 0);
       this.generateAnimations(FacingDirection.Right, 60);
@@ -1455,106 +1455,43 @@ module.exports = class LevelView {
 
     frameList = this.generateFramesWithEndDelay("Player_", 263, 262, "Player_262", 3, 5);
     frameList.push("Player_263");
-    this.player.sprite.animations.add('lookAtCam_down', frameList, idleFrameRate, false).onComplete.add(() => {
-      this.playScaledSpeed(this.player.sprite.animations, "idlePause_down");
+    entity.sprite.animations.add('lookAtCam_down', frameList, idleFrameRate, false).onComplete.add(() => {
+      this.playScaledSpeed(entity.sprite.animations, "idlePause_down");
     });
 
     frameList = this.generateFramesWithEndDelay("Player_", 270, 269, "Player_269", 3, 5);
     frameList.push("Player_270");
-    this.player.sprite.animations.add('lookAtCam_right', frameList, idleFrameRate, false).onComplete.add(() => {
-      this.playScaledSpeed(this.player.sprite.animations, "idlePause_right");
+    entity.sprite.animations.add('lookAtCam_right', frameList, idleFrameRate, false).onComplete.add(() => {
+      this.playScaledSpeed(entity.sprite.animations, "idlePause_right");
     });
 
     frameList = this.generateFramesWithEndDelay("Player_", 277, 276, "Player_276", 3, 5);
     frameList.push("Player_277");
-    this.player.sprite.animations.add('lookAtCam_up', frameList, idleFrameRate, false).onComplete.add(() => {
-      this.playScaledSpeed(this.player.sprite.animations, "idlePause_up");
+    entity.sprite.animations.add('lookAtCam_up', frameList, idleFrameRate, false).onComplete.add(() => {
+      this.playScaledSpeed(entity.sprite.animations, "idlePause_up");
     });
 
     frameList = this.generateFramesWithEndDelay("Player_", 284, 283, "Player_283", 3, 5);
     frameList.push("Player_284");
-    this.player.sprite.animations.add('lookAtCam_left', frameList, idleFrameRate, false).onComplete.add(() => {
-      this.playScaledSpeed(this.player.sprite.animations, "idlePause_left");
+    entity.sprite.animations.add('lookAtCam_left', frameList, idleFrameRate, false).onComplete.add(() => {
+      this.playScaledSpeed(entity.sprite.animations, "idlePause_left");
     });
 
-    this.player.sprite.animations.add('mine_down', Phaser.Animation.generateFrameNames("Player_", 241, 244, "", 3), frameRate, true);
-    this.player.sprite.animations.add('mine_right', Phaser.Animation.generateFrameNames("Player_", 245, 248, "", 3), frameRate, true);
-    this.player.sprite.animations.add('mine_up', Phaser.Animation.generateFrameNames("Player_", 249, 252, "", 3), frameRate, true);
-    this.player.sprite.animations.add('mine_left', Phaser.Animation.generateFrameNames("Player_", 253, 256, "", 3), frameRate, true);
+    entity.sprite.animations.add('mine_down', Phaser.Animation.generateFrameNames("Player_", 241, 244, "", 3), frameRate, true);
+    entity.sprite.animations.add('mine_right', Phaser.Animation.generateFrameNames("Player_", 245, 248, "", 3), frameRate, true);
+    entity.sprite.animations.add('mine_up', Phaser.Animation.generateFrameNames("Player_", 249, 252, "", 3), frameRate, true);
+    entity.sprite.animations.add('mine_left', Phaser.Animation.generateFrameNames("Player_", 253, 256, "", 3), frameRate, true);
 
-    this.player.sprite.animations.add('mineCart_down', Phaser.Animation.generateFrameNames("Minecart_", 5, 5, "", 2), frameRate, false);
-    this.player.sprite.animations.add('mineCart_turnleft_down', Phaser.Animation.generateFrameNames("Minecart_", 6, 6, "", 2), frameRate, false);
-    this.player.sprite.animations.add('mineCart_turnright_down', Phaser.Animation.generateFrameNames("Minecart_", 12, 12, "", 2), frameRate, false);
+    entity.sprite.animations.add('mineCart_down', Phaser.Animation.generateFrameNames("Minecart_", 5, 5, "", 2), frameRate, false);
+    entity.sprite.animations.add('mineCart_turnleft_down', Phaser.Animation.generateFrameNames("Minecart_", 6, 6, "", 2), frameRate, false);
+    entity.sprite.animations.add('mineCart_turnright_down', Phaser.Animation.generateFrameNames("Minecart_", 12, 12, "", 2), frameRate, false);
 
-    this.player.sprite.animations.add('mineCart_right', Phaser.Animation.generateFrameNames("Minecart_", 7, 7, "", 2), frameRate, false);
-    this.player.sprite.animations.add('mineCart_left', Phaser.Animation.generateFrameNames("Minecart_", 11, 11, "", 2), frameRate, false);
+    entity.sprite.animations.add('mineCart_right', Phaser.Animation.generateFrameNames("Minecart_", 7, 7, "", 2), frameRate, false);
+    entity.sprite.animations.add('mineCart_left', Phaser.Animation.generateFrameNames("Minecart_", 11, 11, "", 2), frameRate, false);
 
-    this.player.sprite.animations.add('mineCart_up', Phaser.Animation.generateFrameNames("Minecart_", 9, 9, "", 2), frameRate, false);
-    this.player.sprite.animations.add('mineCart_turnleft_up', Phaser.Animation.generateFrameNames("Minecart_", 10, 10, "", 2), frameRate, false);
-    this.player.sprite.animations.add('mineCart_turnright_up', Phaser.Animation.generateFrameNames("Minecart_", 8, 8, "", 2), frameRate, false);
-  }
-
-  prepareAgentSprite(playerName) {
-
-    this.agent.sprite = this.actionPlane.create(0, 0, `player${playerName}`, 'Player_121');
-
-    this.selectionIndicator = this.shadingPlane.create(24, 44, 'selectionIndicator');
-
-    if (playerName === 'Agent') {
-      this.generateAnimations(FacingDirection.Down, -1, this.agent);
-      this.generateAnimations(FacingDirection.Right, 65, this.agent);
-      this.generateAnimations(FacingDirection.Up, 130, this.agent);
-      this.generateAnimations(FacingDirection.Left, 195, this.agent);
-    } else {
-      this.generateAnimations(FacingDirection.Down, 0, this.agent);
-      this.generateAnimations(FacingDirection.Right, 60, this.agent);
-      this.generateAnimations(FacingDirection.Up, 120, this.agent);
-      this.generateAnimations(FacingDirection.Left, 180, this.agent);
-    }
-
-    const frameRate = 20;
-    const idleFrameRate = 10;
-    let frameList;
-
-    frameList = this.generateFramesWithEndDelay("Player_", 263, 262, "Player_262", 3, 5);
-    frameList.push("Player_263");
-    this.agent.sprite.animations.add('lookAtCam_down', frameList, idleFrameRate, false).onComplete.add(() => {
-      this.playScaledSpeed(this.agent.sprite.animations, "idlePause_down");
-    });
-
-    frameList = this.generateFramesWithEndDelay("Player_", 270, 269, "Player_269", 3, 5);
-    frameList.push("Player_270");
-    this.agent.sprite.animations.add('lookAtCam_right', frameList, idleFrameRate, false).onComplete.add(() => {
-      this.playScaledSpeed(this.agent.sprite.animations, "idlePause_right");
-    });
-
-    frameList = this.generateFramesWithEndDelay("Player_", 277, 276, "Player_276", 3, 5);
-    frameList.push("Player_277");
-    this.agent.sprite.animations.add('lookAtCam_up', frameList, idleFrameRate, false).onComplete.add(() => {
-      this.playScaledSpeed(this.agent.sprite.animations, "idlePause_up");
-    });
-
-    frameList = this.generateFramesWithEndDelay("Player_", 284, 283, "Player_283", 3, 5);
-    frameList.push("Player_284");
-    this.agent.sprite.animations.add('lookAtCam_left', frameList, idleFrameRate, false).onComplete.add(() => {
-      this.playScaledSpeed(this.agent.sprite.animations, "idlePause_left");
-    });
-
-    this.agent.sprite.animations.add('mine_down', Phaser.Animation.generateFrameNames("Player_", 241, 244, "", 3), frameRate, true);
-    this.agent.sprite.animations.add('mine_right', Phaser.Animation.generateFrameNames("Player_", 245, 248, "", 3), frameRate, true);
-    this.agent.sprite.animations.add('mine_up', Phaser.Animation.generateFrameNames("Player_", 249, 252, "", 3), frameRate, true);
-    this.agent.sprite.animations.add('mine_left', Phaser.Animation.generateFrameNames("Player_", 253, 256, "", 3), frameRate, true);
-
-    this.agent.sprite.animations.add('mineCart_down', Phaser.Animation.generateFrameNames("Minecart_", 5, 5, "", 2), frameRate, false);
-    this.agent.sprite.animations.add('mineCart_turnleft_down', Phaser.Animation.generateFrameNames("Minecart_", 6, 6, "", 2), frameRate, false);
-    this.agent.sprite.animations.add('mineCart_turnright_down', Phaser.Animation.generateFrameNames("Minecart_", 12, 12, "", 2), frameRate, false);
-
-    this.agent.sprite.animations.add('mineCart_right', Phaser.Animation.generateFrameNames("Minecart_", 7, 7, "", 2), frameRate, false);
-    this.agent.sprite.animations.add('mineCart_left', Phaser.Animation.generateFrameNames("Minecart_", 11, 11, "", 2), frameRate, false);
-
-    this.agent.sprite.animations.add('mineCart_up', Phaser.Animation.generateFrameNames("Minecart_", 9, 9, "", 2), frameRate, false);
-    this.agent.sprite.animations.add('mineCart_turnleft_up', Phaser.Animation.generateFrameNames("Minecart_", 10, 10, "", 2), frameRate, false);
-    this.agent.sprite.animations.add('mineCart_turnright_up', Phaser.Animation.generateFrameNames("Minecart_", 8, 8, "", 2), frameRate, false);
+    entity.sprite.animations.add('mineCart_up', Phaser.Animation.generateFrameNames("Minecart_", 9, 9, "", 2), frameRate, false);
+    entity.sprite.animations.add('mineCart_turnleft_up', Phaser.Animation.generateFrameNames("Minecart_", 10, 10, "", 2), frameRate, false);
+    entity.sprite.animations.add('mineCart_turnright_up', Phaser.Animation.generateFrameNames("Minecart_", 8, 8, "", 2), frameRate, false);
   }
 
   playerFrameName(n) {
