@@ -364,7 +364,6 @@ test('torch charge: place block', t => {
 
   plane.setBlockAt([1, 2], new LevelBlock('railsRedstoneTorch'));
 
-
   const expected = [
     'redstoneWire',         '',         'redstoneWireVerticalOn',
     '',                     '',         'redstoneWireVerticalOn',
@@ -378,15 +377,15 @@ test('torch charge: place block', t => {
 
 test('iron door open: place block', t => {
   const data = [
-    'redstoneWireVertical','doorIron',      '',
+    'redstoneWireVertical','',      '',
     'redstoneWireVertical','',      '',
     'doorIron',            '',      'doorIron',
   ];
   const plane = new LevelPlane(data, 3, 3, true);
 
-  plane.setBlockAt([0, 0], new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt([1, 0], new LevelBlock('railsRedstoneTorch'));
 
-  t.true(plane.getBlockAt([1, 0]).isOpen);
+  t.false(plane.getBlockAt([2, 2]).isOpen);
   t.true(plane.getBlockAt([0, 2]).isOpen);
 
   t.end();
@@ -394,18 +393,16 @@ test('iron door open: place block', t => {
 
 test('iron door close: destroy block', t => {
   const data = [
-    'railsRedstoneTorch',    'doorIron','',
+    'railsRedstoneTorch',    '','',
     'redstoneWireVerticalOn','','',
     'doorIron',              '','doorIron',
   ];
   const plane = new LevelPlane(data, 3, 3, true);
 
   plane.setBlockAt([0, 0], new LevelBlock(''));
-  plane.setBlockAt([2, 0], new LevelBlock('railsRedstoneTorch'));
 
-  t.true(plane.getBlockAt([1, 0]).isOpen);
-  t.false(plane.getBlockAt([1, 2]).isOpen);
   t.false(plane.getBlockAt([2, 2]).isOpen);
+  t.false(plane.getBlockAt([1, 2]).isOpen);
 
   t.end();
 });
@@ -432,13 +429,7 @@ test('piston activate: place block', t => {
     '','','','','','','grass','',
   ];
 
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
-
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });
@@ -465,13 +456,7 @@ test('piston deactivate: destroy block', t => {
     '','','','','','','grass','',
   ];
 
-  expected.width = undefined;
-  expected.height = undefined;
-  expected.levelModel = null;
-  expected.redstoneList = [];
-  expected.redstoneListON = [];
-
-  t.deepEqual(plane.map(block => block.blockType), expected);
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });
