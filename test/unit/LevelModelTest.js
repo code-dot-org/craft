@@ -9,6 +9,8 @@ const makeLevelDefinition = (width, height) => {
   return {
     playerStartPosition: [0, 2],
     playerStartDirection: 1,
+    agentStartPosition: [0, 1],
+    agentStartDirection: 1,
     playerName: 'Alex',
     groundPlane: makePlane(size, 'grass'),
     groundDecorationPlane: makePlane(size, ''),

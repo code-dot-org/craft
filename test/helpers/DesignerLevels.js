@@ -61,7 +61,9 @@ module.exports = {
     actionPlane: houseActionPlane,
     usePlayer: true,
     playerStartPosition: [4, 7],
+    agentStartPosition: [3, 7],
     playerStartDirection: 0,
+    agentStartDirection: 0,
     levelVerificationTimeout: 20000,
     timeoutResult: () => false,
     verificationFunction: verificationAPI => (
@@ -76,7 +78,9 @@ module.exports = {
     entities: [["sheep", 6, 3, 1]],
     usePlayer: true,
     playerStartPosition: [4, 7],
+    agentStartPosition: [3, 7],
     playerStartDirection: 0,
+    agentStartDirection: 0,
     levelVerificationTimeout: 20000,
     timeoutResult: () => false,
     verificationFunction: verificationAPI => (
@@ -92,6 +96,8 @@ module.exports = {
     usePlayer: true,
     playerStartPosition: [5, 6],
     playerStartDirection: 2,
+    agentStartPosition: [3, 6],
+    agentStartDirection: 2,
     levelVerificationTimeout: 60000,
     timeoutResult: () => false,
     verificationFunction: verificationAPI => {
@@ -115,6 +121,8 @@ module.exports = {
     usePlayer: true,
     playerStartPosition: [3, 1],
     playerStartDirection: 2,
+    agentStartPosition: [2, 1],
+    agentStartDirection: 2,
     levelVerificationTimeout: -1,
     timeoutResult: () => false,
     verificationFunction: verificationAPI  => {
@@ -136,6 +144,8 @@ module.exports = {
     usePlayer: true,
     playerStartPosition: [5, 3],
     playerStartDirection: 2,
+    agentStartPosition: [4, 3],
+    agentStartDirection: 2,
     levelVerificationTimeout: -1,
     timeoutResult: () => false,
     verificationFunction: verificationAPI  => verificationAPI.isEntityDied("zombie", 1),
@@ -148,6 +158,8 @@ module.exports = {
     usePlayer: true,
     playerStartPosition: [4, 8],
     playerStartDirection: 0,
+    agentStartPosition: [3, 8],
+    agentStartDirection: 0,
     levelVerificationTimeout: 60000,
     timeoutResult: () => false,
     verificationFunction: verificationAPI  => (

@@ -217,14 +217,14 @@ module.exports = class LevelView {
 
       this.preparePlayerSprite(this.player.name);
       this.player.sprite.animations.stop();
-      this.setPlayerPosition(this.player.position[0], this.player.position[1], this.player.isOnBlock);
+      this.setPlayerPosition(this.player.position[0], this.player.position[1], this.player.isOnBlock, this.player);
       this.setSelectionIndicatorPosition(this.player.position[0], this.player.position[1]);
       this.selectionIndicator.visible = true;
       this.playIdleAnimation(this.player.position, this.player.facing, this.player.isOnBlock, "Player");
 
       this.preparePlayerSprite(this.agent.name, this.agent);
       this.agent.sprite.animations.stop();
-      this.setAgentPosition(this.agent.position[0], this.agent.position[1], this.agent.isOnBlock);
+      this.setPlayerPosition(this.agent.position[0], this.agent.position[1], this.agent.isOnBlock, this.agent);
       this.setSelectionIndicatorPosition(this.agent.position[0], this.agent.position[1]);
       this.selectionIndicator.visible = true;
       this.playIdleAnimation(this.agent.position, this.agent.facing, this.agent.isOnBlock, "Agent");
@@ -1112,18 +1112,11 @@ module.exports = class LevelView {
     };
   }
 
-  setPlayerPosition(x, y, isOnBlock) {
+  setPlayerPosition(x, y, isOnBlock, entity = this.player) {
     const screen = this.positionToScreen([x, y], isOnBlock);
-    this.player.sprite.x = screen.x;
-    this.player.sprite.y = screen.y;
-    this.player.sprite.sortOrder = this.yToIndex(screen.y) + 5;
-  }
-
-  setAgentPosition(x, y, isOnBlock) {
-    const screen = this.positionToScreen([x, y], isOnBlock);
-    this.agent.sprite.x = screen.x;
-    this.agent.sprite.y = screen.y;
-    this.agent.sprite.sortOrder = this.yToIndex(screen.y) + 5;
+    entity.sprite.x = screen.x;
+    entity.sprite.y = screen.y;
+    entity.sprite.sortOrder = this.yToIndex(screen.y) + 5;
   }
 
   setSelectionIndicatorPosition(x, y) {
