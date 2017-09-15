@@ -1201,8 +1201,8 @@ module.exports = class LevelView {
     // We need to add indices to refresh if there are other blocks in the action plane that might
     // conflict with the drawing of refreshed blocks.
     for (let i = 0; i < positions.length; ++i) {
-      const indexBelow = positions[i][1] + 1;
-      const indexIsValid = indexBelow < this.controller.levelModel.actionPlane.height;
+      const positionBelow = [positions[i][0], positions[i][1] + 1];
+      const indexIsValid = this.controller.levelModel.actionPlane.inBounds(positionBelow);
       if (indexIsValid) {
         const positionOfInterest = [positions[i][0], positions[i][1] + 1];
         let blockToCheck = this.controller.levelModel.actionPlane.getBlockAt(positionOfInterest);

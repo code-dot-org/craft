@@ -341,7 +341,7 @@ module.exports = class LevelPlane {
     let workingNeighbor = null;
     let pos = [];
     let offset = [];
-    let pistonType = this[this.coordinatesToIndex(position)].blockType;
+    let pistonType = this.getBlockAt(position).blockType;
     let armType = "";
 
     switch (pistonType) {
@@ -425,7 +425,7 @@ module.exports = class LevelPlane {
     let pistonType = this.getBlockAt(pistonPosition);
     let newPistonType = pistonType.blockType.substring(0, pistonType.blockType.length - 2);
     let offPiston = new LevelBlock(newPistonType);
-    if (this[this.coordinatesToIndex(armPosition)].blockType.startsWith("pistonArm")) {
+    if (this.getBlockAt(armPosition).blockType.startsWith("pistonArm")) {
       this.setBlockAt(armPosition, emptyBlock);
     }
     this.setBlockAt(pistonPosition, offPiston);
@@ -522,7 +522,7 @@ module.exports = class LevelPlane {
   */
   powerCheck(position) {
     return this.getOrthogonalPositions(position).some(orthogonalPosition => {
-      const block = this[this.coordinatesToIndex(orthogonalPosition)];
+      const block = this.getBlockAt(orthogonalPosition);
       if (block) {
         return (block.isRedstone && block.isPowered) || block.isRedstoneBattery;
       }
