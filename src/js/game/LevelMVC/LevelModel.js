@@ -624,10 +624,10 @@ module.exports = class LevelModel {
     if (!this.controller.followingPlayer() && (x > 9 || y > 9)) {
       return false;
     }
-    return this.isPositionEmpty([x, y]);
+    return this.isPositionEmpty([x, y], entity);
   }
 
-  isPositionEmpty(position) {
+  isPositionEmpty(position, entity = this.player) {
     var result = [false,];
     let [x, y] = position;
 
@@ -655,6 +655,7 @@ module.exports = class LevelModel {
           return [true];
         }
       }
+
       var frontEntity = this.getEntityAt(position);
       if (frontEntity !== undefined) {
         result.push("frontEntity");
@@ -666,7 +667,7 @@ module.exports = class LevelModel {
         // there is no entity
         && (frontEntity === undefined)
         // no lava or water
-        && (this.groundPlane.getBlockAt(position).blockType !== "water" && this.groundPlane.getBlockAt(position).blockType !== "lava");
+        && (entity === this.agent || (this.groundPlane.getBlockAt(position).blockType !== "water" && this.groundPlane.getBlockAt(position).blockType !== "lava"));
     } else {
       result.push("outBound");
     }
