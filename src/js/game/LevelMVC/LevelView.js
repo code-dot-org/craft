@@ -281,19 +281,19 @@ module.exports = class LevelView {
     var direction;
 
     switch (facing) {
-      case FacingDirection.Up:
+      case FacingDirection.North:
         direction = "_up";
         break;
 
-      case FacingDirection.Right:
+      case FacingDirection.East:
         direction = "_right";
         break;
 
-      case FacingDirection.Down:
+      case FacingDirection.South:
         direction = "_down";
         break;
 
-      case FacingDirection.Left:
+      case FacingDirection.West:
         direction = "_left";
         break;
     }
@@ -524,7 +524,7 @@ module.exports = class LevelView {
   }
 
   playMinecartTurnAnimation(position, facing, isOnBlock, completionHandler, turnDirection) {
-    var animation = this.playPlayerAnimation("mineCart_turn" + turnDirection, position, FacingDirection.Down, false);
+    var animation = this.playPlayerAnimation("mineCart_turn" + turnDirection, position, FacingDirection.South, false);
     return animation;
   }
 
@@ -717,7 +717,7 @@ module.exports = class LevelView {
 
     this.setSelectionIndicatorPosition(position[0], position[1]);
     //make sure to render high for when moving up after placing a block
-    var zOrderYIndex = position[1] + (facing === FacingDirection.Up ? 1 : 0);
+    var zOrderYIndex = position[1] + (facing === FacingDirection.North ? 1 : 0);
     entity.sprite.sortOrder = this.yToIndex(zOrderYIndex) + 5;
 
     if (!shouldJumpDown) {
@@ -1418,15 +1418,15 @@ module.exports = class LevelView {
     this.selectionIndicator = this.shadingPlane.create(24, 44, 'selectionIndicator');
 
     if (playerName === 'Agent') {
-      this.generateAnimations(FacingDirection.Down, -1, this.agent);
-      this.generateAnimations(FacingDirection.Right, 65, this.agent);
-      this.generateAnimations(FacingDirection.Up, 130, this.agent);
-      this.generateAnimations(FacingDirection.Left, 195, this.agent);
+      this.generateAnimations(FacingDirection.South, -1, this.agent);
+      this.generateAnimations(FacingDirection.East, 65, this.agent);
+      this.generateAnimations(FacingDirection.North, 130, this.agent);
+      this.generateAnimations(FacingDirection.West, 195, this.agent);
     } else {
-      this.generateAnimations(FacingDirection.Down, 0);
-      this.generateAnimations(FacingDirection.Right, 60);
-      this.generateAnimations(FacingDirection.Up, 120);
-      this.generateAnimations(FacingDirection.Left, 180);
+      this.generateAnimations(FacingDirection.South, 0);
+      this.generateAnimations(FacingDirection.East, 60);
+      this.generateAnimations(FacingDirection.North, 120);
+      this.generateAnimations(FacingDirection.West, 180);
     }
 
     const frameRate = 20;
@@ -1519,7 +1519,7 @@ module.exports = class LevelView {
       frameList.push(this.playerFrameName(offset + 1));
     }
     entity.sprite.animations.add('idlePause' + direction, frameList, frameRate / 3, false).onComplete.add(() => {
-      this.playRandomPlayerIdle(FacingDirection.Down);
+      this.playRandomPlayerIdle(FacingDirection.South);
     });
 
     entity.sprite.animations.add('walk' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 13, offset + 20, "", 3), frameRate, true);

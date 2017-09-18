@@ -26,7 +26,7 @@ module.exports = class Zombie extends BaseEntity {
         var levelView = this.controller.levelView;
         var tween;
         // update z order
-        var zOrderYIndex = position[1] + (facing === FacingDirection.Up ? 1 : 0);
+        var zOrderYIndex = position[1] + (facing === FacingDirection.North ? 1 : 0);
         this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex) + 1;
         this.burningSprite[0].sortOrder = this.sprite.sortOrder + 1;
         this.burningSprite[1].sortOrder = this.sprite.sortOrder - 1;

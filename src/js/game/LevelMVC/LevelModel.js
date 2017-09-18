@@ -339,19 +339,19 @@ module.exports = class LevelModel {
       cy = entity.position[1];
 
     switch (entity.facing) {
-      case FacingDirection.Up:
+      case FacingDirection.North:
         --cy;
         break;
 
-      case FacingDirection.Down:
+      case FacingDirection.South:
         ++cy;
         break;
 
-      case FacingDirection.Left:
+      case FacingDirection.West:
         --cx;
         break;
 
-      case FacingDirection.Right:
+      case FacingDirection.East:
         ++cx;
         break;
     }
@@ -364,19 +364,19 @@ module.exports = class LevelModel {
       cy = entity.position[1];
 
     switch (pushedByFacing) {
-      case FacingDirection.Up:
+      case FacingDirection.North:
         --cy;
         break;
 
-      case FacingDirection.Down:
+      case FacingDirection.South:
         ++cy;
         break;
 
-      case FacingDirection.Left:
+      case FacingDirection.West:
         --cx;
         break;
 
-      case FacingDirection.Right:
+      case FacingDirection.East:
         ++cx;
         break;
     }
@@ -600,22 +600,22 @@ module.exports = class LevelModel {
 
   getMinecartTrack() {
     var track = [];
-    track.push(["down", [3, 2], FacingDirection.Down, 300]);
-    track.push(["down", [3, 3], FacingDirection.Down, 300]);
-    track.push(["down", [3, 4], FacingDirection.Down, 300]);
-    track.push(["down", [3, 5], FacingDirection.Down, 300]);
-    track.push(["down", [3, 6], FacingDirection.Down, 300]);
-    track.push(["down", [3, 7], FacingDirection.Down, 300]);
-    track.push(["turn_left", [3, 7], FacingDirection.Right, 400]);
-    track.push(["right", [4, 7], FacingDirection.Right, 400]);
-    track.push(["right", [5, 7], FacingDirection.Right, 400]);
-    track.push(["right", [6, 7], FacingDirection.Right, 400]);
-    track.push(["right", [7, 7], FacingDirection.Right, 400]);
-    track.push(["right", [8, 7], FacingDirection.Right, 400]);
-    track.push(["right", [9, 7], FacingDirection.Right, 400]);
-    track.push(["right", [10, 7], FacingDirection.Right, 400]);
-    track.push(["right", [11, 7], FacingDirection.Right, 400]);
-    track.push(["right", [12, 7], FacingDirection.Right, 400]);
+    track.push(["down", [3, 2], FacingDirection.South, 300]);
+    track.push(["down", [3, 3], FacingDirection.South, 300]);
+    track.push(["down", [3, 4], FacingDirection.South, 300]);
+    track.push(["down", [3, 5], FacingDirection.South, 300]);
+    track.push(["down", [3, 6], FacingDirection.South, 300]);
+    track.push(["down", [3, 7], FacingDirection.South, 300]);
+    track.push(["turn_left", [3, 7], FacingDirection.East, 400]);
+    track.push(["right", [4, 7], FacingDirection.East, 400]);
+    track.push(["right", [5, 7], FacingDirection.East, 400]);
+    track.push(["right", [6, 7], FacingDirection.East, 400]);
+    track.push(["right", [7, 7], FacingDirection.East, 400]);
+    track.push(["right", [8, 7], FacingDirection.East, 400]);
+    track.push(["right", [9, 7], FacingDirection.East, 400]);
+    track.push(["right", [10, 7], FacingDirection.East, 400]);
+    track.push(["right", [11, 7], FacingDirection.East, 400]);
+    track.push(["right", [12, 7], FacingDirection.East, 400]);
     return track;
   }
 
@@ -750,40 +750,40 @@ module.exports = class LevelModel {
   turnLeft(entity = this.player) {
 
     switch (entity.facing) {
-      case FacingDirection.Up:
-        entity.facing = FacingDirection.Left;
+      case FacingDirection.North:
+        entity.facing = FacingDirection.West;
         break;
 
-      case FacingDirection.Left:
-        entity.facing = FacingDirection.Down;
+      case FacingDirection.West:
+        entity.facing = FacingDirection.South;
         break;
 
-      case FacingDirection.Down:
-        entity.facing = FacingDirection.Right;
+      case FacingDirection.South:
+        entity.facing = FacingDirection.East;
         break;
 
-      case FacingDirection.Right:
-        entity.facing = FacingDirection.Up;
+      case FacingDirection.East:
+        entity.facing = FacingDirection.North;
         break;
     }
   }
 
   turnRight(entity = this.player) {
     switch (entity.facing) {
-      case FacingDirection.Up:
-        entity.facing = FacingDirection.Right;
+      case FacingDirection.North:
+        entity.facing = FacingDirection.East;
         break;
 
-      case FacingDirection.Right:
-        entity.facing = FacingDirection.Down;
+      case FacingDirection.East:
+        entity.facing = FacingDirection.South;
         break;
 
-      case FacingDirection.Down:
-        entity.facing = FacingDirection.Left;
+      case FacingDirection.South:
+        entity.facing = FacingDirection.West;
         break;
 
-      case FacingDirection.Left:
-        entity.facing = FacingDirection.Up;
+      case FacingDirection.West:
+        entity.facing = FacingDirection.North;
         break;
     }
   }
