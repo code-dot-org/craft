@@ -92,6 +92,7 @@ class GameController {
     this.playerDelayFactor = 1.0;
     this.dayNightCycle = false;
     this.player = null;
+    this.agent = null;
 
     this.timerSprite = null;
 
@@ -145,6 +146,7 @@ class GameController {
     this.levelView.reset(this.levelModel);
     this.levelEntity.loadData(this.levelData);
     this.player = this.levelModel.player;
+    this.agent = this.levelModel.agent;
     this.resettableTimers.forEach((timer) => {
       timer.stop(true);
     });
@@ -239,6 +241,9 @@ class GameController {
     if (this.levelModel.usePlayer) {
       this.player.updateMovement();
     }
+    if (this.levelModel.usingAgent) {
+      this.agent.updateMovement();
+    }
     this.levelView.update();
 
     // Check for completion every frame for "event" levels. For procedural
@@ -269,16 +274,30 @@ class GameController {
     this.game.input.keyboard.addKey(Phaser.Keyboard.W).onDown.add(() => {
       this.player.movementState = FacingDirection.North;
       this.player.updateMovement();
+      if (this.levelModel.usingAgent) {
+        this.agent.movementState = FacingDirection.Up;
+        this.agent.updateMovement();
+      }
       if (this.isEdge()) {
         this.player.movementState = -1;
         this.player.updateMovement();
+        if (this.levelModel.usingAgent) {
+          this.agent.movementState = -1;
+          this.agent.updateMovement();
+        }
       }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.W).onUp.add(() => {
       if (this.player.movementState === FacingDirection.North) {
         this.player.movementState = -1;
+        if (this.levelModel.usingAgent) {
+          this.agent.movementState = -1;
+        }
       }
       this.player.updateMovement();
+      if (this.levelModel.usingAgent) {
+        this.agent.updateMovement();
+      }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onDown.add(() => {
       this.player.movementState = FacingDirection.East;
@@ -297,16 +316,30 @@ class GameController {
     this.game.input.keyboard.addKey(Phaser.Keyboard.D).onDown.add(() => {
       this.player.movementState = FacingDirection.East;
       this.player.updateMovement();
+      if (this.levelModel.usingAgent) {
+        this.agent.movementState = FacingDirection.Right;
+        this.agent.updateMovement();
+      }
       if (this.isEdge()) {
         this.player.movementState = -1;
         this.player.updateMovement();
+        if (this.levelModel.usingAgent) {
+          this.agent.movementState = -1;
+          this.agent.updateMovement();
+        }
       }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.D).onUp.add(() => {
       if (this.player.movementState === FacingDirection.East) {
         this.player.movementState = -1;
+        if (this.levelModel.usingAgent) {
+          this.agent.movementState = -1;
+        }
       }
       this.player.updateMovement();
+      if (this.levelModel.usingAgent) {
+        this.agent.updateMovement();
+      }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN).onDown.add(() => {
       this.player.movementState = FacingDirection.South;
@@ -325,16 +358,30 @@ class GameController {
     this.game.input.keyboard.addKey(Phaser.Keyboard.S).onDown.add(() => {
       this.player.movementState = FacingDirection.South;
       this.player.updateMovement();
+      if (this.levelModel.usingAgent) {
+        this.agent.movementState = FacingDirection.Down;
+        this.agent.updateMovement();
+      }
       if (this.isEdge()) {
         this.player.movementState = -1;
         this.player.updateMovement();
+        if (this.levelModel.usingAgent) {
+          this.agent.movementState = -1;
+          this.agent.updateMovement();
+        }
       }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.S).onUp.add(() => {
       if (this.player.movementState === FacingDirection.South) {
         this.player.movementState = -1;
+        if (this.levelModel.usingAgent) {
+          this.agent.movementState = -1;
+        }
       }
       this.player.updateMovement();
+      if (this.levelModel.usingAgent) {
+        this.agent.updateMovement();
+      }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT).onDown.add(() => {
       this.player.movementState = FacingDirection.West;
@@ -353,16 +400,30 @@ class GameController {
     this.game.input.keyboard.addKey(Phaser.Keyboard.A).onDown.add(() => {
       this.player.movementState = FacingDirection.West;
       this.player.updateMovement();
+      if (this.levelModel.usingAgent) {
+        this.agent.movementState = FacingDirection.Left;
+        this.agent.updateMovement();
+      }
       if (this.isEdge()) {
-        this.player.movementState = -1;
-        this.player.updateMovement();
+        this.agent.movementState = -1;
+        this.agent.updateMovement();
+        if (this.levelModel.usingAgent) {
+          this.agent.movementState = -1;
+          this.agent.updateMovement();
+        }
       }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.A).onUp.add(() => {
       if (this.player.movementState === FacingDirection.West) {
         this.player.movementState = -1;
+        if (this.levelModel.usingAgent) {
+          this.agent.movementState = -1;
+        }
       }
       this.player.updateMovement();
+      if (this.levelModel.usingAgent) {
+        this.agent.updateMovement();
+      }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).onDown.add(() => {
       this.player.movementState = -2;
@@ -488,7 +549,7 @@ class GameController {
   }
 
   isType(target) {
-    return typeof (target) === 'string' && target !== 'Player';
+    return typeof (target) === 'string' && (target !== 'Player' && target !== "PlayerAgent");
   }
 
   printErrorMsg(msg) {
@@ -724,14 +785,15 @@ class GameController {
   }
 
   moveDirection(commandQueueItem, direction) {
-    let isMovingOffOf = this.levelModel.isEntityOnBlocktype("Player", "pressurePlateDown");
+    let player = this.getEntity(commandQueueItem.target);
+    let isMovingOffOf = this.levelModel.isEntityOnBlocktype(commandQueueItem.target, "pressurePlateDown");
     if (isMovingOffOf) {
-      let position = this.levelModel.player.position;
+      let position = player.position;
       let block = new LevelBlock('pressurePlateUp');
       let offset = this.directionToOffet(direction);
       this.levelModel.actionPlane.setBlockAt(position, block, offset[0], offset[1]);
     }
-    let outOfDoor = this.levelModel.isEntityOnBlocktype("Player", "doorIron");
+    let outOfDoor = this.levelModel.isEntityOnBlocktype(commandQueueItem.target, "doorIron");
 
     let target = commandQueueItem.target;
     if (!this.isType(target)) {
@@ -756,10 +818,10 @@ class GameController {
       }
       commandQueueItem.succeeded();
     }
-    let isMovingOnToPlate = this.levelModel.isEntityOnBlocktype("Player", "pressurePlateUp");
-    let destinationBlock = this.levelModel.actionPlane.getBlockAt(this.levelModel.player.position);
+    let isMovingOnToPlate = this.levelModel.isEntityOnBlocktype(commandQueueItem.target, "pressurePlateUp");
+    let destinationBlock = this.levelModel.actionPlane.getBlockAt(player.position);
     if (isMovingOnToPlate) {
-      let position = this.levelModel.player.position;
+      let position = player.position;
       let block = new LevelBlock('pressurePlateDown');
       direction = (direction + 2) % 4;
       let offset = this.directionToOffet(direction);
@@ -1360,26 +1422,27 @@ class GameController {
   }
 
   placeBlockForward(commandQueueItem, blockType) {
+    let player = this.getEntity(commandQueueItem.target);
     let forwardPosition,
       placementPlane,
       soundEffect = () => { };
 
-    if (!this.levelModel.canPlaceBlockForward(blockType)) {
-      this.levelView.playPunchAirAnimation(this.levelModel.player.position, this.levelModel.player.facing, this.levelModel.player.position, () => {
-        this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
+    if (!this.levelModel.canPlaceBlockForward(blockType, player)) {
+      this.levelView.playPunchAirAnimation(player.position, player.facing, player.position, () => {
+        this.levelView.playIdleAnimation(player.position, player.facing, false, player);
         commandQueueItem.succeeded();
-      });
+      }, player);
       return;
     }
 
-    forwardPosition = this.levelModel.getMoveForwardPosition();
+    forwardPosition = this.levelModel.getMoveForwardPosition(player);
     placementPlane = this.levelModel.getPlaneToPlaceOn(forwardPosition);
     if (this.levelModel.isBlockOfTypeOnPlane(forwardPosition, "lava", placementPlane)) {
       soundEffect = () => this.levelView.audioPlayer.play("fizz");
     }
 
-    this.levelView.playPlaceBlockInFrontAnimation(this.levelModel.player.position, this.levelModel.player.facing, forwardPosition, () => {
-      this.levelModel.placeBlockForward(blockType, placementPlane);
+    this.levelView.playPlaceBlockInFrontAnimation(player, this.levelModel.player.position, this.levelModel.player.facing, forwardPosition, () => {
+      this.levelModel.placeBlockForward(blockType, placementPlane, player);
       this.levelView.refreshGroundPlane();
 
       this.levelModel.computeShadingPlane();

@@ -1,10 +1,10 @@
 const BaseEntity = require("./BaseEntity.js");
 const CallbackCommand = require("../CommandQueue/CallbackCommand.js");
 
-module.exports = class Player extends BaseEntity {
+module.exports = class Agent extends BaseEntity {
   constructor(controller, type, x, y, name, isOnBlock, facing) {
-    super(controller, type, 'Player', x, y, facing);
-    this.offset = [-18, -32];
+    super(controller, type, 'PlayerAgent', x, y, facing);
+    this.offset = [-5, -15];
     this.name = name;
     this.isOnBlock = isOnBlock;
     this.inventory = {};
@@ -60,18 +60,18 @@ module.exports = class Player extends BaseEntity {
     let wasOnBlock = player.isOnBlock;
     let prevPosition = this.position;
     // update position
-    levelModel.moveForward();
+    levelModel.moveForward(this);
     // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
 
     jumpOff = wasOnBlock && wasOnBlock !== player.isOnBlock;
     if (player.isOnBlock || jumpOff) {
-      groundType = levelModel.actionPlane._data[levelModel.yToIndex(player.position[1]) + player.position[0]].blockType;
+      groundType = levelModel.actionPlane.getBlockAt(player.position).blockType;
     } else {
-      groundType = levelModel.groundPlane._data[levelModel.yToIndex(player.position[1]) + player.position[0]].blockType;
+      groundType = levelModel.actionPlane.getBlockAt(player.position).blockType;
     }
 
     levelView.playMoveForwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, () => {
-      levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
+      levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock, player);
 
       if (levelModel.isPlayerStandingInWater()) {
         levelView.playDrownFailureAnimation(player.position, player.facing, player.isOnBlock, () => {
@@ -97,7 +97,7 @@ module.exports = class Player extends BaseEntity {
   bump(commandQueueItem) {
     var levelView = this.controller.levelView,
       levelModel = this.controller.levelModel;
-    levelView.playBumpAnimation(this.position, this.facing, false);
+    levelView.playBumpAnimation(this.position, this.facing, false, this);
     let frontEntity = this.controller.levelEntity.getEntityAt(levelModel.getMoveForwardPosition(this));
     if (frontEntity !== null) {
       const isFriendlyEntity = this.controller.levelEntity.isFriendlyEntity(frontEntity.type);
