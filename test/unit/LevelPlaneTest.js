@@ -364,7 +364,6 @@ test('torch charge: place block', t => {
 
   plane.setBlockAt([1, 2], new LevelBlock('railsRedstoneTorch'));
 
-
   const expected = [
     'redstoneWire',         '',         'redstoneWireVerticalOn',
     '',                     '',         'redstoneWireVerticalOn',
@@ -378,15 +377,15 @@ test('torch charge: place block', t => {
 
 test('iron door open: place block', t => {
   const data = [
-    'redstoneWireVertical','doorIron',      '',
+    'redstoneWireVertical','',      '',
     'redstoneWireVertical','',      '',
     'doorIron',            '',      'doorIron',
   ];
   const plane = new LevelPlane(data, 3, 3, true);
 
-  plane.setBlockAt([0, 0], new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt([1, 0], new LevelBlock('railsRedstoneTorch'));
 
-  t.true(plane.getBlockAt([1, 0]).isOpen);
+  t.false(plane.getBlockAt([2, 2]).isOpen);
   t.true(plane.getBlockAt([0, 2]).isOpen);
 
   t.end();
@@ -394,18 +393,70 @@ test('iron door open: place block', t => {
 
 test('iron door close: destroy block', t => {
   const data = [
-    'railsRedstoneTorch',    'doorIron','',
+    'railsRedstoneTorch',    '','',
     'redstoneWireVerticalOn','','',
     'doorIron',              '','doorIron',
   ];
   const plane = new LevelPlane(data, 3, 3, true);
 
   plane.setBlockAt([0, 0], new LevelBlock(''));
-  plane.setBlockAt([2, 0], new LevelBlock('railsRedstoneTorch'));
 
-  t.true(plane.getBlockAt([1, 0]).isOpen);
-  t.false(plane.getBlockAt([1, 2]).isOpen);
   t.false(plane.getBlockAt([2, 2]).isOpen);
+  t.false(plane.getBlockAt([1, 2]).isOpen);
+
+  t.end();
+});
+
+test('piston activate: place block', t => {
+  const data = [
+    '','','grass','pistonLeft','','pistonRight','grass','',
+    '','','','redstoneWireVertical','','redstoneWireVertical','','',
+    '','','grass','redstoneWireVertical','','redstoneWireVertical','','',
+    '','','pistonUp','redstoneWireUpLeft','','redstoneWireUpRight','pistonDown','',
+    '','','','','','','grass','',
+    '','','','','','','','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true);
+
+  plane.setBlockAt([4, 2], new LevelBlock('railsRedstoneTorch'));
+
+  const expected = [
+    '','grass','pistonArmLeft','pistonLeftOn','','pistonRightOn','pistonArmRight','grass',
+    '','','grass','redstoneWireVerticalOn','','redstoneWireVerticalOn','','',
+    '','','pistonArmUp','redstoneWireTRightOn','railsRedstoneTorch','redstoneWireTLeftOn','','',
+    '','','pistonUpOn','redstoneWireUpLeftOn','','redstoneWireUpRightOn','pistonDownOn','',
+    '','','','','','','pistonArmDown','',
+    '','','','','','','grass','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+test('piston deactivate: destroy block', t => {
+  const data = [
+    '','grass','pistonArmLeft','pistonLeftOn','','pistonRightOn','pistonArmRight','grass',
+    '','','grass','redstoneWireVerticalOn','','redstoneWireVerticalOn','','',
+    '','','pistonArmUp','redstoneWireTRightOn','railsRedstoneTorch','redstoneWireTLeftOn','','',
+    '','','pistonUpOn','redstoneWireUpLeftOn','','redstoneWireUpRightOn','pistonDownOn','',
+    '','','','','','','pistonArmDown','',
+    '','','','','','','grass','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true);
+
+  plane.setBlockAt([4, 2], new LevelBlock(''));
+
+  const expected = [
+    '','grass','','pistonLeft','','pistonRight','','grass',
+    '','','grass','redstoneWireVertical','','redstoneWireVertical','','',
+    '','','','redstoneWireVertical','','redstoneWireVertical','','',
+    '','','pistonUp','redstoneWireUpLeft','','redstoneWireUpRight','pistonDown','',
+    '','','','','','','','',
+    '','','','','','','grass','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   t.end();
 });

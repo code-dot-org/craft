@@ -122,16 +122,31 @@ module.exports = class LevelBlock {
     if (blockType.startsWith("pressurePlate")) {
       this.isEntity = true;
       this.isWalkable = true;
-      this.isUsable = true;
       this.isDestroyable = false;
       this.isTransparent = true;
       this.isConnectedToRedstone = true;
       this.isRedstoneBattery = blockType === 'pressurePlateUp' ? false : true;
     }
+
+    if (blockType.startsWith("piston")) {
+      this.isDestroyable = false;
+      this.isConnectedToRedstone = !blockType.startsWith("pistonArm");
+      if (blockType.substring(blockType.length - 2, blockType.length) === "On" || blockType.startsWith("pistonArm")) {
+        this.isEntity = true;
+      }
+    }
   }
 
   getIsTree() {
     return !!this.blockType.match(/^tree/);
+  }
+
+  needToRefreshRedstone(){
+    if (this.isRedstone || this.blockType === '' || (this.isConnectedToRedstone && !this.blockType.startsWith("piston"))) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   getIsEmptyOrEntity() {
