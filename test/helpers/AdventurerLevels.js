@@ -5,7 +5,9 @@ module.exports = {
     actionPlane: ["grass","grass","","","","","","","grass","grass","grass","grass","","","","","","","","grass","grass","","","treeOak","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","treeBirch","","",""],
     entities: [['sheep', 6, 4, 1]],
     playerStartPosition: [3, 4],
+    agentStartPosition: [2,4],
     playerStartDirection: 1,
+    agentStartDirection: 1,
     verificationFunction: verificationAPI =>
       verificationAPI.isPlayerNextTo("sheep"),
   },
@@ -14,7 +16,9 @@ module.exports = {
     groundDecorationPlane: ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","tallGrass","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","tallGrass","","","","","","","","",""],
     actionPlane: ["","","","","","","grass","grass","grass","grass","grass","grass","","","","","","","","","grass","grass","","","","","","","","","grass","grass","","","","","","","","","grass","grass","","","treeSpruce","","","","","","grass","","","","","","","","","","grass","","","","","","","","","","","","","","","","","","","grass","","","","","","","","","grass","grass","grass","grass","","","","","","","grass","grass"],
     playerStartPosition: [4, 7],
+    agentStartPosition: [3, 7],
     playerStartDirection: 0,
+    agentStartDirection: 0,
     verificationFunction: verificationAPI =>
       verificationAPI.countOfTypeOnMap("treeSpruce") === 0,
   },
@@ -24,7 +28,9 @@ module.exports = {
     actionPlane: ["grass","grass","grass","grass","","","","","","","","","grass","grass","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","grass","","","","","","","","","","grass","","treeOak","","","","","","","","grass","","","","","","","","",""],
     entities: [["sheep", 5, 3, 3], ["sheep", 4, 5, 3]],
     playerStartPosition: [2, 3],
+    agentStartPosition: [1, 3],
     playerStartDirection: 1,
+    agentStartDirection: 1,
     verificationFunction: verificationAPI =>
       verificationAPI.getInventoryAmount("wool") >= 2,
   },
@@ -33,7 +39,9 @@ module.exports = {
     groundDecorationPlane: ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","tallGrass","","","","","","","","","","","flowerOxeeye","","","","","","","","","flowerDandelion","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","tallGrass","","","","","","","","flowerRose","","tallGrass","tallGrass","","","","","","tallGrass","","flowerOxeeye"],
     actionPlane: ["","grass","grass","grass","grass","grass","grass","grass","grass","grass","","","","","grass","grass","grass","grass","grass","grass","","","","","","","","","","","","","","","","","treeSpruce","","","","","","treeOak","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","treeBirch","","","","","","","","","","","","","","","","","","","","","",""],
     playerStartPosition: [3, 7],
+    agentStartPosition: [1, 3],
     playerStartDirection: 1,
+    agentStartDirection: 1,
     verificationFunction: verificationAPI =>
       verificationAPI.getInventoryAmount("planksBirch") === 1 &&
       verificationAPI.getInventoryAmount("planksSpruce") === 1 &&
@@ -44,7 +52,9 @@ module.exports = {
     groundDecorationPlane: ["","","","","","","flowerOxeeye","tallGrass","","","","","","","","","tallGrass","tallGrass","flowerDandelion","","","","","","","","","flowerDandelion","tallGrass","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","tallGrass","flowerDandelion","","tallGrass","","","","","","","","","tallGrass","","","","","","tallGrass","","",""],
     actionPlane: ["grass","grass","","","","","","","grass","grass","","","","","","","","","","grass","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],
     playerStartPosition: [6, 6],
+    agentStartPosition: [1, 3],
     playerStartDirection: 3,
+    agentStartDirection: 3,
     verificationFunction: verificationAPI =>
       verificationAPI.solutionMapMatchesResultMap([
         "", "", "", "", "", "", "", "", "", "",
@@ -65,6 +75,8 @@ module.exports = {
     actionPlane: ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","planksBirch","planksBirch","planksBirch","planksBirch","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],
     playerStartPosition: [3, 6],
     playerStartDirection: 0,
+    agentStartPosition: [1, 3],
+    agentStartDirection: 0,
     verificationFunction: verificationAPI =>
       verificationAPI.solutionMapMatchesResultMap([
         "", "", "", "", "", "", "", "", "", "",
@@ -86,6 +98,8 @@ module.exports = {
     entities: [["sheep", 8, 2, 3], ["sheep", 2, 6, 3]],
     playerStartPosition: [4, 7],
     playerStartDirection: 0,
+    agentStartPosition: [1, 3],
+    agentStartDirection: 0,
     verificationFunction: verificationAPI =>
       verificationAPI.solutionMapMatchesResultMap([
         "", "", "", "", "", "", "", "", "", "",
@@ -108,6 +122,8 @@ module.exports = {
     entities: [["creeper", 2, 2, 2], ["creeper", 4, 3, 2], ["creeper", 3, 4, 2], ["creeper", 5, 5, 2], ["creeper", 7, 3, 2], ["creeper", 7, 5, 2], ["creeper", 6, 7, 2], ["creeper", 9, 4, 2]],
     playerStartPosition: [2, 6],
     playerStartDirection: 1,
+    agentStartPosition: [1, 3],
+    agentStartDirection: 0,
     verificationFunction: verificationAPI =>
       verificationAPI.isPlayerAt([4, 1]) ||
       verificationAPI.isPlayerAt([4, 2]) ||
@@ -121,6 +137,8 @@ module.exports = {
     actionPlane: ["stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","","","oreCoal","oreCoal","oreCoal","stone","oreCoal","stone","stone","stone","","","","","","","stone","stone","stone","stone","","","","","","","oreCoal","stone","stone","stone","","stone","","","","","oreCoal","stone","stone","stone","stone","stone","oreCoal","oreCoal","","","stone","","","stone","stone","stone","stone","stone","","","stone","stone","stone","stone","stone","stone","stone","stone","","stone","stone","stone","stone","stone","stone","stone","stone","stone","","stone","stone","stone","stone"],
     playerStartPosition: [5, 6],
     playerStartDirection: 0,
+    agentStartPosition: [1, 3],
+    agentStartDirection: 0,
     verificationFunction: verificationAPI =>
       verificationAPI.getInventoryAmount("oreCoal") >= 2 &&
       verificationAPI.countOfTypeOnMap("torch") >= 2,
@@ -132,6 +150,8 @@ module.exports = {
     actionPlane: ["stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","oreIron","oreIron","oreIron","stone","stone","stone","stone","stone","stone","stone","oreIron","oreIron","oreIron","stone","stone","stone","stone","stone","","","","","","","","","stone","","","","","","","","","","","stone","stone","stone","","","","","","stone","stone","","","","","","stone","stone","","stone","stone","stone","","","","","","","","stone","stone","stone","stone","","","","","","","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone"],
     playerStartPosition: [3, 6],
     playerStartDirection: 0,
+    agentStartPosition: [1, 3],
+    agentStartDirection: 0,
     verificationFunction: verificationAPI =>
       verificationAPI.getInventoryAmount("oreIron") >= 2,
   },
@@ -142,6 +162,8 @@ module.exports = {
     actionPlane: ["stone","stone","stone","stone","stone","stone","stone","","stone","stone","stone","stone","","","","","","","stone","stone","stone","","","","","","","","stone","stone","stone","","","","","","","","stone","stone","stone","","stone","stone","oreCoal","oreCoal","stone","oreIron","oreIron","stone","stone","","","","","","","","","","stone","","","","","","stone","","stone","stone","stone","stone","","","stone","","","","stone","stone","stone","stone","","","stone","stone","","","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone"],
     playerStartPosition: [1, 4],
     playerStartDirection: 1,
+    agentStartPosition: [1, 3],
+    agentStartDirection: 0,
     verificationFunction: verificationAPI =>
       verificationAPI.countOfTypeOnMap("oreIron") === 0 &&
       verificationAPI.countOfTypeOnMap("oreCoal") === 0,
@@ -153,6 +175,8 @@ module.exports = {
     actionPlane: ["stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","stone","","stone","oreRedstone","oreDiamond","stone","oreRedstone","stone","stone","stone","","","oreRedstone","","","oreRedstone","oreRedstone","stone","stone","stone","","","","","","","oreDiamond","stone","stone","","","","","","","","stone","stone","stone","","","","","","","oreRedstone","stone","stone","stone","","","","stone","stone","stone","oreRedstone","stone","stone","stone","","","","","","","","","stone","stone","","","","","","","","","stone","stone","","","stone","stone","stone","stone","stone","stone","stone","stone"],
     playerStartPosition: [3, 5],
     playerStartDirection: 1,
+    agentStartPosition: [1, 3],
+    agentStartDirection: 0,
     verificationFunction: verificationAPI =>
       verificationAPI.getInventoryAmount("oreRedstone") >= 3,
   },
@@ -165,6 +189,8 @@ module.exports = {
     fluffPlane: ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],
     playerStartPosition: [9, 7],
     playerStartDirection: 2,
+    agentStartPosition: [1, 3],
+    agentStartDirection: 0,
     verificationFunction: verificationAPI =>
       verificationAPI.solutionMapMatchesResultMap([
         "", "", "", "", "", "", "", "", "", "", "", "",
@@ -189,6 +215,8 @@ module.exports = {
     entities: [["sheep", 0, 18, 1], ["sheep", 1, 14, 1], ["sheep", 2, 17, 1], ["sheep", 3, 15, 1], ["sheep", 4, 18, 1]],
     playerStartPosition: [10, 10],
     playerStartDirection: 0,
+    agentStartPosition: [1, 3],
+    agentStartDirection: 0,
     verificationFunction: () => true,
   },
 };

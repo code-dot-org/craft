@@ -806,10 +806,10 @@ module.exports = class LevelView {
     }
   }
 
-  playPlaceBlockInFrontAnimation(playerPosition, facing, blockPosition, completionHandler) {
+  playPlaceBlockInFrontAnimation(entity = this.player, playerPosition, facing, blockPosition, completionHandler) {
     this.setSelectionIndicatorPosition(blockPosition[0], blockPosition[1]);
 
-    this.playPlayerAnimation("punch", playerPosition, facing, false).onComplete.addOnce(() => {
+    this.playPlayerAnimation("punch", playerPosition, facing, false, entity).onComplete.addOnce(() => {
       completionHandler();
     });
   }
@@ -895,13 +895,13 @@ module.exports = class LevelView {
     this.playPunchAnimation(playerPosition, facing, destroyPosition, "punchDestroy", completionHandler);
   }
 
-  playPunchAirAnimation(playerPosition, facing, destroyPosition, completionHandler) {
-    this.playPunchAnimation(playerPosition, facing, destroyPosition, "punch", completionHandler);
+  playPunchAirAnimation(playerPosition, facing, destroyPosition, completionHandler, entity = this.player) {
+    this.playPunchAnimation(playerPosition, facing, destroyPosition, "punch", completionHandler, entity);
   }
 
-  playPunchAnimation(playerPosition, facing, destroyPosition, animationType, completionHandler) {
+  playPunchAnimation(playerPosition, facing, destroyPosition, animationType, completionHandler, entity = this.player) {
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
-    this.onAnimationEnd(this.playPlayerAnimation(animationType, playerPosition, facing, false), () => {
+    this.onAnimationEnd(this.playPlayerAnimation(animationType, playerPosition, facing, false, entity), () => {
       completionHandler();
     });
   }

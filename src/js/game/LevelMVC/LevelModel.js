@@ -684,17 +684,17 @@ module.exports = class LevelModel {
     return true;
   }
 
-  canPlaceBlockForward(blockType = "") {
-    if (this.player.isOnBlock) {
+  canPlaceBlockForward(blockType = "", entity = this.player) {
+    if (entity.isOnBlock) {
       return false;
     }
-    let plane = this.getPlaneToPlaceOn(this.getMoveForwardPosition());
+    let plane = this.getPlaneToPlaceOn(this.getMoveForwardPosition(entity));
     if (plane === this.groundPlane) {
       if (blockType === "redstoneWire" || blockType.substring(0,5) === "rails" && this.groundPlane._data[this.groundPlane.coordinatesToIndex(this.getMoveForwardPosition())]) {
         return false;
       }
     }
-    return this.getPlaneToPlaceOn(this.getMoveForwardPosition()) !== null;
+    return this.getPlaneToPlaceOn(this.getMoveForwardPosition(entity)) !== null;
   }
 
   getPlaneToPlaceOn(position) {
@@ -818,8 +818,8 @@ module.exports = class LevelModel {
     return placedBlock;
   }
 
-  placeBlockForward(blockType, targetPlane) {
-    let blockPosition = this.getMoveForwardPosition();
+  placeBlockForward(blockType, targetPlane, entity = this.player) {
+    let blockPosition = this.getMoveForwardPosition(entity);
 
     //for placing wetland for crops in free play
     if (blockType === "watering") {
