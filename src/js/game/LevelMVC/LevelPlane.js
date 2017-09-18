@@ -105,7 +105,7 @@ module.exports = class LevelPlane {
     }
 
     let redstoneToRefresh = [];
-    if (block.isRedstone || block.blockType === '' || (block.isConnectedToRedstone && !block.blockType.startsWith("piston"))) {
+    if (block.needToRefreshRedstone()) {
       redstoneToRefresh = this.getRedstone();
       // Once we're done updating redstoneWire states, check to see if doors should open/close.
       if (wasOnADoor) {
@@ -301,8 +301,6 @@ module.exports = class LevelPlane {
       this._data[index].isPowered = this.powerCheck(this.indexToCoordinates(index));
       if (this._data[index].isPowered) {
         this.activatePiston(this.indexToCoordinates(index));
-        if (this.levelModel) {
-        }
       } else if (!this._data[index].isPowered) {
         this.deactivatePiston(this.indexToCoordinates(index));
       }
@@ -319,16 +317,16 @@ module.exports = class LevelPlane {
   */
   findDoorToAnimate(positionInQuestion) {
     let notOffendingIndex = this.coordinatesToIndex(positionInQuestion);
-    for (let i = 0; i < this.length; ++i) {
-      if (this[i].blockType === "doorIron" && notOffendingIndex !== i) {
-        this[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
-        if (this[i].isPowered && !this[i].isOpen) {
-          this[i].isOpen = true;
+    for (let i = 0; i < this._data.length; ++i) {
+      if (this._data[i].blockType === "doorIron" && notOffendingIndex !== i) {
+        this._data[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
+        if (this._data[i].isPowered && !this._data[i].isOpen) {
+          this._data[i].isOpen = true;
           if (this.levelModel) {
             this.levelModel.controller.levelView.animateDoor(i, true);
           }
-        } else if (!this[i].isPowered && this[i].isOpen) {
-          this[i].isOpen = false;
+        } else if (!this._data[i].isPowered && this._data[i].isOpen) {
+          this._data[i].isOpen = false;
           if (this.levelModel) {
             this.levelModel.controller.levelView.animateDoor(i, false);
           }
@@ -395,6 +393,8 @@ module.exports = class LevelPlane {
 
   /**
   * Deactivates a piston at a given position by determining what the arm orientation is.
+  * NOTE: getOrthogonalPositions() does not match the order of the North/East/South/West defined in Facing Directions.
+  * This should be cleaned up in a future PR so we don't have to define the directions here.
   */
   deactivatePiston(position) {
     let neighborPosition = this.getOrthogonalPositions(position);

@@ -141,6 +141,14 @@ module.exports = class LevelBlock {
     return !!this.blockType.match(/^tree/);
   }
 
+  needToRefreshRedstone(){
+    if (this.isRedstone || this.blockType === '' || (this.isConnectedToRedstone && !this.blockType.startsWith("piston"))) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   getIsEmptyOrEntity() {
     return this.isEmpty || this.isEntity;
   }

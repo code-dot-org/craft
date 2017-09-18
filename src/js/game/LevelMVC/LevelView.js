@@ -1204,11 +1204,10 @@ module.exports = class LevelView {
       const positionBelow = [positions[i][0], positions[i][1] + 1];
       const indexIsValid = this.controller.levelModel.actionPlane.inBounds(positionBelow);
       if (indexIsValid) {
-        const positionOfInterest = [positions[i][0], positions[i][1] + 1];
-        let blockToCheck = this.controller.levelModel.actionPlane.getBlockAt(positionOfInterest);
+        let blockToCheck = this.controller.levelModel.actionPlane.getBlockAt(positionBelow);
         const indexIsEmpty = blockToCheck.blockType === "";
         if (!indexIsEmpty) {
-          positions.push(positionOfInterest);
+          positions.push(positionBelow);
         }
       }
     }
