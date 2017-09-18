@@ -1160,8 +1160,8 @@ class GameController {
     let player = this.levelModel.player;
     let frontPosition = this.levelModel.getMoveForwardPosition(player);
     let frontEntity = this.levelEntity.getEntityAt(frontPosition);
-    const frontIndex = this.levelModel.yToIndex(frontPosition[1]) + frontPosition[0];
-    let frontBlock = this.levelModel.actionPlane._data[frontIndex];
+    let frontBlock = this.levelModel.actionPlane.getBlockAt(frontPosition);
+
     const isFrontBlockDoor = frontBlock === undefined ? false : frontBlock.blockType === "door";
     if (frontEntity !== null) {
       // push use command to execute general use behavior of the entity before executing the event
@@ -1281,7 +1281,7 @@ class GameController {
     if (!this.levelModel.inBounds(position[0], position[1])) {
       return;
     }
-    let block = this.levelModel.actionPlane._data[this.levelModel.yToIndex(position[1]) + position[0]];
+    let block = this.levelModel.actionPlane.getBlockAt(position);
 
     if (block !== null && block !== undefined) {
       let destroyPosition = position;
@@ -1342,14 +1342,15 @@ class GameController {
   }
 
   placeBlock(commandQueueItem, blockType) {
-    let blockIndex = (this.levelModel.yToIndex(this.levelModel.player.position[1]) + this.levelModel.player.position[0]);
-    let blockTypeAtPosition = this.levelModel.actionPlane._data[blockIndex].blockType;
+    const position = this.levelModel.player.position;
+    let blockTypeAtPosition = this.levelModel.actionPlane.getBlockAt(position).blockType;
+
     if (this.levelModel.canPlaceBlock()) {
       if (blockTypeAtPosition !== "") {
-        this.levelModel.destroyBlock(blockIndex);
+        this.levelModel.destroyBlock(position);
       }
 
-      if (blockType !== "cropWheat" || this.levelModel.groundPlane.getBlockAt((this.levelModel.player.position)).blockType === "farmlandWet") {
+      if (blockType !== "cropWheat" || this.levelModel.groundPlane.getBlockAt(this.levelModel.player.position).blockType === "farmlandWet") {
         this.levelModel.player.updateHidingBlock(this.levelModel.player.position);
         this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, blockTypeAtPosition, () => {
           if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {

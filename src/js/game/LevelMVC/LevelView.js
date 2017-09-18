@@ -1163,19 +1163,20 @@ module.exports = class LevelView {
     this.actionPlaneBlocks = [];
     for (y = 0; y < this.controller.levelModel.planeHeight; ++y) {
       for (x = 0; x < this.controller.levelModel.planeWidth; ++x) {
-        let blockIndex = (this.yToIndex(y)) + x;
+        let position = [x, y];
         sprite = null;
 
-        if (!levelData.groundDecorationPlane._data[blockIndex].isEmpty) {
-          sprite = this.createBlock(this.actionPlane, x, y, levelData.groundDecorationPlane._data[blockIndex].blockType);
+        const groundBlock = levelData.groundDecorationPlane.getBlockAt(position);
+        if (!groundBlock.isEmpty) {
+          sprite = this.createBlock(this.actionPlane, x, y, groundBlock.blockType);
           if (sprite) {
             sprite.sortOrder = this.yToIndex(y);
           }
         }
 
         sprite = null;
-        if (!levelData.actionPlane._data[blockIndex].isEmpty) {
-          blockType = levelData.actionPlane._data[blockIndex].blockType;
+        if (!levelData.actionPlane.getBlockAt(position).isEmpty) {
+          blockType = levelData.actionPlane.getBlockAt(position).blockType;
           sprite = this.createBlock(this.actionPlane, x, y, blockType);
           if (sprite !== null) {
             sprite.sortOrder = this.yToIndex(y);
@@ -1188,9 +1189,9 @@ module.exports = class LevelView {
 
     for (y = 0; y < this.controller.levelModel.planeHeight; ++y) {
       for (x = 0; x < this.controller.levelModel.planeWidth; ++x) {
-        let blockIndex = (this.yToIndex(y)) + x;
-        if (!levelData.fluffPlane._data[blockIndex].isEmpty) {
-          sprite = this.createBlock(this.fluffPlane, x, y, levelData.fluffPlane._data[blockIndex].blockType);
+        let position = [x, y];
+        if (!levelData.fluffPlane.getBlockAt(position).isEmpty) {
+          sprite = this.createBlock(this.fluffPlane, x, y, levelData.fluffPlane.getBlockAt(position).blockType);
         }
       }
     }
@@ -1200,8 +1201,8 @@ module.exports = class LevelView {
     this.groundPlane.removeAll(true);
     for (var y = 0; y < this.controller.levelModel.planeHeight; ++y) {
       for (var x = 0; x < this.controller.levelModel.planeWidth; ++x) {
-        let blockIndex = (this.yToIndex(y)) + x;
-        var sprite = this.createBlock(this.groundPlane, x, y, this.controller.levelModel.groundPlane._data[blockIndex].blockType);
+        let position = [x, y];
+        var sprite = this.createBlock(this.groundPlane, x, y, this.controller.levelModel.groundPlane.getBlockAt(position).blockType);
         if (sprite) {
           sprite.sortOrder = this.yToIndex(y);
         }
@@ -1942,8 +1943,10 @@ module.exports = class LevelView {
     this.setSelectionIndicatorPosition(this.controller.levelModel.actionPlane.indexToCoordinates(index)[0], this.controller.levelModel.actionPlane.indexToCoordinates(index)[1]);
     this.controller.audioPlayer.play("doorOpen");
     // If it's not walable, then open otherwise, close.
-    this.playDoorAnimation(this.controller.levelModel.actionPlane.indexToCoordinates(index), open, () => {
-      this.controller.levelModel.actionPlane._data[index].isWalkable = !this.controller.levelModel.actionPlane._data[index].isWalkable;
+    const position = this.controller.levelModel.actionPlane.indexToCoordinates(index);
+    this.playDoorAnimation(position, open, () => {
+      const block = this.controller.levelModel.actionPlane.getBlockAt(position);
+      block.isWalkable = !block.isWalkable;
       this.playIdleAnimation(player.position, player.facing, player.isOnBlock);
       this.setSelectionIndicatorPosition(player.position[0], player.position[1]);
     });

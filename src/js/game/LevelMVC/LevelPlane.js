@@ -82,8 +82,26 @@ module.exports = class LevelPlane {
   }
 
   /**
-  * Gets the block at the desired index within the plane.
-  */
+   * Retrieve all the [x, y] coordinates within this plane
+   *
+   * @return {[Number, Number][]}
+   */
+  getAllPositions() {
+    return this._data.map((_, i) => {
+      return this.indexToCoordinates(i);
+    });
+  }
+
+  /**
+   * Gets the block at the desired position within the plane, optionally with an
+   * offset
+   *
+   * @param {Number[]} position - [x, y] coordinates of block
+   * @param {Number} [offsetX=0]
+   * @param {Number} [offsetY=0]
+   *
+   * @return {LevelBlock}
+   */
   getBlockAt(position, offsetX = 0, offsetY = 0) {
     const [x, y] = position;
     const target = [x + offsetX, y + offsetY];
