@@ -212,9 +212,6 @@ module.exports = class LevelView {
 
     this.resetPlanes(levelModel);
     if (levelModel.usePlayer) {
-      console.log(this.player);
-      console.log(this.agent);
-
       this.preparePlayerSprite(this.player.name);
       this.player.sprite.animations.stop();
       this.setPlayerPosition(this.player.position[0], this.player.position[1], this.player.isOnBlock, this.player);
@@ -222,12 +219,14 @@ module.exports = class LevelView {
       this.selectionIndicator.visible = true;
       this.playIdleAnimation(this.player.position, this.player.facing, this.player.isOnBlock, this.player);
 
-      this.preparePlayerSprite(this.agent.name, this.agent);
-      this.agent.sprite.animations.stop();
-      this.setPlayerPosition(this.agent.position[0], this.agent.position[1], this.agent.isOnBlock, this.agent);
-      this.setSelectionIndicatorPosition(this.agent.position[0], this.agent.position[1]);
-      this.selectionIndicator.visible = true;
-      this.playIdleAnimation(this.agent.position, this.agent.facing, this.agent.isOnBlock, this.agent);
+      if (levelModel.usingAgent) {
+        this.preparePlayerSprite(this.agent.name, this.agent);
+        this.agent.sprite.animations.stop();
+        this.setPlayerPosition(this.agent.position[0], this.agent.position[1], this.agent.isOnBlock, this.agent);
+        this.setSelectionIndicatorPosition(this.agent.position[0], this.agent.position[1]);
+        this.selectionIndicator.visible = true;
+        this.playIdleAnimation(this.agent.position, this.agent.facing, this.agent.isOnBlock, this.agent);
+      }
     }
     this.updateShadingPlane(levelModel.shadingPlane);
     this.updateFowPlane(levelModel.fowPlane);
@@ -712,7 +711,6 @@ module.exports = class LevelView {
   playMoveForwardAnimation(entity, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, completionHandler) {
     let tween;
     let position = entity.position;
-    console.log("what is going on");
 
     //stepping on stone sfx
     this.playBlockSound(groundType);

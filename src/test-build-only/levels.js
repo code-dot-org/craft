@@ -28,7 +28,8 @@ window.demoLevels = {
   
   1: {
     instructions: "Nighttime is boring with no zombies (sheep at this time). Get the Zombies spawning at night, and get them to chase you.",
-
+    useAgent: true,
+    
     playerStartPosition: [3, 4],
     agentStartPosition: [7, 2],
 

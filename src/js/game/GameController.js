@@ -240,6 +240,8 @@ class GameController {
     this.levelEntity.tick();
     if (this.levelModel.usePlayer) {
       this.player.updateMovement();
+    }
+    if (this.levelModel.usingAgent) {
       this.agent.updateMovement();
     }
     this.levelView.update();
@@ -272,22 +274,30 @@ class GameController {
     this.game.input.keyboard.addKey(Phaser.Keyboard.W).onDown.add(() => {
       this.player.movementState = FacingDirection.Up;
       this.player.updateMovement();
-      this.agent.movementState = FacingDirection.Up;
-      this.agent.updateMovement();
+      if (this.levelModel.usingAgent) {
+        this.agent.movementState = FacingDirection.Up;
+        this.agent.updateMovement();
+      }
       if (this.isEdge()) {
         this.player.movementState = -1;
         this.player.updateMovement();
-        this.agent.movementState = -1;
-        this.agent.updateMovement();
+        if (this.levelModel.usingAgent) {
+          this.agent.movementState = -1;
+          this.agent.updateMovement();
+        }
       }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.W).onUp.add(() => {
       if (this.player.movementState === FacingDirection.Up) {
         this.player.movementState = -1;
-        this.agent.movementState = -1;
+        if (this.levelModel.usingAgent) {
+          this.agent.movementState = -1;
+        }
       }
       this.player.updateMovement();
-      this.agent.updateMovement();
+      if (this.levelModel.usingAgent) {
+        this.agent.updateMovement();
+      }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onDown.add(() => {
       this.player.movementState = FacingDirection.Right;
@@ -306,22 +316,30 @@ class GameController {
     this.game.input.keyboard.addKey(Phaser.Keyboard.D).onDown.add(() => {
       this.player.movementState = FacingDirection.Right;
       this.player.updateMovement();
-      this.agent.movementState = FacingDirection.Right;
-      this.agent.updateMovement();
+      if (this.levelModel.usingAgent) {
+        this.agent.movementState = FacingDirection.Right;
+        this.agent.updateMovement();
+      }
       if (this.isEdge()) {
         this.player.movementState = -1;
-        this.agent.movementState = -1;
         this.player.updateMovement();
-        this.agent.updateMovement();
+        if (this.levelModel.usingAgent) {
+          this.agent.movementState = -1;
+          this.agent.updateMovement();
+        }
       }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.D).onUp.add(() => {
       if (this.player.movementState === FacingDirection.Right) {
         this.player.movementState = -1;
-        this.agent.movementState = -1;
+        if (this.levelModel.usingAgent) {
+          this.agent.movementState = -1;
+        }
       }
       this.player.updateMovement();
-      this.agent.updateMovement();
+      if (this.levelModel.usingAgent) {
+        this.agent.updateMovement();
+      }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN).onDown.add(() => {
       this.player.movementState = FacingDirection.Down;
@@ -340,22 +358,30 @@ class GameController {
     this.game.input.keyboard.addKey(Phaser.Keyboard.S).onDown.add(() => {
       this.player.movementState = FacingDirection.Down;
       this.player.updateMovement();
-      this.agent.movementState = FacingDirection.Down;
-      this.agent.updateMovement();
+      if (this.levelModel.usingAgent) {
+        this.agent.movementState = FacingDirection.Down;
+        this.agent.updateMovement();
+      }
       if (this.isEdge()) {
         this.player.movementState = -1;
-        this.agent.movementState = -1;
         this.player.updateMovement();
-        this.agent.updateMovement();
+        if (this.levelModel.usingAgent) {
+          this.agent.movementState = -1;
+          this.agent.updateMovement();
+        }
       }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.S).onUp.add(() => {
       if (this.player.movementState === FacingDirection.Down) {
         this.player.movementState = -1;
-        this.agent.movementState = -1;
+        if (this.levelModel.usingAgent) {
+          this.agent.movementState = -1;
+        }
       }
       this.player.updateMovement();
-      this.agent.updateMovement();
+      if (this.levelModel.usingAgent) {
+        this.agent.updateMovement();
+      }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT).onDown.add(() => {
       this.player.movementState = FacingDirection.Left;
@@ -374,24 +400,30 @@ class GameController {
     this.game.input.keyboard.addKey(Phaser.Keyboard.A).onDown.add(() => {
       this.player.movementState = FacingDirection.Left;
       this.player.updateMovement();
-      this.agent.movementState = FacingDirection.Left;
-      this.agent.updateMovement();
+      if (this.levelModel.usingAgent) {
+        this.agent.movementState = FacingDirection.Left;
+        this.agent.updateMovement();
+      }
       if (this.isEdge()) {
         this.agent.movementState = -1;
         this.agent.updateMovement();
-        this.player.movementState = -1;
-        this.player.updateMovement();
+        if (this.levelModel.usingAgent) {
+          this.agent.movementState = -1;
+          this.agent.updateMovement();
+        }
       }
-      console.log(this.agent.position);
-      console.log(this.player.position);
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.A).onUp.add(() => {
       if (this.player.movementState === FacingDirection.Left) {
         this.player.movementState = -1;
-        this.agent.movementState = -1;
+        if (this.levelModel.usingAgent) {
+          this.agent.movementState = -1;
+        }
       }
       this.player.updateMovement();
-      this.agent.updateMovement();
+      if (this.levelModel.usingAgent) {
+        this.agent.updateMovement();
+      }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).onDown.add(() => {
       this.player.movementState = -2;
