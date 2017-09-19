@@ -893,14 +893,14 @@ module.exports = class LevelView {
     this.playScaledSpeed(destroyOverlay.animations, "destroy");
   }
 
-  playDestroyBlockAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
+  playDestroyBlockAnimation(playerPosition, facing, destroyPosition, blockType, entity, completionHandler) {
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
 
     var playerAnimation =
       blockType.match(/(ore|stone|clay|bricks|bedrock)/) ? "mine" : "punchDestroy";
-    this.playPlayerAnimation(playerAnimation, playerPosition, facing, false);
+    this.playPlayerAnimation(playerAnimation, playerPosition, facing, false, entity);
     this.playMiningParticlesAnimation(facing, destroyPosition);
-    this.playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler);
+    this.playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, entity, completionHandler);
   }
 
   playPunchDestroyAirAnimation(playerPosition, facing, destroyPosition, completionHandler) {
@@ -918,10 +918,9 @@ module.exports = class LevelView {
     });
   }
 
-  playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
+  playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, entity, completionHandler) {
     let blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
     let blockToDestroy = this.actionPlaneBlocks[blockIndex];
-
     let destroyOverlay = this.actionPlane.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
     destroyOverlay.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     this.onAnimationEnd(destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false), () => {
@@ -932,14 +931,14 @@ module.exports = class LevelView {
       destroyOverlay.kill();
       this.toDestroy.push(destroyOverlay);
 
-      this.controller.levelModel.destroyBlockForward();
+      this.controller.levelModel.destroyBlockForward(entity);
       this.controller.updateShadingPlane();
       this.controller.updateFowPlane();
 
       this.setSelectionIndicatorPosition(playerPosition[0], playerPosition[1]);
 
       this.audioPlayer.play('dig_wood1');
-      this.playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, true);
+      this.playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, true, entity);
     });
 
     this.playScaledSpeed(destroyOverlay.animations, "destroy");
@@ -967,7 +966,7 @@ module.exports = class LevelView {
     this.playScaledSpeed(miningParticles.animations, "miningParticles");
   }
 
-  playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, placeBlock) {
+  playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, placeBlock, entity = this.player) {
     var explodeAnim = this.actionPlane.create(-36 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
 
     switch (blockType) {
@@ -1035,7 +1034,7 @@ module.exports = class LevelView {
 
       if (placeBlock) {
         if (!this.controller.levelData.isEventLevel) {
-          this.playPlayerAnimation("idle", playerPosition, facing, false);
+          this.playPlayerAnimation("idle", playerPosition, facing, false, entity);
         }
         this.playItemDropAnimation(destroyPosition, blockType, completionHandler);
       }
