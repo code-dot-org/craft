@@ -784,6 +784,32 @@ class GameController {
     }
   }
 
+  moveBackward(commandQueueItem) {
+    let target = commandQueueItem.target;
+    if (!this.isType(target)) {
+      // apply to all entities
+      if (target === undefined) {
+        let entities = this.levelEntity.entityMap;
+        for (var value of entities) {
+          let entity = value[1];
+          let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveForward(callbackCommand); }, entity.identifier);
+          entity.addCommand(callbackCommand, commandQueueItem.repeat);
+        }
+        commandQueueItem.succeeded();
+      } else {
+        let entity = this.getEntity(target);
+        entity.moveForward(commandQueueItem);
+      }
+    } else {
+      let entities = this.getEntities(target);
+      for (let i = 0; i < entities.length; i++) {
+        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveForward(callbackCommand); }, entities[i].identifier);
+        entities[i].addCommand(callbackCommand, commandQueueItem.repeat);
+      }
+      commandQueueItem.succeeded();
+    }
+  }
+
   moveDirection(commandQueueItem, direction) {
     let player = this.getEntity(commandQueueItem.target);
     let isMovingOffOf = this.levelModel.isEntityOnBlocktype(commandQueueItem.target, "pressurePlateDown");
