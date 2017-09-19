@@ -154,13 +154,11 @@ module.exports = class Agent extends BaseEntity {
     }
   }
 
-  hasPermissionToWalk(actionBlock, frontEntity, groundBlock = null) {
+  hasPermissionToWalk(actionBlock, frontEntity) {
         return (actionBlock.isWalkable || ((frontEntity !== undefined && frontEntity.isOnBlock)
         // action plane is empty
         && !actionBlock.isEmpty))
         // there is no entity
-        && (frontEntity === undefined)
-        //linter won't let groundBlock go unused, even though the agent doesn't need it. So...
-        && (groundBlock === null || groundBlock !== null);
+        && (frontEntity === undefined);
   }
 };
