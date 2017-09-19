@@ -275,7 +275,7 @@ class GameController {
       this.player.movementState = FacingDirection.North;
       this.player.updateMovement();
       if (this.levelModel.usingAgent) {
-        this.agent.movementState = FacingDirection.Up;
+        this.agent.movementState = FacingDirection.North;
         this.agent.updateMovement();
       }
       if (this.isEdge()) {
@@ -317,7 +317,7 @@ class GameController {
       this.player.movementState = FacingDirection.East;
       this.player.updateMovement();
       if (this.levelModel.usingAgent) {
-        this.agent.movementState = FacingDirection.Right;
+        this.agent.movementState = FacingDirection.East;
         this.agent.updateMovement();
       }
       if (this.isEdge()) {
@@ -359,7 +359,7 @@ class GameController {
       this.player.movementState = FacingDirection.South;
       this.player.updateMovement();
       if (this.levelModel.usingAgent) {
-        this.agent.movementState = FacingDirection.Down;
+        this.agent.movementState = FacingDirection.South;
         this.agent.updateMovement();
       }
       if (this.isEdge()) {
@@ -401,7 +401,7 @@ class GameController {
       this.player.movementState = FacingDirection.West;
       this.player.updateMovement();
       if (this.levelModel.usingAgent) {
-        this.agent.movementState = FacingDirection.Left;
+        this.agent.movementState = FacingDirection.West;
         this.agent.updateMovement();
       }
       if (this.isEdge()) {
