@@ -1,3 +1,4 @@
+const LevelBlock = require("./LevelBlock.js");
 const FacingDirection = require("./FacingDirection.js");
 
 module.exports = class LevelView {
@@ -1140,8 +1141,7 @@ module.exports = class LevelView {
   resetPlanes(levelData) {
     var sprite,
       x,
-      y,
-      blockType;
+      y;
 
     this.groundPlane.removeAll(true);
     this.actionPlane.removeAll(true);
@@ -1174,9 +1174,14 @@ module.exports = class LevelView {
         }
 
         sprite = null;
-        if (!levelData.actionPlane.getBlockAt(position).isEmpty) {
-          blockType = levelData.actionPlane.getBlockAt(position).blockType;
-          sprite = this.createBlock(this.actionPlane, x, y, blockType);
+        const actionBlock = levelData.actionPlane.getBlockAt(position);
+        if (!actionBlock.isEmpty) {
+          if (actionBlock.getIsMiniblock()) {
+            sprite = this.createMiniBlock(x, y, actionBlock.blockType);
+          } else {
+            sprite = this.createBlock(this.actionPlane, x, y, actionBlock.blockType);
+          }
+
           if (sprite !== null) {
             sprite.sortOrder = this.yToIndex(y);
           }
@@ -1570,84 +1575,36 @@ module.exports = class LevelView {
     entity.sprite.animations.add('jumpDown' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 55, offset + 60, "", 3), frameRate, true);
   }
 
+  /**
+   * Create a "miniblock" asset (representing a floating collectable) based on
+   * the given block at the given coordinates
+   *
+   * @param {Number} x
+   * @param {Number} y
+   * @param {String} blockType
+   */
   createMiniBlock(x, y, blockType) {
-    var frame = "",
-      sprite = null,
+    let sprite = null,
       frameList;
 
-    // We don't have rails miniblock assets yet.
-    if (blockType.startsWith("rails")) {
-      return;
-    }
-
-    // Need to make sure the switch case will capture the right miniBlock for -all- redstoneWire
-    if (blockType.substring(0,12) === "redstoneWire") {
-      blockType = "redstoneDust";
-    }
-
-    switch (blockType) {
-      case "treeAcacia":
-      case "treeBirch":
-      case "treeJungle":
-      case "treeOak":
-      case "treeSpruce":
-        frame = "log" + blockType.substring(4);
-        break;
-      case "stone":
-        frame = "cobblestone";
-        break;
-      case "oreCoal":
-        frame = "coal";
-        break;
-      case "oreDiamond":
-        frame = "diamond";
-        break;
-      case "oreIron":
-        frame = "ingotIron";
-        break;
-      case "oreLapis":
-        frame = "lapisLazuli";
-        break;
-      case "oreGold":
-        frame = "ingotGold";
-        break;
-      case "oreEmerald":
-        frame = "emerald";
-        break;
-      case "oreRedstone":
-        frame = "redstoneDust";
-        break;
-      case "grass":
-        frame = "dirt";
-        break;
-      case "wool_orange":
-        frame = "wool";
-        break;
-      case "tnt":
-        frame = "gunPowder";
-        break;
-      default:
-        frame = blockType;
-        break;
-    }
-
-    let atlas = "miniBlocks";
-    let framePrefix = this.miniBlocks[frame][0];
-    let frameStart = this.miniBlocks[frame][1];
-    let frameEnd = this.miniBlocks[frame][2];
-    let xOffset = -10 - 20 + Math.random() * 40;
-    let yOffset = 0 - 20 + Math.random() * 40;
+    const frame = LevelBlock.getMiniblockFrame(blockType);
+    const atlas = "miniBlocks";
+    const framePrefix = this.miniBlocks[frame][0];
+    const frameStart = this.miniBlocks[frame][1];
+    const frameEnd = this.miniBlocks[frame][2];
+    const xOffset = -10 - 20 + Math.random() * 40;
+    const yOffset = 0 - 20 + Math.random() * 40;
 
     frameList = Phaser.Animation.generateFrameNames(framePrefix, frameStart, frameEnd, ".png", 3);
     sprite = this.actionPlane.create(xOffset + 40 * x, yOffset + this.actionPlane.yOffset + 40 * y, atlas, "");
-    var anim = sprite.animations.add("animate", frameList, 10, false);
+    const anim = sprite.animations.add("animate", frameList, 10, false);
 
     if (this.controller.levelData.isEventLevel) {
-      var distanceBetween = function (position, position2) {
+      const distanceBetween = function (position, position2) {
         return Math.sqrt(Math.pow(position[0] - position2[0], 2) + Math.pow(position[1] - position2[1], 2));
       };
 
-      let collectiblePosition = this.controller.levelModel.spritePositionToIndex([xOffset, yOffset], [sprite.x, sprite.y]);
+      const collectiblePosition = this.controller.levelModel.spritePositionToIndex([xOffset, yOffset], [sprite.x, sprite.y]);
       anim.onComplete.add(() => {
         if (this.controller.levelModel.usePlayer) {
           if (distanceBetween(this.player.position, collectiblePosition) < 2) {
