@@ -540,4 +540,13 @@ module.exports = class BaseEntity {
 
     }
 
+  hasPermissionToWalk(actionBlock, frontEntity, groundBlock = null) {
+        return (actionBlock.isWalkable || ((frontEntity !== undefined && frontEntity.isOnBlock)
+        // action plane is empty
+        && !actionBlock.isEmpty))
+        // there is no entity
+        && (frontEntity === undefined)
+        // no lava or water
+        && (groundBlock.blockType !== "water" && groundBlock.blockType !== "lava");
+  }
 };
