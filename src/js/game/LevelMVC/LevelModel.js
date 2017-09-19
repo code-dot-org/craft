@@ -69,7 +69,8 @@ module.exports = class LevelModel {
 
       if (levelData.useAgent) {
         this.usingAgent = levelData.useAgent;
-        this.agent = new Agent(this.controller, "PlayerAgent", x, y, "Agent", !this.actionPlane.getBlockAt(levelData.agentStartPosition).IsEmptyOrEntity(), levelData.agentStartDirection);
+        const startingBlock = this.actionPlane.getBlockAt(levelData.agentStartPosition);
+        this.agent = new Agent(this.controller, "PlayerAgent", x, y, "Agent", !startingBlock.getIsEmptyOrEntity(), levelData.agentStartDirection);
         this.controller.levelEntity.pushEntity(this.agent);
         this.controller.agent = this.agent;
       }
