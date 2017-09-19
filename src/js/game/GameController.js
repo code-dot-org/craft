@@ -1246,7 +1246,7 @@ class GameController {
               blockType = "planksSpruce";
               break;
           }
-          this.levelView.playDestroyBlockAnimation(player, player.position, player.facing, destroyPosition, blockType, () => {
+          this.levelView.playDestroyBlockAnimation(player.position, player.facing, destroyPosition, blockType, player, () => {
             commandQueueItem.succeeded();
           });
         } else if (block.isUsable) {

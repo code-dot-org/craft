@@ -879,14 +879,14 @@ module.exports = class LevelView {
     this.playScaledSpeed(destroyOverlay.animations, "destroy");
   }
 
-  playDestroyBlockAnimation(entity, playerPosition, facing, destroyPosition, blockType, completionHandler) {
+  playDestroyBlockAnimation(playerPosition, facing, destroyPosition, blockType, entity, completionHandler) {
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
 
     var playerAnimation =
       blockType.match(/(ore|stone|clay|bricks|bedrock)/) ? "mine" : "punchDestroy";
     this.playPlayerAnimation(playerAnimation, playerPosition, facing, false, entity);
     this.playMiningParticlesAnimation(facing, destroyPosition);
-    this.playBlockDestroyOverlayAnimation(entity, playerPosition, facing, destroyPosition, blockType, completionHandler);
+    this.playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, entity, completionHandler);
   }
 
   playPunchDestroyAirAnimation(playerPosition, facing, destroyPosition, completionHandler) {
@@ -904,7 +904,7 @@ module.exports = class LevelView {
     });
   }
 
-  playBlockDestroyOverlayAnimation(entity, playerPosition, facing, destroyPosition, blockType, completionHandler) {
+  playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, entity, completionHandler) {
     let blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
     let blockToDestroy = this.actionPlaneBlocks[blockIndex];
     let destroyOverlay = this.actionPlane.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
