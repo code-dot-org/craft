@@ -59,9 +59,9 @@ window.demoLevels = {
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "water", "water", "water", "water", "water", "water", "water", "water", "water", "water",
+      "water", "water", "water", "water", "water", "water", "water", "water", "water", "water",
+      "water", "water", "water", "water", "water", "water", "water", "water", "water", "water",
     ],
 
     groundDecorationPlane: [
@@ -88,7 +88,7 @@ window.demoLevels = {
       "", "", "", "redstoneWire", "", "", "", "", "", "",
       "", "grass", "oreDiamond", "pistonLeft", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "doorIron", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
     ],
 
     fluffPlane: [

@@ -126,7 +126,7 @@ module.exports = class LevelPlane {
     }
     let wasOnADoor = false;
     // If the questionable position was a door, we want to do a few things differently.
-    if (this.getBlockAt(positionInQuestion).blockType === "doorIron") {
+    if (this.inBounds(positionInQuestion) && this.getBlockAt(positionInQuestion).blockType === "doorIron") {
       wasOnADoor = true;
     }
 
