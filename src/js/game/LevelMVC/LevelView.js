@@ -598,7 +598,7 @@ module.exports = class LevelView {
     //turn
     if (arraydirection.substring(0, 4) === "turn") {
       direction = arraydirection.substring(5);
-      const isUp = facing === FacingDirection.Up || nextFacing === FacingDirection.Up;
+      const isUp = facing === FacingDirection.North || nextFacing === FacingDirection.North;
       this.onAnimationEnd(this.playMinecartTurnAnimation(position, isUp, isOnBlock, completionHandler, direction), () => {
         this.playTrack(nextPosition, nextFacing, isOnBlock, completionHandler);
       });
