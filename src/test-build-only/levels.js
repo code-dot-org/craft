@@ -52,7 +52,8 @@ window.demoLevels = {
       return false;
     },
 
-    groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+    groundPlane: [
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -87,7 +88,6 @@ window.demoLevels = {
       "", "", "", "redstoneWire", "redstoneWire", "redstoneWire", "redstoneWire", "redstoneWire", "pistonUp", "",
       "", "", "", "redstoneWire", "", "", "", "", "", "",
       "", "grass", "oreDiamond", "pistonLeft", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
     ],
 
