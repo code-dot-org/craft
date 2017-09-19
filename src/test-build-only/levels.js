@@ -31,7 +31,7 @@ window.demoLevels = {
     useAgent: true,
     
     playerStartPosition: [3, 4],
-    agentStartPosition: [7, 2],
+    agentStartPosition: [6, 5],
 
     // up: 0, right: 1, down: 2, left: 3
     playerStartDirection: 1,
@@ -52,7 +52,7 @@ window.demoLevels = {
       return false;
     },
 
-    groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+    groundPlane: [
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -60,8 +60,9 @@ window.demoLevels = {
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "water", "water", "water", "water", "water", "water", "water", "water", "water", "water",
+      "water", "water", "water", "water", "water", "water", "water", "water", "water", "water",
+      "water", "water", "water", "water", "water", "water", "water", "water", "water", "water",
     ],
 
     groundDecorationPlane: [
@@ -88,7 +89,6 @@ window.demoLevels = {
       "", "", "", "redstoneWire", "", "", "", "", "", "",
       "", "grass", "oreDiamond", "pistonLeft", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "doorIron", "", "", "", "", "", "",
     ],
 
     fluffPlane: [

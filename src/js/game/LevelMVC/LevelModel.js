@@ -69,7 +69,9 @@ module.exports = class LevelModel {
 
       if (levelData.useAgent) {
         this.usingAgent = levelData.useAgent;
-        this.agent = new Agent(this.controller, "PlayerAgent", x, y, "Agent", !this.actionPlane.getBlockAt(levelData.agentStartPosition).IsEmptyOrEntity(), levelData.agentStartDirection);
+        [x, y] = levelData.agentStartPosition;
+        const startingBlock = this.actionPlane.getBlockAt(levelData.agentStartPosition);
+        this.agent = new Agent(this.controller, "PlayerAgent", x, y, "Agent", !startingBlock.getIsEmptyOrEntity(), levelData.agentStartDirection);
         this.controller.levelEntity.pushEntity(this.agent);
         this.controller.agent = this.agent;
       }
@@ -594,10 +596,10 @@ module.exports = class LevelModel {
     if (!this.controller.followingPlayer() && (x > 9 || y > 9)) {
       return false;
     }
-    return this.isPositionEmpty([x, y]);
+    return this.isPositionEmpty([x, y], entity);
   }
 
-  isPositionEmpty(position) {
+  isPositionEmpty(position, entity = this.player) {
     var result = [false,];
     let [x, y] = position;
 
@@ -625,18 +627,15 @@ module.exports = class LevelModel {
           return [true];
         }
       }
+
       var frontEntity = this.getEntityAt(position);
       if (frontEntity !== undefined) {
         result.push("frontEntity");
         result.push(frontEntity);
       }
-      result[0] = (this.actionPlane.getBlockAt(position).isWalkable || ((frontEntity !== undefined && frontEntity.isOnBlock)
-        // action plane is empty
-        && !this.actionPlane.getBlockAt(position).isEmpty))
-        // there is no entity
-        && (frontEntity === undefined)
-        // no lava or water
-        && (this.groundPlane.getBlockAt(position).blockType !== "water" && this.groundPlane.getBlockAt(position).blockType !== "lava");
+      let groundBlock = this.groundPlane.getBlockAt(position);
+      let actionBlock = this.actionPlane.getBlockAt(position);
+      result[0] = entity.hasPermissionToWalk(actionBlock, frontEntity, groundBlock);
     } else {
       result.push("outBound");
     }
@@ -688,11 +687,11 @@ module.exports = class LevelModel {
     return null;
   }
 
-  canDestroyBlockForward() {
+  canDestroyBlockForward(entity = this.player) {
     var result = false;
 
-    if (!this.player.isOnBlock) {
-      let blockForwardPosition = this.getMoveForwardPosition();
+    if (!entity.isOnBlock) {
+      let blockForwardPosition = this.getMoveForwardPosition(entity);
       let [x, y] = blockForwardPosition;
 
       if (this.inBounds(x, y)) {

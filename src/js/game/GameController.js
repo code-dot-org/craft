@@ -275,7 +275,7 @@ class GameController {
       this.player.movementState = FacingDirection.North;
       this.player.updateMovement();
       if (this.levelModel.usingAgent) {
-        this.agent.movementState = FacingDirection.Up;
+        this.agent.movementState = FacingDirection.North;
         this.agent.updateMovement();
       }
       if (this.isEdge()) {
@@ -317,7 +317,7 @@ class GameController {
       this.player.movementState = FacingDirection.East;
       this.player.updateMovement();
       if (this.levelModel.usingAgent) {
-        this.agent.movementState = FacingDirection.Right;
+        this.agent.movementState = FacingDirection.East;
         this.agent.updateMovement();
       }
       if (this.isEdge()) {
@@ -359,7 +359,7 @@ class GameController {
       this.player.movementState = FacingDirection.South;
       this.player.updateMovement();
       if (this.levelModel.usingAgent) {
-        this.agent.movementState = FacingDirection.Down;
+        this.agent.movementState = FacingDirection.South;
         this.agent.updateMovement();
       }
       if (this.isEdge()) {
@@ -401,7 +401,7 @@ class GameController {
       this.player.movementState = FacingDirection.West;
       this.player.updateMovement();
       if (this.levelModel.usingAgent) {
-        this.agent.movementState = FacingDirection.Left;
+        this.agent.movementState = FacingDirection.West;
         this.agent.updateMovement();
       }
       if (this.isEdge()) {
@@ -1214,9 +1214,9 @@ class GameController {
   }
 
   destroyBlock(commandQueueItem) {
-    let player = this.levelModel.player;
+    let player = this.getEntity(commandQueueItem.target);
     // if there is a destroyable block in front of the player
-    if (this.levelModel.canDestroyBlockForward()) {
+    if (this.levelModel.canDestroyBlockForward(player)) {
       let block = this.levelModel.actionPlane.getBlockAt(this.levelModel.getMoveForwardPosition(player));
 
       if (block !== null) {
@@ -1246,7 +1246,7 @@ class GameController {
               blockType = "planksSpruce";
               break;
           }
-          this.levelView.playDestroyBlockAnimation(player.position, player.facing, destroyPosition, blockType, () => {
+          this.levelView.playDestroyBlockAnimation(player.position, player.facing, destroyPosition, blockType, player, () => {
             commandQueueItem.succeeded();
           });
         } else if (block.isUsable) {
