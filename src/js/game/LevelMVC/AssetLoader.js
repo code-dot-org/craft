@@ -100,7 +100,7 @@ module.exports = class AssetLoader {
         pngPath: `${this.assetRoot}images/Leaves_Spruce_Decay.png`,
         jsonPath: `${this.assetRoot}images/Leaves_Spruce_Decay.json`
       },
-      leavesSpruceSnowyDecay: {
+      leavesSpruceSnowy: {
         type: 'atlasJSON',
         pngPath: `${this.assetRoot}images/Leaves_Spruce_Snowy_Decay.png`,
         jsonPath: `${this.assetRoot}images/Leaves_Spruce_Snowy_Decay.json`
@@ -563,7 +563,7 @@ module.exports = class AssetLoader {
         'leavesJungle',
         'leavesOak',
         'leavesSpruce',
-        'leavesSpruceSnowyDecay',
+        'leavesSpruceSnowy',
         'sheep',
         'creeper',
         'crops',

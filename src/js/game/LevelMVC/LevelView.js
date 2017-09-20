@@ -32,7 +32,7 @@ module.exports = class LevelView {
       "logJungle": ["Miniblocks", 42, 47],
       "logOak": ["Miniblocks", 48, 53],
       "logSpruce": ["Miniblocks", 54, 59],
-      "logSpruceSnowyDecay": ["Miniblocks", 54, 59],
+      "logSpruceSnowy": ["Miniblocks", 54, 59],
       "planksAcacia": ["Miniblocks", 60, 65],
       "planksBirch": ["Miniblocks", 66, 71],
       "planksJungle": ["Miniblocks", 72, 77],
@@ -84,7 +84,7 @@ module.exports = class LevelView {
       "logJungle": ["blocks", "Log_Jungle", -13, 0],
       "logOak": ["blocks", "Log_Oak", -13, 0],
       "logSpruce": ["blocks", "Log_Spruce", -13, 0],
-      "logSpruceSnowyDecay": ["blocks", "Log_Spruce", -13, 0],
+      "logSpruceSnowy": ["blocks", "Log_Spruce", -13, 0],
       //"obsidian": ["blocks", "Obsidian", -13, 0],
       "planksAcacia": ["blocks", "Planks_Acacia", -13, 0],
       "planksBirch": ["blocks", "Planks_Birch", -13, 0],
@@ -105,7 +105,7 @@ module.exports = class LevelView {
       "leavesJungle": ["leavesJungle", "Leaves_Jungle0.png", -100, 0],
       "leavesOak": ["leavesOak", "Leaves_Oak0.png", -100, 0],
       "leavesSpruce": ["leavesSpruce", "Leaves_Spruce0.png", -100, 0],
-      "leavesSpruceSnowyDecay": ["leavesSpruceSnowyDecay", "Leaves_Spruce_snowy1.png", -100, 36],
+      "leavesSpruceSnowy": ["leavesSpruceSnowy", "Leaves_SpruceSnowy1.png", -100, 36],
 
       "watering": ["blocks", "Water_0", -13, 0],
       "cropWheat": ["blocks", "Wheat0", -13, 0],
@@ -216,7 +216,7 @@ module.exports = class LevelView {
       "treeJungle": [[0, 0], [-1, 0], [1, 0], [-1, -1], [0, -1], [1, -1], [-1, -2], [0, -2], [1, -2], [0, -3], [1, -3]],
       "treeOak": [[0, 0], [-1, 0], [1, 0], [-1, -1], [0, -1], [1, -1], [-1, -2], [0, -2], [0, -3]],
       "treeSpruce": [[0, 0], [-1, 0], [1, 0], [-1, -1], [0, -1], [1, -1], [-1, -2], [0, -2], [1, -2], [0, -3]],
-      "treeSpruceSnowyDecay": [[0, 0], [-1, 0], [1, 0], [-1, -1], [0, -1], [1, -1], [-1, -2], [0, -2], [1, -2], [0, -3]]
+      "treeSpruceSnowy": [[0, 0], [-1, 0], [1, 0], [-1, -1], [0, -1], [1, -1], [-1, -2], [0, -2], [1, -2], [0, -3]]
     };
   }
 
@@ -1606,7 +1606,7 @@ module.exports = class LevelView {
       case "treeJungle":
       case "treeOak":
       case "treeSpruce":
-      case "treeSpruceSnowyDecay":
+      case "treeSpruceSnowy":
         frame = "log" + blockType.substring(4);
         break;
       case "stone":
@@ -1750,8 +1750,8 @@ module.exports = class LevelView {
       case "treeSpruce": //0,8
         buildTree(this, [0, 8]);
         break;
-      case "treeSpruceSnowyDecay": //0,8
-        buildTree(this, [0, 10]);
+      case "treeSpruceSnowy": //1,9
+        buildTree(this, [1, 9]);
         break;
       case "cropWheat":
         atlas = this.blocks[blockType][0];
