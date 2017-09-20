@@ -192,6 +192,20 @@ module.exports = class BaseEntity {
         }
     }
 
+    moveBackward(commandQueueItem, record = true) {
+        if (record) {
+            this.controller.addCommandRecord("moveBackward", this.type, commandQueueItem.repeat);
+        }
+        let backwardPosition = this.controller.levelModel.getMoveBackwardPosition(this);
+        var backwardPositionInformation = this.controller.levelModel.canMoveBackward(this);
+        if (backwardPositionInformation[0]) {
+            this.doMoveBackward(commandQueueItem, backwardPosition);
+        } else {
+            this.bump(commandQueueItem);
+            this.callBumpEvents(backwardPositionInformation);
+        }
+    }
+
     /**
      * check all the movable points and choose the farthest one
      *

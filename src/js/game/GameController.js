@@ -798,7 +798,7 @@ class GameController {
         commandQueueItem.succeeded();
       } else {
         let entity = this.getEntity(target);
-        entity.moveForward(commandQueueItem);
+        entity.moveBackward(commandQueueItem);
       }
     } else {
       let entities = this.getEntities(target);
