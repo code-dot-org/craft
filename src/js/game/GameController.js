@@ -1342,7 +1342,8 @@ class GameController {
   }
 
   placeBlock(commandQueueItem, blockType) {
-    const position = this.levelModel.player.position;
+    const player = this.getEntity(commandQueueItem.target);
+    const position = player.position;
     let blockTypeAtPosition = this.levelModel.actionPlane.getBlockAt(position).blockType;
 
     if (this.levelModel.canPlaceBlock()) {
@@ -1350,33 +1351,33 @@ class GameController {
         this.levelModel.destroyBlock(position);
       }
 
-      if (blockType !== "cropWheat" || this.levelModel.groundPlane.getBlockAt(this.levelModel.player.position).blockType === "farmlandWet") {
-        this.levelModel.player.updateHidingBlock(this.levelModel.player.position);
-        this.levelView.playPlaceBlockAnimation(this.levelModel.player.position, this.levelModel.player.facing, blockType, blockTypeAtPosition, () => {
+      if (blockType !== "cropWheat" || this.levelModel.groundPlane.getBlockAt(player.position).blockType === "farmlandWet") {
+        this.levelModel.player.updateHidingBlock(player.position);
+        this.levelView.playPlaceBlockAnimation(player.position, player.facing, blockType, blockTypeAtPosition, () => {
           if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {
             // Special 'minecart' level places a mix of regular and powered tracks, depending on location.
-            if (this.levelModel.player.position[1] < 7) {
+            if (player.position[1] < 7) {
               blockType = "railsUnpoweredVertical";
             } else {
               blockType = "rails";
             }
           }
-          this.levelModel.placeBlock(blockType);
+          this.levelModel.placeBlock(blockType, player);
 
           this.levelModel.computeShadingPlane();
           this.levelModel.computeFowPlane();
           this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
           this.levelView.updateFowPlane(this.levelModel.fowPlane);
           this.delayBy(200, () => {
-            this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
+            this.levelView.playIdleAnimation(player.position, player.facing, false, player);
           });
           this.delayPlayerMoveBy(200, 400, () => {
             commandQueueItem.succeeded();
           });
         });
       } else {
-        let signalBinding = this.levelView.playPlayerAnimation("jumpUp", this.levelModel.player.position, this.levelModel.player.facing, false).onLoop.add(() => {
-          this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
+        let signalBinding = this.levelView.playPlayerAnimation("jumpUp", player.position, player.facing, false, player).onLoop.add(() => {
+          this.levelView.playIdleAnimation(player.position, player.facing, false, player);
           signalBinding.detach();
           this.delayBy(800, () => commandQueueItem.succeeded());
         }, this);

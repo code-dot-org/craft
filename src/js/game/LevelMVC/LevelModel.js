@@ -766,8 +766,8 @@ module.exports = class LevelModel {
     this.moveForward();
   }
 
-  placeBlock(blockType) {
-    const position = this.player.position;
+  placeBlock(blockType, entity = this.player) {
+    const position = entity.position;
     let shouldPlace = false;
     let placedBlock = null;
 
@@ -781,11 +781,19 @@ module.exports = class LevelModel {
         break;
     }
 
-    if (shouldPlace === true) {
-      var block = new LevelBlock(blockType);
+    if (entity === this.agent) {
+      let ground = this.groundPlane.getBlockAt(position);
+      if (ground.blockType === "water" || ground.blockType === "lava") {
+        this.groundPlane._data[this.groundPlane.coordinatesToIndex(position)] = new LevelBlock(blockType);
+        this.controller.levelView.refreshGroundPlane();
+      }
+    } else {
+      if (shouldPlace === true) {
+        var block = new LevelBlock(blockType);
 
-      placedBlock = this.actionPlane.setBlockAt(position, block);
-      this.player.isOnBlock = !block.isWalkable;
+        placedBlock = this.actionPlane.setBlockAt(position, block);
+        this.player.isOnBlock = !block.isWalkable;
+      }
     }
 
     return placedBlock;
