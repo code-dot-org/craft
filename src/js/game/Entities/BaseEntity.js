@@ -24,7 +24,10 @@ module.exports = class BaseEntity {
     }
 
     reset() {
+    }
 
+    canMoveThrough() {
+      return false;
     }
 
     addCommand(commandQueueItem, repeat = false) {
@@ -57,7 +60,6 @@ module.exports = class BaseEntity {
             tween.start();
         }, 50 / this.controller.tweenTimeScale);
         // smooth movement using tween
-
     }
 
   /**
@@ -572,7 +574,7 @@ module.exports = class BaseEntity {
         // action plane is empty
         && !actionBlock.isEmpty))
         // there is no entity
-        && (frontEntity === undefined)
+        && (frontEntity === undefined || frontEntity.canMoveThrough())
         // no lava or water
         && (groundBlock.blockType !== "water" && groundBlock.blockType !== "lava");
   }
