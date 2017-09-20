@@ -106,7 +106,7 @@ module.exports = class LevelView {
       "leavesJungle": ["leavesJungle", "Leaves_Jungle0.png", -100, 0],
       "leavesOak": ["leavesOak", "Leaves_Oak0.png", -100, 0],
       "leavesSpruce": ["leavesSpruce", "Leaves_Spruce0.png", -100, 0],
-      "leavesSpruceSnowy": ["leavesSpruceSnowy", "Leaves_SpruceSnowy1.png", -100, 36],
+      "leavesSpruceSnowy": ["leavesSpruceSnowy", "Leaves_SpruceSnowy0.png", -100, 36],
 
       "watering": ["blocks", "Water_0", -13, 0],
       "cropWheat": ["blocks", "Wheat0", -13, 0],
@@ -1707,7 +1707,7 @@ module.exports = class LevelView {
         buildTree(this, [0, 8]);
         break;
       case "treeSpruceSnowy": //1,9
-        buildTree(this, [1, 9]);
+        buildTree(this, [0, 8]);
         break;
       case "cropWheat":
         atlas = this.blocks[blockType][0];
