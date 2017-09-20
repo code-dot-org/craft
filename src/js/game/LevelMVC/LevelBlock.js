@@ -223,6 +223,7 @@ module.exports = class LevelBlock {
       case "treeJungle":
       case "treeOak":
       case "treeSpruce":
+      case "treeSpruceSnowy":
         frame = "log" + frame.substring(4);
         break;
       case "stone":
