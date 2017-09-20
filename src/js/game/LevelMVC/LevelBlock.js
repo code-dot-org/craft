@@ -128,6 +128,10 @@ module.exports = class LevelBlock {
       this.isRedstoneBattery = blockType === 'pressurePlateUp' ? false : true;
     }
 
+    if (blockType === "glowstone") {
+      this.isEntity = true;
+    }
+
     if (blockType.startsWith("piston")) {
       this.isDestroyable = false;
       this.isConnectedToRedstone = !blockType.startsWith("pistonArm");

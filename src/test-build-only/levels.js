@@ -80,14 +80,14 @@ window.demoLevels = {
 
     actionPlane: [
       "", "", "", "", "", "", "", "", "", "",
-      "", "pistonRight", "oreDiamond", "grass", "oreDiamond", "", "redstoneWire", "pistonDown", "", "",
-      "", "redstoneWire", "redstoneWire", "redstoneWire", "pressurePlateUp", "redstoneWire", "redstoneWire", "oreDiamond", "", "",
-      "grass", "doorIron", "grass", "", "redstoneWire", "", "", "grass", "oreDiamond", "",
-      "", "", "", "", "redstoneWire", "", "", "", "grass", "",
-      "", "", "", "", "redstoneWire", "", "", "", "grass", "grass",
-      "", "", "", "redstoneWire", "redstoneWire", "redstoneWire", "redstoneWire", "redstoneWire", "pistonUp", "",
-      "", "", "", "redstoneWire", "", "", "", "", "", "",
-      "", "grass", "oreDiamond", "pistonLeft", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "treeSpruceSnowyDecay", "", "", "treeSpruce", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
     ],
 
