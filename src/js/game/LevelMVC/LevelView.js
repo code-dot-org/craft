@@ -1606,7 +1606,7 @@ module.exports = class LevelView {
       case "treeJungle":
       case "treeOak":
       case "treeSpruce":
-      case "treeSpruceDecay":
+      case "treeSpruceSnowyDecay":
         frame = "log" + blockType.substring(4);
         break;
       case "stone":

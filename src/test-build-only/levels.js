@@ -53,16 +53,16 @@ window.demoLevels = {
     },
 
     groundPlane: [
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "water", "water", "water", "water", "water", "water", "water", "water", "water", "water",
-      "water", "water", "water", "water", "water", "water", "water", "water", "water", "water",
-      "water", "water", "water", "water", "water", "water", "water", "water", "water", "water",
+      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
+      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
+      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
+      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
+      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
+      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
+      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
+      "ice", "ice", "ice", "ice", "water", "water", "water", "water", "water", "water",
+      "ice", "ice", "ice", "water", "water", "water", "water", "water", "water", "water",
+      "ice", "ice", "water", "water", "water", "water", "water", "water", "water", "water",
     ],
 
     groundDecorationPlane: [
@@ -81,8 +81,8 @@ window.demoLevels = {
     actionPlane: [
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "treeSpruceSnowyDecay", "", "", "treeSpruce", "", "",
+      "", "", "treeSpruce", "", "", "", "", "", "", "",
+      "", "", "", "", "treeSpruceSnowyDecay", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
