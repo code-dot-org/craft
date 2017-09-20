@@ -1353,7 +1353,7 @@ class GameController {
 
       if (blockType !== "cropWheat" || this.levelModel.groundPlane.getBlockAt(player.position).blockType === "farmlandWet") {
         this.levelModel.player.updateHidingBlock(player.position);
-        this.levelView.playPlaceBlockAnimation(player.position, player.facing, blockType, blockTypeAtPosition, () => {
+        this.levelView.playPlaceBlockAnimation(player.position, player.facing, blockType, blockTypeAtPosition, player, () => {
           if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {
             // Special 'minecart' level places a mix of regular and powered tracks, depending on location.
             if (player.position[1] < 7) {
