@@ -329,6 +329,7 @@ module.exports = class LevelPlane {
 
     // Once we're done updating redstoneWire states, check to see if doors and pistons should open/close.
     for (let i = 0; i < this._data.length; ++i) {
+      this.powerAllBlocks();
       this.getIronDoors(i);
       this.getPistonState(i);
     }
@@ -340,7 +341,7 @@ module.exports = class LevelPlane {
   */
   getIronDoors(index) {
     if (this._data[index].blockType === "doorIron") {
-      this._data[index].isPowered = this.powerCheck(this.indexToCoordinates(index));
+      this._data[index].isPowered = this.powerCheckDeluxe(this.indexToCoordinates(index));
       if (this._data[index].isPowered && !this._data[index].isOpen) {
         this._data[index].isOpen = true;
         if (this.levelModel) {
@@ -381,7 +382,7 @@ module.exports = class LevelPlane {
     let notOffendingIndex = this.coordinatesToIndex(positionInQuestion);
     for (let i = 0; i < this._data.length; ++i) {
       if (this._data[i].blockType === "doorIron" && notOffendingIndex !== i) {
-        this._data[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
+        this._data[i].isPowered = this.powerCheckDeluxe(this.indexToCoordinates(i));
         if (this._data[i].isPowered && !this._data[i].isOpen) {
           this._data[i].isOpen = true;
           if (this.levelModel) {
@@ -595,6 +596,23 @@ module.exports = class LevelPlane {
         return (block.isRedstone && block.isPowered) || block.isRedstoneBattery;
       }
     });
+  }
+
+  powerCheckDeluxe(position) {
+    return this.getOrthogonalPositions(position).some(orthogonalPosition => {
+      const block = this.getBlockAt(orthogonalPosition);
+      if (block) {
+        return block.isPowered || block.isRedstoneBattery;
+      }
+    });
+  }
+
+  powerAllBlocks() {
+    for (let i = 0; i < this._data.length; ++i) {
+      if (this._data[i].blockType !== "" && this._data[i].isSolid) {
+        this._data[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
+      }
+    }
   }
 
 };
