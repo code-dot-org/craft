@@ -1307,6 +1307,8 @@ class GameController {
             break;
           case "logSpruce":
           case "treeSpruce":
+          case "logSpruceSnowy":
+          case "treeSpruceSnowy":
             blockType = "planksSpruce";
             break;
         }
