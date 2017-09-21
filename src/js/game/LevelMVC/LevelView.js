@@ -1037,12 +1037,16 @@ module.exports = class LevelView {
         if (!this.controller.levelData.isEventLevel) {
           this.playPlayerAnimation("idle", playerPosition, facing, false, entity);
         }
-        this.playItemDropAnimation(destroyPosition, blockType, completionHandler);
+        if (completionHandler !== null) {
+          this.playItemDropAnimation(destroyPosition, blockType, completionHandler);
+        }
       }
     });
     this.playScaledSpeed(explodeAnim.animations, "explode");
     if (this.controller.levelData.isEventLevel ^ !placeBlock) {
-      completionHandler();
+      if (completionHandler !== null) {
+        completionHandler();
+      }
     }
   }
 

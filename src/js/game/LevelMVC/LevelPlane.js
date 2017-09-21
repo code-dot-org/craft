@@ -48,6 +48,7 @@ module.exports = class LevelPlane {
     this.levelModel = LevelModel;
     this.redstoneList = [];
     this.redstoneListON = [];
+    this.redo = false;
 
     for (let index = 0; index < planeData.length; ++index) {
       let block = new LevelBlock(planeData[index]);
@@ -332,6 +333,12 @@ module.exports = class LevelPlane {
       this.getIronDoors(i);
       this.getPistonState(i);
     }
+
+    if (this.redo) {
+      this.redo = false;
+      this.getRedstone();
+    }
+
     return posToRefresh;
   }
 
@@ -408,6 +415,10 @@ module.exports = class LevelPlane {
     let pos = [];
     let offset = [];
     let pistonType = this.getBlockAt(position).blockType;
+    let checkOn = pistonType.substring(pistonType.length - 2, pistonType.length);
+    if (checkOn === "On") {
+      pistonType = pistonType.substring(0, pistonType.length - 2);
+    }
     let armType = "";
 
     switch (pistonType) {
@@ -520,6 +531,14 @@ module.exports = class LevelPlane {
     let armBlock = new LevelBlock(pistonType);
     for (let i = blocksPositions.length - 1; i >= 0; --i) {
       let destination = [blocksPositions[i][0] + offsetX, blocksPositions[i][1] + offsetY];
+      let block = this.getBlockAt(blocksPositions[i]);
+      if (this.getBlockAt(destination) === undefined) {
+        console.log("break");
+      }
+      if (this.getBlockAt(destination).blockType.startsWith("redstone") || this.getBlockAt(destination).blockType.startsWith("door")) {
+        this.levelModel.controller.levelView.playExplosionAnimation(destination, 2, destination, block.blockType, null, null, this.player);
+        this.redo = true;
+      }
       this.setBlockAt(destination, this.getBlockAt(blocksPositions[i]));
       if (i === 0) {
         this.setBlockAt(blocksPositions[i], armBlock);
@@ -533,7 +552,7 @@ module.exports = class LevelPlane {
   getBlocksToPush(position, offsetX = 0, offsetY = 0) {
     let pushingBlocks = [];
     let workingPosition = position;
-    while (this.inBounds(workingPosition) && this.getBlockAt(workingPosition).blockType !== "") {
+    while (this.inBounds(workingPosition) && this.getBlockAt(workingPosition).blockType !== "" && !this.getBlockAt(workingPosition).blockType.startsWith("redstone") && !this.getBlockAt(workingPosition).blockType.startsWith("door")) {
       pushingBlocks.push(workingPosition);
       workingPosition = [workingPosition[0] + offsetX, workingPosition[1] + offsetY];
     }

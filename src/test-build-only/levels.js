@@ -60,9 +60,9 @@ window.demoLevels = {
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "water", "water", "water", "water", "water", "water", "water", "water", "water", "water",
-      "water", "water", "water", "water", "water", "water", "water", "water", "water", "water",
-      "water", "water", "water", "water", "water", "water", "water", "water", "water", "water",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
     ],
 
     groundDecorationPlane: [
@@ -80,15 +80,15 @@ window.demoLevels = {
 
     actionPlane: [
       "", "", "", "", "", "", "", "", "", "",
-      "", "pistonRight", "oreDiamond", "grass", "oreDiamond", "", "redstoneWire", "pistonDown", "", "",
-      "", "redstoneWire", "redstoneWire", "redstoneWire", "pressurePlateUp", "redstoneWire", "redstoneWire", "oreDiamond", "", "",
-      "grass", "doorIron", "grass", "", "redstoneWire", "", "", "grass", "oreDiamond", "",
-      "", "", "", "", "redstoneWire", "", "", "", "grass", "",
-      "", "", "", "", "redstoneWire", "", "", "", "grass", "grass",
-      "", "", "", "redstoneWire", "redstoneWire", "redstoneWire", "redstoneWire", "redstoneWire", "pistonUp", "",
-      "", "", "", "redstoneWire", "", "", "", "", "", "",
-      "", "grass", "oreDiamond", "pistonLeft", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
+      "", "pressurePlateUp", "", "", "", "", "", "", "", "",
+      "", "redstoneWire", "", "", "", "", "", "", "", "",
+      "", "redstoneWire", "", "", "", "", "", "", "", "",
+      "", "redstoneWire", "redstoneWire", "redstoneWire", "redstoneWire", "redstoneWire", "", "grass", "", "",
+      "", "", "", "", "", "redstoneWire", "", "", "", "",
+      "", "pistonRight", "grass", "grass", "grass", "redstoneWire", "grass", "", "", "",
+      "", "redstoneWire", "", "", "", "redstoneWire", "", "", "", "",
+      "", "redstoneWire", "redstoneWire", "redstoneWire", "redstoneWire", "redstoneWire", "", "", "", "",
     ],
 
     fluffPlane: [
