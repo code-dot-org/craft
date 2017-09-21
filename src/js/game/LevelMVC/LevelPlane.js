@@ -48,7 +48,6 @@ module.exports = class LevelPlane {
     this.levelModel = LevelModel;
     this.redstoneList = [];
     this.redstoneListON = [];
-    this.redo = false;
 
     for (let index = 0; index < planeData.length; ++index) {
       let block = new LevelBlock(planeData[index]);
@@ -334,11 +333,6 @@ module.exports = class LevelPlane {
       this.getPistonState(i);
     }
 
-    if (this.redo) {
-      this.redo = false;
-      this.getRedstone();
-    }
-
     return posToRefresh;
   }
 
@@ -515,6 +509,7 @@ module.exports = class LevelPlane {
   */
   pushBlocks(blocksPositions, offsetX = 0, offsetY = 0) {
     let pistonType = "";
+    let redo = false;
     if (offsetX === 1) {
       pistonType = "pistonArmRight";
     } else if (offsetX === -1) {
@@ -537,12 +532,15 @@ module.exports = class LevelPlane {
       }
       if (this.getBlockAt(destination).blockType.startsWith("redstone") || this.getBlockAt(destination).blockType.startsWith("door")) {
         this.levelModel.controller.levelView.playExplosionAnimation(destination, 2, destination, block.blockType, null, null, this.player);
-        this.redo = true;
+        redo = true;
       }
       this.setBlockAt(destination, this.getBlockAt(blocksPositions[i]));
       if (i === 0) {
         this.setBlockAt(blocksPositions[i], armBlock);
       }
+    }
+    if (redo) {
+      this.getRedstone();
     }
   }
 

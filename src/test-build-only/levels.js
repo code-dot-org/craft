@@ -84,11 +84,11 @@ window.demoLevels = {
       "", "pressurePlateUp", "", "", "", "", "", "", "", "",
       "", "redstoneWire", "", "", "", "", "", "", "", "",
       "", "redstoneWire", "", "", "", "", "", "", "", "",
-      "", "redstoneWire", "redstoneWire", "redstoneWire", "redstoneWire", "redstoneWire", "", "grass", "", "",
-      "", "", "", "", "", "redstoneWire", "", "", "", "",
+      "", "redstoneWire", "", "", "", "", "", "", "", "",
+      "", "redstoneWire", "", "", "", "", "", "", "", "",
       "", "pistonRight", "grass", "grass", "grass", "redstoneWire", "grass", "", "", "",
-      "", "redstoneWire", "", "", "", "redstoneWire", "", "", "", "",
-      "", "redstoneWire", "redstoneWire", "redstoneWire", "redstoneWire", "redstoneWire", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
     ],
 
     fluffPlane: [
