@@ -543,8 +543,12 @@ module.exports = class LevelPlane {
             stuckBlockPosition[0] += 1;
             break;
         }
-        this.setBlockAt(armPosition, this.getBlockAt(stuckBlockPosition));
-        this.setBlockAt(stuckBlockPosition, emptyBlock);
+        if (this.inBounds(stuckBlockPosition)) {
+          this.setBlockAt(armPosition, this.getBlockAt(stuckBlockPosition));
+          this.setBlockAt(stuckBlockPosition, emptyBlock);
+        } else {
+          this.setBlockAt(armPosition, emptyBlock);
+        }
       } else {
         this.setBlockAt(armPosition, emptyBlock);
       }
@@ -578,11 +582,13 @@ module.exports = class LevelPlane {
       if (this.getBlockAt(destination) === undefined) {
         console.log("break");
       }
-      if (this.getBlockAt(destination).blockType.startsWith("redstone") || this.getBlockAt(destination).blockType.startsWith("door")) {
+      if (this.inBounds(destination) && (this.getBlockAt(destination).blockType.startsWith("redstone") || this.getBlockAt(destination).blockType.startsWith("door"))) {
         this.levelModel.controller.levelView.playExplosionAnimation(destination, 2, destination, block.blockType, null, null, this.player);
         redo = true;
       }
-      this.setBlockAt(destination, this.getBlockAt(blocksPositions[i]));
+      if (this.inBounds(destination)) {
+        this.setBlockAt(destination, this.getBlockAt(blocksPositions[i]));
+      }
       if (i === 0) {
         this.setBlockAt(blocksPositions[i], armBlock);
       }
