@@ -409,6 +409,10 @@ module.exports = class LevelPlane {
     let pos = [];
     let offset = [];
     let pistonType = this.getBlockAt(position).blockType;
+    let checkOn = pistonType.substring(pistonType.length - 2, pistonType.length);
+    if (checkOn === "On") {
+      pistonType = pistonType.substring(0, pistonType.length - 2);
+    }
     let armType = "";
 
     switch (pistonType) {

@@ -148,6 +148,10 @@ module.exports = class LevelBlock {
       this.isRedstoneBattery = blockType === 'pressurePlateUp' ? false : true;
     }
 
+    if (blockType === "glowstone") {
+      this.isEntity = true;
+    }
+
     if (blockType.startsWith("piston")) {
       this.isSolid = false;
       this.isDestroyable = false;
@@ -231,6 +235,7 @@ module.exports = class LevelBlock {
       case "treeJungle":
       case "treeOak":
       case "treeSpruce":
+      case "treeSpruceSnowy":
         frame = "log" + frame.substring(4);
         break;
       case "stone":
