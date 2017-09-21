@@ -191,6 +191,20 @@ module.exports = class LevelView {
       "pistonArmRight": ["blocks", "piston_arm_right", -26, -13],
       "pistonArmUp": ["blocks", "piston_arm_up", -26, -13],
       "pistonArmDown": ["blocks", "piston_arm_down", -26, -13],
+
+      "pistonUpSticky": ["blocks", "piston_up", -13, 0],
+      "pistonDownSticky": ["blocks", "piston_down_sticky", -13, 0],
+      "pistonLeftSticky": ["blocks", "piston_left", -13, 0],
+      "pistonRightSticky": ["blocks", "piston_right", -13, 0],
+      "pistonUpOnSticky": ["blocks", "piston_base_up", -26, -13],
+      "pistonDownOnSticky": ["blocks", "piston_base_down_sticky", -26, -13],
+      "pistonLeftOnSticky": ["blocks", "piston_base_left", -26, -13],
+      "pistonRightOnSticky": ["blocks", "piston_base_right", -26, -13],
+
+      "pistonArmLeftSticky": ["blocks", "piston_arm_left", -26, -13],
+      "pistonArmRightSticky": ["blocks", "piston_arm_right", -26, -13],
+      "pistonArmUpSticky": ["blocks", "piston_arm_up", -26, -13],
+      "pistonArmDownSticky": ["blocks", "piston_arm_down_sticky", -26, -13],
     };
     this.actionPlaneBlocks = [];
     this.toDestroy = [];

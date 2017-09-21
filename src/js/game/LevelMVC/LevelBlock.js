@@ -140,7 +140,9 @@ module.exports = class LevelBlock {
     if (blockType.startsWith("piston")) {
       this.isDestroyable = false;
       this.isConnectedToRedstone = !blockType.startsWith("pistonArm");
-      if (blockType.substring(blockType.length - 2, blockType.length) === "On" || blockType.startsWith("pistonArm")) {
+      if (blockType.substring(blockType.length - 2, blockType.length) === "On" ||
+      blockType.startsWith("pistonArm") ||
+      blockType.substring(blockType.length - 8, blockType.length) === "OnSticky") {
         this.isEntity = true;
       }
     }
