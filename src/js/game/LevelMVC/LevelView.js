@@ -33,6 +33,7 @@ module.exports = class LevelView {
       "logJungle": ["Miniblocks", 42, 47],
       "logOak": ["Miniblocks", 48, 53],
       "logSpruce": ["Miniblocks", 54, 59],
+      "logSpruceSnowy": ["Miniblocks", 54, 59],
       "planksAcacia": ["Miniblocks", 60, 65],
       "planksBirch": ["Miniblocks", 66, 71],
       "planksJungle": ["Miniblocks", 72, 77],
@@ -84,6 +85,7 @@ module.exports = class LevelView {
       "logJungle": ["blocks", "Log_Jungle", -13, 0],
       "logOak": ["blocks", "Log_Oak", -13, 0],
       "logSpruce": ["blocks", "Log_Spruce", -13, 0],
+      "logSpruceSnowy": ["blocks", "Log_Spruce", -13, 0],
       //"obsidian": ["blocks", "Obsidian", -13, 0],
       "planksAcacia": ["blocks", "Planks_Acacia", -13, 0],
       "planksBirch": ["blocks", "Planks_Birch", -13, 0],
@@ -104,6 +106,7 @@ module.exports = class LevelView {
       "leavesJungle": ["leavesJungle", "Leaves_Jungle0.png", -100, 0],
       "leavesOak": ["leavesOak", "Leaves_Oak0.png", -100, 0],
       "leavesSpruce": ["leavesSpruce", "Leaves_Spruce0.png", -100, 0],
+      "leavesSpruceSnowy": ["leavesSpruceSnowy", "Leaves_SpruceSnowy0.png", -100, 36],
 
       "watering": ["blocks", "Water_0", -13, 0],
       "cropWheat": ["blocks", "Wheat0", -13, 0],
@@ -191,6 +194,18 @@ module.exports = class LevelView {
       "pistonArmRight": ["blocks", "piston_arm_right", -26, -13],
       "pistonArmUp": ["blocks", "piston_arm_up", -26, -13],
       "pistonArmDown": ["blocks", "piston_arm_down", -26, -13],
+
+      "cactus": ["blocks", "cactus", -13, 0],
+      "dead_bush": ["blocks", "dead_bush", -13, 0],
+      "glowstone": ["blocks", "glowstone", -13, 0],
+      "grass_path": ["blocks", "grass_path", -13, 0],
+      "ice": ["blocks", "ice", -13, 0],
+      "netherrack": ["blocks", "netherrack", -13, 0],
+      "nether_brick": ["blocks", "nether_brick", -13, 0],
+      "quartz_ore": ["blocks", "quartz_ore", -13, 0],
+      "snow": ["blocks", "snow", -13, 0],
+      "snowy_grass": ["blocks", "snowy_grass", -13, 0],
+      "top_snow": ["blocks", "top_snow", -13, 0],
     };
     this.actionPlaneBlocks = [];
     this.toDestroy = [];
@@ -201,7 +216,8 @@ module.exports = class LevelView {
       "treeBirch": [[0, 0], [-1, 0], [1, 0], [-1, -1], [0, -1], [1, -1], [-1, -2], [0, -2], [1, -2], [0, -3]],
       "treeJungle": [[0, 0], [-1, 0], [1, 0], [-1, -1], [0, -1], [1, -1], [-1, -2], [0, -2], [1, -2], [0, -3], [1, -3]],
       "treeOak": [[0, 0], [-1, 0], [1, 0], [-1, -1], [0, -1], [1, -1], [-1, -2], [0, -2], [0, -3]],
-      "treeSpruce": [[0, 0], [-1, 0], [1, 0], [-1, -1], [0, -1], [1, -1], [-1, -2], [0, -2], [1, -2], [0, -3]]
+      "treeSpruce": [[0, 0], [-1, 0], [1, 0], [-1, -1], [0, -1], [1, -1], [-1, -2], [0, -2], [1, -2], [0, -3]],
+      "treeSpruceSnowy": [[0, 0], [-1, 0], [1, 0], [-1, -1], [0, -1], [1, -1], [-1, -2], [0, -2], [1, -2], [0, -3]]
     };
   }
 
@@ -991,7 +1007,6 @@ module.exports = class LevelView {
       case "logSpruce":
         explodeAnim.tint = 0x4b3923;
         break;
-
       case "planksAcacia":
         explodeAnim.tint = 0xba6337;
         break;
@@ -1689,6 +1704,9 @@ module.exports = class LevelView {
         buildTree(this, [0, 6]);
         break;
       case "treeSpruce": //0,8
+        buildTree(this, [0, 8]);
+        break;
+      case "treeSpruceSnowy": //1,9
         buildTree(this, [0, 8]);
         break;
       case "cropWheat":
