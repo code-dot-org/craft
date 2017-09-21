@@ -1,3 +1,4 @@
+const LevelBlock = require("./LevelBlock.js");
 const FacingDirection = require("./FacingDirection.js");
 
 module.exports = class LevelView {
@@ -32,6 +33,7 @@ module.exports = class LevelView {
       "logJungle": ["Miniblocks", 42, 47],
       "logOak": ["Miniblocks", 48, 53],
       "logSpruce": ["Miniblocks", 54, 59],
+      "logSpruceSnowy": ["Miniblocks", 54, 59],
       "planksAcacia": ["Miniblocks", 60, 65],
       "planksBirch": ["Miniblocks", 66, 71],
       "planksJungle": ["Miniblocks", 72, 77],
@@ -83,6 +85,7 @@ module.exports = class LevelView {
       "logJungle": ["blocks", "Log_Jungle", -13, 0],
       "logOak": ["blocks", "Log_Oak", -13, 0],
       "logSpruce": ["blocks", "Log_Spruce", -13, 0],
+      "logSpruceSnowy": ["blocks", "Log_Spruce", -13, 0],
       //"obsidian": ["blocks", "Obsidian", -13, 0],
       "planksAcacia": ["blocks", "Planks_Acacia", -13, 0],
       "planksBirch": ["blocks", "Planks_Birch", -13, 0],
@@ -103,6 +106,7 @@ module.exports = class LevelView {
       "leavesJungle": ["leavesJungle", "Leaves_Jungle0.png", -100, 0],
       "leavesOak": ["leavesOak", "Leaves_Oak0.png", -100, 0],
       "leavesSpruce": ["leavesSpruce", "Leaves_Spruce0.png", -100, 0],
+      "leavesSpruceSnowy": ["leavesSpruceSnowy", "Leaves_SpruceSnowy0.png", -100, 36],
 
       "watering": ["blocks", "Water_0", -13, 0],
       "cropWheat": ["blocks", "Wheat0", -13, 0],
@@ -190,6 +194,18 @@ module.exports = class LevelView {
       "pistonArmRight": ["blocks", "piston_arm_right", -26, -13],
       "pistonArmUp": ["blocks", "piston_arm_up", -26, -13],
       "pistonArmDown": ["blocks", "piston_arm_down", -26, -13],
+
+      "cactus": ["blocks", "cactus", -13, 0],
+      "dead_bush": ["blocks", "dead_bush", -13, 0],
+      "glowstone": ["blocks", "glowstone", -13, 0],
+      "grass_path": ["blocks", "grass_path", -13, 0],
+      "ice": ["blocks", "ice", -13, 0],
+      "netherrack": ["blocks", "netherrack", -13, 0],
+      "nether_brick": ["blocks", "nether_brick", -13, 0],
+      "quartz_ore": ["blocks", "quartz_ore", -13, 0],
+      "snow": ["blocks", "snow", -13, 0],
+      "snowy_grass": ["blocks", "snowy_grass", -13, 0],
+      "top_snow": ["blocks", "top_snow", -13, 0],
     };
     this.actionPlaneBlocks = [];
     this.toDestroy = [];
@@ -200,7 +216,8 @@ module.exports = class LevelView {
       "treeBirch": [[0, 0], [-1, 0], [1, 0], [-1, -1], [0, -1], [1, -1], [-1, -2], [0, -2], [1, -2], [0, -3]],
       "treeJungle": [[0, 0], [-1, 0], [1, 0], [-1, -1], [0, -1], [1, -1], [-1, -2], [0, -2], [1, -2], [0, -3], [1, -3]],
       "treeOak": [[0, 0], [-1, 0], [1, 0], [-1, -1], [0, -1], [1, -1], [-1, -2], [0, -2], [0, -3]],
-      "treeSpruce": [[0, 0], [-1, 0], [1, 0], [-1, -1], [0, -1], [1, -1], [-1, -2], [0, -2], [1, -2], [0, -3]]
+      "treeSpruce": [[0, 0], [-1, 0], [1, 0], [-1, -1], [0, -1], [1, -1], [-1, -2], [0, -2], [1, -2], [0, -3]],
+      "treeSpruceSnowy": [[0, 0], [-1, 0], [1, 0], [-1, -1], [0, -1], [1, -1], [-1, -2], [0, -2], [1, -2], [0, -3]]
     };
   }
 
@@ -990,7 +1007,6 @@ module.exports = class LevelView {
       case "logSpruce":
         explodeAnim.tint = 0x4b3923;
         break;
-
       case "planksAcacia":
         explodeAnim.tint = 0xba6337;
         break;
@@ -1140,8 +1156,7 @@ module.exports = class LevelView {
   resetPlanes(levelData) {
     var sprite,
       x,
-      y,
-      blockType;
+      y;
 
     this.groundPlane.removeAll(true);
     this.actionPlane.removeAll(true);
@@ -1174,9 +1189,14 @@ module.exports = class LevelView {
         }
 
         sprite = null;
-        if (!levelData.actionPlane.getBlockAt(position).isEmpty) {
-          blockType = levelData.actionPlane.getBlockAt(position).blockType;
-          sprite = this.createBlock(this.actionPlane, x, y, blockType);
+        const actionBlock = levelData.actionPlane.getBlockAt(position);
+        if (!actionBlock.isEmpty) {
+          if (actionBlock.getIsMiniblock()) {
+            sprite = this.createMiniBlock(x, y, actionBlock.blockType);
+          } else {
+            sprite = this.createBlock(this.actionPlane, x, y, actionBlock.blockType);
+          }
+
           if (sprite !== null) {
             sprite.sortOrder = this.yToIndex(y);
           }
@@ -1570,84 +1590,36 @@ module.exports = class LevelView {
     entity.sprite.animations.add('jumpDown' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 55, offset + 60, "", 3), frameRate, true);
   }
 
+  /**
+   * Create a "miniblock" asset (representing a floating collectable) based on
+   * the given block at the given coordinates
+   *
+   * @param {Number} x
+   * @param {Number} y
+   * @param {String} blockType
+   */
   createMiniBlock(x, y, blockType) {
-    var frame = "",
-      sprite = null,
+    let sprite = null,
       frameList;
 
-    // We don't have rails miniblock assets yet.
-    if (blockType.startsWith("rails")) {
-      return;
-    }
-
-    // Need to make sure the switch case will capture the right miniBlock for -all- redstoneWire
-    if (blockType.substring(0,12) === "redstoneWire") {
-      blockType = "redstoneDust";
-    }
-
-    switch (blockType) {
-      case "treeAcacia":
-      case "treeBirch":
-      case "treeJungle":
-      case "treeOak":
-      case "treeSpruce":
-        frame = "log" + blockType.substring(4);
-        break;
-      case "stone":
-        frame = "cobblestone";
-        break;
-      case "oreCoal":
-        frame = "coal";
-        break;
-      case "oreDiamond":
-        frame = "diamond";
-        break;
-      case "oreIron":
-        frame = "ingotIron";
-        break;
-      case "oreLapis":
-        frame = "lapisLazuli";
-        break;
-      case "oreGold":
-        frame = "ingotGold";
-        break;
-      case "oreEmerald":
-        frame = "emerald";
-        break;
-      case "oreRedstone":
-        frame = "redstoneDust";
-        break;
-      case "grass":
-        frame = "dirt";
-        break;
-      case "wool_orange":
-        frame = "wool";
-        break;
-      case "tnt":
-        frame = "gunPowder";
-        break;
-      default:
-        frame = blockType;
-        break;
-    }
-
-    let atlas = "miniBlocks";
-    let framePrefix = this.miniBlocks[frame][0];
-    let frameStart = this.miniBlocks[frame][1];
-    let frameEnd = this.miniBlocks[frame][2];
-    let xOffset = -10 - 20 + Math.random() * 40;
-    let yOffset = 0 - 20 + Math.random() * 40;
+    const frame = LevelBlock.getMiniblockFrame(blockType);
+    const atlas = "miniBlocks";
+    const framePrefix = this.miniBlocks[frame][0];
+    const frameStart = this.miniBlocks[frame][1];
+    const frameEnd = this.miniBlocks[frame][2];
+    const xOffset = -10 - 20 + Math.random() * 40;
+    const yOffset = 0 - 20 + Math.random() * 40;
 
     frameList = Phaser.Animation.generateFrameNames(framePrefix, frameStart, frameEnd, ".png", 3);
     sprite = this.actionPlane.create(xOffset + 40 * x, yOffset + this.actionPlane.yOffset + 40 * y, atlas, "");
-    var anim = sprite.animations.add("animate", frameList, 10, false);
+    const anim = sprite.animations.add("animate", frameList, 10, false);
 
     if (this.controller.levelData.isEventLevel) {
-      var distanceBetween = function (position, position2) {
+      const distanceBetween = function (position, position2) {
         return Math.sqrt(Math.pow(position[0] - position2[0], 2) + Math.pow(position[1] - position2[1], 2));
       };
 
-      let collectiblePosition = this.controller.levelModel.spritePositionToIndex([xOffset, yOffset], [sprite.x, sprite.y]);
+      const collectiblePosition = this.controller.levelModel.spritePositionToIndex([xOffset, yOffset], [sprite.x, sprite.y]);
       anim.onComplete.add(() => {
         if (this.controller.levelModel.usePlayer) {
           if (distanceBetween(this.player.position, collectiblePosition) < 2) {
@@ -1732,6 +1704,9 @@ module.exports = class LevelView {
         buildTree(this, [0, 6]);
         break;
       case "treeSpruce": //0,8
+        buildTree(this, [0, 8]);
+        break;
+      case "treeSpruceSnowy": //1,9
         buildTree(this, [0, 8]);
         break;
       case "cropWheat":
