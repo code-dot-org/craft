@@ -512,7 +512,6 @@ module.exports = class LevelPlane {
   */
   retractArm(armPosition, pistonPosition) {
     let emptyBlock = new LevelBlock("");
-    console.debug("what");
     let pistonType = this.getBlockAt(pistonPosition);
     let concat = "";
     let blockType = "";
