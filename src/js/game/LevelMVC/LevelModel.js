@@ -613,15 +613,17 @@ module.exports = class LevelModel {
         }
         result.push("notEmpty");
       }
-      // Only prevent walking into water/lava in "Events" levels.
+      // Prevent walking into water/lava in levels where the player is
+      // controlled by arrow keys. In levels where the player is controlled by
+      // blocks, let them drown.
       if (this.groundPlane.getBlockAt(position).blockType === "water") {
-        if (this.controller.levelData.isEventLevel) {
+        if (this.controller.getIsDirectPlayerControl()) {
           result.push("water");
         } else {
           return [true];
         }
       } else if (this.groundPlane.getBlockAt(position).blockType === "lava") {
-        if (this.controller.levelData.isEventLevel) {
+        if (this.controller.getIsDirectPlayerControl()) {
           result.push("lava");
         } else {
           return [true];

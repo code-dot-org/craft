@@ -10,7 +10,7 @@ module.exports = class Player extends BaseEntity {
     this.inventory = {};
     this.movementState = -1;
 
-    if (controller.levelData.isEventLevel) {
+    if (controller.getIsDirectPlayerControl()) {
       this.moveDelayMin = 0;
       this.moveDelayMax = 0;
     } else {
@@ -22,7 +22,7 @@ module.exports = class Player extends BaseEntity {
   // "Events" levels allow the player to move around with the arrow keys, and
   // perform actions with the space bar.
   updateMovement() {
-    if (!this.controller.attemptRunning || !this.controller.levelData.isEventLevel) {
+    if (!this.controller.attemptRunning || !this.controller.getIsDirectPlayerControl()) {
       return;
     }
     const queueIsEmpty = this.queue.isFinished() || !this.queue.isStarted();

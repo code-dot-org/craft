@@ -118,6 +118,16 @@ class GameController {
   }
 
   /**
+   * Is this one of those level types in which the player is controlled by arrow
+   * keys rather than by blocks?
+   *
+   * @return {boolean}
+   */
+  getIsDirectPlayerControl() {
+    return this.levelData.isEventLevel || this.levelData.isAgentLevel;
+  }
+
+  /**
    * @param {Object} levelConfig
    */
   loadLevel(levelConfig) {
@@ -248,7 +258,7 @@ class GameController {
 
     // Check for completion every frame for "event" levels. For procedural
     // levels, only check completion after the player has run all commands.
-    if (this.levelData.isEventLevel || this.player.queue.state > 1) {
+    if (this.getIsDirectPlayerControl() || this.player.queue.state > 1) {
       this.checkSolution();
     }
   }
@@ -1533,7 +1543,7 @@ class GameController {
       } else {
         this.endLevel(true);
       }
-    } else if (this.levelModel.isFailed() || !this.levelData.isEventLevel) {
+    } else if (this.levelModel.isFailed() || !this.getIsDirectPlayerControl()) {
       // For "Events" levels, check the final state to see if it's failed.
       // Procedural levels only call `checkSolution` after all code has run, so
       // fail if we didn't pass the success condition.
