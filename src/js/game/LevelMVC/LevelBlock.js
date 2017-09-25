@@ -162,6 +162,10 @@ module.exports = class LevelBlock {
     }
   }
 
+  canHoldCharge() {
+    return this.isSolid;
+  }
+
   /**
    * @return {boolean}
    */

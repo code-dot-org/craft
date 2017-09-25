@@ -341,7 +341,7 @@ module.exports = class LevelPlane {
   */
   getIronDoors(index) {
     if (this._data[index].blockType === "doorIron") {
-      this._data[index].isPowered = this.powerCheckDeluxe(this.indexToCoordinates(index));
+      this._data[index].isPowered = this.powerCheck(this.indexToCoordinates(index), true);
       if (this._data[index].isPowered && !this._data[index].isOpen) {
         this._data[index].isOpen = true;
         if (this.levelModel) {
@@ -382,7 +382,7 @@ module.exports = class LevelPlane {
     let notOffendingIndex = this.coordinatesToIndex(positionInQuestion);
     for (let i = 0; i < this._data.length; ++i) {
       if (this._data[i].blockType === "doorIron" && notOffendingIndex !== i) {
-        this._data[i].isPowered = this.powerCheckDeluxe(this.indexToCoordinates(i));
+        this._data[i].isPowered = this.powerCheck(this.indexToCoordinates(i), true);
         if (this._data[i].isPowered && !this._data[i].isOpen) {
           this._data[i].isOpen = true;
           if (this.levelModel) {
@@ -593,27 +593,21 @@ module.exports = class LevelPlane {
   /**
   * Checking power state for objects that are powered by redstone.
   */
-  powerCheck(position) {
+  powerCheck(position, canReadCharge = false) {
     return this.getOrthogonalPositions(position).some(orthogonalPosition => {
       const block = this.getBlockAt(orthogonalPosition);
       if (block) {
+        if (canReadCharge) {
+          return block.isPowered || block.isRedstoneBattery;
+        }
         return (block.isRedstone && block.isPowered) || block.isRedstoneBattery;
-      }
-    });
-  }
-
-  powerCheckDeluxe(position) {
-    return this.getOrthogonalPositions(position).some(orthogonalPosition => {
-      const block = this.getBlockAt(orthogonalPosition);
-      if (block) {
-        return block.isPowered || block.isRedstoneBattery;
       }
     });
   }
 
   powerAllBlocks() {
     for (let i = 0; i < this._data.length; ++i) {
-      if (this._data[i].blockType !== "" && this._data[i].isSolid) {
+      if (this._data[i].blockType !== "" && this._data[i].canHoldCharge()) {
         this._data[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
       }
     }
