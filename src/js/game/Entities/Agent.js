@@ -19,6 +19,18 @@ module.exports = class Agent extends BaseEntity {
     }
   }
 
+  /**
+   * check whether or not the given entity can place a block
+   */
+  canPlaceBlockOver(toPlaceBlockType, onTopOfBlockType) {
+    if (onTopOfBlockType === "water" || onTopOfBlockType === "lava") {
+      if (!toPlaceBlockType.startsWith("redstoneWire") && !toPlaceBlockType.startsWith("piston") && !toPlaceBlockType.startsWith("rails")) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   // "Events" levels allow the player to move around with the arrow keys, and
   // perform actions with the space bar.
   updateMovement() {

@@ -119,34 +119,36 @@ module.exports = class LevelPlane {
     this._data[this.coordinatesToIndex(position)] = block;
     let offset = [offsetX,offsetY];
 
-    let positionInQuestion = [0,0];
-    // This will either be the pos the player is leaving or entering, depending on situation
-    if (this.levelModel) {
-      positionInQuestion = [this.levelModel.player.position[0] + offset[0], this.levelModel.player.position[1] + offset[1]];
-    }
-    let wasOnADoor = false;
-    // If the questionable position was a door, we want to do a few things differently.
-    if (this.inBounds(positionInQuestion) && this.getBlockAt(positionInQuestion).blockType === "doorIron") {
-      wasOnADoor = true;
-    }
-
-    let redstoneToRefresh = [];
-    if (block.needToRefreshRedstone()) {
-      redstoneToRefresh = this.getRedstone();
-      // Once we're done updating redstoneWire states, check to see if doors should open/close.
-      if (wasOnADoor) {
-        this.findDoorToAnimate(positionInQuestion);
-      } else {
-        this.findDoorToAnimate([-1,-1]);
+    if (this === this.levelModel.actionPlane) {
+      let positionInQuestion = [0,0];
+      // This will either be the pos the player is leaving or entering, depending on situation
+      if (this.levelModel) {
+        positionInQuestion = [this.levelModel.player.position[0] + offset[0], this.levelModel.player.position[1] + offset[1]];
       }
-    }
+      let wasOnADoor = false;
+      // If the questionable position was a door, we want to do a few things differently.
+      if (this.inBounds(positionInQuestion) && this.getBlockAt(positionInQuestion).blockType === "doorIron") {
+        wasOnADoor = true;
+      }
 
-    this.determineRailType(position, true);
+      let redstoneToRefresh = [];
+      if (block.needToRefreshRedstone()) {
+        redstoneToRefresh = this.getRedstone();
+        // Once we're done updating redstoneWire states, check to see if doors should open/close.
+        if (wasOnADoor) {
+          this.findDoorToAnimate(positionInQuestion);
+        } else {
+          this.findDoorToAnimate([-1,-1]);
+        }
+      }
 
-    if (this.levelModel) {
-      let positionAndTouching = this.getOrthogonalPositions(position).concat([position]);
-      this.levelModel.controller.levelView.refreshActionPlane(positionAndTouching);
-      this.levelModel.controller.levelView.refreshActionPlane(redstoneToRefresh);
+      this.determineRailType(position, true);
+
+      if (this.levelModel) {
+        let positionAndTouching = this.getOrthogonalPositions(position).concat([position]);
+        this.levelModel.controller.levelView.refreshActionPlane(positionAndTouching);
+        this.levelModel.controller.levelView.refreshActionPlane(redstoneToRefresh);
+      }
     }
 
     return block;

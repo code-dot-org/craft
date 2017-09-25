@@ -193,6 +193,13 @@ module.exports = class BaseEntity {
     }
 
     /**
+     * check whether or not the given entity can place a block
+     */
+    canPlaceBlockOver() {
+      return false;
+    }
+
+    /**
      * check all the movable points and choose the farthest one
      *
      * @param {any} commandQueueItem

@@ -183,6 +183,13 @@ module.exports = class LevelBlock {
     return blockType.endsWith("Miniblock");
   }
 
+  static doesNotRequireJumpAnimation() {
+    if (this.blockType === "cropWheat" || this.blockType === "torch" || this.blockType.startsWith("rail") || this.blockType.startsWith("redstoneWire")) {
+      return true;
+    }
+    return false;
+  }
+
   /**
    * For any given block type, get the appropriate mini block frame (as defined
    * in LevelView.miniblocks) if it exists.

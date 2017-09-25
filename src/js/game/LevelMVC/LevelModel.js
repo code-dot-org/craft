@@ -783,8 +783,8 @@ module.exports = class LevelModel {
 
     if (entity === this.agent) {
       let ground = this.groundPlane.getBlockAt(position);
-      if (ground.blockType === "water" || ground.blockType === "lava") {
-        this.groundPlane._data[this.groundPlane.coordinatesToIndex(position)] = new LevelBlock(blockType);
+      if (entity.canPlaceBlockOver(blockType, ground.blockType)) {
+        this.groundPlane.setBlockAt(position, new LevelBlock(blockType));
         this.controller.levelView.refreshGroundPlane();
       }
     } else {

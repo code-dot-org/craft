@@ -19,6 +19,16 @@ module.exports = class Player extends BaseEntity {
     }
   }
 
+  /**
+   * check whether or not the given entity can place a block
+   */
+  canPlaceBlockOver(toPlaceBlockType, onTopOfBlockType) {
+    if (toPlaceBlockType !== undefined && onTopOfBlockType !== undefined) {
+      return true;
+    }
+    return false;
+  }
+
   // "Events" levels allow the player to move around with the arrow keys, and
   // perform actions with the space bar.
   updateMovement() {
