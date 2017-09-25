@@ -119,7 +119,7 @@ module.exports = class LevelPlane {
     this._data[this.coordinatesToIndex(position)] = block;
     let offset = [offsetX,offsetY];
 
-    if (this === this.levelModel.actionPlane) {
+    if (this.levelModel && this === this.levelModel.actionPlane) {
       let positionInQuestion = [0,0];
       // This will either be the pos the player is leaving or entering, depending on situation
       if (this.levelModel) {
