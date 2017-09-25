@@ -767,7 +767,7 @@ module.exports = class LevelView {
     tween.start();
   }
 
-  playMoveBackwardAnimation(entity, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, completionHandler) {
+  playMoveBackwardAnimation(entity, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, animation, completionHandler) {
     let tween;
     let position = entity.position;
 
@@ -780,7 +780,7 @@ module.exports = class LevelView {
     entity.sprite.sortOrder = this.yToIndex(zOrderYIndex) + 5;
 
     if (!shouldJumpDown) {
-      const animName = "walk" + this.getDirectionName(facing);
+      const animName = animation + this.getDirectionName(facing);
       this.playScaledSpeed(entity.sprite.animations, animName);
       tween = this.addResettableTween(entity.sprite).to(
         this.positionToScreen(position, isOnBlock, entity), 180, Phaser.Easing.Linear.None);
