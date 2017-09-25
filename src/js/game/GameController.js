@@ -792,7 +792,7 @@ class GameController {
         let entities = this.levelEntity.entityMap;
         for (var value of entities) {
           let entity = value[1];
-          let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveForward(callbackCommand); }, entity.identifier);
+          let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveBackward(callbackCommand); }, entity.identifier);
           entity.addCommand(callbackCommand, commandQueueItem.repeat);
         }
         commandQueueItem.succeeded();
@@ -803,7 +803,7 @@ class GameController {
     } else {
       let entities = this.getEntities(target);
       for (let i = 0; i < entities.length; i++) {
-        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveForward(callbackCommand); }, entities[i].identifier);
+        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveBackward(callbackCommand); }, entities[i].identifier);
         entities[i].addCommand(callbackCommand, commandQueueItem.repeat);
       }
       commandQueueItem.succeeded();

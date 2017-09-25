@@ -626,9 +626,6 @@ module.exports = class LevelModel {
 
   canMoveBackward(entity = this.player) {
     const [x, y] = this.getMoveBackwardPosition(entity);
-    if (!this.controller.followingPlayer() && (x > 9 || y > 9)) {
-      return false;
-    }
     return this.isPositionEmpty([x, y], entity);
   }
 

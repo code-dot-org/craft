@@ -113,7 +113,7 @@ module.exports = class Agent extends BaseEntity {
       groundType = levelModel.actionPlane.getBlockAt(player.position).blockType;
     }
 
-    levelView.playMoveForwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, () => {
+    levelView.playMoveBackwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, () => {
       levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock, player);
 
       if (levelModel.isPlayerStandingInWater()) {
