@@ -80,6 +80,8 @@ window.demoLevels = {
 
     actionPlane: [
       "", "", "", "", "", "", "", "", "", "",
+      "", "", "pressurePlateUp", "redstoneWire", "grass", "doorIron", "glass", "redstoneWire", "pressurePlateUp", "",
+      "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",

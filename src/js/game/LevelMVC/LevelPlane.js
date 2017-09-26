@@ -334,7 +334,6 @@ module.exports = class LevelPlane {
       this.getIronDoors(position);
       this.getPistonState(position);
     });
-
     return posToRefresh;
   }
 
@@ -604,13 +603,24 @@ module.exports = class LevelPlane {
   /**
   * Checking power state for objects that are powered by redstone.
   */
-  powerCheck(position) {
+  powerCheck(position, canReadCharge = false) {
     return this.getOrthogonalPositions(position).some(orthogonalPosition => {
       const block = this.getBlockAt(orthogonalPosition);
       if (block) {
+        if (canReadCharge) {
+          return block.isPowered || block.isRedstoneBattery;
+        }
         return (block.isRedstone && block.isPowered) || block.isRedstoneBattery;
       }
     });
+  }
+
+  powerAllBlocks() {
+    for (let i = 0; i < this._data.length; ++i) {
+      if (this._data[i].blockType !== "" && this._data[i].canHoldCharge()) {
+        this._data[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
+      }
+    }
   }
 
 };
