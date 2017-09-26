@@ -118,6 +118,16 @@ class GameController {
   }
 
   /**
+   * Is this one of those level types in which the player is controlled by arrow
+   * keys rather than by blocks?
+   *
+   * @return {boolean}
+   */
+  getIsDirectPlayerControl() {
+    return this.levelData.isEventLevel || this.levelData.isAgentLevel;
+  }
+
+  /**
    * @param {Object} levelConfig
    */
   loadLevel(levelConfig) {
@@ -248,7 +258,7 @@ class GameController {
 
     // Check for completion every frame for "event" levels. For procedural
     // levels, only check completion after the player has run all commands.
-    if (this.levelData.isEventLevel || this.player.queue.state > 1) {
+    if (this.getIsDirectPlayerControl() || this.player.queue.state > 1) {
       this.checkSolution();
     }
   }
@@ -778,6 +788,32 @@ class GameController {
       let entities = this.getEntities(target);
       for (let i = 0; i < entities.length; i++) {
         let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveForward(callbackCommand); }, entities[i].identifier);
+        entities[i].addCommand(callbackCommand, commandQueueItem.repeat);
+      }
+      commandQueueItem.succeeded();
+    }
+  }
+
+  moveBackward(commandQueueItem) {
+    let target = commandQueueItem.target;
+    if (!this.isType(target)) {
+      // apply to all entities
+      if (target === undefined) {
+        let entities = this.levelEntity.entityMap;
+        for (var value of entities) {
+          let entity = value[1];
+          let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveBackward(callbackCommand); }, entity.identifier);
+          entity.addCommand(callbackCommand, commandQueueItem.repeat);
+        }
+        commandQueueItem.succeeded();
+      } else {
+        let entity = this.getEntity(target);
+        entity.moveBackward(commandQueueItem);
+      }
+    } else {
+      let entities = this.getEntities(target);
+      for (let i = 0; i < entities.length; i++) {
+        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveBackward(callbackCommand); }, entities[i].identifier);
         entities[i].addCommand(callbackCommand, commandQueueItem.repeat);
       }
       commandQueueItem.succeeded();
@@ -1534,7 +1570,7 @@ class GameController {
       } else {
         this.endLevel(true);
       }
-    } else if (this.levelModel.isFailed() || !this.levelData.isEventLevel) {
+    } else if (this.levelModel.isFailed() || !this.getIsDirectPlayerControl()) {
       // For "Events" levels, check the final state to see if it's failed.
       // Procedural levels only call `checkSolution` after all code has run, so
       // fail if we didn't pass the success condition.

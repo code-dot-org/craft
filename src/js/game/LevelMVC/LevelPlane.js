@@ -318,19 +318,21 @@ module.exports = class LevelPlane {
   getRedstone() {
     this.redstoneList = [];
     this.redstoneListON = [];
-    for (let i = 0; i < this._data.length; ++i) {
-      if (this._data[i].isRedstone) {
-        this._data[i].isPowered = false;
-        let position = this.indexToCoordinates(i);
+
+    this.getAllPositions().forEach((position) => {
+      const block = this.getBlockAt(position);
+      if (block.isRedstone) {
+        block.isPowered = false;
         this.redstoneList.push(position);
       }
-    }
-    for (let i = 0; i < this._data.length; ++i) {
-      if (this._data[i].isRedstoneBattery) {
-        let position = this.indexToCoordinates(i);
+    });
+
+    this.getAllPositions().forEach((position) => {
+      const block = this.getBlockAt(position);
+      if (block.isRedstoneBattery) {
         this.redstonePropagation(position);
       }
-    }
+    });
 
     let posToRefresh = [];
     for (let i = 0; i < this.redstoneList.length; ++i) {
@@ -343,26 +345,30 @@ module.exports = class LevelPlane {
     }
 
     // Once we're done updating redstoneWire states, check to see if doors and pistons should open/close.
-    for (let i = 0; i < this._data.length; ++i) {
-      this.getIronDoors(i);
-      this.getPistonState(i);
-    }
+    this.getAllPositions().forEach((position) => {
+      this.getIronDoors(position);
+      this.getPistonState(position);
+    });
+
     return posToRefresh;
   }
 
   /**
   * Evaluates what state Iron Doors on the map should be in.
   */
-  getIronDoors(index) {
-    if (this._data[index].blockType === "doorIron") {
-      this._data[index].isPowered = this.powerCheck(this.indexToCoordinates(index));
-      if (this._data[index].isPowered && !this._data[index].isOpen) {
-        this._data[index].isOpen = true;
+  getIronDoors(position) {
+    const block = this.getBlockAt(position);
+    const index = this.coordinatesToIndex(position);
+
+    if (block.blockType === "doorIron") {
+      block.isPowered = this.powerCheck(position);
+      if (block.isPowered && !block.isOpen) {
+        block.isOpen = true;
         if (this.levelModel) {
           this.levelModel.controller.levelView.animateDoor(index, true);
         }
-      } else if (!this._data[index].isPowered && this._data[index].isOpen) {
-        this._data[index].isOpen = false;
+      } else if (!block.isPowered && block.isOpen) {
+        block.isOpen = false;
         if (this.levelModel) {
           this.levelModel.controller.levelView.animateDoor(index, false);
         }
@@ -373,13 +379,15 @@ module.exports = class LevelPlane {
   /**
   * Evaluates what state Pistons on the map should be in.
   */
-  getPistonState(index) {
-    if (this._data[index].blockType.startsWith("piston") && !this._data[index].blockType.startsWith("pistonArm")) {
-      this._data[index].isPowered = this.powerCheck(this.indexToCoordinates(index));
-      if (this._data[index].isPowered) {
-        this.activatePiston(this.indexToCoordinates(index));
-      } else if (!this._data[index].isPowered) {
-        this.deactivatePiston(this.indexToCoordinates(index));
+  getPistonState(position) {
+    const block = this.getBlockAt(position);
+
+    if (block.blockType.startsWith("piston") && !block.blockType.startsWith("pistonArm")) {
+      block.isPowered = this.powerCheck(position);
+      if (block.isPowered) {
+        this.activatePiston(position);
+      } else if (!block.isPowered) {
+        this.deactivatePiston(position);
       }
 
       if (this.levelModel) {
@@ -393,23 +401,25 @@ module.exports = class LevelPlane {
   * Find all iron doors in a level and evaluate if they need to be animated based on state
   */
   findDoorToAnimate(positionInQuestion) {
-    let notOffendingIndex = this.coordinatesToIndex(positionInQuestion);
-    for (let i = 0; i < this._data.length; ++i) {
-      if (this._data[i].blockType === "doorIron" && notOffendingIndex !== i) {
-        this._data[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
-        if (this._data[i].isPowered && !this._data[i].isOpen) {
-          this._data[i].isOpen = true;
+    this.getAllPositions().forEach((position) => {
+      const block = this.getBlockAt(position);
+      const index = this.coordinatesToIndex(position);
+
+      if (block.blockType === "doorIron" && position !== positionInQuestion) {
+        block.isPowered = this.powerCheck(position);
+        if (block.isPowered && !block.isOpen) {
+          block.isOpen = true;
           if (this.levelModel) {
-            this.levelModel.controller.levelView.animateDoor(i, true);
+            this.levelModel.controller.levelView.animateDoor(index, true);
           }
-        } else if (!this._data[i].isPowered && this._data[i].isOpen) {
-          this._data[i].isOpen = false;
+        } else if (!block.isPowered && block.isOpen) {
+          block.isOpen = false;
           if (this.levelModel) {
-            this.levelModel.controller.levelView.animateDoor(i, false);
+            this.levelModel.controller.levelView.animateDoor(index, false);
           }
         }
       }
-    }
+    });
   }
 
   /**
@@ -484,7 +494,7 @@ module.exports = class LevelPlane {
     let east = 2;
     let west = 3;
 
-    switch (this._data[this.coordinatesToIndex(position)].blockType) {
+    switch (this.getBlockAt(position).blockType) {
       case "pistonUpOn": {
         this.retractArm(neighborPosition[north], position);
         break;
@@ -577,12 +587,13 @@ module.exports = class LevelPlane {
   * propagates power to the surrounding indices.
   */
   redstonePropagation(position) {
-    let block = this._data[this.coordinatesToIndex(position)];
+    const block = this.getBlockAt(position);
+
     if (block.isRedstone) {
       let indexToRemove = this.findPositionInArray(position, this.redstoneList);
       this.redstoneList.splice(indexToRemove,1);
       this.redstoneListON.push(position);
-      this._data[this.coordinatesToIndex(position)].isPowered = true;
+      block.isPowered = true;
     }
 
     this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
@@ -595,7 +606,8 @@ module.exports = class LevelPlane {
   * the propagation call to surrounding indices.
   */
   blockPropagation(position) {
-    let adjacentBlock = this._data[position[1] * this.width + position[0]];
+    let adjacentBlock = this.getBlockAt(position);
+
     if (this.inBounds(position) &&
       adjacentBlock.isPowered === false &&
       adjacentBlock.isRedstone) {

@@ -10,7 +10,7 @@ module.exports = class Player extends BaseEntity {
     this.inventory = {};
     this.movementState = -1;
 
-    if (controller.levelData.isEventLevel) {
+    if (controller.getIsDirectPlayerControl()) {
       this.moveDelayMin = 0;
       this.moveDelayMax = 0;
     } else {
@@ -47,7 +47,7 @@ module.exports = class Player extends BaseEntity {
   // "Events" levels allow the player to move around with the arrow keys, and
   // perform actions with the space bar.
   updateMovement() {
-    if (!this.controller.attemptRunning || !this.controller.levelData.isEventLevel) {
+    if (!this.controller.attemptRunning || !this.controller.getIsDirectPlayerControl()) {
       return;
     }
     const queueIsEmpty = this.queue.isFinished() || !this.queue.isStarted();
@@ -97,6 +97,49 @@ module.exports = class Player extends BaseEntity {
 
     levelView.playMoveForwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, () => {
       levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
+
+      if (levelModel.isPlayerStandingInWater()) {
+        levelView.playDrownFailureAnimation(player.position, player.facing, player.isOnBlock, () => {
+          this.controller.handleEndState(false);
+        });
+      } else if (levelModel.isPlayerStandingInLava()) {
+        levelView.playBurnInLavaAnimation(player.position, player.facing, player.isOnBlock, () => {
+          this.controller.handleEndState(false);
+        });
+      } else {
+        this.controller.delayPlayerMoveBy(this.moveDelayMin, this.moveDelayMax, () => {
+          commandQueueItem.succeeded();
+        });
+      }
+    });
+
+    this.updateHidingTree();
+    this.updateHidingBlock(prevPosition);
+    this.collectItems(prevPosition);
+    this.collectItems();
+  }
+
+  doMoveBackward(commandQueueItem) {
+    var player = this,
+      groundType,
+      jumpOff,
+      levelModel = this.controller.levelModel,
+      levelView = this.controller.levelView;
+    let wasOnBlock = player.isOnBlock;
+    let prevPosition = this.position;
+    // update position
+    levelModel.moveBackward(this);
+    // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
+
+    jumpOff = wasOnBlock && wasOnBlock !== player.isOnBlock;
+    if (player.isOnBlock || jumpOff) {
+      groundType = levelModel.actionPlane.getBlockAt(player.position).blockType;
+    } else {
+      groundType = levelModel.actionPlane.getBlockAt(player.position).blockType;
+    }
+
+    levelView.playMoveBackwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, "walk", () => {
+      levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock, player);
 
       if (levelModel.isPlayerStandingInWater()) {
         levelView.playDrownFailureAnimation(player.position, player.facing, player.isOnBlock, () => {
