@@ -165,6 +165,10 @@ module.exports = class LevelBlock {
     return this.blockType !== "" && !this.blockType.startsWith("redstone") && !this.blockType.startsWith("door");
   }
 
+  isDestroyableUponPush() {
+    return this.blockType.startsWith("redstone") || this.blockType.startsWith("door");
+  }
+
   needToRefreshRedstone(){
     if (this.isRedstone || this.blockType === '' || (this.isConnectedToRedstone && !this.blockType.startsWith("piston"))) {
       return true;

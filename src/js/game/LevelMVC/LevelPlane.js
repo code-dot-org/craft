@@ -536,7 +536,7 @@ module.exports = class LevelPlane {
     for (let i = blocksPositions.length - 1; i >= 0; --i) {
       let destination = [blocksPositions[i][0] + offsetX, blocksPositions[i][1] + offsetY];
       let block = this.getBlockAt(blocksPositions[i]);
-      if (this.getBlockAt(destination).blockType.startsWith("redstone") || this.getBlockAt(destination).blockType.startsWith("door")) {
+      if (this.getBlockAt(destination).isDestroyableUponPush()) {
         this.levelModel.controller.levelView.playExplosionAnimation(destination, 2, destination, block.blockType, null, null, this.player);
         redo = true;
       }
