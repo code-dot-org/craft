@@ -27,6 +27,10 @@ module.exports = class Agent extends BaseEntity {
       if (!toPlaceBlockType.startsWith("redstoneWire") && !toPlaceBlockType.startsWith("piston") && !toPlaceBlockType.startsWith("rails")) {
         return true;
       }
+    } else {
+      if (toPlaceBlockType.startsWith("redstoneWire") || toPlaceBlockType.startsWith("rails")) {
+        return true;
+      }
     }
     return false;
   }

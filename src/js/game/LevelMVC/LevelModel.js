@@ -784,8 +784,12 @@ module.exports = class LevelModel {
     if (entity === this.agent) {
       let ground = this.groundPlane.getBlockAt(position);
       if (entity.canPlaceBlockOver(blockType, ground.blockType)) {
-        this.groundPlane.setBlockAt(position, new LevelBlock(blockType));
-        this.controller.levelView.refreshGroundPlane();
+        if (this.alwaysPlaceActionPlane(blockType)) {
+          placedBlock = this.actionPlane.setBlockAt(position, new LevelBlock(blockType));
+        } else {
+          this.groundPlane.setBlockAt(position, new LevelBlock(blockType));
+          this.controller.levelView.refreshGroundPlane();
+        }
       }
     } else {
       if (shouldPlace === true) {
@@ -797,6 +801,10 @@ module.exports = class LevelModel {
     }
 
     return placedBlock;
+  }
+
+  alwaysPlaceActionPlane(blockType) {
+    return blockType.startsWith("redstone") || blockType.startsWith("rails") || blockType === "torch" || blockType.startsWith("piston");
   }
 
   placeBlockForward(blockType, targetPlane, entity = this.player) {
