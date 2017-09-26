@@ -1596,7 +1596,7 @@ module.exports = class LevelView {
       frameList.push(this.playerFrameName(offset + 1));
     }
     entity.sprite.animations.add('idlePause' + direction, frameList, frameRate / 3, false).onComplete.add(() => {
-      this.playRandomPlayerIdle(FacingDirection.South);
+      this.playRandomPlayerIdle(facing);
     });
 
     entity.sprite.animations.add('walk' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 13, offset + 20, "", 3), frameRate, true);
