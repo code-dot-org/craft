@@ -768,35 +768,20 @@ module.exports = class LevelModel {
 
   placeBlock(blockType, entity = this.player) {
     const position = entity.position;
-    let shouldPlace = false;
     let placedBlock = null;
 
-    switch (blockType) {
-      case "cropWheat":
-        shouldPlace = this.groundPlane.getBlockAt(position).blockType === "farmlandWet";
-        break;
-
-      default:
-        shouldPlace = true;
-        break;
-    }
-
-    if (entity === this.agent) {
-      let ground = this.groundPlane.getBlockAt(position);
-      if (entity.canPlaceBlockOver(blockType, ground.blockType)) {
-        if (this.alwaysPlaceActionPlane(blockType)) {
-          placedBlock = this.actionPlane.setBlockAt(position, new LevelBlock(blockType));
-        } else {
-          this.groundPlane.setBlockAt(position, new LevelBlock(blockType));
+    let ground = this.groundPlane.getBlockAt(position);
+    let result = entity.canPlaceBlockOver(blockType, ground.blockType);
+    if (result.canPlace) {
+      var block = new LevelBlock(blockType);
+      switch (result.plane) {
+        case "actionPlane":
+          placedBlock = this.actionPlane.setBlockAt(position, block);
+          break;
+        case "groundPlane":
+          this.groundPlane.setBlockAt(position, block);
           this.controller.levelView.refreshGroundPlane();
-        }
-      }
-    } else {
-      if (shouldPlace === true) {
-        var block = new LevelBlock(blockType);
-
-        placedBlock = this.actionPlane.setBlockAt(position, block);
-        this.player.isOnBlock = !block.isWalkable;
+          break;
       }
     }
 

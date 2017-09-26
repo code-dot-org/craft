@@ -23,10 +23,18 @@ module.exports = class Player extends BaseEntity {
    * check whether or not the given entity can place a block
    */
   canPlaceBlockOver(toPlaceBlockType, onTopOfBlockType) {
-    if (toPlaceBlockType !== undefined && onTopOfBlockType !== undefined) {
-      return true;
+    let result = {canPlace: false, plane: ""};
+    if (onTopOfBlockType === "water" || onTopOfBlockType === "lava") {
+      result.canPlace = true;
+      result.plane = "groundPlane";
+    } else {
+      result.canPlace = true;
+      result.plane = "actionPlane";
     }
-    return false;
+    if (toPlaceBlockType === "cropWheat") {
+      result.canPlace = onTopOfBlockType === "farmlandWet";
+    }
+    return result;
   }
 
   // "Events" levels allow the player to move around with the arrow keys, and
