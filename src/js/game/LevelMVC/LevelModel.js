@@ -777,6 +777,7 @@ module.exports = class LevelModel {
       switch (result.plane) {
         case "actionPlane":
           placedBlock = this.actionPlane.setBlockAt(position, block);
+          entity.walkableCheck(block);
           break;
         case "groundPlane":
           this.groundPlane.setBlockAt(position, block);

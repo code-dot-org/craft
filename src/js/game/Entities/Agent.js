@@ -38,6 +38,13 @@ module.exports = class Agent extends BaseEntity {
     return result;
   }
 
+  /**
+   * player walkable stuff
+   */
+  walkableCheck() {
+    //do nothing
+  }
+
   // "Events" levels allow the player to move around with the arrow keys, and
   // perform actions with the space bar.
   updateMovement() {

@@ -37,6 +37,13 @@ module.exports = class Player extends BaseEntity {
     return result;
   }
 
+  /**
+   * player walkable stuff
+   */
+  walkableCheck(block) {
+    this.isOnBlock = !block.isWalkable;
+  }
+
   // "Events" levels allow the player to move around with the arrow keys, and
   // perform actions with the space bar.
   updateMovement() {
