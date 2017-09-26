@@ -162,6 +162,8 @@ module.exports = class LevelPlane {
         this.levelModel.controller.levelView.refreshActionPlane(positionAndTouching);
         this.levelModel.controller.levelView.refreshActionPlane(redstoneToRefresh);
       }
+    } else if (this.isGroundPlane()) {
+      this.levelModel.controller.levelView.refreshGroundPlane();
     }
 
     return block;

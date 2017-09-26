@@ -818,16 +818,11 @@ module.exports = class LevelModel {
           break;
         case "groundPlane":
           this.groundPlane.setBlockAt(position, block);
-          this.controller.levelView.refreshGroundPlane();
           break;
       }
     }
 
     return placedBlock;
-  }
-
-  alwaysPlaceActionPlane(blockType) {
-    return blockType.startsWith("redstone") || blockType.startsWith("rails") || blockType === "torch" || blockType.startsWith("piston");
   }
 
   placeBlockForward(blockType, targetPlane, entity = this.player) {

@@ -60,6 +60,12 @@ module.exports = class BaseEntity {
 
     }
 
+  /**
+   * player walkable stuff
+   */
+  walkableCheck() {
+    //do nothing
+  }
 
     updateHidingTree() {
         var levelView = this.controller.levelView;
