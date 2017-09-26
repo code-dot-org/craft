@@ -94,6 +94,49 @@ module.exports = class Agent extends BaseEntity {
     this.collectItems();
   }
 
+  doMoveBackward(commandQueueItem) {
+    var player = this,
+      groundType,
+      jumpOff,
+      levelModel = this.controller.levelModel,
+      levelView = this.controller.levelView;
+    let wasOnBlock = player.isOnBlock;
+    let prevPosition = this.position;
+    // update position
+    levelModel.moveBackward(this);
+    // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
+
+    jumpOff = wasOnBlock && wasOnBlock !== player.isOnBlock;
+    if (player.isOnBlock || jumpOff) {
+      groundType = levelModel.actionPlane.getBlockAt(player.position).blockType;
+    } else {
+      groundType = levelModel.actionPlane.getBlockAt(player.position).blockType;
+    }
+
+    levelView.playMoveBackwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, "walk", () => {
+      levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock, player);
+
+      if (levelModel.isPlayerStandingInWater()) {
+        levelView.playDrownFailureAnimation(player.position, player.facing, player.isOnBlock, () => {
+          this.controller.handleEndState(false);
+        });
+      } else if (levelModel.isPlayerStandingInLava()) {
+        levelView.playBurnInLavaAnimation(player.position, player.facing, player.isOnBlock, () => {
+          this.controller.handleEndState(false);
+        });
+      } else {
+        this.controller.delayPlayerMoveBy(this.moveDelayMin, this.moveDelayMax, () => {
+          commandQueueItem.succeeded();
+        });
+      }
+    });
+
+    this.updateHidingTree();
+    this.updateHidingBlock(prevPosition);
+    this.collectItems(prevPosition);
+    this.collectItems();
+  }
+
   bump(commandQueueItem) {
     var levelView = this.controller.levelView,
       levelModel = this.controller.levelModel;

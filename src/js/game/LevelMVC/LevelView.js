@@ -767,6 +767,34 @@ module.exports = class LevelView {
     tween.start();
   }
 
+  playMoveBackwardAnimation(entity, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, animation, completionHandler) {
+    let tween;
+    let position = entity.position;
+
+    //stepping on stone sfx
+    this.playBlockSound(groundType);
+
+    this.setSelectionIndicatorPosition(position[0], position[1]);
+    //make sure to render high for when moving up after placing a block
+    var zOrderYIndex = position[1] + (facing === FacingDirection.North ? 1 : 0);
+    entity.sprite.sortOrder = this.yToIndex(zOrderYIndex) + 5;
+
+    if (!shouldJumpDown) {
+      const animName = animation + this.getDirectionName(facing);
+      this.playScaledSpeed(entity.sprite.animations, animName);
+      tween = this.addResettableTween(entity.sprite).to(
+        this.positionToScreen(position, isOnBlock, entity), 180, Phaser.Easing.Linear.None);
+    } else {
+      tween = this.playPlayerJumpDownVerticalAnimation(facing, position, oldPosition);
+    }
+
+    tween.onComplete.add(() => {
+      completionHandler();
+    });
+
+    tween.start();
+  }
+
   /**
    * Animate the player jumping down from on top of a block to ground level.
    * @param {FacingDirection} facing
