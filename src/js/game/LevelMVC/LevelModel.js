@@ -352,6 +352,31 @@ module.exports = class LevelModel {
     return [cx, cy];
   }
 
+  getMoveBackwardPosition(entity = this.player) {
+    var cx = entity.position[0],
+      cy = entity.position[1];
+
+    switch (entity.facing) {
+      case FacingDirection.North:
+        ++cy;
+        break;
+
+      case FacingDirection.South:
+        --cy;
+        break;
+
+      case FacingDirection.West:
+        ++cx;
+        break;
+
+      case FacingDirection.East:
+        --cx;
+        break;
+    }
+
+    return [cx, cy];
+  }
+
   getPushBackPosition(entity, pushedByFacing) {
     var cx = entity.position[0],
       cy = entity.position[1];
@@ -599,6 +624,11 @@ module.exports = class LevelModel {
     return this.isPositionEmpty([x, y], entity);
   }
 
+  canMoveBackward(entity = this.player) {
+    const [x, y] = this.getMoveBackwardPosition(entity);
+    return this.isPositionEmpty([x, y], entity);
+  }
+
   isPositionEmpty(position, entity = this.player) {
     var result = [false,];
     let [x, y] = position;
@@ -613,15 +643,17 @@ module.exports = class LevelModel {
         }
         result.push("notEmpty");
       }
-      // Only prevent walking into water/lava in "Events" levels.
+      // Prevent walking into water/lava in levels where the player is
+      // controlled by arrow keys. In levels where the player is controlled by
+      // blocks, let them drown.
       if (this.groundPlane.getBlockAt(position).blockType === "water") {
-        if (this.controller.levelData.isEventLevel) {
+        if (this.controller.getIsDirectPlayerControl()) {
           result.push("water");
         } else {
           return [true];
         }
       } else if (this.groundPlane.getBlockAt(position).blockType === "lava") {
-        if (this.controller.levelData.isEventLevel) {
+        if (this.controller.getIsDirectPlayerControl()) {
           result.push("lava");
         } else {
           return [true];
@@ -706,6 +738,11 @@ module.exports = class LevelModel {
   moveForward(entity = this.player) {
     let blockForwardPosition = this.getMoveForwardPosition(entity);
     this.moveTo(blockForwardPosition, entity);
+  }
+
+  moveBackward(entity = this.player) {
+    let blockBackwardPosition = this.getMoveBackwardPosition(entity);
+    this.moveTo(blockBackwardPosition, entity);
   }
 
   moveTo(position, entity = this.player) {
