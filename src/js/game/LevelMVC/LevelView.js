@@ -1084,7 +1084,7 @@ module.exports = class LevelView {
       }
     });
     this.playScaledSpeed(explodeAnim.animations, "explode");
-    if (this.controller.levelData.isEventLevel ^ !placeBlock) {
+    if (this.controller.getIsDirectPlayerControl() ^ !placeBlock) {
       if (completionHandler) {
         completionHandler();
       }
@@ -1097,8 +1097,10 @@ module.exports = class LevelView {
       sprite.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     }
 
-    if (completionHandler && this.controller.getIsDirectPlayerControl()) {
-      completionHandler();
+    if (this.controller.getIsDirectPlayerControl()) {
+      if (completionHandler) {
+        completionHandler();
+      }
     } else {
       this.onAnimationEnd(this.playScaledSpeed(sprite.animations, "animate"), () => {
         const player = this.controller.levelModel.player;
