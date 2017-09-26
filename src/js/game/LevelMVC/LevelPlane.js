@@ -41,13 +41,14 @@ const PoweredRailConnectionPriority = [
 ];
 
 module.exports = class LevelPlane {
-  constructor(planeData, width, height, isActionPlane = false, LevelModel = null) {
+  constructor(planeData, width, height, isActionPlane = false, LevelModel = null, planeType = null) {
     this._data = [];
     this.width = width;
     this.height = height;
     this.levelModel = LevelModel;
     this.redstoneList = [];
     this.redstoneListON = [];
+    this.planeType = planeType;
 
     for (let index = 0; index < planeData.length; ++index) {
       let block = new LevelBlock(planeData[index]);
@@ -111,6 +112,18 @@ module.exports = class LevelPlane {
     }
   }
 
+  isActionPlane() {
+    return this.planeType === "actionPlane";
+  }
+
+  isDecorationPlane() {
+    return this.planeType === "decorationPlane";
+  }
+
+  isGroundPlane() {
+    return this.planeType === "groundPlane";
+  }
+
   /**
   * Changes the block at a desired position to the desired block.
   * Important note: This is the cornerstone of block placing/destroying.
@@ -119,7 +132,7 @@ module.exports = class LevelPlane {
     this._data[this.coordinatesToIndex(position)] = block;
     let offset = [offsetX,offsetY];
 
-    if (this.levelModel && this === this.levelModel.actionPlane) {
+    if (this.isActionPlane()) {
       let positionInQuestion = [0,0];
       // This will either be the pos the player is leaving or entering, depending on situation
       if (this.levelModel) {

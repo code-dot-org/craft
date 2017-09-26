@@ -34,10 +34,10 @@ module.exports = class LevelModel {
   }
 
   reset() {
-    this.groundPlane = new LevelPlane(this.initialLevelData.groundPlane, this.planeWidth, this.planeHeight, this.controller, this);
-    this.groundDecorationPlane = new LevelPlane(this.initialLevelData.groundDecorationPlane, this.planeWidth, this.planeHeight, this.controller, this);
+    this.groundPlane = new LevelPlane(this.initialLevelData.groundPlane, this.planeWidth, this.planeHeight, this.controller, this, "groundPlane");
+    this.groundDecorationPlane = new LevelPlane(this.initialLevelData.groundDecorationPlane, this.planeWidth, this.planeHeight, this.controller, this, "decorationPlane");
     this.shadingPlane = [];
-    this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, this.controller, this, true);
+    this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, this.controller, this, "actionPlane");
 
     this.actionPlane.getAllPositions().forEach((position) => {
       if (this.actionPlane.getBlockAt(position).blockType === "railsRedstoneTorch") {
