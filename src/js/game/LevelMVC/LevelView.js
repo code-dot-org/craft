@@ -1052,9 +1052,7 @@ module.exports = class LevelView {
         if (!this.controller.levelData.isEventLevel) {
           this.playPlayerAnimation("idle", playerPosition, facing, false, entity);
         }
-        if (completionHandler !== null) {
-          this.playItemDropAnimation(destroyPosition, blockType, completionHandler);
-        }
+        this.playItemDropAnimation(destroyPosition, blockType, completionHandler);
       }
     });
     this.playScaledSpeed(explodeAnim.animations, "explode");
@@ -1071,7 +1069,7 @@ module.exports = class LevelView {
       sprite.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     }
 
-    if (this.controller.levelData.isEventLevel) {
+    if (completionHandler !== null && this.controller.levelData.isEventLevel) {
       completionHandler();
     } else {
       this.onAnimationEnd(this.playScaledSpeed(sprite.animations, "animate"), () => {
@@ -1108,7 +1106,9 @@ module.exports = class LevelView {
           (this.player.inventory[blockType] || 0) + 1;
         sprite.kill();
         this.toDestroy.push(sprite);
-        completionHandler();
+        if (completionHandler !== null) {
+          completionHandler();
+        }
       } else {
         this.playItemAcquireAnimation(this.player.position, this.player.facing, sprite, completionHandler, blockType);
       }

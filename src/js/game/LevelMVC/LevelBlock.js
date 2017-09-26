@@ -161,6 +161,10 @@ module.exports = class LevelBlock {
     return !!this.blockType.match(/^tree/);
   }
 
+  getIsPushable() {
+    return this.blockType !== "" && !this.blockType.startsWith("redstone") && !this.blockType.startsWith("door");
+  }
+
   needToRefreshRedstone(){
     if (this.isRedstone || this.blockType === '' || (this.isConnectedToRedstone && !this.blockType.startsWith("piston"))) {
       return true;

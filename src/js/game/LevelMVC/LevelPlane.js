@@ -527,9 +527,6 @@ module.exports = class LevelPlane {
     for (let i = blocksPositions.length - 1; i >= 0; --i) {
       let destination = [blocksPositions[i][0] + offsetX, blocksPositions[i][1] + offsetY];
       let block = this.getBlockAt(blocksPositions[i]);
-      if (this.getBlockAt(destination) === undefined) {
-        console.log("break");
-      }
       if (this.getBlockAt(destination).blockType.startsWith("redstone") || this.getBlockAt(destination).blockType.startsWith("door")) {
         this.levelModel.controller.levelView.playExplosionAnimation(destination, 2, destination, block.blockType, null, null, this.player);
         redo = true;
@@ -550,7 +547,7 @@ module.exports = class LevelPlane {
   getBlocksToPush(position, offsetX = 0, offsetY = 0) {
     let pushingBlocks = [];
     let workingPosition = position;
-    while (this.inBounds(workingPosition) && this.getBlockAt(workingPosition).blockType !== "" && !this.getBlockAt(workingPosition).blockType.startsWith("redstone") && !this.getBlockAt(workingPosition).blockType.startsWith("door")) {
+    while (this.inBounds(workingPosition) && this.getBlockAt(workingPosition).getIsPushable()) {
       pushingBlocks.push(workingPosition);
       workingPosition = [workingPosition[0] + offsetX, workingPosition[1] + offsetY];
     }
