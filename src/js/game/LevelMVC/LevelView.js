@@ -767,6 +767,34 @@ module.exports = class LevelView {
     tween.start();
   }
 
+  playMoveBackwardAnimation(entity, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, animation, completionHandler) {
+    let tween;
+    let position = entity.position;
+
+    //stepping on stone sfx
+    this.playBlockSound(groundType);
+
+    this.setSelectionIndicatorPosition(position[0], position[1]);
+    //make sure to render high for when moving up after placing a block
+    var zOrderYIndex = position[1] + (facing === FacingDirection.North ? 1 : 0);
+    entity.sprite.sortOrder = this.yToIndex(zOrderYIndex) + 5;
+
+    if (!shouldJumpDown) {
+      const animName = animation + this.getDirectionName(facing);
+      this.playScaledSpeed(entity.sprite.animations, animName);
+      tween = this.addResettableTween(entity.sprite).to(
+        this.positionToScreen(position, isOnBlock, entity), 180, Phaser.Easing.Linear.None);
+    } else {
+      tween = this.playPlayerJumpDownVerticalAnimation(facing, position, oldPosition);
+    }
+
+    tween.onComplete.add(() => {
+      completionHandler();
+    });
+
+    tween.start();
+  }
+
   /**
    * Animate the player jumping down from on top of a block to ground level.
    * @param {FacingDirection} facing
@@ -1049,14 +1077,14 @@ module.exports = class LevelView {
       this.toDestroy.push(explodeAnim);
 
       if (placeBlock) {
-        if (!this.controller.levelData.isEventLevel) {
+        if (!this.controller.getIsDirectPlayerControl()) {
           this.playPlayerAnimation("idle", playerPosition, facing, false, entity);
         }
         this.playItemDropAnimation(destroyPosition, blockType, completionHandler);
       }
     });
     this.playScaledSpeed(explodeAnim.animations, "explode");
-    if (this.controller.levelData.isEventLevel ^ !placeBlock) {
+    if (this.controller.getIsDirectPlayerControl() ^ !placeBlock) {
       completionHandler();
     }
   }
@@ -1067,7 +1095,7 @@ module.exports = class LevelView {
       sprite.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     }
 
-    if (this.controller.levelData.isEventLevel) {
+    if (this.controller.getIsDirectPlayerControl()) {
       completionHandler();
     } else {
       this.onAnimationEnd(this.playScaledSpeed(sprite.animations, "animate"), () => {
@@ -1614,7 +1642,7 @@ module.exports = class LevelView {
     sprite = this.actionPlane.create(xOffset + 40 * x, yOffset + this.actionPlane.yOffset + 40 * y, atlas, "");
     const anim = sprite.animations.add("animate", frameList, 10, false);
 
-    if (this.controller.levelData.isEventLevel) {
+    if (this.controller.getIsDirectPlayerControl()) {
       const distanceBetween = function (position, position2) {
         return Math.sqrt(Math.pow(position[0] - position2[0], 2) + Math.pow(position[1] - position2[1], 2));
       };

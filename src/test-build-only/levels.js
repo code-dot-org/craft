@@ -31,7 +31,7 @@ window.demoLevels = {
     useAgent: true,
     
     playerStartPosition: [3, 4],
-    agentStartPosition: [6, 5],
+    agentStartPosition: [3, 6],
 
     // up: 0, right: 1, down: 2, left: 3
     playerStartDirection: 1,
@@ -86,6 +86,8 @@ window.demoLevels = {
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "snow", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
