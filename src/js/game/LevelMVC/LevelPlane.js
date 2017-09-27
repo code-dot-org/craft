@@ -329,6 +329,7 @@ module.exports = class LevelPlane {
       posToRefresh.push(this.redstoneListON[i]);
     }
 
+    this.powerAllBlocks();
     // Once we're done updating redstoneWire states, check to see if doors and pistons should open/close.
     this.getAllPositions().forEach((position) => {
       this.getIronDoors(position);
@@ -345,7 +346,7 @@ module.exports = class LevelPlane {
     const index = this.coordinatesToIndex(position);
 
     if (block.blockType === "doorIron") {
-      block.isPowered = this.powerCheck(position);
+      block.isPowered = this.powerCheck(position, true);
       if (block.isPowered && !block.isOpen) {
         block.isOpen = true;
         if (this.levelModel) {
@@ -367,7 +368,7 @@ module.exports = class LevelPlane {
     const block = this.getBlockAt(position);
 
     if (block.blockType.startsWith("piston") && !block.blockType.startsWith("pistonArm")) {
-      block.isPowered = this.powerCheck(position);
+      block.isPowered = this.powerCheck(position, true);
       if (block.isPowered) {
         this.activatePiston(position);
       } else if (!block.isPowered) {
@@ -390,7 +391,7 @@ module.exports = class LevelPlane {
       const index = this.coordinatesToIndex(position);
 
       if (block.blockType === "doorIron" && position !== positionInQuestion) {
-        block.isPowered = this.powerCheck(position);
+        block.isPowered = this.powerCheck(position, true);
         if (block.isPowered && !block.isOpen) {
           block.isOpen = true;
           if (this.levelModel) {
@@ -417,6 +418,9 @@ module.exports = class LevelPlane {
     let pos = [];
     let offset = [];
     let pistonType = this.getBlockAt(position).blockType;
+    if (this.getBlockAt(position).getIsStickyPiston()) {
+      pistonType = pistonType.substring(0, pistonType.length - 6);
+    }
     let checkOn = pistonType.substring(pistonType.length - 2, pistonType.length);
     if (checkOn === "On") {
       pistonType = pistonType.substring(0, pistonType.length - 2);
@@ -455,12 +459,21 @@ module.exports = class LevelPlane {
     }
     if (workingNeighbor.blockType !== "" && !workingNeighbor.blockType.startsWith("pistonArm")) {
       let blocksPositions = this.getBlocksToPush(pos, offset[0], offset[1]);
-      let onPiston = new LevelBlock(pistonType += "On");
+      let concat = "On";
+      if (this.getBlockAt(position).getIsStickyPiston()) {
+        concat += "Sticky";
+      }
+      let onPiston = new LevelBlock(pistonType += concat);
       this.setBlockAt(position, onPiston);
       this.pushBlocks(blocksPositions, offset[0], offset[1]);
     } else if (workingNeighbor.blockType === "") {
+      let concat = "On";
+      if (this.getBlockAt(position).getIsStickyPiston()) {
+        concat += "Sticky";
+        armType += "Sticky";
+      }
       let armBlock = new LevelBlock(armType);
-      let pistonBlock = new LevelBlock(pistonType += "On");
+      let pistonBlock = new LevelBlock(pistonType += concat);
       this.setBlockAt(pos, armBlock);
       this.setBlockAt(position, pistonBlock);
     }
@@ -478,7 +491,11 @@ module.exports = class LevelPlane {
     let east = 2;
     let west = 3;
 
-    switch (this.getBlockAt(position).blockType) {
+    let pistonType = this.getBlockAt(position).blockType;
+    if (this._data[this.coordinatesToIndex(position)].getIsStickyPiston()) {
+      pistonType = pistonType.substring(0, pistonType.length - 6);
+    }
+    switch (pistonType) {
       case "pistonUpOn": {
         this.retractArm(neighborPosition[north], position);
         break;
@@ -504,10 +521,43 @@ module.exports = class LevelPlane {
   retractArm(armPosition, pistonPosition) {
     let emptyBlock = new LevelBlock("");
     let pistonType = this.getBlockAt(pistonPosition);
-    let newPistonType = pistonType.blockType.substring(0, pistonType.blockType.length - 2);
+    let concat = "";
+    let blockType = "";
+    if (this.getBlockAt(pistonPosition).getIsStickyPiston()) {
+      concat = "Sticky";
+      blockType = pistonType.blockType.substring(0, pistonType.blockType.length - 8);
+    } else {
+      blockType = pistonType.blockType.substring(0, pistonType.blockType.length - 2);
+    }
+    let newPistonType = blockType + concat;
     let offPiston = new LevelBlock(newPistonType);
     if (this.getBlockAt(armPosition).blockType.startsWith("pistonArm")) {
-      this.setBlockAt(armPosition, emptyBlock);
+      if (this.getBlockAt(pistonPosition).getIsStickyPiston()) {
+        let direction = pistonType.blockType.substring(6, 7);
+        let stuckBlockPosition = [armPosition[0], armPosition[1]];
+        switch (direction) {
+          case "D":
+            stuckBlockPosition[1] += 1;
+            break;
+          case "U":
+            stuckBlockPosition[1] -= 1;
+            break;
+          case "L":
+            stuckBlockPosition[0] -= 1;
+            break;
+          case "R":
+            stuckBlockPosition[0] += 1;
+            break;
+        }
+        if (this.inBounds(stuckBlockPosition)) {
+          this.setBlockAt(armPosition, this.getBlockAt(stuckBlockPosition));
+          this.setBlockAt(stuckBlockPosition, emptyBlock);
+        } else {
+          this.setBlockAt(armPosition, emptyBlock);
+        }
+      } else {
+        this.setBlockAt(armPosition, emptyBlock);
+      }
     }
     this.setBlockAt(pistonPosition, offPiston);
   }

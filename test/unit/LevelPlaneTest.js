@@ -460,3 +460,57 @@ test('piston deactivate: destroy block', t => {
 
   t.end();
 });
+
+test('sticky piston activate: place block', t => {
+  const data = [
+    '','','grass','pistonLeftSticky','','pistonRightSticky','grass','',
+    '','','','redstoneWireVertical','','redstoneWireVertical','','',
+    '','','grass','redstoneWireVertical','','redstoneWireVertical','','',
+    '','','pistonUpSticky','redstoneWireUpLeft','','redstoneWireUpRight','pistonDownSticky','',
+    '','','','','','','grass','',
+    '','','','','','','','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true);
+
+  plane.setBlockAt([4, 2], new LevelBlock('railsRedstoneTorch'));
+
+  const expected = [
+    '','grass','pistonArmLeft','pistonLeftOnSticky','','pistonRightOnSticky','pistonArmRight','grass',
+    '','','grass','redstoneWireVerticalOn','','redstoneWireVerticalOn','','',
+    '','','pistonArmUp','redstoneWireTRightOn','railsRedstoneTorch','redstoneWireTLeftOn','','',
+    '','','pistonUpOnSticky','redstoneWireUpLeftOn','','redstoneWireUpRightOn','pistonDownOnSticky','',
+    '','','','','','','pistonArmDown','',
+    '','','','','','','grass','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+test('sticky piston deactivate: destroy block', t => {
+  const data = [
+    '','grass','pistonArmLeft','pistonLeftOnSticky','','pistonRightOnSticky','pistonArmRight','grass',
+    '','','grass','redstoneWireVerticalOn','','redstoneWireVerticalOn','','',
+    '','','pistonArmUp','redstoneWireTRightOn','railsRedstoneTorch','redstoneWireTLeftOn','','',
+    '','','pistonUpOnSticky','redstoneWireUpLeftOn','','redstoneWireUpRightOn','pistonDownOnSticky','',
+    '','','','','','','pistonArmDownSticky','',
+    '','','','','','','grass','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true);
+
+  plane.setBlockAt([4, 2], new LevelBlock(''));
+
+  const expected = [
+    '','','grass','pistonLeftSticky','','pistonRightSticky','grass','',
+    '','','','redstoneWireVertical','','redstoneWireVertical','','',
+    '','','grass','redstoneWireVertical','','redstoneWireVertical','','',
+    '','','pistonUpSticky','redstoneWireUpLeft','','redstoneWireUpRight','pistonDownSticky','',
+    '','','','','','','grass','',
+    '','','','','','','','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});

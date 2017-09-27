@@ -195,6 +195,20 @@ module.exports = class LevelView {
       "pistonArmUp": ["blocks", "piston_arm_up", -26, -13],
       "pistonArmDown": ["blocks", "piston_arm_down", -26, -13],
 
+      "pistonUpSticky": ["blocks", "piston_up", -13, 0],
+      "pistonDownSticky": ["blocks", "piston_down_sticky", -13, 0],
+      "pistonLeftSticky": ["blocks", "piston_left", -13, 0],
+      "pistonRightSticky": ["blocks", "piston_right", -13, 0],
+      "pistonUpOnSticky": ["blocks", "piston_base_up", -26, -13],
+      "pistonDownOnSticky": ["blocks", "piston_base_down_sticky", -26, -13],
+      "pistonLeftOnSticky": ["blocks", "piston_base_left", -26, -13],
+      "pistonRightOnSticky": ["blocks", "piston_base_right", -26, -13],
+
+      "pistonArmLeftSticky": ["blocks", "piston_arm_left", -26, -13],
+      "pistonArmRightSticky": ["blocks", "piston_arm_right", -26, -13],
+      "pistonArmUpSticky": ["blocks", "piston_arm_up", -26, -13],
+      "pistonArmDownSticky": ["blocks", "piston_arm_down_sticky", -26, -13],
+
       "cactus": ["blocks", "cactus", -13, 0],
       "dead_bush": ["blocks", "dead_bush", -13, 0],
       "glowstone": ["blocks", "glowstone", -13, 0],
@@ -1080,7 +1094,9 @@ module.exports = class LevelView {
         if (!this.controller.getIsDirectPlayerControl()) {
           this.playPlayerAnimation("idle", playerPosition, facing, false, entity);
         }
-        this.playItemDropAnimation(destroyPosition, blockType, completionHandler);
+        if (completionHandler !== null) {
+          this.playItemDropAnimation(destroyPosition, blockType, completionHandler);
+        }
       }
     });
     this.playScaledSpeed(explodeAnim.animations, "explode");
