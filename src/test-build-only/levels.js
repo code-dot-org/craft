@@ -79,16 +79,16 @@ window.demoLevels = {
     ],
 
     actionPlane: [
+      "grass", "ice", "grass", "pistonLeft", "redstoneWire", "pressurePlateUp", "redstoneWire", "redstoneWire", "", "",
+      "", "", "", "", "", "", "", "redstoneWire", "", "",
+      "redstoneWire", "redstoneWire", "redstoneWire", "", "", "", "", "grass", "doorIron", "grass",
+      "redstoneWire", "", "redstoneWire", "", "", "", "", "", "", "",
+      "redstoneWire", "redstoneWire", "redstoneWire", "", "", "", "", "", "", "",
+      "redstoneWire", "", "redstoneWire", "", "", "", "", "", "", "",
+      "redstoneWire", "redstoneWire", "redstoneWire", "", "", "", "", "", "", "",
+      "", "railsRedstoneTorch", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "pressurePlateUp", "redstoneWire", "grass", "doorIron", "glass", "redstoneWire", "pressurePlateUp", "",
       "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "pistonRight", "grass", "grass", "redstoneWire", "grass", "", "", "", "",
-      "", "redstoneWire", "", "", "", "", "", "", "", "",
-      "", "redstoneWire", "", "", "", "", "", "", "", "",
-      "", "redstoneWire", "", "", "", "", "", "", "", "",
-      "", "redstoneWire", "", "", "", "", "", "", "", "",
-      "", "pressurePlateUp", "", "", "", "", "", "", "", "",
     ],
 
     fluffPlane: [
