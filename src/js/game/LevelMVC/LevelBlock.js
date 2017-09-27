@@ -156,12 +156,18 @@ module.exports = class LevelBlock {
       this.isSolid = false;
       this.isDestroyable = false;
       this.isConnectedToRedstone = !blockType.startsWith("pistonArm");
-      if (blockType.substring(blockType.length - 2, blockType.length) === "On" || blockType.startsWith("pistonArm")) {
+      if (blockType.substring(blockType.length - 2, blockType.length) === "On" ||
+        blockType.startsWith("pistonArm") ||
+        blockType.substring(blockType.length - 8, blockType.length) === "OnSticky"
+      ) {
         this.isEntity = true;
       }
     }
   }
 
+  getIsStickyPiston() {
+    return this.blockType.substring(this.blockType.length - 6, this.blockType.length) === "Sticky";
+  }
   canHoldCharge() {
     return this.isSolid;
   }
