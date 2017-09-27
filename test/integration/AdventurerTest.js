@@ -317,3 +317,33 @@ test('Adventurer 14: Free Play 20x20', t => {
     });
   }));
 });
+
+test('Adventurer 15: Agent placeBlock', t => {
+  attempt('adventurer15', api => new Promise(resolve => {
+    for (let i = 0; i < 5; i++) {
+      api.placeBlock(null, 'planksBirch', 'PlayerAgent');
+      api.moveForward(null, 'PlayerAgent');
+    }
+
+    const expected = [
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "planksBirch", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "planksBirch", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "gravel", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "planksBirch", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "planksBirch", "grass", "grass", "grass", "grass",
+    ];
+
+    api.startAttempt((success, levelModel) => {
+      t.deepEqual(levelModel.actionPlane, expected);
+      t.assert(success);
+      t.end();
+
+      resolve();
+    });
+  }));
+});
