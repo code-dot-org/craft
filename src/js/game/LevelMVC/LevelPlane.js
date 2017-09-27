@@ -418,8 +418,7 @@ module.exports = class LevelPlane {
     let pos = [];
     let offset = [];
     let pistonType = this.getBlockAt(position).blockType;
-    let checkSticky = pistonType.substring(pistonType.length - 6, pistonType.length);
-    if (checkSticky === "Sticky") {
+    if (this.getBlockAt(position).getIsStickyPiston()) {
       pistonType = pistonType.substring(0, pistonType.length - 6);
     }
     let checkOn = pistonType.substring(pistonType.length - 2, pistonType.length);
@@ -461,17 +460,17 @@ module.exports = class LevelPlane {
     if (workingNeighbor.blockType !== "" && !workingNeighbor.blockType.startsWith("pistonArm")) {
       let blocksPositions = this.getBlocksToPush(pos, offset[0], offset[1]);
       let concat = "On";
-      if (checkSticky === "Sticky") {
-        concat += checkSticky;
+      if (this.getBlockAt(position).getIsStickyPiston()) {
+        concat += "Sticky";
       }
       let onPiston = new LevelBlock(pistonType += concat);
       this.setBlockAt(position, onPiston);
       this.pushBlocks(blocksPositions, offset[0], offset[1]);
     } else if (workingNeighbor.blockType === "") {
       let concat = "On";
-      if (checkSticky === "Sticky") {
-        concat += checkSticky;
-        armType += checkSticky;
+      if (this.getBlockAt(position).getIsStickyPiston()) {
+        concat += "Sticky";
+        armType += "Sticky";
       }
       let armBlock = new LevelBlock(armType);
       let pistonBlock = new LevelBlock(pistonType += concat);
@@ -492,8 +491,8 @@ module.exports = class LevelPlane {
     let east = 2;
     let west = 3;
 
-    let pistonType = this._data[this.coordinatesToIndex(position)].blockType;
-    if (pistonType.substring(pistonType.length - 6, pistonType.length) === "Sticky") {
+    let pistonType = this.getBlockAt(position).blockType;
+    if (this._data[this.coordinatesToIndex(position)].getIsStickyPiston()) {
       pistonType = pistonType.substring(0, pistonType.length - 6);
     }
     switch (pistonType) {
@@ -524,8 +523,7 @@ module.exports = class LevelPlane {
     let pistonType = this.getBlockAt(pistonPosition);
     let concat = "";
     let blockType = "";
-    let stickyCheck = pistonType.blockType.substring(pistonType.blockType.length - 6, pistonType.blockType.length);
-    if (stickyCheck === "Sticky") {
+    if (this.getBlockAt(pistonPosition).getIsStickyPiston()) {
       concat = "Sticky";
       blockType = pistonType.blockType.substring(0, pistonType.blockType.length - 8);
     } else {
@@ -534,7 +532,7 @@ module.exports = class LevelPlane {
     let newPistonType = blockType + concat;
     let offPiston = new LevelBlock(newPistonType);
     if (this.getBlockAt(armPosition).blockType.startsWith("pistonArm")) {
-      if (stickyCheck === "Sticky") {
+      if (this.getBlockAt(pistonPosition).getIsStickyPiston()) {
         let direction = pistonType.blockType.substring(6, 7);
         let stuckBlockPosition = [armPosition[0], armPosition[1]];
         switch (direction) {
@@ -587,9 +585,6 @@ module.exports = class LevelPlane {
     for (let i = blocksPositions.length - 1; i >= 0; --i) {
       let destination = [blocksPositions[i][0] + offsetX, blocksPositions[i][1] + offsetY];
       let block = this.getBlockAt(blocksPositions[i]);
-      if (this.getBlockAt(destination) === undefined) {
-        console.log("break");
-      }
       if (this.inBounds(destination) && (this.getBlockAt(destination).blockType.startsWith("redstone") || this.getBlockAt(destination).blockType.startsWith("door"))) {
         this.levelModel.controller.levelView.playExplosionAnimation(destination, 2, destination, block.blockType, null, null, this.player);
         redo = true;
