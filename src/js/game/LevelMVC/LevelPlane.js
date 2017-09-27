@@ -329,6 +329,7 @@ module.exports = class LevelPlane {
       posToRefresh.push(this.redstoneListON[i]);
     }
 
+    this.powerAllBlocks();
     // Once we're done updating redstoneWire states, check to see if doors and pistons should open/close.
     this.getAllPositions().forEach((position) => {
       this.getIronDoors(position);
@@ -345,7 +346,7 @@ module.exports = class LevelPlane {
     const index = this.coordinatesToIndex(position);
 
     if (block.blockType === "doorIron") {
-      block.isPowered = this.powerCheck(position);
+      block.isPowered = this.powerCheck(position, true);
       if (block.isPowered && !block.isOpen) {
         block.isOpen = true;
         if (this.levelModel) {
@@ -367,7 +368,7 @@ module.exports = class LevelPlane {
     const block = this.getBlockAt(position);
 
     if (block.blockType.startsWith("piston") && !block.blockType.startsWith("pistonArm")) {
-      block.isPowered = this.powerCheck(position);
+      block.isPowered = this.powerCheck(position, true);
       if (block.isPowered) {
         this.activatePiston(position);
       } else if (!block.isPowered) {
@@ -390,7 +391,7 @@ module.exports = class LevelPlane {
       const index = this.coordinatesToIndex(position);
 
       if (block.blockType === "doorIron" && position !== positionInQuestion) {
-        block.isPowered = this.powerCheck(position);
+        block.isPowered = this.powerCheck(position, true);
         if (block.isPowered && !block.isOpen) {
           block.isOpen = true;
           if (this.levelModel) {
