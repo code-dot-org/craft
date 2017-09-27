@@ -334,7 +334,6 @@ module.exports = class LevelPlane {
       this.getIronDoors(position);
       this.getPistonState(position);
     });
-
     return posToRefresh;
   }
 
@@ -585,13 +584,11 @@ module.exports = class LevelPlane {
     for (let i = blocksPositions.length - 1; i >= 0; --i) {
       let destination = [blocksPositions[i][0] + offsetX, blocksPositions[i][1] + offsetY];
       let block = this.getBlockAt(blocksPositions[i]);
-      if (this.inBounds(destination) && (this.getBlockAt(destination).blockType.startsWith("redstone") || this.getBlockAt(destination).blockType.startsWith("door"))) {
+      if (this.getBlockAt(destination).isDestroyableUponPush()) {
         this.levelModel.controller.levelView.playExplosionAnimation(destination, 2, destination, block.blockType, null, null, this.player);
         redo = true;
       }
-      if (this.inBounds(destination)) {
-        this.setBlockAt(destination, this.getBlockAt(blocksPositions[i]));
-      }
+      this.setBlockAt(destination, this.getBlockAt(blocksPositions[i]));
       if (i === 0) {
         this.setBlockAt(blocksPositions[i], armBlock);
       }
@@ -607,7 +604,7 @@ module.exports = class LevelPlane {
   getBlocksToPush(position, offsetX = 0, offsetY = 0) {
     let pushingBlocks = [];
     let workingPosition = position;
-    while (this.inBounds(workingPosition) && this.getBlockAt(workingPosition).blockType !== "" && !this.getBlockAt(workingPosition).blockType.startsWith("redstone") && !this.getBlockAt(workingPosition).blockType.startsWith("door")) {
+    while (this.inBounds(workingPosition) && this.getBlockAt(workingPosition).getIsPushable()) {
       pushingBlocks.push(workingPosition);
       workingPosition = [workingPosition[0] + offsetX, workingPosition[1] + offsetY];
     }
@@ -664,13 +661,24 @@ module.exports = class LevelPlane {
   /**
   * Checking power state for objects that are powered by redstone.
   */
-  powerCheck(position) {
+  powerCheck(position, canReadCharge = false) {
     return this.getOrthogonalPositions(position).some(orthogonalPosition => {
       const block = this.getBlockAt(orthogonalPosition);
       if (block) {
+        if (canReadCharge) {
+          return block.isPowered || block.isRedstoneBattery;
+        }
         return (block.isRedstone && block.isPowered) || block.isRedstoneBattery;
       }
     });
+  }
+
+  powerAllBlocks() {
+    for (let i = 0; i < this._data.length; ++i) {
+      if (this._data[i].blockType !== "" && this._data[i].canHoldCharge()) {
+        this._data[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
+      }
+    }
   }
 
 };
