@@ -517,6 +517,7 @@ module.exports = class LevelPlane {
   */
   pushBlocks(blocksPositions, offsetX = 0, offsetY = 0) {
     let pistonType = "";
+    let redo = false;
     if (offsetX === 1) {
       pistonType = "pistonArmRight";
     } else if (offsetX === -1) {
@@ -533,10 +534,18 @@ module.exports = class LevelPlane {
     let armBlock = new LevelBlock(pistonType);
     for (let i = blocksPositions.length - 1; i >= 0; --i) {
       let destination = [blocksPositions[i][0] + offsetX, blocksPositions[i][1] + offsetY];
+      let block = this.getBlockAt(blocksPositions[i]);
+      if (this.getBlockAt(destination).isDestroyableUponPush()) {
+        this.levelModel.controller.levelView.playExplosionAnimation(destination, 2, destination, block.blockType, null, null, this.player);
+        redo = true;
+      }
       this.setBlockAt(destination, this.getBlockAt(blocksPositions[i]));
       if (i === 0) {
         this.setBlockAt(blocksPositions[i], armBlock);
       }
+    }
+    if (redo) {
+      this.getRedstone();
     }
   }
 
@@ -546,7 +555,7 @@ module.exports = class LevelPlane {
   getBlocksToPush(position, offsetX = 0, offsetY = 0) {
     let pushingBlocks = [];
     let workingPosition = position;
-    while (this.inBounds(workingPosition) && this.getBlockAt(workingPosition).blockType !== "") {
+    while (this.inBounds(workingPosition) && this.getBlockAt(workingPosition).getIsPushable()) {
       pushingBlocks.push(workingPosition);
       workingPosition = [workingPosition[0] + offsetX, workingPosition[1] + offsetY];
     }

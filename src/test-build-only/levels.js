@@ -53,16 +53,16 @@ window.demoLevels = {
     },
 
     groundPlane: [
-      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
-      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
-      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
-      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
-      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
-      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
-      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
-      "ice", "ice", "ice", "ice", "water", "water", "water", "water", "water", "water",
-      "ice", "ice", "ice", "water", "water", "water", "water", "water", "water", "water",
-      "ice", "ice", "water", "water", "water", "water", "water", "water", "water", "water",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
     ],
 
     groundDecorationPlane: [
