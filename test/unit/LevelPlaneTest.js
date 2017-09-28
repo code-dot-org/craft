@@ -470,7 +470,7 @@ test('sticky piston activate: place block', t => {
     '','','','','','','grass','',
     '','','','','','','','',
   ];
-  const plane = new LevelPlane(data, 8, 6, true);
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
 
   plane.setBlockAt([4, 2], new LevelBlock('railsRedstoneTorch'));
 
@@ -497,7 +497,7 @@ test('sticky piston deactivate: destroy block', t => {
     '','','','','','','pistonArmDownSticky','',
     '','','','','','','grass','',
   ];
-  const plane = new LevelPlane(data, 8, 6, true);
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
 
   plane.setBlockAt([4, 2], new LevelBlock(''));
 
