@@ -26,13 +26,8 @@ module.exports = class Player extends BaseEntity {
     if (!this.controller.attemptRunning || !this.controller.getIsDirectPlayerControl()) {
       return;
     }
-    const queueIsEmpty = this.queue.isFinished() || !this.queue.isStarted();
-    const isMoving = this.movementState !== -1;
-    const queueHasOne = this.queue.currentCommand && this.queue.getLength() === 0;
-    const timeEllapsed = (+new Date() - this.lastMovement);
-    const movementAlmostFinished = timeEllapsed > 300;
 
-    if (!this.onTracks && ((queueIsEmpty || (queueHasOne && movementAlmostFinished)) && isMoving)) {
+    if (this.canUpdateMovement()) {
       // Arrow key
       if (this.movementState >= 0) {
         let direction = this.movementState;
@@ -50,6 +45,15 @@ module.exports = class Player extends BaseEntity {
         this.addCommand(callbackCommand);
       }
     }
+  }
+
+  canUpdateMovement() {
+    const queueIsEmpty = this.queue.isFinished() || !this.queue.isStarted();
+    const isMoving = this.movementState !== -1;
+    const queueHasOne = this.queue.currentCommand && this.queue.getLength() === 0;
+    const timeEllapsed = (+new Date() - this.lastMovement);
+    const movementAlmostFinished = timeEllapsed > 300;
+    return !this.onTracks && ((queueIsEmpty || (queueHasOne && movementAlmostFinished)) && isMoving);
   }
 
   doMoveForward(commandQueueItem) {

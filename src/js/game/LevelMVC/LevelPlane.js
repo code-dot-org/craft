@@ -256,7 +256,7 @@ module.exports = class LevelPlane {
     let powerState = '';
     let priority = RailConnectionPriority;
     if (block.isConnectedToRedstone) {
-      powerState = 'Unpowered';
+      powerState = block.isPowered ? "Powered" : "Unpowered";
       priority = PoweredRailConnectionPriority;
     }
 
@@ -269,6 +269,17 @@ module.exports = class LevelPlane {
     if (updateTouching) {
       this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
         this.determineRailType(orthogonalPosition);
+      });
+    }
+  }
+
+  //working on powering rails. To be used in a future PR
+  powerRails(position) {
+    let block = this.getBlockAt(position);
+    if (block.blockType.startsWith("railsUnp") && block.isPowered === false) {
+      block.isPowered = this.powerCheck(position);
+      this.getOrthogonalPositions(position).some(orthogonalPosition => {
+        this.powerRails(orthogonalPosition);
       });
     }
   }
@@ -329,6 +340,7 @@ module.exports = class LevelPlane {
 
     // Once we're done updating redstoneWire states, check to see if doors and pistons should open/close.
     for (let i = 0; i < this._data.length; ++i) {
+      this.powerRails(this.indexToCoordinates(i));
       this.getIronDoors(i);
       this.getPistonState(i);
     }

@@ -1173,7 +1173,6 @@ class GameController {
     let frontBlock = this.levelModel.actionPlane.getBlockAt(frontPosition);
 
     const isFrontBlockDoor = frontBlock === undefined ? false : frontBlock.blockType === "door";
-    const isFrontBlockRails = frontBlock === undefined ? false : frontBlock.blockType.startsWith("rails");
     if (frontEntity !== null) {
       // push use command to execute general use behavior of the entity before executing the event
       this.levelView.setSelectionIndicatorPosition(frontPosition[0], frontPosition[1]);
@@ -1213,7 +1212,7 @@ class GameController {
           commandQueueItem.succeeded();
         });
       });
-    } else if (isFrontBlockRails) {
+    } else if (frontBlock.isRail) {
       player.onTracks = true;
       this.levelView.playTrack(frontPosition, player.facing, true, player, null);
       commandQueueItem.succeeded();
