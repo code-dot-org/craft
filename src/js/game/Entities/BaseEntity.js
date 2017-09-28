@@ -216,7 +216,7 @@ module.exports = class BaseEntity {
      * check whether or not the given entity can place a block
      */
     canPlaceBlockOver() {
-      return false;
+      return { canPlace: false, plane: '' };
     }
 
     /**
