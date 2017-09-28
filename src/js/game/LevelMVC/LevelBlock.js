@@ -50,7 +50,6 @@ module.exports = class LevelBlock {
       this.isRail = blockType !== "railsRedstoneTorch";
       this.isConnectedToRedstone = /^rails(RedstoneTorch|Unpowered|Powered)/.test(blockType);
       this.isRedstoneBattery = blockType === "railsRedstoneTorch";
-      this.isRail = blockType !== "railsRedstoneTorch";
       this.connectionA = undefined;
       this.connectionB = undefined;
     }
