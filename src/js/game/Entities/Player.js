@@ -9,6 +9,7 @@ module.exports = class Player extends BaseEntity {
     this.isOnBlock = isOnBlock;
     this.inventory = {};
     this.movementState = -1;
+    this.onTracks = false;
 
     if (controller.getIsDirectPlayerControl()) {
       this.moveDelayMin = 0;
@@ -31,7 +32,7 @@ module.exports = class Player extends BaseEntity {
     const timeEllapsed = (+new Date() - this.lastMovement);
     const movementAlmostFinished = timeEllapsed > 300;
 
-    if ((queueIsEmpty || (queueHasOne && movementAlmostFinished)) && isMoving) {
+    if (!this.onTracks && ((queueIsEmpty || (queueHasOne && movementAlmostFinished)) && isMoving)) {
       // Arrow key
       if (this.movementState >= 0) {
         let direction = this.movementState;
