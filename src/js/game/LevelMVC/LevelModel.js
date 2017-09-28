@@ -34,10 +34,10 @@ module.exports = class LevelModel {
   }
 
   reset() {
-    this.groundPlane = new LevelPlane(this.initialLevelData.groundPlane, this.planeWidth, this.planeHeight, this.controller, this);
-    this.groundDecorationPlane = new LevelPlane(this.initialLevelData.groundDecorationPlane, this.planeWidth, this.planeHeight, this.controller, this);
+    this.groundPlane = new LevelPlane(this.initialLevelData.groundPlane, this.planeWidth, this.planeHeight, this.controller, this, "groundPlane");
+    this.groundDecorationPlane = new LevelPlane(this.initialLevelData.groundDecorationPlane, this.planeWidth, this.planeHeight, this.controller, this, "decorationPlane");
     this.shadingPlane = [];
-    this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, this.controller, this, true);
+    this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, this.controller, this, "actionPlane");
 
     this.actionPlane.getAllPositions().forEach((position) => {
       if (this.actionPlane.getBlockAt(position).blockType === "railsRedstoneTorch") {
@@ -803,26 +803,23 @@ module.exports = class LevelModel {
     this.moveForward();
   }
 
-  placeBlock(blockType) {
-    const position = this.player.position;
-    let shouldPlace = false;
+  placeBlock(blockType, entity = this.player) {
+    const position = entity.position;
     let placedBlock = null;
 
-    switch (blockType) {
-      case "cropWheat":
-        shouldPlace = this.groundPlane.getBlockAt(position).blockType === "farmlandWet";
-        break;
-
-      default:
-        shouldPlace = true;
-        break;
-    }
-
-    if (shouldPlace === true) {
+    let ground = this.groundPlane.getBlockAt(position);
+    let result = entity.canPlaceBlockOver(blockType, ground.blockType);
+    if (result.canPlace) {
       var block = new LevelBlock(blockType);
-
-      placedBlock = this.actionPlane.setBlockAt(position, block);
-      this.player.isOnBlock = !block.isWalkable;
+      switch (result.plane) {
+        case "actionPlane":
+          placedBlock = this.actionPlane.setBlockAt(position, block);
+          entity.walkableCheck(block);
+          break;
+        case "groundPlane":
+          this.groundPlane.setBlockAt(position, block);
+          break;
+      }
     }
 
     return placedBlock;

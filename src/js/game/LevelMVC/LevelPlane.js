@@ -41,13 +41,14 @@ const PoweredRailConnectionPriority = [
 ];
 
 module.exports = class LevelPlane {
-  constructor(planeData, width, height, isActionPlane = false, LevelModel = null) {
+  constructor(planeData, width, height, isActionPlane = false, LevelModel = null, planeType = null) {
     this._data = [];
     this.width = width;
     this.height = height;
     this.levelModel = LevelModel;
     this.redstoneList = [];
     this.redstoneListON = [];
+    this.planeType = planeType;
 
     for (let index = 0; index < planeData.length; ++index) {
       let block = new LevelBlock(planeData[index]);
@@ -111,6 +112,18 @@ module.exports = class LevelPlane {
     }
   }
 
+  isActionPlane() {
+    return this.planeType === "actionPlane";
+  }
+
+  isDecorationPlane() {
+    return this.planeType === "decorationPlane";
+  }
+
+  isGroundPlane() {
+    return this.planeType === "groundPlane";
+  }
+
   /**
   * Changes the block at a desired position to the desired block.
   * Important note: This is the cornerstone of block placing/destroying.
@@ -119,34 +132,38 @@ module.exports = class LevelPlane {
     this._data[this.coordinatesToIndex(position)] = block;
     let offset = [offsetX,offsetY];
 
-    let positionInQuestion = [0,0];
-    // This will either be the pos the player is leaving or entering, depending on situation
-    if (this.levelModel) {
-      positionInQuestion = [this.levelModel.player.position[0] + offset[0], this.levelModel.player.position[1] + offset[1]];
-    }
-    let wasOnADoor = false;
-    // If the questionable position was a door, we want to do a few things differently.
-    if (this.inBounds(positionInQuestion) && this.getBlockAt(positionInQuestion).blockType === "doorIron") {
-      wasOnADoor = true;
-    }
-
-    let redstoneToRefresh = [];
-    if (block.needToRefreshRedstone()) {
-      redstoneToRefresh = this.getRedstone();
-      // Once we're done updating redstoneWire states, check to see if doors should open/close.
-      if (wasOnADoor) {
-        this.findDoorToAnimate(positionInQuestion);
-      } else {
-        this.findDoorToAnimate([-1,-1]);
+    if (this.isActionPlane()) {
+      let positionInQuestion = [0,0];
+      // This will either be the pos the player is leaving or entering, depending on situation
+      if (this.levelModel) {
+        positionInQuestion = [this.levelModel.player.position[0] + offset[0], this.levelModel.player.position[1] + offset[1]];
       }
-    }
+      let wasOnADoor = false;
+      // If the questionable position was a door, we want to do a few things differently.
+      if (this.inBounds(positionInQuestion) && this.getBlockAt(positionInQuestion).blockType === "doorIron") {
+        wasOnADoor = true;
+      }
 
-    this.determineRailType(position, true);
+      let redstoneToRefresh = [];
+      if (block.needToRefreshRedstone()) {
+        redstoneToRefresh = this.getRedstone();
+        // Once we're done updating redstoneWire states, check to see if doors should open/close.
+        if (wasOnADoor) {
+          this.findDoorToAnimate(positionInQuestion);
+        } else {
+          this.findDoorToAnimate([-1,-1]);
+        }
+      }
 
-    if (this.levelModel) {
-      let positionAndTouching = this.getOrthogonalPositions(position).concat([position]);
-      this.levelModel.controller.levelView.refreshActionPlane(positionAndTouching);
-      this.levelModel.controller.levelView.refreshActionPlane(redstoneToRefresh);
+      this.determineRailType(position, true);
+
+      if (this.levelModel && this.levelModel.controller.levelView) {
+        let positionAndTouching = this.getOrthogonalPositions(position).concat([position]);
+        this.levelModel.controller.levelView.refreshActionPlane(positionAndTouching);
+        this.levelModel.controller.levelView.refreshActionPlane(redstoneToRefresh);
+      }
+    } else if (this.isGroundPlane()) {
+      this.levelModel.controller.levelView.refreshGroundPlane();
     }
 
     return block;

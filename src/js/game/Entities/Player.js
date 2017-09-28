@@ -19,6 +19,31 @@ module.exports = class Player extends BaseEntity {
     }
   }
 
+  /**
+   * check whether or not the given entity can place a block
+   */
+  canPlaceBlockOver(toPlaceBlockType, onTopOfBlockType) {
+    let result = {canPlace: false, plane: ""};
+    if (onTopOfBlockType === "water" || onTopOfBlockType === "lava") {
+      result.canPlace = true;
+      result.plane = "groundPlane";
+    } else {
+      result.canPlace = true;
+      result.plane = "actionPlane";
+    }
+    if (toPlaceBlockType === "cropWheat") {
+      result.canPlace = onTopOfBlockType === "farmlandWet";
+    }
+    return result;
+  }
+
+  /**
+   * player walkable stuff
+   */
+  walkableCheck(block) {
+    this.isOnBlock = !block.isWalkable;
+  }
+
   // "Events" levels allow the player to move around with the arrow keys, and
   // perform actions with the space bar.
   updateMovement() {

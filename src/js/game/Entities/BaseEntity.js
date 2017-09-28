@@ -60,6 +60,12 @@ module.exports = class BaseEntity {
 
     }
 
+  /**
+   * player walkable stuff
+   */
+  walkableCheck() {
+    //do nothing
+  }
 
     updateHidingTree() {
         var levelView = this.controller.levelView;
@@ -204,6 +210,13 @@ module.exports = class BaseEntity {
             this.bump(commandQueueItem);
             this.callBumpEvents(backwardPositionInformation);
         }
+    }
+
+    /**
+     * check whether or not the given entity can place a block
+     */
+    canPlaceBlockOver() {
+      return { canPlace: false, plane: '' };
     }
 
     /**

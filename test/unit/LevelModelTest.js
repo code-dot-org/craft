@@ -30,6 +30,13 @@ test('sanity', t => {
   const levelDefinition = makeLevelDefinition(5, 5);
   const model = new LevelModel(levelDefinition, mockGameController);
 
+  model.placeBlock("grass");
+  t.true(model.actionPlane.getBlockAt([0,2]).blockType === "grass");
+  model.placeBlock("gravel");
+  t.true(model.actionPlane.getBlockAt([0,2]).blockType === "gravel");
+  model.placeBlock("ice");
+  t.false(model.actionPlane.getBlockAt([0,2]).blockType === "grass");
+
   t.equal(model.planeArea(), 25);
 
   t.assert(model.inBounds(2, 4));

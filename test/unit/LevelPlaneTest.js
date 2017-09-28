@@ -10,7 +10,7 @@ test('get blocks', t => {
     'water', 'lava', 'water', 'lava',
     'grass', 'dirt', 'stone', 'sand',
   ];
-  const plane = new LevelPlane(data, 4, 3, true, null);
+  const plane = new LevelPlane(data, 4, 3, true, null, "actionPlane");
 
   t.equal(plane.getBlockAt([0, 0]).blockType, 'grass');
   t.equal(plane.getBlockAt([1, 1], 1).blockType, 'water');
@@ -51,7 +51,7 @@ test('get blocks', t => {
 // 3   │     ──┘
 test('redstone wires', t => {
   const data = new Array(24).fill('');
-  const plane = new LevelPlane(data, 6, 4, true, null);
+  const plane = new LevelPlane(data, 6, 4, true, null, "actionPlane");
 
   // Place the test pattern.
   plane.setBlockAt([0, 0], new LevelBlock('redstoneWire'));
@@ -114,7 +114,7 @@ test('rail connections: T-junctions', t => {
     'rails',  '',       'rails',  '',       'rails',  '',       '',
     '',       '',       '',       '',       '',       'rails',  '',
   ];
-  const plane = new LevelPlane(data, 7, 6, true, null);
+  const plane = new LevelPlane(data, 7, 6, true, null, "actionPlane");
 
   t.equal(plane.setBlockAt([1, 0], new LevelBlock('rails')).blockType, 'railsSouthEast');
   t.equal(plane.setBlockAt([5, 1], new LevelBlock('rails')).blockType, 'railsSouthEast');
@@ -154,7 +154,7 @@ test('rail connections: unpowered T-junctions', t => {
     'rails',  '',       'rails',  '',       'rails',  '',       '',
     '',       '',       '',       '',       '',       'rails',  '',
   ];
-  const plane = new LevelPlane(data, 7, 6, true, null);
+  const plane = new LevelPlane(data, 7, 6, true, null, "actionPlane");
 
   t.equal(plane.setBlockAt([1, 0], new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
   t.equal(plane.setBlockAt([5, 1], new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
@@ -184,7 +184,7 @@ test('rail connections: unpowered T-junctions', t => {
 //
 test('rail connections: 2x2 loop', t => {
   const data = new Array(4).fill('');
-  const plane = new LevelPlane(data, 2, 2, true);
+  const plane = new LevelPlane(data, 2, 2, true, null, "actionPlane");
 
   t.equal(plane.setBlockAt([1, 0], new LevelBlock('rails')).blockType, 'rails');
   t.equal(plane.setBlockAt([0, 0], new LevelBlock('rails')).blockType, 'railsEast');
@@ -209,7 +209,7 @@ test('rail connections: 2x2 loop', t => {
 //    5 6 7       ╚═══╝
 test('rail connections: longer track', t => {
   const data = new Array(16).fill('');
-  const plane = new LevelPlane(data, 4, 4, true);
+  const plane = new LevelPlane(data, 4, 4, true, null, "actionPlane");
 
   plane.setBlockAt([0, 0], new LevelBlock('rails'));
   plane.setBlockAt([1, 1], new LevelBlock('rails'));
@@ -248,7 +248,7 @@ test('rail connections: destroy block', t => {
     'railsEastWest',  'railsSouthWest', '',
     '',               'railsNorthSouth','',
   ];
-  const plane = new LevelPlane(data, 3, 3, true);
+  const plane = new LevelPlane(data, 3, 3, true, null, "actionPlane");
 
   // Destroy track block.
   plane.setBlockAt([0, 1], new LevelBlock(''));
@@ -276,7 +276,7 @@ test('redstone charge: place block', t => {
     '','',                        '',
     '','',                        '',
   ];
-  const plane = new LevelPlane(data, 3, 3, true);
+  const plane = new LevelPlane(data, 3, 3, true, null, "actionPlane");
 
   plane.setBlockAt([2, 0], new LevelBlock('redstoneWire'));
   plane.setBlockAt([2, 1], new LevelBlock('redstoneWire'));
@@ -306,7 +306,7 @@ test('redstone charge: destroy block', t => {
     '',                  '',         'redstoneWireVerticalOn',
     'redstoneWire',      '',         'redstoneWireVerticalOn',
   ];
-  const plane = new LevelPlane(data, 3, 3, true);
+  const plane = new LevelPlane(data, 3, 3, true, null, "actionPlane");
 
   plane.setBlockAt([2, 0], new LevelBlock(''));
 
@@ -333,7 +333,7 @@ test('torch charge: destroy block', t => {
     '',                  '',         'redstoneWireVerticalOn',
     'redstoneWire',      '',         'redstoneWireVerticalOn',
   ];
-  const plane = new LevelPlane(data, 3, 3, true);
+  const plane = new LevelPlane(data, 3, 3, true, null, "actionPlane");
 
   plane.setBlockAt([1, 0], new LevelBlock(''));
 
@@ -360,7 +360,7 @@ test('torch charge: place block', t => {
     '',            '',      'redstoneWireVertical',
     '',            '',      'redstoneWireVertical',
   ];
-  const plane = new LevelPlane(data, 3, 3, true);
+  const plane = new LevelPlane(data, 3, 3, true, null, "actionPlane");
 
   plane.setBlockAt([1, 2], new LevelBlock('railsRedstoneTorch'));
 
@@ -381,7 +381,7 @@ test('iron door open: place block', t => {
     'redstoneWireVertical','',      '',
     'doorIron',            '',      'doorIron',
   ];
-  const plane = new LevelPlane(data, 3, 3, true);
+  const plane = new LevelPlane(data, 3, 3, true, null, "actionPlane");
 
   plane.setBlockAt([1, 0], new LevelBlock('railsRedstoneTorch'));
 
@@ -397,7 +397,7 @@ test('iron door close: destroy block', t => {
     'redstoneWireVerticalOn','','',
     'doorIron',              '','doorIron',
   ];
-  const plane = new LevelPlane(data, 3, 3, true);
+  const plane = new LevelPlane(data, 3, 3, true, null, "actionPlane");
 
   plane.setBlockAt([0, 0], new LevelBlock(''));
 
@@ -416,7 +416,7 @@ test('piston activate: place block', t => {
     '','','','','','','grass','',
     '','','','','','','','',
   ];
-  const plane = new LevelPlane(data, 8, 6, true);
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
 
   plane.setBlockAt([4, 2], new LevelBlock('railsRedstoneTorch'));
 
@@ -443,7 +443,7 @@ test('piston deactivate: destroy block', t => {
     '','','','','','','pistonArmDown','',
     '','','','','','','grass','',
   ];
-  const plane = new LevelPlane(data, 8, 6, true);
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
 
   plane.setBlockAt([4, 2], new LevelBlock(''));
 
