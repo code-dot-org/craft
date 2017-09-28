@@ -195,6 +195,20 @@ module.exports = class LevelView {
       "pistonArmUp": ["blocks", "piston_arm_up", -26, -13],
       "pistonArmDown": ["blocks", "piston_arm_down", -26, -13],
 
+      "pistonUpSticky": ["blocks", "piston_up", -13, 0],
+      "pistonDownSticky": ["blocks", "piston_down_sticky", -13, 0],
+      "pistonLeftSticky": ["blocks", "piston_left", -13, 0],
+      "pistonRightSticky": ["blocks", "piston_right", -13, 0],
+      "pistonUpOnSticky": ["blocks", "piston_base_up", -26, -13],
+      "pistonDownOnSticky": ["blocks", "piston_base_down_sticky", -26, -13],
+      "pistonLeftOnSticky": ["blocks", "piston_base_left", -26, -13],
+      "pistonRightOnSticky": ["blocks", "piston_base_right", -26, -13],
+
+      "pistonArmLeftSticky": ["blocks", "piston_arm_left", -26, -13],
+      "pistonArmRightSticky": ["blocks", "piston_arm_right", -26, -13],
+      "pistonArmUpSticky": ["blocks", "piston_arm_up", -26, -13],
+      "pistonArmDownSticky": ["blocks", "piston_arm_down_sticky", -26, -13],
+
       "cactus": ["blocks", "cactus", -13, 0],
       "dead_bush": ["blocks", "dead_bush", -13, 0],
       "glowstone": ["blocks", "glowstone", -13, 0],
@@ -777,6 +791,34 @@ module.exports = class LevelView {
     tween.start();
   }
 
+  playMoveBackwardAnimation(entity, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, animation, completionHandler) {
+    let tween;
+    let position = entity.position;
+
+    //stepping on stone sfx
+    this.playBlockSound(groundType);
+
+    this.setSelectionIndicatorPosition(position[0], position[1]);
+    //make sure to render high for when moving up after placing a block
+    var zOrderYIndex = position[1] + (facing === FacingDirection.North ? 1 : 0);
+    entity.sprite.sortOrder = this.yToIndex(zOrderYIndex) + 5;
+
+    if (!shouldJumpDown) {
+      const animName = animation + this.getDirectionName(facing);
+      this.playScaledSpeed(entity.sprite.animations, animName);
+      tween = this.addResettableTween(entity.sprite).to(
+        this.positionToScreen(position, isOnBlock, entity), 180, Phaser.Easing.Linear.None);
+    } else {
+      tween = this.playPlayerJumpDownVerticalAnimation(facing, position, oldPosition);
+    }
+
+    tween.onComplete.add(() => {
+      completionHandler();
+    });
+
+    tween.start();
+  }
+
   /**
    * Animate the player jumping down from on top of a block to ground level.
    * @param {FacingDirection} facing
@@ -804,14 +846,18 @@ module.exports = class LevelView {
     return tween;
   }
 
-  playPlaceBlockAnimation(position, facing, blockType, blockTypeAtPosition, completionHandler) {
+  skipHopAnimation(blockType) {
+    return blockType === "cropWheat" || blockType === "torch" || blockType.startsWith("rail") || blockType.startsWith("redstoneWire");
+  }
+
+  playPlaceBlockAnimation(position, facing, blockType, blockTypeAtPosition, entity, completionHandler) {
     var jumpAnimName;
     let blockIndex = this.yToIndex(position[1]) + position[0];
 
-    if (blockType === "cropWheat" || blockType === "torch" || blockType.startsWith("rail") || blockType.startsWith("redstoneWire")) {
+    if (entity === this.agent || this.skipHopAnimation(blockType)) {
       this.setSelectionIndicatorPosition(position[0], position[1]);
 
-      var signalDetacher = this.playPlayerAnimation("punch", position, facing, false).onComplete.add(() => {
+      var signalDetacher = this.playPlayerAnimation("punch", position, facing, false, entity).onComplete.add(() => {
         signalDetacher.detach();
         completionHandler();
       });
@@ -1062,12 +1108,16 @@ module.exports = class LevelView {
         if (!this.controller.getIsDirectPlayerControl()) {
           this.playPlayerAnimation("idle", playerPosition, facing, false, entity);
         }
-        this.playItemDropAnimation(destroyPosition, blockType, completionHandler);
+        if (completionHandler !== null) {
+          this.playItemDropAnimation(destroyPosition, blockType, completionHandler);
+        }
       }
     });
     this.playScaledSpeed(explodeAnim.animations, "explode");
     if (this.controller.getIsDirectPlayerControl() ^ !placeBlock) {
-      completionHandler();
+      if (completionHandler) {
+        completionHandler();
+      }
     }
   }
 
@@ -1078,7 +1128,9 @@ module.exports = class LevelView {
     }
 
     if (this.controller.getIsDirectPlayerControl()) {
-      completionHandler();
+      if (completionHandler) {
+        completionHandler();
+      }
     } else {
       this.onAnimationEnd(this.playScaledSpeed(sprite.animations, "animate"), () => {
         const player = this.controller.levelModel.player;
@@ -1114,7 +1166,9 @@ module.exports = class LevelView {
           (this.player.inventory[blockType] || 0) + 1;
         sprite.kill();
         this.toDestroy.push(sprite);
-        completionHandler();
+        if (completionHandler) {
+          completionHandler();
+        }
       } else {
         this.playItemAcquireAnimation(this.player.position, this.player.facing, sprite, completionHandler, blockType);
       }
@@ -1578,7 +1632,7 @@ module.exports = class LevelView {
       frameList.push(this.playerFrameName(offset + 1));
     }
     entity.sprite.animations.add('idlePause' + direction, frameList, frameRate / 3, false).onComplete.add(() => {
-      this.playRandomPlayerIdle(FacingDirection.South);
+      this.playRandomPlayerIdle(facing);
     });
 
     entity.sprite.animations.add('walk' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 13, offset + 20, "", 3), frameRate, true);

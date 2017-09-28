@@ -34,10 +34,10 @@ module.exports = class LevelModel {
   }
 
   reset() {
-    this.groundPlane = new LevelPlane(this.initialLevelData.groundPlane, this.planeWidth, this.planeHeight, this.controller, this);
-    this.groundDecorationPlane = new LevelPlane(this.initialLevelData.groundDecorationPlane, this.planeWidth, this.planeHeight, this.controller, this);
+    this.groundPlane = new LevelPlane(this.initialLevelData.groundPlane, this.planeWidth, this.planeHeight, this.controller, this, "groundPlane");
+    this.groundDecorationPlane = new LevelPlane(this.initialLevelData.groundDecorationPlane, this.planeWidth, this.planeHeight, this.controller, this, "decorationPlane");
     this.shadingPlane = [];
-    this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, this.controller, this, true);
+    this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, this.controller, this, "actionPlane");
 
     this.actionPlane.getAllPositions().forEach((position) => {
       if (this.actionPlane.getBlockAt(position).blockType === "railsRedstoneTorch") {
@@ -355,6 +355,31 @@ module.exports = class LevelModel {
     return [cx, cy];
   }
 
+  getMoveBackwardPosition(entity = this.player) {
+    var cx = entity.position[0],
+      cy = entity.position[1];
+
+    switch (entity.facing) {
+      case FacingDirection.North:
+        ++cy;
+        break;
+
+      case FacingDirection.South:
+        --cy;
+        break;
+
+      case FacingDirection.West:
+        ++cx;
+        break;
+
+      case FacingDirection.East:
+        --cx;
+        break;
+    }
+
+    return [cx, cy];
+  }
+
   getPushBackPosition(entity, pushedByFacing) {
     var cx = entity.position[0],
       cy = entity.position[1];
@@ -602,6 +627,11 @@ module.exports = class LevelModel {
     return this.isPositionEmpty([x, y], entity);
   }
 
+  canMoveBackward(entity = this.player) {
+    const [x, y] = this.getMoveBackwardPosition(entity);
+    return this.isPositionEmpty([x, y], entity);
+  }
+
   isPositionEmpty(position, entity = this.player) {
     var result = [false,];
     let [x, y] = position;
@@ -713,6 +743,11 @@ module.exports = class LevelModel {
     this.moveTo(blockForwardPosition, entity);
   }
 
+  moveBackward(entity = this.player) {
+    let blockBackwardPosition = this.getMoveBackwardPosition(entity);
+    this.moveTo(blockBackwardPosition, entity);
+  }
+
   moveTo(position, entity = this.player) {
     entity.position = position;
 
@@ -771,26 +806,23 @@ module.exports = class LevelModel {
     this.moveForward();
   }
 
-  placeBlock(blockType) {
-    const position = this.player.position;
-    let shouldPlace = false;
+  placeBlock(blockType, entity = this.player) {
+    const position = entity.position;
     let placedBlock = null;
 
-    switch (blockType) {
-      case "cropWheat":
-        shouldPlace = this.groundPlane.getBlockAt(position).blockType === "farmlandWet";
-        break;
-
-      default:
-        shouldPlace = true;
-        break;
-    }
-
-    if (shouldPlace === true) {
+    let ground = this.groundPlane.getBlockAt(position);
+    let result = entity.canPlaceBlockOver(blockType, ground.blockType);
+    if (result.canPlace) {
       var block = new LevelBlock(blockType);
-
-      placedBlock = this.actionPlane.setBlockAt(position, block);
-      this.player.isOnBlock = !block.isWalkable;
+      switch (result.plane) {
+        case "actionPlane":
+          placedBlock = this.actionPlane.setBlockAt(position, block);
+          entity.walkableCheck(block);
+          break;
+        case "groundPlane":
+          this.groundPlane.setBlockAt(position, block);
+          break;
+      }
     }
 
     return placedBlock;

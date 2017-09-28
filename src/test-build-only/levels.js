@@ -31,7 +31,7 @@ window.demoLevels = {
     useAgent: true,
     
     playerStartPosition: [3, 4],
-    agentStartPosition: [6, 5],
+    agentStartPosition: [3, 6],
 
     // up: 0, right: 1, down: 2, left: 3
     playerStartDirection: 1,
@@ -53,16 +53,16 @@ window.demoLevels = {
     },
 
     groundPlane: [
-      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
-      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
-      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
-      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
-      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
-      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
-      "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow", "snow",
-      "ice", "ice", "ice", "ice", "water", "water", "water", "water", "water", "water",
-      "ice", "ice", "ice", "water", "water", "water", "water", "water", "water", "water",
-      "ice", "ice", "water", "water", "water", "water", "water", "water", "water", "water",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
     ],
 
     groundDecorationPlane: [
@@ -79,14 +79,14 @@ window.demoLevels = {
     ],
 
     actionPlane: [
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "treeSpruce", "", "", "", "", "", "", "",
-      "", "", "", "", "treeSpruceSnowy", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
+      "grass", "ice", "grass", "pistonLeft", "redstoneWire", "pressurePlateUp", "redstoneWire", "redstoneWire", "", "",
+      "", "", "", "", "", "", "", "redstoneWire", "", "",
+      "redstoneWire", "redstoneWire", "redstoneWire", "", "", "", "", "grass", "doorIron", "grass",
+      "redstoneWire", "", "redstoneWire", "", "", "", "", "", "", "",
+      "redstoneWire", "redstoneWire", "redstoneWire", "", "", "", "", "", "", "",
+      "redstoneWire", "", "redstoneWire", "", "", "", "", "", "", "",
+      "redstoneWire", "redstoneWire", "redstoneWire", "", "", "", "", "", "", "",
+      "", "railsRedstoneTorch", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
     ],

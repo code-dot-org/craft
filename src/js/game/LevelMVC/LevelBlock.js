@@ -17,6 +17,7 @@ module.exports = class LevelBlock {
     this.isRedstoneBattery = false;
     this.isOpen = false;
     this.isRail = false;
+    this.isSolid = true;
 
     if (blockType === "") {
       this.isWalkable = true;
@@ -58,6 +59,14 @@ module.exports = class LevelBlock {
       this.isEntity = true;
       this.isDestroyable = false;
       this.isUsable = true;
+    }
+
+    if (blockType.startsWith("glass")) {
+      this.isSolid = false;
+    }
+
+    if (blockType.startsWith("ice")) {
+      this.isSolid = false;
     }
 
     if (blockType === "creeper") {
@@ -106,6 +115,7 @@ module.exports = class LevelBlock {
     }
 
     if (blockType === "door") {
+      this.isSolid = false;
       this.isEntity = true;
       this.isWalkable = false;
       this.isUsable = true;
@@ -114,6 +124,7 @@ module.exports = class LevelBlock {
     }
 
     if (blockType === "doorIron") {
+      this.isSolid = false;
       this.isEntity = true;
       this.isWalkable = false;
       this.isDestroyable = false;
@@ -144,12 +155,23 @@ module.exports = class LevelBlock {
     }
 
     if (blockType.startsWith("piston")) {
+      this.isSolid = false;
       this.isDestroyable = false;
       this.isConnectedToRedstone = !blockType.startsWith("pistonArm");
-      if (blockType.substring(blockType.length - 2, blockType.length) === "On" || blockType.startsWith("pistonArm")) {
+      if (blockType.substring(blockType.length - 2, blockType.length) === "On" ||
+        blockType.startsWith("pistonArm") ||
+        blockType.substring(blockType.length - 8, blockType.length) === "OnSticky"
+      ) {
         this.isEntity = true;
       }
     }
+  }
+
+  getIsStickyPiston() {
+    return this.blockType.substring(this.blockType.length - 6, this.blockType.length) === "Sticky";
+  }
+  canHoldCharge() {
+    return this.isSolid;
   }
 
   /**
@@ -161,6 +183,14 @@ module.exports = class LevelBlock {
 
   getIsTree() {
     return !!this.blockType.match(/^tree/);
+  }
+
+  getIsPushable() {
+    return this.blockType !== "" && !this.blockType.startsWith("redstone") && !this.blockType.startsWith("door");
+  }
+
+  isDestroyableUponPush() {
+    return this.blockType.startsWith("redstone") || this.blockType.startsWith("door");
   }
 
   needToRefreshRedstone(){

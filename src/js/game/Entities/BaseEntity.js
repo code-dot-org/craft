@@ -60,6 +60,12 @@ module.exports = class BaseEntity {
 
     }
 
+  /**
+   * player walkable stuff
+   */
+  walkableCheck() {
+    //do nothing
+  }
 
     updateHidingTree() {
         var levelView = this.controller.levelView;
@@ -190,6 +196,27 @@ module.exports = class BaseEntity {
             this.bump(commandQueueItem);
             this.callBumpEvents(forwardPositionInformation);
         }
+    }
+
+    moveBackward(commandQueueItem, record = true) {
+        if (record) {
+            this.controller.addCommandRecord("moveBackward", this.type, commandQueueItem.repeat);
+        }
+        let backwardPosition = this.controller.levelModel.getMoveBackwardPosition(this);
+        var backwardPositionInformation = this.controller.levelModel.canMoveBackward(this);
+        if (backwardPositionInformation[0]) {
+            this.doMoveBackward(commandQueueItem, backwardPosition);
+        } else {
+            this.bump(commandQueueItem);
+            this.callBumpEvents(backwardPositionInformation);
+        }
+    }
+
+    /**
+     * check whether or not the given entity can place a block
+     */
+    canPlaceBlockOver() {
+      return { canPlace: false, plane: '' };
     }
 
     /**
