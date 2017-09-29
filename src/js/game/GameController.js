@@ -822,11 +822,12 @@ class GameController {
 
   moveDirection(commandQueueItem, direction) {
     let player = this.getEntity(commandQueueItem.target);
+
     let isMovingOffOf = this.levelModel.isEntityOnBlocktype(commandQueueItem.target, "pressurePlateDown");
     if (isMovingOffOf) {
       let position = player.position;
       let block = new LevelBlock('pressurePlateUp');
-      let offset = this.directionToOffet(direction);
+      let offset = this.directionToOffset(direction);
       this.levelModel.actionPlane.setBlockAt(position, block, offset[0], offset[1]);
     }
     let outOfDoor = this.levelModel.isEntityOnBlocktype(commandQueueItem.target, "doorIron");
@@ -854,13 +855,14 @@ class GameController {
       }
       commandQueueItem.succeeded();
     }
+
     let isMovingOnToPlate = this.levelModel.isEntityOnBlocktype(commandQueueItem.target, "pressurePlateUp");
     let destinationBlock = this.levelModel.actionPlane.getBlockAt(player.position);
     if (isMovingOnToPlate) {
       let position = player.position;
       let block = new LevelBlock('pressurePlateDown');
       direction = (direction + 2) % 4;
-      let offset = this.directionToOffet(direction);
+      let offset = this.directionToOffset(direction);
       this.levelModel.actionPlane.setBlockAt(position, block, offset[0], offset[1]);
     } else {
       if (outOfDoor && destinationBlock.blockType !== "doorIron") {
@@ -869,7 +871,7 @@ class GameController {
     }
   }
 
-  directionToOffet(direction) {
+  directionToOffset(direction) {
     let offset = [0,0];
     // Direction will ever only not be null if we're calling this as a
     // function of player movement.
