@@ -68,17 +68,42 @@ module.exports = class LevelModel {
       this.controller.player = this.player;
 
       if (levelData.useAgent) {
-        this.usingAgent = levelData.useAgent;
-        [x, y] = levelData.agentStartPosition;
-        const startingBlock = this.actionPlane.getBlockAt(levelData.agentStartPosition);
-        this.agent = new Agent(this.controller, "PlayerAgent", x, y, "Agent", !startingBlock.getIsEmptyOrEntity(), levelData.agentStartDirection);
-        this.controller.levelEntity.pushEntity(this.agent);
-        this.controller.agent = this.agent;
+        this.doAgentSpawn(levelData);
       }
     }
 
     this.computeShadingPlane();
     this.computeFowPlane();
+  }
+
+  doAgentSpawn(levelData = null, aX = -1, aY = -1) {
+    this.usingAgent = true;
+    let [x, y] = [0, 0];
+    let direction = 0;
+    let name = "";
+    let key = "";
+    if (levelData !== null) {
+      [x, y] = levelData.agentStartPosition;
+      direction = levelData.agentStartDirection;
+      name = "PlayerAgent";
+      key = "Agent";
+      const startingBlock = this.actionPlane.getBlockAt([x, y]);
+      this.agent = new Agent(this.controller, name, x, y, key, !startingBlock.getIsEmptyOrEntity(), direction);
+      this.controller.levelEntity.pushEntity(this.agent);
+      this.controller.agent = this.agent;
+    }
+    if (aX !== -1 && aY !== -1) {
+      [x, y] = [aX, aY];
+      direction = 2;
+      name = "PlayerAgent";
+      key = "Agent";
+      const startingBlock = this.actionPlane.getBlockAt([x, y]);
+      this.agent = new Agent(this.controller, name, x, y, key, !startingBlock.getIsEmptyOrEntity(), direction);
+      this.controller.levelEntity.pushEntity(this.agent);
+      this.controller.agent = this.agent;
+
+      this.controller.levelView.reset(this);
+    }
   }
 
   yToIndex(y) {
