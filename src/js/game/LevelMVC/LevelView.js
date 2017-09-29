@@ -1657,6 +1657,10 @@ module.exports = class LevelView {
       frameList;
 
     const frame = LevelBlock.getMiniblockFrame(blockType);
+    if (!frame) {
+      return sprite;
+    }
+
     const atlas = "miniBlocks";
     const framePrefix = this.miniBlocks[frame][0];
     const frameStart = this.miniBlocks[frame][1];
