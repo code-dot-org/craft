@@ -184,7 +184,7 @@ module.exports = class LevelBlock {
   }
 
   getIsPushable() {
-    return this.blockType !== "" && !this.blockType.startsWith("redstone") && !this.blockType.startsWith("door");
+    return this.blockType !== "" && !this.blockType.startsWith("redstone") && !this.blockType.startsWith("door") && !this.blockType.startsWith("railsRedstone");
   }
 
   isDestroyableUponPush() {
