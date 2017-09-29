@@ -1239,7 +1239,6 @@ class GameController {
         });
       });
     } else if (frontBlock.isRail) {
-      player.onTracks = true;
       this.levelView.playTrack(frontPosition, player.facing, true, player, null);
       commandQueueItem.succeeded();
     } else {
