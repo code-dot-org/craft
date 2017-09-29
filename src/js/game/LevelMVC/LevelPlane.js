@@ -610,15 +610,8 @@ module.exports = class LevelPlane {
     for (let i = blocksPositions.length - 1; i >= 0; --i) {
       let destination = [blocksPositions[i][0] + offsetX, blocksPositions[i][1] + offsetY];
       let block = this.getBlockAt(blocksPositions[i]);
-      if (block.isDestroyableUponPush() || (this.inBounds(destination) && this.getBlockAt(destination).isDestroyableUponPush())) {
-        let newBlock = undefined;
-        if (block.isDestroyableUponPush()) {
-          newBlock = this.getBlockAt(blocksPositions[i - 1]);
-          this.setBlockAt(blocksPositions[i], new LevelBlock(newBlock.blockType));
-          this.levelModel.controller.levelView.playExplosionAnimation(blocksPositions[i], 2, blocksPositions[i], newBlock.blockType, null, null, this.player);
-        } else {
-          this.levelModel.controller.levelView.playExplosionAnimation(destination, 2, destination, block.blockType, null, null, this.player);
-        }
+      if ((this.inBounds(destination) && this.getBlockAt(destination).isDestroyableUponPush())) {
+        this.levelModel.controller.levelView.playExplosionAnimation(destination, 2, destination, block.blockType, null, null, this.player);
         redo = true;
       }
       this.setBlockAt(destination, this.getBlockAt(blocksPositions[i]));
@@ -698,6 +691,29 @@ module.exports = class LevelPlane {
     return this.getOrthogonalPositions(position).some(orthogonalPosition => {
       const block = this.getBlockAt(orthogonalPosition);
       if (block) {
+        if (this.getBlockAt(position).blockType.startsWith("piston")) {
+          let piston = this.getBlockAt(position);
+          let direction = piston.blockType.substring(6, 7);
+          let ignoreThisSide = [0, 0];
+          switch (direction) {
+            case "D":
+              ignoreThisSide = [0, 1];
+              break;
+            case "U":
+              ignoreThisSide = [0, -1];
+              break;
+            case "L":
+              ignoreThisSide = [-1, 0];
+              break;
+            case "R":
+              ignoreThisSide = [1, 0];
+              break;
+          }
+          let posCheck = [position[0] + ignoreThisSide[0], position[1] + ignoreThisSide[1]];
+          if (posCheck[0] === orthogonalPosition[0] && posCheck[1] === orthogonalPosition[1]) {
+            return false;
+          }
+        }
         if (canReadCharge) {
           return block.isPowered || block.isRedstoneBattery;
         }
