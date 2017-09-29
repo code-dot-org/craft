@@ -331,7 +331,8 @@ module.exports = class LevelPlane {
 
     this.getAllPositions().forEach((position) => {
       const block = this.getBlockAt(position);
-      if (block.isRedstoneBattery) {
+      if (block.isRedstoneBattery && block.isNeedingToPropagate) {
+        block.isNeedingToPropagate = false;
         this.redstonePropagation(position);
       }
     });
@@ -474,7 +475,14 @@ module.exports = class LevelPlane {
         break;
       }
     }
-    if (workingNeighbor.blockType !== "" && !workingNeighbor.blockType.startsWith("pistonArm")) {
+
+
+    // Break an object right in front of the piston.
+    if (workingNeighbor.isDestroyableUponPush()) {
+      this.setBlockAt(pos, new LevelBlock(""));
+      this.levelModel.controller.levelView.playExplosionAnimation(pos, 2, pos, workingNeighbor.blockType, null, null, this.player);
+    } else if (workingNeighbor.blockType !== "" && !workingNeighbor.blockType.startsWith("pistonArm")) {
+      // We've actually got something to push.
       let blocksPositions = this.getBlocksToPush(pos, offset[0], offset[1]);
       let concat = "On";
       if (this.getBlockAt(position).getIsStickyPiston()) {
@@ -484,6 +492,7 @@ module.exports = class LevelPlane {
       this.setBlockAt(position, onPiston);
       this.pushBlocks(blocksPositions, offset[0], offset[1]);
     } else if (workingNeighbor.blockType === "") {
+      // Nothing to push, so just make the arm.
       let concat = "On";
       if (this.getBlockAt(position).getIsStickyPiston()) {
         concat += "Sticky";
@@ -602,8 +611,15 @@ module.exports = class LevelPlane {
     for (let i = blocksPositions.length - 1; i >= 0; --i) {
       let destination = [blocksPositions[i][0] + offsetX, blocksPositions[i][1] + offsetY];
       let block = this.getBlockAt(blocksPositions[i]);
-      if (this.inBounds(destination) && this.getBlockAt(destination).isDestroyableUponPush()) {
-        this.levelModel.controller.levelView.playExplosionAnimation(destination, 2, destination, block.blockType, null, null, this.player);
+      if (block.isDestroyableUponPush() || (this.inBounds(destination) && this.getBlockAt(destination).isDestroyableUponPush())) {
+        let newBlock = undefined;
+        if (block.isDestroyableUponPush()) {
+          newBlock = this.getBlockAt(blocksPositions[i - 1]);
+          this.setBlockAt(blocksPositions[i], new LevelBlock(newBlock.blockType));
+          this.levelModel.controller.levelView.playExplosionAnimation(blocksPositions[i], 2, blocksPositions[i], newBlock.blockType, null, null, this.player);
+        } else {
+          this.levelModel.controller.levelView.playExplosionAnimation(destination, 2, destination, block.blockType, null, null, this.player);
+        }
         redo = true;
       }
       this.setBlockAt(destination, this.getBlockAt(blocksPositions[i]));

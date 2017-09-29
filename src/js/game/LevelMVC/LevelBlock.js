@@ -15,6 +15,7 @@ module.exports = class LevelBlock {
     this.isPowered = false;
     this.isConnectedToRedstone = false; // can this block connect to nearby redstone wire
     this.isRedstoneBattery = false;
+    this.isNeedingToPropagate = true;
     this.isOpen = false;
     this.isSolid = true;
 
@@ -188,7 +189,7 @@ module.exports = class LevelBlock {
   }
 
   isDestroyableUponPush() {
-    return this.blockType.startsWith("redstone") || this.blockType.startsWith("door");
+    return this.blockType.startsWith("redstone") || this.blockType.startsWith("door") || this.blockType.startsWith("railsRedstone");
   }
 
   needToRefreshRedstone(){
