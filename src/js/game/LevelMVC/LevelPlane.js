@@ -331,8 +331,7 @@ module.exports = class LevelPlane {
 
     this.getAllPositions().forEach((position) => {
       const block = this.getBlockAt(position);
-      if (block.isRedstoneBattery && block.isNeedingToPropagate) {
-        block.isNeedingToPropagate = false;
+      if (block.isRedstoneBattery) {
         this.redstonePropagation(position);
       }
     });
