@@ -152,6 +152,10 @@ module.exports = class LevelBlock {
       this.isEntity = true;
     }
 
+    if (blockType.startsWith("bed")) {
+      this.isEntity = true;
+    }
+
     if (blockType.startsWith("piston")) {
       this.isSolid = false;
       this.isDestroyable = false;
