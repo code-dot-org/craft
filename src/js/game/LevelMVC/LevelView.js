@@ -613,7 +613,7 @@ module.exports = class LevelView {
   }
 
   playTrack(position, facing, isOnBlock, entity = this.player, completionHandler) {
-    let  track = this.controller.levelModel.actionPlane.getMinecartTrack(position, facing);
+    const track = this.controller.levelModel.actionPlane.getMinecartTrack(position, facing);
 
     if (!track) {
       entity.onTracks = false;
