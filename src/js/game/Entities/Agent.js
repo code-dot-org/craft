@@ -109,8 +109,6 @@ module.exports = class Agent extends BaseEntity {
 
     this.updateHidingTree();
     this.updateHidingBlock(prevPosition);
-    this.collectItems(prevPosition);
-    this.collectItems();
   }
 
   doMoveBackward(commandQueueItem) {
@@ -152,8 +150,6 @@ module.exports = class Agent extends BaseEntity {
 
     this.updateHidingTree();
     this.updateHidingBlock(prevPosition);
-    this.collectItems(prevPosition);
-    this.collectItems();
   }
 
   bump(commandQueueItem) {
@@ -175,28 +171,6 @@ module.exports = class Agent extends BaseEntity {
     this.controller.delayPlayerMoveBy(200, 400, () => {
       commandQueueItem.succeeded();
     });
-  }
-
-  collectItems(targetPosition = this.position) {
-    // collectible check
-    var collectibles = this.controller.levelView.collectibleItems;
-    var distanceBetween = function (position, position2) {
-      return Math.sqrt(Math.pow(position[0] - position2[0], 2) + Math.pow(position[1] - position2[1], 2));
-    };
-    for (var i = 0; i < collectibles.length; i++) {
-      let sprite = collectibles[i][0];
-      // already collected item
-      if (sprite === null) {
-        collectibles.splice(i, 1);
-
-      } else {
-        let collectiblePosition = this.controller.levelModel.spritePositionToIndex(collectibles[i][1], [sprite.x, sprite.y]);
-        if (distanceBetween(targetPosition, collectiblePosition) < 2) {
-          this.controller.levelView.playItemAcquireAnimation(this.position, this.facing, sprite, () => { }, collectibles[i][2]);
-          collectibles.splice(i, 1);
-        }
-      }
-    }
   }
 
   takeDamage(callbackCommand) {
