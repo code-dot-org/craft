@@ -801,7 +801,10 @@ class GameController {
   }
 
   moveForward(commandQueueItem) {
-    let target = commandQueueItem.target;
+    const target = commandQueueItem.target;
+    const moveOffset = this.directionToOffset(target.facing);
+    this.handleMoveOffPressurePlate(commandQueueItem, moveOffset);
+
     if (!this.isType(target)) {
       // apply to all entities
       if (target === undefined) {
@@ -824,10 +827,16 @@ class GameController {
       }
       commandQueueItem.succeeded();
     }
+
+    this.handleMoveOnPressurePlate(commandQueueItem, moveOffset);
+    this.handleMoveOffIronDoor(commandQueueItem, moveOffset);
   }
 
   moveBackward(commandQueueItem) {
-    let target = commandQueueItem.target;
+    const target = commandQueueItem.target;
+    const moveOffset = this.directionToOffset(FacingDirection.opposite(target.facing));
+    this.handleMoveOffPressurePlate(commandQueueItem, moveOffset);
+
     if (!this.isType(target)) {
       // apply to all entities
       if (target === undefined) {
@@ -850,6 +859,9 @@ class GameController {
       }
       commandQueueItem.succeeded();
     }
+
+    this.handleMoveOnPressurePlate(commandQueueItem, moveOffset);
+    this.handleMoveOffIronDoor(commandQueueItem, moveOffset);
   }
 
   moveDirection(commandQueueItem, direction) {
