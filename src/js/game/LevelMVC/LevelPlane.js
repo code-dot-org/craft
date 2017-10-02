@@ -558,19 +558,18 @@ module.exports = class LevelPlane {
     let offPiston = new LevelBlock(newPistonType);
     if (this.getBlockAt(armPosition).blockType.startsWith("pistonArm")) {
       if (this.getBlockAt(pistonPosition).getIsStickyPiston()) {
-        let direction = pistonType.blockType.substring(6, 7);
         let stuckBlockPosition = [armPosition[0], armPosition[1]];
-        switch (direction) {
-          case "D":
+        switch (pistonType.getPistonDirection()) {
+          case "South":
             stuckBlockPosition[1] += 1;
             break;
-          case "U":
+          case "North":
             stuckBlockPosition[1] -= 1;
             break;
-          case "L":
+          case "West":
             stuckBlockPosition[0] -= 1;
             break;
-          case "R":
+          case "East":
             stuckBlockPosition[0] += 1;
             break;
         }
@@ -610,7 +609,7 @@ module.exports = class LevelPlane {
     for (let i = blocksPositions.length - 1; i >= 0; --i) {
       let destination = [blocksPositions[i][0] + offsetX, blocksPositions[i][1] + offsetY];
       let block = this.getBlockAt(blocksPositions[i]);
-      if ((this.inBounds(destination) && this.getBlockAt(destination).isDestroyableUponPush())) {
+      if (this.inBounds(destination) && this.getBlockAt(destination).isDestroyableUponPush()) {
         this.levelModel.controller.levelView.playExplosionAnimation(destination, 2, destination, block.blockType, null, null, this.player);
         redo = true;
       }
@@ -693,19 +692,18 @@ module.exports = class LevelPlane {
       if (block) {
         if (this.getBlockAt(position).blockType.startsWith("piston")) {
           let piston = this.getBlockAt(position);
-          let direction = piston.blockType.substring(6, 7);
           let ignoreThisSide = [0, 0];
-          switch (direction) {
-            case "D":
+          switch (piston.getPistonDirection()) {
+            case "South":
               ignoreThisSide = [0, 1];
               break;
-            case "U":
+            case "North":
               ignoreThisSide = [0, -1];
               break;
-            case "L":
+            case "West":
               ignoreThisSide = [-1, 0];
               break;
-            case "R":
+            case "East":
               ignoreThisSide = [1, 0];
               break;
           }

@@ -184,7 +184,7 @@ module.exports = class LevelBlock {
   }
 
   getIsPushable() {
-    return this.blockType !== "" && !this.blockType.startsWith("redstone") && !this.blockType.startsWith("door") && !this.blockType.startsWith("railsRedstone");
+    return this.blockType !== "" && !this.isDestroyableUponPush();
   }
 
   isDestroyableUponPush() {
@@ -196,6 +196,22 @@ module.exports = class LevelBlock {
       return true;
     } else {
       return false;
+    }
+  }
+
+  getPistonDirection() {
+    if (this.blockType.startsWith("piston")) {
+      let direction = this.blockType.substring(6, 7);
+      switch (direction) {
+        case "D":
+          return "South";
+        case "U":
+          return "North";
+        case "L":
+          return "West";
+        case "R":
+          return "East";
+      }
     }
   }
 
