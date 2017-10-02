@@ -68,7 +68,7 @@ module.exports = class LevelModel {
       this.controller.player = this.player;
 
       if (levelData.useAgent) {
-        this.doAgentSpawn(levelData);
+        this.spawnAgent(levelData);
       }
     }
 
@@ -76,13 +76,13 @@ module.exports = class LevelModel {
     this.computeFowPlane();
   }
 
-  doAgentSpawn(levelData = null, aX = -1, aY = -1) {
+  spawnAgent(levelData, positionOverride, directionOverride) {
     this.usingAgent = true;
     let [x, y] = [0, 0];
     let direction = 0;
     let name = "";
     let key = "";
-    if (levelData !== null) {
+    if (levelData) {
       [x, y] = levelData.agentStartPosition;
       direction = levelData.agentStartDirection;
       name = "PlayerAgent";
@@ -91,10 +91,9 @@ module.exports = class LevelModel {
       this.agent = new Agent(this.controller, name, x, y, key, !startingBlock.getIsEmptyOrEntity(), direction);
       this.controller.levelEntity.pushEntity(this.agent);
       this.controller.agent = this.agent;
-    }
-    if (aX !== -1 && aY !== -1) {
-      [x, y] = [aX, aY];
-      direction = 2;
+    } else if (positionOverride !== undefined) {
+      [x, y] = positionOverride;
+      direction = directionOverride;
       name = "PlayerAgent";
       key = "Agent";
       const startingBlock = this.actionPlane.getBlockAt([x, y]);

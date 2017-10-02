@@ -1540,7 +1540,7 @@ class GameController {
         this.levelView.playMinecartAnimation(player.isOnBlock,
           () => { this.handleEndState(true); }, this.levelModel.getUnpoweredRails());
       } else if (this.checkAgentSpawn()) {
-        this.levelModel.doAgentSpawn(null, 3, 2);
+        this.levelModel.spawnAgent(null, [3, 2], 2); // This will spawn the Agent at [3, 2], facing South.
       } else if (this.checkTntAnimation()) {
         this.resultReported = true;
         this.levelView.scaleShowWholeWorld(() => {});
