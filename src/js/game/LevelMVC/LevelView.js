@@ -58,6 +58,60 @@ module.exports = class LevelView {
       "milk": ["Miniblocks", 186, 191],
       "egg": ["Miniblocks", 192, 197],
       "poppy": ["Miniblocks", 198, 203],
+      "daisy": ["Miniblocks", 204, 209],
+      "dandelion": ["Miniblocks", 210, 215],
+      "bed": ["Miniblocks", 216, 221],
+      "cactus": ["Miniblocks", 222, 227],
+      "clay": ["Miniblocks", 228, 233],
+      "deadbush": ["Miniblocks", 234, 239],
+      "doorIron": ["Miniblocks", 240, 245],
+      "doorOak": ["Miniblocks", 246, 251],
+      "glowstoneDust": ["Miniblocks", 252, 257],
+      "hardenedClay": ["Miniblocks", 258, 263],
+      "hardenedClayBlack": ["Miniblocks", 264, 269],
+      "hardenedClayBlue": ["Miniblocks", 270, 275],
+      "hardenedClayBrown": ["Miniblocks", 276, 281],
+      "hardenedClayCyan": ["Miniblocks", 282, 287],
+      "hardenedClayGray": ["Miniblocks", 288, 293],
+      "hardenedClayGreen": ["Miniblocks", 294, 299],
+      "hardenedClayLightBlue": ["Miniblocks", 300, 305],
+      "hardenedClayLime": ["Miniblocks", 306, 311],
+      "hardenedClayMagenta": ["Miniblocks", 312, 317],
+      "hardenedClayOrange": ["Miniblocks", 318, 323],
+      "hardenedClayPink": ["Miniblocks", 324, 329],
+      "hardenedClayPurple": ["Miniblocks", 330, 335],
+      "hardenedClayRed": ["Miniblocks", 336, 341],
+      "hardenedClaySilver": ["Miniblocks", 342, 347],
+      "hardenedClayWhite": ["Miniblocks", 348, 353],
+      "hardenedClayYellow": ["Miniblocks", 354, 359],
+      "netherbrick": ["Miniblocks", 360, 365],
+      "netherrack": ["Miniblocks", 366, 371],
+      "obsidian": ["Miniblocks", 372, 377],
+      "piston": ["Miniblocks", 378, 383],
+      "pressurePlateOak": ["Miniblocks", 384, 389],
+      "netherQuartz": ["Miniblocks", 390, 395],
+      "railGolden": ["Miniblocks", 396, 401],
+      "railNormal": ["Miniblocks", 402, 407],
+      "redstoneTorch": ["Miniblocks", 408, 413],
+      "reeds": ["Miniblocks", 414, 419],
+      "seedsWheat": ["Miniblocks", 420, 425],
+      "snow": ["Miniblocks", 426, 431],
+      "snowBall": ["Miniblocks", 432, 437],
+      "woolBlack": ["Miniblocks", 438, 443],
+      "woolBlue": ["Miniblocks", 444, 449],
+      "woolBrown": ["Miniblocks", 450, 455],
+      "woolCyan": ["Miniblocks", 456, 461],
+      "woolGray": ["Miniblocks", 462, 467],
+      "woolGreen": ["Miniblocks", 468, 473],
+      "woolLightBlue": ["Miniblocks", 474, 479],
+      "woolLime": ["Miniblocks", 480, 485],
+      "woolMagenta": ["Miniblocks", 486, 491],
+      "woolOrange": ["Miniblocks", 492, 497],
+      "woolPink": ["Miniblocks", 498, 503],
+      "woolLPurple": ["Miniblocks", 504, 509],
+      "woolRed": ["Miniblocks", 510, 515],
+      "woolSilver": ["Miniblocks", 516, 521],
+      "woolYellow": ["Miniblocks", 522, 527],
     };
 
     this.blocks = {
@@ -1111,8 +1165,16 @@ module.exports = class LevelView {
     }
   }
 
+  // Ice and glass blocks do not drop mini-blocks in Minecraft.
+  shouldDropMiniBlock(blockType) {
+    return !blockType.startsWith("ice") && !blockType.startsWith("glass");
+  }
+
   playItemDropAnimation(destroyPosition, blockType, completionHandler) {
-    var sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
+    var sprite = null;
+    if (this.shouldDropMiniBlock(blockType)) {
+      sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
+    }
     if (sprite) {
       sprite.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     }

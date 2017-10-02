@@ -231,7 +231,7 @@ module.exports = class LevelBlock {
   static getMiniblockFrame(blockType) {
     // We don't have rails miniblock assets yet.
     if (blockType.startsWith("rails")) {
-      return;
+      return "railNormal";
     }
 
     // We use the same miniblock for -all- restoneWire
