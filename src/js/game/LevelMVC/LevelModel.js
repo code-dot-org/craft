@@ -49,6 +49,9 @@ module.exports = class LevelModel {
       if (this.actionPlane.getBlockAt(position).blockType.substring(0,12) === "redstoneWire") {
         this.actionPlane.determineRedstoneSprite(position);
       }
+      if (this.actionPlane.getBlockAt(position).isRail) {
+        this.actionPlane.determineRailType(position);
+      }
     });
 
     this.fluffPlane = new LevelPlane(this.initialLevelData.fluffPlane, this.planeWidth, this.planeHeight);

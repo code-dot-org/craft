@@ -1238,6 +1238,9 @@ class GameController {
           commandQueueItem.succeeded();
         });
       });
+    } else if (frontBlock.isRail) {
+      this.levelView.playTrack(frontPosition, player.facing, true, player, null);
+      commandQueueItem.succeeded();
     } else {
       this.levelView.playPunchDestroyAirAnimation(player.position, player.facing, this.levelModel.getMoveForwardPosition(), () => {
         this.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]);

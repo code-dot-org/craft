@@ -16,6 +16,7 @@ module.exports = class LevelBlock {
     this.isConnectedToRedstone = false; // can this block connect to nearby redstone wire
     this.isRedstoneBattery = false;
     this.isOpen = false;
+    this.isRail = false;
     this.isSolid = true;
 
     if (blockType === "") {

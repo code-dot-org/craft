@@ -608,14 +608,16 @@ module.exports = class LevelView {
 
     animation.onComplete.add(() => {
       this.activateUnpoweredRails(unpoweredRails);
-      this.playTrack(position, this.player.facing, isOnBlock, completionHandler);
+      this.playTrack(position, this.player.facing, isOnBlock, this.player, completionHandler);
     });
   }
 
-  playTrack(position, facing, isOnBlock, completionHandler) {
+  playTrack(position, facing, isOnBlock, entity = this.player, completionHandler) {
+    entity.onTracks = true;
     const track = this.controller.levelModel.actionPlane.getMinecartTrack(position, facing);
 
     if (!track) {
+      entity.onTracks = false;
       if (completionHandler) {
         completionHandler();
       }
@@ -631,11 +633,11 @@ module.exports = class LevelView {
       direction = arraydirection.substring(5);
       const isUp = facing === FacingDirection.North || nextFacing === FacingDirection.North;
       this.onAnimationEnd(this.playMinecartTurnAnimation(position, isUp, isOnBlock, completionHandler, direction), () => {
-        this.playTrack(nextPosition, nextFacing, isOnBlock, completionHandler);
+        this.playTrack(nextPosition, nextFacing, isOnBlock, entity, completionHandler);
       });
     } else {
       this.onAnimationEnd(this.playMinecartMoveForwardAnimation(position, facing, isOnBlock, completionHandler, nextPosition, speed), () => {
-        this.playTrack(nextPosition, nextFacing, isOnBlock, completionHandler);
+        this.playTrack(nextPosition, nextFacing, isOnBlock, entity, completionHandler);
       });
     }
   }
