@@ -562,16 +562,16 @@ module.exports = class LevelPlane {
       if (this.getBlockAt(pistonPosition).getIsStickyPiston()) {
         let stuckBlockPosition = [armPosition[0], armPosition[1]];
         switch (pistonType.getPistonDirection()) {
-          case "South":
+          case South:
             stuckBlockPosition[1] += 1;
             break;
-          case "North":
+          case North:
             stuckBlockPosition[1] -= 1;
             break;
-          case "West":
+          case West:
             stuckBlockPosition[0] -= 1;
             break;
-          case "East":
+          case East:
             stuckBlockPosition[0] += 1;
             break;
         }
@@ -698,16 +698,16 @@ module.exports = class LevelPlane {
           let piston = this.getBlockAt(position);
           let ignoreThisSide = [0, 0];
           switch (piston.getPistonDirection()) {
-            case "South":
+            case South:
               ignoreThisSide = [0, 1];
               break;
-            case "North":
+            case North:
               ignoreThisSide = [0, -1];
               break;
-            case "West":
+            case West:
               ignoreThisSide = [-1, 0];
               break;
-            case "East":
+            case East:
               ignoreThisSide = [1, 0];
               break;
           }

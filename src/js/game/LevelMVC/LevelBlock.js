@@ -1,3 +1,10 @@
+const {
+  North,
+  South,
+  East,
+  West,
+} = require("./FacingDirection.js");
+
 module.exports = class LevelBlock {
   constructor(blockType) {
     this.blockType = blockType;
@@ -204,13 +211,13 @@ module.exports = class LevelBlock {
       let direction = this.blockType.substring(6, 7);
       switch (direction) {
         case "D":
-          return "South";
+          return South;
         case "U":
-          return "North";
+          return North;
         case "L":
-          return "West";
+          return West;
         case "R":
-          return "East";
+          return East;
       }
     }
   }
