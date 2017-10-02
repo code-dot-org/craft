@@ -5,17 +5,15 @@ global.navigator = window.navigator;
 global.document = window.document;
 global.Element = window.Element;
 global.Canvas = require('canvas');
-global.Image = Canvas.Image;
+global.Image = global.Canvas.Image;
 window.CanvasRenderingContext2D = {};
 window.focus = () => {};
 window.scrollTo = () => {};
 global.Phaser = {};
 global.PIXI = require('../../node_modules/phaser/build/pixi');
 global.p2 = require('../../node_modules/phaser/build/p2');
-Phaser = require('phaser');
-Phaser.AnimationManager.prototype.play = function (name) {
-  setTimeout(() => this.getAnimation(name).onComplete.dispatch(), 1000);
-};
+global.Phaser = require('phaser');
+global.Phaser.AnimationManager.prototype.play = () => {};
 
 const LevelView = require('../../src/js/game/LevelMVC/LevelView');
 const LevelModel = require('../../src/js/game/LevelMVC/LevelModel');
@@ -26,6 +24,7 @@ const mockGameController = {
   levelData: {},
   followingPlayer: () => false,
   originalFpsToScaled: () => 60,
+  getIsDirectPlayerControl: () => true,
 };
 
 const levelData = {
@@ -36,7 +35,7 @@ const levelData = {
   gridDimensions: [10, 10],
   fluffPlane: ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],
   playerName: 'Alex',
-  verificationFunction: verificationAPI => {},
+  verificationFunction: () => {},
   groundPlane: ["grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","dirt","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
   groundDecorationPlane: ["","","","","","","","","","","","","","","","","","","flowerRose","","","tallGrass","","","","","","","","tallGrass","","","tallGrass","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","tallGrass","flowerRose","","","","","","","",""],
   actionPlane: ["grass","grass","","","","","","","grass","grass","grass","grass","","","","","","","","grass","grass","","","treeOak","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","treeBirch","","",""],
@@ -48,11 +47,10 @@ const levelData = {
 const levelModel = new LevelModel(levelData, mockGameController);
 
 test('sanity', t => {
-  debugger;
-  const game = new Phaser.Game({
+  const game = new global.Phaser.Game({
     width: 400,
     height: 400,
-    renderer: Phaser.HEADLESS,
+    renderer: global.Phaser.HEADLESS,
     state: 'earlyLoad',
   });
   game.state.add('levelRunner', {
@@ -61,8 +59,11 @@ test('sanity', t => {
       mockGameController.levelModel = levelModel;
       const view = new LevelView(mockGameController);
       view.create(levelModel);
-      console.log(view.actionPlane);
 
+      t.equal(view.player.sprite.position.x, 102);
+      t.equal(view.player.sprite.position.y, 128);
+
+      setTimeout(() => game.destroy(), 0);
       t.end();
     }
   });
