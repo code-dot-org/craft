@@ -479,7 +479,9 @@ module.exports = class LevelPlane {
     // Break an object right in front of the piston.
     if (workingNeighbor.isDestroyableUponPush()) {
       this.setBlockAt(pos, new LevelBlock(""));
-      this.levelModel.controller.levelView.playExplosionAnimation(pos, 2, pos, workingNeighbor.blockType, null, null, this.player);
+      if (this.levelModel) {
+        this.levelModel.controller.levelView.playExplosionAnimation(pos, 2, pos, workingNeighbor.blockType, null, null, this.player);
+      }
     } else if (workingNeighbor.blockType !== "" && !workingNeighbor.blockType.startsWith("pistonArm")) {
       // We've actually got something to push.
       let blocksPositions = this.getBlocksToPush(pos, offset[0], offset[1]);
@@ -610,7 +612,9 @@ module.exports = class LevelPlane {
       let destination = [blocksPositions[i][0] + offsetX, blocksPositions[i][1] + offsetY];
       let block = this.getBlockAt(blocksPositions[i]);
       if (this.inBounds(destination) && this.getBlockAt(destination).isDestroyableUponPush()) {
-        this.levelModel.controller.levelView.playExplosionAnimation(destination, 2, destination, block.blockType, null, null, this.player);
+        if (this.levelModel) {
+          this.levelModel.controller.levelView.playExplosionAnimation(destination, 2, destination, block.blockType, null, null, this.player);
+        }
         redo = true;
       }
       this.setBlockAt(destination, this.getBlockAt(blocksPositions[i]));
