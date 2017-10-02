@@ -9,6 +9,8 @@ const makeLevelDefinition = (width, height) => {
   return {
     playerStartPosition: [0, 2],
     playerStartDirection: 1,
+    agentStartPosition: [0, 1],
+    agentStartDirection: 1,
     playerName: 'Alex',
     groundPlane: makePlane(size, 'grass'),
     groundDecorationPlane: makePlane(size, ''),
@@ -20,12 +22,20 @@ const makeLevelDefinition = (width, height) => {
 
 const mockGameController = {
   levelEntity: new LevelEntity({}),
+  getIsDirectPlayerControl: () => false,
   levelData: {},
 };
 
 test('sanity', t => {
   const levelDefinition = makeLevelDefinition(5, 5);
   const model = new LevelModel(levelDefinition, mockGameController);
+
+  model.placeBlock("grass");
+  t.true(model.actionPlane.getBlockAt([0,2]).blockType === "grass");
+  model.placeBlock("gravel");
+  t.true(model.actionPlane.getBlockAt([0,2]).blockType === "gravel");
+  model.placeBlock("ice");
+  t.false(model.actionPlane.getBlockAt([0,2]).blockType === "grass");
 
   t.equal(model.planeArea(), 25);
 

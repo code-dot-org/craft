@@ -28,19 +28,22 @@ window.demoLevels = {
   
   1: {
     instructions: "Nighttime is boring with no zombies (sheep at this time). Get the Zombies spawning at night, and get them to chase you.",
-
+    useAgent: true,
+    
     playerStartPosition: [3, 4],
+    agentStartPosition: [3, 6],
 
     // up: 0, right: 1, down: 2, left: 3
     playerStartDirection: 1,
+    agentStartDirection: 1,
 
-    playerName: "Agent",
+    playerName: "SteveEvents",
     isEventLevel: true,
     earlyLoadAssetPacks: ['allAssetsMinusPlayer'],
-    earlyLoadNiceToHaveAssetPacks: ['playerAgent'],
+    earlyLoadNiceToHaveAssetPacks: ['playerSteveEvents', 'playerAgent'],
 
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerAgent'],
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteveEvents', 'playerAgent'],
       afterLoad: [],
     },
 
@@ -49,7 +52,8 @@ window.demoLevels = {
       return false;
     },
 
-    groundPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+    groundPlane: [
+      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
@@ -75,15 +79,15 @@ window.demoLevels = {
     ],
 
     actionPlane: [
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "railsSouthEast", "railsEastWest", "railsEastWest", "railsSouthWest", "", "", "", "",
-      "", "", "railsNorthSouth", "", "", "railsNorthSouth", "", "", "", "",
-      "", "", "railsNorthSouth", "", "", "railsNorthSouth", "", "", "", "",
-      "", "", "railsNorthEast", "railsEastWest", "railsEastWest", "railsNorthWest", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
+      "grass", "ice", "grass", "pistonLeft", "redstoneWire", "pressurePlateUp", "redstoneWire", "redstoneWire", "", "",
+      "", "", "", "", "", "", "", "redstoneWire", "", "",
+      "redstoneWire", "redstoneWire", "redstoneWire", "", "", "", "", "grass", "doorIron", "grass",
+      "redstoneWire", "", "redstoneWire", "", "", "", "", "", "", "",
+      "redstoneWire", "redstoneWire", "redstoneWire", "", "", "rails", "rails", "rails", "", "",
+      "redstoneWire", "", "redstoneWire", "", "", "", "", "rails", "", "",
+      "redstoneWire", "redstoneWire", "redstoneWire", "", "", "", "", "rails", "rails", "",
+      "", "railsRedstoneTorch", "", "", "", "", "rails", "", "rails", "",
+      "", "", "", "", "", "", "rails", "rails", "rails", "",
       "", "", "", "", "", "", "", "", "", "",
     ],
 

@@ -2,6 +2,7 @@ const LevelPlane = require("./LevelPlane.js");
 const LevelBlock = require("./LevelBlock.js");
 const FacingDirection = require("./FacingDirection.js");
 const Player = require("../Entities/Player.js");
+const Agent = require("../Entities/Agent.js");
 
 // for blocks on the action plane, we need an actual "block" object, so we can model
 
@@ -13,24 +14,15 @@ module.exports = class LevelModel {
       levelData.gridDimensions[1] : 10;
     this.controller = controller;
     this.player = {};
-
-    this.railMap =
-      ["", "", "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "", "", "",
-        "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsUnpoweredVertical", "", "", "", "", "", "",
-        "", "", "", "railsNorthEast", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest", "railsEastWest",
-        "", "", "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "", "", ""];
+    this.agent = {};
+    this.usingAgent = false;
 
     this.initialLevelData = Object.create(levelData);
 
     this.reset();
 
     this.initialPlayerState = Object.create(this.player);
+    this.initialAgentState = Object.create(this.agent);
   }
 
   planeArea() {
@@ -42,19 +34,25 @@ module.exports = class LevelModel {
   }
 
   reset() {
-    this.groundPlane = new LevelPlane(this.initialLevelData.groundPlane, this.planeWidth, this.planeHeight, this.controller, this);
-    this.groundDecorationPlane = new LevelPlane(this.initialLevelData.groundDecorationPlane, this.planeWidth, this.planeHeight, this.controller, this);
+    this.groundPlane = new LevelPlane(this.initialLevelData.groundPlane, this.planeWidth, this.planeHeight, this.controller, this, "groundPlane");
+    this.groundDecorationPlane = new LevelPlane(this.initialLevelData.groundDecorationPlane, this.planeWidth, this.planeHeight, this.controller, this, "decorationPlane");
     this.shadingPlane = [];
-    this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, this.controller, this, true);
+    this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, this.controller, this, "actionPlane");
 
-    for (let i = 0; i < this.actionPlane.length; ++i) {
-      if (this.actionPlane[i].blockType.substring(0,12) === "redstoneWire") {
-        let y = Math.floor(i / this.planeHeight);
-        let x = i - (y * this.planeHeight);
-        let position = [x,y];
-        this.actionPlane.determineRedstoneSprite(position, i);
+    this.actionPlane.getAllPositions().forEach((position) => {
+      if (this.actionPlane.getBlockAt(position).blockType === "railsRedstoneTorch") {
+        this.actionPlane.redstonePropagation(position);
       }
-    }
+    });
+
+    this.actionPlane.getAllPositions().forEach((position) => {
+      if (this.actionPlane.getBlockAt(position).blockType.substring(0,12) === "redstoneWire") {
+        this.actionPlane.determineRedstoneSprite(position);
+      }
+      if (this.actionPlane.getBlockAt(position).isRail) {
+        this.actionPlane.determineRailType(position);
+      }
+    });
 
     this.fluffPlane = new LevelPlane(this.initialLevelData.fluffPlane, this.planeWidth, this.planeHeight);
     this.fowPlane = [];
@@ -68,9 +66,18 @@ module.exports = class LevelModel {
       this.usePlayer = true;
     }
     if (this.usePlayer) {
-      this.player = new Player(this.controller, "Player", x, y, this.initialLevelData.playerName || "Steve", !this.actionPlane[this.yToIndex(y) + x].getIsEmptyOrEntity(), levelData.playerStartDirection);
+      this.player = new Player(this.controller, "Player", x, y, this.initialLevelData.playerName || "Steve", !this.actionPlane.getBlockAt([x, y]).getIsEmptyOrEntity(), levelData.playerStartDirection);
       this.controller.levelEntity.pushEntity(this.player);
       this.controller.player = this.player;
+
+      if (levelData.useAgent) {
+        this.usingAgent = levelData.useAgent;
+        [x, y] = levelData.agentStartPosition;
+        const startingBlock = this.actionPlane.getBlockAt(levelData.agentStartPosition);
+        this.agent = new Agent(this.controller, "PlayerAgent", x, y, "Agent", !startingBlock.getIsEmptyOrEntity(), levelData.agentStartDirection);
+        this.controller.levelEntity.pushEntity(this.agent);
+        this.controller.agent = this.agent;
+      }
     }
 
     this.computeShadingPlane();
@@ -254,15 +261,11 @@ module.exports = class LevelModel {
   }
 
   countOfTypeOnMap(blockType) {
-    var count = 0,
-      i;
+    const blocksOfType = this.actionPlane.getAllPositions().filter((position) => {
+      return this.actionPlane.getBlockAt(position).blockType === blockType;
+    });
 
-    for (i = 0; i < this.planeArea(); ++i) {
-      if (blockType === this.actionPlane[i].blockType) {
-        ++count;
-      }
-    }
-    return count;
+    return blocksOfType.length;
   }
 
   isPlayerAt(position) {
@@ -281,18 +284,19 @@ module.exports = class LevelModel {
   solutionMapMatchesResultMap(solutionMap) {
     for (var i = 0; i < this.planeArea(); i++) {
       var solutionItemType = solutionMap[i];
+      let position = this.actionPlane.indexToCoordinates(i);
 
       // "" on the solution map means we dont care what's at that spot
       if (solutionItemType !== "") {
         if (solutionItemType === "empty") {
-          if (!this.actionPlane[i].isEmpty) {
+          if (!this.actionPlane.getBlockAt(position).isEmpty) {
             return false;
           }
         } else if (solutionItemType === "any") {
-          if (this.actionPlane[i].isEmpty) {
+          if (this.actionPlane.getBlockAt(position).isEmpty) {
             return false;
           }
-        } else if (this.actionPlane[i].blockType !== solutionItemType) {
+        } else if (this.actionPlane.getBlockAt(position).blockType !== solutionItemType) {
           return false;
         }
       }
@@ -304,8 +308,7 @@ module.exports = class LevelModel {
     var tnt = [];
     for (var x = 0; x < this.planeWidth; ++x) {
       for (var y = 0; y < this.planeHeight; ++y) {
-        var index = this.coordinatesToIndex([x, y]);
-        var block = this.actionPlane[index];
+        var block = this.actionPlane.getBlockAt([x, y]);
         if (block.blockType === "tnt") {
           tnt.push([x, y]);
         }
@@ -318,10 +321,9 @@ module.exports = class LevelModel {
     var unpoweredRails = [];
     for (var x = 0; x < this.planeWidth; ++x) {
       for (var y = 0; y < this.planeHeight; ++y) {
-        var index = this.coordinatesToIndex([x, y]);
-        var block = this.actionPlane[index];
+        var block = this.actionPlane.getBlockAt([x, y]);
         if (block.blockType.substring(0, 7) === "railsUn") {
-          unpoweredRails.push([x, y], "railsPowered" + this.actionPlane[index].blockType.substring(14));
+          unpoweredRails.push([x, y], "railsPowered" + block.blockType.substring(14));
         }
       }
     }
@@ -333,20 +335,45 @@ module.exports = class LevelModel {
       cy = entity.position[1];
 
     switch (entity.facing) {
-      case FacingDirection.Up:
+      case FacingDirection.North:
         --cy;
         break;
 
-      case FacingDirection.Down:
+      case FacingDirection.South:
         ++cy;
         break;
 
-      case FacingDirection.Left:
+      case FacingDirection.West:
         --cx;
         break;
 
-      case FacingDirection.Right:
+      case FacingDirection.East:
         ++cx;
+        break;
+    }
+
+    return [cx, cy];
+  }
+
+  getMoveBackwardPosition(entity = this.player) {
+    var cx = entity.position[0],
+      cy = entity.position[1];
+
+    switch (entity.facing) {
+      case FacingDirection.North:
+        ++cy;
+        break;
+
+      case FacingDirection.South:
+        --cy;
+        break;
+
+      case FacingDirection.West:
+        ++cx;
+        break;
+
+      case FacingDirection.East:
+        --cx;
         break;
     }
 
@@ -358,19 +385,19 @@ module.exports = class LevelModel {
       cy = entity.position[1];
 
     switch (pushedByFacing) {
-      case FacingDirection.Up:
+      case FacingDirection.North:
         --cy;
         break;
 
-      case FacingDirection.Down:
+      case FacingDirection.South:
         ++cy;
         break;
 
-      case FacingDirection.Left:
+      case FacingDirection.West:
         --cx;
         break;
 
-      case FacingDirection.Right:
+      case FacingDirection.East:
         ++cx;
         break;
     }
@@ -488,7 +515,7 @@ module.exports = class LevelModel {
     posLeft = [0, position[1] - 1, position[2]];
     posRight[0] = this.yToIndex(posRight[2]) + posRight[1];
 
-    checkActionBlock = this.actionPlane[index];
+    checkActionBlock = this.actionPlane.getBlockAt(this.actionPlane.indexToCoordinates(index));
     for (var i = 0; i < array.length; ++i) {
       if (array[i][0] === index) {
         checkIndex = -1;
@@ -534,7 +561,7 @@ module.exports = class LevelModel {
   getAllBorderingPositionNotOfType(position, blockType) {
     var surroundingBlocks = this.getAllBorderingPosition(position, null);
     for (var b = 1; b < surroundingBlocks.length; ++b) {
-      if (surroundingBlocks[b][0] && this.actionPlane[this.coordinatesToIndex(surroundingBlocks[b][1])].blockType === blockType) {
+      if (surroundingBlocks[b][0] && this.actionPlane.getBlockAt(surroundingBlocks[b][1]).blockType === blockType) {
         surroundingBlocks[b][0] = false;
       }
     }
@@ -592,40 +619,20 @@ module.exports = class LevelModel {
     return allFoundObjects;
   }
 
-  getAllBorderingPlayer(blockType) {
-    return this.getAllBorderingPosition(this.player.position, blockType);
-  }
-
-  isPlayerStandingNearCreeper() {
-    return this.getAllBorderingPlayer("creeper");
-  }
-
-  getMinecartTrack() {
-    var track = [];
-    track.push(["down", [3, 2], FacingDirection.Down, 300]);
-    track.push(["down", [3, 3], FacingDirection.Down, 300]);
-    track.push(["down", [3, 4], FacingDirection.Down, 300]);
-    track.push(["down", [3, 5], FacingDirection.Down, 300]);
-    track.push(["down", [3, 6], FacingDirection.Down, 300]);
-    track.push(["down", [3, 7], FacingDirection.Down, 300]);
-    track.push(["turn_left", [3, 7], FacingDirection.Right, 400]);
-    track.push(["right", [4, 7], FacingDirection.Right, 400]);
-    track.push(["right", [5, 7], FacingDirection.Right, 400]);
-    track.push(["right", [6, 7], FacingDirection.Right, 400]);
-    track.push(["right", [7, 7], FacingDirection.Right, 400]);
-    track.push(["right", [8, 7], FacingDirection.Right, 400]);
-    track.push(["right", [9, 7], FacingDirection.Right, 400]);
-    track.push(["right", [10, 7], FacingDirection.Right, 400]);
-    track.push(["right", [11, 7], FacingDirection.Right, 400]);
-    return track;
-  }
-
   canMoveForward(entity = this.player) {
-    let blockForwardPosition = this.getMoveForwardPosition(entity);
-    return this.isPositionEmpty(blockForwardPosition);
+    const [x, y] = this.getMoveForwardPosition(entity);
+    if (!this.controller.followingPlayer() && (x > 9 || y > 9)) {
+      return false;
+    }
+    return this.isPositionEmpty([x, y], entity);
   }
 
-  isPositionEmpty(position) {
+  canMoveBackward(entity = this.player) {
+    const [x, y] = this.getMoveBackwardPosition(entity);
+    return this.isPositionEmpty([x, y], entity);
+  }
+
+  isPositionEmpty(position, entity = this.player) {
     var result = [false,];
     let [x, y] = position;
 
@@ -639,32 +646,31 @@ module.exports = class LevelModel {
         }
         result.push("notEmpty");
       }
-      // Only prevent walking into water/lava in "Events" levels.
+      // Prevent walking into water/lava in levels where the player is
+      // controlled by arrow keys. In levels where the player is controlled by
+      // blocks, let them drown.
       if (this.groundPlane.getBlockAt(position).blockType === "water") {
-        if (this.controller.levelData.isEventLevel) {
+        if (this.controller.getIsDirectPlayerControl()) {
           result.push("water");
         } else {
           return [true];
         }
       } else if (this.groundPlane.getBlockAt(position).blockType === "lava") {
-        if (this.controller.levelData.isEventLevel) {
+        if (this.controller.getIsDirectPlayerControl()) {
           result.push("lava");
         } else {
           return [true];
         }
       }
+
       var frontEntity = this.getEntityAt(position);
       if (frontEntity !== undefined) {
         result.push("frontEntity");
         result.push(frontEntity);
       }
-      result[0] = (this.actionPlane.getBlockAt(position).isWalkable || ((frontEntity !== undefined && frontEntity.isOnBlock)
-        // action plane is empty
-        && !this.actionPlane.getBlockAt(position).isEmpty))
-        // there is no entity
-        && (frontEntity === undefined)
-        // no lava or water
-        && (this.groundPlane.getBlockAt(position).blockType !== "water" && this.groundPlane.getBlockAt(position).blockType !== "lava");
+      let groundBlock = this.groundPlane.getBlockAt(position);
+      let actionBlock = this.actionPlane.getBlockAt(position);
+      result[0] = entity.hasPermissionToWalk(actionBlock, frontEntity, groundBlock);
     } else {
       result.push("outBound");
     }
@@ -686,17 +692,17 @@ module.exports = class LevelModel {
     return true;
   }
 
-  canPlaceBlockForward(blockType = "") {
-    if (this.player.isOnBlock) {
+  canPlaceBlockForward(blockType = "", entity = this.player) {
+    if (entity.isOnBlock) {
       return false;
     }
-    let plane = this.getPlaneToPlaceOn(this.getMoveForwardPosition());
+    let plane = this.getPlaneToPlaceOn(this.getMoveForwardPosition(entity));
     if (plane === this.groundPlane) {
-      if (blockType === "redstoneWire" || blockType.substring(0,5) === "rails" && this.groundPlane[this.groundPlane.coordinatesToIndex(this.getMoveForwardPosition())]) {
+      if (blockType === "redstoneWire" || blockType.substring(0,5) === "rails" && this.groundPlane.getBlockAt(this.getMoveForwardPosition())) {
         return false;
       }
     }
-    return this.getPlaneToPlaceOn(this.getMoveForwardPosition()) !== null;
+    return this.getPlaneToPlaceOn(this.getMoveForwardPosition(entity)) !== null;
   }
 
   getPlaneToPlaceOn(position) {
@@ -716,11 +722,11 @@ module.exports = class LevelModel {
     return null;
   }
 
-  canDestroyBlockForward() {
+  canDestroyBlockForward(entity = this.player) {
     var result = false;
 
-    if (!this.player.isOnBlock) {
-      let blockForwardPosition = this.getMoveForwardPosition();
+    if (!entity.isOnBlock) {
+      let blockForwardPosition = this.getMoveForwardPosition(entity);
       let [x, y] = blockForwardPosition;
 
       if (this.inBounds(x, y)) {
@@ -737,6 +743,11 @@ module.exports = class LevelModel {
     this.moveTo(blockForwardPosition, entity);
   }
 
+  moveBackward(entity = this.player) {
+    let blockBackwardPosition = this.getMoveBackwardPosition(entity);
+    this.moveTo(blockBackwardPosition, entity);
+  }
+
   moveTo(position, entity = this.player) {
     entity.position = position;
 
@@ -748,40 +759,40 @@ module.exports = class LevelModel {
   turnLeft(entity = this.player) {
 
     switch (entity.facing) {
-      case FacingDirection.Up:
-        entity.facing = FacingDirection.Left;
+      case FacingDirection.North:
+        entity.facing = FacingDirection.West;
         break;
 
-      case FacingDirection.Left:
-        entity.facing = FacingDirection.Down;
+      case FacingDirection.West:
+        entity.facing = FacingDirection.South;
         break;
 
-      case FacingDirection.Down:
-        entity.facing = FacingDirection.Right;
+      case FacingDirection.South:
+        entity.facing = FacingDirection.East;
         break;
 
-      case FacingDirection.Right:
-        entity.facing = FacingDirection.Up;
+      case FacingDirection.East:
+        entity.facing = FacingDirection.North;
         break;
     }
   }
 
   turnRight(entity = this.player) {
     switch (entity.facing) {
-      case FacingDirection.Up:
-        entity.facing = FacingDirection.Right;
+      case FacingDirection.North:
+        entity.facing = FacingDirection.East;
         break;
 
-      case FacingDirection.Right:
-        entity.facing = FacingDirection.Down;
+      case FacingDirection.East:
+        entity.facing = FacingDirection.South;
         break;
 
-      case FacingDirection.Down:
-        entity.facing = FacingDirection.Left;
+      case FacingDirection.South:
+        entity.facing = FacingDirection.West;
         break;
 
-      case FacingDirection.Left:
-        entity.facing = FacingDirection.Up;
+      case FacingDirection.West:
+        entity.facing = FacingDirection.North;
         break;
     }
   }
@@ -795,33 +806,30 @@ module.exports = class LevelModel {
     this.moveForward();
   }
 
-  placeBlock(blockType, force = false) {
-    const position = this.player.position;
-    let shouldPlace = false;
+  placeBlock(blockType, entity = this.player) {
+    const position = entity.position;
     let placedBlock = null;
 
-    switch (blockType) {
-      case "cropWheat":
-        shouldPlace = this.groundPlane.getBlockAt(position).blockType === "farmlandWet";
-        break;
-
-      default:
-        shouldPlace = true;
-        break;
-    }
-
-    if (shouldPlace === true) {
+    let ground = this.groundPlane.getBlockAt(position);
+    let result = entity.canPlaceBlockOver(blockType, ground.blockType);
+    if (result.canPlace) {
       var block = new LevelBlock(blockType);
-
-      placedBlock = this.actionPlane.setBlockAt(position, block, force);
-      this.player.isOnBlock = !block.isWalkable;
+      switch (result.plane) {
+        case "actionPlane":
+          placedBlock = this.actionPlane.setBlockAt(position, block);
+          entity.walkableCheck(block);
+          break;
+        case "groundPlane":
+          this.groundPlane.setBlockAt(position, block);
+          break;
+      }
     }
 
     return placedBlock;
   }
 
-  placeBlockForward(blockType, targetPlane) {
-    let blockPosition = this.getMoveForwardPosition();
+  placeBlockForward(blockType, targetPlane, entity = this.player) {
+    let blockPosition = this.getMoveForwardPosition(entity);
 
     //for placing wetland for crops in free play
     if (blockType === "watering") {
@@ -998,8 +1006,8 @@ module.exports = class LevelModel {
     var emissives = [];
     for (var y = 0; y < this.planeHeight; ++y) {
       for (var x = 0; x < this.planeWidth; ++x) {
-        var index = this.coordinatesToIndex([x, y]);
-        if (!this.actionPlane[index].isEmpty && this.actionPlane[index].isEmissive || this.groundPlane[index].isEmissive && this.actionPlane[index].isEmpty) {
+        let position = [x, y];
+        if (!this.actionPlane.getBlockAt(position).isEmpty && this.actionPlane.getBlockAt(position).isEmissive || this.groundPlane.getBlockAt(position).isEmissive && this.actionPlane.getBlockAt(position).isEmpty) {
           emissives.push([x, y]);
         }
       }
@@ -1143,7 +1151,7 @@ module.exports = class LevelModel {
 
       hasRight = false;
 
-      if (this.actionPlane[index].isEmpty || this.actionPlane[index].isTransparent) {
+      if (this.actionPlane.getBlockAt([x, y]).isEmpty || this.actionPlane.getBlockAt([x, y]).isTransparent) {
         if (y === 0) {
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Bottom' });
         }
@@ -1160,12 +1168,12 @@ module.exports = class LevelModel {
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Left' });
         }
 
-        if (x < this.planeWidth - 1 && !this.actionPlane[this.yToIndex(y) + x + 1].getIsEmptyOrEntity()) {
+        if (x < this.planeWidth - 1 && !this.actionPlane.getBlockAt([x + 1, y]).getIsEmptyOrEntity()) {
           // needs a left side AO shadow
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Left' });
         }
 
-        if (x > 0 && !this.actionPlane[this.yToIndex(y) + x - 1].getIsEmptyOrEntity()) {
+        if (x > 0 && !this.actionPlane.getBlockAt([x - 1, y]).getIsEmptyOrEntity()) {
           // needs a right side AO shadow
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Right' });
           this.shadingPlane.push({
@@ -1174,7 +1182,7 @@ module.exports = class LevelModel {
             type: 'Shadow_Parts_Fade_base.png'
           });
 
-          if (y > 0 && x > 0 && this.actionPlane[this.yToIndex(y - 1) + x - 1].getIsEmptyOrEntity()) {
+          if (y > 0 && x > 0 && this.actionPlane.getBlockAt([x - 1, y - 1]).getIsEmptyOrEntity()) {
             this.shadingPlane.push({
               x: x,
               y: y,
@@ -1185,30 +1193,30 @@ module.exports = class LevelModel {
           hasRight = true;
         }
 
-        if (y > 0 && !this.actionPlane[this.yToIndex(y - 1) + x].getIsEmptyOrEntity()) {
+        if (y > 0 && !this.actionPlane.getBlockAt([x, y - 1]).getIsEmptyOrEntity()) {
           // needs a bottom side AO shadow
           this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Bottom' });
         } else if (y > 0) {
-          if (x < this.planeWidth - 1 && !this.actionPlane[this.yToIndex(y - 1) + x + 1].getIsEmptyOrEntity() &&
-            this.actionPlane[this.yToIndex(y) + x + 1].getIsEmptyOrEntity()) {
+          if (x < this.planeWidth - 1 && !this.actionPlane.getBlockAt([x + 1, y - 1]).getIsEmptyOrEntity() &&
+            this.actionPlane.getBlockAt([x + 1, y]).getIsEmptyOrEntity()) {
             // needs a bottom left side AO shadow
             this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_BottomLeft' });
           }
 
-          if (!hasRight && x > 0 && !this.actionPlane[this.yToIndex(y - 1) + x - 1].getIsEmptyOrEntity()) {
+          if (!hasRight && x > 0 && !this.actionPlane.getBlockAt([x - 1, y - 1]).getIsEmptyOrEntity()) {
             // needs a bottom right side AO shadow
             this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_BottomRight' });
           }
         }
 
         if (y < this.planeHeight - 1) {
-          if (x < this.planeWidth - 1 && !this.actionPlane[this.yToIndex(y + 1) + x + 1].getIsEmptyOrEntity() &&
-            this.actionPlane[this.yToIndex(y) + x + 1].getIsEmptyOrEntity()) {
+          if (x < this.planeWidth - 1 && !this.actionPlane.getBlockAt([x + 1, y + 1]).getIsEmptyOrEntity() &&
+            this.actionPlane.getBlockAt([x + 1, y]).getIsEmptyOrEntity()) {
             // needs a bottom left side AO shadow
             this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_TopLeft' });
           }
 
-          if (!hasRight && x > 0 && !this.actionPlane[this.yToIndex(y + 1) + x - 1].getIsEmptyOrEntity()) {
+          if (!hasRight && x > 0 && !this.actionPlane.getBlockAt([x - 1, y + 1]).getIsEmptyOrEntity()) {
             // needs a bottom right side AO shadow
             this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_TopRight' });
           }

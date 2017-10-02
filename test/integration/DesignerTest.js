@@ -32,6 +32,7 @@ test('Designer 2: Four Chicken Move', t => {
   attempt('designer02', api => new Promise(resolve => {
     api.onEventTriggered(null, 'chicken', 2, event => {
       api.repeat(null, () => {
+        api.drop(null, 'diamond', event.targetIdentifier);
         api.moveForward(null, event.targetIdentifier);
         api.turnLeft(null, event.targetIdentifier);
       }, -1, event.targetIdentifier);
@@ -77,6 +78,28 @@ test('Designer 4: Move Player Inside House', t => {
 
     api.startAttempt(success => {
       t.assert(success);
+      t.end();
+
+      resolve();
+    });
+  }));
+});
+
+test('Designer 5: Add Shear Sheep Behavior (push back)', t => {
+  attempt('designer05', api => new Promise(resolve => {
+    // Move to the sheep and push it back 1 space.
+    for (let i = 0; i < 4; i++) {
+      api.moveForward(null, 'Player');
+    }
+    api.turnRight(null, 'Player');
+    api.moveForward(null, 'Player');
+    api.moveForward(null, 'Player');
+
+    api.startAttempt((success, levelModel) => {
+      t.deepEqual(levelModel.player.position, [5, 3]);
+      t.equal(levelModel.getEntityAt([6, 3]), undefined);
+      t.equal(levelModel.getEntityAt([7, 3]).type, 'sheep');
+      t.assert(!success);
       t.end();
 
       resolve();
@@ -224,7 +247,7 @@ test('Designer 8: Trapped by Zombies', t => {
   }));
 });
 
-test('Designer 8: Trapped by Zombies', t => {
+test('Designer 9: Spawn Entity', t => {
   attempt('designer09', api => new Promise(resolve => {
     api.spawnEntity(null, 'sheep', 'middle');
     api.onEventTriggered(null, 'sheep', 2, event => {

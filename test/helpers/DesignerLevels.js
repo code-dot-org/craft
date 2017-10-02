@@ -16,6 +16,7 @@ module.exports = {
     actionPlane: baseActionPlane,
     entities: [["chicken", 4, 4, 1]],
     usePlayer: false,
+    usingAgent: false,
     levelVerificationTimeout: 5000,
     timeoutResult: verificationAPI => (
       verificationAPI.getCommandExecutedCount("moveForward") >= 1 &&
@@ -34,6 +35,7 @@ module.exports = {
     actionPlane: baseActionPlane,
     entities: fourChickens,
     usePlayer: false,
+    usingAgent: false,
     levelVerificationTimeout: 5000,
     timeoutResult: verificationAPI => (
       verificationAPI.getRepeatCommandExecutedCount("moveForward") > 0
@@ -47,6 +49,7 @@ module.exports = {
     actionPlane: baseActionPlane,
     entities: fourChickens,
     usePlayer: false,
+    usingAgent: false,
     levelVerificationTimeout: 7000,
     timeoutResult: verificationAPI => (
       verificationAPI.getCommandExecutedCount("turnRandom") >= 1 ||
@@ -60,8 +63,11 @@ module.exports = {
     groundDecorationPlane: houseDecorationPlane,
     actionPlane: houseActionPlane,
     usePlayer: true,
+    usingAgent: false,
     playerStartPosition: [4, 7],
+    agentStartPosition: [3, 7],
     playerStartDirection: 0,
+    agentStartDirection: 0,
     levelVerificationTimeout: 20000,
     timeoutResult: () => false,
     verificationFunction: verificationAPI => (
@@ -75,8 +81,11 @@ module.exports = {
     actionPlane: houseActionPlane,
     entities: [["sheep", 6, 3, 1]],
     usePlayer: true,
+    usingAgent: false,
     playerStartPosition: [4, 7],
+    agentStartPosition: [3, 7],
     playerStartDirection: 0,
+    agentStartDirection: 0,
     levelVerificationTimeout: 20000,
     timeoutResult: () => false,
     verificationFunction: verificationAPI => (
@@ -90,8 +99,11 @@ module.exports = {
     actionPlane: ["stone", "stone", "", "stone", "stone", "", "", "", "stone", "stone", "stone", "", "", "", "", "", "", "", "", "stone", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "stone", "stone", "", "", "", "", "", "stone", "", "", "", "stone", "", "", "", "", "", "stone", "stone", "", "", "", "", "stone", "", "", "", "", "", "", "", "", "stone", "stone", "", "", "", "", "", "", "", "", "", "", "stone", "", "", "", "stone", "", "", "", "", "grass", "stone", "", "", "stone", "stone", "", "", "", "grass", "grass"],
     entities: [["cow", 6, 1, 1], ["cow", 1, 2, 1]],
     usePlayer: true,
+    usingAgent: false,
     playerStartPosition: [5, 6],
     playerStartDirection: 2,
+    agentStartPosition: [3, 6],
+    agentStartDirection: 2,
     levelVerificationTimeout: 60000,
     timeoutResult: () => false,
     verificationFunction: verificationAPI => {
@@ -113,8 +125,11 @@ module.exports = {
     actionPlane: ["stone", "stone", "", "", "stone", "stone", "stone", "oreCoal", "stone", "stone", "oreCoal", "stone", "", "", "", "", "stone", "stone", "stone", "", "stone", "", "", "", "", "", "stone", "stone", "", "treeBirch", "", "", "", "", "", "", "stone", "stone", "", "", "", "", "", "", "", "", "stone", "", "", "", "", "", "", "", "", "", "stone", "", "", "", "", "", "", "", "", "", "stone", "stone", "", "", "", "", "", "", "", "stone", "stone", "stone", "", "", "", "", "", "", "stone", "stone", "stone", "stone", "stone", "", "", "", "", "", "stone", "stone", "stone", "oreDiamond", "stone", "stone"],
     entities: [["sheep", 8, 4, 1], ["creeper", 2, 8, 1]],
     usePlayer: true,
+    usingAgent: false,
     playerStartPosition: [3, 1],
     playerStartDirection: 2,
+    agentStartPosition: [2, 1],
+    agentStartDirection: 2,
     levelVerificationTimeout: -1,
     timeoutResult: () => false,
     verificationFunction: verificationAPI  => {
@@ -134,8 +149,11 @@ module.exports = {
     actionPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "bricks", "bricks", "glass", "bricks", "bricks", "", "", "", "", "", "bricks", "", "", "", "bricks", "", "", "", "", "", "glass", "", "torch", "", "glass", "", "", "", "", "", "bricks", "", "", "", "bricks", "", "", "", "", "", "bricks", "bricks", "door", "bricks", "bricks", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
     entities: [["zombie", 5, 7, 1], ["ironGolem", 5, 9, 1]],
     usePlayer: true,
+    usingAgent: false,
     playerStartPosition: [5, 3],
     playerStartDirection: 2,
+    agentStartPosition: [4, 3],
+    agentStartDirection: 2,
     levelVerificationTimeout: -1,
     timeoutResult: () => false,
     verificationFunction: verificationAPI  => verificationAPI.isEntityDied("zombie", 1),
@@ -146,8 +164,11 @@ module.exports = {
     groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
     actionPlane: ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "", "", "", "", "grass", "grass", "grass", "grass", "grass", "", "", "", "", "", "", "grass", "grass", "grass", "", "", "", "", "", "", "", "", "grass", "grass", "", "", "", "", "", "", "", "", "grass", "grass", "", "", "", "", "", "", "", "", "grass", "grass", "", "", "", "", "", "", "", "", "grass", "grass", "", "", "", "", "", "", "", "", "grass", "grass", "grass", "", "", "", "", "", "", "grass", "grass", "grass", "grass", "grass", "", "", "", "", "grass", "grass", "grass"],
     usePlayer: true,
+    usingAgent: false,
     playerStartPosition: [4, 8],
     playerStartDirection: 0,
+    agentStartPosition: [3, 8],
+    agentStartDirection: 0,
     levelVerificationTimeout: 60000,
     timeoutResult: () => false,
     verificationFunction: verificationAPI  => (
