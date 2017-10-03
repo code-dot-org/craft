@@ -472,7 +472,7 @@ module.exports = class LevelView {
 
   playPlayerAnimation(animationName, position, facing, isOnBlock = false, entity = this.player) {
     let direction = this.getDirectionName(facing);
-    entity.sprite.sortOrder = this.yToIndex(position[1]) + 5;
+    entity.sprite.sortOrder = this.yToIndex(position[1]) + entity.getSortOrderOffset();
 
     let animName = animationName + direction;
     return this.playScaledSpeed(entity.sprite.animations, animName);
@@ -872,7 +872,7 @@ module.exports = class LevelView {
     this.setSelectionIndicatorPosition(position[0], position[1]);
     //make sure to render high for when moving up after placing a block
     var zOrderYIndex = position[1] + (facing === FacingDirection.North ? 1 : 0);
-    entity.sprite.sortOrder = this.yToIndex(zOrderYIndex) + 5;
+    entity.sprite.sortOrder = this.yToIndex(zOrderYIndex) + entity.getSortOrderOffset();
 
     if (!shouldJumpDown) {
       const animName = "walk" + this.getDirectionName(facing);
@@ -900,7 +900,7 @@ module.exports = class LevelView {
     this.setSelectionIndicatorPosition(position[0], position[1]);
     //make sure to render high for when moving up after placing a block
     var zOrderYIndex = position[1] + (facing === FacingDirection.North ? 1 : 0);
-    entity.sprite.sortOrder = this.yToIndex(zOrderYIndex) + 5;
+    entity.sprite.sortOrder = this.yToIndex(zOrderYIndex) + entity.getSortOrderOffset();
 
     if (!shouldJumpDown) {
       const animName = animation + this.getDirectionName(facing);
@@ -1296,7 +1296,7 @@ module.exports = class LevelView {
     const screen = this.positionToScreen([x, y], isOnBlock, entity);
     entity.sprite.x = screen.x;
     entity.sprite.y = screen.y;
-    entity.sprite.sortOrder = this.yToIndex(screen.y) + 5;
+    entity.sprite.sortOrder = this.yToIndex(screen.y) + entity.getSortOrderOffset();
   }
 
   setSelectionIndicatorPosition(x, y) {

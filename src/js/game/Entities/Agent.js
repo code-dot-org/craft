@@ -38,6 +38,22 @@ module.exports = class Agent extends BaseEntity {
     return result;
   }
 
+  /**
+   * @override
+   */
+  canMoveThrough() {
+    return true;
+  }
+
+  /**
+   * Give agent a higher-than-normal offset so that it will always render on top
+   * of the player when on the same cell.
+   * @override
+   */
+  getSortOrderOffset() {
+    return super.getSortOrderOffset() + 1;
+  }
+
   // "Events" levels allow the player to move around with the arrow keys, and
   // perform actions with the space bar.
   updateMovement() {
