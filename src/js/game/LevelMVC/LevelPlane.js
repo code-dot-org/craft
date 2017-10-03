@@ -474,7 +474,16 @@ module.exports = class LevelPlane {
         break;
       }
     }
-    if (workingNeighbor.blockType !== "" && !workingNeighbor.blockType.startsWith("pistonArm")) {
+
+
+    // Break an object right in front of the piston.
+    if (workingNeighbor.isDestroyableUponPush()) {
+      this.setBlockAt(pos, new LevelBlock(""));
+      if (this.levelModel) {
+        this.levelModel.controller.levelView.playExplosionAnimation(pos, 2, pos, workingNeighbor.blockType, null, null, this.player);
+      }
+    } else if (workingNeighbor.blockType !== "" && !workingNeighbor.blockType.startsWith("pistonArm")) {
+      // We've actually got something to push.
       let blocksPositions = this.getBlocksToPush(pos, offset[0], offset[1]);
       let concat = "On";
       if (this.getBlockAt(position).getIsStickyPiston()) {
@@ -484,6 +493,7 @@ module.exports = class LevelPlane {
       this.setBlockAt(position, onPiston);
       this.pushBlocks(blocksPositions, offset[0], offset[1]);
     } else if (workingNeighbor.blockType === "") {
+      // Nothing to push, so just make the arm.
       let concat = "On";
       if (this.getBlockAt(position).getIsStickyPiston()) {
         concat += "Sticky";
@@ -550,19 +560,18 @@ module.exports = class LevelPlane {
     let offPiston = new LevelBlock(newPistonType);
     if (this.getBlockAt(armPosition).blockType.startsWith("pistonArm")) {
       if (this.getBlockAt(pistonPosition).getIsStickyPiston()) {
-        let direction = pistonType.blockType.substring(6, 7);
         let stuckBlockPosition = [armPosition[0], armPosition[1]];
-        switch (direction) {
-          case "D":
+        switch (pistonType.getPistonDirection()) {
+          case South:
             stuckBlockPosition[1] += 1;
             break;
-          case "U":
+          case North:
             stuckBlockPosition[1] -= 1;
             break;
-          case "L":
+          case West:
             stuckBlockPosition[0] -= 1;
             break;
-          case "R":
+          case East:
             stuckBlockPosition[0] += 1;
             break;
         }
@@ -603,7 +612,9 @@ module.exports = class LevelPlane {
       let destination = [blocksPositions[i][0] + offsetX, blocksPositions[i][1] + offsetY];
       let block = this.getBlockAt(blocksPositions[i]);
       if (this.inBounds(destination) && this.getBlockAt(destination).isDestroyableUponPush()) {
-        this.levelModel.controller.levelView.playExplosionAnimation(destination, 2, destination, block.blockType, null, null, this.player);
+        if (this.levelModel) {
+          this.levelModel.controller.levelView.playExplosionAnimation(destination, 2, destination, block.blockType, null, null, this.player);
+        }
         redo = true;
       }
       this.setBlockAt(destination, this.getBlockAt(blocksPositions[i]));
@@ -683,6 +694,28 @@ module.exports = class LevelPlane {
     return this.getOrthogonalPositions(position).some(orthogonalPosition => {
       const block = this.getBlockAt(orthogonalPosition);
       if (block) {
+        if (this.getBlockAt(position).blockType.startsWith("piston")) {
+          let piston = this.getBlockAt(position);
+          let ignoreThisSide = [0, 0];
+          switch (piston.getPistonDirection()) {
+            case South:
+              ignoreThisSide = [0, 1];
+              break;
+            case North:
+              ignoreThisSide = [0, -1];
+              break;
+            case West:
+              ignoreThisSide = [-1, 0];
+              break;
+            case East:
+              ignoreThisSide = [1, 0];
+              break;
+          }
+          let posCheck = [position[0] + ignoreThisSide[0], position[1] + ignoreThisSide[1]];
+          if (posCheck[0] === orthogonalPosition[0] && posCheck[1] === orthogonalPosition[1]) {
+            return false;
+          }
+        }
         if (canReadCharge) {
           return block.isPowered || block.isRedstoneBattery;
         }
