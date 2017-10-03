@@ -351,6 +351,15 @@ module.exports = class LevelView {
     this.reset(levelModel);
   }
 
+  resetEntity(entity) {
+    this.preparePlayerSprite(entity.name, entity);
+    entity.sprite.animations.stop();
+    this.setPlayerPosition(entity.position[0], entity.position[1], entity.isOnBlock, entity);
+    this.setSelectionIndicatorPosition(entity.position[0], entity.position[1]);
+    this.selectionIndicator.visible = true;
+    this.playIdleAnimation(entity.position, entity.facing, entity.isOnBlock, entity);
+  }
+
   reset(levelModel) {
     this.player = levelModel.player;
     this.agent = levelModel.agent;
@@ -363,23 +372,15 @@ module.exports = class LevelView {
     this.trees = [];
 
     this.resetPlanes(levelModel);
+
     if (levelModel.usePlayer) {
-      this.preparePlayerSprite(this.player.name);
-      this.player.sprite.animations.stop();
-      this.setPlayerPosition(this.player.position[0], this.player.position[1], this.player.isOnBlock, this.player);
-      this.setSelectionIndicatorPosition(this.player.position[0], this.player.position[1]);
-      this.selectionIndicator.visible = true;
-      this.playIdleAnimation(this.player.position, this.player.facing, this.player.isOnBlock, this.player);
+      this.resetEntity(this.player);
 
       if (levelModel.usingAgent) {
-        this.preparePlayerSprite(this.agent.name, this.agent);
-        this.agent.sprite.animations.stop();
-        this.setPlayerPosition(this.agent.position[0], this.agent.position[1], this.agent.isOnBlock, this.agent);
-        this.setSelectionIndicatorPosition(this.agent.position[0], this.agent.position[1]);
-        this.selectionIndicator.visible = true;
-        this.playIdleAnimation(this.agent.position, this.agent.facing, this.agent.isOnBlock, this.agent);
+        this.resetEntity(this.agent);
       }
     }
+
     this.updateShadingPlane(levelModel.shadingPlane);
     this.updateFowPlane(levelModel.fowPlane);
 
@@ -1536,7 +1537,7 @@ module.exports = class LevelView {
     }
   }
 
-  playRandomPlayerIdle(facing) {
+  playRandomPlayerIdle(facing, entity = this.player) {
     var facingName,
       rand,
       animationName;
@@ -1561,7 +1562,7 @@ module.exports = class LevelView {
     }
 
     animationName += facingName;
-    this.playScaledSpeed(this.player.sprite.animations, animationName);
+    this.playScaledSpeed(entity.sprite.animations, animationName);
   }
 
   generatePlayerCelebrateFrames() {
@@ -1715,7 +1716,7 @@ module.exports = class LevelView {
     }
 
     entity.sprite.animations.add('idle' + direction, frameList, frameRate / 3, false).onComplete.add(() => {
-      this.playRandomPlayerIdle(facing);
+      this.playRandomPlayerIdle(facing, entity);
     });
     frameList = this.generateFramesWithEndDelay("Player_", offset + 6, offset + 5, this.playerFrameName(offset + 5), 3, 5);
     frameList.push(this.playerFrameName(offset + 6));
@@ -1732,7 +1733,7 @@ module.exports = class LevelView {
       frameList.push(this.playerFrameName(offset + 1));
     }
     entity.sprite.animations.add('idlePause' + direction, frameList, frameRate / 3, false).onComplete.add(() => {
-      this.playRandomPlayerIdle(facing);
+      this.playRandomPlayerIdle(facing, entity);
     });
 
     entity.sprite.animations.add('walk' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 13, offset + 20, "", 3), frameRate, true);
