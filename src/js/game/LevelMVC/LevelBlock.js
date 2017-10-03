@@ -234,6 +234,10 @@ module.exports = class LevelBlock {
       return "railNormal";
     }
 
+    if (blockType.startsWith("glass") || blockType.startsWith("ice")) {
+      return undefined;
+    }
+
     // We use the same miniblock for -all- restoneWire
     if (blockType.substring(0,12) === "redstoneWire") {
       return "redstoneDust";

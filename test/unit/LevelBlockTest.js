@@ -28,6 +28,8 @@ test('getMiniblockFrame', t => {
 
   // Rails give us nothing
   t.equal(LevelBlock.getMiniblockFrame("rails"), "railNormal");
+  t.equal(LevelBlock.getMiniblockFrame("glass"), undefined);
+  t.equal(LevelBlock.getMiniblockFrame("ice"), undefined);
 
   // Generally, the in-world blocks, the miniblock-specific blocks, and the
   // miniblock frame itself should all resolve to just the miniblock frame
