@@ -71,17 +71,40 @@ module.exports = class LevelModel {
       this.controller.player = this.player;
 
       if (levelData.useAgent) {
-        this.usingAgent = levelData.useAgent;
-        [x, y] = levelData.agentStartPosition;
-        const startingBlock = this.actionPlane.getBlockAt(levelData.agentStartPosition);
-        this.agent = new Agent(this.controller, "PlayerAgent", x, y, "Agent", !startingBlock.getIsEmptyOrEntity(), levelData.agentStartDirection);
-        this.controller.levelEntity.pushEntity(this.agent);
-        this.controller.agent = this.agent;
+        this.spawnAgent(levelData);
       }
     }
 
     this.computeShadingPlane();
     this.computeFowPlane();
+  }
+
+  /**
+   * Creates the Agent entity
+   *
+   * @param {Object} levelData the initial level data object, specifying the
+   *        Agent's default position and direction
+   * @param {[Number, Number]} [positionOverride] optional position override
+   * @param {Number} [directionOverride] optional direction override
+   */
+  spawnAgent(levelData, positionOverride, directionOverride) {
+    this.usingAgent = true;
+
+    const [x, y] = (positionOverride !== undefined)
+      ? positionOverride
+      : levelData.agentStartPosition;
+
+    const direction = (directionOverride !== undefined)
+        ? directionOverride
+        : levelData.agentStartDirection;
+
+    const name = "PlayerAgent";
+    const key = "Agent";
+
+    const startingBlock = this.actionPlane.getBlockAt([x, y]);
+    this.agent = new Agent(this.controller, name, x, y, key, !startingBlock.getIsEmptyOrEntity(), direction);
+    this.controller.levelEntity.pushEntity(this.agent);
+    this.controller.agent = this.agent;
   }
 
   yToIndex(y) {

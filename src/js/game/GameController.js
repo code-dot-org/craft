@@ -1353,6 +1353,10 @@ class GameController {
     return this.specialLevelType === 'houseBuild';
   }
 
+  checkAgentSpawn() {
+    return this.specialLevelType === 'agentSpawn';
+  }
+
   placeBlock(commandQueueItem, blockType) {
     const player = this.getEntity(commandQueueItem.target);
     const position = player.position;
@@ -1509,6 +1513,8 @@ class GameController {
         this.resultReported = true;
         this.levelView.playMinecartAnimation(player.isOnBlock,
           () => { this.handleEndState(true); }, this.levelModel.getUnpoweredRails());
+      } else if (this.checkAgentSpawn()) {
+        this.levelModel.spawnAgent(null, [3, 2], 2); // This will spawn the Agent at [3, 2], facing South.
       } else if (this.checkTntAnimation()) {
         this.resultReported = true;
         this.levelView.scaleShowWholeWorld(() => {});
