@@ -709,11 +709,14 @@ module.exports = class LevelView {
       this.setPlayerPosition(position[0], position[1], isOnBlock);
       tweenWToC.start();
     });
-    if (playSuccessAnimation) {
-      tweenWToC.onComplete.add(() => {
+    tweenWToC.onComplete.add(() => {
+      if (playSuccessAnimation) {
         this.playSuccessAnimation(position, facing, isOnBlock, completionHandler);
-      });
-    }
+      } else {
+        completionHandler();
+      }
+    });
+
     tweenToW.start();
 
     return tweenToW;

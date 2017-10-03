@@ -1536,26 +1536,20 @@ class GameController {
       } else if (this.checkAgentSpawn()) {
         this.resultReported = true;
 
-        const tweenToWhite = this.levelView.playLevelEndAnimation(player.position, player.facing, player.isOnBlock, () => {
-          this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock, () => {
-            this.endLevel(true);
-          });
-        }, true);
-        tweenToWhite.onComplete.add(() => {
-          console.log("spawning agent");
+        this.levelView.playLevelEndAnimation(player.position, player.facing, player.isOnBlock, () => {
           this.levelModel.spawnAgent(null, [3, 2], 2); // This will spawn the Agent at [3, 2], facing South.
           this.levelView.agent = this.agent;
           this.levelView.resetEntity(this.agent);
 
           this.updateFowPlane();
           this.updateShadingPlane();
-          console.log("level end animation ended");
-          //this.delayBy(200, () => {
-          //  this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock, () => {
-          //    this.endLevel(true);
-          //  });
-          //});
-        });
+
+          this.delayBy(200, () => {
+            this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock, () => {
+              this.handleEndState(true);
+            });
+          });
+        }, false);
       } else if (this.checkTntAnimation()) {
         this.resultReported = true;
         this.levelView.scaleShowWholeWorld(() => {});
