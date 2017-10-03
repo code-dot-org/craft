@@ -105,11 +105,6 @@ module.exports = class AssetLoader {
         pngPath: `${this.assetRoot}images/Leaves_Spruce_Snowy_Decay.png`,
         jsonPath: `${this.assetRoot}images/Leaves_Spruce_Snowy_Decay.json`
       },
-      Nether_Portal: {
-        type: 'atlasJSON',
-        pngPath: `${this.assetRoot}images/Nether_Portal.png`,
-        jsonPath: `${this.assetRoot}images/Nether_Portal.json`
-      },
       sheep: {
         type: 'atlasJSON',
         pngPath: `${this.assetRoot}images/Sheep_2016.png`,
@@ -516,7 +511,6 @@ module.exports = class AssetLoader {
         'sheep',
         'creeper',
         'crops',
-        'Nether_Portal',
         'torch',
         'destroyOverlay',
         'blockExplode',
@@ -574,7 +568,6 @@ module.exports = class AssetLoader {
         'creeper',
         'crops',
         'torch',
-        'Nether_Portal',
         'destroyOverlay',
         'blockExplode',
         'miningParticles',
