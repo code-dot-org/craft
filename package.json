@@ -1,6 +1,6 @@
 {
   "name": "@code-dot-org/craft",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Top-down 2D game engine for the Craft app type. See NOTICE for restrictions on use.",
   "main": "build/js/app.bundled.js",
   "scripts": {
@@ -17,8 +17,7 @@
   },
   "author": "Code.org Contributors",
   "license": "SEE LICENSE IN LICENSE",
-  "browserify-shim": {
-  },
+  "browserify-shim": {},
   "devDependencies": {
     "babelify": "^6.3.0",
     "browserify": "^10.2.4",
