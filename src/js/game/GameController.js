@@ -1406,10 +1406,8 @@ class GameController {
           }
           this.levelModel.placeBlock(blockType, player);
 
-          this.levelModel.computeShadingPlane();
-          this.levelModel.computeFowPlane();
-          this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
-          this.levelView.updateFowPlane(this.levelModel.fowPlane);
+          this.updateFowPlane();
+          this.updateShadingPlane();
           this.delayBy(200, () => {
             this.levelView.playIdleAnimation(player.position, player.facing, false, player);
           });
@@ -1489,10 +1487,8 @@ class GameController {
       this.levelModel.placeBlockForward(blockType, placementPlane, player);
       this.levelView.refreshGroundPlane();
 
-      this.levelModel.computeShadingPlane();
-      this.levelModel.computeFowPlane();
-      this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
-      this.levelView.updateFowPlane(this.levelModel.fowPlane);
+      this.updateFowPlane();
+      this.updateShadingPlane();
       soundEffect();
       this.delayBy(200, () => {
         this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
@@ -1529,10 +1525,8 @@ class GameController {
           () => {
             this.levelModel.destroyBlock(bedPosition);
             this.levelModel.destroyBlock(doorPosition);
-            this.levelModel.computeShadingPlane();
-            this.levelModel.computeFowPlane();
-            this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
-            this.levelView.updateFowPlane(this.levelModel.fowPlane);
+            this.updateFowPlane();
+            this.updateShadingPlane();
           }
         );
       } else if (this.checkMinecartLevelEndAnimation()) {
@@ -1563,10 +1557,8 @@ class GameController {
             if (!player.isOnBlock && wasOnBlock) {
               this.levelView.playPlayerJumpDownVerticalAnimation(player.facing, player.position);
             }
-            this.levelModel.computeShadingPlane();
-            this.levelModel.computeFowPlane();
-            this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
-            this.levelView.updateFowPlane(this.levelModel.fowPlane);
+            this.updateFowPlane();
+            this.updateShadingPlane();
             this.delayBy(200, () => {
               this.levelView.playSuccessAnimation(player.position, player.facing, player.isOnBlock, () => {
                 this.endLevel(true);
