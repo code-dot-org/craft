@@ -351,6 +351,15 @@ module.exports = class LevelView {
     this.reset(levelModel);
   }
 
+  resetEntity(entity) {
+    this.preparePlayerSprite(entity.name, entity);
+    entity.sprite.animations.stop();
+    this.setPlayerPosition(entity.position[0], entity.position[1], entity.isOnBlock, entity);
+    this.setSelectionIndicatorPosition(entity.position[0], entity.position[1]);
+    this.selectionIndicator.visible = true;
+    this.playIdleAnimation(entity.position, entity.facing, entity.isOnBlock, entity);
+  }
+
   reset(levelModel) {
     this.player = levelModel.player;
     this.agent = levelModel.agent;
@@ -363,23 +372,15 @@ module.exports = class LevelView {
     this.trees = [];
 
     this.resetPlanes(levelModel);
+
     if (levelModel.usePlayer) {
-      this.preparePlayerSprite(this.player.name);
-      this.player.sprite.animations.stop();
-      this.setPlayerPosition(this.player.position[0], this.player.position[1], this.player.isOnBlock, this.player);
-      this.setSelectionIndicatorPosition(this.player.position[0], this.player.position[1]);
-      this.selectionIndicator.visible = true;
-      this.playIdleAnimation(this.player.position, this.player.facing, this.player.isOnBlock, this.player);
+      this.resetEntity(this.player);
 
       if (levelModel.usingAgent) {
-        this.preparePlayerSprite(this.agent.name, this.agent);
-        this.agent.sprite.animations.stop();
-        this.setPlayerPosition(this.agent.position[0], this.agent.position[1], this.agent.isOnBlock, this.agent);
-        this.setSelectionIndicatorPosition(this.agent.position[0], this.agent.position[1]);
-        this.selectionIndicator.visible = true;
-        this.playIdleAnimation(this.agent.position, this.agent.facing, this.agent.isOnBlock, this.agent);
+        this.resetEntity(this.agent);
       }
     }
+
     this.updateShadingPlane(levelModel.shadingPlane);
     this.updateFowPlane(levelModel.fowPlane);
 
