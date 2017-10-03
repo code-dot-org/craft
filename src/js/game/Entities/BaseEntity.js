@@ -4,63 +4,64 @@ const EventType = require("../Event/EventType.js");
 const CallbackCommand = require("../CommandQueue/CallbackCommand.js");
 
 module.exports = class BaseEntity {
-    constructor(controller, type, identifier, x, y, facing) {
-        this.queue = new CommandQueue(controller);
-        this.controller = controller;
-        this.game = controller.game;
-        this.position = [x, y];
-        this.type = type;
-        // temp
-        this.facing = facing;
-        // offset for sprite position in grid
-        this.offset = [-22, -12];
-        this.identifier = identifier;
-        this.healthPoint = 3;
-        this.underTree = { state: false, treeIndex: -1 };
-    }
+  constructor(controller, type, identifier, x, y, facing) {
+    this.queue = new CommandQueue(controller);
+    this.controller = controller;
+    this.game = controller.game;
+    this.position = [x, y];
+    this.type = type;
+    // temp
+    this.facing = facing;
+    // offset for sprite position in grid
+    this.offset = [-22, -12];
+    this.identifier = identifier;
+    this.healthPoint = 3;
+    this.underTree = { state: false, treeIndex: -1 };
+  }
 
-    tick() {
-        this.queue.tick();
-    }
+  tick() {
+      this.queue.tick();
+  }
 
-    reset() {
-    }
+  reset() {
+  }
 
-    canMoveThrough() {
-      return false;
-    }
+  canMoveThrough() {
+    return false;
+  }
 
-    addCommand(commandQueueItem, repeat = false) {
-        this.queue.addCommand(commandQueueItem, repeat);
-        // execute the command
-        this.queue.begin();
-    }
 
-    playMoveForwardAnimation(position, facing, commandQueueItem, groundType) {
-        var levelView = this.controller.levelView;
-        var tween;
-        // update z order
-        var zOrderYIndex = position[1] + (facing === FacingDirection.North ? 1 : 0);
-        this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex) + 1;
-        // stepping sound
-        levelView.playBlockSound(groundType);
-        // play walk animation
-        var animName = "walk" + this.controller.levelView.getDirectionName(this.facing);
-        var idleAnimName = "idle" + this.controller.levelView.getDirectionName(this.facing);
-        levelView.playScaledSpeed(this.sprite.animations, animName);
-        setTimeout(() => {
-            tween = this.controller.levelView.addResettableTween(this.sprite).to({
-                x: (this.offset[0] + 40 * position[0]), y: (this.offset[1] + 40 * position[1])
-            }, 300, Phaser.Easing.Linear.None);
-            tween.onComplete.add(() => {
-                levelView.playScaledSpeed(this.sprite.animations, idleAnimName);
-                commandQueueItem.succeeded();
-            });
+  addCommand(commandQueueItem, repeat = false) {
+    this.queue.addCommand(commandQueueItem, repeat);
+    // execute the command
+    this.queue.begin();
+  }
 
-            tween.start();
-        }, 50 / this.controller.tweenTimeScale);
-        // smooth movement using tween
-    }
+  playMoveForwardAnimation(position, facing, commandQueueItem, groundType) {
+    var levelView = this.controller.levelView;
+    var tween;
+    // update z order
+    var zOrderYIndex = position[1] + (facing === FacingDirection.North ? 1 : 0);
+    this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex) + 1;
+    // stepping sound
+    levelView.playBlockSound(groundType);
+    // play walk animation
+    var animName = "walk" + this.controller.levelView.getDirectionName(this.facing);
+    var idleAnimName = "idle" + this.controller.levelView.getDirectionName(this.facing);
+    levelView.playScaledSpeed(this.sprite.animations, animName);
+    setTimeout(() => {
+      tween = this.controller.levelView.addResettableTween(this.sprite).to({
+        x: (this.offset[0] + 40 * position[0]), y: (this.offset[1] + 40 * position[1])
+      }, 300, Phaser.Easing.Linear.None);
+      tween.onComplete.add(() => {
+        levelView.playScaledSpeed(this.sprite.animations, idleAnimName);
+        commandQueueItem.succeeded();
+      });
+
+      tween.start();
+    }, 50 / this.controller.tweenTimeScale);
+    // smooth movement using tween
+  }
 
   /**
    * player walkable stuff
