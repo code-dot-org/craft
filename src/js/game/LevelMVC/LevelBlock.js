@@ -229,13 +229,16 @@ module.exports = class LevelBlock {
    * @return {String} frame identifier
    */
   static getMiniblockFrame(blockType) {
-    // We don't have rails miniblock assets yet.
+    if (blockType === "railsRedstoneTorch") {
+      return "redstoneTorch";
+    }
+
     if (blockType.startsWith("rails")) {
       return "railNormal";
     }
 
     if (blockType.startsWith("glass") || blockType.startsWith("ice")) {
-      return undefined;
+      return null;
     }
 
     // We use the same miniblock for -all- restoneWire

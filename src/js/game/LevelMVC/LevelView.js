@@ -1165,16 +1165,9 @@ module.exports = class LevelView {
     }
   }
 
-  // Ice and glass blocks do not drop mini-blocks in Minecraft.
-  shouldDropMiniBlock(blockType) {
-    return !blockType.startsWith("ice") && !blockType.startsWith("glass");
-  }
-
   playItemDropAnimation(destroyPosition, blockType, completionHandler) {
-    var sprite = null;
-    if (this.shouldDropMiniBlock(blockType)) {
-      sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
-    }
+    var sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
+
     if (sprite) {
       sprite.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     }
@@ -1717,6 +1710,10 @@ module.exports = class LevelView {
   createMiniBlock(x, y, blockType) {
     let sprite = null,
       frameList;
+
+    if (!LevelBlock.getMiniblockFrame(blockType)) {
+      return null;
+    }
 
     const frame = LevelBlock.getMiniblockFrame(blockType);
     const atlas = "miniBlocks";
