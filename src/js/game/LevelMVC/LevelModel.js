@@ -76,33 +76,32 @@ module.exports = class LevelModel {
     this.computeFowPlane();
   }
 
+  /**
+   * Creates the Agent entity
+   *
+   * @param {Object} levelData the initial level data object, specifying the
+   *        Agent's default position and direction
+   * @param {[Number, Number]} [positionOverride] optional position override
+   * @param {Number} [directionOverride] optional direction override
+   */
   spawnAgent(levelData, positionOverride, directionOverride) {
     this.usingAgent = true;
-    let [x, y] = [0, 0];
-    let direction = 0;
-    let name = "";
-    let key = "";
-    if (levelData) {
-      [x, y] = levelData.agentStartPosition;
-      direction = levelData.agentStartDirection;
-      name = "PlayerAgent";
-      key = "Agent";
-      const startingBlock = this.actionPlane.getBlockAt([x, y]);
-      this.agent = new Agent(this.controller, name, x, y, key, !startingBlock.getIsEmptyOrEntity(), direction);
-      this.controller.levelEntity.pushEntity(this.agent);
-      this.controller.agent = this.agent;
-    } else if (positionOverride !== undefined) {
-      [x, y] = positionOverride;
-      direction = directionOverride;
-      name = "PlayerAgent";
-      key = "Agent";
-      const startingBlock = this.actionPlane.getBlockAt([x, y]);
-      this.agent = new Agent(this.controller, name, x, y, key, !startingBlock.getIsEmptyOrEntity(), direction);
-      this.controller.levelEntity.pushEntity(this.agent);
-      this.controller.agent = this.agent;
 
-      this.controller.levelView.reset(this);
-    }
+    const [x, y] = (positionOverride !== undefined)
+      ? positionOverride
+      : levelData.agentStartPosition;
+
+    const direction = (directionOverride !== undefined)
+        ? directionOverride
+        : levelData.agentStartDirection;
+
+    const name = "PlayerAgent";
+    const key = "Agent";
+
+    const startingBlock = this.actionPlane.getBlockAt([x, y]);
+    this.agent = new Agent(this.controller, name, x, y, key, !startingBlock.getIsEmptyOrEntity(), direction);
+    this.controller.levelEntity.pushEntity(this.agent);
+    this.controller.agent = this.agent;
   }
 
   yToIndex(y) {
