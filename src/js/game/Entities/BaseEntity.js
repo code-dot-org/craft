@@ -30,6 +30,17 @@ module.exports = class BaseEntity {
     return false;
   }
 
+  /**
+   * For entities which need to be able to accomodate rendering in the same
+   * cell as other entities, provide a way to define a rendering offset.
+   *
+   * @see LevelView.playPlayerAnimation
+   * @see LevelView.playMoveForwardAnimation
+   * @return Number
+   */
+  getSortOrderOffset() {
+    return 5;
+  }
 
   addCommand(commandQueueItem, repeat = false) {
     this.queue.addCommand(commandQueueItem, repeat);
