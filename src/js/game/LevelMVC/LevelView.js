@@ -1420,6 +1420,10 @@ module.exports = class LevelView {
           return;
         }
 
+        if (newBlock && newBlock.getIsMiniblock()) {
+          return;
+        }
+
         if (newBlock && newBlock.blockType) {
           this.createActionPlaneBlock(position, newBlock.blockType);
         } else if (newBlock) {
