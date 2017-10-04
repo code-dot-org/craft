@@ -30,6 +30,10 @@ module.exports = class BaseEntity {
     return false;
   }
 
+  canTriggerPressurePlates() {
+    return false;
+  }
+
   /**
    * For entities which need to be able to accomodate rendering in the same
    * cell as other entities, provide a way to define a rendering offset.

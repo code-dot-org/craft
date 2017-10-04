@@ -714,15 +714,17 @@ class GameController {
 
   handleMoveOffPressurePlate(commandQueueItem, moveOffset) {
     const isMovingOffOf = this.levelModel.isEntityOnBlocktype(commandQueueItem.target, "pressurePlateDown");
-    if (isMovingOffOf && !this.playerAgentShareIndex()) {
-      const entity = this.getEntity(commandQueueItem.target);
+    const entity = this.getEntity(commandQueueItem.target);
+    let remainOn = false;
+    this.levelEntity.getEntitiesOfType('all').some(workingEntity => {
+      if (workingEntity !== entity && workingEntity.canTriggerPressurePlates()) {
+        remainOn = true;
+      }
+    });
+    if (isMovingOffOf && !remainOn) {
       const block = new LevelBlock('pressurePlateUp');
       this.levelModel.actionPlane.setBlockAt(entity.position, block, moveOffset[0], moveOffset[1]);
     }
-  }
-
-  playerAgentShareIndex() {
-    return (this.agent.position[0] === this.player.position[0] && this.agent.position[1] === this.player.position[1]);
   }
 
   handleMoveOnPressurePlate(commandQueueItem, moveOffset) {

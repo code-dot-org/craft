@@ -213,4 +213,9 @@ module.exports = class Agent extends BaseEntity {
         // there is no entity
         && (frontEntity === undefined);
   }
+
+  canTriggerPressurePlates() {
+    return true;
+  }
+
 };
