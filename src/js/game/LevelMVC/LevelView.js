@@ -1076,8 +1076,8 @@ module.exports = class LevelView {
     this.playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, entity, completionHandler);
   }
 
-  playPunchDestroyAirAnimation(playerPosition, facing, destroyPosition, completionHandler) {
-    this.playPunchAnimation(playerPosition, facing, destroyPosition, "punchDestroy", completionHandler);
+  playPunchDestroyAirAnimation(playerPosition, facing, destroyPosition, completionHandler, entity = this.player) {
+    this.playPunchAnimation(playerPosition, facing, destroyPosition, "punchDestroy", completionHandler, entity);
   }
 
   playPunchAirAnimation(playerPosition, facing, destroyPosition, completionHandler, entity = this.player) {
