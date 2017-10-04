@@ -206,12 +206,8 @@ module.exports = class Agent extends BaseEntity {
     }
   }
 
-  hasPermissionToWalk(actionBlock, frontEntity) {
-        return (actionBlock.isWalkable || ((frontEntity !== undefined && frontEntity.isOnBlock)
-        // action plane is empty
-        && !actionBlock.isEmpty))
-        // there is no entity
-        && (frontEntity === undefined);
+  hasPermissionToWalk(actionBlock) {
+        return (actionBlock.isWalkable);
   }
 
   canTriggerPressurePlates() {
