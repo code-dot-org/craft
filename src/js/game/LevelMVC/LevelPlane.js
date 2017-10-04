@@ -694,6 +694,9 @@ module.exports = class LevelPlane {
     return this.getOrthogonalPositions(position).some(orthogonalPosition => {
       const block = this.getBlockAt(orthogonalPosition);
       if (block) {
+        if (block.blockType.startsWith("piston")) {
+          return false;
+        }
         if (this.getBlockAt(position).blockType.startsWith("piston")) {
           let piston = this.getBlockAt(position);
           let ignoreThisSide = [0, 0];
