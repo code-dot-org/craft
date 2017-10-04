@@ -1420,7 +1420,7 @@ module.exports = class LevelView {
           return;
         }
 
-        if (newBlock && newBlock.blockType === "diamondMiniblock") {
+        if (newBlock && newBlock.getIsMiniblock()) {
           return;
         }
 
