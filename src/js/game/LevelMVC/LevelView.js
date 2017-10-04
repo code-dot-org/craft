@@ -1807,7 +1807,7 @@ module.exports = class LevelView {
           if (distanceBetween(this.player.position, collectiblePosition) < collectibleDistance) {
             this.playItemAcquireAnimation(this.player.position, this.player.facing, sprite, () => { }, blockType);
           } else {
-            this.collectibleItems.push([sprite, [xOffset, yOffset], blockType]);
+            this.collectibleItems.push([sprite, [xOffset, yOffset], blockType, collectibleDistance]);
           }
         }
       });

@@ -195,15 +195,14 @@ module.exports = class Player extends BaseEntity {
       return Math.sqrt(Math.pow(position[0] - position2[0], 2) + Math.pow(position[1] - position2[1], 2));
     };
     for (var i = 0; i < collectibles.length; i++) {
-      let sprite = collectibles[i][0];
+      const [sprite, offset, blockType, collectibleDistance] = collectibles[i];
       // already collected item
       if (sprite === null) {
         collectibles.splice(i, 1);
-
       } else {
-        let collectiblePosition = this.controller.levelModel.spritePositionToIndex(collectibles[i][1], [sprite.x, sprite.y]);
-        if (distanceBetween(targetPosition, collectiblePosition) < 2) {
-          this.controller.levelView.playItemAcquireAnimation(this.position, this.facing, sprite, () => { }, collectibles[i][2]);
+        let collectiblePosition = this.controller.levelModel.spritePositionToIndex(offset, [sprite.x, sprite.y]);
+        if (distanceBetween(targetPosition, collectiblePosition) < collectibleDistance) {
+          this.controller.levelView.playItemAcquireAnimation(this.position, this.facing, sprite, () => { }, blockType);
           collectibles.splice(i, 1);
         }
       }
