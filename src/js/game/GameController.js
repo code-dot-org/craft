@@ -1277,13 +1277,13 @@ class GameController {
       }
       // if there is a entity in front of the player
     } else {
-      this.levelView.playPunchDestroyAirAnimation(player.position, player.facing, this.levelModel.getMoveForwardPosition(), () => {
+      this.levelView.playPunchDestroyAirAnimation(player.position, player.facing, this.levelModel.getMoveForwardPosition(player), () => {
         this.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]);
-        this.levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
+        this.levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock, player);
         this.delayPlayerMoveBy(0, 0, () => {
           commandQueueItem.succeeded();
         });
-      });
+      }, player);
     }
   }
 
