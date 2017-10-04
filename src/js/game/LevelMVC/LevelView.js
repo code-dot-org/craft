@@ -1357,7 +1357,13 @@ module.exports = class LevelView {
         const actionBlock = levelData.actionPlane.getBlockAt(position);
         if (!actionBlock.isEmpty) {
           if (actionBlock.getIsMiniblock()) {
-            sprite = this.createMiniBlock(x, y, actionBlock.blockType);
+            // miniblocks defined on the action plane like this should have a
+            // closer collectible range and a narrower drop offset than normal
+            sprite = this.createMiniBlock(x, y, actionBlock.blockType, {
+              collectibleDistance: 1,
+              xOffsetRange: 10,
+              yOffsetRange: 10
+            });
           } else {
             sprite = this.createBlock(this.actionPlane, x, y, actionBlock.blockType);
           }
