@@ -226,4 +226,9 @@ module.exports = class Player extends BaseEntity {
       });
     }
   }
+
+  canTriggerPressurePlates() {
+    return true;
+  }
+
 };
