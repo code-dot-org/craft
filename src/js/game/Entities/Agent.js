@@ -211,6 +211,10 @@ module.exports = class Agent extends BaseEntity {
         // action plane is empty
         && !actionBlock.isEmpty))
         // there is no entity
-        && (frontEntity === undefined);
+        && (frontEntity === undefined || this.entityIsPlayer(frontEntity));
+  }
+
+  entityIsPlayer(entity) {
+    return entity.identifier === "Player";
   }
 };
