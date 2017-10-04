@@ -717,7 +717,9 @@ class GameController {
     const entity = this.getEntity(commandQueueItem.target);
     let remainOn = false;
     this.levelEntity.getEntitiesOfType('all').some(workingEntity => {
-      if (workingEntity !== entity && workingEntity.canTriggerPressurePlates()) {
+      if (workingEntity !== entity
+      && workingEntity.canTriggerPressurePlates()
+      && this.positionEquivalence(workingEntity.position, entity.position)) {
         remainOn = true;
       }
     });
@@ -725,6 +727,10 @@ class GameController {
       const block = new LevelBlock('pressurePlateUp');
       this.levelModel.actionPlane.setBlockAt(entity.position, block, moveOffset[0], moveOffset[1]);
     }
+  }
+
+  positionEquivalence(lhs, rhs) {
+    return (lhs[0] === rhs[0] && lhs[1] === rhs[1]);
   }
 
   handleMoveOnPressurePlate(commandQueueItem, moveOffset) {
