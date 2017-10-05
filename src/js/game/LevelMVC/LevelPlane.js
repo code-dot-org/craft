@@ -41,13 +41,14 @@ const PoweredRailConnectionPriority = [
 ];
 
 module.exports = class LevelPlane {
-  constructor(planeData, width, height, isActionPlane = false, LevelModel = null) {
+  constructor(planeData, width, height, isActionPlane = false, LevelModel = null, planeType = null) {
     this._data = [];
     this.width = width;
     this.height = height;
     this.levelModel = LevelModel;
     this.redstoneList = [];
     this.redstoneListON = [];
+    this.planeType = planeType;
 
     for (let index = 0; index < planeData.length; ++index) {
       let block = new LevelBlock(planeData[index]);
@@ -111,6 +112,18 @@ module.exports = class LevelPlane {
     }
   }
 
+  isActionPlane() {
+    return this.planeType === "actionPlane";
+  }
+
+  isDecorationPlane() {
+    return this.planeType === "decorationPlane";
+  }
+
+  isGroundPlane() {
+    return this.planeType === "groundPlane";
+  }
+
   /**
   * Changes the block at a desired position to the desired block.
   * Important note: This is the cornerstone of block placing/destroying.
@@ -119,34 +132,38 @@ module.exports = class LevelPlane {
     this._data[this.coordinatesToIndex(position)] = block;
     let offset = [offsetX,offsetY];
 
-    let positionInQuestion = [0,0];
-    // This will either be the pos the player is leaving or entering, depending on situation
-    if (this.levelModel) {
-      positionInQuestion = [this.levelModel.player.position[0] + offset[0], this.levelModel.player.position[1] + offset[1]];
-    }
-    let wasOnADoor = false;
-    // If the questionable position was a door, we want to do a few things differently.
-    if (this.inBounds(positionInQuestion) && this.getBlockAt(positionInQuestion).blockType === "doorIron") {
-      wasOnADoor = true;
-    }
-
-    let redstoneToRefresh = [];
-    if (block.needToRefreshRedstone()) {
-      redstoneToRefresh = this.getRedstone();
-      // Once we're done updating redstoneWire states, check to see if doors should open/close.
-      if (wasOnADoor) {
-        this.findDoorToAnimate(positionInQuestion);
-      } else {
-        this.findDoorToAnimate([-1,-1]);
+    if (this.isActionPlane()) {
+      let positionInQuestion = [0,0];
+      // This will either be the pos the player is leaving or entering, depending on situation
+      if (this.levelModel) {
+        positionInQuestion = [this.levelModel.player.position[0] + offset[0], this.levelModel.player.position[1] + offset[1]];
       }
-    }
+      let wasOnADoor = false;
+      // If the questionable position was a door, we want to do a few things differently.
+      if (this.inBounds(positionInQuestion) && this.getBlockAt(positionInQuestion).blockType === "doorIron") {
+        wasOnADoor = true;
+      }
 
-    this.determineRailType(position, true);
+      let redstoneToRefresh = [];
+      if (block.needToRefreshRedstone()) {
+        redstoneToRefresh = this.getRedstone();
+        // Once we're done updating redstoneWire states, check to see if doors should open/close.
+        if (wasOnADoor) {
+          this.findDoorToAnimate(positionInQuestion);
+        } else {
+          this.findDoorToAnimate([-1,-1]);
+        }
+      }
 
-    if (this.levelModel) {
-      let positionAndTouching = this.getOrthogonalPositions(position).concat([position]);
-      this.levelModel.controller.levelView.refreshActionPlane(positionAndTouching);
-      this.levelModel.controller.levelView.refreshActionPlane(redstoneToRefresh);
+      this.determineRailType(position, true);
+
+      if (this.levelModel && this.levelModel.controller.levelView) {
+        let positionAndTouching = this.getOrthogonalPositions(position).concat([position]);
+        this.levelModel.controller.levelView.refreshActionPlane(positionAndTouching);
+        this.levelModel.controller.levelView.refreshActionPlane(redstoneToRefresh);
+      }
+    } else if (this.isGroundPlane()) {
+      this.levelModel.controller.levelView.refreshGroundPlane();
     }
 
     return block;
@@ -329,6 +346,7 @@ module.exports = class LevelPlane {
       posToRefresh.push(this.redstoneListON[i]);
     }
 
+    this.powerAllBlocks();
     // Once we're done updating redstoneWire states, check to see if doors and pistons should open/close.
     this.getAllPositions().forEach((position) => {
       this.getIronDoors(position);
@@ -345,7 +363,7 @@ module.exports = class LevelPlane {
     const index = this.coordinatesToIndex(position);
 
     if (block.blockType === "doorIron") {
-      block.isPowered = this.powerCheck(position);
+      block.isPowered = this.powerCheck(position, true);
       if (block.isPowered && !block.isOpen) {
         block.isOpen = true;
         if (this.levelModel) {
@@ -367,7 +385,7 @@ module.exports = class LevelPlane {
     const block = this.getBlockAt(position);
 
     if (block.blockType.startsWith("piston") && !block.blockType.startsWith("pistonArm")) {
-      block.isPowered = this.powerCheck(position);
+      block.isPowered = this.powerCheck(position, true);
       if (block.isPowered) {
         this.activatePiston(position);
       } else if (!block.isPowered) {
@@ -390,7 +408,7 @@ module.exports = class LevelPlane {
       const index = this.coordinatesToIndex(position);
 
       if (block.blockType === "doorIron" && position !== positionInQuestion) {
-        block.isPowered = this.powerCheck(position);
+        block.isPowered = this.powerCheck(position, true);
         if (block.isPowered && !block.isOpen) {
           block.isOpen = true;
           if (this.levelModel) {
@@ -417,6 +435,9 @@ module.exports = class LevelPlane {
     let pos = [];
     let offset = [];
     let pistonType = this.getBlockAt(position).blockType;
+    if (this.getBlockAt(position).getIsStickyPiston()) {
+      pistonType = pistonType.substring(0, pistonType.length - 6);
+    }
     let checkOn = pistonType.substring(pistonType.length - 2, pistonType.length);
     if (checkOn === "On") {
       pistonType = pistonType.substring(0, pistonType.length - 2);
@@ -453,14 +474,33 @@ module.exports = class LevelPlane {
         break;
       }
     }
-    if (workingNeighbor.blockType !== "" && !workingNeighbor.blockType.startsWith("pistonArm")) {
+
+
+    // Break an object right in front of the piston.
+    if (workingNeighbor.isDestroyableUponPush()) {
+      this.setBlockAt(pos, new LevelBlock(""));
+      if (this.levelModel) {
+        this.levelModel.controller.levelView.playExplosionAnimation(pos, 2, pos, workingNeighbor.blockType, null, null, this.player);
+      }
+    } else if (workingNeighbor.blockType !== "" && !workingNeighbor.blockType.startsWith("pistonArm")) {
+      // We've actually got something to push.
       let blocksPositions = this.getBlocksToPush(pos, offset[0], offset[1]);
-      let onPiston = new LevelBlock(pistonType += "On");
+      let concat = "On";
+      if (this.getBlockAt(position).getIsStickyPiston()) {
+        concat += "Sticky";
+      }
+      let onPiston = new LevelBlock(pistonType += concat);
       this.setBlockAt(position, onPiston);
       this.pushBlocks(blocksPositions, offset[0], offset[1]);
     } else if (workingNeighbor.blockType === "") {
+      // Nothing to push, so just make the arm.
+      let concat = "On";
+      if (this.getBlockAt(position).getIsStickyPiston()) {
+        concat += "Sticky";
+        armType += "Sticky";
+      }
       let armBlock = new LevelBlock(armType);
-      let pistonBlock = new LevelBlock(pistonType += "On");
+      let pistonBlock = new LevelBlock(pistonType += concat);
       this.setBlockAt(pos, armBlock);
       this.setBlockAt(position, pistonBlock);
     }
@@ -478,7 +518,11 @@ module.exports = class LevelPlane {
     let east = 2;
     let west = 3;
 
-    switch (this.getBlockAt(position).blockType) {
+    let pistonType = this.getBlockAt(position).blockType;
+    if (this._data[this.coordinatesToIndex(position)].getIsStickyPiston()) {
+      pistonType = pistonType.substring(0, pistonType.length - 6);
+    }
+    switch (pistonType) {
       case "pistonUpOn": {
         this.retractArm(neighborPosition[north], position);
         break;
@@ -504,10 +548,42 @@ module.exports = class LevelPlane {
   retractArm(armPosition, pistonPosition) {
     let emptyBlock = new LevelBlock("");
     let pistonType = this.getBlockAt(pistonPosition);
-    let newPistonType = pistonType.blockType.substring(0, pistonType.blockType.length - 2);
+    let concat = "";
+    let blockType = "";
+    if (this.getBlockAt(pistonPosition).getIsStickyPiston()) {
+      concat = "Sticky";
+      blockType = pistonType.blockType.substring(0, pistonType.blockType.length - 8);
+    } else {
+      blockType = pistonType.blockType.substring(0, pistonType.blockType.length - 2);
+    }
+    let newPistonType = blockType + concat;
     let offPiston = new LevelBlock(newPistonType);
     if (this.getBlockAt(armPosition).blockType.startsWith("pistonArm")) {
-      this.setBlockAt(armPosition, emptyBlock);
+      if (this.getBlockAt(pistonPosition).getIsStickyPiston()) {
+        let stuckBlockPosition = [armPosition[0], armPosition[1]];
+        switch (pistonType.getPistonDirection()) {
+          case South:
+            stuckBlockPosition[1] += 1;
+            break;
+          case North:
+            stuckBlockPosition[1] -= 1;
+            break;
+          case West:
+            stuckBlockPosition[0] -= 1;
+            break;
+          case East:
+            stuckBlockPosition[0] += 1;
+            break;
+        }
+        if (this.inBounds(stuckBlockPosition)) {
+          this.setBlockAt(armPosition, this.getBlockAt(stuckBlockPosition));
+          this.setBlockAt(stuckBlockPosition, emptyBlock);
+        } else {
+          this.setBlockAt(armPosition, emptyBlock);
+        }
+      } else {
+        this.setBlockAt(armPosition, emptyBlock);
+      }
     }
     this.setBlockAt(pistonPosition, offPiston);
   }
@@ -535,8 +611,10 @@ module.exports = class LevelPlane {
     for (let i = blocksPositions.length - 1; i >= 0; --i) {
       let destination = [blocksPositions[i][0] + offsetX, blocksPositions[i][1] + offsetY];
       let block = this.getBlockAt(blocksPositions[i]);
-      if (this.getBlockAt(destination).isDestroyableUponPush()) {
-        this.levelModel.controller.levelView.playExplosionAnimation(destination, 2, destination, block.blockType, null, null, this.player);
+      if (this.inBounds(destination) && this.getBlockAt(destination).isDestroyableUponPush()) {
+        if (this.levelModel) {
+          this.levelModel.controller.levelView.playExplosionAnimation(destination, 2, destination, block.blockType, null, null, this.player);
+        }
         redo = true;
       }
       this.setBlockAt(destination, this.getBlockAt(blocksPositions[i]));
@@ -616,6 +694,31 @@ module.exports = class LevelPlane {
     return this.getOrthogonalPositions(position).some(orthogonalPosition => {
       const block = this.getBlockAt(orthogonalPosition);
       if (block) {
+        if (block.blockType.startsWith("piston")) {
+          return false;
+        }
+        if (this.getBlockAt(position).blockType.startsWith("piston")) {
+          let piston = this.getBlockAt(position);
+          let ignoreThisSide = [0, 0];
+          switch (piston.getPistonDirection()) {
+            case South:
+              ignoreThisSide = [0, 1];
+              break;
+            case North:
+              ignoreThisSide = [0, -1];
+              break;
+            case West:
+              ignoreThisSide = [-1, 0];
+              break;
+            case East:
+              ignoreThisSide = [1, 0];
+              break;
+          }
+          let posCheck = [position[0] + ignoreThisSide[0], position[1] + ignoreThisSide[1]];
+          if (posCheck[0] === orthogonalPosition[0] && posCheck[1] === orthogonalPosition[1]) {
+            return false;
+          }
+        }
         if (canReadCharge) {
           return block.isPowered || block.isRedstoneBattery;
         }

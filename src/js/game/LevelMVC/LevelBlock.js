@@ -1,3 +1,10 @@
+const {
+  North,
+  South,
+  East,
+  West,
+} = require("./FacingDirection.js");
+
 module.exports = class LevelBlock {
   constructor(blockType) {
     this.blockType = blockType;
@@ -16,6 +23,7 @@ module.exports = class LevelBlock {
     this.isConnectedToRedstone = false; // can this block connect to nearby redstone wire
     this.isRedstoneBattery = false;
     this.isOpen = false;
+    this.isRail = false;
     this.isSolid = true;
 
     if (blockType === "") {
@@ -152,16 +160,26 @@ module.exports = class LevelBlock {
       this.isEntity = true;
     }
 
+    if (blockType.startsWith("bed")) {
+      this.isEntity = true;
+    }
+
     if (blockType.startsWith("piston")) {
       this.isSolid = false;
       this.isDestroyable = false;
       this.isConnectedToRedstone = !blockType.startsWith("pistonArm");
-      if (blockType.substring(blockType.length - 2, blockType.length) === "On" || blockType.startsWith("pistonArm")) {
+      if (blockType.substring(blockType.length - 2, blockType.length) === "On" ||
+        blockType.startsWith("pistonArm") ||
+        blockType.substring(blockType.length - 8, blockType.length) === "OnSticky"
+      ) {
         this.isEntity = true;
       }
     }
   }
 
+  getIsStickyPiston() {
+    return this.blockType.substring(this.blockType.length - 6, this.blockType.length) === "Sticky";
+  }
   canHoldCharge() {
     return this.isSolid;
   }
@@ -178,11 +196,11 @@ module.exports = class LevelBlock {
   }
 
   getIsPushable() {
-    return this.blockType !== "" && !this.blockType.startsWith("redstone") && !this.blockType.startsWith("door");
+    return this.blockType !== "" && !this.isDestroyableUponPush();
   }
 
   isDestroyableUponPush() {
-    return this.blockType.startsWith("redstone") || this.blockType.startsWith("door");
+    return this.blockType.startsWith("redstone") || this.blockType.startsWith("door") || this.blockType.startsWith("railsRedstone") || this.blockType.startsWith("pressure");
   }
 
   needToRefreshRedstone(){
@@ -190,6 +208,22 @@ module.exports = class LevelBlock {
       return true;
     } else {
       return false;
+    }
+  }
+
+  getPistonDirection() {
+    if (this.blockType.startsWith("piston")) {
+      let direction = this.blockType.substring(6, 7);
+      switch (direction) {
+        case "D":
+          return South;
+        case "U":
+          return North;
+        case "L":
+          return West;
+        case "R":
+          return East;
+      }
     }
   }
 
@@ -223,9 +257,16 @@ module.exports = class LevelBlock {
    * @return {String} frame identifier
    */
   static getMiniblockFrame(blockType) {
-    // We don't have rails miniblock assets yet.
+    if (blockType === "railsRedstoneTorch") {
+      return "redstoneTorch";
+    }
+
     if (blockType.startsWith("rails")) {
-      return;
+      return "railNormal";
+    }
+
+    if (blockType.startsWith("glass") || blockType.startsWith("ice")) {
+      return undefined;
     }
 
     // We use the same miniblock for -all- restoneWire

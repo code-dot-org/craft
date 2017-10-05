@@ -34,10 +34,10 @@ module.exports = class LevelModel {
   }
 
   reset() {
-    this.groundPlane = new LevelPlane(this.initialLevelData.groundPlane, this.planeWidth, this.planeHeight, this.controller, this);
-    this.groundDecorationPlane = new LevelPlane(this.initialLevelData.groundDecorationPlane, this.planeWidth, this.planeHeight, this.controller, this);
+    this.groundPlane = new LevelPlane(this.initialLevelData.groundPlane, this.planeWidth, this.planeHeight, this.controller, this, "groundPlane");
+    this.groundDecorationPlane = new LevelPlane(this.initialLevelData.groundDecorationPlane, this.planeWidth, this.planeHeight, this.controller, this, "decorationPlane");
     this.shadingPlane = [];
-    this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, this.controller, this, true);
+    this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, this.controller, this, "actionPlane");
 
     this.actionPlane.getAllPositions().forEach((position) => {
       if (this.actionPlane.getBlockAt(position).blockType === "railsRedstoneTorch") {
@@ -48,6 +48,9 @@ module.exports = class LevelModel {
     this.actionPlane.getAllPositions().forEach((position) => {
       if (this.actionPlane.getBlockAt(position).blockType.substring(0,12) === "redstoneWire") {
         this.actionPlane.determineRedstoneSprite(position);
+      }
+      if (this.actionPlane.getBlockAt(position).isRail) {
+        this.actionPlane.determineRailType(position);
       }
     });
 
@@ -68,17 +71,40 @@ module.exports = class LevelModel {
       this.controller.player = this.player;
 
       if (levelData.useAgent) {
-        this.usingAgent = levelData.useAgent;
-        [x, y] = levelData.agentStartPosition;
-        const startingBlock = this.actionPlane.getBlockAt(levelData.agentStartPosition);
-        this.agent = new Agent(this.controller, "PlayerAgent", x, y, "Agent", !startingBlock.getIsEmptyOrEntity(), levelData.agentStartDirection);
-        this.controller.levelEntity.pushEntity(this.agent);
-        this.controller.agent = this.agent;
+        this.spawnAgent(levelData);
       }
     }
 
     this.computeShadingPlane();
     this.computeFowPlane();
+  }
+
+  /**
+   * Creates the Agent entity
+   *
+   * @param {Object} levelData the initial level data object, specifying the
+   *        Agent's default position and direction
+   * @param {[Number, Number]} [positionOverride] optional position override
+   * @param {Number} [directionOverride] optional direction override
+   */
+  spawnAgent(levelData, positionOverride, directionOverride) {
+    this.usingAgent = true;
+
+    const [x, y] = (positionOverride !== undefined)
+      ? positionOverride
+      : levelData.agentStartPosition;
+
+    const direction = (directionOverride !== undefined)
+        ? directionOverride
+        : levelData.agentStartDirection;
+
+    const name = "PlayerAgent";
+    const key = "Agent";
+
+    const startingBlock = this.actionPlane.getBlockAt([x, y]);
+    this.agent = new Agent(this.controller, name, x, y, key, !startingBlock.getIsEmptyOrEntity(), direction);
+    this.controller.levelEntity.pushEntity(this.agent);
+    this.controller.agent = this.agent;
   }
 
   yToIndex(y) {
@@ -803,26 +829,23 @@ module.exports = class LevelModel {
     this.moveForward();
   }
 
-  placeBlock(blockType) {
-    const position = this.player.position;
-    let shouldPlace = false;
+  placeBlock(blockType, entity = this.player) {
+    const position = entity.position;
     let placedBlock = null;
 
-    switch (blockType) {
-      case "cropWheat":
-        shouldPlace = this.groundPlane.getBlockAt(position).blockType === "farmlandWet";
-        break;
-
-      default:
-        shouldPlace = true;
-        break;
-    }
-
-    if (shouldPlace === true) {
+    let ground = this.groundPlane.getBlockAt(position);
+    let result = entity.canPlaceBlockOver(blockType, ground.blockType);
+    if (result.canPlace) {
       var block = new LevelBlock(blockType);
-
-      placedBlock = this.actionPlane.setBlockAt(position, block);
-      this.player.isOnBlock = !block.isWalkable;
+      switch (result.plane) {
+        case "actionPlane":
+          placedBlock = this.actionPlane.setBlockAt(position, block);
+          entity.walkableCheck(block);
+          break;
+        case "groundPlane":
+          this.groundPlane.setBlockAt(position, block);
+          break;
+      }
     }
 
     return placedBlock;

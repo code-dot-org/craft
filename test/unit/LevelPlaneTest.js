@@ -10,7 +10,7 @@ test('get blocks', t => {
     'water', 'lava', 'water', 'lava',
     'grass', 'dirt', 'stone', 'sand',
   ];
-  const plane = new LevelPlane(data, 4, 3, true, null);
+  const plane = new LevelPlane(data, 4, 3, true, null, "actionPlane");
 
   t.equal(plane.getBlockAt([0, 0]).blockType, 'grass');
   t.equal(plane.getBlockAt([1, 1], 1).blockType, 'water');
@@ -51,7 +51,7 @@ test('get blocks', t => {
 // 3   │     ──┘
 test('redstone wires', t => {
   const data = new Array(24).fill('');
-  const plane = new LevelPlane(data, 6, 4, true, null);
+  const plane = new LevelPlane(data, 6, 4, true, null, "actionPlane");
 
   // Place the test pattern.
   plane.setBlockAt([0, 0], new LevelBlock('redstoneWire'));
@@ -114,7 +114,7 @@ test('rail connections: T-junctions', t => {
     'rails',  '',       'rails',  '',       'rails',  '',       '',
     '',       '',       '',       '',       '',       'rails',  '',
   ];
-  const plane = new LevelPlane(data, 7, 6, true, null);
+  const plane = new LevelPlane(data, 7, 6, true, null, "actionPlane");
 
   t.equal(plane.setBlockAt([1, 0], new LevelBlock('rails')).blockType, 'railsSouthEast');
   t.equal(plane.setBlockAt([5, 1], new LevelBlock('rails')).blockType, 'railsSouthEast');
@@ -154,7 +154,7 @@ test('rail connections: unpowered T-junctions', t => {
     'rails',  '',       'rails',  '',       'rails',  '',       '',
     '',       '',       '',       '',       '',       'rails',  '',
   ];
-  const plane = new LevelPlane(data, 7, 6, true, null);
+  const plane = new LevelPlane(data, 7, 6, true, null, "actionPlane");
 
   t.equal(plane.setBlockAt([1, 0], new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
   t.equal(plane.setBlockAt([5, 1], new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
@@ -184,7 +184,7 @@ test('rail connections: unpowered T-junctions', t => {
 //
 test('rail connections: 2x2 loop', t => {
   const data = new Array(4).fill('');
-  const plane = new LevelPlane(data, 2, 2, true);
+  const plane = new LevelPlane(data, 2, 2, true, null, "actionPlane");
 
   t.equal(plane.setBlockAt([1, 0], new LevelBlock('rails')).blockType, 'rails');
   t.equal(plane.setBlockAt([0, 0], new LevelBlock('rails')).blockType, 'railsEast');
@@ -209,7 +209,7 @@ test('rail connections: 2x2 loop', t => {
 //    5 6 7       ╚═══╝
 test('rail connections: longer track', t => {
   const data = new Array(16).fill('');
-  const plane = new LevelPlane(data, 4, 4, true);
+  const plane = new LevelPlane(data, 4, 4, true, null, "actionPlane");
 
   plane.setBlockAt([0, 0], new LevelBlock('rails'));
   plane.setBlockAt([1, 1], new LevelBlock('rails'));
@@ -248,7 +248,7 @@ test('rail connections: destroy block', t => {
     'railsEastWest',  'railsSouthWest', '',
     '',               'railsNorthSouth','',
   ];
-  const plane = new LevelPlane(data, 3, 3, true);
+  const plane = new LevelPlane(data, 3, 3, true, null, "actionPlane");
 
   // Destroy track block.
   plane.setBlockAt([0, 1], new LevelBlock(''));
@@ -276,7 +276,7 @@ test('redstone charge: place block', t => {
     '','',                        '',
     '','',                        '',
   ];
-  const plane = new LevelPlane(data, 3, 3, true);
+  const plane = new LevelPlane(data, 3, 3, true, null, "actionPlane");
 
   plane.setBlockAt([2, 0], new LevelBlock('redstoneWire'));
   plane.setBlockAt([2, 1], new LevelBlock('redstoneWire'));
@@ -306,7 +306,7 @@ test('redstone charge: destroy block', t => {
     '',                  '',         'redstoneWireVerticalOn',
     'redstoneWire',      '',         'redstoneWireVerticalOn',
   ];
-  const plane = new LevelPlane(data, 3, 3, true);
+  const plane = new LevelPlane(data, 3, 3, true, null, "actionPlane");
 
   plane.setBlockAt([2, 0], new LevelBlock(''));
 
@@ -333,7 +333,7 @@ test('torch charge: destroy block', t => {
     '',                  '',         'redstoneWireVerticalOn',
     'redstoneWire',      '',         'redstoneWireVerticalOn',
   ];
-  const plane = new LevelPlane(data, 3, 3, true);
+  const plane = new LevelPlane(data, 3, 3, true, null, "actionPlane");
 
   plane.setBlockAt([1, 0], new LevelBlock(''));
 
@@ -360,7 +360,7 @@ test('torch charge: place block', t => {
     '',            '',      'redstoneWireVertical',
     '',            '',      'redstoneWireVertical',
   ];
-  const plane = new LevelPlane(data, 3, 3, true);
+  const plane = new LevelPlane(data, 3, 3, true, null, "actionPlane");
 
   plane.setBlockAt([1, 2], new LevelBlock('railsRedstoneTorch'));
 
@@ -381,7 +381,7 @@ test('iron door open: place block', t => {
     'redstoneWireVertical','',      '',
     'doorIron',            '',      'doorIron',
   ];
-  const plane = new LevelPlane(data, 3, 3, true);
+  const plane = new LevelPlane(data, 3, 3, true, null, "actionPlane");
 
   plane.setBlockAt([1, 0], new LevelBlock('railsRedstoneTorch'));
 
@@ -397,7 +397,7 @@ test('iron door close: destroy block', t => {
     'redstoneWireVerticalOn','','',
     'doorIron',              '','doorIron',
   ];
-  const plane = new LevelPlane(data, 3, 3, true);
+  const plane = new LevelPlane(data, 3, 3, true, null, "actionPlane");
 
   plane.setBlockAt([0, 0], new LevelBlock(''));
 
@@ -416,7 +416,7 @@ test('piston activate: place block', t => {
     '','','','','','','grass','',
     '','','','','','','','',
   ];
-  const plane = new LevelPlane(data, 8, 6, true);
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
 
   plane.setBlockAt([4, 2], new LevelBlock('railsRedstoneTorch'));
 
@@ -443,7 +443,7 @@ test('piston deactivate: destroy block', t => {
     '','','','','','','pistonArmDown','',
     '','','','','','','grass','',
   ];
-  const plane = new LevelPlane(data, 8, 6, true);
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
 
   plane.setBlockAt([4, 2], new LevelBlock(''));
 
@@ -454,6 +454,330 @@ test('piston deactivate: destroy block', t => {
     '','','pistonUp','redstoneWireUpLeft','','redstoneWireUpRight','pistonDown','',
     '','','','','','','','',
     '','','','','','','grass','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+test('sticky piston activate: place block', t => {
+  const data = [
+    '','','grass','pistonLeftSticky','','pistonRightSticky','grass','',
+    '','','','redstoneWireVertical','','redstoneWireVertical','','',
+    '','','grass','redstoneWireVertical','','redstoneWireVertical','','',
+    '','','pistonUpSticky','redstoneWireUpLeft','','redstoneWireUpRight','pistonDownSticky','',
+    '','','','','','','grass','',
+    '','','','','','','','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
+
+  plane.setBlockAt([4, 2], new LevelBlock('railsRedstoneTorch'));
+
+  const expected = [
+    '','grass','pistonArmLeft','pistonLeftOnSticky','','pistonRightOnSticky','pistonArmRight','grass',
+    '','','grass','redstoneWireVerticalOn','','redstoneWireVerticalOn','','',
+    '','','pistonArmUp','redstoneWireTRightOn','railsRedstoneTorch','redstoneWireTLeftOn','','',
+    '','','pistonUpOnSticky','redstoneWireUpLeftOn','','redstoneWireUpRightOn','pistonDownOnSticky','',
+    '','','','','','','pistonArmDown','',
+    '','','','','','','grass','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+test('sticky piston deactivate: destroy block', t => {
+  const data = [
+    '','grass','pistonArmLeft','pistonLeftOnSticky','','pistonRightOnSticky','pistonArmRight','grass',
+    '','','grass','redstoneWireVerticalOn','','redstoneWireVerticalOn','','',
+    '','','pistonArmUp','redstoneWireTRightOn','railsRedstoneTorch','redstoneWireTLeftOn','','',
+    '','','pistonUpOnSticky','redstoneWireUpLeftOn','','redstoneWireUpRightOn','pistonDownOnSticky','',
+    '','','','','','','pistonArmDownSticky','',
+    '','','','','','','grass','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
+
+  plane.setBlockAt([4, 2], new LevelBlock(''));
+
+  const expected = [
+    '','','grass','pistonLeftSticky','','pistonRightSticky','grass','',
+    '','','','redstoneWireVertical','','redstoneWireVertical','','',
+    '','','grass','redstoneWireVertical','','redstoneWireVertical','','',
+    '','','pistonUpSticky','redstoneWireUpLeft','','redstoneWireUpRight','pistonDownSticky','',
+    '','','','','','','grass','',
+    '','','','','','','','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+test('piston destroy torch: adjacent to piston', t => {
+  const data = [
+    '','','railsRedstoneTorch','pistonLeft','','','','',
+    '','','','redstoneWireVertical','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
+
+  plane.setBlockAt([3, 2], new LevelBlock('railsRedstoneTorch'));
+
+  const expected = [
+    '','','pistonArmLeft','pistonLeftOn','','','','',
+    '','','','redstoneWireVerticalOn','','','','',
+    '','','','railsRedstoneTorch','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+test('piston destroy torch: not adjacent to piston', t => {
+  const data = [
+    '','railsRedstoneTorch','grass','pistonLeft','','','','',
+    '','','','redstoneWireVertical','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
+
+  plane.setBlockAt([3, 2], new LevelBlock('railsRedstoneTorch'));
+
+  const expected = [
+    '','grass','pistonArmLeft','pistonLeftOn','','','','',
+    '','','','redstoneWireVerticalOn','','','','',
+    '','','','railsRedstoneTorch','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+test('piston destroy door: adjacent to piston', t => {
+  const data = [
+    '','','doorIron','pistonLeft','','','','',
+    '','','','redstoneWireVertical','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
+
+  plane.setBlockAt([3, 2], new LevelBlock('railsRedstoneTorch'));
+
+  const expected = [
+    '','','pistonArmLeft','pistonLeftOn','','','','',
+    '','','','redstoneWireVerticalOn','','','','',
+    '','','','railsRedstoneTorch','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+test('piston destroy door: not adjacent to piston', t => {
+  const data = [
+    '','doorIron','grass','pistonLeft','','','','',
+    '','','','redstoneWireVertical','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
+
+  plane.setBlockAt([3, 2], new LevelBlock('railsRedstoneTorch'));
+
+  const expected = [
+    '','grass','pistonArmLeft','pistonLeftOn','','','','',
+    '','','','redstoneWireVerticalOn','','','','',
+    '','','','railsRedstoneTorch','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+test('piston destroy pressure Plate: adjacent to piston', t => {
+  const data = [
+    '','','pressurePlateUp','pistonLeft','','','','',
+    '','','','redstoneWireVertical','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
+
+  plane.setBlockAt([3, 2], new LevelBlock('railsRedstoneTorch'));
+
+  const expected = [
+    '','','pistonArmLeft','pistonLeftOn','','','','',
+    '','','','redstoneWireVerticalOn','','','','',
+    '','','','railsRedstoneTorch','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+test('piston destroy door: not adjacent to piston', t => {
+  const data = [
+    '','pressurePlateUp','grass','pistonLeft','','','','',
+    '','','','redstoneWireVertical','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
+
+  plane.setBlockAt([3, 2], new LevelBlock('railsRedstoneTorch'));
+
+  const expected = [
+    '','grass','pistonArmLeft','pistonLeftOn','','','','',
+    '','','','redstoneWireVerticalOn','','','','',
+    '','','','railsRedstoneTorch','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+test('piston destroy redstoneWire: adjacent to piston', t => {
+  const data = [
+    '','','redstoneWireHorizontal','pistonLeft','','','','',
+    '','','','redstoneWireVertical','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
+
+  plane.setBlockAt([3, 2], new LevelBlock('railsRedstoneTorch'));
+
+  const expected = [
+    '','','pistonArmLeft','pistonLeftOn','','','','',
+    '','','','redstoneWireVerticalOn','','','','',
+    '','','','railsRedstoneTorch','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+test('piston destroy redstoneWire: not adjacent to piston', t => {
+  const data = [
+    '','redstoneWireHorizontal','grass','pistonLeft','','','','',
+    '','','','redstoneWireVertical','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
+
+  plane.setBlockAt([3, 2], new LevelBlock('railsRedstoneTorch'));
+
+  const expected = [
+    '','grass','pistonArmLeft','pistonLeftOn','','','','',
+    '','','','redstoneWireVerticalOn','','','','',
+    '','','','railsRedstoneTorch','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+test('piston directional power: torch at arm side', t => {
+  const data = [
+    '','','','pistonLeft','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
+
+  plane.setBlockAt([2, 0], new LevelBlock('railsRedstoneTorch'));
+
+  const expected = [
+    '','','railsRedstoneTorch','pistonLeft','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+test('sticky piston directional power: torch at arm side', t => {
+  const data = [
+    '','','','pistonLeftSticky','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
+
+  plane.setBlockAt([2, 0], new LevelBlock('railsRedstoneTorch'));
+
+  const expected = [
+    '','','railsRedstoneTorch','pistonLeftSticky','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
   ];
 
   t.deepEqual(plane._data.map(block => block.blockType), expected);

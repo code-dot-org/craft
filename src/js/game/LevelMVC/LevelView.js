@@ -58,6 +58,60 @@ module.exports = class LevelView {
       "milk": ["Miniblocks", 186, 191],
       "egg": ["Miniblocks", 192, 197],
       "poppy": ["Miniblocks", 198, 203],
+      "daisy": ["Miniblocks", 204, 209],
+      "dandelion": ["Miniblocks", 210, 215],
+      "bed": ["Miniblocks", 216, 221],
+      "cactus": ["Miniblocks", 222, 227],
+      "clay": ["Miniblocks", 228, 233],
+      "deadbush": ["Miniblocks", 234, 239],
+      "doorIron": ["Miniblocks", 240, 245],
+      "doorOak": ["Miniblocks", 246, 251],
+      "glowstoneDust": ["Miniblocks", 252, 257],
+      "hardenedClay": ["Miniblocks", 258, 263],
+      "hardenedClayBlack": ["Miniblocks", 264, 269],
+      "hardenedClayBlue": ["Miniblocks", 270, 275],
+      "hardenedClayBrown": ["Miniblocks", 276, 281],
+      "hardenedClayCyan": ["Miniblocks", 282, 287],
+      "hardenedClayGray": ["Miniblocks", 288, 293],
+      "hardenedClayGreen": ["Miniblocks", 294, 299],
+      "hardenedClayLightBlue": ["Miniblocks", 300, 305],
+      "hardenedClayLime": ["Miniblocks", 306, 311],
+      "hardenedClayMagenta": ["Miniblocks", 312, 317],
+      "hardenedClayOrange": ["Miniblocks", 318, 323],
+      "hardenedClayPink": ["Miniblocks", 324, 329],
+      "hardenedClayPurple": ["Miniblocks", 330, 335],
+      "hardenedClayRed": ["Miniblocks", 336, 341],
+      "hardenedClaySilver": ["Miniblocks", 342, 347],
+      "hardenedClayWhite": ["Miniblocks", 348, 353],
+      "hardenedClayYellow": ["Miniblocks", 354, 359],
+      "netherbrick": ["Miniblocks", 360, 365],
+      "netherrack": ["Miniblocks", 366, 371],
+      "obsidian": ["Miniblocks", 372, 377],
+      "piston": ["Miniblocks", 378, 383],
+      "pressurePlateOak": ["Miniblocks", 384, 389],
+      "netherQuartz": ["Miniblocks", 390, 395],
+      "railGolden": ["Miniblocks", 396, 401],
+      "railNormal": ["Miniblocks", 402, 407],
+      "redstoneTorch": ["Miniblocks", 408, 413],
+      "reeds": ["Miniblocks", 414, 419],
+      "seedsWheat": ["Miniblocks", 420, 425],
+      "snow": ["Miniblocks", 426, 431],
+      "snowBall": ["Miniblocks", 432, 437],
+      "woolBlack": ["Miniblocks", 438, 443],
+      "woolBlue": ["Miniblocks", 444, 449],
+      "woolBrown": ["Miniblocks", 450, 455],
+      "woolCyan": ["Miniblocks", 456, 461],
+      "woolGray": ["Miniblocks", 462, 467],
+      "woolGreen": ["Miniblocks", 468, 473],
+      "woolLightBlue": ["Miniblocks", 474, 479],
+      "woolLime": ["Miniblocks", 480, 485],
+      "woolMagenta": ["Miniblocks", 486, 491],
+      "woolOrange": ["Miniblocks", 492, 497],
+      "woolPink": ["Miniblocks", 498, 503],
+      "woolLPurple": ["Miniblocks", 504, 509],
+      "woolRed": ["Miniblocks", 510, 515],
+      "woolSilver": ["Miniblocks", 516, 521],
+      "woolYellow": ["Miniblocks", 522, 527],
     };
 
     this.blocks = {
@@ -100,6 +154,20 @@ module.exports = class LevelView {
       "water": ["blocks", "Water_0", -13, 0],
       "wool": ["blocks", "Wool_White", -13, 0],
       "wool_orange": ["blocks", "Wool_Orange", -13, 0],
+      "wool_black": ["blocks", "Wool_Black", -13, 0],
+      "wool_blue": ["blocks", "Wool_Blue", -13, 0],
+      "wool_brown": ["blocks", "Wool_Brown", -13, 0],
+      "wool_cyan": ["blocks", "Wool_Cyan", -13, 0],
+      "wool_gray": ["blocks", "Wool_Gray", -13, 0],
+      "wool_green": ["blocks", "Wool_Green", -13, 0],
+      "wool_light_blue": ["blocks", "Wool_LightBlue", -13, 0],
+      "wool_lime": ["blocks", "Wool_Lime", -13, 0],
+      "wool_magenta": ["blocks", "Wool_Magenta", -13, 0],
+      "wool_pink": ["blocks", "Wool_Pink", -13, 0],
+      "wool_purple": ["blocks", "Wool_Purple", -13, 0],
+      "wool_red": ["blocks", "Wool_Red", -13, 0],
+      "wool_silver": ["blocks", "Wool_Silver", -13, 0],
+      "wool_yellow": ["blocks", "Wool_Yellow", -13, 0],
 
       "leavesAcacia": ["leavesAcacia", "Leaves_Acacia0.png", -100, 0],
       "leavesBirch": ["leavesBirch", "Leaves_Birch0.png", -100, 0],
@@ -195,6 +263,20 @@ module.exports = class LevelView {
       "pistonArmUp": ["blocks", "piston_arm_up", -26, -13],
       "pistonArmDown": ["blocks", "piston_arm_down", -26, -13],
 
+      "pistonUpSticky": ["blocks", "piston_up", -13, 0],
+      "pistonDownSticky": ["blocks", "piston_down_sticky", -13, 0],
+      "pistonLeftSticky": ["blocks", "piston_left", -13, 0],
+      "pistonRightSticky": ["blocks", "piston_right", -13, 0],
+      "pistonUpOnSticky": ["blocks", "piston_base_up", -26, -13],
+      "pistonDownOnSticky": ["blocks", "piston_base_down_sticky", -26, -13],
+      "pistonLeftOnSticky": ["blocks", "piston_base_left", -26, -13],
+      "pistonRightOnSticky": ["blocks", "piston_base_right", -26, -13],
+
+      "pistonArmLeftSticky": ["blocks", "piston_arm_left", -26, -13],
+      "pistonArmRightSticky": ["blocks", "piston_arm_right", -26, -13],
+      "pistonArmUpSticky": ["blocks", "piston_arm_up", -26, -13],
+      "pistonArmDownSticky": ["blocks", "piston_arm_down_sticky", -26, -13],
+
       "cactus": ["blocks", "cactus", -13, 0],
       "dead_bush": ["blocks", "dead_bush", -13, 0],
       "glowstone": ["blocks", "glowstone", -13, 0],
@@ -208,6 +290,44 @@ module.exports = class LevelView {
       "top_snow": ["blocks", "top_snow", -13, 0],
 
       "Nether_Portal": ["blocks", "Nether_Portal0", 0, -58],
+
+      //hooking up all old blocks that we had assets for but never used in previous years
+      "bedFoot": ["blocks", "Bed_Foot", -13, 0],
+      "bedHead": ["blocks", "Bed_Head", -13, 10],
+      "clay": ["blocks", "Clay", -13, 0],
+      "glassBlack": ["blocks", "Glass_Black", -13, 0],
+      "glassBlue": ["blocks", "Glass_Blue", -13, 0],
+      "glassBrown": ["blocks", "Glass_Brown", -13, 0],
+      "glassCyan": ["blocks", "Glass_Cyan", -13, 0],
+      "glassGray": ["blocks", "Glass_Gray", -13, 0],
+      "glassGreen": ["blocks", "Glass_Green", -13, 0],
+      "glassLightBlue": ["blocks", "Glass_LightBlue", -13, 0],
+      "glassLime": ["blocks", "Glass_Lime", -13, 0],
+      "glassMagenta": ["blocks", "Glass_Magenta", -13, 0],
+      "glassOrange": ["blocks", "Glass_Orange", -13, 0],
+      "glassPink": ["blocks", "Glass_Pink", -13, 0],
+      "glassPurple": ["blocks", "Glass_Purple", -13, 0],
+      "glassRed": ["blocks", "Glass_Red", -13, 0],
+      "glassSilver": ["blocks", "Glass_Silver", -13, 0],
+      "glassWhite": ["blocks", "Glass_White", -13, 0],
+      "glassYellow": ["blocks", "Glass_Yellow", -13, 0],
+      "terracotta": ["blocks", "Terracotta", -13, 0],
+      "terracottaBlack": ["blocks", "Terracotta_Black", -13, 0],
+      "terracottaBlue": ["blocks", "Terracotta_Blue", -13, 0],
+      "terracottaBrown": ["blocks", "Terracotta_Brown", -13, 0],
+      "terracottaCyan": ["blocks", "Terracotta_Cyan", -13, 0],
+      "terracottaGray": ["blocks", "Terracotta_Gray", -13, 0],
+      "terracottaGreen": ["blocks", "Terracotta_Green", -13, 0],
+      "terracottaLightBlue": ["blocks", "Terracotta_LightBlue", -13, 0],
+      "terracottaLime": ["blocks", "Terracotta_Lime", -13, 0],
+      "terracottaMagenta": ["blocks", "Terracotta_Magenta", -13, 0],
+      "terracottaOrange": ["blocks", "Terracotta_Orange", -13, 0],
+      "terracottaPink": ["blocks", "Terracotta_Pink", -13, 0],
+      "terracottaPurple": ["blocks", "Terracotta_Purple", -13, 0],
+      "terracottaRed": ["blocks", "Terracotta_Red", -13, 0],
+      "terracottaSilver": ["blocks", "Terracotta_Silver", -13, 0],
+      "terracottaWhite": ["blocks", "Terracotta_White", -13, 0],
+      "terracottaYellow": ["blocks", "Terracotta_Yellow", -13, 0],
     };
     this.actionPlaneBlocks = [];
     this.toDestroy = [];
@@ -232,6 +352,15 @@ module.exports = class LevelView {
     this.reset(levelModel);
   }
 
+  resetEntity(entity) {
+    this.preparePlayerSprite(entity.name, entity);
+    entity.sprite.animations.stop();
+    this.setPlayerPosition(entity.position[0], entity.position[1], entity.isOnBlock, entity);
+    this.setSelectionIndicatorPosition(entity.position[0], entity.position[1]);
+    this.selectionIndicator.visible = true;
+    this.playIdleAnimation(entity.position, entity.facing, entity.isOnBlock, entity);
+  }
+
   reset(levelModel) {
     this.player = levelModel.player;
     this.agent = levelModel.agent;
@@ -244,23 +373,15 @@ module.exports = class LevelView {
     this.trees = [];
 
     this.resetPlanes(levelModel);
+
     if (levelModel.usePlayer) {
-      this.preparePlayerSprite(this.player.name);
-      this.player.sprite.animations.stop();
-      this.setPlayerPosition(this.player.position[0], this.player.position[1], this.player.isOnBlock, this.player);
-      this.setSelectionIndicatorPosition(this.player.position[0], this.player.position[1]);
-      this.selectionIndicator.visible = true;
-      this.playIdleAnimation(this.player.position, this.player.facing, this.player.isOnBlock, this.player);
+      this.resetEntity(this.player);
 
       if (levelModel.usingAgent) {
-        this.preparePlayerSprite(this.agent.name, this.agent);
-        this.agent.sprite.animations.stop();
-        this.setPlayerPosition(this.agent.position[0], this.agent.position[1], this.agent.isOnBlock, this.agent);
-        this.setSelectionIndicatorPosition(this.agent.position[0], this.agent.position[1]);
-        this.selectionIndicator.visible = true;
-        this.playIdleAnimation(this.agent.position, this.agent.facing, this.agent.isOnBlock, this.agent);
+        this.resetEntity(this.agent);
       }
     }
+
     this.updateShadingPlane(levelModel.shadingPlane);
     this.updateFowPlane(levelModel.fowPlane);
 
@@ -353,7 +474,7 @@ module.exports = class LevelView {
 
   playPlayerAnimation(animationName, position, facing, isOnBlock = false, entity = this.player) {
     let direction = this.getDirectionName(facing);
-    entity.sprite.sortOrder = this.yToIndex(position[1]) + 5;
+    entity.sprite.sortOrder = this.yToIndex(position[1]) + entity.getSortOrderOffset();
 
     let animName = animationName + direction;
     return this.playScaledSpeed(entity.sprite.animations, animName);
@@ -596,14 +717,16 @@ module.exports = class LevelView {
 
     animation.onComplete.add(() => {
       this.activateUnpoweredRails(unpoweredRails);
-      this.playTrack(position, this.player.facing, isOnBlock, completionHandler);
+      this.playTrack(position, this.player.facing, isOnBlock, this.player, completionHandler);
     });
   }
 
-  playTrack(position, facing, isOnBlock, completionHandler) {
+  playTrack(position, facing, isOnBlock, entity = this.player, completionHandler) {
+    entity.onTracks = true;
     const track = this.controller.levelModel.actionPlane.getMinecartTrack(position, facing);
 
     if (!track) {
+      entity.onTracks = false;
       if (completionHandler) {
         completionHandler();
       }
@@ -619,11 +742,11 @@ module.exports = class LevelView {
       direction = arraydirection.substring(5);
       const isUp = facing === FacingDirection.North || nextFacing === FacingDirection.North;
       this.onAnimationEnd(this.playMinecartTurnAnimation(position, isUp, isOnBlock, completionHandler, direction), () => {
-        this.playTrack(nextPosition, nextFacing, isOnBlock, completionHandler);
+        this.playTrack(nextPosition, nextFacing, isOnBlock, entity, completionHandler);
       });
     } else {
       this.onAnimationEnd(this.playMinecartMoveForwardAnimation(position, facing, isOnBlock, completionHandler, nextPosition, speed), () => {
-        this.playTrack(nextPosition, nextFacing, isOnBlock, completionHandler);
+        this.playTrack(nextPosition, nextFacing, isOnBlock, entity, completionHandler);
       });
     }
   }
@@ -751,7 +874,7 @@ module.exports = class LevelView {
     this.setSelectionIndicatorPosition(position[0], position[1]);
     //make sure to render high for when moving up after placing a block
     var zOrderYIndex = position[1] + (facing === FacingDirection.North ? 1 : 0);
-    entity.sprite.sortOrder = this.yToIndex(zOrderYIndex) + 5;
+    entity.sprite.sortOrder = this.yToIndex(zOrderYIndex) + entity.getSortOrderOffset();
 
     if (!shouldJumpDown) {
       const animName = "walk" + this.getDirectionName(facing);
@@ -779,7 +902,7 @@ module.exports = class LevelView {
     this.setSelectionIndicatorPosition(position[0], position[1]);
     //make sure to render high for when moving up after placing a block
     var zOrderYIndex = position[1] + (facing === FacingDirection.North ? 1 : 0);
-    entity.sprite.sortOrder = this.yToIndex(zOrderYIndex) + 5;
+    entity.sprite.sortOrder = this.yToIndex(zOrderYIndex) + entity.getSortOrderOffset();
 
     if (!shouldJumpDown) {
       const animName = animation + this.getDirectionName(facing);
@@ -824,14 +947,18 @@ module.exports = class LevelView {
     return tween;
   }
 
-  playPlaceBlockAnimation(position, facing, blockType, blockTypeAtPosition, completionHandler) {
+  skipHopAnimation(blockType) {
+    return blockType === "cropWheat" || blockType === "torch" || blockType.startsWith("rail") || blockType.startsWith("redstoneWire");
+  }
+
+  playPlaceBlockAnimation(position, facing, blockType, blockTypeAtPosition, entity, completionHandler) {
     var jumpAnimName;
     let blockIndex = this.yToIndex(position[1]) + position[0];
 
-    if (blockType === "cropWheat" || blockType === "torch" || blockType.startsWith("rail") || blockType.startsWith("redstoneWire")) {
+    if (entity === this.agent || this.skipHopAnimation(blockType)) {
       this.setSelectionIndicatorPosition(position[0], position[1]);
 
-      var signalDetacher = this.playPlayerAnimation("punch", position, facing, false).onComplete.add(() => {
+      var signalDetacher = this.playPlayerAnimation("punch", position, facing, false, entity).onComplete.add(() => {
         signalDetacher.detach();
         completionHandler();
       });
@@ -950,8 +1077,8 @@ module.exports = class LevelView {
     this.playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, entity, completionHandler);
   }
 
-  playPunchDestroyAirAnimation(playerPosition, facing, destroyPosition, completionHandler) {
-    this.playPunchAnimation(playerPosition, facing, destroyPosition, "punchDestroy", completionHandler);
+  playPunchDestroyAirAnimation(playerPosition, facing, destroyPosition, completionHandler, entity = this.player) {
+    this.playPunchAnimation(playerPosition, facing, destroyPosition, "punchDestroy", completionHandler, entity);
   }
 
   playPunchAirAnimation(playerPosition, facing, destroyPosition, completionHandler, entity = this.player) {
@@ -1082,7 +1209,9 @@ module.exports = class LevelView {
         if (!this.controller.getIsDirectPlayerControl()) {
           this.playPlayerAnimation("idle", playerPosition, facing, false, entity);
         }
-        this.playItemDropAnimation(destroyPosition, blockType, completionHandler);
+        if (completionHandler !== null) {
+          this.playItemDropAnimation(destroyPosition, blockType, completionHandler);
+        }
       }
     });
     this.playScaledSpeed(explodeAnim.animations, "explode");
@@ -1095,6 +1224,7 @@ module.exports = class LevelView {
 
   playItemDropAnimation(destroyPosition, blockType, completionHandler) {
     var sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
+
     if (sprite) {
       sprite.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     }
@@ -1168,7 +1298,7 @@ module.exports = class LevelView {
     const screen = this.positionToScreen([x, y], isOnBlock, entity);
     entity.sprite.x = screen.x;
     entity.sprite.y = screen.y;
-    entity.sprite.sortOrder = this.yToIndex(screen.y) + 5;
+    entity.sprite.sortOrder = this.yToIndex(screen.y) + entity.getSortOrderOffset();
   }
 
   setSelectionIndicatorPosition(x, y) {
@@ -1291,6 +1421,10 @@ module.exports = class LevelView {
           return;
         }
 
+        if (newBlock && newBlock.getIsMiniblock()) {
+          return;
+        }
+
         if (newBlock && newBlock.blockType) {
           this.createActionPlaneBlock(position, newBlock.blockType);
         } else if (newBlock) {
@@ -1408,7 +1542,7 @@ module.exports = class LevelView {
     }
   }
 
-  playRandomPlayerIdle(facing) {
+  playRandomPlayerIdle(facing, entity = this.player) {
     var facingName,
       rand,
       animationName;
@@ -1433,7 +1567,7 @@ module.exports = class LevelView {
     }
 
     animationName += facingName;
-    this.playScaledSpeed(this.player.sprite.animations, animationName);
+    this.playScaledSpeed(entity.sprite.animations, animationName);
   }
 
   generatePlayerCelebrateFrames() {
@@ -1587,7 +1721,7 @@ module.exports = class LevelView {
     }
 
     entity.sprite.animations.add('idle' + direction, frameList, frameRate / 3, false).onComplete.add(() => {
-      this.playRandomPlayerIdle(facing);
+      this.playRandomPlayerIdle(facing, entity);
     });
     frameList = this.generateFramesWithEndDelay("Player_", offset + 6, offset + 5, this.playerFrameName(offset + 5), 3, 5);
     frameList.push(this.playerFrameName(offset + 6));
@@ -1604,7 +1738,7 @@ module.exports = class LevelView {
       frameList.push(this.playerFrameName(offset + 1));
     }
     entity.sprite.animations.add('idlePause' + direction, frameList, frameRate / 3, false).onComplete.add(() => {
-      this.playRandomPlayerIdle(facing);
+      this.playRandomPlayerIdle(facing, entity);
     });
 
     entity.sprite.animations.add('walk' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 13, offset + 20, "", 3), frameRate, true);
@@ -1639,6 +1773,10 @@ module.exports = class LevelView {
       frameList;
 
     const frame = LevelBlock.getMiniblockFrame(blockType);
+    if (!frame) {
+      return sprite;
+    }
+
     const atlas = "miniBlocks";
     const framePrefix = this.miniBlocks[frame][0];
     const frameStart = this.miniBlocks[frame][1];

@@ -19,6 +19,41 @@ module.exports = class Agent extends BaseEntity {
     }
   }
 
+  /**
+   * check whether or not the given entity can place a block
+   */
+  canPlaceBlockOver(toPlaceBlockType, onTopOfBlockType) {
+    let result = {canPlace: false, plane: ""};
+    if (onTopOfBlockType === "water" || onTopOfBlockType === "lava") {
+      if (!toPlaceBlockType.startsWith("redstoneWire") && !toPlaceBlockType.startsWith("piston") && !toPlaceBlockType.startsWith("rails")) {
+        result.canPlace = true;
+        result.plane = "groundPlane";
+      }
+    } else {
+      if (toPlaceBlockType.startsWith("redstoneWire") || toPlaceBlockType.startsWith("rails")) {
+        result.canPlace = true;
+        result.plane = "actionPlane";
+      }
+    }
+    return result;
+  }
+
+  /**
+   * @override
+   */
+  canMoveThrough() {
+    return true;
+  }
+
+  /**
+   * Give agent a higher-than-normal offset so that it will always render on top
+   * of the player when on the same cell.
+   * @override
+   */
+  getSortOrderOffset() {
+    return super.getSortOrderOffset() + 1;
+  }
+
   // "Events" levels allow the player to move around with the arrow keys, and
   // perform actions with the space bar.
   updateMovement() {
@@ -90,8 +125,6 @@ module.exports = class Agent extends BaseEntity {
 
     this.updateHidingTree();
     this.updateHidingBlock(prevPosition);
-    this.collectItems(prevPosition);
-    this.collectItems();
   }
 
   doMoveBackward(commandQueueItem) {
@@ -133,8 +166,6 @@ module.exports = class Agent extends BaseEntity {
 
     this.updateHidingTree();
     this.updateHidingBlock(prevPosition);
-    this.collectItems(prevPosition);
-    this.collectItems();
   }
 
   bump(commandQueueItem) {
@@ -158,28 +189,6 @@ module.exports = class Agent extends BaseEntity {
     });
   }
 
-  collectItems(targetPosition = this.position) {
-    // collectible check
-    var collectibles = this.controller.levelView.collectibleItems;
-    var distanceBetween = function (position, position2) {
-      return Math.sqrt(Math.pow(position[0] - position2[0], 2) + Math.pow(position[1] - position2[1], 2));
-    };
-    for (var i = 0; i < collectibles.length; i++) {
-      let sprite = collectibles[i][0];
-      // already collected item
-      if (sprite === null) {
-        collectibles.splice(i, 1);
-
-      } else {
-        let collectiblePosition = this.controller.levelModel.spritePositionToIndex(collectibles[i][1], [sprite.x, sprite.y]);
-        if (distanceBetween(targetPosition, collectiblePosition) < 2) {
-          this.controller.levelView.playItemAcquireAnimation(this.position, this.facing, sprite, () => { }, collectibles[i][2]);
-          collectibles.splice(i, 1);
-        }
-      }
-    }
-  }
-
   takeDamage(callbackCommand) {
     let facingName = this.controller.levelView.getDirectionName(this.facing);
     this.healthPoint--;
@@ -197,11 +206,12 @@ module.exports = class Agent extends BaseEntity {
     }
   }
 
-  hasPermissionToWalk(actionBlock, frontEntity) {
-        return (actionBlock.isWalkable || ((frontEntity !== undefined && frontEntity.isOnBlock)
-        // action plane is empty
-        && !actionBlock.isEmpty))
-        // there is no entity
-        && (frontEntity === undefined);
+  hasPermissionToWalk(actionBlock) {
+        return (actionBlock.isWalkable);
   }
+
+  canTriggerPressurePlates() {
+    return true;
+  }
+
 };

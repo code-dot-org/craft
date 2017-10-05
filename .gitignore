@@ -33,6 +33,7 @@ Icon?
 
 # Code coverage
 /coverage
+.nyc_output
 
 # ZSH Cake plugin cache
 /.cake_task_cache

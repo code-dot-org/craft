@@ -9,6 +9,7 @@ module.exports = class Player extends BaseEntity {
     this.isOnBlock = isOnBlock;
     this.inventory = {};
     this.movementState = -1;
+    this.onTracks = false;
 
     if (controller.getIsDirectPlayerControl()) {
       this.moveDelayMin = 0;
@@ -19,19 +20,39 @@ module.exports = class Player extends BaseEntity {
     }
   }
 
+  /**
+   * check whether or not the given entity can place a block
+   */
+  canPlaceBlockOver(toPlaceBlockType, onTopOfBlockType) {
+    let result = {canPlace: false, plane: ""};
+    if (onTopOfBlockType === "water" || onTopOfBlockType === "lava") {
+      result.canPlace = true;
+      result.plane = "groundPlane";
+    } else {
+      result.canPlace = true;
+      result.plane = "actionPlane";
+    }
+    if (toPlaceBlockType === "cropWheat") {
+      result.canPlace = onTopOfBlockType === "farmlandWet";
+    }
+    return result;
+  }
+
+  /**
+   * player walkable stuff
+   */
+  walkableCheck(block) {
+    this.isOnBlock = !block.isWalkable;
+  }
+
   // "Events" levels allow the player to move around with the arrow keys, and
   // perform actions with the space bar.
   updateMovement() {
     if (!this.controller.attemptRunning || !this.controller.getIsDirectPlayerControl()) {
       return;
     }
-    const queueIsEmpty = this.queue.isFinished() || !this.queue.isStarted();
-    const isMoving = this.movementState !== -1;
-    const queueHasOne = this.queue.currentCommand && this.queue.getLength() === 0;
-    const timeEllapsed = (+new Date() - this.lastMovement);
-    const movementAlmostFinished = timeEllapsed > 300;
 
-    if ((queueIsEmpty || (queueHasOne && movementAlmostFinished)) && isMoving) {
+    if (this.canUpdateMovement()) {
       // Arrow key
       if (this.movementState >= 0) {
         let direction = this.movementState;
@@ -49,6 +70,15 @@ module.exports = class Player extends BaseEntity {
         this.addCommand(callbackCommand);
       }
     }
+  }
+
+  canUpdateMovement() {
+    const queueIsEmpty = this.queue.isFinished() || !this.queue.isStarted();
+    const isMoving = this.movementState !== -1;
+    const queueHasOne = this.queue.currentCommand && this.queue.getLength() === 0;
+    const timeEllapsed = (+new Date() - this.lastMovement);
+    const movementAlmostFinished = timeEllapsed > 300;
+    return !this.onTracks && ((queueIsEmpty || (queueHasOne && movementAlmostFinished)) && isMoving);
   }
 
   doMoveForward(commandQueueItem) {
@@ -196,4 +226,9 @@ module.exports = class Player extends BaseEntity {
       });
     }
   }
+
+  canTriggerPressurePlates() {
+    return true;
+  }
+
 };
