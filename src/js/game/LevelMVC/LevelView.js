@@ -467,7 +467,9 @@ module.exports = class LevelView {
     let blockIndex = (this.yToIndex(position[1])) + position[0];
     let block = this.actionPlaneBlocks[blockIndex];
     let animationName = open ? "open" : "close";
-    this.onAnimationEnd(block.animations.play(animationName, 60), () => {
+    const animation = this.playScaledSpeed(block.animations, animationName);
+    this.onAnimationEnd(animation, () => {
+      animation.updateCurrentFrame();
       completionHandler();
     });
   }
@@ -1875,7 +1877,7 @@ module.exports = class LevelView {
       }
       frameList = frameList.concat(animationFramesIron);
 
-      sprite.animations.add("open", frameList, 5, false);
+      sprite.animations.add("open", frameList);
 
       frameList = [];
       animationFramesIron = Phaser.Animation.generateFrameNames(type, 3, 0, "", 1);
@@ -1883,7 +1885,7 @@ module.exports = class LevelView {
         frameList.push(`${type}3`);
       }
       frameList = frameList.concat(animationFramesIron);
-      sprite.animations.add("close", frameList, 5, false);
+      sprite.animations.add("close", frameList);
 
       return sprite;
     };
