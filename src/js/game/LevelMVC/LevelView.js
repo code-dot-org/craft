@@ -466,7 +466,9 @@ module.exports = class LevelView {
     let blockIndex = (this.yToIndex(position[1])) + position[0];
     let block = this.actionPlaneBlocks[blockIndex];
     let animationName = open ? "open" : "close";
-    this.onAnimationEnd(this.playScaledSpeed(block.animations, animationName), () => {
+    const animation = this.playScaledSpeed(block.animations, animationName);
+    this.onAnimationEnd(animation, () => {
+      animation.updateCurrentFrame();
       completionHandler();
     });
   }
