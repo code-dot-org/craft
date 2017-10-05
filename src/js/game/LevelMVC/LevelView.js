@@ -1435,7 +1435,8 @@ module.exports = class LevelView {
           return;
         }
 
-        if (newBlock && newBlock.getIsMiniblock()) {
+        if ((newBlock && newBlock.getIsMiniblock())
+        || newBlock && newBlock.getIsTree()) {
           return;
         }
 
