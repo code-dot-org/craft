@@ -999,6 +999,10 @@ module.exports = class LevelView {
     });
   }
 
+  correctForShadowOverlay(blockType) {
+    return blockType.startsWith("pistonArm");
+  }
+
   createActionPlaneBlock(position, blockType) {
     let blockIndex = (this.yToIndex(position[1])) + position[0];
 
@@ -1009,7 +1013,11 @@ module.exports = class LevelView {
     var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
 
     if (sprite) {
-      sprite.sortOrder = this.yToIndex(position[1]);
+      let correction = 0;
+      if (this.correctForShadowOverlay(blockType)) {
+        correction = -0.1;
+      }
+      sprite.sortOrder = this.yToIndex(position[1]) + correction;
     }
 
     this.actionPlaneBlocks[blockIndex] = sprite;
