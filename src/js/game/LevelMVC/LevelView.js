@@ -1357,7 +1357,13 @@ module.exports = class LevelView {
         const actionBlock = levelData.actionPlane.getBlockAt(position);
         if (!actionBlock.isEmpty) {
           if (actionBlock.getIsMiniblock()) {
-            sprite = this.createMiniBlock(x, y, actionBlock.blockType);
+            // miniblocks defined on the action plane like this should have a
+            // closer collectible range and a narrower drop offset than normal
+            sprite = this.createMiniBlock(x, y, actionBlock.blockType, {
+              collectibleDistance: 1,
+              xOffsetRange: 10,
+              yOffsetRange: 10
+            });
           } else {
             sprite = this.createBlock(this.actionPlane, x, y, actionBlock.blockType);
           }
@@ -1766,10 +1772,19 @@ module.exports = class LevelView {
    * @param {Number} x
    * @param {Number} y
    * @param {String} blockType
+   * @param {Object} [overrides] optional overrides for various defaults
+   * @param {Number} [overrides.collectibleDistance=2] distance at which the
+   *        miniblock can be collected
+   * @param {Number} [overrides.xOffsetRange=40]
+   * @param {Number} [overrides.yOffsetRange=40]
    */
-  createMiniBlock(x, y, blockType) {
+  createMiniBlock(x, y, blockType, overrides = {}) {
     let sprite = null,
       frameList;
+
+    const collectibleDistance = overrides.collectibleDistance || 2;
+    const xOffsetRange = overrides.xOffsetRange || 40;
+    const yOffsetRange = overrides.yOffsetRange || 40;
 
     const frame = LevelBlock.getMiniblockFrame(blockType);
     if (!frame) {
@@ -1780,8 +1795,8 @@ module.exports = class LevelView {
     const framePrefix = this.miniBlocks[frame][0];
     const frameStart = this.miniBlocks[frame][1];
     const frameEnd = this.miniBlocks[frame][2];
-    const xOffset = -10 - 20 + Math.random() * 40;
-    const yOffset = 0 - 20 + Math.random() * 40;
+    const xOffset = -10 - (xOffsetRange / 2) + (Math.random() * xOffsetRange);
+    const yOffset = 0 - (yOffsetRange / 2) + (Math.random() * yOffsetRange);
 
     frameList = Phaser.Animation.generateFrameNames(framePrefix, frameStart, frameEnd, ".png", 3);
     sprite = this.actionPlane.create(xOffset + 40 * x, yOffset + this.actionPlane.yOffset + 40 * y, atlas, "");
@@ -1795,10 +1810,10 @@ module.exports = class LevelView {
       const collectiblePosition = this.controller.levelModel.spritePositionToIndex([xOffset, yOffset], [sprite.x, sprite.y]);
       anim.onComplete.add(() => {
         if (this.controller.levelModel.usePlayer) {
-          if (distanceBetween(this.player.position, collectiblePosition) < 2) {
+          if (distanceBetween(this.player.position, collectiblePosition) < collectibleDistance) {
             this.playItemAcquireAnimation(this.player.position, this.player.facing, sprite, () => { }, blockType);
           } else {
-            this.collectibleItems.push([sprite, [xOffset, yOffset], blockType]);
+            this.collectibleItems.push([sprite, [xOffset, yOffset], blockType, collectibleDistance]);
           }
         }
       });
