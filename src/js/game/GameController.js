@@ -955,13 +955,6 @@ class GameController {
     }
   }
 
-  useEntity(commandQueueItem, userIdentifier, targetIdentifier) {
-    if (this.levelEntity.entityMap.has(targetIdentifier)) {
-      let userEntity = this.getEntity(userIdentifier);
-      this.levelEntity.entityMap.get(targetIdentifier).use(commandQueueItem, userEntity);
-    }
-  }
-
   spawnEntity(commandQueueItem, type, spawnDirection) {
     this.addCommandRecord("spawn", type, commandQueueItem.repeat);
     let spawnedEntity = this.levelEntity.spawnEntity(type, spawnDirection);
