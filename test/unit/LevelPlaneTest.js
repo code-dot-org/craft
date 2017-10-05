@@ -784,3 +784,33 @@ test('sticky piston directional power: torch at arm side', t => {
 
   t.end();
 });
+
+test('certain objets arent weakly charged', t => {
+  const data = [
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    'pistonUp','','pistonUp','','pistonUp','','pistonUp','',
+    'pressurePlateUp','','doorIron','','pistonRight','','grass','',
+    '','','','','','','','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
+
+  plane.setBlockAt([0, 5], new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt([2, 5], new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt([4, 5], new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt([6, 5], new LevelBlock('railsRedstoneTorch'));
+
+  const expected = [
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','pistonArmUp','',
+    'pistonUp','','pistonUp','','pistonUp','','pistonUpOn','',
+    'pressurePlateUp','','doorIron','','pistonRightOn','pistonArmRight','grass','',
+    'railsRedstoneTorch','','railsRedstoneTorch','','railsRedstoneTorch','','railsRedstoneTorch','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});

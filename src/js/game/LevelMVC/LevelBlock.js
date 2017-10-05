@@ -123,6 +123,7 @@ module.exports = class LevelBlock {
     }
 
     if (blockType === "door") {
+      this.isWeaklyPowerable = false;
       this.isSolid = false;
       this.isEntity = true;
       this.isWalkable = false;
@@ -132,6 +133,7 @@ module.exports = class LevelBlock {
     }
 
     if (blockType === "doorIron") {
+      this.isWeaklyPowerable = false;
       this.isSolid = false;
       this.isEntity = true;
       this.isWalkable = false;
