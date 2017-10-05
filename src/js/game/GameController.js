@@ -877,35 +877,6 @@ class GameController {
     return offset;
   }
 
-  moveRandom(commandQueueItem) {
-    let target = commandQueueItem.target;
-    let getRandomInt = function (min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    };
-    if (!this.isType(target)) {
-      // apply to all entities
-      if (target === undefined) {
-        let entities = this.levelEntity.entityMap;
-        for (let value of entities) {
-          let entity = value[1];
-          let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveDirection(callbackCommand, getRandomInt(0, 3)); }, entity.identifier);
-          entity.addCommand(callbackCommand, commandQueueItem.repeat);
-        }
-        commandQueueItem.succeeded();
-      } else {
-        let entity = this.getEntity(target);
-        entity.moveDirection(commandQueueItem, getRandomInt(0, 3));
-      }
-    } else {
-      let entities = this.getEntities(target);
-      for (var i = 0; i < entities.length; i++) {
-        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveDirection(callbackCommand, getRandomInt(0, 3)); }, entities[i].identifier);
-        entities[i].addCommand(callbackCommand, commandQueueItem.repeat);
-      }
-      commandQueueItem.succeeded();
-    }
-  }
-
   turn(commandQueueItem, direction) {
     let target = commandQueueItem.target;
     if (!this.isType(target)) {
@@ -987,7 +958,6 @@ class GameController {
       commandQueueItem.succeeded();
     }
   }
-
 
   explodeEntity(commandQueueItem) {
     let target = commandQueueItem.target;
@@ -1175,6 +1145,7 @@ class GameController {
     this.levelView.audioPlayer.play(sound);
     commandQueueItem.succeeded();
   }
+
   use(commandQueueItem) {
     let player = this.levelModel.player;
     let frontPosition = this.levelModel.getMoveForwardPosition(player);
