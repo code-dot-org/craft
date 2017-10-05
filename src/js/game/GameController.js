@@ -756,33 +756,48 @@ class GameController {
     }
   }
 
+  /**
+   * Run a command. If no `commandQueueItem.target` is provided, the command
+   * will be applied to all targets.
+   *
+   * @param commandQueueItem
+   * @param command
+   * @param commandArgs
+   */
+  execute(commandQueueItem, command, ...commandArgs) {
+    let target = commandQueueItem.target;
+    if (!this.isType(target)) {
+      if (target === undefined) {
+        // Apply to all entities.
+        let entities = this.levelEntity.entityMap;
+        for (let value of entities) {
+          let entity = value[1];
+          let callbackCommand = new CallbackCommand(this, () => { }, () => { this.execute(callbackCommand, command, ...commandArgs); }, entity.identifier);
+          entity.addCommand(callbackCommand, commandQueueItem.repeat);
+        }
+        commandQueueItem.succeeded();
+      } else {
+        // Apply to the given target.
+        let entity = this.getEntity(target);
+        entity[command](commandQueueItem, ...commandArgs);
+      }
+    } else {
+      // Apply to all targets of the given type.
+      let entities = this.getEntities(target);
+      for (let i = 0; i < entities.length; i++) {
+        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.execute(callbackCommand, command, ...commandArgs); }, entities[i].identifier);
+        entities[i].addCommand(callbackCommand, commandQueueItem.repeat);
+      }
+      commandQueueItem.succeeded();
+    }
+  }
+
   moveForward(commandQueueItem) {
     const target = commandQueueItem.target;
     const moveOffset = this.directionToOffset(target.facing);
     this.handleMoveOffPressurePlate(commandQueueItem, moveOffset);
 
-    if (!this.isType(target)) {
-      // apply to all entities
-      if (target === undefined) {
-        let entities = this.levelEntity.entityMap;
-        for (var value of entities) {
-          let entity = value[1];
-          let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveForward(callbackCommand); }, entity.identifier);
-          entity.addCommand(callbackCommand, commandQueueItem.repeat);
-        }
-        commandQueueItem.succeeded();
-      } else {
-        let entity = this.getEntity(target);
-        entity.moveForward(commandQueueItem);
-      }
-    } else {
-      let entities = this.getEntities(target);
-      for (let i = 0; i < entities.length; i++) {
-        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveForward(callbackCommand); }, entities[i].identifier);
-        entities[i].addCommand(callbackCommand, commandQueueItem.repeat);
-      }
-      commandQueueItem.succeeded();
-    }
+    this.execute(commandQueueItem, 'moveForward');
 
     this.handleMoveOnPressurePlate(commandQueueItem, moveOffset);
     this.handleMoveOffIronDoor(commandQueueItem, moveOffset);
@@ -793,28 +808,7 @@ class GameController {
     const moveOffset = this.directionToOffset(FacingDirection.opposite(target.facing));
     this.handleMoveOffPressurePlate(commandQueueItem, moveOffset);
 
-    if (!this.isType(target)) {
-      // apply to all entities
-      if (target === undefined) {
-        let entities = this.levelEntity.entityMap;
-        for (var value of entities) {
-          let entity = value[1];
-          let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveBackward(callbackCommand); }, entity.identifier);
-          entity.addCommand(callbackCommand, commandQueueItem.repeat);
-        }
-        commandQueueItem.succeeded();
-      } else {
-        let entity = this.getEntity(target);
-        entity.moveBackward(commandQueueItem);
-      }
-    } else {
-      let entities = this.getEntities(target);
-      for (let i = 0; i < entities.length; i++) {
-        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveBackward(callbackCommand); }, entities[i].identifier);
-        entities[i].addCommand(callbackCommand, commandQueueItem.repeat);
-      }
-      commandQueueItem.succeeded();
-    }
+    this.execute(commandQueueItem, 'moveBackward');
 
     this.handleMoveOnPressurePlate(commandQueueItem, moveOffset);
     this.handleMoveOffIronDoor(commandQueueItem, moveOffset);
@@ -824,29 +818,7 @@ class GameController {
     const moveOffset = this.directionToOffset(direction);
     this.handleMoveOffPressurePlate(commandQueueItem, moveOffset);
 
-    let target = commandQueueItem.target;
-    if (!this.isType(target)) {
-      // apply to all entities
-      if (target === undefined) {
-        let entities = this.levelEntity.entityMap;
-        for (let value of entities) {
-          let entity = value[1];
-          let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveDirection(callbackCommand, direction); }, entity.identifier);
-          entity.addCommand(callbackCommand, commandQueueItem.repeat);
-        }
-        commandQueueItem.succeeded();
-      } else {
-        let entity = this.getEntity(target);
-        entity.moveDirection(commandQueueItem, direction);
-      }
-    } else {
-      let entities = this.getEntities(target);
-      for (let i = 0; i < entities.length; i++) {
-        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveDirection(callbackCommand, direction); }, entities[i].identifier);
-        entities[i].addCommand(callbackCommand, commandQueueItem.repeat);
-      }
-      commandQueueItem.succeeded();
-    }
+    this.execute(commandQueueItem, 'moveDirection', direction);
 
     this.handleMoveOnPressurePlate(commandQueueItem, moveOffset);
     this.handleMoveOffIronDoor(commandQueueItem, moveOffset);
@@ -877,85 +849,12 @@ class GameController {
     return offset;
   }
 
-  moveRandom(commandQueueItem) {
-    let target = commandQueueItem.target;
-    let getRandomInt = function (min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    };
-    if (!this.isType(target)) {
-      // apply to all entities
-      if (target === undefined) {
-        let entities = this.levelEntity.entityMap;
-        for (let value of entities) {
-          let entity = value[1];
-          let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveDirection(callbackCommand, getRandomInt(0, 3)); }, entity.identifier);
-          entity.addCommand(callbackCommand, commandQueueItem.repeat);
-        }
-        commandQueueItem.succeeded();
-      } else {
-        let entity = this.getEntity(target);
-        entity.moveDirection(commandQueueItem, getRandomInt(0, 3));
-      }
-    } else {
-      let entities = this.getEntities(target);
-      for (var i = 0; i < entities.length; i++) {
-        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveDirection(callbackCommand, getRandomInt(0, 3)); }, entities[i].identifier);
-        entities[i].addCommand(callbackCommand, commandQueueItem.repeat);
-      }
-      commandQueueItem.succeeded();
-    }
-  }
-
   turn(commandQueueItem, direction) {
-    let target = commandQueueItem.target;
-    if (!this.isType(target)) {
-      // apply to all entities
-      if (target === undefined) {
-        let entities = this.levelEntity.entityMap;
-        for (let value of entities) {
-          let entity = value[1];
-          let callbackCommand = new CallbackCommand(this, () => { }, () => { this.turn(callbackCommand, direction); }, entity.identifier);
-          entity.addCommand(callbackCommand, commandQueueItem.repeat);
-        }
-        commandQueueItem.succeeded();
-      } else {
-        let entity = this.getEntity(target);
-        entity.turn(commandQueueItem, direction);
-      }
-    } else {
-      let entities = this.getEntities(target);
-      for (let i = 0; i < entities.length; i++) {
-        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.turn(callbackCommand, direction); }, entities[i].identifier);
-        entities[i].addCommand(callbackCommand, commandQueueItem.repeat);
-      }
-      commandQueueItem.succeeded();
-    }
+    this.execute(commandQueueItem, 'turn', direction);
   }
 
   turnRandom(commandQueueItem) {
-    let target = commandQueueItem.target;
-    if (!this.isType(target)) {
-      // apply to all entities
-      if (target === undefined) {
-        let entities = this.levelEntity.entityMap;
-        for (let value of entities) {
-          let entity = value[1];
-          let callbackCommand = new CallbackCommand(this, () => { }, () => { this.turnRandom(callbackCommand); }, entity.identifier);
-          entity.addCommand(callbackCommand, commandQueueItem.repeat);
-        }
-        commandQueueItem.succeeded();
-      } else {
-        let entity = this.getEntity(target);
-        entity.turnRandom(commandQueueItem);
-      }
-    } else {
-      let entities = this.getEntities(target);
-      for (let i = 0; i < entities.length; i++) {
-        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.turnRandom(callbackCommand); }, entities[i].identifier);
-        entities[i].addCommand(callbackCommand, commandQueueItem.repeat);
-      }
-      commandQueueItem.succeeded();
-    }
+    this.execute(commandQueueItem, 'turnRandom');
   }
 
   flashEntity(commandQueueItem) {
@@ -987,7 +886,6 @@ class GameController {
       commandQueueItem.succeeded();
     }
   }
-
 
   explodeEntity(commandQueueItem) {
     let target = commandQueueItem.target;
@@ -1054,13 +952,6 @@ class GameController {
         entities[i].addCommand(callbackCommand, commandQueueItem.repeat);
       }
       commandQueueItem.succeeded();
-    }
-  }
-
-  useEntity(commandQueueItem, userIdentifier, targetIdentifier) {
-    if (this.levelEntity.entityMap.has(targetIdentifier)) {
-      let userEntity = this.getEntity(userIdentifier);
-      this.levelEntity.entityMap.get(targetIdentifier).use(commandQueueItem, userEntity);
     }
   }
 
@@ -1175,6 +1066,7 @@ class GameController {
     this.levelView.audioPlayer.play(sound);
     commandQueueItem.succeeded();
   }
+
   use(commandQueueItem) {
     let player = this.levelModel.player;
     let frontPosition = this.levelModel.getMoveForwardPosition(player);
