@@ -878,32 +878,7 @@ class GameController {
   }
 
   moveRandom(commandQueueItem) {
-    let target = commandQueueItem.target;
-    let getRandomInt = function (min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    };
-    if (!this.isType(target)) {
-      // apply to all entities
-      if (target === undefined) {
-        let entities = this.levelEntity.entityMap;
-        for (let value of entities) {
-          let entity = value[1];
-          let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveDirection(callbackCommand, getRandomInt(0, 3)); }, entity.identifier);
-          entity.addCommand(callbackCommand, commandQueueItem.repeat);
-        }
-        commandQueueItem.succeeded();
-      } else {
-        let entity = this.getEntity(target);
-        entity.moveDirection(commandQueueItem, getRandomInt(0, 3));
-      }
-    } else {
-      let entities = this.getEntities(target);
-      for (var i = 0; i < entities.length; i++) {
-        let callbackCommand = new CallbackCommand(this, () => { }, () => { this.moveDirection(callbackCommand, getRandomInt(0, 3)); }, entities[i].identifier);
-        entities[i].addCommand(callbackCommand, commandQueueItem.repeat);
-      }
-      commandQueueItem.succeeded();
-    }
+    this.moveDirection(commandQueueItem, FacingDirection.random());
   }
 
   turn(commandQueueItem, direction) {

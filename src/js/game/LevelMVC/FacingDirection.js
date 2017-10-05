@@ -25,6 +25,10 @@ const FacingDirection = Object.freeze({
   turn: function (facing, rotation) {
     return (facing + 4 + (rotation === 'right' ? 1 : -1)) % 4;
   },
+
+  random: function () {
+    return Math.floor(Math.random() * 4);
+  }
 });
 
 module.exports = FacingDirection;
