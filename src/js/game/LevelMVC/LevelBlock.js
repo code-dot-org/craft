@@ -50,7 +50,7 @@ module.exports = class LevelBlock {
     }
 
     if (blockType.substring(0, 5) === "rails") {
-      this.isWeaklyPowerable = false;
+      this.isWeaklyPowerable = blockType === 'railsRedstoneTorch' ? true : false;
       this.isEntity = true;
       this.isWalkable = true;
       this.isUsable = true;
