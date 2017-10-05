@@ -140,7 +140,7 @@ module.exports = class LevelView {
       "logOak": ["blocks", "Log_Oak", -13, 0],
       "logSpruce": ["blocks", "Log_Spruce", -13, 0],
       "logSpruceSnowy": ["blocks", "Log_Spruce", -13, 0],
-      //"obsidian": ["blocks", "Obsidian", -13, 0],
+      "obsidian": ["blocks", "Obsidian", -13, 0],
       "planksAcacia": ["blocks", "Planks_Acacia", -13, 0],
       "planksBirch": ["blocks", "Planks_Birch", -13, 0],
       "planksJungle": ["blocks", "Planks_Jungle", -13, 0],
@@ -289,6 +289,8 @@ module.exports = class LevelView {
       "snowy_grass": ["blocks", "snowy_grass", -13, 0],
       "top_snow": ["blocks", "top_snow", -13, 0],
 
+      "Nether_Portal": ["blocks", "Nether_Portal0", 0, -58],
+
       //hooking up all old blocks that we had assets for but never used in previous years
       "bedFoot": ["blocks", "Bed_Foot", -13, 0],
       "bedHead": ["blocks", "Bed_Head", -13, 10],
@@ -326,7 +328,6 @@ module.exports = class LevelView {
       "terracottaSilver": ["blocks", "Terracotta_Silver", -13, 0],
       "terracottaWhite": ["blocks", "Terracotta_White", -13, 0],
       "terracottaYellow": ["blocks", "Terracotta_Yellow", -13, 0],
-
     };
     this.actionPlaneBlocks = [];
     this.toDestroy = [];
@@ -1958,6 +1959,17 @@ module.exports = class LevelView {
         yOffset = this.blocks[blockType][3];
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Lava_", 0, 5, "", 0);
+        sprite.animations.add("idle", frameList, 5, true);
+        this.playScaledSpeed(sprite.animations, "idle");
+        break;
+
+      case "Nether_Portal":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Nether_Portal", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
         this.playScaledSpeed(sprite.animations, "idle");
         break;
