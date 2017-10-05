@@ -121,10 +121,13 @@ module.exports = class BaseEntity {
     }
 
     updateHidingBlock(prevPosition) {
-        var levelView = this.controller.levelView;
+        const levelView = this.controller.levelView;
+        const actionPlane = this.controller.levelModel.actionPlane;
+
         let frontBlockCheck = function (entity, position) {
             let frontPosition = [position[0], position[1] + 1];
-            if (frontPosition[1] < 10) {
+            const frontBlock = actionPlane.getBlockAt(frontPosition);
+            if (frontBlock && !frontBlock.isTransparent) {
                 var sprite = levelView.actionPlaneBlocks[levelView.coordinatesToIndex(frontPosition)];
                 if (sprite !== null) {
                     var tween = entity.controller.levelView.addResettableTween(sprite).to({
