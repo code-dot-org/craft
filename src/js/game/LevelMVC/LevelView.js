@@ -140,7 +140,7 @@ module.exports = class LevelView {
       "logOak": ["blocks", "Log_Oak", -13, 0],
       "logSpruce": ["blocks", "Log_Spruce", -13, 0],
       "logSpruceSnowy": ["blocks", "Log_Spruce", -13, 0],
-      //"obsidian": ["blocks", "Obsidian", -13, 0],
+      "obsidian": ["blocks", "Obsidian", -13, 0],
       "planksAcacia": ["blocks", "Planks_Acacia", -13, 0],
       "planksBirch": ["blocks", "Planks_Birch", -13, 0],
       "planksJungle": ["blocks", "Planks_Jungle", -13, 0],
@@ -289,6 +289,8 @@ module.exports = class LevelView {
       "snowy_grass": ["blocks", "snowy_grass", -13, 0],
       "top_snow": ["blocks", "top_snow", -13, 0],
 
+      "Nether_Portal": ["blocks", "Nether_Portal0", 0, -58],
+
       //hooking up all old blocks that we had assets for but never used in previous years
       "bedFoot": ["blocks", "Bed_Foot", -13, 0],
       "bedHead": ["blocks", "Bed_Head", -13, 10],
@@ -326,7 +328,6 @@ module.exports = class LevelView {
       "terracottaSilver": ["blocks", "Terracotta_Silver", -13, 0],
       "terracottaWhite": ["blocks", "Terracotta_White", -13, 0],
       "terracottaYellow": ["blocks", "Terracotta_Yellow", -13, 0],
-
     };
     this.actionPlaneBlocks = [];
     this.toDestroy = [];
@@ -1001,6 +1002,10 @@ module.exports = class LevelView {
     });
   }
 
+  correctForShadowOverlay(blockType) {
+    return blockType.startsWith("pistonArm");
+  }
+
   createActionPlaneBlock(position, blockType) {
     let blockIndex = (this.yToIndex(position[1])) + position[0];
 
@@ -1011,7 +1016,11 @@ module.exports = class LevelView {
     var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
 
     if (sprite) {
-      sprite.sortOrder = this.yToIndex(position[1]);
+      let correction = 0;
+      if (this.correctForShadowOverlay(blockType)) {
+        correction = -0.1;
+      }
+      sprite.sortOrder = this.yToIndex(position[1]) + correction;
     }
 
     this.actionPlaneBlocks[blockIndex] = sprite;
@@ -1359,7 +1368,13 @@ module.exports = class LevelView {
         const actionBlock = levelData.actionPlane.getBlockAt(position);
         if (!actionBlock.isEmpty) {
           if (actionBlock.getIsMiniblock()) {
-            sprite = this.createMiniBlock(x, y, actionBlock.blockType);
+            // miniblocks defined on the action plane like this should have a
+            // closer collectible range and a narrower drop offset than normal
+            sprite = this.createMiniBlock(x, y, actionBlock.blockType, {
+              collectibleDistance: 1,
+              xOffsetRange: 10,
+              yOffsetRange: 10
+            });
           } else {
             sprite = this.createBlock(this.actionPlane, x, y, actionBlock.blockType);
           }
@@ -1768,10 +1783,19 @@ module.exports = class LevelView {
    * @param {Number} x
    * @param {Number} y
    * @param {String} blockType
+   * @param {Object} [overrides] optional overrides for various defaults
+   * @param {Number} [overrides.collectibleDistance=2] distance at which the
+   *        miniblock can be collected
+   * @param {Number} [overrides.xOffsetRange=40]
+   * @param {Number} [overrides.yOffsetRange=40]
    */
-  createMiniBlock(x, y, blockType) {
+  createMiniBlock(x, y, blockType, overrides = {}) {
     let sprite = null,
       frameList;
+
+    const collectibleDistance = overrides.collectibleDistance || 2;
+    const xOffsetRange = overrides.xOffsetRange || 40;
+    const yOffsetRange = overrides.yOffsetRange || 40;
 
     const frame = LevelBlock.getMiniblockFrame(blockType);
     if (!frame) {
@@ -1782,8 +1806,8 @@ module.exports = class LevelView {
     const framePrefix = this.miniBlocks[frame][0];
     const frameStart = this.miniBlocks[frame][1];
     const frameEnd = this.miniBlocks[frame][2];
-    const xOffset = -10 - 20 + Math.random() * 40;
-    const yOffset = 0 - 20 + Math.random() * 40;
+    const xOffset = -10 - (xOffsetRange / 2) + (Math.random() * xOffsetRange);
+    const yOffset = 0 - (yOffsetRange / 2) + (Math.random() * yOffsetRange);
 
     frameList = Phaser.Animation.generateFrameNames(framePrefix, frameStart, frameEnd, ".png", 3);
     sprite = this.actionPlane.create(xOffset + 40 * x, yOffset + this.actionPlane.yOffset + 40 * y, atlas, "");
@@ -1797,10 +1821,10 @@ module.exports = class LevelView {
       const collectiblePosition = this.controller.levelModel.spritePositionToIndex([xOffset, yOffset], [sprite.x, sprite.y]);
       anim.onComplete.add(() => {
         if (this.controller.levelModel.usePlayer) {
-          if (distanceBetween(this.player.position, collectiblePosition) < 2) {
+          if (distanceBetween(this.player.position, collectiblePosition) < collectibleDistance) {
             this.playItemAcquireAnimation(this.player.position, this.player.facing, sprite, () => { }, blockType);
           } else {
-            this.collectibleItems.push([sprite, [xOffset, yOffset], blockType]);
+            this.collectibleItems.push([sprite, [xOffset, yOffset], blockType, collectibleDistance]);
           }
         }
       });
@@ -1937,6 +1961,17 @@ module.exports = class LevelView {
         yOffset = this.blocks[blockType][3];
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Lava_", 0, 5, "", 0);
+        sprite.animations.add("idle", frameList, 5, true);
+        this.playScaledSpeed(sprite.animations, "idle");
+        break;
+
+      case "Nether_Portal":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Nether_Portal", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
         this.playScaledSpeed(sprite.animations, "idle");
         break;
