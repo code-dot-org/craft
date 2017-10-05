@@ -4,7 +4,7 @@ const CallbackCommand = require("../CommandQueue/CallbackCommand.js");
 module.exports = class Agent extends BaseEntity {
   constructor(controller, type, x, y, name, isOnBlock, facing) {
     super(controller, type, 'PlayerAgent', x, y, facing);
-    this.offset = [-5, -15];
+    this.offset = [-16, -15];
     this.name = name;
     this.isOnBlock = isOnBlock;
     this.inventory = {};
