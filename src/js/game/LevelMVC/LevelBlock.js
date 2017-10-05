@@ -25,6 +25,7 @@ module.exports = class LevelBlock {
     this.isOpen = false;
     this.isRail = false;
     this.isSolid = true;
+    this.isWeaklyPowerable = true;
 
     if (blockType === "") {
       this.isWalkable = true;
@@ -49,6 +50,7 @@ module.exports = class LevelBlock {
     }
 
     if (blockType.substring(0, 5) === "rails") {
+      this.isWeaklyPowerable = false;
       this.isEntity = true;
       this.isWalkable = true;
       this.isUsable = true;
@@ -148,6 +150,7 @@ module.exports = class LevelBlock {
     }
 
     if (blockType.startsWith("pressurePlate")) {
+      this.isWeaklyPowerable = blockType === 'pressurePlateUp' ? false : true;
       this.isEntity = true;
       this.isWalkable = true;
       this.isDestroyable = false;
@@ -165,6 +168,7 @@ module.exports = class LevelBlock {
     }
 
     if (blockType.startsWith("piston")) {
+      this.isWeaklyPowerable = false;
       this.isSolid = false;
       this.isDestroyable = false;
       this.isConnectedToRedstone = !blockType.startsWith("pistonArm");
