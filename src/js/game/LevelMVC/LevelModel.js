@@ -75,6 +75,13 @@ module.exports = class LevelModel {
       }
     }
 
+    // If we have an agent but the level initialization data doesn't define one,
+    // then we must have spawned one during the level run and so want to reset
+    // back to not having one
+    if (!levelData.useAgent && this.usingAgent) {
+      this.destroyAgent();
+    }
+
     this.computeShadingPlane();
     this.computeFowPlane();
   }
@@ -105,6 +112,16 @@ module.exports = class LevelModel {
     this.agent = new Agent(this.controller, name, x, y, key, !startingBlock.getIsEmptyOrEntity(), direction);
     this.controller.levelEntity.pushEntity(this.agent);
     this.controller.agent = this.agent;
+  }
+
+  /**
+   * Destroys the agent entity; is the inverse of spawnAgent.
+   */
+  destroyAgent() {
+    this.controller.agent = undefined;
+    this.controller.levelEntity.destroyEntity(this.agent.identifier);
+    this.agent = undefined;
+    this.usingAgent = false;
   }
 
   yToIndex(y) {
