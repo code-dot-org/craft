@@ -1431,9 +1431,9 @@ module.exports = class LevelView {
       if (position) {
         const newBlock = this.controller.levelModel.actionPlane.getBlockAt(position);
 
-        //we don't want to refresh doors. They're not destroyable, and refreshing
-        //will lead to bad animation states
-        if (newBlock && this.isDoor(newBlock)) {
+        // we don't want to refresh doors. They're not destroyable, and
+        // refreshing will lead to bad animation states
+        if (newBlock && newBlock.getIsDoor()) {
           return;
         }
 
@@ -1451,10 +1451,6 @@ module.exports = class LevelView {
         }
       }
     });
-  }
-
-  isDoor(block) {
-    return block.blockType.startsWith("door");
   }
 
   updateShadingPlane(shadingData) {

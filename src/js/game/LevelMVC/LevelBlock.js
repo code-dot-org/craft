@@ -201,6 +201,10 @@ module.exports = class LevelBlock {
     return !!this.blockType.match(/^tree/);
   }
 
+  getIsDoor() {
+    return this.blockType.startsWith("door");
+  }
+
   getIsPushable() {
     return this.blockType !== "" && !this.isDestroyableUponPush();
   }
