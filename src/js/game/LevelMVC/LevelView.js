@@ -1792,7 +1792,7 @@ module.exports = class LevelView {
     const yOffsetRange = overrides.yOffsetRange || 40;
 
     const frame = LevelBlock.getMiniblockFrame(blockType);
-    if (!frame) {
+    if (!(frame && this.miniBlocks[frame])) {
       return sprite;
     }
 
