@@ -385,18 +385,23 @@ module.exports = class LevelPlane {
   }
 
   skipDoorTo(position) {
-    let playerPos = this.getMoveToPosition(this.levelModel.player);
-    let agentPos= this.getMoveToPosition(this.levelModel.agent);
-    if (this.positionEquivalence(playerPos, position) || this.positionEquivalence(agentPos, position)) {
-      return true;
+    if (this.levelModel) {
+      let playerPos = this.getMoveToPosition(this.levelModel.player);
+      let agentPos= this.getMoveToPosition(this.levelModel.agent);
+      if (this.positionEquivalence(playerPos, position) || this.positionEquivalence(agentPos, position)) {
+        return true;
+      }
     }
+
   }
 
   skipDoorFrom(position) {
-    let playerPos = this.getMoveFromPosition(this.levelModel.player);
-    let agentPos= this.getMoveFromPosition(this.levelModel.agent);
-    if (this.positionEquivalence(playerPos, position) || this.positionEquivalence(agentPos, position)) {
-      return true;
+    if (this.levelModel) {
+      let playerPos = this.getMoveFromPosition(this.levelModel.player);
+      let agentPos= this.getMoveFromPosition(this.levelModel.agent);
+      if (this.positionEquivalence(playerPos, position) || this.positionEquivalence(agentPos, position)) {
+        return true;
+      }
     }
   }
 
