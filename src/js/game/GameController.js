@@ -1074,7 +1074,7 @@ class GameController {
     let frontBlock = this.levelModel.actionPlane.getBlockAt(frontPosition);
 
     const isFrontBlockDoor = frontBlock === undefined ? false : frontBlock.blockType === "door";
-    if (frontEntity !== null) {
+    if (frontEntity !== null && frontEntity  !== this.agent) {
       // push use command to execute general use behavior of the entity before executing the event
       this.levelView.setSelectionIndicatorPosition(frontPosition[0], frontPosition[1]);
       this.levelView.onAnimationEnd(this.levelView.playPlayerAnimation("punch", player.position, player.facing, false), () => {
