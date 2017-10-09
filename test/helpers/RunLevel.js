@@ -33,7 +33,7 @@ module.exports = (level, commands, step = 0.1) => {
     afterAssetsLoaded: () => {
       const api = gameController.codeOrgAPI;
       api.resetAttempt();
-      commands(api).then(() => {
+      commands(api, gameController.levelModel).then(() => {
         // Clean up.
         gameController.game.destroy();
         gameController.game.time = {};
