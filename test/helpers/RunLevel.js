@@ -1,15 +1,16 @@
 const sinon = require("sinon");
 const GameController = require("../../src/js/game/GameController");
 const AdventurerLevels = require("./AdventurerLevels");
+const AgentLevels = require("./AgentLevels");
 const DesignerLevels = require("./DesignerLevels");
 
 sinon.stub(Math, "random").returns(0.5);
 
-const levels = Object.assign({}, AdventurerLevels, DesignerLevels);
+const levels = Object.assign({}, AdventurerLevels, AgentLevels, DesignerLevels);
 
 const defaults = {
   assetPacks: {
-    beforeLoad: ['allAssetsMinusPlayer', 'playerAlex'],
+    beforeLoad: ['allAssetsMinusPlayer', 'playerAlex', 'playerAgent'],
     afterLoad: [],
   },
   gridDimensions: [10, 10],
@@ -32,7 +33,7 @@ module.exports = (level, commands, step = 0.1) => {
     afterAssetsLoaded: () => {
       const api = gameController.codeOrgAPI;
       api.resetAttempt();
-      commands(api).then(() => {
+      commands(api, gameController.levelModel).then(() => {
         // Clean up.
         gameController.game.destroy();
         gameController.game.time = {};
