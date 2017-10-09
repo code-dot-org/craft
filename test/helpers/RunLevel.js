@@ -10,7 +10,7 @@ const levels = Object.assign({}, AdventurerLevels, AgentLevels, DesignerLevels);
 
 const defaults = {
   assetPacks: {
-    beforeLoad: ['allAssetsMinusPlayer', 'playerAlex'],
+    beforeLoad: ['allAssetsMinusPlayer', 'playerAlex', 'playerAgent'],
     afterLoad: [],
   },
   gridDimensions: [10, 10],
