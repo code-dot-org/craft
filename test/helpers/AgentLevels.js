@@ -12,4 +12,16 @@ module.exports = {
     agentStartDirection: 0,
     verificationFunction: verificationAPI => verificationAPI.isPlayerAt([3, 3]),
   },
+  agent05: {
+    isAgentLevel: true,
+    usingAgent: true,
+    groundPlane: ["sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass", "grass", "grass", "sand", "sand", "sand", "wool_orange", "sand", "sand", "grass", "grass", "grass", "grass", "water", "sand", "sand", "sand", "sand", "sand", "sand", "grass", "oreDiamond", "grass", "water", "water", "water", "water", "water", "water", "sand", "sand", "sand", "sand", "dirt", "water", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "sand", "water", "water", "water", "water", "water", "dirt", "water", "water", "planksOak", "planksOak", "sand", "sand", "sand", "sand", "water", "water", "water", "water", "planksOak", "planksOak", "grass", "grass", "grass", "sand", "sand", "sand", "sand", "sand", "planksOak", "planksOak", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "planksOak", "planksOak", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"],
+    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "tallGrass", "", "", "tallGrass", "", "", "", "", "", "", "", "tallGrass", "", "flowerOxeeye", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "tallGrass", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "tallGrass", "", "flowerOxeeye", "", "", "", "", "tallGrass", "", "", "", "", "tallGrass"],
+    actionPlane: ["sand", "sand", "sand", "", "sand", "grass", "grass", "", "", "", "", "", "sand", "torch", "sand", "sand", "", "", "treeSpruce", "", "", "sand", "", "", "", "sand", "sand", "", "diamondMiniblock", "", "", "", "", "", "", "", "sand", "", "", "", "sand", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "sand", "", "", "planksOak", "planksOak", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "planksOak", "planksOak", "", "", "", "", "", "", "", ""],
+    playerStartPosition: [1, 8],
+    agentStartPosition: [3, 6],
+    playerStartDirection: 1,
+    agentStartDirection: 0,
+    verificationFunction: verificationAPI => verificationAPI.isPlayerAt([3, 1]),
+  },
 };
