@@ -8,7 +8,6 @@
   <script src="<%= appBundle %>"></script>
   <script src="test-build-only/jquery-1.7.min.js"></script>
   <script src="test-build-only/soundEffects.js"></script>
-  <script src="test-build-only/levels.js"></script>
   <title>2D Craft Playground</title>
 </head>
 <body>
@@ -40,6 +39,17 @@
 <script>
   var demoLevels = window.demoLevels;
 
+  var defaults = {
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerAlex', 'playerAgent'],
+      afterLoad: [],
+    },
+    gridDimensions: [10, 10],
+    fluffPlane: ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],
+    playerName: 'Alex',
+    playerStartPosition: [],
+  };
+
   function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -47,8 +57,8 @@
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
   }
 
-  var levelNumber = parseInt(getParameterByName('level') || 1, 10);
-  var testLevelToLoad = demoLevels[levelNumber];
+  var testLevelToLoad = demoLevels[getParameterByName('level')] || demoLevels['1'];
+  testLevelToLoad = Object.assign({}, defaults, testLevelToLoad);
 
   // Initialize test instance of game, exposed to window for debugging.
   var gameController = new GameController({
@@ -64,17 +74,7 @@
     },
   });
 
-  if (levelNumber === 1) {
-    /**
-     * Simulate dialog being open, controller being created in different frame
-     * from level load.
-     */
-    window.setTimeout(function() {
-      gameController.loadLevel(testLevelToLoad);
-    }, 10);
-  } else {
-    gameController.loadLevel(testLevelToLoad);
-  }
+  gameController.loadLevel(testLevelToLoad);
 
   $('input[type=range]').on('input', function () {
     $("#speed-display").html('Speed: ' + $(this).val() + 'x');
