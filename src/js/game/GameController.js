@@ -715,7 +715,11 @@ class GameController {
   handleMoveOffPressurePlate(commandQueueItem, moveOffset) {
     const isMovingOffOf = this.levelModel.isEntityOnBlocktype(commandQueueItem.target, "pressurePlateDown");
     const entity = this.getEntity(commandQueueItem.target);
+    const destinationBlock = this.levelModel.actionPlane.getBlockAt([entity.position[0] + moveOffset[0], entity.position[1] + moveOffset[1]]);
     let remainOn = false;
+    if (destinationBlock === undefined || !destinationBlock.isWalkable) {
+      remainOn = true;
+    }
     this.levelEntity.getEntitiesOfType('all').some(workingEntity => {
       if (workingEntity !== entity
       && workingEntity.canTriggerPressurePlates()
