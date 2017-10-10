@@ -28,3 +28,29 @@ test('Agent 1: Spawn Agent', t => {
     });
   }), 1);
 });
+
+test('Agent 5: Build Bridge', t => {
+  attempt('agent05', api => new Promise(resolve => {
+    // Have the Agent build a bridge.
+    for (let i = 0; i < 3; i++) {
+      api.moveForward(null, 'PlayerAgent');
+      api.placeBlock(null, 'planksOak', 'PlayerAgent');
+    }
+
+    // Once the bridge is built, move the player to the finish square.
+    setTimeout(() => {
+      api.moveForward(null, 'Player');
+      api.moveForward(null, 'Player');
+      api.turnLeft(null, 'Player');
+      api.arrowDown(0);
+    }, 1000);
+
+    api.startAttempt((success, levelModel) => {
+      t.deepEqual(levelModel.agent.position, [3, 3]);
+      t.assert(success);
+      t.end();
+
+      resolve();
+    });
+  }));
+});
