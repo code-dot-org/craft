@@ -2136,11 +2136,14 @@ module.exports = class LevelView {
   }
 
   doorOccupationCheck(index) {
-    let player = this.controller.levelModel.player;
-    let agent = this.controller.levelModel.agent;
-    let playerPos = this.controller.levelModel.coordinatesToIndex(player.position);
-    let agentPos = this.controller.levelModel.coordinatesToIndex(agent.position);
-
-    return (playerPos === index || agentPos === index);
+    var width = this.controller.levelModel.actionPlane.width;
+    var posToIndex = (position) => {return position[1] * width + position[0];};
+    this.controller.levelEntity.entityMap.forEach(function (item) {
+      let itemIndex = posToIndex(item.position);
+      if (itemIndex === index) {
+        return true;
+      }
+    });
+    return false;
   }
 };
