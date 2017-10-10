@@ -795,17 +795,13 @@ class GameController {
   moveForward(commandQueueItem) {
     const target = commandQueueItem.target;
     let entity = this.getEntity(target);
-    if (entity === this.agent) {
-      entity.movementState = entity.facing;
-    }
+    entity.movementState = entity.facing;
     const moveOffset = this.directionToOffset(entity.facing);
     this.handleMoveOffPressurePlate(commandQueueItem, moveOffset);
 
     this.execute(commandQueueItem, 'moveForward');
 
-    if (entity === this.agent) {
-      entity.movementState = -1;
-    }
+    entity.movementState = -1;
     this.handleMoveOnPressurePlate(commandQueueItem, moveOffset);
     this.handleMoveOffIronDoor(commandQueueItem, moveOffset);
   }
@@ -813,17 +809,13 @@ class GameController {
   moveBackward(commandQueueItem) {
     const target = commandQueueItem.target;
     let entity = this.getEntity(target);
-    if (entity === this.agent) {
-      entity.movementState = FacingDirection.opposite(entity.facing);
-    }
+    entity.movementState = FacingDirection.opposite(entity.facing);
     const moveOffset = this.directionToOffset(FacingDirection.opposite(entity.facing));
     this.handleMoveOffPressurePlate(commandQueueItem, moveOffset);
 
     this.execute(commandQueueItem, 'moveBackward');
 
-    if (entity === this.agent) {
-      entity.movementState = -1;
-    }
+    entity.movementState = -1;
     this.handleMoveOnPressurePlate(commandQueueItem, moveOffset);
     this.handleMoveOffIronDoor(commandQueueItem, moveOffset);
   }

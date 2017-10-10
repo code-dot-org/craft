@@ -2117,6 +2117,10 @@ module.exports = class LevelView {
   * Animate Door and set the status
   */
   animateDoor(index, open) {
+    if (this.doorOccupationCheck(index)) {
+      return;
+    }
+
     let player = this.controller.levelModel.player;
 
     this.setSelectionIndicatorPosition(this.controller.levelModel.actionPlane.indexToCoordinates(index)[0], this.controller.levelModel.actionPlane.indexToCoordinates(index)[1]);
@@ -2131,4 +2135,12 @@ module.exports = class LevelView {
     });
   }
 
+  doorOccupationCheck(index) {
+    let player = this.controller.levelModel.player;
+    let agent = this.controller.levelModel.agent;
+    let playerPos = this.controller.levelModel.coordinatesToIndex(player.position);
+    let agentPos = this.controller.levelModel.coordinatesToIndex(agent.position);
+
+    return (playerPos === index || agentPos === index);
+  }
 };
