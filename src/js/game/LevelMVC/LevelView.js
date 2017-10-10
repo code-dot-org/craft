@@ -897,7 +897,6 @@ module.exports = class LevelView {
     this.playBlockSound(groundType);
 
     this.setSelectionIndicatorPosition(position[0], position[1]);
-    entity.sprite.sortOrder = this.yToIndex(targetYIndex) + entity.getSortOrderOffset();
 
     if (!shouldJumpDown) {
       const animName = 'walk' + this.getDirectionName(facing);
@@ -907,6 +906,14 @@ module.exports = class LevelView {
     } else {
       tween = this.playPlayerJumpDownVerticalAnimation(facing, position, oldPosition);
     }
+
+    // Update the sort order halfway through the animation
+    tween.onUpdateCallback((tween, percent) => {
+      if (percent >= 0.5) {
+        entity.sprite.sortOrder = this.yToIndex(targetYIndex) + entity.getSortOrderOffset();
+        tween.onUpdateCallback(null);
+      }
+    });
 
     tween.onComplete.add(() => {
       completionHandler();
