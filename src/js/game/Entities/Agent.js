@@ -51,7 +51,7 @@ module.exports = class Agent extends BaseEntity {
    * @override
    */
   getSortOrderOffset() {
-    return super.getSortOrderOffset() + 1;
+    return super.getSortOrderOffset() - 1;
   }
 
   // "Events" levels allow the player to move around with the arrow keys, and
