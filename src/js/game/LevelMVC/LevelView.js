@@ -851,6 +851,9 @@ module.exports = class LevelView {
 
   playBlockSound(groundType) {
     var oreString = groundType.substring(0, 3);
+    if (groundType === "water" || groundType === "lava") {
+      return;
+    }
     if (groundType === "stone" || groundType === "cobblestone" || groundType === "bedrock" ||
       oreString === "ore" || groundType === "bricks") {
       this.audioPlayer.play("stepStone");
