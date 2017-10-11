@@ -213,7 +213,12 @@ module.exports = class BaseEntity {
         let forwardPosition = this.controller.levelModel.getMoveForwardPosition(this);
         var forwardPositionInformation = this.controller.levelModel.canMoveForward(this);
         if (forwardPositionInformation[0]) {
+            let offset = this.controller.directionToOffset(this.facing);
+            let weMovedOnTo = this.handleMoveOnPressurePlate(offset);
             this.doMoveForward(commandQueueItem, forwardPosition);
+            if (!weMovedOnTo) {
+              this.handleMoveOffPressurePlate(this.reverseOffset(offset));
+            }
         } else {
             this.bump(commandQueueItem);
             this.callBumpEvents(forwardPositionInformation);
@@ -227,7 +232,12 @@ module.exports = class BaseEntity {
         let backwardPosition = this.controller.levelModel.getMoveBackwardPosition(this);
         var backwardPositionInformation = this.controller.levelModel.canMoveBackward(this);
         if (backwardPositionInformation[0]) {
+            let offset = this.controller.directionToOffset(FacingDirection.opposite(this.facing));
+            let weMovedOnTo = this.handleMoveOnPressurePlate(offset);
             this.doMoveBackward(commandQueueItem, backwardPosition);
+            if (!weMovedOnTo) {
+              this.handleMoveOffPressurePlate(this.reverseOffset(offset));
+            }
         } else {
             this.bump(commandQueueItem);
             this.callBumpEvents(backwardPositionInformation);
@@ -600,8 +610,9 @@ module.exports = class BaseEntity {
   }
 
   handleMoveOffPressurePlate(moveOffset) {
-    const isMovingOffOf = this.controller.levelModel.isEntityOnBlocktype(this.identifier, "pressurePlateDown");
-    const destinationBlock = this.controller.levelModel.actionPlane.getBlockAt([this.position[0] + moveOffset[0], this.position[1] + moveOffset[1]]);
+    const previousPosition = [this.position[0] + moveOffset[0], this.position[1] + moveOffset[1]];
+    const isMovingOffOf = this.controller.levelModel.actionPlane.getBlockAt(previousPosition).blockType === "pressurePlateDown";
+    const destinationBlock = this.controller.levelModel.actionPlane.getBlockAt(this.position);
     let remainOn = false;
     if (destinationBlock === undefined || !destinationBlock.isWalkable) {
       remainOn = true;
@@ -615,16 +626,23 @@ module.exports = class BaseEntity {
     });
     if (isMovingOffOf && !remainOn) {
       const block = new LevelBlock('pressurePlateUp');
-      this.controller.levelModel.actionPlane.setBlockAt(this.position, block, moveOffset[0], moveOffset[1]);
+      this.controller.levelModel.actionPlane.setBlockAt(previousPosition, block, moveOffset[0], moveOffset[1]);
     }
   }
 
   handleMoveOnPressurePlate(moveOffset) {
-    const isMovingOnToPlate = this.controller.levelModel.isEntityOnBlocktype(this.identifier, "pressurePlateUp");
+    const targetPosition = [this.position[0] + moveOffset[0], this.position[1] + moveOffset[1]];
+    const isMovingOnToPlate = this.controller.levelModel.actionPlane.getBlockAt(targetPosition).blockType === "pressurePlateUp";
     if (isMovingOnToPlate) {
       const block = new LevelBlock('pressurePlateDown');
-      this.controller.levelModel.actionPlane.setBlockAt(this.position, block, moveOffset[0], moveOffset[1]);
+      this.controller.levelModel.actionPlane.setBlockAt(targetPosition, block);
+      return true;
     }
+    return false;
+  }
+
+  reverseOffset(offset) {
+    return [offset[0] * -1, offset[1] * -1];
   }
 
 };
