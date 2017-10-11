@@ -14,7 +14,11 @@
 
 <div id="phaser-game"></div>
 
-<p><button id="reset-button">Reset</button></p>
+<p>
+  <button id="reset-button">Reset</button>
+  <select id="level-load">
+  </select>
+</p>
 
 <p id="speed-display">Speed: 1x</p>
 <input type="range" min="0" value="1" max="5" step=".01" name="speed-slider" id="speed-slider" style="width: 200px"/>
@@ -57,7 +61,8 @@
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
   }
 
-  var testLevelToLoad = demoLevels[getParameterByName('level')] || demoLevels['1'];
+  var levelParam = getParameterByName('level');
+  var testLevelToLoad = demoLevels[levelParam] || demoLevels['default'];
   testLevelToLoad = Object.assign({}, defaults, testLevelToLoad);
 
   // Initialize test instance of game, exposed to window for debugging.
@@ -75,6 +80,15 @@
   });
 
   gameController.loadLevel(testLevelToLoad);
+
+  $levelselect = $('#level-load');
+  Object.keys(demoLevels).forEach(key => {
+    $levelselect.append($('<option/>', {text: key, selected: key === levelParam}));
+  });
+
+  $levelselect.on('change', () => {
+    location.search = `level=${$levelselect.val()}`;
+  });
 
   $('input[type=range]').on('input', function () {
     $("#speed-display").html('Speed: ' + $(this).val() + 'x');
