@@ -212,11 +212,13 @@ module.exports = class BaseEntity {
         let forwardPosition = this.controller.levelModel.getMoveForwardPosition(this);
         var forwardPositionInformation = this.controller.levelModel.canMoveForward(this);
         if (forwardPositionInformation[0]) {
+            this.movementState = this.facing;
             this.doMoveForward(commandQueueItem, forwardPosition);
         } else {
             this.bump(commandQueueItem);
             this.callBumpEvents(forwardPositionInformation);
         }
+        this.movementState = -1;
     }
 
     moveBackward(commandQueueItem, record = true) {
@@ -226,11 +228,13 @@ module.exports = class BaseEntity {
         let backwardPosition = this.controller.levelModel.getMoveBackwardPosition(this);
         var backwardPositionInformation = this.controller.levelModel.canMoveBackward(this);
         if (backwardPositionInformation[0]) {
+            this.movementState = FacingDirection.opposite(this.facing);
             this.doMoveBackward(commandQueueItem, backwardPosition);
         } else {
             this.bump(commandQueueItem);
             this.callBumpEvents(backwardPositionInformation);
         }
+        this.movementState = -1;
     }
 
     /**
