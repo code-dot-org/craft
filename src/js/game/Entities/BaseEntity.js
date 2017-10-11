@@ -2,6 +2,7 @@ const CommandQueue = require("../CommandQueue/CommandQueue.js");
 const FacingDirection = require("../LevelMVC/FacingDirection.js");
 const EventType = require("../Event/EventType.js");
 const CallbackCommand = require("../CommandQueue/CallbackCommand.js");
+const LevelBlock = require("../LevelMVC/LevelBlock.js");
 
 module.exports = class BaseEntity {
   constructor(controller, type, identifier, x, y, facing) {
@@ -597,4 +598,33 @@ module.exports = class BaseEntity {
         // no lava or water
         && (groundBlock.blockType !== "water" && groundBlock.blockType !== "lava");
   }
+
+  handleMoveOffPressurePlate(moveOffset) {
+    const isMovingOffOf = this.controller.levelModel.isEntityOnBlocktype(this.identifier, "pressurePlateDown");
+    const destinationBlock = this.controller.levelModel.actionPlane.getBlockAt([this.position[0] + moveOffset[0], this.position[1] + moveOffset[1]]);
+    let remainOn = false;
+    if (destinationBlock === undefined || !destinationBlock.isWalkable) {
+      remainOn = true;
+    }
+    this.controller.levelEntity.getEntitiesOfType('all').some(workingEntity => {
+      if (workingEntity !== this
+      && workingEntity.canTriggerPressurePlates()
+      && this.controller.positionEquivalence(workingEntity.position, this.position)) {
+        remainOn = true;
+      }
+    });
+    if (isMovingOffOf && !remainOn) {
+      const block = new LevelBlock('pressurePlateUp');
+      this.controller.levelModel.actionPlane.setBlockAt(this.position, block, moveOffset[0], moveOffset[1]);
+    }
+  }
+
+  handleMoveOnPressurePlate(moveOffset) {
+    const isMovingOnToPlate = this.controller.levelModel.isEntityOnBlocktype(this.identifier, "pressurePlateUp");
+    if (isMovingOnToPlate) {
+      const block = new LevelBlock('pressurePlateDown');
+      this.controller.levelModel.actionPlane.setBlockAt(this.position, block, moveOffset[0], moveOffset[1]);
+    }
+  }
+
 };
