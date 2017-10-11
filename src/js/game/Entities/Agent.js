@@ -10,13 +10,8 @@ module.exports = class Agent extends BaseEntity {
     this.inventory = {};
     this.movementState = -1;
 
-    if (controller.getIsDirectPlayerControl()) {
-      this.moveDelayMin = 0;
-      this.moveDelayMax = 0;
-    } else {
-      this.moveDelayMin = 30;
-      this.moveDelayMax = 200;
-    }
+    this.moveDelayMin = 20;
+    this.moveDelayMax = 150;
   }
 
   /**
