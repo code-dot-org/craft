@@ -617,10 +617,11 @@ module.exports = class BaseEntity {
     if (destinationBlock === undefined || !destinationBlock.isWalkable) {
       remainOn = true;
     }
-    this.controller.levelEntity.getEntitiesOfType('all').some(workingEntity => {
-      if (workingEntity !== this
+    var self = this;
+    this.controller.levelEntity.entityMap.forEach(function (workingEntity) {
+      if (workingEntity.identifier !== self.identifier
       && workingEntity.canTriggerPressurePlates()
-      && this.controller.positionEquivalence(workingEntity.position, this.position)) {
+      && self.controller.positionEquivalence(workingEntity.position, previousPosition)) {
         remainOn = true;
       }
     });

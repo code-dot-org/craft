@@ -8,7 +8,6 @@ const LevelModel = require("./LevelMVC/LevelModel.js");
 const LevelView = require("./LevelMVC/LevelView.js");
 const LevelEntity = require("./LevelMVC/LevelEntity.js");
 const AssetLoader = require("./LevelMVC/AssetLoader.js");
-const LevelBlock = require("./LevelMVC/LevelBlock.js");
 
 const CodeOrgAPI = require("./API/CodeOrgAPI.js");
 
@@ -712,38 +711,8 @@ class GameController {
     }
   }
 
-  handleMoveOffPressurePlate(commandQueueItem, moveOffset) {
-    const isMovingOffOf = this.levelModel.isEntityOnBlocktype(commandQueueItem.target, "pressurePlateDown");
-    const entity = this.getEntity(commandQueueItem.target);
-    const destinationBlock = this.levelModel.actionPlane.getBlockAt([entity.position[0] + moveOffset[0], entity.position[1] + moveOffset[1]]);
-    let remainOn = false;
-    if (destinationBlock === undefined || !destinationBlock.isWalkable) {
-      remainOn = true;
-    }
-    this.levelEntity.getEntitiesOfType('all').some(workingEntity => {
-      if (workingEntity !== entity
-      && workingEntity.canTriggerPressurePlates()
-      && this.positionEquivalence(workingEntity.position, entity.position)) {
-        remainOn = true;
-      }
-    });
-    if (isMovingOffOf && !remainOn) {
-      const block = new LevelBlock('pressurePlateUp');
-      this.levelModel.actionPlane.setBlockAt(entity.position, block, moveOffset[0], moveOffset[1]);
-    }
-  }
-
   positionEquivalence(lhs, rhs) {
     return (lhs[0] === rhs[0] && lhs[1] === rhs[1]);
-  }
-
-  handleMoveOnPressurePlate(commandQueueItem, moveOffset) {
-    const isMovingOnToPlate = this.levelModel.isEntityOnBlocktype(commandQueueItem.target, "pressurePlateUp");
-    if (isMovingOnToPlate) {
-      const entity = this.getEntity(commandQueueItem.target);
-      const block = new LevelBlock('pressurePlateDown');
-      this.levelModel.actionPlane.setBlockAt(entity.position, block, moveOffset[0], moveOffset[1]);
-    }
   }
 
   handleMoveOffIronDoor(commandQueueItem, moveOffset) {
