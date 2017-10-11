@@ -1,5 +1,4 @@
 const BaseEntity = require("./BaseEntity.js");
-const FacingDirection = require("../LevelMVC/FacingDirection.js");
 module.exports = class Zombie extends BaseEntity {
     constructor(controller, type, identifier, x, y, facing) {
         super(controller, type, identifier, x, y, facing);
@@ -23,33 +22,15 @@ module.exports = class Zombie extends BaseEntity {
     }
 
     playMoveForwardAnimation(position, facing, commandQueueItem, groundType) {
-        var levelView = this.controller.levelView;
-        var tween;
-        // update z order
-        var zOrderYIndex = position[1] + (facing === FacingDirection.North ? 1 : 0);
-        this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex) + 1;
+        super.playMoveForwardAnimation(position, facing, commandQueueItem, groundType);
+
         this.burningSprite[0].sortOrder = this.sprite.sortOrder + 1;
         this.burningSprite[1].sortOrder = this.sprite.sortOrder - 1;
-        // stepping sound
-        levelView.playBlockSound(groundType);
-        // play walk animation
-        var animName = "walk" + this.controller.levelView.getDirectionName(this.facing);
-        var idleAnimName = "idle" + this.controller.levelView.getDirectionName(this.facing);
-        levelView.playScaledSpeed(this.sprite.animations, animName);
-        setTimeout(() => {
-            // tween for position
-            tween = this.controller.levelView.addResettableTween(this.sprite).to({
-                x: (this.offset[0] + 40 * position[0]), y: (this.offset[1] + 40 * position[1])
-            }, 300, Phaser.Easing.Linear.None);
-            tween.onComplete.add(() => {
-                levelView.playScaledSpeed(this.sprite.animations, idleAnimName);
-                commandQueueItem.succeeded();
-            });
 
-            tween.start();
+        setTimeout(() => {
             // tween for burning animation
             for (var i = 0; i < 2; i++) {
-                tween = this.controller.levelView.addResettableTween(this.burningSprite[i]).to({
+                const tween = this.controller.levelView.addResettableTween(this.burningSprite[i]).to({
                     x: (this.offset[0] + this.burningSpriteOffset[0] + 40 * position[0]), y: (this.offset[1] + this.burningSpriteOffset[1] + 40 * position[1])
                 }, 300, Phaser.Easing.Linear.None);
                 tween.onComplete.add(() => {
@@ -57,9 +38,8 @@ module.exports = class Zombie extends BaseEntity {
 
                 tween.start();
             }
-        }, 50);
+        }, 50 / this.controller.tweenTimeScale);
         // smooth movement using tween
-
     }
 
     setBurn(burn) {
