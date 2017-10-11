@@ -507,7 +507,7 @@ module.exports = class LevelView {
   playBumpAnimation(position, facing, isOnBlock, entity = this.player) {
     var animation = this.playPlayerAnimation("bump", position, facing, isOnBlock, entity);
     animation.onComplete.add(() => {
-      this.playIdleAnimation(position, facing, isOnBlock);
+      this.playIdleAnimation(position, facing, isOnBlock, entity);
     });
     return animation;
   }
@@ -2121,7 +2121,7 @@ module.exports = class LevelView {
     this.playDoorAnimation(position, open, () => {
       const block = this.controller.levelModel.actionPlane.getBlockAt(position);
       block.isWalkable = !block.isWalkable;
-      this.playIdleAnimation(player.position, player.facing, player.isOnBlock);
+      this.playIdleAnimation(player.position, player.facing, player.isOnBlock, player);
       this.setSelectionIndicatorPosition(player.position[0], player.position[1]);
     });
   }
