@@ -97,7 +97,7 @@ module.exports = class Agent extends BaseEntity {
     if (player.isOnBlock || jumpOff) {
       groundType = levelModel.actionPlane.getBlockAt(player.position).blockType;
     } else {
-      groundType = levelModel.actionPlane.getBlockAt(player.position).blockType;
+      groundType = levelModel.groundPlane.getBlockAt(player.position).blockType;
     }
 
     levelView.playMoveForwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, () => {
@@ -138,7 +138,7 @@ module.exports = class Agent extends BaseEntity {
     if (player.isOnBlock || jumpOff) {
       groundType = levelModel.actionPlane.getBlockAt(player.position).blockType;
     } else {
-      groundType = levelModel.actionPlane.getBlockAt(player.position).blockType;
+      groundType = levelModel.groundPlane.getBlockAt(player.position).blockType;
     }
 
     levelView.playMoveBackwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, "walk", () => {
