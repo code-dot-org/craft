@@ -21,4 +21,17 @@ module.exports = {
     agentStartDirection: 0,
     verificationFunction: verificationAPI => verificationAPI.isPlayerAt([3, 1]),
   },
+  agent08: {
+    isAgentLevel: true,
+    useAgent: true,
+    isDaytime: false,
+    groundPlane: ["sandstone", "sandstone", "sandstone", "sandstone", "water", "water", "sandstone", "sandstone", "sandstone", "sandstone", "sandstone", "sand", "sandstone", "sand", "water", "water", "sand", "sand", "sand", "sandstone", "sandstone", "lava", "sand", "sand", "water", "water", "sand", "sand", "sand", "wool_orange", "sandstone", "sand", "sand", "sand", "water", "water", "sand", "sand", "sand", "sandstone", "sandstone", "sand", "sand", "sand", "water", "water", "sandstone", "water", "water", "sandstone", "water", "water", "water", "water", "water", "water", "sandstone", "water", "water", "sandstone", "water", "water", "water", "water", "water", "water", "sandstone", "oreDiamond", "sand", "sandstone", "sandstone", "sand", "sand", "sand", "sandstone", "sandstone", "sandstone", "sand", "sandstone", "sandstone", "sandstone", "sand", "sand", "sand", "sandstone", "sandstone", "sandstone", "sandstone", "sandstone", "sandstone", "sandstone", "sandstone", "sand", "sand", "sandstone", "sandstone", "sandstone", "sandstone", "sandstone", "sandstone"],
+    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+    actionPlane: ["sandstone", "sandstone", "sandstone", "sandstone", "", "", "sandstone", "sandstone", "sandstone", "sandstone", "sandstone", "", "", "", "", "", "", "", "", "sandstone", "sandstone", "", "", "", "", "", "", "", "", "torch", "sandstone", "", "", "", "", "", "", "", "sandstone", "sandstone", "sandstone", "", "", "", "", "", "sandstone", "", "", "sandstone", "", "", "", "", "", "", "sandstone", "", "", "sandstone", "", "", "", "", "", "", "sandstone", "diamondMiniblock", "", "sandstone", "sandstone", "", "", "", "sandstone", "sandstone", "sandstone", "", "", "sandstone", "sandstone", "", "", "", "sandstone", "sandstone", "sandstone", "sandstone", "sandstone", "sandstone", "sandstone", "sandstone", "sandstone", "", "sandstone", "sandstone", "sandstone", "sandstone", "sandstone", "sandstone"],
+    playerStartPosition: [2, 7],
+    playerStartDirection: 0,
+    agentStartPosition: [3, 7],
+    agentStartDirection: 0,
+    verificationFunction: verificationAPI => verificationAPI.isPlayerAt([9, 2]),
+  },
 };
