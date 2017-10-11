@@ -90,7 +90,7 @@ module.exports = function (grunt) {
     },
     browserify: {
       app: {
-        src: ['<%= project.src %>/game/GameController.js'],
+        src: ['src/test-build-only/playground.js'],
         dest: '<%= project.bundle %>',
         options: {
           transform: [
