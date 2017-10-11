@@ -21,6 +21,14 @@ module.exports = class Sheep extends BaseEntity {
         commandQueueItem.succeeded();
     }
 
+    getWalkAnimation() {
+        return this.getNakedSuffix() + super.getWalkAnimation();
+    }
+
+    getIdleAnimation() {
+        return this.getNakedSuffix() + super.getIdleAnimation();
+    }
+
     playMoveForwardAnimation(position, facing, commandQueueItem, groundType) {
         var levelView = this.controller.levelView;
         var tween;
@@ -30,21 +38,19 @@ module.exports = class Sheep extends BaseEntity {
         // stepping sound
         levelView.playBlockSound(groundType);
         // play walk animation
-        var animName = this.getNakedSuffix() + "walk" + this.controller.levelView.getDirectionName(this.facing);
-        var idleName = this.getNakedSuffix() + "idle" + this.controller.levelView.getDirectionName(this.facing);
-        levelView.playScaledSpeed(this.sprite.animations, animName);
+        levelView.playScaledSpeed(this.sprite.animations, this.getWalkAnimation());
         setTimeout(() => {
-            // smooth movement using tween
             tween = this.controller.levelView.addResettableTween(this.sprite).to({
                 x: (this.offset[0] + 40 * position[0]), y: (this.offset[1] + 40 * position[1])
             }, 300, Phaser.Easing.Linear.None);
             tween.onComplete.add(() => {
+                levelView.playScaledSpeed(this.sprite.animations, this.getIdleAnimation());
                 commandQueueItem.succeeded();
-                levelView.playScaledSpeed(this.sprite.animations, idleName);
             });
 
             tween.start();
-        }, 50);
+        }, 50 / this.controller.tweenTimeScale);
+        // smooth movement using tween
     }
 
     bump(commandQueueItem) {

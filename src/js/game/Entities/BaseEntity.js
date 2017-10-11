@@ -52,6 +52,14 @@ module.exports = class BaseEntity {
     this.queue.begin();
   }
 
+  getWalkAnimation() {
+    return "walk" + this.controller.levelView.getDirectionName(this.facing);
+  }
+
+  getIdleAnimation() {
+    return "idle" + this.controller.levelView.getDirectionName(this.facing);
+  }
+
   playMoveForwardAnimation(position, facing, commandQueueItem, groundType) {
     var levelView = this.controller.levelView;
     var tween;
@@ -61,15 +69,13 @@ module.exports = class BaseEntity {
     // stepping sound
     levelView.playBlockSound(groundType);
     // play walk animation
-    var animName = "walk" + this.controller.levelView.getDirectionName(this.facing);
-    var idleAnimName = "idle" + this.controller.levelView.getDirectionName(this.facing);
-    levelView.playScaledSpeed(this.sprite.animations, animName);
+    levelView.playScaledSpeed(this.sprite.animations, this.getWalkAnimation());
     setTimeout(() => {
       tween = this.controller.levelView.addResettableTween(this.sprite).to({
         x: (this.offset[0] + 40 * position[0]), y: (this.offset[1] + 40 * position[1])
       }, 300, Phaser.Easing.Linear.None);
       tween.onComplete.add(() => {
-        levelView.playScaledSpeed(this.sprite.animations, idleAnimName);
+        levelView.playScaledSpeed(this.sprite.animations, this.getIdleAnimation());
         commandQueueItem.succeeded();
       });
 
