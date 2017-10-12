@@ -362,8 +362,8 @@ module.exports = class LevelPlane {
     if (block.blockType === "doorIron") {
       block.isPowered = this.powerCheck(position, true);
       if (block.isPowered && !block.isOpen) {
+        block.isOpen = true;
         if (this.levelModel) {
-          block.isOpen = true;
           this.levelModel.controller.levelView.animateDoor(index, true);
         }
       } else if (!block.isPowered && block.isOpen) {
