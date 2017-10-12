@@ -29,8 +29,8 @@ test('Agent 1: Spawn Agent', t => {
   }), 1);
 });
 
-test('Agent 5: Build Bridge', t => {
-  attempt('agent05', api => new Promise(resolve => {
+test('Agent 6: Build Bridge', t => {
+  attempt('agent06', api => new Promise(resolve => {
     // Have the Agent build a bridge.
     for (let i = 0; i < 3; i++) {
       api.moveForward(null, 'PlayerAgent');
