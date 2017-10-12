@@ -3,7 +3,7 @@ const AgentLevels = require("../../test/helpers/AgentLevels");
 const DesignerLevels = require("../../test/helpers/DesignerLevels");
 
 module.exports = Object.assign({
-  1: {
+  default: {
     instructions: "Nighttime is boring with no zombies (sheep at this time). Get the Zombies spawning at night, and get them to chase you.",
     useAgent: true,
     
