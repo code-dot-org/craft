@@ -29,7 +29,7 @@ const mockGameController = {
 
 const levelData = {
   assetPacks: {
-    beforeLoad: ['allAssetsMinusPlayer', 'playerAlex'],
+    beforeLoad: ['allAssetsMinusPlayer', 'playerAlex', 'playerAgent'],
     afterLoad: [],
   },
   gridDimensions: [10, 10],
@@ -40,8 +40,11 @@ const levelData = {
   groundDecorationPlane: ["","","","","","","","","","","","","","","","","","","flowerRose","","","tallGrass","","","","","","","","tallGrass","","","tallGrass","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","tallGrass","flowerRose","","","","","","","",""],
   actionPlane: ["grass","grass","","","","","","","grass","grass","grass","grass","","","","","","","","grass","grass","","","treeOak","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","treeBirch","","",""],
   entities: [['sheep', 6, 4, 1]],
+  agentStartPosition: [3, 4],
+  agentStartDirection: 1,
   playerStartPosition: [3, 4],
   playerStartDirection: 1,
+  useAgent: true,
 };
 
 const levelModel = new LevelModel(levelData, mockGameController);
@@ -70,3 +73,27 @@ test('sanity', t => {
 
   game.state.start('levelRunner');
 });
+
+test('draw order', t => {
+  const game = new global.Phaser.Game({
+    width: 400,
+    height: 400,
+    renderer: global.Phaser.HEADLESS,
+    state: 'earlyLoad',
+  });
+  game.state.add('levelRunner', {
+    create: () => {
+      mockGameController.game = game;
+      mockGameController.levelModel = levelModel;
+      const view = new LevelView(mockGameController);
+      view.create(levelModel);
+      t.ok(view.player.sprite.sortOrder > view.agent.sprite.sortOrder);
+
+      setTimeout(() => game.destroy(), 0);
+      t.end();
+    }
+  });
+
+  game.state.start('levelRunner');
+});
+
