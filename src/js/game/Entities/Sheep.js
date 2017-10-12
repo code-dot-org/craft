@@ -1,5 +1,4 @@
 const BaseEntity = require("./BaseEntity.js");
-const FacingDirection = require("../LevelMVC/FacingDirection.js");
 const EventType = require("../Event/EventType.js");
 
 module.exports = class Sheep extends BaseEntity {
@@ -21,30 +20,12 @@ module.exports = class Sheep extends BaseEntity {
         commandQueueItem.succeeded();
     }
 
-    playMoveForwardAnimation(position, facing, commandQueueItem, groundType) {
-        var levelView = this.controller.levelView;
-        var tween;
-        // update z order
-        var zOrderYIndex = position[1] + (facing === FacingDirection.North ? 1 : 0);
-        this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex) + 1;
-        // stepping sound
-        levelView.playBlockSound(groundType);
-        // play walk animation
-        var animName = this.getNakedSuffix() + "walk" + this.controller.levelView.getDirectionName(this.facing);
-        var idleName = this.getNakedSuffix() + "idle" + this.controller.levelView.getDirectionName(this.facing);
-        levelView.playScaledSpeed(this.sprite.animations, animName);
-        setTimeout(() => {
-            // smooth movement using tween
-            tween = this.controller.levelView.addResettableTween(this.sprite).to({
-                x: (this.offset[0] + 40 * position[0]), y: (this.offset[1] + 40 * position[1])
-            }, 300, Phaser.Easing.Linear.None);
-            tween.onComplete.add(() => {
-                commandQueueItem.succeeded();
-                levelView.playScaledSpeed(this.sprite.animations, idleName);
-            });
+    getWalkAnimation() {
+        return this.getNakedSuffix() + super.getWalkAnimation();
+    }
 
-            tween.start();
-        }, 50);
+    getIdleAnimation() {
+        return this.getNakedSuffix() + super.getIdleAnimation();
     }
 
     bump(commandQueueItem) {
