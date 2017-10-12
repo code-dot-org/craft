@@ -26,6 +26,7 @@ module.exports = class LevelBlock {
     this.isRail = false;
     this.isSolid = true;
     this.isWeaklyPowerable = true;
+    this.isStickable = true;
 
     if (blockType === "") {
       this.isWalkable = true;
@@ -47,10 +48,12 @@ module.exports = class LevelBlock {
     if (blockType.match('torch')) {
       this.isWalkable = true;
       this.isPlacable = true;
+      this.isStickable = false;
     }
 
     if (blockType.substring(0, 5) === "rails") {
       this.isWeaklyPowerable = blockType === 'railsRedstoneTorch' ? true : false;
+      this.isStickable = blockType === 'railsRedstoneTorch' ? false : true;
       this.isEntity = true;
       this.isWalkable = true;
       this.isUsable = true;
@@ -130,6 +133,7 @@ module.exports = class LevelBlock {
       this.isUsable = true;
       this.isDestroyable = false;
       this.isTransparent = true;
+      this.isStickable = false;
     }
 
     if (blockType === "doorIron") {
@@ -140,6 +144,7 @@ module.exports = class LevelBlock {
       this.isDestroyable = false;
       this.isTransparent = true;
       this.isConnectedToRedstone = true;
+      this.isStickable = false;
     }
 
     if (blockType.startsWith("redstoneWire")) {
@@ -149,6 +154,7 @@ module.exports = class LevelBlock {
       this.isDestroyable = true;
       this.isTransparent = true;
       this.isRedstone = true;
+      this.isStickable = false;
     }
 
     if (blockType.startsWith("pressurePlate")) {
@@ -159,6 +165,7 @@ module.exports = class LevelBlock {
       this.isTransparent = true;
       this.isConnectedToRedstone = true;
       this.isRedstoneBattery = blockType === 'pressurePlateUp' ? false : true;
+      this.isStickable = false;
     }
 
     if (blockType === "glowstone") {
