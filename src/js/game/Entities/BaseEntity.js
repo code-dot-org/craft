@@ -202,17 +202,23 @@ module.exports = class BaseEntity {
     moveDirection(commandQueueItem, direction) {
         // update entity's direction
         this.controller.levelModel.turnToDirection(this, direction);
-        this.moveForward(commandQueueItem, false);
+        this.moveForward(commandQueueItem, false, true);
     }
 
-    moveForward(commandQueueItem, record = true) {
+    moveForward(commandQueueItem, record = true, movingDirection = false) {
         if (record) {
             this.controller.addCommandRecord("moveForward", this.type, commandQueueItem.repeat);
         }
         let forwardPosition = this.controller.levelModel.getMoveForwardPosition(this);
         var forwardPositionInformation = this.controller.levelModel.canMoveForward(this);
         if (forwardPositionInformation[0]) {
+            if (!movingDirection) {
+              this.movementState = this.facing;
+            }
             this.doMoveForward(commandQueueItem, forwardPosition);
+            if (!movingDirection) {
+              this.movementState = -1;
+            }
         } else {
             this.bump(commandQueueItem);
             this.callBumpEvents(forwardPositionInformation);
@@ -226,7 +232,9 @@ module.exports = class BaseEntity {
         let backwardPosition = this.controller.levelModel.getMoveBackwardPosition(this);
         var backwardPositionInformation = this.controller.levelModel.canMoveBackward(this);
         if (backwardPositionInformation[0]) {
+            this.movementState = FacingDirection.opposite(this.facing);
             this.doMoveBackward(commandQueueItem, backwardPosition);
+            this.movementState = -1;
         } else {
             this.bump(commandQueueItem);
             this.callBumpEvents(backwardPositionInformation);
