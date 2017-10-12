@@ -1080,8 +1080,12 @@ module.exports = class LevelView {
   playDestroyBlockAnimation(playerPosition, facing, destroyPosition, blockType, entity, completionHandler) {
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
 
-    var playerAnimation =
-      blockType.match(/(ore|stone|clay|bricks|bedrock)/) ? "mine" : "punchDestroy";
+    var playerAnimation = undefined;
+    if (entity === this.agent) {
+      playerAnimation = "punchDestroy";
+    } else {
+      playerAnimation = blockType.match(/(ore|stone|clay|bricks|bedrock)/) ? "mine" : "punchDestroy";
+    }
     this.playPlayerAnimation(playerAnimation, playerPosition, facing, false, entity);
     this.playMiningParticlesAnimation(facing, destroyPosition);
     this.playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, entity, completionHandler);
