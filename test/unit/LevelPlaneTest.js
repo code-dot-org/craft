@@ -845,3 +845,63 @@ test('certain objets arent weakly charged', t => {
 
   t.end();
 });
+
+test('Sticky piston grabbing, do not pull', t => {
+  const data = [
+    '','','','','','','','',
+    '','','','','','','','',
+    'pressurePlateUp','','railsRedstoneTorch','','torch','','redstoneWire','',
+    'pistonArmUp','','pistonArmUp','','pistonArmUp','','pistonArmUp','',
+    'pistonUpOnSticky','','pistonUpOnSticky','','pistonUpOnSticky','','pistonUpOnSticky','',
+    'railsRedstoneTorch','','railsRedstoneTorch','','railsRedstoneTorch','','railsRedstoneTorch','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
+
+  plane.setBlockAt([0, 5], new LevelBlock(''));
+  plane.setBlockAt([2, 5], new LevelBlock(''));
+  plane.setBlockAt([4, 5], new LevelBlock(''));
+  plane.setBlockAt([6, 5], new LevelBlock(''));
+
+  const expected = [
+    '','','','','','','','',
+    '','','','','','','','',
+    'pressurePlateUp','','railsRedstoneTorch','','torch','','redstoneWire','',
+    '','','','','','','','',
+    'pistonUpSticky','','pistonUpSticky','','pistonUpSticky','','pistonUpSticky','',
+    '','','','','','','','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+test('Sticky piston grabbing, do pull', t => {
+  const data = [
+    '','','','','','','','',
+    '','','','','','','','',
+    'grass','','bedrock','','railsSouth','','netherrack','',
+    'pistonArmUp','','pistonArmUp','','pistonArmUp','','pistonArmUp','',
+    'pistonUpOnSticky','','pistonUpOnSticky','','pistonUpOnSticky','','pistonUpOnSticky','',
+    'railsRedstoneTorch','','railsRedstoneTorch','','railsRedstoneTorch','','railsRedstoneTorch','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
+
+  plane.setBlockAt([0, 5], new LevelBlock(''));
+  plane.setBlockAt([2, 5], new LevelBlock(''));
+  plane.setBlockAt([4, 5], new LevelBlock(''));
+  plane.setBlockAt([6, 5], new LevelBlock(''));
+
+  const expected = [
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    'grass','','bedrock','','railsSouth','','netherrack','',
+    'pistonUpSticky','','pistonUpSticky','','pistonUpSticky','','pistonUpSticky','',
+    '','','','','','','','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});

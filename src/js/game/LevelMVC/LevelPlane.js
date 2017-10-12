@@ -575,7 +575,7 @@ module.exports = class LevelPlane {
             stuckBlockPosition[0] += 1;
             break;
         }
-        if (this.inBounds(stuckBlockPosition)) {
+        if (this.inBounds(stuckBlockPosition) && this.getBlockAt(stuckBlockPosition).isStickable) {
           this.setBlockAt(armPosition, this.getBlockAt(stuckBlockPosition));
           this.setBlockAt(stuckBlockPosition, emptyBlock);
         } else {
