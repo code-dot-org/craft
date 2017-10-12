@@ -869,35 +869,30 @@ module.exports = class LevelView {
     }
   }
 
+  /**
+   * Play the MoveForward animation for the given entity. Note that both
+   * MoveForward and MoveBackward are implemented using the same walk
+   * animations, and the only difference between the two is the logic they use
+   * for moving north after placing a block
+   *
+   * @see LevelView.playWalkAnimation
+   */
   playMoveForwardAnimation(entity, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, completionHandler) {
-    let tween;
-    let position = entity.position;
-
-    //stepping on stone sfx
-    this.playBlockSound(groundType);
-
-    this.setSelectionIndicatorPosition(position[0], position[1]);
-    //make sure to render high for when moving up after placing a block
-    var zOrderYIndex = position[1] + (facing === FacingDirection.North ? 1 : 0);
-    entity.sprite.sortOrder = this.yToIndex(zOrderYIndex) + entity.getSortOrderOffset();
-
-    if (!shouldJumpDown) {
-      const animName = "walk" + this.getDirectionName(facing);
-      this.playScaledSpeed(entity.sprite.animations, animName);
-      tween = this.addResettableTween(entity.sprite).to(
-        this.positionToScreen(position, isOnBlock, entity), 180, Phaser.Easing.Linear.None);
-    } else {
-      tween = this.playPlayerJumpDownVerticalAnimation(facing, position, oldPosition);
-    }
-
-    tween.onComplete.add(() => {
-      completionHandler();
-    });
-
-    tween.start();
+    // make sure to render high for when moving north after placing a block
+    const targetYIndex = entity.position[1] + (facing === FacingDirection.North ? 1 : 0);
+    this.playWalkAnimation(entity, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, targetYIndex, completionHandler);
   }
 
-  playMoveBackwardAnimation(entity, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, animation, completionHandler) {
+  /**
+   * @see LevelView.playMoveForwardAnimation
+   */
+  playMoveBackwardAnimation(entity, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, completionHandler) {
+    // make sure to render high for when moving north after placing a block
+    const targetYIndex = entity.position[1] + (facing === FacingDirection.South ? 1 : 0);
+    this.playWalkAnimation(entity, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, targetYIndex, completionHandler);
+  }
+
+  playWalkAnimation(entity, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, targetYIndex, completionHandler) {
     let tween;
     let position = entity.position;
 
@@ -905,18 +900,23 @@ module.exports = class LevelView {
     this.playBlockSound(groundType);
 
     this.setSelectionIndicatorPosition(position[0], position[1]);
-    //make sure to render high for when moving up after placing a block
-    var zOrderYIndex = position[1] + (facing === FacingDirection.North ? 1 : 0);
-    entity.sprite.sortOrder = this.yToIndex(zOrderYIndex) + entity.getSortOrderOffset();
 
     if (!shouldJumpDown) {
-      const animName = animation + this.getDirectionName(facing);
+      const animName = 'walk' + this.getDirectionName(facing);
       this.playScaledSpeed(entity.sprite.animations, animName);
       tween = this.addResettableTween(entity.sprite).to(
         this.positionToScreen(position, isOnBlock, entity), 180, Phaser.Easing.Linear.None);
     } else {
       tween = this.playPlayerJumpDownVerticalAnimation(facing, position, oldPosition);
     }
+
+    // Update the sort order 3/4 of the way through the animation
+    tween.onUpdateCallback((tween, percent) => {
+      if (percent >= 0.75) {
+        entity.sprite.sortOrder = this.yToIndex(targetYIndex) + entity.getSortOrderOffset();
+        tween.onUpdateCallback(null);
+      }
+    });
 
     tween.onComplete.add(() => {
       completionHandler();
