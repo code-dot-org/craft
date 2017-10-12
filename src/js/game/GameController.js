@@ -771,31 +771,6 @@ class GameController {
     this.execute(commandQueueItem, 'moveDirection', direction);
   }
 
-  directionToOffset(direction) {
-    let offset = [0,0];
-    // Direction will ever only not be null if we're calling this as a
-    // function of player movement.
-    switch (direction) {
-      case 0: {
-        offset[1] = -1;
-        break;
-      }
-      case 1: {
-        offset[0] = 1;
-        break;
-      }
-      case 2: {
-        offset[1] = 1;
-        break;
-      }
-      case 3: {
-        offset[0] = -1;
-        break;
-      }
-    }
-    return offset;
-  }
-
   turn(commandQueueItem, direction) {
     this.execute(commandQueueItem, 'turn', direction);
   }

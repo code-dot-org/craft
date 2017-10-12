@@ -219,7 +219,7 @@ module.exports = class BaseEntity {
         let forwardPosition = this.controller.levelModel.getMoveForwardPosition(this);
         var forwardPositionInformation = this.controller.levelModel.canMoveForward(this);
         if (forwardPositionInformation[0]) {
-            let offset = this.controller.directionToOffset(this.facing);
+            let offset = this.directionToOffset(this.facing);
             let weMovedOnTo = this.handleMoveOnPressurePlate(offset);
             this.doMoveForward(commandQueueItem, forwardPosition);
             if (!weMovedOnTo) {
@@ -239,7 +239,7 @@ module.exports = class BaseEntity {
         let backwardPosition = this.controller.levelModel.getMoveBackwardPosition(this);
         var backwardPositionInformation = this.controller.levelModel.canMoveBackward(this);
         if (backwardPositionInformation[0]) {
-            let offset = this.controller.directionToOffset(FacingDirection.opposite(this.facing));
+            let offset = this.directionToOffset(FacingDirection.opposite(this.facing));
             let weMovedOnTo = this.handleMoveOnPressurePlate(offset);
             this.doMoveBackward(commandQueueItem, backwardPosition);
             if (!weMovedOnTo) {
@@ -666,4 +666,30 @@ module.exports = class BaseEntity {
     }
   }
 
+
+
+  directionToOffset(direction) {
+    let offset = [0,0];
+    // Direction will ever only not be null if we're calling this as a
+    // function of player movement.
+    switch (direction) {
+      case 0: {
+        offset[1] = -1;
+        break;
+      }
+      case 1: {
+        offset[0] = 1;
+        break;
+      }
+      case 2: {
+        offset[1] = 1;
+        break;
+      }
+      case 3: {
+        offset[0] = -1;
+        break;
+      }
+    }
+    return offset;
+  }
 };

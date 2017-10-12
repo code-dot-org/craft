@@ -342,9 +342,9 @@ module.exports = class LevelPlane {
     return (lhs[0] === rhs[0] && lhs[1] === rhs[1]);
   }
 
-  checkEntityConflit(position) {
+  checkEntityConflict(position) {
     let captureReturn = false;
-    this.levelModel.controller.levelEntity.entityMap.forEach((workingEntity) => {
+    this.levelModel.controller.levelEntity.entityMap.entries().some((workingEntity) => {
       if (this.positionEquivalence(position, workingEntity.position)) {
         captureReturn = true;
       }
@@ -368,7 +368,7 @@ module.exports = class LevelPlane {
         }
       } else if (!block.isPowered && block.isOpen) {
         if (this.levelModel) {
-          if (!this.checkEntityConflit(position)) {
+          if (!this.checkEntityConflict(position)) {
             block.isOpen = false;
             this.levelModel.controller.levelView.animateDoor(index, false);
           }
@@ -413,7 +413,7 @@ module.exports = class LevelPlane {
           if (this.levelModel) {
             this.levelModel.controller.levelView.animateDoor(index, true);
           }
-        } else if (!block.isPowered && block.isOpen && !this.checkEntityConflit(position)) {
+        } else if (!block.isPowered && block.isOpen && !this.checkEntityConflict(position)) {
           block.isOpen = false;
           if (this.levelModel) {
             this.levelModel.controller.levelView.animateDoor(index, false);
