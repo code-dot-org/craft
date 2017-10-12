@@ -225,6 +225,7 @@ module.exports = class BaseEntity {
             if (!weMovedOnTo) {
               this.handleMoveOffPressurePlate(this.reverseOffset(offset));
             }
+            this.handleMoveOffIronDoor(this.reverseOffset(offset));
         } else {
             this.bump(commandQueueItem);
             this.callBumpEvents(forwardPositionInformation);
@@ -244,6 +245,7 @@ module.exports = class BaseEntity {
             if (!weMovedOnTo) {
               this.handleMoveOffPressurePlate(this.reverseOffset(offset));
             }
+            this.handleMoveOffIronDoor(this.reverseOffset(offset));
         } else {
             this.bump(commandQueueItem);
             this.callBumpEvents(backwardPositionInformation);
@@ -649,6 +651,19 @@ module.exports = class BaseEntity {
 
   reverseOffset(offset) {
     return [offset[0] * -1, offset[1] * -1];
+  }
+
+  handleMoveOffIronDoor(moveOffset) {
+    const formerPosition = [this.position[0] + moveOffset[0], this.position[1] + moveOffset[1]];
+    if (!this.controller.levelModel.inBounds(formerPosition[0], formerPosition[1])) {
+      return;
+    }
+
+    const wasOnDoor = this.controller.levelModel.actionPlane.getBlockAt(formerPosition).blockType === "doorIron";
+    const isOnDoor = this.controller.levelModel.actionPlane.getBlockAt(this.position).blockType === "doorIron";
+    if (wasOnDoor && !isOnDoor) {
+      this.controller.levelModel.actionPlane.findDoorToAnimate([-1, -1]);
+    }
   }
 
 };

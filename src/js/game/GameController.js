@@ -723,20 +723,6 @@ class GameController {
     return (lhs[0] === rhs[0] && lhs[1] === rhs[1]);
   }
 
-  handleMoveOffIronDoor(commandQueueItem, moveOffset) {
-    const entity = this.getEntity(commandQueueItem.target);
-    const formerPosition = [entity.position[0] - moveOffset[0], entity.position[1] - moveOffset[1]];
-    if (!this.levelModel.inBounds(formerPosition[0], formerPosition[1])) {
-      return;
-    }
-
-    const wasOnDoor = this.levelModel.actionPlane.getBlockAt(formerPosition).blockType === "doorIron";
-    const isOnDoor = this.levelModel.actionPlane.getBlockAt(entity.position).blockType === "doorIron";
-    if (wasOnDoor && !isOnDoor) {
-      this.levelModel.actionPlane.findDoorToAnimate([-1, -1]);
-    }
-  }
-
   /**
    * Run a command. If no `commandQueueItem.target` is provided, the command
    * will be applied to all targets.
@@ -774,30 +760,15 @@ class GameController {
   }
 
   moveForward(commandQueueItem) {
-    const entity = this.getEntity(commandQueueItem.target);
-    const moveOffset = this.directionToOffset(entity.facing);
-
     this.execute(commandQueueItem, 'moveForward');
-
-    this.handleMoveOffIronDoor(commandQueueItem, moveOffset);
   }
 
   moveBackward(commandQueueItem) {
-    const entity = this.getEntity(commandQueueItem.target);
-    const moveOffset = this.directionToOffset(FacingDirection.opposite(entity.facing));
-
     this.execute(commandQueueItem, 'moveBackward');
-
-    this.handleMoveOffIronDoor(commandQueueItem, moveOffset);
   }
 
   moveDirection(commandQueueItem, direction) {
-    const entity = this.getEntity(commandQueueItem.target);
-    const moveOffset = this.directionToOffset(entity.movementState);
-
     this.execute(commandQueueItem, 'moveDirection', direction);
-
-    this.handleMoveOffIronDoor(commandQueueItem, moveOffset);
   }
 
   directionToOffset(direction) {

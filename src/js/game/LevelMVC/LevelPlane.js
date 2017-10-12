@@ -128,31 +128,14 @@ module.exports = class LevelPlane {
   * Changes the block at a desired position to the desired block.
   * Important note: This is the cornerstone of block placing/destroying.
   */
-  setBlockAt(position, block, offsetX = 0, offsetY = 0) {
+  setBlockAt(position, block) {
     this._data[this.coordinatesToIndex(position)] = block;
-    let offset = [offsetX,offsetY];
 
     if (this.isActionPlane()) {
-      let positionInQuestion = [0,0];
-      // This will either be the pos the player is leaving or entering, depending on situation
-      if (this.levelModel) {
-        positionInQuestion = [this.levelModel.player.position[0] + offset[0], this.levelModel.player.position[1] + offset[1]];
-      }
-      let wasOnADoor = false;
-      // If the questionable position was a door, we want to do a few things differently.
-      if (this.inBounds(positionInQuestion) && this.getBlockAt(positionInQuestion).blockType === "doorIron") {
-        wasOnADoor = true;
-      }
 
       let redstoneToRefresh = [];
       if (block.needToRefreshRedstone()) {
         redstoneToRefresh = this.getRedstone();
-        // Once we're done updating redstoneWire states, check to see if doors should open/close.
-        if (wasOnADoor) {
-          this.findDoorToAnimate(positionInQuestion);
-        } else {
-          this.findDoorToAnimate([-1,-1]);
-        }
       }
 
       this.determineRailType(position, true);
@@ -355,6 +338,20 @@ module.exports = class LevelPlane {
     return posToRefresh;
   }
 
+  positionEquivalence(lhs, rhs) {
+    return (lhs[0] === rhs[0] && lhs[1] === rhs[1]);
+  }
+
+  checkEntityConflit(position) {
+    let captureReturn = false;
+    this.levelModel.controller.levelEntity.entityMap.forEach((workingEntity) => {
+      if (this.positionEquivalence(position, workingEntity.position)) {
+        captureReturn = true;
+      }
+    });
+    return captureReturn;
+  }
+
   /**
   * Evaluates what state Iron Doors on the map should be in.
   */
@@ -365,14 +362,16 @@ module.exports = class LevelPlane {
     if (block.blockType === "doorIron") {
       block.isPowered = this.powerCheck(position, true);
       if (block.isPowered && !block.isOpen) {
-        block.isOpen = true;
         if (this.levelModel) {
+          block.isOpen = true;
           this.levelModel.controller.levelView.animateDoor(index, true);
         }
       } else if (!block.isPowered && block.isOpen) {
-        block.isOpen = false;
         if (this.levelModel) {
-          this.levelModel.controller.levelView.animateDoor(index, false);
+          if (!this.checkEntityConflit(position)) {
+            block.isOpen = false;
+            this.levelModel.controller.levelView.animateDoor(index, false);
+          }
         }
       }
     }
