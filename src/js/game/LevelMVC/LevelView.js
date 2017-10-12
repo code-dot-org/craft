@@ -2055,6 +2055,10 @@ module.exports = class LevelView {
         break;
 
       default:
+        if (blockType.startsWith('pressurePlate')) {
+          plane = this.groundPlane;
+          y -= 0.5;
+        }
         atlas = this.blocks[blockType][0];
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
