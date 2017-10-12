@@ -907,9 +907,9 @@ module.exports = class LevelView {
       tween = this.playPlayerJumpDownVerticalAnimation(facing, position, oldPosition);
     }
 
-    // Update the sort order halfway through the animation
+    // Update the sort order 3/4 of the way through the animation
     tween.onUpdateCallback((tween, percent) => {
-      if (percent >= 0.5) {
+      if (percent >= 0.75) {
         entity.sprite.sortOrder = this.yToIndex(targetYIndex) + entity.getSortOrderOffset();
         tween.onUpdateCallback(null);
       }
