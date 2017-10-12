@@ -24,6 +24,12 @@
 <input type="range" min="0" value="1" max="5" step=".01" name="speed-slider" id="speed-slider" style="width: 200px"/>
 
 <p>
+  Controlling:
+  <input type="radio" name="target" value="Player" checked> Player
+  <input type="radio" name="target" value="PlayerAgent"> Agent
+</p>
+
+<p>
   Currently placing:
   <select id="block-type">
     <option>rails</option>
@@ -38,7 +44,7 @@
   </select>
 </p>
 
-<p>Move with <kbd>w</kbd> <kbd>a</kbd> <kbd>s</kbd> <kbd>d</kbd>. Place blocks with <kbd>Enter</kbd>. Destroy blocks with <kbd>Backspace</kbd>.</p>
+<p>Move with <kbd>w</kbd> <kbd>a</kbd> <kbd>s</kbd> <kbd>d</kbd>. Place blocks with <kbd>Enter</kbd>. Destroy blocks with <kbd>Backspace</kbd>. Switch target with <kbd>Shift</kbd>.</p>
 
 <script>
   var demoLevels = window.demoLevels;
@@ -100,16 +106,57 @@
     gameController.codeOrgAPI.startAttempt(() => {});
   });
 
-  $(window).on('keydown', e => {
+  window.addEventListener('keydown', e => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    var target = $('input[name=target]:checked').val();
+    var instance = target === 'Player' ? gameController.player : gameController.agent;
+
     switch (e.keyCode) {
       case 8:
       case 46:
-        gameController.codeOrgAPI.destroyBlock(null, 'Player');
+        gameController.codeOrgAPI.destroyBlock(null, target);
         break;
       case 13:
-        gameController.codeOrgAPI.placeInFront(null, $('#block-type').val(), 'Player');
+        gameController.codeOrgAPI.placeInFront(null, $('#block-type').val(), target);
+        break;
+      case 16:
+        $('input[name=target]:not(:checked)').prop('checked', true);
+        break;
+      case 38:
+      case 87:
+        instance.movementState = 0;
+        instance.updateMovement();
+        break;
+      case 40:
+      case 83:
+        instance.movementState = 2;
+        instance.updateMovement();
+        break;
+      case 37:
+      case 65:
+        instance.movementState = 3;
+        instance.updateMovement();
+        break;
+      case 39:
+      case 868:
+        instance.movementState = 1;
+        instance.updateMovement();
+        break;
     }
-  });
+  }, true);
+
+  window.addEventListener('keyup', e => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    var target = $('input[name=target]:checked').val();
+    var instance = target === 'Player' ? gameController.player : gameController.agent;
+
+    instance.movementState = -1;
+    instance.updateMovement();
+  }, true);
 
   window.gameController = gameController;
 </script>
