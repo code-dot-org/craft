@@ -138,17 +138,17 @@ module.exports = class LevelPlane {
       if (this.levelModel) {
         positionInQuestion = [this.levelModel.player.position[0] + offset[0], this.levelModel.player.position[1] + offset[1]];
       }
-      let wasOnADoor = false;
+      let intoDoor = false;
       // If the questionable position was a door, we want to do a few things differently.
       if (this.inBounds(positionInQuestion) && this.getBlockAt(positionInQuestion).blockType === "doorIron") {
-        wasOnADoor = true;
+        intoDoor = true;
       }
 
       let redstoneToRefresh = [];
       if (block.needToRefreshRedstone()) {
         redstoneToRefresh = this.getRedstone();
         // Once we're done updating redstoneWire states, check to see if doors should open/close.
-        if (wasOnADoor) {
+        if (!intoDoor && block.blockType !== "pressurePlateDown") {
           this.findDoorToAnimate(positionInQuestion);
         } else {
           this.findDoorToAnimate([-1,-1]);
@@ -365,17 +365,86 @@ module.exports = class LevelPlane {
     if (block.blockType === "doorIron") {
       block.isPowered = this.powerCheck(position, true);
       if (block.isPowered && !block.isOpen) {
+        if (this.skipDoorFrom(position)) {
+          return;
+        }
         block.isOpen = true;
         if (this.levelModel) {
           this.levelModel.controller.levelView.animateDoor(index, true);
         }
       } else if (!block.isPowered && block.isOpen) {
+        if (this.skipDoorTo(position)) {
+          return;
+        }
         block.isOpen = false;
         if (this.levelModel) {
           this.levelModel.controller.levelView.animateDoor(index, false);
         }
       }
     }
+  }
+
+  skipDoorTo(position) {
+    if (this.levelModel) {
+      let playerPos = this.getMoveToPosition(this.levelModel.player);
+      let agentPos= this.getMoveToPosition(this.levelModel.agent);
+      if (this.positionEquivalence(playerPos, position) || this.positionEquivalence(agentPos, position)) {
+        return true;
+      }
+    }
+
+  }
+
+  skipDoorFrom(position) {
+    if (this.levelModel) {
+      let playerPos = this.getMoveFromPosition(this.levelModel.player);
+      let agentPos= this.getMoveFromPosition(this.levelModel.agent);
+      if (this.positionEquivalence(playerPos, position) || this.positionEquivalence(agentPos, position)) {
+        return true;
+      }
+    }
+  }
+
+  positionEquivalence(lhs, rhs) {
+    return lhs[0] === rhs[0] && lhs[1] === rhs[1];
+  }
+
+  getMoveFromPosition(entity = this.player) {
+    let offSet = [0, 0];
+    switch (entity.movementState) {
+      case 0:
+        offSet[1] = 1;
+        break;
+      case 1:
+        offSet[0] = -1;
+        break;
+      case 2:
+        offSet[1] = -1;
+        break;
+      case 3:
+        offSet[0] = 1;
+        break;
+    }
+    return [entity.position[0] + offSet[0], entity.position[1] + offSet[1]];
+  }
+
+  getMoveToPosition(entity = this.player) {
+    let offSet = [0, 0];
+    switch (entity.movementState) {
+      case 0:
+        offSet[1] = -1;
+        break;
+      case 1:
+        offSet[0] = 1;
+        break;
+      case 2:
+        offSet[1] = 1;
+        break;
+      case 3:
+        offSet[0] = -1;
+        break;
+    }
+    return [entity.position[0] + offSet[0], entity.position[1] + offSet[1]];
   }
 
   /**
@@ -400,7 +469,7 @@ module.exports = class LevelPlane {
   }
 
   /**
-  * Find all iron doors in a level and evaluate if they need to be animated based on state
+  * Find all iron doors in a level and evaluate if they need to be animated based on state.
   */
   findDoorToAnimate(positionInQuestion) {
     this.getAllPositions().forEach((position) => {
@@ -410,14 +479,18 @@ module.exports = class LevelPlane {
       if (block.blockType === "doorIron" && position !== positionInQuestion) {
         block.isPowered = this.powerCheck(position, true);
         if (block.isPowered && !block.isOpen) {
-          block.isOpen = true;
           if (this.levelModel) {
-            this.levelModel.controller.levelView.animateDoor(index, true);
+            if (!this.skipDoorFrom(position)) {
+              block.isOpen = true;
+              this.levelModel.controller.levelView.animateDoor(index, false);
+            }
           }
         } else if (!block.isPowered && block.isOpen) {
-          block.isOpen = false;
           if (this.levelModel) {
-            this.levelModel.controller.levelView.animateDoor(index, false);
+            if (!this.skipDoorTo(position)) {
+              block.isOpen = false;
+              this.levelModel.controller.levelView.animateDoor(index, false);
+            }
           }
         }
       }

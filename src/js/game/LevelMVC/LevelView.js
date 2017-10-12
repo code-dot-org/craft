@@ -507,7 +507,7 @@ module.exports = class LevelView {
   playBumpAnimation(position, facing, isOnBlock, entity = this.player) {
     var animation = this.playPlayerAnimation("bump", position, facing, isOnBlock, entity);
     animation.onComplete.add(() => {
-      this.playIdleAnimation(position, facing, isOnBlock);
+      this.playIdleAnimation(position, facing, isOnBlock, entity);
     });
     return animation;
   }
@@ -2116,7 +2116,12 @@ module.exports = class LevelView {
   * Animate Door and set the status
   */
   animateDoor(index, open) {
+    if (this.doorOccupationCheck(index)) {
+      return;
+    }
+
     let player = this.controller.levelModel.player;
+
     this.setSelectionIndicatorPosition(this.controller.levelModel.actionPlane.indexToCoordinates(index)[0], this.controller.levelModel.actionPlane.indexToCoordinates(index)[1]);
     this.controller.audioPlayer.play("doorOpen");
     // If it's not walable, then open otherwise, close.
@@ -2129,4 +2134,15 @@ module.exports = class LevelView {
     });
   }
 
+  doorOccupationCheck(index) {
+    var width = this.controller.levelModel.actionPlane.width;
+    var posToIndex = (position) => {return position[1] * width + position[0];};
+    this.controller.levelEntity.entityMap.forEach(function (item) {
+      let itemIndex = posToIndex(item.position);
+      if (itemIndex === index) {
+        return true;
+      }
+    });
+    return false;
+  }
 };

@@ -802,22 +802,28 @@ class GameController {
 
   moveForward(commandQueueItem) {
     const target = commandQueueItem.target;
-    const moveOffset = this.directionToOffset(target.facing);
+    let entity = this.getEntity(target);
+    entity.movementState = entity.facing;
+    const moveOffset = this.directionToOffset(entity.facing);
     this.handleMoveOffPressurePlate(commandQueueItem, moveOffset);
 
     this.execute(commandQueueItem, 'moveForward');
 
+    entity.movementState = -1;
     this.handleMoveOnPressurePlate(commandQueueItem, moveOffset);
     this.handleMoveOffIronDoor(commandQueueItem, moveOffset);
   }
 
   moveBackward(commandQueueItem) {
     const target = commandQueueItem.target;
-    const moveOffset = this.directionToOffset(FacingDirection.opposite(target.facing));
+    let entity = this.getEntity(target);
+    entity.movementState = FacingDirection.opposite(entity.facing);
+    const moveOffset = this.directionToOffset(FacingDirection.opposite(entity.facing));
     this.handleMoveOffPressurePlate(commandQueueItem, moveOffset);
 
     this.execute(commandQueueItem, 'moveBackward');
 
+    entity.movementState = -1;
     this.handleMoveOnPressurePlate(commandQueueItem, moveOffset);
     this.handleMoveOffIronDoor(commandQueueItem, moveOffset);
   }
