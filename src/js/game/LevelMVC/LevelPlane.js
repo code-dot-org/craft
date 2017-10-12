@@ -413,7 +413,7 @@ module.exports = class LevelPlane {
           if (this.levelModel) {
             this.levelModel.controller.levelView.animateDoor(index, true);
           }
-        } else if (!block.isPowered && block.isOpen) {
+        } else if (!block.isPowered && block.isOpen && !this.checkEntityConflit(position)) {
           block.isOpen = false;
           if (this.levelModel) {
             this.levelModel.controller.levelView.animateDoor(index, false);
