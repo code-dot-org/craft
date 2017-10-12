@@ -377,6 +377,31 @@ module.exports = class AssetLoader {
         mp3: `${this.assetRoot}audio/zombiehurt2.mp3`,
         ogg: `${this.assetRoot}audio/zombiehurt2.ogg`
       },
+      pistonIn: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/piston_in.mp3`,
+        ogg: `${this.assetRoot}audio/piston_in.ogg`
+      },
+      pistonOut: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/piston_out.mp3`,
+        ogg: `${this.assetRoot}audio/piston_out.ogg`
+      },
+      portalAmbient: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/portal.mp3`,
+        ogg: `${this.assetRoot}audio/portal.ogg`
+      },
+      portalTravel: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/travel_portal.mp3`,
+        ogg: `${this.assetRoot}audio/travel_portal.ogg`
+      },
+      pressurePlateClick: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/pressurePlateClick.mp3`,
+        ogg: `${this.assetRoot}audio/pressurePlateClick.ogg`
+      },
     };
 
     const ALL_SOUND_ASSETS = [
