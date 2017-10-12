@@ -507,7 +507,7 @@ module.exports = class LevelView {
   playBumpAnimation(position, facing, isOnBlock, entity = this.player) {
     var animation = this.playPlayerAnimation("bump", position, facing, isOnBlock, entity);
     animation.onComplete.add(() => {
-      this.playIdleAnimation(position, facing, isOnBlock);
+      this.playIdleAnimation(position, facing, isOnBlock, entity);
     });
     return animation;
   }
@@ -1083,8 +1083,12 @@ module.exports = class LevelView {
   playDestroyBlockAnimation(playerPosition, facing, destroyPosition, blockType, entity, completionHandler) {
     this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
 
-    var playerAnimation =
-      blockType.match(/(ore|stone|clay|bricks|bedrock)/) ? "mine" : "punchDestroy";
+    var playerAnimation = undefined;
+    if (entity === this.agent) {
+      playerAnimation = "punchDestroy";
+    } else {
+      playerAnimation = blockType.match(/(ore|stone|clay|bricks|bedrock)/) ? "mine" : "punchDestroy";
+    }
     this.playPlayerAnimation(playerAnimation, playerPosition, facing, false, entity);
     this.playMiningParticlesAnimation(facing, destroyPosition);
     this.playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, entity, completionHandler);
@@ -2124,7 +2128,7 @@ module.exports = class LevelView {
     this.playDoorAnimation(position, open, () => {
       const block = this.controller.levelModel.actionPlane.getBlockAt(position);
       block.isWalkable = !block.isWalkable;
-      this.playIdleAnimation(player.position, player.facing, player.isOnBlock);
+      this.playIdleAnimation(player.position, player.facing, player.isOnBlock, player);
       this.setSelectionIndicatorPosition(player.position[0], player.position[1]);
     });
   }
