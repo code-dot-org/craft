@@ -1012,17 +1012,32 @@ module.exports = class LevelView {
   }
 
   createActionPlaneBlock(position, blockType) {
-    let blockIndex = (this.yToIndex(position[1])) + position[0];
+    const block = new LevelBlock(blockType);
+    const blockIndex = (this.yToIndex(position[1])) + position[0];
+    if (block.isEmpty) {
+      this.actionPlaneBlocks[blockIndex] = null;
+      return;
+    }
 
     // Remove the old sprite at this position, if there is one.
     this.actionGroup.remove(this.actionPlaneBlocks[blockIndex]);
     this.groundGroup.remove(this.actionPlaneBlocks[blockIndex]);
 
     // Create a new sprite.
-    const block = new LevelBlock(blockType);
-    const group = block.shouldRenderOnGroundPlane() ? this.groundGroup : this.actionGroup;
-    const offset = block.shouldRenderOnGroundPlane() ? -0.5 : 0;
-    const sprite = this.createBlock(group, position[0], position[1] + offset, blockType);
+    let sprite;
+    if (block.getIsMiniblock()) {
+      // miniblocks defined on the action plane like this should have a
+      // closer collectible range and a narrower drop offset than normal
+      sprite = this.createMiniBlock(position[0], position[1], blockType, {
+        collectibleDistance: 1,
+        xOffsetRange: 10,
+        yOffsetRange: 10
+      });
+    } else {
+      const group = block.shouldRenderOnGroundPlane() ? this.groundGroup : this.actionGroup;
+      const offset = block.shouldRenderOnGroundPlane() ? -0.5 : 0;
+      sprite = this.createBlock(group, position[0], position[1] + offset, blockType);
+    }
 
     if (sprite) {
       sprite.sortOrder = this.yToIndex(position[1]);
@@ -1374,28 +1389,10 @@ module.exports = class LevelView {
           }
         }
 
-        sprite = null;
         const actionBlock = levelData.actionPlane.getBlockAt(position);
-        if (!actionBlock.isEmpty && !actionBlock.shouldRenderOnGroundPlane()) {
-          if (actionBlock.getIsMiniblock()) {
-            // miniblocks defined on the action plane like this should have a
-            // closer collectible range and a narrower drop offset than normal
-            sprite = this.createMiniBlock(x, y, actionBlock.blockType, {
-              collectibleDistance: 1,
-              xOffsetRange: 10,
-              yOffsetRange: 10
-            });
-          } else {
-            sprite = this.createBlock(this.actionGroup, x, y, actionBlock.blockType);
-          }
-
-          if (sprite !== null) {
-            sprite.sortOrder = this.yToIndex(y);
-            this.correctForShadowOverlay(actionBlock.blockType, sprite);
-          }
+        if (!actionBlock.shouldRenderOnGroundPlane()) {
+          this.createActionPlaneBlock(position, actionBlock.blockType);
         }
-
-        this.actionPlaneBlocks.push(sprite);
       }
     }
 
