@@ -1016,9 +1016,13 @@ module.exports = class LevelView {
 
     // Remove the old sprite at this position, if there is one.
     this.actionPlane.remove(this.actionPlaneBlocks[blockIndex]);
+    this.groundPlane.remove(this.actionPlaneBlocks[blockIndex]);
 
     // Create a new sprite.
-    var sprite = this.createBlock(this.actionPlane, position[0], position[1], blockType);
+    const block = new LevelBlock(blockType);
+    const plane = block.shouldRenderOnGroundPlane() ? this.groundPlane : this.actionPlane;
+    const offset = block.shouldRenderOnGroundPlane() ? -0.5 : 0;
+    const sprite = this.createBlock(plane, position[0], position[1] + offset, blockType);
 
     if (sprite) {
       sprite.sortOrder = this.yToIndex(position[1]);
@@ -1372,7 +1376,7 @@ module.exports = class LevelView {
 
         sprite = null;
         const actionBlock = levelData.actionPlane.getBlockAt(position);
-        if (!actionBlock.isEmpty) {
+        if (!actionBlock.isEmpty && !actionBlock.shouldRenderOnGroundPlane()) {
           if (actionBlock.getIsMiniblock()) {
             // miniblocks defined on the action plane like this should have a
             // closer collectible range and a narrower drop offset than normal
@@ -1410,9 +1414,16 @@ module.exports = class LevelView {
     for (var y = 0; y < this.controller.levelModel.planeHeight; ++y) {
       for (var x = 0; x < this.controller.levelModel.planeWidth; ++x) {
         let position = [x, y];
-        var sprite = this.createBlock(this.groundPlane, x, y, this.controller.levelModel.groundPlane.getBlockAt(position).blockType);
+        const groundBlock = this.controller.levelModel.groundPlane.getBlockAt(position);
+        var sprite = this.createBlock(this.groundPlane, x, y, groundBlock.blockType);
+
         if (sprite) {
           sprite.sortOrder = this.yToIndex(y);
+        }
+
+        const actionBlock = this.controller.levelModel.actionPlane.getBlockAt(position);
+        if (actionBlock && actionBlock.shouldRenderOnGroundPlane()) {
+          this.createActionPlaneBlock([x, y], actionBlock.blockType);
         }
       }
     }
@@ -1455,6 +1466,7 @@ module.exports = class LevelView {
           // Remove the old sprite at this position, if there is one.
           const index = this.coordinatesToIndex(position);
           this.actionPlane.remove(this.actionPlaneBlocks[index]);
+          this.groundPlane.remove(this.actionPlaneBlocks[index]);
         }
       }
     });
