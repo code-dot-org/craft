@@ -2060,6 +2060,11 @@ module.exports = class LevelView {
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        if (plane === this.actionPlane) {
+          const variance = 0x12;
+          const brightness = (Math.round(Math.random() * variance) + 0xff - variance).toString(16);
+          sprite.tint = '0x' + brightness + brightness + brightness;
+        }
         break;
     }
 
