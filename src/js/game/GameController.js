@@ -71,6 +71,8 @@ class GameController {
     this.earlyLoadNiceToHaveAssetPacks =
       gameControllerConfig.earlyLoadNiceToHaveAssetPacks || [];
 
+    this.audioPlayer.play("doorOpen");
+
     this.resettableTimers = [];
     this.timeouts = [];
     this.timeout = 0;

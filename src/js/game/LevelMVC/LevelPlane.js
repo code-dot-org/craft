@@ -347,12 +347,28 @@ module.exports = class LevelPlane {
     }
 
     this.powerAllBlocks();
+    let needToPlayPiston = "";
     // Once we're done updating redstoneWire states, check to see if doors and pistons should open/close.
     this.getAllPositions().forEach((position) => {
       this.getIronDoors(position);
-      this.getPistonState(position);
+      needToPlayPiston = this.getPistonState(position);
     });
+    this.playPistonSound(needToPlayPiston);
     return posToRefresh;
+  }
+
+  playPistonSound(sound) {
+    switch (sound) {
+      case "On":
+        this.levelModel.controller.audioPlayer.play("pistonOut");
+        break;
+      case "Off":
+        this.levelModel.controller.audioPlayer.play("pistonIn");
+        break;
+      case "":
+        //do nothing
+        break;
+    }
   }
 
   /**
@@ -383,13 +399,16 @@ module.exports = class LevelPlane {
   */
   getPistonState(position) {
     const block = this.getBlockAt(position);
+    let returnValue = "";
 
     if (block.blockType.startsWith("piston") && !block.blockType.startsWith("pistonArm")) {
       block.isPowered = this.powerCheck(position, true);
       if (block.isPowered) {
         this.activatePiston(position);
+        returnValue = "On";
       } else if (!block.isPowered) {
         this.deactivatePiston(position);
+        returnValue = "Off";
       }
 
       if (this.levelModel) {
@@ -397,6 +416,7 @@ module.exports = class LevelPlane {
         this.levelModel.controller.updateShadingPlane();
       }
     }
+    return returnValue;
   }
 
   /**
@@ -474,7 +494,6 @@ module.exports = class LevelPlane {
         break;
       }
     }
-
 
     // Break an object right in front of the piston.
     if (workingNeighbor.isDestroyableUponPush()) {
