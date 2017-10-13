@@ -338,14 +338,10 @@ module.exports = class LevelPlane {
     return posToRefresh;
   }
 
-  positionEquivalence(lhs, rhs) {
-    return (lhs[0] === rhs[0] && lhs[1] === rhs[1]);
-  }
-
   checkEntityConflict(position) {
     let captureReturn = false;
     this.levelModel.controller.levelEntity.entityMap.forEach((workingEntity) => {
-      if (this.positionEquivalence(position, workingEntity.position)) {
+      if (this.levelModel.controller.positionEquivalence(position, workingEntity.position)) {
         captureReturn = true;
       }
     });

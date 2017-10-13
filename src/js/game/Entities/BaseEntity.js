@@ -666,8 +666,6 @@ module.exports = class BaseEntity {
     }
   }
 
-
-
   directionToOffset(direction) {
     let offset = [0,0];
     // Direction will ever only not be null if we're calling this as a
