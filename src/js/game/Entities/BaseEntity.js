@@ -219,12 +219,13 @@ module.exports = class BaseEntity {
         let forwardPosition = this.controller.levelModel.getMoveForwardPosition(this);
         var forwardPositionInformation = this.controller.levelModel.canMoveForward(this);
         if (forwardPositionInformation[0]) {
-            let offset = this.controller.directionToOffset(this.facing);
+            let offset = this.directionToOffset(this.facing);
             let weMovedOnTo = this.handleMoveOnPressurePlate(offset);
             this.doMoveForward(commandQueueItem, forwardPosition);
             if (!weMovedOnTo) {
               this.handleMoveOffPressurePlate(this.reverseOffset(offset));
             }
+            this.handleMoveOffIronDoor(this.reverseOffset(offset));
         } else {
             this.bump(commandQueueItem);
             this.callBumpEvents(forwardPositionInformation);
@@ -238,12 +239,13 @@ module.exports = class BaseEntity {
         let backwardPosition = this.controller.levelModel.getMoveBackwardPosition(this);
         var backwardPositionInformation = this.controller.levelModel.canMoveBackward(this);
         if (backwardPositionInformation[0]) {
-            let offset = this.controller.directionToOffset(FacingDirection.opposite(this.facing));
+            let offset = this.directionToOffset(FacingDirection.opposite(this.facing));
             let weMovedOnTo = this.handleMoveOnPressurePlate(offset);
             this.doMoveBackward(commandQueueItem, backwardPosition);
             if (!weMovedOnTo) {
               this.handleMoveOffPressurePlate(this.reverseOffset(offset));
             }
+            this.handleMoveOffIronDoor(this.reverseOffset(offset));
         } else {
             this.bump(commandQueueItem);
             this.callBumpEvents(backwardPositionInformation);
@@ -651,4 +653,41 @@ module.exports = class BaseEntity {
     return [offset[0] * -1, offset[1] * -1];
   }
 
+  handleMoveOffIronDoor(moveOffset) {
+    const formerPosition = [this.position[0] + moveOffset[0], this.position[1] + moveOffset[1]];
+    if (!this.controller.levelModel.inBounds(formerPosition[0], formerPosition[1])) {
+      return;
+    }
+
+    const wasOnDoor = this.controller.levelModel.actionPlane.getBlockAt(formerPosition).blockType === "doorIron";
+    const isOnDoor = this.controller.levelModel.actionPlane.getBlockAt(this.position).blockType === "doorIron";
+    if (wasOnDoor && !isOnDoor) {
+      this.controller.levelModel.actionPlane.findDoorToAnimate([-1, -1]);
+    }
+  }
+
+  directionToOffset(direction) {
+    let offset = [0,0];
+    // Direction will ever only not be null if we're calling this as a
+    // function of player movement.
+    switch (direction) {
+      case 0: {
+        offset[1] = -1;
+        break;
+      }
+      case 1: {
+        offset[0] = 1;
+        break;
+      }
+      case 2: {
+        offset[1] = 1;
+        break;
+      }
+      case 3: {
+        offset[0] = -1;
+        break;
+      }
+    }
+    return offset;
+  }
 };
