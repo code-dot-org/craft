@@ -1285,7 +1285,7 @@ class GameController {
 
     this.levelView.playPlaceBlockInFrontAnimation(player, this.levelModel.player.position, this.levelModel.player.facing, forwardPosition, () => {
       this.levelModel.placeBlockForward(blockType, placementPlane, player);
-      this.levelView.refreshGroundPlane();
+      this.levelView.refreshGroundGroup();
 
       this.updateFowPlane();
       this.updateShadingPlane();
@@ -1472,7 +1472,7 @@ class GameController {
       }
       this.levelModel.isDaytime = true;
       this.levelModel.clearFow();
-      this.levelView.updateFowPlane(this.levelModel.fowPlane);
+      this.levelView.updateFowGroup(this.levelModel.fowPlane);
       this.events.forEach(e => e({ eventType: EventType.WhenDayGlobal }));
       let entities = this.levelEntity.entityMap;
       for (let value of entities) {
@@ -1503,7 +1503,7 @@ class GameController {
       }
       this.levelModel.isDaytime = false;
       this.levelModel.computeFowPlane();
-      this.levelView.updateFowPlane(this.levelModel.fowPlane);
+      this.levelView.updateFowGroup(this.levelModel.fowPlane);
       this.events.forEach(e => e({ eventType: EventType.WhenNightGlobal }));
       let entities = this.levelEntity.entityMap;
       for (let value of entities) {
@@ -1595,12 +1595,12 @@ class GameController {
 
   updateFowPlane() {
     this.levelModel.computeFowPlane();
-    this.levelView.updateFowPlane(this.levelModel.fowPlane);
+    this.levelView.updateFowGroup(this.levelModel.fowPlane);
   }
 
   updateShadingPlane() {
     this.levelModel.computeShadingPlane();
-    this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
+    this.levelView.updateShadingGroup(this.levelModel.shadingPlane);
   }
 }
 

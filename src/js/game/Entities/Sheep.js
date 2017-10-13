@@ -49,10 +49,10 @@ module.exports = class Sheep extends BaseEntity {
             return (Math.random() * (max - min) + min) * 1000;
         };
         let frameRate = 10, randomPauseMin = 0.2, randomPauseMax = 1;
-        let actionPlane = this.controller.levelView.actionPlane;
+        let actionGroup = this.controller.levelView.actionGroup;
         var frameList = [];
         var frameName = "ShadowSheep_2016";
-        this.sprite = actionPlane.create(0, 0, 'sheep', 'ShadowSheep_2016001.png');
+        this.sprite = actionGroup.create(0, 0, 'sheep', 'ShadowSheep_2016001.png');
         let stillFrameName = ['ShadowSheep_2016217.png', 'ShadowSheep_2016109.png', 'ShadowSheep_2016001.png', 'ShadowSheep_2016325.png'];
         let idleDelayFrame = 8;
         // for normal sheep
