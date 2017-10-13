@@ -190,9 +190,25 @@ module.exports = class LevelBlock {
     }
   }
 
+  /**
+   * "flat" blocks are those subset of walkable blocks which are walkable
+   * because they are lying right on the ground, as opposed to those blocks like
+   * torches which are walkable because they do not occupy very much space.
+   */
+  isFlat() {
+    return this.blockType.substring(0, 5) === "rails" ||
+        this.blockType.startsWith("redstoneWire") ||
+        this.blockType.startsWith("pressurePlate");
+  }
+
+  shouldRenderOnGroundPlane() {
+    return this.isFlat();
+  }
+
   getIsStickyPiston() {
     return this.blockType.substring(this.blockType.length - 6, this.blockType.length) === "Sticky";
   }
+
   canHoldCharge() {
     return this.isSolid;
   }
