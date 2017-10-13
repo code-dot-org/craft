@@ -13,10 +13,10 @@ module.exports = class Cow extends BaseEntity {
             return (Math.random() * (max - min) + min) * 1000;
         };
         let frameRate = 12, randomPauseMin = 0.2, randomPauseMax = 1;
-        let actionPlane = this.controller.levelView.actionPlane;
+        let actionGroup = this.controller.levelView.actionGroup;
         var frameList = [];
         var frameName = "Cow";
-        this.sprite = actionPlane.create(0, 0, 'cow', 'Cow0001.png');
+        this.sprite = actionGroup.create(0, 0, 'cow', 'Cow0001.png');
         let stillFrameName = ['Cow0222.png', 'Cow0111.png', 'Cow0001.png', 'Cow0333.png'];
         let idleDelayFrame = 20;
         // [direction][[idle],[look left],[look right],[look up],[look down],[walk],[attack],[take dmg],[die],[bump],[idle2],[eat]]

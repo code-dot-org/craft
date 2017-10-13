@@ -13,11 +13,11 @@ module.exports = class LevelView {
     this.agent = null;
     this.selectionIndicator = null;
 
-    this.groundPlane = null;
-    this.shadingPlane = null;
-    this.actionPlane = null;
-    this.fluffPlane = null;
-    this.fowPlane = null;
+    this.groundGroup = null;
+    this.shadingGroup = null;
+    this.actionGroup = null;
+    this.fluffGroup = null;
+    this.fowGroup = null;
     this.collectibleItems = [];
     //{sprite : sprite, type : blockType, position : [x,y]}
     this.trees = [];
@@ -405,8 +405,8 @@ module.exports = class LevelView {
   }
 
   render() {
-    this.actionPlane.sort('sortOrder');
-    this.fluffPlane.sort('z');
+    this.actionGroup.sort('sortOrder');
+    this.fluffGroup.sort('z');
   }
 
   scaleShowWholeWorld(completionHandler) {
@@ -517,9 +517,9 @@ module.exports = class LevelView {
       tween;
 
     this.playPlayerAnimation("fail", position, facing, isOnBlock);
-    this.createBlock(this.fluffPlane, position[0], position[1], "bubbles");
+    this.createBlock(this.fluffGroup, position[0], position[1], "bubbles");
 
-    sprite = this.fluffPlane.create(0, 0, "finishOverlay");
+    sprite = this.fluffGroup.create(0, 0, "finishOverlay");
     var [scaleX, scaleY] = this.controller.scaleFromOriginal();
     sprite.scale.x = scaleX;
     sprite.scale.y = scaleY;
@@ -542,9 +542,9 @@ module.exports = class LevelView {
       tween;
 
     this.playPlayerAnimation("jumpUp", position, facing, isOnBlock);
-    this.createBlock(this.fluffPlane, position[0], position[1], "fire");
+    this.createBlock(this.fluffGroup, position[0], position[1], "fire");
 
-    sprite = this.fluffPlane.create(0, 0, "finishOverlay");
+    sprite = this.fluffGroup.create(0, 0, "finishOverlay");
     var [scaleX, scaleY] = this.controller.scaleFromOriginal();
     sprite.scale.x = scaleX;
     sprite.scale.y = scaleY;
@@ -672,7 +672,7 @@ module.exports = class LevelView {
   }
 
   playExplosionCloudAnimation(position) {
-    this.createBlock(this.fluffPlane, position[0], position[1], "explosion");
+    this.createBlock(this.fluffGroup, position[0], position[1], "explosion");
   }
 
   coordinatesToIndex(coordinates) {
@@ -756,7 +756,7 @@ module.exports = class LevelView {
   addHouseBed(bottomCoordinates) {
     //Temporary, will be replaced by bed blocks
     var bedTopCoordinate = (bottomCoordinates[1] - 1);
-    var sprite = this.actionPlane.create(38 * bottomCoordinates[0], 35 * bedTopCoordinate, "bed");
+    var sprite = this.actionGroup.create(38 * bottomCoordinates[0], 35 * bedTopCoordinate, "bed");
     sprite.sortOrder = this.yToIndex(bottomCoordinates[1]);
   }
 
@@ -766,7 +766,7 @@ module.exports = class LevelView {
     this.createActionPlaneBlock(coordinates, "door");
     //Need to grab the correct blocktype from the action layer
     //And use that type block to create the ground block under the door
-    sprite = this.createBlock(this.groundPlane, coordinates[0], coordinates[1], "wool_orange");
+    sprite = this.createBlock(this.groundGroup, coordinates[0], coordinates[1], "wool_orange");
     toDestroy.kill();
     sprite.sortOrder = this.yToIndex(6);
   }
@@ -789,14 +789,14 @@ module.exports = class LevelView {
       for (var i = 0; i < createFloor.length; ++i) {
         xCoord = createFloor[i][1];
         yCoord = createFloor[i][2];
-        /*this.groundPlane._data[this.coordinatesToIndex([xCoord,yCoord])].kill();*/
-        sprite = this.createBlock(this.groundPlane, xCoord, yCoord, "wool_orange");
+        /*this.groundGroup._data[this.coordinatesToIndex([xCoord,yCoord])].kill();*/
+        sprite = this.createBlock(this.groundGroup, xCoord, yCoord, "wool_orange");
         sprite.sortOrder = this.yToIndex(yCoord);
       }
 
       this.addHouseBed(houseObjectPositions[0]);
       this.addDoor(houseObjectPositions[1]);
-      this.groundPlane.sort('sortOrder');
+      this.groundGroup.sort('sortOrder');
       updateScreen();
     });
   }
@@ -807,7 +807,7 @@ module.exports = class LevelView {
       tweenToW,
       tweenWToC;
 
-    sprite = this.fluffPlane.create(0, 0, "finishOverlay");
+    sprite = this.fluffGroup.create(0, 0, "finishOverlay");
     var [scaleX, scaleY] = this.controller.scaleFromOriginal();
     sprite.scale.x = scaleX;
     sprite.scale.y = scaleY;
@@ -1015,12 +1015,12 @@ module.exports = class LevelView {
     let blockIndex = (this.yToIndex(position[1])) + position[0];
 
     // Remove the old sprite at this position, if there is one.
-    this.actionPlane.remove(this.actionPlaneBlocks[blockIndex]);
-    this.groundPlane.remove(this.actionPlaneBlocks[blockIndex]);
+    this.actionGroup.remove(this.actionPlaneBlocks[blockIndex]);
+    this.groundGroup.remove(this.actionPlaneBlocks[blockIndex]);
 
     // Create a new sprite.
     const block = new LevelBlock(blockType);
-    const plane = block.shouldRenderOnGroundPlane() ? this.groundPlane : this.actionPlane;
+    const plane = block.shouldRenderOnGroundPlane() ? this.groundGroup : this.actionGroup;
     const offset = block.shouldRenderOnGroundPlane() ? -0.5 : 0;
     const sprite = this.createBlock(plane, position[0], position[1] + offset, blockType);
 
@@ -1064,7 +1064,7 @@ module.exports = class LevelView {
     let blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
     let blockToDestroy = this.actionPlaneBlocks[blockIndex];
 
-    let destroyOverlay = this.actionPlane.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
+    let destroyOverlay = this.actionGroup.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
     destroyOverlay.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     this.onAnimationEnd(destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false), () => {
       this.actionPlaneBlocks[blockIndex] = null;
@@ -1115,7 +1115,7 @@ module.exports = class LevelView {
   playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, entity, completionHandler) {
     let blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
     let blockToDestroy = this.actionPlaneBlocks[blockIndex];
-    let destroyOverlay = this.actionPlane.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
+    let destroyOverlay = this.actionGroup.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
     destroyOverlay.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     this.onAnimationEnd(destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false), () => {
       if (blockToDestroy.hasOwnProperty("onBlockDestroy")) {
@@ -1151,7 +1151,7 @@ module.exports = class LevelView {
     let miningParticlesFirstFrame = miningParticlesData[miningParticlesIndex][0];
     let miningParticlesOffsetX = miningParticlesData[miningParticlesIndex][1];
     let miningParticlesOffsetY = miningParticlesData[miningParticlesIndex][2];
-    let miningParticles = this.actionPlane.create(miningParticlesOffsetX + 40 * destroyPosition[0], miningParticlesOffsetY + 40 * destroyPosition[1], "miningParticles", "MiningParticles" + miningParticlesFirstFrame);
+    let miningParticles = this.actionGroup.create(miningParticlesOffsetX + 40 * destroyPosition[0], miningParticlesOffsetY + 40 * destroyPosition[1], "miningParticles", "MiningParticles" + miningParticlesFirstFrame);
     miningParticles.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
     this.onAnimationEnd(miningParticles.animations.add("miningParticles", Phaser.Animation.generateFrameNames("miningParticles", miningParticlesFirstFrame, miningParticlesFirstFrame + 11, "", 0), 30, false), () => {
       miningParticles.kill();
@@ -1161,7 +1161,7 @@ module.exports = class LevelView {
   }
 
   playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, placeBlock, entity = this.player) {
-    var explodeAnim = this.actionPlane.create(-36 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
+    var explodeAnim = this.actionGroup.create(-36 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
 
     switch (blockType) {
       case "treeAcacia":
@@ -1327,16 +1327,16 @@ module.exports = class LevelView {
   }
 
   createPlanes() {
-    this.groundPlane = this.game.add.group();
-    this.groundPlane.yOffset = -2;
-    this.shadingPlane = this.game.add.group();
-    this.shadingPlane.yOffset = -2;
-    this.actionPlane = this.game.add.group();
-    this.actionPlane.yOffset = -22;
-    this.fluffPlane = this.game.add.group();
-    this.fluffPlane.yOffset = -160;
-    this.fowPlane = this.game.add.group();
-    this.fowPlane.yOffset = 0;
+    this.groundGroup = this.game.add.group();
+    this.groundGroup.yOffset = -2;
+    this.shadingGroup = this.game.add.group();
+    this.shadingGroup.yOffset = -2;
+    this.actionGroup = this.game.add.group();
+    this.actionGroup.yOffset = -22;
+    this.fluffGroup = this.game.add.group();
+    this.fluffGroup.yOffset = -160;
+    this.fowGroup = this.game.add.group();
+    this.fowGroup.yOffset = 0;
   }
 
   resetPlanes(levelData) {
@@ -1344,11 +1344,11 @@ module.exports = class LevelView {
       x,
       y;
 
-    this.groundPlane.removeAll(true);
-    this.actionPlane.removeAll(true);
-    this.fluffPlane.removeAll(true);
-    this.shadingPlane.removeAll(true);
-    this.fowPlane.removeAll(true);
+    this.groundGroup.removeAll(true);
+    this.actionGroup.removeAll(true);
+    this.fluffGroup.removeAll(true);
+    this.shadingGroup.removeAll(true);
+    this.fowGroup.removeAll(true);
 
     this.baseShading = this.game.add.group();
 
@@ -1368,7 +1368,7 @@ module.exports = class LevelView {
 
         const groundBlock = levelData.groundDecorationPlane.getBlockAt(position);
         if (!groundBlock.isEmpty) {
-          sprite = this.createBlock(this.actionPlane, x, y, groundBlock.blockType);
+          sprite = this.createBlock(this.actionGroup, x, y, groundBlock.blockType);
           if (sprite) {
             sprite.sortOrder = this.yToIndex(y);
           }
@@ -1386,7 +1386,7 @@ module.exports = class LevelView {
               yOffsetRange: 10
             });
           } else {
-            sprite = this.createBlock(this.actionPlane, x, y, actionBlock.blockType);
+            sprite = this.createBlock(this.actionGroup, x, y, actionBlock.blockType);
           }
 
           if (sprite !== null) {
@@ -1403,7 +1403,7 @@ module.exports = class LevelView {
       for (x = 0; x < this.controller.levelModel.planeWidth; ++x) {
         let position = [x, y];
         if (!levelData.fluffPlane.getBlockAt(position).isEmpty) {
-          sprite = this.createBlock(this.fluffPlane, x, y, levelData.fluffPlane.getBlockAt(position).blockType);
+          sprite = this.createBlock(this.fluffGroup, x, y, levelData.fluffPlane.getBlockAt(position).blockType);
         }
       }
     }
@@ -1415,7 +1415,7 @@ module.exports = class LevelView {
       for (var x = 0; x < this.controller.levelModel.planeWidth; ++x) {
         let position = [x, y];
         const groundBlock = this.controller.levelModel.groundPlane.getBlockAt(position);
-        var sprite = this.createBlock(this.groundPlane, x, y, groundBlock.blockType);
+        var sprite = this.createBlock(this.groundGroup, x, y, groundBlock.blockType);
 
         if (sprite) {
           sprite.sortOrder = this.yToIndex(y);
@@ -1465,8 +1465,8 @@ module.exports = class LevelView {
         } else if (newBlock) {
           // Remove the old sprite at this position, if there is one.
           const index = this.coordinatesToIndex(position);
-          this.actionPlane.remove(this.actionPlaneBlocks[index]);
-          this.groundPlane.remove(this.actionPlaneBlocks[index]);
+          this.actionGroup.remove(this.actionPlaneBlocks[index]);
+          this.groundGroup.remove(this.actionPlaneBlocks[index]);
         }
       }
     });
@@ -1475,11 +1475,11 @@ module.exports = class LevelView {
   updateShadingPlane(shadingData) {
     var index, shadowItem, sx, sy, atlas;
 
-    this.shadingPlane.removeAll();
+    this.shadingGroup.removeAll();
 
-    this.shadingPlane.add(this.baseShading);
+    this.shadingGroup.add(this.baseShading);
     if (this.selectionIndicator) {
-      this.shadingPlane.add(this.selectionIndicator);
+      this.shadingGroup.add(this.selectionIndicator);
     }
 
     for (index = 0; index < shadingData.length; ++index) {
@@ -1543,14 +1543,14 @@ module.exports = class LevelView {
           break;
       }
 
-      this.shadingPlane.create(sx, sy, atlas, shadowItem.type);
+      this.shadingGroup.create(sx, sy, atlas, shadowItem.type);
     }
   }
 
   updateFowPlane(fowData) {
     var index, fx, fy, atlas;
 
-    this.fowPlane.removeAll();
+    this.fowGroup.removeAll();
 
     for (index = 0; index < fowData.length; ++index) {
       let fowItem = fowData[index];
@@ -1568,7 +1568,7 @@ module.exports = class LevelView {
             break;
         }
 
-        var sprite = this.fowPlane.create(fx, fy, atlas, fowItem.type);
+        var sprite = this.fowGroup.create(fx, fy, atlas, fowItem.type);
         sprite.alpha = 0.8;
       }
     }
@@ -1661,12 +1661,12 @@ module.exports = class LevelView {
 
   preparePlayerSprite(playerName, entity = this.player) {
 
-    entity.sprite = this.actionPlane.create(0, 0, `player${playerName}`, 'Player_121');
+    entity.sprite = this.actionGroup.create(0, 0, `player${playerName}`, 'Player_121');
     if (this.controller.followingPlayer() && entity === this.player) {
       this.game.camera.follow(entity.sprite);
     }
 
-    this.selectionIndicator = this.shadingPlane.create(24, 44, 'selectionIndicator');
+    this.selectionIndicator = this.shadingGroup.create(24, 44, 'selectionIndicator');
 
     this.generateAnimations(FacingDirection.South, 0, entity);
     this.generateAnimations(FacingDirection.East, 60, entity);
@@ -1819,7 +1819,7 @@ module.exports = class LevelView {
     const yOffset = 0 - (yOffsetRange / 2) + (Math.random() * yOffsetRange);
 
     frameList = Phaser.Animation.generateFrameNames(framePrefix, frameStart, frameEnd, ".png", 3);
-    sprite = this.actionPlane.create(xOffset + 40 * x, yOffset + this.actionPlane.yOffset + 40 * y, atlas, "");
+    sprite = this.actionGroup.create(xOffset + 40 * x, yOffset + this.actionGroup.yOffset + 40 * y, atlas, "");
     const anim = sprite.animations.add("animate", frameList, 10, false);
 
     if (this.controller.getIsDirectPlayerControl()) {
@@ -1859,7 +1859,7 @@ module.exports = class LevelView {
     var buildTree = function (levelView, frame) {
       let type = blockType.substring(4);
       sprite = levelView.createBlock(plane, x, y, "log" + type);
-      sprite.fluff = levelView.createBlock(levelView.fluffPlane, x, y, "leaves" + type);
+      sprite.fluff = levelView.createBlock(levelView.fluffGroup, x, y, "leaves" + type);
       sprite.onBlockDestroy = (logSprite) => {
         logSprite.fluff.animations.add("despawn", Phaser.Animation.generateFrameNames("Leaves_" + type, frame[0], frame[1], ".png", 0), 10, false).onComplete.add(() => {
           levelView.toDestroy.push(logSprite.fluff);
@@ -1959,7 +1959,7 @@ module.exports = class LevelView {
         sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
         sprite.kill();
         this.toDestroy.push(sprite);
-        this.createBlock(this.groundPlane, x, y, "farmlandWet");
+        this.createBlock(this.groundGroup, x, y, "farmlandWet");
         this.refreshGroundPlane();
         break;
 
