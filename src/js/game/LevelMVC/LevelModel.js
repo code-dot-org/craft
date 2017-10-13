@@ -40,13 +40,13 @@ module.exports = class LevelModel {
     this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, this.controller, this, "actionPlane");
 
     this.actionPlane.getAllPositions().forEach((position) => {
-      if (this.actionPlane.getBlockAt(position).blockType === "railsRedstoneTorch") {
+      if (this.actionPlane.getBlockAt(position).isRedstoneBattery) {
         this.actionPlane.redstonePropagation(position);
       }
     });
 
     this.actionPlane.getAllPositions().forEach((position) => {
-      if (this.actionPlane.getBlockAt(position).blockType.substring(0,12) === "redstoneWire") {
+      if (this.actionPlane.getBlockAt(position).isRedstone) {
         this.actionPlane.determineRedstoneSprite(position);
       }
       if (this.actionPlane.getBlockAt(position).isRail) {
@@ -850,10 +850,10 @@ module.exports = class LevelModel {
     const position = entity.position;
     let placedBlock = null;
 
-    let ground = this.groundPlane.getBlockAt(position);
-    let result = entity.canPlaceBlockOver(blockType, ground.blockType);
+    const ground = this.groundPlane.getBlockAt(position);
+    const block = new LevelBlock(blockType);
+    let result = entity.canPlaceBlockOver(block, ground);
     if (result.canPlace) {
-      var block = new LevelBlock(blockType);
       switch (result.plane) {
         case "actionPlane":
           placedBlock = this.actionPlane.setBlockAt(position, block);

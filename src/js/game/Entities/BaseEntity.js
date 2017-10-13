@@ -253,7 +253,19 @@ module.exports = class BaseEntity {
     }
 
     /**
-     * check whether or not the given entity can place a block
+     * @typedef {Object} CanPlace
+     * @property {boolean} canPlace - whether or not placement is allowed at all
+     * @property {string} plane - which plane the block should be placed on. Can
+     *                    be either "groundPlane" or "actionPlane"
+     */
+
+    /**
+     * check whether or not the entity can place the given block on top of the
+     * given block
+     *
+     * @param {LevelBlock} [toPlaceBlock]
+     * @param {LevelBlock} [onTopOfBlock]
+     * @return {CanPlace}
      */
     canPlaceBlockOver() {
       return { canPlace: false, plane: '' };
