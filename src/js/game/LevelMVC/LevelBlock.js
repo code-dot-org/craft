@@ -303,6 +303,10 @@ module.exports = class LevelBlock {
     return this.isEmpty || this.isEntity;
   }
 
+  static isWalkable(blockType) {
+    return new LevelBlock(blockType).isWalkable;
+  }
+
   /**
    * Does the given block type represent a miniblock?
    *
