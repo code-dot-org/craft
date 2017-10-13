@@ -21,20 +21,22 @@ module.exports = class Player extends BaseEntity {
   }
 
   /**
-   * check whether or not the given entity can place a block
+   * @override
    */
-  canPlaceBlockOver(toPlaceBlockType, onTopOfBlockType) {
-    let result = {canPlace: false, plane: ""};
-    if (onTopOfBlockType === "water" || onTopOfBlockType === "lava") {
+  canPlaceBlockOver(toPlaceBlock, onTopOfBlock) {
+    let result = { canPlace: false, plane: '' };
+    if (onTopOfBlock.isLiquid()) {
       result.canPlace = true;
       result.plane = "groundPlane";
     } else {
       result.canPlace = true;
       result.plane = "actionPlane";
     }
-    if (toPlaceBlockType === "cropWheat") {
-      result.canPlace = onTopOfBlockType === "farmlandWet";
+
+    if (toPlaceBlock.blockType === "cropWheat") {
+      result.canPlace = onTopOfBlock.blockType === "farmlandWet";
     }
+
     return result;
   }
 

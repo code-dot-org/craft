@@ -15,17 +15,17 @@ module.exports = class Agent extends BaseEntity {
   }
 
   /**
-   * check whether or not the given entity can place a block
+   * @override
    */
-  canPlaceBlockOver(toPlaceBlockType, onTopOfBlockType) {
-    let result = {canPlace: false, plane: ""};
-    if (onTopOfBlockType === "water" || onTopOfBlockType === "lava") {
-      if (!toPlaceBlockType.startsWith("redstoneWire") && !toPlaceBlockType.startsWith("piston") && !toPlaceBlockType.startsWith("rails")) {
+  canPlaceBlockOver(toPlaceBlock, onTopOfBlock) {
+    let result = { canPlace: false, plane: '' };
+    if (onTopOfBlock.getIsLiquid()) {
+      if (!toPlaceBlock.isRedstone && !toPlaceBlock.getIsPiston() && !toPlaceBlock.isRails) {
         result.canPlace = true;
         result.plane = "groundPlane";
       }
     } else {
-      if (toPlaceBlockType.startsWith("redstoneWire") || toPlaceBlockType.startsWith("rails")) {
+      if (toPlaceBlock.isRedstone || toPlaceBlock.isRails) {
         result.canPlace = true;
         result.plane = "actionPlane";
       }

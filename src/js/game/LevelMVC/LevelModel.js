@@ -850,10 +850,10 @@ module.exports = class LevelModel {
     const position = entity.position;
     let placedBlock = null;
 
-    let ground = this.groundPlane.getBlockAt(position);
-    let result = entity.canPlaceBlockOver(blockType, ground.blockType);
+    const ground = this.groundPlane.getBlockAt(position);
+    const block = new LevelBlock(blockType);
+    let result = entity.canPlaceBlockOver(block, ground);
     if (result.canPlace) {
-      var block = new LevelBlock(blockType);
       switch (result.plane) {
         case "actionPlane":
           placedBlock = this.actionPlane.setBlockAt(position, block);
