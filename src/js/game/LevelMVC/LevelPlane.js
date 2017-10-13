@@ -379,7 +379,7 @@ module.exports = class LevelPlane {
   getPistonState(position) {
     const block = this.getBlockAt(position);
 
-    if (block.blockType.startsWith("piston") && !block.blockType.startsWith("pistonArm")) {
+    if (block.getIsPiston() && !block.getIsPistonArm()) {
       block.isPowered = this.powerCheck(position, true);
       if (block.isPowered) {
         this.activatePiston(position);
@@ -477,7 +477,7 @@ module.exports = class LevelPlane {
       if (this.levelModel) {
         this.levelModel.controller.levelView.playExplosionAnimation(pos, 2, pos, workingNeighbor.blockType, null, null, this.player);
       }
-    } else if (workingNeighbor.blockType !== "" && !workingNeighbor.blockType.startsWith("pistonArm")) {
+    } else if (workingNeighbor.blockType !== "" && !workingNeighbor.getIsPistonArm()) {
       // We've actually got something to push.
       let blocksPositions = this.getBlocksToPush(pos, offset[0], offset[1]);
       let concat = "On";
@@ -553,7 +553,7 @@ module.exports = class LevelPlane {
     }
     let newPistonType = blockType + concat;
     let offPiston = new LevelBlock(newPistonType);
-    if (this.getBlockAt(armPosition).blockType.startsWith("pistonArm")) {
+    if (this.getBlockAt(armPosition).getIsPistonArm()) {
       if (this.getBlockAt(pistonPosition).getIsStickyPiston()) {
         let stuckBlockPosition = [armPosition[0], armPosition[1]];
         switch (pistonType.getPistonDirection()) {
@@ -692,7 +692,7 @@ module.exports = class LevelPlane {
         if (!block.isWeaklyPowerable) {
           return false;
         }
-        if (this.getBlockAt(position).blockType.startsWith("piston")) {
+        if (this.getBlockAt(position).getIsPiston()) {
           let piston = this.getBlockAt(position);
           let ignoreThisSide = [0, 0];
           switch (piston.getPistonDirection()) {
