@@ -612,7 +612,9 @@ module.exports = class LevelPlane {
         }
         redo = true;
       }
-      this.setBlockAt(destination, this.getBlockAt(blocksPositions[i]));
+      if (this.inBounds(destination)) {
+        this.setBlockAt(destination, this.getBlockAt(blocksPositions[i]));
+      }
       if (i === 0) {
         this.setBlockAt(blocksPositions[i], armBlock);
       }
