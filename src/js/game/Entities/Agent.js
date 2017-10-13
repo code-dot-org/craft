@@ -20,12 +20,12 @@ module.exports = class Agent extends BaseEntity {
   canPlaceBlockOver(toPlaceBlock, onTopOfBlock) {
     let result = { canPlace: false, plane: '' };
     if (onTopOfBlock.getIsLiquid()) {
-      if (!toPlaceBlock.isRedstone && !toPlaceBlock.getIsPiston() && !toPlaceBlock.isRails) {
+      if (!toPlaceBlock.isRedstone && !toPlaceBlock.getIsPiston() && !toPlaceBlock.isRail) {
         result.canPlace = true;
         result.plane = "groundPlane";
       }
     } else {
-      if (toPlaceBlock.isRedstone || toPlaceBlock.isRails) {
+      if (toPlaceBlock.isRedstone || toPlaceBlock.isRail) {
         result.canPlace = true;
         result.plane = "actionPlane";
       }

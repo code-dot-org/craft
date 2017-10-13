@@ -25,7 +25,7 @@ module.exports = class Player extends BaseEntity {
    */
   canPlaceBlockOver(toPlaceBlock, onTopOfBlock) {
     let result = { canPlace: false, plane: '' };
-    if (onTopOfBlock.isLiquid()) {
+    if (onTopOfBlock.getIsLiquid()) {
       result.canPlace = true;
       result.plane = "groundPlane";
     } else {
