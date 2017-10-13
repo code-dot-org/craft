@@ -107,7 +107,9 @@
   });
 
   window.addEventListener('keydown', e => {
-    e.preventDefault();
+    if (e.target !== document.body) {
+      e.preventDefault();
+    }
     e.stopImmediatePropagation();
 
     var target = $('input[name=target]:checked').val();
@@ -148,7 +150,6 @@
   }, true);
 
   window.addEventListener('keyup', e => {
-    e.preventDefault();
     e.stopImmediatePropagation();
 
     var target = $('input[name=target]:checked').val();
