@@ -1020,9 +1020,9 @@ module.exports = class LevelView {
 
     // Create a new sprite.
     const block = new LevelBlock(blockType);
-    const plane = block.shouldRenderOnGroundPlane() ? this.groundGroup : this.actionGroup;
+    const group = block.shouldRenderOnGroundPlane() ? this.groundGroup : this.actionGroup;
     const offset = block.shouldRenderOnGroundPlane() ? -0.5 : 0;
-    const sprite = this.createBlock(plane, position[0], position[1] + offset, blockType);
+    const sprite = this.createBlock(group, position[0], position[1] + offset, blockType);
 
     if (sprite) {
       sprite.sortOrder = this.yToIndex(position[1]);
@@ -1847,7 +1847,7 @@ module.exports = class LevelView {
     this.playScaledSpeed(sprite.animations, animationName).setFrame(rand, true);
   }
 
-  createBlock(plane, x, y, blockType) {
+  createBlock(group, x, y, blockType) {
     var i,
       sprite = null,
       frameList,
@@ -1858,7 +1858,7 @@ module.exports = class LevelView {
 
     var buildTree = function (levelView, frame) {
       let type = blockType.substring(4);
-      sprite = levelView.createBlock(plane, x, y, "log" + type);
+      sprite = levelView.createBlock(group, x, y, "log" + type);
       sprite.fluff = levelView.createBlock(levelView.fluffGroup, x, y, "leaves" + type);
       sprite.onBlockDestroy = (logSprite) => {
         logSprite.fluff.animations.add("despawn", Phaser.Animation.generateFrameNames("Leaves_" + type, frame[0], frame[1], ".png", 0), 10, false).onComplete.add(() => {
@@ -1876,7 +1876,7 @@ module.exports = class LevelView {
       frame = this.blocks[blockType][1];
       xOffset = this.blocks[blockType][2];
       yOffset = this.blocks[blockType][3];
-      sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+      sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
 
       frameList = [];
       var animationFramesIron = Phaser.Animation.generateFrameNames(type, 0, 3, "", 1);
@@ -1922,7 +1922,7 @@ module.exports = class LevelView {
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
-        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Wheat", 0, 2, "", 0);
         sprite.animations.add("idle", frameList, 0.4, false);
         this.playScaledSpeed(sprite.animations, "idle");
@@ -1933,7 +1933,7 @@ module.exports = class LevelView {
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
-        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Torch", 0, 23, "", 0);
         sprite.animations.add("idle", frameList, 15, true);
         this.playScaledSpeed(sprite.animations, "idle");
@@ -1944,7 +1944,7 @@ module.exports = class LevelView {
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
-        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Water_", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
         this.playScaledSpeed(sprite.animations, "idle");
@@ -1956,7 +1956,7 @@ module.exports = class LevelView {
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
-        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         sprite.kill();
         this.toDestroy.push(sprite);
         this.createBlock(this.groundGroup, x, y, "farmlandWet");
@@ -1968,7 +1968,7 @@ module.exports = class LevelView {
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
-        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Lava_", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
         this.playScaledSpeed(sprite.animations, "idle");
@@ -1979,7 +1979,7 @@ module.exports = class LevelView {
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
-        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Nether_Portal", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
         this.playScaledSpeed(sprite.animations, "idle");
@@ -1990,7 +1990,7 @@ module.exports = class LevelView {
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
-        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("LavaPop", 1, 7, "", 2);
         for (i = 0; i < 4; ++i) {
           frameList.push("LavaPop07");
@@ -2012,7 +2012,7 @@ module.exports = class LevelView {
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
-        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Fire", 0, 14, "", 2);
         sprite.animations.add("idle", frameList, 5, true);
         this.playScaledSpeed(sprite.animations, "idle");
@@ -2023,7 +2023,7 @@ module.exports = class LevelView {
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
-        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Bubbles", 0, 14, "", 2);
         sprite.animations.add("idle", frameList, 5, true);
         this.playScaledSpeed(sprite.animations, "idle");
@@ -2034,7 +2034,7 @@ module.exports = class LevelView {
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
-        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Explosion", 0, 16, "", 1);
         sprite.animations.add("idle", frameList, 15, false).onComplete.add(() => {
           this.toDestroy.push(sprite);
@@ -2056,7 +2056,7 @@ module.exports = class LevelView {
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
-        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("TNTexplosion", 0, 8, "", 0);
         sprite.animations.add("explode", frameList, 7, false).onComplete.add(() => {
           this.playExplosionCloudAnimation([x, y]);
@@ -2071,8 +2071,8 @@ module.exports = class LevelView {
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
-        sprite = plane.create(xOffset + 40 * x, yOffset + plane.yOffset + 40 * y, atlas, frame);
-        if (plane === this.actionPlane) {
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
+        if (group === this.actionGroup) {
           const psuedoRandom = x * 97 + y * 29;
           const variance = 0x12;
           const brightness = ((psuedoRandom % variance) + 0xff - variance).toString(16);
