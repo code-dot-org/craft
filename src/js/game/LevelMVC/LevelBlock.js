@@ -228,6 +228,29 @@ module.exports = class LevelBlock {
     return this.blockType.startsWith("door");
   }
 
+  getIsLiquid() {
+    return this.blockType === "water" ||
+        this.blockType === "lava";
+  }
+
+  /**
+   * Note that this will be true for blocks representing the unpowered piston,
+   * the "base" of the powered piston, AND the extended arm of the powered
+   * piston
+   *
+   * @return {boolean}
+   */
+  getIsPiston() {
+    return this.blockType.startsWith("piston");
+  }
+
+  /**
+   * @return {boolean}
+   */
+  getIsPistonArm() {
+    return this.blockType.startsWith("pistonArm");
+  }
+
   getIsPushable() {
     return this.blockType !== "" && !this.isDestroyableUponPush();
   }
