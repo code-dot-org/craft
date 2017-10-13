@@ -40,13 +40,13 @@ module.exports = class LevelModel {
     this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, this.controller, this, "actionPlane");
 
     this.actionPlane.getAllPositions().forEach((position) => {
-      if (this.actionPlane.getBlockAt(position).blockType === "railsRedstoneTorch") {
+      if (this.actionPlane.getBlockAt(position).isRedstoneBattery) {
         this.actionPlane.redstonePropagation(position);
       }
     });
 
     this.actionPlane.getAllPositions().forEach((position) => {
-      if (this.actionPlane.getBlockAt(position).blockType.substring(0,12) === "redstoneWire") {
+      if (this.actionPlane.getBlockAt(position).isRedstone) {
         this.actionPlane.determineRedstoneSprite(position);
       }
       if (this.actionPlane.getBlockAt(position).isRail) {
