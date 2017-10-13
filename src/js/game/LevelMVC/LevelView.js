@@ -2067,10 +2067,14 @@ module.exports = class LevelView {
         yOffset = this.blocks[blockType][3];
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         if (group === this.actionGroup || group === this.groundGroup) {
-          const psuedoRandom = Math.pow((x * 10) + y, 5) * 19;
-          const variance = 0x17;
-          const offset = group === this.groundGroup ? 0x15 : 0;
-          const brightness = Math.floor((psuedoRandom % variance) + 0xff - variance - offset).toString(16);
+          const psuedoRandom = Math.pow((x * 10) + y, 5) % 251;
+          let darkness = psuedoRandom / 12;
+          if (group === this.groundGroup) {
+            darkness += 24;
+          } else {
+            darkness *= 0.75;
+          }
+          const brightness = Math.floor(0xff - darkness).toString(16);
           sprite.tint = '0x' + brightness + brightness + brightness;
         }
         break;
