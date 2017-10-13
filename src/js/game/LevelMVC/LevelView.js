@@ -348,7 +348,7 @@ module.exports = class LevelView {
   }
 
   create(levelModel) {
-    this.createPlanes();
+    this.createGroups();
     this.reset(levelModel);
   }
 
@@ -372,7 +372,7 @@ module.exports = class LevelView {
     this.collectibleItems = [];
     this.trees = [];
 
-    this.resetPlanes(levelModel);
+    this.resetGroups(levelModel);
 
     if (levelModel.usePlayer) {
       this.resetEntity(this.player);
@@ -382,8 +382,8 @@ module.exports = class LevelView {
       }
     }
 
-    this.updateShadingPlane(levelModel.shadingPlane);
-    this.updateFowPlane(levelModel.fowPlane);
+    this.updateShadingGroup(levelModel.shadingPlane);
+    this.updateFowGroup(levelModel.fowPlane);
 
     if (this.controller.followingPlayer()) {
       this.game.world.setBounds(0, 0, levelModel.planeWidth * 40, levelModel.planeHeight * 40);
@@ -1326,7 +1326,7 @@ module.exports = class LevelView {
     this.selectionIndicator.y = -55 + 43 + 40 * y;
   }
 
-  createPlanes() {
+  createGroups() {
     this.groundGroup = this.game.add.group();
     this.groundGroup.yOffset = -2;
     this.shadingGroup = this.game.add.group();
@@ -1339,7 +1339,7 @@ module.exports = class LevelView {
     this.fowGroup.yOffset = 0;
   }
 
-  resetPlanes(levelData) {
+  resetGroups(levelData) {
     var sprite,
       x,
       y;
@@ -1358,7 +1358,7 @@ module.exports = class LevelView {
       }
     }
 
-    this.refreshGroundPlane();
+    this.refreshGroundGroup();
 
     this.actionPlaneBlocks = [];
     for (y = 0; y < this.controller.levelModel.planeHeight; ++y) {
@@ -1409,8 +1409,8 @@ module.exports = class LevelView {
     }
   }
 
-  refreshGroundPlane() {
-    this.groundPlane.removeAll(true);
+  refreshGroundGroup() {
+    this.groundGroup.removeAll(true);
     for (var y = 0; y < this.controller.levelModel.planeHeight; ++y) {
       for (var x = 0; x < this.controller.levelModel.planeWidth; ++x) {
         let position = [x, y];
@@ -1429,7 +1429,7 @@ module.exports = class LevelView {
     }
   }
 
-  refreshActionPlane(positions) {
+  refreshActionGroup(positions) {
     // We need to add indices to refresh if there are other blocks in the action plane that might
     // conflict with the drawing of refreshed blocks.
     for (let i = 0; i < positions.length; ++i) {
@@ -1472,7 +1472,7 @@ module.exports = class LevelView {
     });
   }
 
-  updateShadingPlane(shadingData) {
+  updateShadingGroup(shadingData) {
     var index, shadowItem, sx, sy, atlas;
 
     this.shadingGroup.removeAll();
@@ -1547,7 +1547,7 @@ module.exports = class LevelView {
     }
   }
 
-  updateFowPlane(fowData) {
+  updateFowGroup(fowData) {
     var index, fx, fy, atlas;
 
     this.fowGroup.removeAll();
@@ -1960,7 +1960,7 @@ module.exports = class LevelView {
         sprite.kill();
         this.toDestroy.push(sprite);
         this.createBlock(this.groundGroup, x, y, "farmlandWet");
-        this.refreshGroundPlane();
+        this.refreshGroundGroup();
         break;
 
       case "lava":

@@ -142,11 +142,11 @@ module.exports = class LevelPlane {
 
       if (this.levelModel && this.levelModel.controller.levelView) {
         let positionAndTouching = this.getOrthogonalPositions(position).concat([position]);
-        this.levelModel.controller.levelView.refreshActionPlane(positionAndTouching);
-        this.levelModel.controller.levelView.refreshActionPlane(redstoneToRefresh);
+        this.levelModel.controller.levelView.refreshActionGroup(positionAndTouching);
+        this.levelModel.controller.levelView.refreshActionGroup(redstoneToRefresh);
       }
     } else if (this.isGroundPlane()) {
-      this.levelModel.controller.levelView.refreshGroundPlane();
+      this.levelModel.controller.levelView.refreshGroundGroup();
     }
 
     return block;
