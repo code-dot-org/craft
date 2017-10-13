@@ -1014,14 +1014,15 @@ module.exports = class LevelView {
   createActionPlaneBlock(position, blockType) {
     const block = new LevelBlock(blockType);
     const blockIndex = (this.yToIndex(position[1])) + position[0];
-    if (block.isEmpty) {
-      this.actionPlaneBlocks[blockIndex] = null;
-      return;
-    }
 
     // Remove the old sprite at this position, if there is one.
     this.actionGroup.remove(this.actionPlaneBlocks[blockIndex]);
     this.groundGroup.remove(this.actionPlaneBlocks[blockIndex]);
+
+    if (block.isEmpty) {
+      this.actionPlaneBlocks[blockIndex] = null;
+      return;
+    }
 
     // Create a new sprite.
     let sprite;
