@@ -1373,9 +1373,9 @@ module.exports = class LevelView {
       }
     }
 
+    this.actionPlaneBlocks = [];
     this.refreshGroundGroup();
 
-    this.actionPlaneBlocks = [];
     for (y = 0; y < this.controller.levelModel.planeHeight; ++y) {
       for (x = 0; x < this.controller.levelModel.planeWidth; ++x) {
         let position = [x, y];
