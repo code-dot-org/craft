@@ -1368,12 +1368,6 @@ module.exports = class LevelView {
 
     this.baseShading = this.game.add.group();
 
-    for (var shadeX = 0; shadeX < this.controller.levelModel.planeWidth * 40; shadeX += 400) {
-      for (var shadeY = 0; shadeY < this.controller.levelModel.planeHeight * 40; shadeY += 400) {
-        this.baseShading.create(shadeX, shadeY, 'shadeLayer');
-      }
-    }
-
     this.actionPlaneBlocks = [];
     this.refreshGroundGroup();
 
@@ -1845,6 +1839,18 @@ module.exports = class LevelView {
     this.playScaledSpeed(sprite.animations, animationName).setFrame(rand, true);
   }
 
+  psuedoRandomTint(group, sprite, x, y) {
+    const psuedoRandom = Math.pow((x * 10) + y, 5) % 251;
+    let darkness = psuedoRandom / 12;
+    if (group === this.groundGroup) {
+      darkness += 24;
+    } else {
+      darkness *= 0.75;
+    }
+    const brightness = Math.floor(0xff - darkness).toString(16);
+    sprite.tint = '0x' + brightness + brightness + brightness;
+  }
+
   createBlock(group, x, y, blockType) {
     var i,
       sprite = null,
@@ -1945,6 +1951,7 @@ module.exports = class LevelView {
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Water_", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
+        this.psuedoRandomTint(group, sprite, x, y);
         this.playScaledSpeed(sprite.animations, "idle");
         break;
 
@@ -1969,6 +1976,7 @@ module.exports = class LevelView {
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Lava_", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
+        this.psuedoRandomTint(group, sprite, x, y);
         this.playScaledSpeed(sprite.animations, "idle");
         break;
 
@@ -2070,11 +2078,8 @@ module.exports = class LevelView {
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
-        if (group === this.actionGroup) {
-          const psuedoRandom = x * 97 + y * 29;
-          const variance = 0x12;
-          const brightness = ((psuedoRandom % variance) + 0xff - variance).toString(16);
-          sprite.tint = '0x' + brightness + brightness + brightness;
+        if (group === this.actionGroup || group === this.groundGroup) {
+          this.psuedoRandomTint(group, sprite, x, y);
         }
         break;
     }

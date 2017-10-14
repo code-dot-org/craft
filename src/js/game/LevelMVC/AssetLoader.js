@@ -14,10 +14,6 @@ module.exports = class AssetLoader {
         type: 'image',
         path: `${this.assetRoot}images/Selection_Indicator.png`
       },
-      shadeLayer: {
-        type: 'image',
-        path: `${this.assetRoot}images/Shade_Layer.png`
-      },
       tallGrass: {
         type: 'image',
         path: `${this.assetRoot}images/TallGrass.png`
@@ -417,7 +413,6 @@ module.exports = class AssetLoader {
       'chicken',
       'entityShadow',
       'selectionIndicator',
-      'shadeLayer',
       'AO',
       'blockShadows',
       'tallGrass',
@@ -432,7 +427,6 @@ module.exports = class AssetLoader {
       adventurerLevelOneAssets: [
         'entityShadow',
         'selectionIndicator',
-        'shadeLayer',
         'AO',
         'blockShadows',
         'leavesOak',
@@ -448,7 +442,6 @@ module.exports = class AssetLoader {
       adventurerLevelTwoAssets: [
         'entityShadow',
         'selectionIndicator',
-        'shadeLayer',
         'AO',
         'blockShadows',
         'leavesSpruce',
@@ -471,7 +464,6 @@ module.exports = class AssetLoader {
       adventurerLevelThreeAssets: [
         'entityShadow',
         'selectionIndicator',
-        'shadeLayer',
         'AO',
         'blockShadows',
         'leavesOak',
@@ -495,7 +487,6 @@ module.exports = class AssetLoader {
       adventurerAllAssetsMinusPlayer: [
         'entityShadow',
         'selectionIndicator',
-        'shadeLayer',
         'tallGrass',
         'finishOverlay',
         'bed',
@@ -550,7 +541,6 @@ module.exports = class AssetLoader {
       allAssetsMinusPlayer: [
         'entityShadow',
         'selectionIndicator',
-        'shadeLayer',
         'tallGrass',
         'finishOverlay',
         'bed',
