@@ -341,6 +341,9 @@ module.exports = class LevelPlane {
   checkEntityConflict(position) {
     let captureReturn = false;
     this.levelModel.controller.levelEntity.entityMap.forEach((workingEntity) => {
+      if (workingEntity.type === "ghast") {
+        workingEntity.playRandomIdle(2);
+      }
       if (this.levelModel.controller.positionEquivalence(position, workingEntity.position)) {
         captureReturn = true;
       }
