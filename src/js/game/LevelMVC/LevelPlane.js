@@ -129,6 +129,9 @@ module.exports = class LevelPlane {
   * Important note: This is the cornerstone of block placing/destroying.
   */
   setBlockAt(position, block) {
+    if (!this.inBounds(position)) {
+      return;
+    }
     this._data[this.coordinatesToIndex(position)] = block;
 
     if (this.isActionPlane()) {
