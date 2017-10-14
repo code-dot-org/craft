@@ -31,7 +31,7 @@ module.exports = {
     playerStartDirection: 0,
     agentStartPosition: [5, 9],
     agentStartDirection: 0,
-    verificationFunction: verificationAPI => verificationAPI.isPlayerAt([3, 1]),
+    verificationFunction: verificationAPI => verificationAPI.isPlayerAt([9, 1]),
   },
   agent06: {
     isAgentLevel: true,
