@@ -1252,6 +1252,36 @@ module.exports = class LevelView {
         explodeAnim.tint = 0x8a5e33;
         break;
 
+      case "redstoneWireOn":
+      case "redstoneWireHorizontalOn":
+      case "redstoneWireVerticalOn":
+      case "redstoneWireUpRightOn":
+      case "redstoneWireUpLeftOn":
+      case "redstoneWireDownRightOn":
+      case "redstoneWireDownLeftOn":
+      case "redstoneWireTUpOn":
+      case "redstoneWireTDownOn":
+      case "redstoneWireTLeftOn":
+      case "redstoneWireTRightOn":
+      case "redstoneWireCrossOn":
+        explodeAnim.tint = 0x990707;
+        break;
+
+      case "redstoneWire":
+      case "redstoneWireHorizontal":
+      case "redstoneWireVertical":
+      case "redstoneWireUpRight":
+      case "redstoneWireUpLeft":
+      case "redstoneWireDownRight":
+      case "redstoneWireDownLeft":
+      case "redstoneWireTUp":
+      case "redstoneWireTDown":
+      case "redstoneWireTLeft":
+      case "redstoneWireTRight":
+      case "redstoneWireCross":
+        explodeAnim.tint = 0x290202;
+        break;
+
       default:
         break;
     }
