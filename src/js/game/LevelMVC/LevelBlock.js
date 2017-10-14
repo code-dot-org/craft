@@ -191,14 +191,11 @@ module.exports = class LevelBlock {
   }
 
   /**
-   * "flat" blocks are those subset of walkable blocks which are walkable
-   * because they are lying right on the ground, as opposed to those blocks like
-   * torches which are walkable because they do not occupy very much space.
+   * @see {LevelBlock.isFlat}
+   * @return {boolean}
    */
   isFlat() {
-    return this.blockType.substring(0, 5) === "rails" ||
-        this.blockType.startsWith("redstoneWire") ||
-        this.blockType.startsWith("pressurePlate");
+    return LevelBlock.isFlat(this.blockType);
   }
 
   shouldRenderOnGroundPlane() {
@@ -214,6 +211,7 @@ module.exports = class LevelBlock {
   }
 
   /**
+   * @see {LevelBlock.isMiniblock}
    * @return {boolean}
    */
   getIsMiniblock() {
@@ -295,6 +293,21 @@ module.exports = class LevelBlock {
    */
   static isMiniblock(blockType) {
     return blockType.endsWith("Miniblock");
+  }
+
+  /**
+   * Does the given block type represent a "flat" block?
+   * "flat" blocks are those subset of walkable blocks which are walkable
+   * because they are lying right on the ground, as opposed to those blocks like
+   * torches which are walkable because they do not occupy very much space.
+   *
+   * @param {String} blockType
+   * @return {boolean}
+   */
+  static isFlat(blockType) {
+    return blockType.substring(0, 5) === "rails" ||
+        blockType.startsWith("redstoneWire") ||
+        blockType.startsWith("pressurePlate");
   }
 
   /**
