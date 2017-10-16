@@ -183,7 +183,7 @@ class GameController {
       this.updateScore();
     }
 
-    if (!this.levelData.isEventLevel) {
+    if (!this.levelData.isEventLevel && !this.levelData.isAgentLevel) {
       this.events.push(event => {
         if (event.eventType === EventType.WhenUsed && event.targetType === 'sheep') {
           this.codeOrgAPI.drop(null, 'wool', event.targetIdentifier);
@@ -1013,7 +1013,7 @@ class GameController {
         frontEntity.addCommand(useCommand);
         frontEntity.queue.endPushHighPriorityCommands();
         this.levelView.playPlayerAnimation("idle", player.position, player.facing, false);
-        if (this.levelData.isEventLevel) {
+        if (this.levelData.isEventLevel || this.levelData.isAgentLevel) {
           this.delayPlayerMoveBy(0, 0, () => {
             commandQueueItem.succeeded();
           });
