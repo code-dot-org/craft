@@ -172,7 +172,7 @@ module.exports = class LevelBlock {
       this.isEntity = true;
     }
 
-    if (blockType.startsWith("bed")) {
+    if (blockType === "bedFoot" || blockType === "bedHead") {
       this.isEntity = true;
     }
 
