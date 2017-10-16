@@ -690,13 +690,13 @@ module.exports = class LevelModel {
       // controlled by arrow keys. In levels where the player is controlled by
       // blocks, let them drown.
       if (this.groundPlane.getBlockAt(position).blockType === "water") {
-        if (this.controller.getIsDirectPlayerControl()) {
+        if (this.controller.levelData.isEventLevel) {
           result.push("water");
         } else {
           return [true];
         }
       } else if (this.groundPlane.getBlockAt(position).blockType === "lava") {
-        if (this.controller.getIsDirectPlayerControl()) {
+        if (this.controller.levelData.isEventLevel) {
           result.push("lava");
         } else {
           return [true];
