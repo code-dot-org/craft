@@ -103,19 +103,9 @@ module.exports = class Agent extends BaseEntity {
     levelView.playMoveForwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, () => {
       levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock, player);
 
-      if (levelModel.isPlayerStandingInWater()) {
-        levelView.playDrownFailureAnimation(player.position, player.facing, player.isOnBlock, () => {
-          this.controller.handleEndState(false);
-        });
-      } else if (levelModel.isPlayerStandingInLava()) {
-        levelView.playBurnInLavaAnimation(player.position, player.facing, player.isOnBlock, () => {
-          this.controller.handleEndState(false);
-        });
-      } else {
-        this.controller.delayPlayerMoveBy(this.moveDelayMin, this.moveDelayMax, () => {
-          commandQueueItem.succeeded();
-        });
-      }
+      this.controller.delayPlayerMoveBy(this.moveDelayMin, this.moveDelayMax, () => {
+        commandQueueItem.succeeded();
+      });
     });
 
     this.updateHidingTree();
@@ -208,5 +198,4 @@ module.exports = class Agent extends BaseEntity {
   canTriggerPressurePlates() {
     return true;
   }
-
 };
