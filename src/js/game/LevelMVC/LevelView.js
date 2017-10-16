@@ -1128,18 +1128,23 @@ module.exports = class LevelView {
     });
   }
 
+  /**
+   * Play the block Destroy Overlay animation. As a side effect, also actually
+   * destroy the block in the level model, update the visualization, and play
+   * the block Explision animation.
+   *
+   * Note that if the block is of a type that does not require an overlay
+   * animation, this method (confusingly) simply calls the side effects
+   * immediately.
+   */
   playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, entity, completionHandler) {
-    let blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
-    let blockToDestroy = this.actionPlaneBlocks[blockIndex];
-    let destroyOverlay = this.actionGroup.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
-    destroyOverlay.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
-    this.onAnimationEnd(destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false), () => {
+    const blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
+    const blockToDestroy = this.actionPlaneBlocks[blockIndex];
+
+    const afterDestroy = () => {
       if (blockToDestroy.hasOwnProperty("onBlockDestroy")) {
         blockToDestroy.onBlockDestroy(blockToDestroy);
       }
-
-      destroyOverlay.kill();
-      this.toDestroy.push(destroyOverlay);
 
       this.controller.levelModel.destroyBlockForward(entity);
       this.controller.updateShadingPlane();
@@ -1149,9 +1154,24 @@ module.exports = class LevelView {
 
       this.audioPlayer.play('dig_wood1');
       this.playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, true, entity);
-    });
+    };
 
-    this.playScaledSpeed(destroyOverlay.animations, "destroy");
+    if (LevelBlock.isFlat(blockType)) {
+      // "flat" blocks are by definition not cube shaped and so shouldn't accept
+      // the cube-shaped destroy overlay animation. In this case, destroy the
+      // block immediately without waiting for the animation.
+      afterDestroy();
+    } else {
+      const destroyOverlay = this.actionGroup.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
+      destroyOverlay.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
+      this.onAnimationEnd(destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false), () => {
+        destroyOverlay.kill();
+        this.toDestroy.push(destroyOverlay);
+
+        afterDestroy();
+      });
+      this.playScaledSpeed(destroyOverlay.animations, "destroy");
+    }
   }
 
   playMiningParticlesAnimation(facing, destroyPosition) {
@@ -1230,6 +1250,36 @@ module.exports = class LevelView {
         break;
       case "dirt":
         explodeAnim.tint = 0x8a5e33;
+        break;
+
+      case "redstoneWireOn":
+      case "redstoneWireHorizontalOn":
+      case "redstoneWireVerticalOn":
+      case "redstoneWireUpRightOn":
+      case "redstoneWireUpLeftOn":
+      case "redstoneWireDownRightOn":
+      case "redstoneWireDownLeftOn":
+      case "redstoneWireTUpOn":
+      case "redstoneWireTDownOn":
+      case "redstoneWireTLeftOn":
+      case "redstoneWireTRightOn":
+      case "redstoneWireCrossOn":
+        explodeAnim.tint = 0x990707;
+        break;
+
+      case "redstoneWire":
+      case "redstoneWireHorizontal":
+      case "redstoneWireVertical":
+      case "redstoneWireUpRight":
+      case "redstoneWireUpLeft":
+      case "redstoneWireDownRight":
+      case "redstoneWireDownLeft":
+      case "redstoneWireTUp":
+      case "redstoneWireTDown":
+      case "redstoneWireTLeft":
+      case "redstoneWireTRight":
+      case "redstoneWireCross":
+        explodeAnim.tint = 0x290202;
         break;
 
       default:
