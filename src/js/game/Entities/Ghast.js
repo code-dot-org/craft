@@ -3,7 +3,7 @@ module.exports = class Ghast extends BaseEntity {
     constructor(controller, type, identifier, x, y, facing) {
         super(controller, type, identifier, x, y, facing);
         var zOrderYIndex = this.position[1];
-        this.offset = [-25, -32];
+        this.offset = [-50, -84];
         this.prepareSprite();
         this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex);
     }
@@ -17,13 +17,13 @@ module.exports = class Ghast extends BaseEntity {
         var frameList = [];
         var frameName = "Ghast";
         this.sprite = actionGroup.create(0, 0, 'ghast', 'Ghast0000.png');
-        this.sprite.scale.setTo(0.75,0.75);
+        this.sprite.scale.setTo(1,1);
         let stillFrameName = ['Ghast0072.png', 'Ghast0048.png', 'Ghast0024.png', 'Ghast0000.png'];
-        let idleDelayFrame = 8;
+        let idleDelayFrame = 0;
         // [direction][[idle],[shoot]]
-        var frameListPerDirection = [[[24, 35], [36, 47]], // down
+        var frameListPerDirection = [[[72, 83], [84, 95]], // down
         [[48, 59], [60, 71]], // right
-        [[72, 83], [84, 95]], // up
+        [[24, 35], [36, 47]], // up
         [[0, 11], [12, 23]]]; // left
         for (var i = 0; i < 4; i++) {
             var facingName = this.controller.levelView.getDirectionName(i);
