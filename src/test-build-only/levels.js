@@ -15,7 +15,7 @@ module.exports = Object.assign({
     agentStartDirection: 1,
 
     playerName: "SteveEvents",
-    isEventLevel: true,
+    isAgentLevel: true,
     earlyLoadAssetPacks: ['allAssetsMinusPlayer'],
     earlyLoadNiceToHaveAssetPacks: ['playerSteveEvents', 'playerAgent'],
 
