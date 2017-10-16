@@ -81,27 +81,25 @@ module.exports = class Agent extends BaseEntity {
     }
   }
 
-  doMoveForward(commandQueueItem) {
-    var player = this,
-      groundType,
-      jumpOff,
-      levelModel = this.controller.levelModel,
-      levelView = this.controller.levelView;
-    let wasOnBlock = player.isOnBlock;
-    let prevPosition = this.position;
-    // update position
-    levelModel.moveForward(this);
-    // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
+  doMove(commandQueueItem, movement) {
+    let groundType;
+    const levelModel = this.controller.levelModel;
+    const levelView = this.controller.levelView;
+    const wasOnBlock = this.isOnBlock;
+    const prevPosition = this.position;
 
-    jumpOff = wasOnBlock && wasOnBlock !== player.isOnBlock;
-    if (player.isOnBlock || jumpOff) {
-      groundType = levelModel.actionPlane.getBlockAt(player.position).blockType;
+    // Update position.
+    levelModel[movement](this);
+
+    const jumpOff = wasOnBlock && wasOnBlock !== this.isOnBlock;
+    if (this.isOnBlock || jumpOff) {
+      groundType = levelModel.actionPlane.getBlockAt(this.position).blockType;
     } else {
-      groundType = levelModel.groundPlane.getBlockAt(player.position).blockType;
+      groundType = levelModel.groundPlane.getBlockAt(this.position).blockType;
     }
 
-    levelView.playMoveForwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, () => {
-      levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock, player);
+    levelView.playMoveForwardAnimation(this, prevPosition, this.facing, jumpOff, this.isOnBlock, groundType, () => {
+      levelView.playIdleAnimation(this.position, this.facing, this.isOnBlock, this);
 
       this.controller.delayPlayerMoveBy(this.moveDelayMin, this.moveDelayMax, () => {
         commandQueueItem.succeeded();
@@ -112,45 +110,12 @@ module.exports = class Agent extends BaseEntity {
     this.updateHidingBlock(prevPosition);
   }
 
+  doMoveForward(commandQueueItem) {
+    this.doMove(commandQueueItem, 'moveForward');
+  }
+
   doMoveBackward(commandQueueItem) {
-    var player = this,
-      groundType,
-      jumpOff,
-      levelModel = this.controller.levelModel,
-      levelView = this.controller.levelView;
-    let wasOnBlock = player.isOnBlock;
-    let prevPosition = this.position;
-    // update position
-    levelModel.moveBackward(this);
-    // TODO: check for Lava, Creeper, water => play approp animation & call commandQueueItem.failed()
-
-    jumpOff = wasOnBlock && wasOnBlock !== player.isOnBlock;
-    if (player.isOnBlock || jumpOff) {
-      groundType = levelModel.actionPlane.getBlockAt(player.position).blockType;
-    } else {
-      groundType = levelModel.groundPlane.getBlockAt(player.position).blockType;
-    }
-
-    levelView.playMoveBackwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, () => {
-      levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock, player);
-
-      if (levelModel.isPlayerStandingInWater()) {
-        levelView.playDrownFailureAnimation(player.position, player.facing, player.isOnBlock, () => {
-          this.controller.handleEndState(false);
-        });
-      } else if (levelModel.isPlayerStandingInLava()) {
-        levelView.playBurnInLavaAnimation(player.position, player.facing, player.isOnBlock, () => {
-          this.controller.handleEndState(false);
-        });
-      } else {
-        this.controller.delayPlayerMoveBy(this.moveDelayMin, this.moveDelayMax, () => {
-          commandQueueItem.succeeded();
-        });
-      }
-    });
-
-    this.updateHidingTree();
-    this.updateHidingBlock(prevPosition);
+    this.doMove(commandQueueItem, 'moveBackward');
   }
 
   bump(commandQueueItem) {
