@@ -89,7 +89,7 @@ module.exports = class Agent extends BaseEntity {
     const prevPosition = this.position;
 
     // Update position.
-    levelModel[movement](this);
+    levelModel[`move${movement}`](this);
 
     const jumpOff = wasOnBlock && wasOnBlock !== this.isOnBlock;
     if (this.isOnBlock || jumpOff) {
@@ -98,7 +98,7 @@ module.exports = class Agent extends BaseEntity {
       groundType = levelModel.groundPlane.getBlockAt(this.position).blockType;
     }
 
-    levelView.playMoveForwardAnimation(this, prevPosition, this.facing, jumpOff, this.isOnBlock, groundType, () => {
+    levelView[`playMove${movement}Animation`](this, prevPosition, this.facing, jumpOff, this.isOnBlock, groundType, () => {
       levelView.playIdleAnimation(this.position, this.facing, this.isOnBlock, this);
 
       this.controller.delayPlayerMoveBy(this.moveDelayMin, this.moveDelayMax, () => {
@@ -111,11 +111,11 @@ module.exports = class Agent extends BaseEntity {
   }
 
   doMoveForward(commandQueueItem) {
-    this.doMove(commandQueueItem, 'moveForward');
+    this.doMove(commandQueueItem, 'Forward');
   }
 
   doMoveBackward(commandQueueItem) {
-    this.doMove(commandQueueItem, 'moveBackward');
+    this.doMove(commandQueueItem, 'Backward');
   }
 
   bump(commandQueueItem) {
