@@ -347,27 +347,22 @@ module.exports = class LevelPlane {
     }
 
     this.powerAllBlocks();
-    let needToPlayPiston = "";
+    var soundToPlay = "";
     // Once we're done updating redstoneWire states, check to see if doors and pistons should open/close.
     this.getAllPositions().forEach((position) => {
       this.getIronDoors(position);
-      needToPlayPiston = this.getPistonState(position);
+      let atLeastOnce = this.getPistonState(position);
+      if (atLeastOnce !== "") {
+        soundToPlay = atLeastOnce;
+      }
     });
-    this.playPistonSound(needToPlayPiston);
+    this.playPistonSound(soundToPlay);
     return posToRefresh;
   }
 
   playPistonSound(sound) {
-    switch (sound) {
-      case "On":
-        this.levelModel.controller.audioPlayer.play("pistonOut");
-        break;
-      case "Off":
-        this.levelModel.controller.audioPlayer.play("pistonIn");
-        break;
-      case "":
-        //do nothing
-        break;
+    if (sound !== "") {
+      this.levelModel.controller.audioPlayer.play(sound);
     }
   }
 
@@ -405,10 +400,10 @@ module.exports = class LevelPlane {
       block.isPowered = this.powerCheck(position, true);
       if (block.isPowered) {
         this.activatePiston(position);
-        returnValue = "On";
+        returnValue = "pistonOut";
       } else if (!block.isPowered) {
         this.deactivatePiston(position);
-        returnValue = "Off";
+        returnValue = "pistonIn";
       }
 
       if (this.levelModel) {
