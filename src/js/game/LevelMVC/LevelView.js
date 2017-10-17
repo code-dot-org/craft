@@ -1858,10 +1858,10 @@ module.exports = class LevelView {
     const frameStart = this.miniBlocks[frame][1];
     const frameEnd = this.miniBlocks[frame][2];
     const xOffset = -10 - (xOffsetRange / 2) + (Math.random() * xOffsetRange);
-    const yOffset = 0 - (yOffsetRange / 2) + (Math.random() * yOffsetRange);
+    const yOffset = 0 - (yOffsetRange / 2) + (Math.random() * yOffsetRange) + this.actionGroup.yOffset;
 
     frameList = Phaser.Animation.generateFrameNames(framePrefix, frameStart, frameEnd, ".png", 3);
-    sprite = this.actionGroup.create(xOffset + 40 * x, yOffset + this.actionGroup.yOffset + 40 * y, atlas, "");
+    sprite = this.actionGroup.create(xOffset + 40 * x, yOffset + 40 * y, atlas, "");
     const anim = sprite.animations.add("animate", frameList, 10, false);
 
     if (this.controller.getIsDirectPlayerControl()) {
