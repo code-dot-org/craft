@@ -473,7 +473,9 @@ module.exports = class LevelPlane {
       }
     }
 
-
+    if (this.pistonArmBlocked(position, offset)) {
+      return;
+    }
     // Break an object right in front of the piston.
     if (workingNeighbor.isDestroyableUponPush()) {
       this.setBlockAt(pos, new LevelBlock(""));
@@ -503,6 +505,12 @@ module.exports = class LevelPlane {
       this.setBlockAt(position, pistonBlock);
     }
   }
+
+  pistonArmBlocked(position, offset) {
+    const workingPosition = [position[0] + offset[0], position[1] + offset[1]];
+    return this.checkEntityConflict(workingPosition);
+  }
+
 
   /**
   * Deactivates a piston at a given position by determining what the arm orientation is.
