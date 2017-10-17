@@ -342,6 +342,9 @@ module.exports = class LevelPlane {
   }
 
   checkEntityConflict(position) {
+    if (!this.levelModel) {
+      return;
+    }
     let captureReturn = false;
     this.levelModel.controller.levelEntity.entityMap.forEach((workingEntity) => {
       if (this.levelModel.controller.positionEquivalence(position, workingEntity.position)) {
