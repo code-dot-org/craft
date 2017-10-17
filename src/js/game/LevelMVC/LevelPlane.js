@@ -359,6 +359,9 @@ module.exports = class LevelPlane {
   }
 
   playPistonSound() {
+    if (!this.levelModel) {
+      return;
+    }
     if (this.playPistonOn) {
       this.levelModel.controller.audioPlayer.play("pistonOut");
     } else if (this.playPistonOff) {
