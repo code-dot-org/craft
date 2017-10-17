@@ -232,6 +232,24 @@ module.exports = class LevelBlock {
   }
 
   /**
+   * Can this block be placed in liquid to replace a liquid block? Should
+   * generally be true for all "standard" blocks like cobblestone and dirt, and
+   * false for all "special" blocks like redstone and torches.
+   *
+   * @return {boolean}
+   */
+  getIsPlaceableInLiquid() {
+    const notPlaceable =
+      this.isRedstone ||
+      this.getIsPiston() ||
+      this.isRail ||
+      this.blockType === 'torch' ||
+      this.blockType === 'railsRedstoneTorch';
+
+    return !notPlaceable;
+  }
+
+  /**
    * Note that this will be true for blocks representing the unpowered piston,
    * the "base" of the powered piston, AND the extended arm of the powered
    * piston

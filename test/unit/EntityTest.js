@@ -53,8 +53,8 @@ test('canPlaceBlockOver', t => {
     });
   });
 
-  // Agents cannot place redstone, pistons, or rails on liquid
-  ["redstoneWire", "piston", "rails"].map((type) => new LevelBlock(type)).forEach((blockToPlace) => {
+  // Agents cannot place redstone, pistons, rails, or torches on liquid
+  ["redstoneWire", "piston", "rails", "torch", "railsRedstoneTorch"].map((type) => new LevelBlock(type)).forEach((blockToPlace) => {
     liquidBlocks.forEach((groundBlock) => {
       t.false(agent.canPlaceBlockOver(blockToPlace, groundBlock).canPlace);
     });
