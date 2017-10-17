@@ -1118,14 +1118,7 @@ module.exports = class LevelModel {
     var x, y;
 
     this.fowPlane = [];
-    if (this.isDaytime) {
-      for (y = 0; y < this.planeHeight; ++y) {
-        for (x = 0; x < this.planeWidth; ++x) {
-          // this.fowPlane.push[""]; // noop as originally written
-          // TODO(bjordan) completely remove?
-        }
-      }
-    } else {
+    if (!this.isDaytime) {
       // compute the fog of war for light emitting blocks
       for (y = 0; y < this.planeHeight; ++y) {
         for (x = 0; x < this.planeWidth; ++x) {
