@@ -356,8 +356,10 @@ module.exports = class LevelView {
     this.preparePlayerSprite(entity.name, entity);
     entity.sprite.animations.stop();
     this.setPlayerPosition(entity.position[0], entity.position[1], entity.isOnBlock, entity);
-    this.setSelectionIndicatorPosition(entity.position[0], entity.position[1]);
-    this.selectionIndicator.visible = true;
+    if (entity.shouldUpdateSelectionIndicator()) {
+      this.setSelectionIndicatorPosition(entity.position[0], entity.position[1]);
+      this.selectionIndicator.visible = true;
+    }
     this.playIdleAnimation(entity.position, entity.facing, entity.isOnBlock, entity);
   }
 
@@ -899,7 +901,9 @@ module.exports = class LevelView {
     //stepping on stone sfx
     this.playBlockSound(groundType);
 
-    this.setSelectionIndicatorPosition(position[0], position[1]);
+    if (entity.shouldUpdateSelectionIndicator()) {
+      this.setSelectionIndicatorPosition(position[0], position[1]);
+    }
 
     if (!shouldJumpDown) {
       const animName = 'walk' + this.getDirectionName(facing);
@@ -960,9 +964,10 @@ module.exports = class LevelView {
     var jumpAnimName;
     let blockIndex = this.yToIndex(position[1]) + position[0];
 
-    if (entity === this.agent || this.skipHopAnimation(blockType)) {
+    if (entity.shouldUpdateSelectionIndicator()) {
       this.setSelectionIndicatorPosition(position[0], position[1]);
-
+    }
+    if (entity === this.agent || this.skipHopAnimation(blockType)) {
       var signalDetacher = this.playPlayerAnimation("punch", position, facing, false, entity).onComplete.add(() => {
         signalDetacher.detach();
         completionHandler();
@@ -971,7 +976,6 @@ module.exports = class LevelView {
       this.audioPlayer.play("placeBlock");
 
       let direction = this.getDirectionName(facing);
-      this.setSelectionIndicatorPosition(position[0], position[1]);
 
       jumpAnimName = "jumpUp" + direction;
 
@@ -1100,7 +1104,9 @@ module.exports = class LevelView {
   }
 
   playDestroyBlockAnimation(playerPosition, facing, destroyPosition, blockType, entity, completionHandler) {
-    this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
+    if (entity.shouldUpdateSelectionIndicator()) {
+      this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
+    }
 
     var playerAnimation = undefined;
     if (entity === this.agent) {
@@ -1122,7 +1128,9 @@ module.exports = class LevelView {
   }
 
   playPunchAnimation(playerPosition, facing, destroyPosition, animationType, completionHandler, entity = this.player) {
-    this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
+    if (entity.shouldUpdateSelectionIndicator()) {
+      this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
+    }
     this.onAnimationEnd(this.playPlayerAnimation(animationType, playerPosition, facing, false, entity), () => {
       completionHandler();
     });
@@ -1150,7 +1158,9 @@ module.exports = class LevelView {
       this.controller.updateShadingPlane();
       this.controller.updateFowPlane();
 
-      this.setSelectionIndicatorPosition(playerPosition[0], playerPosition[1]);
+      if (entity.shouldUpdateSelectionIndicator()) {
+        this.setSelectionIndicatorPosition(playerPosition[0], playerPosition[1]);
+      }
 
       this.audioPlayer.play('dig_wood1');
       this.playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, true, entity);
@@ -1708,7 +1718,9 @@ module.exports = class LevelView {
       this.game.camera.follow(entity.sprite);
     }
 
-    this.selectionIndicator = this.shadingGroup.create(24, 44, 'selectionIndicator');
+    if (entity.shouldUpdateSelectionIndicator()) {
+      this.selectionIndicator = this.shadingGroup.create(24, 44, 'selectionIndicator');
+    }
 
     this.generateAnimations(FacingDirection.South, 0, entity);
     this.generateAnimations(FacingDirection.East, 60, entity);
