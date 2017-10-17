@@ -59,17 +59,17 @@ module.exports = class Zombie extends BaseEntity {
             return (Math.random() * (max - min) + min) * 1000;
         };
         let frameRate = 10, randomPauseMin = 0.2, randomPauseMax = 1;
-        let actionPlane = this.controller.levelView.actionPlane;
+        let actionGroup = this.controller.levelView.actionGroup;
         var frameList = [];
         var frameName = "Zombie_";
-        this.sprite = actionPlane.create(0, 0, 'zombie', 'Zombie_001.png');
+        this.sprite = actionGroup.create(0, 0, 'zombie', 'Zombie_001.png');
         // update sort order and position
         this.sprite.sortOrder = this.controller.levelView.yToIndex(this.position[1]);
         this.sprite.x = this.offset[0] + 40 * this.position[0];
         this.sprite.y = this.offset[1] + 40 * this.position[1];
         // add burning sprite
-        this.burningSprite = [actionPlane.create(this.sprite.x + this.burningSpriteOffset[0], this.sprite.y + this.burningSpriteOffset[1], 'burningInSun', "BurningFront_001.png"),
-        actionPlane.create(this.sprite.x + this.burningSpriteOffset[0], this.sprite.y + this.burningSpriteOffset[1], 'burningInSun', "BurningBehind_001.png")];
+        this.burningSprite = [actionGroup.create(this.sprite.x + this.burningSpriteOffset[0], this.sprite.y + this.burningSpriteOffset[1], 'burningInSun', "BurningFront_001.png"),
+        actionGroup.create(this.sprite.x + this.burningSpriteOffset[0], this.sprite.y + this.burningSpriteOffset[1], 'burningInSun', "BurningBehind_001.png")];
 
         frameList = Phaser.Animation.generateFrameNames("BurningFront_", 1, 15, ".png", 3);
         this.burningSprite[0].animations.add("burn", frameList, frameRate, true);

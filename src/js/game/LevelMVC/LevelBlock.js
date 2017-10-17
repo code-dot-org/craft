@@ -172,7 +172,7 @@ module.exports = class LevelBlock {
       this.isEntity = true;
     }
 
-    if (blockType.startsWith("bed")) {
+    if (blockType === "bedFoot" || blockType === "bedHead") {
       this.isEntity = true;
     }
 
@@ -190,14 +190,28 @@ module.exports = class LevelBlock {
     }
   }
 
+  /**
+   * @see {LevelBlock.isFlat}
+   * @return {boolean}
+   */
+  isFlat() {
+    return LevelBlock.isFlat(this.blockType);
+  }
+
+  shouldRenderOnGroundPlane() {
+    return this.isFlat();
+  }
+
   getIsStickyPiston() {
     return this.blockType.substring(this.blockType.length - 6, this.blockType.length) === "Sticky";
   }
+
   canHoldCharge() {
     return this.isSolid;
   }
 
   /**
+   * @see {LevelBlock.isMiniblock}
    * @return {boolean}
    */
   getIsMiniblock() {
@@ -210,6 +224,29 @@ module.exports = class LevelBlock {
 
   getIsDoor() {
     return this.blockType.startsWith("door");
+  }
+
+  getIsLiquid() {
+    return this.blockType === "water" ||
+        this.blockType === "lava";
+  }
+
+  /**
+   * Note that this will be true for blocks representing the unpowered piston,
+   * the "base" of the powered piston, AND the extended arm of the powered
+   * piston
+   *
+   * @return {boolean}
+   */
+  getIsPiston() {
+    return this.blockType.startsWith("piston");
+  }
+
+  /**
+   * @return {boolean}
+   */
+  getIsPistonArm() {
+    return this.blockType.startsWith("pistonArm");
   }
 
   getIsPushable() {
@@ -256,6 +293,21 @@ module.exports = class LevelBlock {
    */
   static isMiniblock(blockType) {
     return blockType.endsWith("Miniblock");
+  }
+
+  /**
+   * Does the given block type represent a "flat" block?
+   * "flat" blocks are those subset of walkable blocks which are walkable
+   * because they are lying right on the ground, as opposed to those blocks like
+   * torches which are walkable because they do not occupy very much space.
+   *
+   * @param {String} blockType
+   * @return {boolean}
+   */
+  static isFlat(blockType) {
+    return blockType.substring(0, 5) === "rails" ||
+        blockType.startsWith("redstoneWire") ||
+        blockType.startsWith("pressurePlate");
   }
 
   /**

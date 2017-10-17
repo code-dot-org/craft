@@ -13,10 +13,10 @@ module.exports = class IronGolem extends BaseEntity {
             return (Math.random() * (max - min) + min) * 1000;
         };
         let frameRate = 8, randomPauseMin = 0.2, randomPauseMax = 1;
-        let actionPlane = this.controller.levelView.actionPlane;
+        let actionGroup = this.controller.levelView.actionGroup;
         var frameList = [];
         var frameName = "Iron_Golem_Anims";
-        this.sprite = actionPlane.create(0, 0, 'ironGolem', 'Iron_Golem_Anims001.png');
+        this.sprite = actionGroup.create(0, 0, 'ironGolem', 'Iron_Golem_Anims001.png');
         // [direction][[idle],[look left],[look right],[look up],[look down],[walk],[attack],[take dmg],[die],[bump]]
         var frameListPerDirection = [[[45, 45], [46, 48], [50, 52], [58, 60], [54, 56], [62, 70], [71, 74], [77, 81], [82, 88], [185, 192]], // down
         [[133, 133], [134, 136], [138, 140], [146, 148], [142, 144], [150, 158], [159, 162], [165, 169], [170, 176], [201, 208]], // right

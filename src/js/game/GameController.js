@@ -183,7 +183,7 @@ class GameController {
       this.updateScore();
     }
 
-    if (!this.levelData.isEventLevel) {
+    if (!this.getIsDirectPlayerControl()) {
       this.events.push(event => {
         if (event.eventType === EventType.WhenUsed && event.targetType === 'sheep') {
           this.codeOrgAPI.drop(null, 'wool', event.targetIdentifier);
@@ -723,20 +723,6 @@ class GameController {
     return (lhs[0] === rhs[0] && lhs[1] === rhs[1]);
   }
 
-  handleMoveOffIronDoor(commandQueueItem, moveOffset) {
-    const entity = this.getEntity(commandQueueItem.target);
-    const formerPosition = [entity.position[0] - moveOffset[0], entity.position[1] - moveOffset[1]];
-    if (!this.levelModel.inBounds(formerPosition[0], formerPosition[1])) {
-      return;
-    }
-
-    const wasOnDoor = this.levelModel.actionPlane.getBlockAt(formerPosition).blockType === "doorIron";
-    const isOnDoor = this.levelModel.actionPlane.getBlockAt(entity.position).blockType === "doorIron";
-    if (wasOnDoor && !isOnDoor) {
-      this.levelModel.actionPlane.findDoorToAnimate([-1, -1]);
-    }
-  }
-
   /**
    * Run a command. If no `commandQueueItem.target` is provided, the command
    * will be applied to all targets.
@@ -774,55 +760,15 @@ class GameController {
   }
 
   moveForward(commandQueueItem) {
-    const entity = this.getEntity(commandQueueItem.target);
-    const moveOffset = this.directionToOffset(entity.facing);
-
     this.execute(commandQueueItem, 'moveForward');
-
-    this.handleMoveOffIronDoor(commandQueueItem, moveOffset);
   }
 
   moveBackward(commandQueueItem) {
-    const entity = this.getEntity(commandQueueItem.target);
-    const moveOffset = this.directionToOffset(FacingDirection.opposite(entity.facing));
-
     this.execute(commandQueueItem, 'moveBackward');
-
-    this.handleMoveOffIronDoor(commandQueueItem, moveOffset);
   }
 
   moveDirection(commandQueueItem, direction) {
-    const entity = this.getEntity(commandQueueItem.target);
-    const moveOffset = this.directionToOffset(entity.movementState);
-
     this.execute(commandQueueItem, 'moveDirection', direction);
-
-    this.handleMoveOffIronDoor(commandQueueItem, moveOffset);
-  }
-
-  directionToOffset(direction) {
-    let offset = [0,0];
-    // Direction will ever only not be null if we're calling this as a
-    // function of player movement.
-    switch (direction) {
-      case 0: {
-        offset[1] = -1;
-        break;
-      }
-      case 1: {
-        offset[0] = 1;
-        break;
-      }
-      case 2: {
-        offset[1] = 1;
-        break;
-      }
-      case 3: {
-        offset[0] = -1;
-        break;
-      }
-    }
-    return offset;
   }
 
   turn(commandQueueItem, direction) {
@@ -1067,7 +1013,7 @@ class GameController {
         frontEntity.addCommand(useCommand);
         frontEntity.queue.endPushHighPriorityCommands();
         this.levelView.playPlayerAnimation("idle", player.position, player.facing, false);
-        if (this.levelData.isEventLevel) {
+        if (this.getIsDirectPlayerControl()) {
           this.delayPlayerMoveBy(0, 0, () => {
             commandQueueItem.succeeded();
           });
@@ -1339,7 +1285,7 @@ class GameController {
 
     this.levelView.playPlaceBlockInFrontAnimation(player, this.levelModel.player.position, this.levelModel.player.facing, forwardPosition, () => {
       this.levelModel.placeBlockForward(blockType, placementPlane, player);
-      this.levelView.refreshGroundPlane();
+      this.levelView.refreshGroundGroup();
 
       this.updateFowPlane();
       this.updateShadingPlane();
@@ -1526,7 +1472,7 @@ class GameController {
       }
       this.levelModel.isDaytime = true;
       this.levelModel.clearFow();
-      this.levelView.updateFowPlane(this.levelModel.fowPlane);
+      this.levelView.updateFowGroup(this.levelModel.fowPlane);
       this.events.forEach(e => e({ eventType: EventType.WhenDayGlobal }));
       let entities = this.levelEntity.entityMap;
       for (let value of entities) {
@@ -1557,7 +1503,7 @@ class GameController {
       }
       this.levelModel.isDaytime = false;
       this.levelModel.computeFowPlane();
-      this.levelView.updateFowPlane(this.levelModel.fowPlane);
+      this.levelView.updateFowGroup(this.levelModel.fowPlane);
       this.events.forEach(e => e({ eventType: EventType.WhenNightGlobal }));
       let entities = this.levelEntity.entityMap;
       for (let value of entities) {
@@ -1649,12 +1595,12 @@ class GameController {
 
   updateFowPlane() {
     this.levelModel.computeFowPlane();
-    this.levelView.updateFowPlane(this.levelModel.fowPlane);
+    this.levelView.updateFowGroup(this.levelModel.fowPlane);
   }
 
   updateShadingPlane() {
     this.levelModel.computeShadingPlane();
-    this.levelView.updateShadingPlane(this.levelModel.shadingPlane);
+    this.levelView.updateShadingGroup(this.levelModel.shadingPlane);
   }
 }
 

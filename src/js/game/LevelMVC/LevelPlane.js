@@ -130,42 +130,28 @@ module.exports = class LevelPlane {
   * Changes the block at a desired position to the desired block.
   * Important note: This is the cornerstone of block placing/destroying.
   */
-  setBlockAt(position, block, offsetX = 0, offsetY = 0) {
+  setBlockAt(position, block) {
+    if (!this.inBounds(position)) {
+      return;
+    }
     this._data[this.coordinatesToIndex(position)] = block;
-    let offset = [offsetX,offsetY];
 
     if (this.isActionPlane()) {
-      let positionInQuestion = [0,0];
-      // This will either be the pos the player is leaving or entering, depending on situation
-      if (this.levelModel) {
-        positionInQuestion = [this.levelModel.player.position[0] + offset[0], this.levelModel.player.position[1] + offset[1]];
-      }
-      let wasOnADoor = false;
-      // If the questionable position was a door, we want to do a few things differently.
-      if (this.inBounds(positionInQuestion) && this.getBlockAt(positionInQuestion).blockType === "doorIron") {
-        wasOnADoor = true;
-      }
 
       let redstoneToRefresh = [];
       if (block.needToRefreshRedstone()) {
         redstoneToRefresh = this.getRedstone();
-        // Once we're done updating redstoneWire states, check to see if doors should open/close.
-        if (wasOnADoor) {
-          this.findDoorToAnimate(positionInQuestion);
-        } else {
-          this.findDoorToAnimate([-1,-1]);
-        }
       }
 
       this.determineRailType(position, true);
 
       if (this.levelModel && this.levelModel.controller.levelView) {
         let positionAndTouching = this.getOrthogonalPositions(position).concat([position]);
-        this.levelModel.controller.levelView.refreshActionPlane(positionAndTouching);
-        this.levelModel.controller.levelView.refreshActionPlane(redstoneToRefresh);
+        this.levelModel.controller.levelView.refreshActionGroup(positionAndTouching);
+        this.levelModel.controller.levelView.refreshActionGroup(redstoneToRefresh);
       }
     } else if (this.isGroundPlane()) {
-      this.levelModel.controller.levelView.refreshGroundPlane();
+      this.levelModel.controller.levelView.refreshGroundGroup();
     }
 
     return block;
@@ -371,6 +357,16 @@ module.exports = class LevelPlane {
     this.playPistonOff = false;
   }
 
+  checkEntityConflict(position) {
+    let captureReturn = false;
+    this.levelModel.controller.levelEntity.entityMap.forEach((workingEntity) => {
+      if (this.levelModel.controller.positionEquivalence(position, workingEntity.position)) {
+        captureReturn = true;
+      }
+    });
+    return captureReturn;
+  }
+
   /**
   * Evaluates what state Iron Doors on the map should be in.
   */
@@ -386,9 +382,11 @@ module.exports = class LevelPlane {
           this.levelModel.controller.levelView.animateDoor(index, true);
         }
       } else if (!block.isPowered && block.isOpen) {
-        block.isOpen = false;
         if (this.levelModel) {
-          this.levelModel.controller.levelView.animateDoor(index, false);
+          if (!this.checkEntityConflict(position)) {
+            block.isOpen = false;
+            this.levelModel.controller.levelView.animateDoor(index, false);
+          }
         }
       }
     }
@@ -400,7 +398,7 @@ module.exports = class LevelPlane {
   getPistonState(position) {
     const block = this.getBlockAt(position);
 
-    if (block.blockType.startsWith("piston") && !block.blockType.startsWith("pistonArm")) {
+    if (block.getIsPiston() && !block.getIsPistonArm()) {
       block.isPowered = this.powerCheck(position, true);
       if (block.isPowered) {
         this.activatePiston(position);
@@ -429,7 +427,7 @@ module.exports = class LevelPlane {
           if (this.levelModel) {
             this.levelModel.controller.levelView.animateDoor(index, true);
           }
-        } else if (!block.isPowered && block.isOpen) {
+        } else if (!block.isPowered && block.isOpen && !this.checkEntityConflict(position)) {
           block.isOpen = false;
           if (this.levelModel) {
             this.levelModel.controller.levelView.animateDoor(index, false);
@@ -497,7 +495,7 @@ module.exports = class LevelPlane {
       if (this.levelModel) {
         this.levelModel.controller.levelView.playExplosionAnimation(pos, 2, pos, workingNeighbor.blockType, null, null, this.player);
       }
-    } else if (workingNeighbor.blockType !== "" && !workingNeighbor.blockType.startsWith("pistonArm")) {
+    } else if (workingNeighbor.blockType !== "" && !workingNeighbor.getIsPistonArm()) {
       // We've actually got something to push.
       let blocksPositions = this.getBlocksToPush(pos, offset[0], offset[1]);
       let concat = "On";
@@ -575,7 +573,7 @@ module.exports = class LevelPlane {
     }
     let newPistonType = blockType + concat;
     let offPiston = new LevelBlock(newPistonType);
-    if (this.getBlockAt(armPosition).blockType.startsWith("pistonArm")) {
+    if (this.getBlockAt(armPosition).getIsPistonArm()) {
       if (this.getBlockAt(pistonPosition).getIsStickyPiston()) {
         let stuckBlockPosition = [armPosition[0], armPosition[1]];
         switch (pistonType.getPistonDirection()) {
@@ -716,7 +714,7 @@ module.exports = class LevelPlane {
         if (!block.isWeaklyPowerable) {
           return false;
         }
-        if (this.getBlockAt(position).blockType.startsWith("piston")) {
+        if (this.getBlockAt(position).getIsPiston()) {
           let piston = this.getBlockAt(position);
           let ignoreThisSide = [0, 0];
           switch (piston.getPistonDirection()) {
