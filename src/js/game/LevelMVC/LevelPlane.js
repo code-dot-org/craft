@@ -49,6 +49,8 @@ module.exports = class LevelPlane {
     this.redstoneList = [];
     this.redstoneListON = [];
     this.planeType = planeType;
+    this.playPistonOn = false;
+    this.playPistonOff = false;
 
     for (let index = 0; index < planeData.length; ++index) {
       let block = new LevelBlock(planeData[index]);
@@ -347,23 +349,23 @@ module.exports = class LevelPlane {
     }
 
     this.powerAllBlocks();
-    var soundToPlay = "";
     // Once we're done updating redstoneWire states, check to see if doors and pistons should open/close.
     this.getAllPositions().forEach((position) => {
       this.getIronDoors(position);
-      let atLeastOnce = this.getPistonState(position);
-      if (atLeastOnce !== "") {
-        soundToPlay = atLeastOnce;
-      }
+      this.getPistonState(position);
     });
-    this.playPistonSound(soundToPlay);
+    this.playPistonSound();
     return posToRefresh;
   }
 
-  playPistonSound(sound) {
-    if (sound !== "" && this.levelModel) {
-      this.levelModel.controller.audioPlayer.play(sound);
+  playPistonSound() {
+    if (this.playPistonOn) {
+      this.levelModel.controller.audioPlayer.play("pistonOut");
+    } else if (this.playPistonOff) {
+      this.levelModel.controller.audioPlayer.play("pistonIn");
     }
+    this.playPistonOn = false;
+    this.playPistonOff = false;
   }
 
   /**
@@ -394,24 +396,19 @@ module.exports = class LevelPlane {
   */
   getPistonState(position) {
     const block = this.getBlockAt(position);
-    let returnValue = "";
 
     if (block.blockType.startsWith("piston") && !block.blockType.startsWith("pistonArm")) {
       block.isPowered = this.powerCheck(position, true);
       if (block.isPowered) {
         this.activatePiston(position);
-        returnValue = "pistonOut";
       } else if (!block.isPowered) {
         this.deactivatePiston(position);
-        returnValue = "pistonIn";
       }
-
       if (this.levelModel) {
         this.levelModel.controller.updateFowPlane();
         this.levelModel.controller.updateShadingPlane();
       }
     }
-    return returnValue;
   }
 
   /**
@@ -493,6 +490,7 @@ module.exports = class LevelPlane {
     // Break an object right in front of the piston.
     if (workingNeighbor.isDestroyableUponPush()) {
       this.setBlockAt(pos, new LevelBlock(""));
+      this.playPistonOn = true;
       if (this.levelModel) {
         this.levelModel.controller.levelView.playExplosionAnimation(pos, 2, pos, workingNeighbor.blockType, null, null, this.player);
       }
@@ -506,6 +504,7 @@ module.exports = class LevelPlane {
       let onPiston = new LevelBlock(pistonType += concat);
       this.setBlockAt(position, onPiston);
       this.pushBlocks(blocksPositions, offset[0], offset[1]);
+      this.playPistonOn = true;
     } else if (workingNeighbor.blockType === "") {
       // Nothing to push, so just make the arm.
       let concat = "On";
@@ -517,6 +516,7 @@ module.exports = class LevelPlane {
       let pistonBlock = new LevelBlock(pistonType += concat);
       this.setBlockAt(pos, armBlock);
       this.setBlockAt(position, pistonBlock);
+      this.playPistonOn = true;
     }
   }
 
@@ -594,9 +594,11 @@ module.exports = class LevelPlane {
           this.setBlockAt(stuckBlockPosition, emptyBlock);
         } else {
           this.setBlockAt(armPosition, emptyBlock);
+          this.playPistonOff = true;
         }
       } else {
         this.setBlockAt(armPosition, emptyBlock);
+        this.playPistonOff = true;
       }
     }
     this.setBlockAt(pistonPosition, offPiston);
