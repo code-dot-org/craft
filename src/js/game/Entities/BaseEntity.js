@@ -36,6 +36,17 @@ module.exports = class BaseEntity {
   }
 
   /**
+   * Whether or not the white "selection indicator" highlight square should
+   * update to follow this entity around as it moves and interacts with the
+   * world
+   *
+   * @return {boolean}
+   */
+  shouldUpdateSelectionIndicator() {
+    return false;
+  }
+
+  /**
    * For entities which need to be able to accomodate rendering in the same
    * cell as other entities, provide a way to define a rendering offset.
    *
