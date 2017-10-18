@@ -769,7 +769,7 @@ class GameController {
 
   moveDirection(commandQueueItem, direction) {
     let player = this.levelModel.player;
-    let frontPosition = this.getNextRailPosition(player);
+    let frontPosition = this.levelModel.getNextRailPosition(player);
     let frontBlock = this.levelModel.actionPlane.getBlockAt(frontPosition);
     if (frontBlock && frontBlock.isRail) {
       this.levelView.playTrack(frontPosition, direction, true, player, null);
@@ -777,25 +777,6 @@ class GameController {
     } else {
       this.execute(commandQueueItem, 'moveDirection', direction);
     }
-  }
-
-  getNextRailPosition(entity = this.player) {
-    let offset = [0,0];
-    switch (entity.movementState) {
-      case 0:
-        offset[1] = -1;
-        break;
-      case 1:
-        offset[0] = 1;
-        break;
-      case 2:
-        offset[1] = 1;
-        break;
-      case 3:
-        offset[0] = -1;
-        break;
-    }
-    return [entity.position[0] + offset[0], entity.position[1] + offset[1]];
   }
 
   turn(commandQueueItem, direction) {

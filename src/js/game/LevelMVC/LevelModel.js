@@ -261,6 +261,25 @@ module.exports = class LevelModel {
     return this.controller.score;
   }
 
+  getNextRailPosition(entity = this.player) {
+    let offset = [0,0];
+    switch (entity.movementState) {
+      case 0:
+        offset[1] = -1;
+        break;
+      case 1:
+        offset[0] = 1;
+        break;
+      case 2:
+        offset[1] = 1;
+        break;
+      case 3:
+        offset[0] = -1;
+        break;
+    }
+    return [entity.position[0] + offset[0], entity.position[1] + offset[1]];
+  }
+
   getEntityCount(entityType) {
     var entityList = this.controller.levelEntity.getEntitiesOfType(entityType);
     return entityList.length;
