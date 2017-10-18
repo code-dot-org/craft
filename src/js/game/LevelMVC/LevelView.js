@@ -1398,7 +1398,8 @@ module.exports = class LevelView {
   drawHintPath(gridSpaces) {
     this.hintGroup.removeAll(true);
 
-    const hintPath = this.game.add.bitmapData(400, 400);
+    const bounds = this.game.world.bounds;
+    const hintPath = this.game.add.bitmapData(bounds.width, bounds.height);
     const sprite = this.hintGroup.create(0, 0, hintPath);
     sprite.alpha = 0;
 
