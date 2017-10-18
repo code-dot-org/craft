@@ -1396,6 +1396,8 @@ module.exports = class LevelView {
    * @param {Array<Array<int>>} gridSpaces An array of x and y grid coordinates.
    */
   drawHintPath(gridSpaces) {
+    this.hintGroup.removeAll(true);
+
     const hintPath = this.game.add.bitmapData(400, 400);
     this.hintGroup.create(0, 0, hintPath);
 
