@@ -195,6 +195,7 @@ module.exports = class LevelView {
       "tallGrass": ["tallGrass", "", -13, 0],
 
       "lavaPop": ["lavaPop", "LavaPop01", -13, 0],
+      "redstoneSparkle": ["redstoneSparkle", "redstone_sparkle1.png", -25, -8],
       "fire": ["fire", "", -11, 135],
       "bubbles": ["bubbles", "", -11, 135],
       "explosion": ["explosion", "", -70, 60],
@@ -2119,6 +2120,28 @@ module.exports = class LevelView {
         }
         sprite.animations.add("idle", frameList, 5, true);
         this.playAnimationWithOffset(sprite, "idle", 29, 1);
+        break;
+
+      case "redstoneSparkle":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("redstone_sparkle", 0, 24, ".png");
+        for (i = 0; i < 4; ++i) {
+          frameList.push("redstone_sparkle7");
+        }
+        frameList = frameList.concat(Phaser.Animation.generateFrameNames("redstone_sparkle", 8, 13, ".png"));
+        for (i = 0; i < 3; ++i) {
+          frameList.push("redstone_sparkle13");
+        }
+        frameList = frameList.concat(Phaser.Animation.generateFrameNames("redstone_sparkle", 14, 23, ".png"));
+        for (i = 0; i < 8; ++i) {
+          frameList.push("redstone_sparkle1");
+        }
+        sprite.animations.add("idle", frameList, 5, true);
+        this.playAnimationWithOffset(sprite, "idle", Math.floor(Math.random() * 3) + 21, 1);
         break;
 
       case "fire":
