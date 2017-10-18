@@ -1402,11 +1402,44 @@ module.exports = class LevelView {
     this.selectionIndicator.y = -55 + 43 + 40 * y;
   }
 
+  /**
+   * @param {Array<Array<int>>} gridSpaces An array of x and y grid coordinates.
+   */
+  drawHintPath(gridSpaces) {
+    this.hintGroup.removeAll(true);
+
+    const bounds = this.game.world.bounds;
+    const hintPath = this.game.add.bitmapData(bounds.width, bounds.height);
+
+    const context = hintPath.context;
+    context.setLineDash([10, 10]);
+    context.lineDashOffset = 5;
+    context.lineWidth = 2;
+    context.strokeStyle = '#fff';
+    context.shadowColor = '#000';
+    context.shadowOffsetY = 7;
+    context.shadowBlur = 4;
+
+    context.beginPath();
+    gridSpaces.forEach(([x, y]) => {
+      context.lineTo(40 * x + 19, 40 * y + 19);
+    });
+    context.stroke();
+
+    const sprite = this.hintGroup.create(0, 0, hintPath);
+    sprite.alpha = 0;
+
+    this.addResettableTween(sprite)
+      .to({alpha: 1}, 830, Phaser.Easing.Quadratic.Out)
+      .to({alpha: 0.4}, 500, Phaser.Easing.Quadratic.InOut, true, 0, -1, true);
+  }
+
   createGroups() {
     this.groundGroup = this.game.add.group();
     this.groundGroup.yOffset = -2;
     this.shadingGroup = this.game.add.group();
     this.shadingGroup.yOffset = -2;
+    this.hintGroup = this.game.add.group();
     this.actionGroup = this.game.add.group();
     this.actionGroup.yOffset = -22;
     this.fluffGroup = this.game.add.group();
@@ -1422,6 +1455,7 @@ module.exports = class LevelView {
 
     this.groundGroup.removeAll(true);
     this.actionGroup.removeAll(true);
+    this.hintGroup.removeAll(true);
     this.fluffGroup.removeAll(true);
     this.shadingGroup.removeAll(true);
     this.fowGroup.removeAll(true);
