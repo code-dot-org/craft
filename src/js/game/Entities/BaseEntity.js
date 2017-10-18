@@ -684,7 +684,7 @@ module.exports = class BaseEntity {
     const formerPosition = [this.position[0] + moveOffset[0], this.position[1] + moveOffset[1]];
     this.controller.levelModel.actionPlane.getOrthogonalPositions(formerPosition).forEach(workingPos => {
       if (this.controller.levelModel.actionPlane.inBounds(workingPos)) {
-        const block =  this.controller.levelModel.actionPlane.getBlockAt(workingPos);
+        const block = this.controller.levelModel.actionPlane.getBlockAt(workingPos);
         if (block.blockType.startsWith("piston") && block.isPowered) {
           this.controller.levelModel.actionPlane.activatePiston(workingPos);
         }
