@@ -1332,7 +1332,8 @@ module.exports = class LevelView {
       }
     } else {
       this.onAnimationEnd(this.playScaledSpeed(sprite.animations, "animate"), () => {
-        this.player.collectItems();
+        const player = this.controller.levelModel.player;
+        this.playItemAcquireAnimation(player.position, player.facing, sprite, completionHandler, blockType);
       });
     }
   }
