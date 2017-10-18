@@ -206,6 +206,11 @@ module.exports = class AssetLoader {
         pngPath: `${this.assetRoot}images/Chicken.png`,
         jsonPath: `${this.assetRoot}images/Chicken.json`
       },
+      ghast: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/Ghast.png`,
+        jsonPath: `${this.assetRoot}images/Ghast.json`
+      },
       dig_wood1: {
         type: 'sound',
         mp3: `${this.assetRoot}audio/dig_wood1.mp3`,
@@ -593,6 +598,7 @@ module.exports = class AssetLoader {
         'zombie',
         'cow',
         'chicken',
+        'ghast',
         'ironGolem',
         'burningInSun',
         'chickenHurt',
