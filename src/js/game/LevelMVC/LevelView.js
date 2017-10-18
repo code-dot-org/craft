@@ -751,6 +751,7 @@ module.exports = class LevelView {
     } else {
       this.onAnimationEnd(this.playMinecartMoveForwardAnimation(position, facing, isOnBlock, completionHandler, nextPosition, speed), () => {
         this.playTrack(nextPosition, nextFacing, isOnBlock, entity, completionHandler);
+        entity.collectItems(entity.position);
       });
     }
   }
@@ -1331,8 +1332,7 @@ module.exports = class LevelView {
       }
     } else {
       this.onAnimationEnd(this.playScaledSpeed(sprite.animations, "animate"), () => {
-        const player = this.controller.levelModel.player;
-        this.playItemAcquireAnimation(player.position, player.facing, sprite, completionHandler, blockType);
+        this.player.collectItems();
       });
     }
   }
