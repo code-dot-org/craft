@@ -112,6 +112,18 @@ module.exports = class LevelView {
       "woolRed": ["Miniblocks", 510, 515],
       "woolSilver": ["Miniblocks", 516, 521],
       "woolYellow": ["Miniblocks", 522, 527],
+      "bookEnchanted": ["Miniblocks", 528, 533],
+      "bucketEmpty": ["Miniblocks", 534, 539],
+      "chest": ["Miniblocks", 540, 545],
+      "compass": ["Miniblocks", 546, 551],
+      "axeDiamond": ["Miniblocks", 552, 557],
+      "pickaxeDiamond": ["Miniblocks", 558, 563],
+      "shovelDiamond": ["Miniblocks", 564, 569],
+      "flintAndSteel": ["Miniblocks", 570, 575],
+      "flint": ["Miniblocks", 576, 581],
+      "mapEmpty": ["Miniblocks", 582, 587],
+      "minecart": ["Miniblocks", 588, 593],
+      "potionBottleDrinkable": ["Miniblocks", 594, 599]
     };
 
     this.blocks = {
