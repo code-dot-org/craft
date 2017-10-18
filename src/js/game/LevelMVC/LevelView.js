@@ -1399,7 +1399,12 @@ module.exports = class LevelView {
     this.hintGroup.removeAll(true);
 
     const hintPath = this.game.add.bitmapData(400, 400);
-    this.hintGroup.create(0, 0, hintPath);
+    const sprite = this.hintGroup.create(0, 0, hintPath);
+    sprite.alpha = 0;
+
+    this.addResettableTween(sprite)
+      .to({alpha: 1}, 830, Phaser.Easing.Quadratic.Out)
+      .to({alpha: 0.4}, 500, Phaser.Easing.Quadratic.InOut, true, 0, -1, true);
 
     const context = hintPath.context;
     context.setLineDash([10, 10]);
