@@ -1400,12 +1400,6 @@ module.exports = class LevelView {
 
     const bounds = this.game.world.bounds;
     const hintPath = this.game.add.bitmapData(bounds.width, bounds.height);
-    const sprite = this.hintGroup.create(0, 0, hintPath);
-    sprite.alpha = 0;
-
-    this.addResettableTween(sprite)
-      .to({alpha: 1}, 830, Phaser.Easing.Quadratic.Out)
-      .to({alpha: 0.4}, 500, Phaser.Easing.Quadratic.InOut, true, 0, -1, true);
 
     const context = hintPath.context;
     context.setLineDash([10, 10]);
@@ -1422,7 +1416,12 @@ module.exports = class LevelView {
     });
     context.stroke();
 
-    hintPath.dirty = true;
+    const sprite = this.hintGroup.create(0, 0, hintPath);
+    sprite.alpha = 0;
+
+    this.addResettableTween(sprite)
+      .to({alpha: 1}, 830, Phaser.Easing.Quadratic.Out)
+      .to({alpha: 0.4}, 500, Phaser.Easing.Quadratic.InOut, true, 0, -1, true);
   }
 
   createGroups() {
