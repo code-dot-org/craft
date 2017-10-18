@@ -141,6 +141,11 @@ module.exports = class AssetLoader {
         pngPath: `${this.assetRoot}images/LavaPop.png`,
         jsonPath: `${this.assetRoot}images/LavaPop.json`
       },
+      redstoneSparkle: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/Redstone_Sparkle.png`,
+        jsonPath: `${this.assetRoot}images/Redstone_Sparkle.json`
+      },
       fire: {
         type: 'atlasJSON',
         pngPath: `${this.assetRoot}images/Fire.png`,
@@ -563,6 +568,7 @@ module.exports = class AssetLoader {
         'miningParticles',
         'miniBlocks',
         'lavaPop',
+        'redstoneSparkle',
         'fire',
         'bubbles',
         'explosion',
