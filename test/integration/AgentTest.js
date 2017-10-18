@@ -18,7 +18,7 @@ test('Agent 1: Spawn Agent', t => {
     api.startAttempt((success, levelModel) => {
       // Verify the Agent has spawned.
       t.assert(levelModel.usingAgent);
-      t.deepEqual(levelModel.agent.position, [3, 2]);
+      t.deepEqual(levelModel.agent.position, [3, 4]);
 
       t.deepEqual(levelModel.player.position, [3, 3]);
       t.assert(success);
