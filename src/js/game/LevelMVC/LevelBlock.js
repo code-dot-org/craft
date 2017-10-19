@@ -244,7 +244,8 @@ module.exports = class LevelBlock {
       this.getIsPiston() ||
       this.isRail ||
       this.blockType === 'torch' ||
-      this.blockType === 'railsRedstoneTorch';
+      this.blockType === 'railsRedstoneTorch' ||
+      this.blockType === 'pressurePlateUp';
 
     return !notPlaceable;
   }
