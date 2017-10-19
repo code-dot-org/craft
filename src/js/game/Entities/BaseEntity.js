@@ -656,6 +656,7 @@ module.exports = class BaseEntity {
       }
     });
     if (isMovingOffOf && !remainOn) {
+      this.controller.audioPlayer.play("pressurePlateClick");
       const block = new LevelBlock('pressurePlateUp');
       this.controller.levelModel.actionPlane.setBlockAt(previousPosition, block, moveOffset[0], moveOffset[1]);
     }
@@ -665,6 +666,7 @@ module.exports = class BaseEntity {
     const targetPosition = [this.position[0] + moveOffset[0], this.position[1] + moveOffset[1]];
     const isMovingOnToPlate = this.controller.levelModel.actionPlane.getBlockAt(targetPosition).blockType === "pressurePlateUp";
     if (isMovingOnToPlate) {
+      this.controller.audioPlayer.play("pressurePlateClick");
       const block = new LevelBlock('pressurePlateDown');
       this.controller.levelModel.actionPlane.setBlockAt(targetPosition, block);
       return true;

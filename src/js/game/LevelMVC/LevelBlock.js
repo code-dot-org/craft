@@ -304,7 +304,18 @@ module.exports = class LevelBlock {
   }
 
   /**
+   * Static passthrough to the isWalkable property for the given blockType.
+   * TODO @hamms: remove this method once all calling methods have been updated
+   *      to operate on actual LevelBlocks rather than blockType strings
+   */
+  static isWalkable(blockType) {
+    return new LevelBlock(blockType).isWalkable;
+  }
+
+  /**
    * Does the given block type represent a miniblock?
+   * TODO @hamms: remove this method once all calling methods have been updated
+   *      to operate on actual LevelBlocks rather than blockType strings
    *
    * @param {String} blockType
    * @return {boolean}
