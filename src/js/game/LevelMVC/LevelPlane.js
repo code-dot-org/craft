@@ -49,6 +49,8 @@ module.exports = class LevelPlane {
     this.redstoneList = [];
     this.redstoneListON = [];
     this.planeType = planeType;
+    this.playPistonOn = false;
+    this.playPistonOff = false;
 
     for (let index = 0; index < planeData.length; ++index) {
       let block = new LevelBlock(planeData[index]);
@@ -338,7 +340,21 @@ module.exports = class LevelPlane {
       this.getIronDoors(position);
       this.getPistonState(position);
     });
+    this.playPistonSound();
     return posToRefresh;
+  }
+
+  playPistonSound() {
+    if (!this.levelModel) {
+      return;
+    }
+    if (this.playPistonOn) {
+      this.levelModel.controller.audioPlayer.play("pistonOut");
+    } else if (this.playPistonOff) {
+      this.levelModel.controller.audioPlayer.play("pistonIn");
+    }
+    this.playPistonOn = false;
+    this.playPistonOff = false;
   }
 
   checkEntityConflict(position) {
@@ -392,7 +408,6 @@ module.exports = class LevelPlane {
       } else if (!block.isPowered) {
         this.deactivatePiston(position);
       }
-
       if (this.levelModel) {
         this.levelModel.controller.updateFowPlane();
         this.levelModel.controller.updateShadingPlane();
@@ -482,6 +497,7 @@ module.exports = class LevelPlane {
     // Break an object right in front of the piston.
     if (workingNeighbor.isDestroyableUponPush()) {
       this.setBlockAt(pos, new LevelBlock(""));
+      this.playPistonOn = true;
       if (this.levelModel) {
         this.levelModel.controller.levelView.playExplosionAnimation(pos, 2, pos, workingNeighbor.blockType, null, null, this.player);
       }
@@ -495,6 +511,7 @@ module.exports = class LevelPlane {
       let onPiston = new LevelBlock(pistonType += concat);
       this.setBlockAt(position, onPiston);
       this.pushBlocks(blocksPositions, offset[0], offset[1]);
+      this.playPistonOn = true;
     } else if (workingNeighbor.blockType === "") {
       // Nothing to push, so just make the arm.
       let concat = "On";
@@ -506,6 +523,7 @@ module.exports = class LevelPlane {
       let pistonBlock = new LevelBlock(pistonType += concat);
       this.setBlockAt(pos, armBlock);
       this.setBlockAt(position, pistonBlock);
+      this.playPistonOn = true;
     }
   }
 
@@ -589,9 +607,11 @@ module.exports = class LevelPlane {
           this.setBlockAt(stuckBlockPosition, emptyBlock);
         } else {
           this.setBlockAt(armPosition, emptyBlock);
+          this.playPistonOff = true;
         }
       } else {
         this.setBlockAt(armPosition, emptyBlock);
+        this.playPistonOff = true;
       }
     }
     this.setBlockAt(pistonPosition, offPiston);

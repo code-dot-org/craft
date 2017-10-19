@@ -36,6 +36,17 @@ module.exports = class BaseEntity {
   }
 
   /**
+   * Whether or not the white "selection indicator" highlight square should
+   * update to follow this entity around as it moves and interacts with the
+   * world
+   *
+   * @return {boolean}
+   */
+  shouldUpdateSelectionIndicator() {
+    return false;
+  }
+
+  /**
    * For entities which need to be able to accomodate rendering in the same
    * cell as other entities, provide a way to define a rendering offset.
    *
@@ -647,6 +658,7 @@ module.exports = class BaseEntity {
       }
     });
     if (isMovingOffOf && !remainOn) {
+      this.controller.audioPlayer.play("pressurePlateClick");
       const block = new LevelBlock('pressurePlateUp');
       this.controller.levelModel.actionPlane.setBlockAt(previousPosition, block, moveOffset[0], moveOffset[1]);
     }
@@ -656,6 +668,7 @@ module.exports = class BaseEntity {
     const targetPosition = [this.position[0] + moveOffset[0], this.position[1] + moveOffset[1]];
     const isMovingOnToPlate = this.controller.levelModel.actionPlane.getBlockAt(targetPosition).blockType === "pressurePlateUp";
     if (isMovingOnToPlate) {
+      this.controller.audioPlayer.play("pressurePlateClick");
       const block = new LevelBlock('pressurePlateDown');
       this.controller.levelModel.actionPlane.setBlockAt(targetPosition, block);
       return true;

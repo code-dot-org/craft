@@ -112,6 +112,18 @@ module.exports = class LevelView {
       "woolRed": ["Miniblocks", 510, 515],
       "woolSilver": ["Miniblocks", 516, 521],
       "woolYellow": ["Miniblocks", 522, 527],
+      "bookEnchanted": ["Miniblocks", 528, 533],
+      "bucketEmpty": ["Miniblocks", 534, 539],
+      "chest": ["Miniblocks", 540, 545],
+      "compass": ["Miniblocks", 546, 551],
+      "axeDiamond": ["Miniblocks", 552, 557],
+      "pickaxeDiamond": ["Miniblocks", 558, 563],
+      "shovelDiamond": ["Miniblocks", 564, 569],
+      "flintAndSteel": ["Miniblocks", 570, 575],
+      "flint": ["Miniblocks", 576, 581],
+      "mapEmpty": ["Miniblocks", 582, 587],
+      "minecart": ["Miniblocks", 588, 593],
+      "potionBottleDrinkable": ["Miniblocks", 594, 599]
     };
 
     this.blocks = {
@@ -183,6 +195,7 @@ module.exports = class LevelView {
       "tallGrass": ["tallGrass", "", -13, 0],
 
       "lavaPop": ["lavaPop", "LavaPop01", -13, 0],
+      "redstoneSparkle": ["redstoneSparkle", "redstone_sparkle1.png", -25, -8],
       "fire": ["fire", "", -11, 135],
       "bubbles": ["bubbles", "", -11, 135],
       "explosion": ["explosion", "", -70, 60],
@@ -356,8 +369,10 @@ module.exports = class LevelView {
     this.preparePlayerSprite(entity.name, entity);
     entity.sprite.animations.stop();
     this.setPlayerPosition(entity.position[0], entity.position[1], entity.isOnBlock, entity);
-    this.setSelectionIndicatorPosition(entity.position[0], entity.position[1]);
-    this.selectionIndicator.visible = true;
+    if (entity.shouldUpdateSelectionIndicator()) {
+      this.setSelectionIndicatorPosition(entity.position[0], entity.position[1]);
+      this.selectionIndicator.visible = true;
+    }
     this.playIdleAnimation(entity.position, entity.facing, entity.isOnBlock, entity);
   }
 
@@ -899,7 +914,9 @@ module.exports = class LevelView {
     //stepping on stone sfx
     this.playBlockSound(groundType);
 
-    this.setSelectionIndicatorPosition(position[0], position[1]);
+    if (entity.shouldUpdateSelectionIndicator()) {
+      this.setSelectionIndicatorPosition(position[0], position[1]);
+    }
 
     if (!shouldJumpDown) {
       const animName = 'walk' + this.getDirectionName(facing);
@@ -960,9 +977,10 @@ module.exports = class LevelView {
     var jumpAnimName;
     let blockIndex = this.yToIndex(position[1]) + position[0];
 
-    if (entity === this.agent || this.skipHopAnimation(blockType)) {
+    if (entity.shouldUpdateSelectionIndicator()) {
       this.setSelectionIndicatorPosition(position[0], position[1]);
-
+    }
+    if (entity === this.agent || this.skipHopAnimation(blockType)) {
       var signalDetacher = this.playPlayerAnimation("punch", position, facing, false, entity).onComplete.add(() => {
         signalDetacher.detach();
         completionHandler();
@@ -971,7 +989,6 @@ module.exports = class LevelView {
       this.audioPlayer.play("placeBlock");
 
       let direction = this.getDirectionName(facing);
-      this.setSelectionIndicatorPosition(position[0], position[1]);
 
       jumpAnimName = "jumpUp" + direction;
 
@@ -1100,7 +1117,9 @@ module.exports = class LevelView {
   }
 
   playDestroyBlockAnimation(playerPosition, facing, destroyPosition, blockType, entity, completionHandler) {
-    this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
+    if (entity.shouldUpdateSelectionIndicator()) {
+      this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
+    }
 
     var playerAnimation = undefined;
     if (entity === this.agent) {
@@ -1122,7 +1141,9 @@ module.exports = class LevelView {
   }
 
   playPunchAnimation(playerPosition, facing, destroyPosition, animationType, completionHandler, entity = this.player) {
-    this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
+    if (entity.shouldUpdateSelectionIndicator()) {
+      this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
+    }
     this.onAnimationEnd(this.playPlayerAnimation(animationType, playerPosition, facing, false, entity), () => {
       completionHandler();
     });
@@ -1150,7 +1171,9 @@ module.exports = class LevelView {
       this.controller.updateShadingPlane();
       this.controller.updateFowPlane();
 
-      this.setSelectionIndicatorPosition(playerPosition[0], playerPosition[1]);
+      if (entity.shouldUpdateSelectionIndicator()) {
+        this.setSelectionIndicatorPosition(playerPosition[0], playerPosition[1]);
+      }
 
       this.audioPlayer.play('dig_wood1');
       this.playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, true, entity);
@@ -1392,11 +1415,44 @@ module.exports = class LevelView {
     this.selectionIndicator.y = -55 + 43 + 40 * y;
   }
 
+  /**
+   * @param {Array<Array<int>>} gridSpaces An array of x and y grid coordinates.
+   */
+  drawHintPath(gridSpaces) {
+    this.hintGroup.removeAll(true);
+
+    const bounds = this.game.world.bounds;
+    const hintPath = this.game.add.bitmapData(bounds.width, bounds.height);
+
+    const context = hintPath.context;
+    context.setLineDash([10, 10]);
+    context.lineDashOffset = 5;
+    context.lineWidth = 2;
+    context.strokeStyle = '#fff';
+    context.shadowColor = '#000';
+    context.shadowOffsetY = 7;
+    context.shadowBlur = 4;
+
+    context.beginPath();
+    gridSpaces.forEach(([x, y]) => {
+      context.lineTo(40 * x + 19, 40 * y + 19);
+    });
+    context.stroke();
+
+    const sprite = this.hintGroup.create(0, 0, hintPath);
+    sprite.alpha = 0;
+
+    this.addResettableTween(sprite)
+      .to({alpha: 1}, 830, Phaser.Easing.Quadratic.Out)
+      .to({alpha: 0.4}, 500, Phaser.Easing.Quadratic.InOut, true, 0, -1, true);
+  }
+
   createGroups() {
     this.groundGroup = this.game.add.group();
     this.groundGroup.yOffset = -2;
     this.shadingGroup = this.game.add.group();
     this.shadingGroup.yOffset = -2;
+    this.hintGroup = this.game.add.group();
     this.actionGroup = this.game.add.group();
     this.actionGroup.yOffset = -22;
     this.fluffGroup = this.game.add.group();
@@ -1412,6 +1468,7 @@ module.exports = class LevelView {
 
     this.groundGroup.removeAll(true);
     this.actionGroup.removeAll(true);
+    this.hintGroup.removeAll(true);
     this.fluffGroup.removeAll(true);
     this.shadingGroup.removeAll(true);
     this.fowGroup.removeAll(true);
@@ -1708,7 +1765,9 @@ module.exports = class LevelView {
       this.game.camera.follow(entity.sprite);
     }
 
-    this.selectionIndicator = this.shadingGroup.create(24, 44, 'selectionIndicator');
+    if (entity.shouldUpdateSelectionIndicator()) {
+      this.selectionIndicator = this.shadingGroup.create(24, 44, 'selectionIndicator');
+    }
 
     this.generateAnimations(FacingDirection.South, 0, entity);
     this.generateAnimations(FacingDirection.East, 60, entity);
@@ -1858,10 +1917,10 @@ module.exports = class LevelView {
     const frameStart = this.miniBlocks[frame][1];
     const frameEnd = this.miniBlocks[frame][2];
     const xOffset = -10 - (xOffsetRange / 2) + (Math.random() * xOffsetRange);
-    const yOffset = 0 - (yOffsetRange / 2) + (Math.random() * yOffsetRange);
+    const yOffset = 0 - (yOffsetRange / 2) + (Math.random() * yOffsetRange) + this.actionGroup.yOffset;
 
     frameList = Phaser.Animation.generateFrameNames(framePrefix, frameStart, frameEnd, ".png", 3);
-    sprite = this.actionGroup.create(xOffset + 40 * x, yOffset + this.actionGroup.yOffset + 40 * y, atlas, "");
+    sprite = this.actionGroup.create(xOffset + 40 * x, yOffset + 40 * y, atlas, "");
     const anim = sprite.animations.add("animate", frameList, 10, false);
 
     if (this.controller.getIsDirectPlayerControl()) {
@@ -2063,6 +2122,28 @@ module.exports = class LevelView {
         this.playAnimationWithOffset(sprite, "idle", 29, 1);
         break;
 
+      case "redstoneSparkle":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("redstone_sparkle", 0, 24, ".png");
+        for (i = 0; i < 4; ++i) {
+          frameList.push("redstone_sparkle7");
+        }
+        frameList = frameList.concat(Phaser.Animation.generateFrameNames("redstone_sparkle", 8, 13, ".png"));
+        for (i = 0; i < 3; ++i) {
+          frameList.push("redstone_sparkle13");
+        }
+        frameList = frameList.concat(Phaser.Animation.generateFrameNames("redstone_sparkle", 14, 23, ".png"));
+        for (i = 0; i < 8; ++i) {
+          frameList.push("redstone_sparkle1");
+        }
+        sprite.animations.add("idle", frameList, 5, true);
+        this.playAnimationWithOffset(sprite, "idle", Math.floor(Math.random() * 3) + 21, 1);
+        break;
+
       case "fire":
         atlas = this.blocks[blockType][0];
         frame = this.blocks[blockType][1];
@@ -2199,7 +2280,10 @@ module.exports = class LevelView {
     this.playDoorAnimation(position, open, () => {
       const block = this.controller.levelModel.actionPlane.getBlockAt(position);
       block.isWalkable = !block.isWalkable;
-      this.playIdleAnimation(player.position, player.facing, player.isOnBlock, player);
+      if (block.blockType !== "doorIron") {
+        // Iron doors don't need to set the player animation to Idle, because they're not opened with 'use'.
+        this.playIdleAnimation(player.position, player.facing, player.isOnBlock, player);
+      }
       this.setSelectionIndicatorPosition(player.position[0], player.position[1]);
     });
   }

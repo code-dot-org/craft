@@ -41,6 +41,13 @@ module.exports = class Player extends BaseEntity {
   }
 
   /**
+   * @override
+   */
+  shouldUpdateSelectionIndicator() {
+    return true;
+  }
+
+  /**
    * player walkable stuff
    */
   walkableCheck(block) {

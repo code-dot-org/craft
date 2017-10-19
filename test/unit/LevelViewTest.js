@@ -25,6 +25,9 @@ const mockGameController = {
   followingPlayer: () => false,
   originalFpsToScaled: () => 60,
   getIsDirectPlayerControl: () => true,
+  audioPlayer: {
+    play: () => {}
+  }
 };
 
 const levelData = {
@@ -45,6 +48,7 @@ const levelData = {
   playerStartPosition: [3, 4],
   playerStartDirection: 1,
   useAgent: true,
+  usePlayer: true,
 };
 
 const levelModel = new LevelModel(levelData, mockGameController);
@@ -97,3 +101,50 @@ test('draw order', t => {
   game.state.start('levelRunner');
 });
 
+test('selection indicator', t => {
+  const game = new global.Phaser.Game({
+    width: 400,
+    height: 400,
+    renderer: global.Phaser.HEADLESS,
+    state: 'earlyLoad',
+  });
+  game.state.add('levelRunner', {
+    create: () => {
+      mockGameController.game = game;
+      mockGameController.levelModel = levelModel;
+      const view = new LevelView(mockGameController);
+      mockGameController.levelView = view;
+      view.create(levelModel);
+
+      const mockCommandQueueItem = {
+        succeeded: () => {}
+      };
+
+      // selection indicator starts visible on player
+      t.equals(view.player.sprite.x, 102);
+      t.equals(view.player.sprite.y, 128);
+      t.equals(view.selectionIndicator.x, 108);
+      t.equals(view.selectionIndicator.y, 148);
+      t.true(view.selectionIndicator.visible);
+
+      // selection indicator updates as player moves
+      view.player.doMoveForward(mockCommandQueueItem);
+      t.equals(view.selectionIndicator.x, 148);
+      t.equals(view.selectionIndicator.y, 148);
+
+      view.player.doMoveForward(mockCommandQueueItem);
+      t.equals(view.selectionIndicator.x, 188);
+      t.equals(view.selectionIndicator.y, 148);
+
+      // selection indicator does not update as agent moves
+      view.agent.doMoveForward(mockCommandQueueItem);
+      t.equals(view.selectionIndicator.x, 188);
+      t.equals(view.selectionIndicator.y, 148);
+
+      setTimeout(() => game.destroy(), 0);
+      t.end();
+    }
+  });
+
+  game.state.start('levelRunner');
+});

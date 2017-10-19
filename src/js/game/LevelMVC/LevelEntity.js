@@ -5,6 +5,7 @@ const IronGolem = require("../Entities/IronGolem.js");
 const Creeper = require("../Entities/Creeper.js");
 const Cow = require("../Entities/Cow.js");
 const Chicken = require("../Entities/Chicken.js");
+const Ghast = require("../Entities/Ghast.js");
 
 
 /**
@@ -77,6 +78,9 @@ module.exports = class LevelEntity {
           break;
         case 'chicken':
           entity = new Chicken(this.controller, type, identifier, x, y, facing);
+          break;
+        case 'ghast':
+          entity = new Ghast(this.controller, type, identifier, x, y, facing);
           break;
         default:
           entity = new BaseEntity(this.controller, type, identifier, x, y, facing);
