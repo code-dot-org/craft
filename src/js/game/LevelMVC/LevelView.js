@@ -969,10 +969,6 @@ module.exports = class LevelView {
     return tween;
   }
 
-  skipHopAnimation(blockType) {
-    return blockType === "cropWheat" || blockType === "torch" || blockType.startsWith("rail") || blockType.startsWith("redstoneWire");
-  }
-
   playPlaceBlockAnimation(position, facing, blockType, blockTypeAtPosition, entity, completionHandler) {
     var jumpAnimName;
     let blockIndex = this.yToIndex(position[1]) + position[0];
@@ -980,7 +976,8 @@ module.exports = class LevelView {
     if (entity.shouldUpdateSelectionIndicator()) {
       this.setSelectionIndicatorPosition(position[0], position[1]);
     }
-    if (entity === this.agent || this.skipHopAnimation(blockType)) {
+
+    if (entity === this.agent || LevelBlock.isWalkable(blockType)) {
       var signalDetacher = this.playPlayerAnimation("punch", position, facing, false, entity).onComplete.add(() => {
         signalDetacher.detach();
         completionHandler();
