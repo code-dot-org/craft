@@ -2187,7 +2187,9 @@ module.exports = class LevelView {
         yOffset = this.blocks[blockType][3];
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         if (group === this.actionGroup || group === this.groundGroup) {
-          this.psuedoRandomTint(group, sprite, x, y);
+          if (!blockType.startsWith("rails")) {
+            this.psuedoRandomTint(group, sprite, x, y);
+          }
         }
         break;
     }
