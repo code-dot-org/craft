@@ -327,8 +327,7 @@ module.exports = class LevelBlock {
     // Starts With 'rail' will capture rails and railsRedstoneTorch.
     return blockType.isRail ||
         blockType.startsWith("redstoneWire") ||
-        blockType.startsWith("pressurePlate") ||
-        blockType === "torch";
+        blockType.startsWith("pressurePlate");
   }
 
   /**
