@@ -237,6 +237,7 @@ module.exports = class BaseEntity {
               this.handleMoveOffPressurePlate(this.reverseOffset(offset));
             }
             this.handleMoveOffIronDoor(this.reverseOffset(offset));
+            this.handleMoveAwayFromPiston(this.reverseOffset(offset));
         } else {
             this.bump(commandQueueItem);
             this.callBumpEvents(forwardPositionInformation);
@@ -257,6 +258,7 @@ module.exports = class BaseEntity {
               this.handleMoveOffPressurePlate(this.reverseOffset(offset));
             }
             this.handleMoveOffIronDoor(this.reverseOffset(offset));
+            this.handleMoveAwayFromPiston(this.reverseOffset(offset));
         } else {
             this.bump(commandQueueItem);
             this.callBumpEvents(backwardPositionInformation);
@@ -689,6 +691,18 @@ module.exports = class BaseEntity {
     if (wasOnDoor && !isOnDoor) {
       this.controller.levelModel.actionPlane.findDoorToAnimate([-1, -1]);
     }
+  }
+
+  handleMoveAwayFromPiston(moveOffset) {
+    const formerPosition = [this.position[0] + moveOffset[0], this.position[1] + moveOffset[1]];
+    this.controller.levelModel.actionPlane.getOrthogonalPositions(formerPosition).forEach(workingPos => {
+      if (this.controller.levelModel.actionPlane.inBounds(workingPos)) {
+        const block = this.controller.levelModel.actionPlane.getBlockAt(workingPos);
+        if (block.blockType.startsWith("piston") && block.isPowered) {
+          this.controller.levelModel.actionPlane.activatePiston(workingPos);
+        }
+      }
+    });
   }
 
   directionToOffset(direction) {
