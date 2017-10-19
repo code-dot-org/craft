@@ -143,6 +143,7 @@ module.exports = class LevelPlane {
         redstoneToRefresh = this.getRedstone();
       }
 
+      this.updateWeakCharge(position, block);
       this.determineRailType(position, true);
 
       if (this.levelModel && this.levelModel.controller.levelView) {
@@ -749,6 +750,20 @@ module.exports = class LevelPlane {
       if (this._data[i].blockType !== "" && this._data[i].canHoldCharge()) {
         this._data[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
       }
+    }
+  }
+
+  updateWeakCharge(position, block) {
+    if (block.isWeaklyPowerable) {
+      block.isPowered = this.powerCheck(position);
+    }
+    if (block.isPowered) {
+      this.getOrthogonalPositions(position).forEach(workingPos => {
+        if (this.inBounds(workingPos)) {
+          this.getIronDoors(workingPos);
+          this.getPistonState(workingPos);
+        }
+      });
     }
   }
 
