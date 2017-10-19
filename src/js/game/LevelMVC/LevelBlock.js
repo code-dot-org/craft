@@ -324,7 +324,8 @@ module.exports = class LevelBlock {
    * @return {boolean}
    */
   static isFlat(blockType) {
-    return blockType.substring(0, 5) === "rails" ||
+    // Starts With 'rail' will capture rails and railsRedstoneTorch.
+    return blockType.isRail ||
         blockType.startsWith("redstoneWire") ||
         blockType.startsWith("pressurePlate") ||
         blockType === "torch";
