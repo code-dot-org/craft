@@ -291,16 +291,16 @@ module.exports = class LevelView {
       "pistonArmDownSticky": ["blocks", "piston_arm_down_sticky", -26, -13],
 
       "cactus": ["blocks", "cactus", -13, 0],
-      "dead_bush": ["blocks", "dead_bush", -13, 0],
+      "deadBush": ["blocks", "dead_bush", -13, 0],
       "glowstone": ["blocks", "glowstone", -13, 0],
-      "grass_path": ["blocks", "grass_path", -13, 0],
+      "grassPath": ["blocks", "grass_path", -13, 0],
       "ice": ["blocks", "ice", -13, 0],
       "netherrack": ["blocks", "netherrack", -13, 0],
-      "nether_brick": ["blocks", "nether_brick", -13, 0],
-      "quartz_ore": ["blocks", "quartz_ore", -13, 0],
+      "netherBrick": ["blocks", "nether_brick", -13, 0],
+      "quartzOre": ["blocks", "quartz_ore", -13, 0],
       "snow": ["blocks", "snow", -13, 0],
-      "snowy_grass": ["blocks", "snowy_grass", -13, 0],
-      "top_snow": ["blocks", "top_snow", -13, 0],
+      "snowyGrass": ["blocks", "snowy_grass", -13, 0],
+      "topSnow": ["blocks", "top_snow", -13, 0],
 
       "Nether_Portal": ["blocks", "Nether_Portal0", 0, -58],
 
