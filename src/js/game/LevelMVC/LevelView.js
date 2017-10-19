@@ -2202,7 +2202,7 @@ module.exports = class LevelView {
     }
 
     const southWestBlock = this.controller.levelModel.actionPlane.getBlockAt([x - 1, y + 1]);
-    return southWestBlock && southWestBlock.blockType && !southWestBlock.isWalkable
+    return southWestBlock && southWestBlock.blockType && !southWestBlock.isWalkable;
   }
 
   isUnderTree(treeIndex, position) {
