@@ -326,7 +326,8 @@ module.exports = class LevelBlock {
   static isFlat(blockType) {
     return blockType.substring(0, 5) === "rails" ||
         blockType.startsWith("redstoneWire") ||
-        blockType.startsWith("pressurePlate");
+        blockType.startsWith("pressurePlate") ||
+        blockType === "torch";
   }
 
   /**
