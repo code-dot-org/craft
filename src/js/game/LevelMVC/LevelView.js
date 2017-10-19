@@ -2151,12 +2151,8 @@ module.exports = class LevelView {
 
       case "doorIron":
         sprite = buildDoor(this, "DoorIron");
-        if (group === this.actionGroup) {
-          const southBlock = this.controller.levelModel.actionPlane.getBlockAt([x, y + 1]);
-          const southWestBlock = this.controller.levelModel.actionPlane.getBlockAt([x - 1, y + 1]);
-          if ((!southBlock || !southBlock.blockType || (southBlock.isEntity && !southBlock.blockType.startsWith("piston"))) && southWestBlock && southWestBlock.blockType && !southWestBlock.isTransparent) {
-            sprite.addChild(this.game.make.sprite(-40, 55, "blockShadows", "Shadow_Parts_Fade_overlap.png"));
-          }
+        if (this.blockReceivesCornerShadow(x, y)) {
+          sprite.addChild(this.game.make.sprite(-40, 55, "blockShadows", "Shadow_Parts_Fade_overlap.png"));
         }
         break;
 
@@ -2184,17 +2180,29 @@ module.exports = class LevelView {
         if (group === this.actionGroup || group === this.groundGroup) {
           this.psuedoRandomTint(group, sprite, x, y);
         }
-        if (group === this.actionGroup) {
-          const southBlock = this.controller.levelModel.actionPlane.getBlockAt([x, y + 1]);
-          const southWestBlock = this.controller.levelModel.actionPlane.getBlockAt([x - 1, y + 1]);
-          if ((!southBlock || !southBlock.blockType || (southBlock.isEntity && !southBlock.blockType.startsWith("piston"))) && southWestBlock && southWestBlock.blockType && !southWestBlock.isTransparent) {
-            sprite.addChild(this.game.make.sprite(-39, 40, "blockShadows", "Shadow_Parts_Fade_overlap.png"));
+        if (group === this.actionGroup && this.blockReceivesCornerShadow(x, y)) {
+          let xShadow = -39;
+          let yShadow = 40;
+          if (blockType.startsWith("pistonArm")) {
+            xShadow = -26;
+            yShadow = 53;
           }
+          sprite.addChild(this.game.make.sprite(xShadow, yShadow, "blockShadows", "Shadow_Parts_Fade_overlap.png"));
         }
         break;
     }
 
     return sprite;
+  }
+
+  blockReceivesCornerShadow(x, y) {
+    const southBlock = this.controller.levelModel.actionPlane.getBlockAt([x, y + 1]);
+    if (!southBlock || (southBlock.blockType && !southBlock.isWalkable)) {
+      return false;
+    }
+
+    const southWestBlock = this.controller.levelModel.actionPlane.getBlockAt([x - 1, y + 1]);
+    return southWestBlock && southWestBlock.blockType && !southWestBlock.isWalkable
   }
 
   isUnderTree(treeIndex, position) {
