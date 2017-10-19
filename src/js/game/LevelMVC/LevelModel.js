@@ -261,6 +261,10 @@ module.exports = class LevelModel {
     return this.controller.score;
   }
 
+  isNextRailValid(block, direction) {
+    return block.connectionA === direction || block.connectionB === direction;
+  }
+
   getNextRailPosition(entity = this.player) {
     let offset = [0,0];
     switch (entity.movementState) {

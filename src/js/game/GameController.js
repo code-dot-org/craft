@@ -771,7 +771,8 @@ class GameController {
     let player = this.levelModel.player;
     let frontPosition = this.levelModel.getNextRailPosition(player);
     let frontBlock = this.levelModel.actionPlane.getBlockAt(frontPosition);
-    if (frontBlock && frontBlock.isRail) {
+    let shouldRide = this.levelModel.isNextRailValid(frontBlock, direction);
+    if (shouldRide) {
       this.levelView.playTrack(frontPosition, direction, true, player, null);
       commandQueueItem.succeeded();
     } else {
