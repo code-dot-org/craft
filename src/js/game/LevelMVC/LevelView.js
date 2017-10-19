@@ -1375,9 +1375,9 @@ module.exports = class LevelView {
           (this.player.inventory[blockType] || 0) + 1;
         sprite.kill();
         this.toDestroy.push(sprite);
-        const e = createEvent('craftCollectibleCollected');
-        e.blockType = blockType;
-        window.dispatchEvent(e);
+        const event = createEvent('craftCollectibleCollected');
+        event.blockType = blockType;
+        window.dispatchEvent(event);
         if (completionHandler) {
           completionHandler();
         }
