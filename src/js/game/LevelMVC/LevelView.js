@@ -1,5 +1,6 @@
 const LevelBlock = require("./LevelBlock.js");
 const FacingDirection = require("./FacingDirection.js");
+const createEvent = require("../../utils").createEvent;
 
 module.exports = class LevelView {
   constructor(controller) {
@@ -1374,6 +1375,9 @@ module.exports = class LevelView {
           (this.player.inventory[blockType] || 0) + 1;
         sprite.kill();
         this.toDestroy.push(sprite);
+        const event = createEvent('craftCollectibleCollected');
+        event.blockType = blockType;
+        window.dispatchEvent(event);
         if (completionHandler) {
           completionHandler();
         }
