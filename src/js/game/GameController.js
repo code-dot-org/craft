@@ -769,9 +769,7 @@ class GameController {
 
   moveDirection(commandQueueItem, direction) {
     let player = this.levelModel.player;
-    let frontPosition = this.levelModel.getNextRailPosition(player);
-    let frontBlock = this.levelModel.actionPlane.getBlockAt(frontPosition);
-    let shouldRide = this.levelModel.isNextRailValid(frontBlock, direction);
+    let shouldRide = this.levelModel.shouldRide(direction);
     if (shouldRide) {
       /* We have to pass in the player's current position, not forward position, to appropirately
          handle starting a minecart ride on a corner. */

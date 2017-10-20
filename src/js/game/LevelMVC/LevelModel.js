@@ -261,6 +261,13 @@ module.exports = class LevelModel {
     return this.controller.score;
   }
 
+  shouldRide(direction) {
+    let player = this.player;
+    let frontPosition = this.getNextRailPosition(player);
+    let frontBlock = this.actionPlane.getBlockAt(frontPosition);
+    return this.isNextRailValid(frontBlock, direction);
+  }
+
   isNextRailValid(block, direction) {
     if (!block) {
       return;
