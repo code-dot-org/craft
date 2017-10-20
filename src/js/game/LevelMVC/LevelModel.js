@@ -1259,7 +1259,10 @@ module.exports = class LevelModel {
           }
         }
 
-        if (y < this.planeHeight - 1) {
+        if (y < this.planeHeight - 1 && this.occludedBy(surrounding.south)) {
+          // needs a top side AO shadow
+          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Top' });
+        } else if (y < this.planeHeight - 1) {
           if (x < this.planeWidth - 1 && this.occludedBy(surrounding.southEast) &&
             !this.occludedBy(surrounding.east)) {
             // needs a bottom left side AO shadow
