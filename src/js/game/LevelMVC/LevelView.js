@@ -727,8 +727,9 @@ module.exports = class LevelView {
 
   playTrack(position, facing, isOnBlock, entity = this.player, completionHandler) {
     entity.onTracks = true;
-    let track = this.controller.levelModel.actionPlane.getMinecartTrack(position, facing);
 
+    // Need to get track on current position to avoid mishandling immediate turns
+    let track = this.controller.levelModel.actionPlane.getMinecartTrack(position, facing);
 
     let offset = FacingDirection.getOffsetFromDirection(facing);
     let nextPos = [entity.position[0] + offset[0], entity.position[1] + offset[1]];
@@ -741,6 +742,9 @@ module.exports = class LevelView {
       return;
     }
 
+    // If track is undefined, it means the player was not on a rail
+    // but if we reached this, that means we're trying to get on a rail for the first time
+    // and we need to grab that track -in front of us-
     if (track === undefined) {
       track = this.controller.levelModel.actionPlane.getMinecartTrack(nextPos, facing);
     }
