@@ -244,7 +244,8 @@ module.exports = class LevelBlock {
       this.getIsPiston() ||
       this.isRail ||
       this.blockType === 'torch' ||
-      this.blockType === 'railsRedstoneTorch';
+      this.blockType === 'railsRedstoneTorch' ||
+      this.blockType === 'pressurePlateUp';
 
     return !notPlaceable;
   }
@@ -334,7 +335,8 @@ module.exports = class LevelBlock {
    * @return {boolean}
    */
   static isFlat(blockType) {
-    return blockType.substring(0, 5) === "rails" ||
+    // Starts With 'rail' will capture rails and railsRedstoneTorch.
+    return blockType.isRail ||
         blockType.startsWith("redstoneWire") ||
         blockType.startsWith("pressurePlate");
   }
