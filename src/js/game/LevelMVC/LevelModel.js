@@ -1193,6 +1193,7 @@ module.exports = class LevelModel {
       hasRight = false;
 
       const block = plane.getBlockAt([x, y]);
+      const groundBlock = this.groundPlane.getBlockAt([x, y]);
       if (block.isEmpty || block.isTransparent || block.getIsLiquid()) {
         let atlas = 'AO';
         if (block.blockType === 'lava') {
@@ -1201,21 +1202,23 @@ module.exports = class LevelModel {
           atlas = 'WaterAO';
         }
 
-        // Edge of world AO.
-        if (y === 0) {
-          this.shadingPlane.push({ x, y, atlas, type: 'AOeffect_Bottom' });
-        }
+        if (block === groundBlock || !groundBlock.getIsLiquid()) {
+          // Edge of world AO.
+          if (y === 0) {
+            this.shadingPlane.push({x, y, atlas, type: 'AOeffect_Bottom'});
+          }
 
-        if (y === this.planeHeight - 1) {
-          this.shadingPlane.push({ x, y, atlas, type: 'AOeffect_Top' });
-        }
+          if (y === this.planeHeight - 1) {
+            this.shadingPlane.push({x, y, atlas, type: 'AOeffect_Top'});
+          }
 
-        if (x === 0) {
-          this.shadingPlane.push({ x, y, atlas, type: 'AOeffect_Right' });
-        }
+          if (x === 0) {
+            this.shadingPlane.push({x, y, atlas, type: 'AOeffect_Right'});
+          }
 
-        if (x === this.planeWidth - 1) {
-          this.shadingPlane.push({ x, y, atlas, type: 'AOeffect_Left' });
+          if (x === this.planeWidth - 1) {
+            this.shadingPlane.push({x, y, atlas, type: 'AOeffect_Left'});
+          }
         }
 
         // Neighbor AO.
