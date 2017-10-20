@@ -711,7 +711,7 @@
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"Nether_Portal0":
+"NetherPortal1":
 {
 	"frame": {"x":0,"y":0,"w":160,"h":138},
 	"rotated": false,
@@ -720,7 +720,7 @@
 	"sourceSize": {"w":160,"h":140},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"Nether_Portal1":
+"NetherPortal2":
 {
 	"frame": {"x":0,"y":138,"w":160,"h":138},
 	"rotated": false,
@@ -729,7 +729,7 @@
 	"sourceSize": {"w":160,"h":140},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"Nether_Portal2":
+"NetherPortal3":
 {
 	"frame": {"x":160,"y":0,"w":160,"h":138},
 	"rotated": false,
@@ -738,7 +738,7 @@
 	"sourceSize": {"w":160,"h":140},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"Nether_Portal3":
+"NetherPortal4":
 {
 	"frame": {"x":0,"y":276,"w":160,"h":138},
 	"rotated": false,
@@ -747,7 +747,7 @@
 	"sourceSize": {"w":160,"h":140},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"Nether_Portal4":
+"NetherPortal5":
 {
 	"frame": {"x":160,"y":138,"w":160,"h":138},
 	"rotated": false,
@@ -756,7 +756,7 @@
 	"sourceSize": {"w":160,"h":140},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"Nether_Portal5":
+"NetherPortal6":
 {
 	"frame": {"x":320,"y":0,"w":160,"h":138},
 	"rotated": false,
@@ -1654,6 +1654,6 @@
 	"format": "RGBA8888",
 	"size": {"w":512,"h":1057},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:c967106af3b8a18031c47111e30b2000:6ecfdaadf1ef82811ca9a8b3aa114fd6:dc08b29c59c8d022bfb6afbcfc3933bf$"
+	"smartupdate": "$TexturePacker:SmartUpdate:2eb69ef0fec23b08db9a126a272af931:2ee7aa68ba606c1bb9d177456233c70b:dc08b29c59c8d022bfb6afbcfc3933bf$"
 }
 }
