@@ -191,11 +191,17 @@ module.exports = class LevelBlock {
   }
 
   /**
-   * @see {LevelBlock.isFlat}
+   * Does the given block type represent a "flat" block?
+   * "flat" blocks are those subset of walkable blocks which are walkable
+   * because they are lying right on the ground, as opposed to those blocks like
+   * torches which are walkable because they do not occupy very much space.
+   *
    * @return {boolean}
    */
   isFlat() {
-    return LevelBlock.isFlat(this.blockType);
+    return this.isRail ||
+        this.isRedstone ||
+        this.blockType.startsWith("pressurePlate");
   }
 
   shouldRenderOnGroundPlane() {
@@ -308,6 +314,9 @@ module.exports = class LevelBlock {
    * Static passthrough to the isWalkable property for the given blockType.
    * TODO @hamms: remove this method once all calling methods have been updated
    *      to operate on actual LevelBlocks rather than blockType strings
+   *
+   * @param {String} blockType
+   * @return {boolean}
    */
   static isWalkable(blockType) {
     return new LevelBlock(blockType).isWalkable;
@@ -326,19 +335,15 @@ module.exports = class LevelBlock {
   }
 
   /**
-   * Does the given block type represent a "flat" block?
-   * "flat" blocks are those subset of walkable blocks which are walkable
-   * because they are lying right on the ground, as opposed to those blocks like
-   * torches which are walkable because they do not occupy very much space.
+   * Static passthrough to the isWalkable property for the given blockType.
+   * TODO @hamms: remove this method once all calling methods have been updated
+   *      to operate on actual LevelBlocks rather than blockType strings
    *
    * @param {String} blockType
    * @return {boolean}
    */
   static isFlat(blockType) {
-    // Starts With 'rail' will capture rails and railsRedstoneTorch.
-    return blockType.isRail ||
-        blockType.startsWith("redstoneWire") ||
-        blockType.startsWith("pressurePlate");
+    return new LevelBlock(blockType).isFlat();
   }
 
   /**
