@@ -789,7 +789,7 @@ module.exports = class LevelModel {
   }
 
   moveTo(position, entity = this.player) {
-    entity.position = position;
+    entity.setMovePosition(position);
 
     if (this.actionPlane.getBlockAt(position).isEmpty) {
       entity.isOnBlock = false;

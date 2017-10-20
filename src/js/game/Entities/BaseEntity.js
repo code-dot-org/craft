@@ -46,6 +46,10 @@ module.exports = class BaseEntity {
     return false;
   }
 
+  setMovePosition(position) {
+    this.position = position;
+  }
+
   /**
    * For entities which need to be able to accomodate rendering in the same
    * cell as other entities, provide a way to define a rendering offset.

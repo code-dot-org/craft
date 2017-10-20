@@ -48,6 +48,14 @@ module.exports = class Player extends BaseEntity {
   }
 
   /**
+   * @override
+   */
+  setMovePosition(position) {
+    super.setMovePosition(position);
+    this.collectItems(this.position);
+  }
+
+  /**
    * player walkable stuff
    */
   walkableCheck(block) {
@@ -60,10 +68,6 @@ module.exports = class Player extends BaseEntity {
     const allowMovement = this.controller.attemptRunning || this.controller.getCanMoveBeforeRunButtonClick();
     if (!this.controller.getIsDirectPlayerControl() || !allowMovement) {
       return;
-    }
-
-    if (this.onTracks) {
-      this.collectItems(this.position);
     }
 
     if (this.canUpdateMovement()) {
