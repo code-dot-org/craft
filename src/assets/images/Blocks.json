@@ -711,7 +711,7 @@
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"NetherPortal1":
+"NetherPortal0":
 {
 	"frame": {"x":0,"y":0,"w":160,"h":138},
 	"rotated": false,
@@ -720,7 +720,7 @@
 	"sourceSize": {"w":160,"h":140},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"NetherPortal2":
+"NetherPortal1":
 {
 	"frame": {"x":0,"y":138,"w":160,"h":138},
 	"rotated": false,
@@ -729,7 +729,7 @@
 	"sourceSize": {"w":160,"h":140},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"NetherPortal3":
+"NetherPortal2":
 {
 	"frame": {"x":160,"y":0,"w":160,"h":138},
 	"rotated": false,
@@ -738,7 +738,7 @@
 	"sourceSize": {"w":160,"h":140},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"NetherPortal4":
+"NetherPortal3":
 {
 	"frame": {"x":0,"y":276,"w":160,"h":138},
 	"rotated": false,
@@ -747,7 +747,7 @@
 	"sourceSize": {"w":160,"h":140},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"NetherPortal5":
+"NetherPortal4":
 {
 	"frame": {"x":160,"y":138,"w":160,"h":138},
 	"rotated": false,
@@ -756,7 +756,7 @@
 	"sourceSize": {"w":160,"h":140},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"NetherPortal6":
+"NetherPortal5":
 {
 	"frame": {"x":320,"y":0,"w":160,"h":138},
 	"rotated": false,
