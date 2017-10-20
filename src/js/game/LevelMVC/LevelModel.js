@@ -1196,9 +1196,9 @@ module.exports = class LevelModel {
       if (block.isEmpty || block.isTransparent || block.getIsLiquid()) {
         let atlas = 'AO';
         if (block.blockType === 'lava') {
-          atlas = 'AOLava';
+          atlas = 'LavaGlow';
         } else if (block.blockType === 'water') {
-          atlas = 'AOWater';
+          atlas = 'WaterAO';
         }
 
         // Edge of world AO.

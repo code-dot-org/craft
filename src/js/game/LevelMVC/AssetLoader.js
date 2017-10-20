@@ -56,15 +56,15 @@ module.exports = class AssetLoader {
         pngPath: `${this.assetRoot}images/AO.png`,
         jsonPath: `${this.assetRoot}images/AO.json`
       },
-      AOLava: {
+      LavaGlow: {
         type: 'atlasJSON',
-        pngPath: `${this.assetRoot}images/AOLava.png`,
-        jsonPath: `${this.assetRoot}images/AO.json`
+        pngPath: `${this.assetRoot}images/LavaGlow.png`,
+        jsonPath: `${this.assetRoot}images/LavaGlow.json`
       },
-      AOWater: {
+      WaterAO: {
         type: 'atlasJSON',
-        pngPath: `${this.assetRoot}images/AOWater.png`,
-        jsonPath: `${this.assetRoot}images/AO.json`
+        pngPath: `${this.assetRoot}images/WaterAO.png`,
+        jsonPath: `${this.assetRoot}images/WaterAO.json`
       },
       blockShadows: {
         type: 'atlasJSON',
@@ -541,8 +541,8 @@ module.exports = class AssetLoader {
         'finishOverlay',
         'bed',
         'AO',
-        'AOLava',
-        'AOWater',
+        'LavaGlow',
+        'WaterAO',
         'blockShadows',
         'undergroundFow',
         'blocks',
@@ -597,8 +597,8 @@ module.exports = class AssetLoader {
         'finishOverlay',
         'bed',
         'AO',
-        'AOLava',
-        'AOWater',
+        'LavaGlow',
+        'WaterAO',
         'blockShadows',
         'undergroundFow',
         'blocks',
