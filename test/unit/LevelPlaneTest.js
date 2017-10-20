@@ -905,3 +905,58 @@ test('Sticky piston grabbing, do pull', t => {
 
   t.end();
 });
+
+test('Weak Charge: placeblock', t => {
+  const data = [
+    '','','','','','','','',
+    '','pistonRight','','','','','','',
+    'railsRedstoneTorch','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
+
+  plane.setBlockAt([0, 1], new LevelBlock('grass'));
+
+  const expected = [
+    '','','','','','','','',
+    'grass','pistonRightOn','pistonArmRight','','','','','',
+    'railsRedstoneTorch','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});
+
+test('weak charge: destroy block', t => {
+  const data = [
+    '','','','','','','','',
+    'grass','pistonRightOn','pistonArmRight','','','','','',
+    'railsRedstoneTorch','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+  const plane = new LevelPlane(data, 8, 6, true, null, "actionPlane");
+
+  plane.setBlockAt([0, 1], new LevelBlock(''));
+
+  const expected = [
+    '','','','','','','','',
+    '','pistonRight','','','','','','',
+    'railsRedstoneTorch','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});
+
