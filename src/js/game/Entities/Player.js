@@ -62,6 +62,10 @@ module.exports = class Player extends BaseEntity {
       return;
     }
 
+    if (this.onTracks) {
+      this.collectItems(this.position);
+    }
+
     if (this.canUpdateMovement()) {
       // Arrow key
       if (this.movementState >= 0) {
