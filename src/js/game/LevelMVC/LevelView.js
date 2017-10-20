@@ -1585,7 +1585,7 @@ module.exports = class LevelView {
     for (index = 0; index < shadingData.length; ++index) {
       shadowItem = shadingData[index];
 
-      atlas = "AO";
+      atlas = shadowItem.atlas;
       sx = 40 * shadowItem.x;
       sy = -22 + 40 * shadowItem.y;
 
@@ -1631,13 +1631,11 @@ module.exports = class LevelView {
           break;
 
         case "Shadow_Parts_Fade_base.png":
-          atlas = "blockShadows";
           sx -= 52;
           sy += 0;
           break;
 
         case "Shadow_Parts_Fade_top.png":
-          atlas = "blockShadows";
           sx -= 52;
           sy += 0;
           break;

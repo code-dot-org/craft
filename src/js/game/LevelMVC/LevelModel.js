@@ -1171,8 +1171,9 @@ module.exports = class LevelModel {
   }
 
   computeShadingPlane() {
+    this.shadingPlane = [];
     this.computeShading(this.actionPlane);
-    //this.computeShading(this.groundPlane);
+    this.computeShading(this.groundPlane);
   }
 
   occludedBy(block) {
@@ -1185,8 +1186,6 @@ module.exports = class LevelModel {
       index,
       hasRight;
 
-    this.shadingPlane = [];
-
     for (index = 0; index < this.planeArea(); ++index) {
       x = index % this.planeWidth;
       y = Math.floor(index / this.planeWidth);
@@ -1195,46 +1194,56 @@ module.exports = class LevelModel {
 
       const block = plane.getBlockAt([x, y]);
       if (block.isEmpty || block.isTransparent || block.getIsLiquid()) {
+        let atlas = 'AO';
+        if (block.blockType === 'lava') {
+          atlas = 'AOLava';
+        } else if (block.blockType === 'water') {
+          atlas = 'AOWater';
+        }
+
         // Edge of world AO.
         if (y === 0) {
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Bottom' });
+          this.shadingPlane.push({ x, y, atlas, type: 'AOeffect_Bottom' });
         }
 
         if (y === this.planeHeight - 1) {
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Top' });
+          this.shadingPlane.push({ x, y, atlas, type: 'AOeffect_Top' });
         }
 
         if (x === 0) {
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Right' });
+          this.shadingPlane.push({ x, y, atlas, type: 'AOeffect_Right' });
         }
 
         if (x === this.planeWidth - 1) {
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Left' });
+          this.shadingPlane.push({ x, y, atlas, type: 'AOeffect_Left' });
         }
 
         // Neighbor AO.
         const surrounding = plane.getSurroundingBlocks([x, y]);
         if (x < this.planeWidth - 1 && this.occludedBy(surrounding.east)) {
           // needs a left side AO shadow
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Left' });
+          this.shadingPlane.push({ x, y, atlas, type: 'AOeffect_Left' });
         }
 
         if (x > 0 && this.occludedBy(surrounding.west)) {
           // needs a right side AO shadow
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Right' });
+          this.shadingPlane.push({ x, y, atlas, type: 'AOeffect_Right' });
 
+          // Lighting shadows.
           if (!block.getIsLiquid()) {
             this.shadingPlane.push({
-              x: x,
-              y: y,
+              x,
+              y,
+              atlas: 'blockShadows',
               type: 'Shadow_Parts_Fade_base.png'
             });
 
             if (y > 0 && x > 0 &&
               plane.getBlockAt([x - 1, y - 1]).getIsEmptyOrEntity()) {
               this.shadingPlane.push({
-                x: x,
-                y: y,
+                x,
+                y,
+                atlas: 'blockShadows',
                 type: 'Shadow_Parts_Fade_top.png'
               });
             }
@@ -1245,33 +1254,33 @@ module.exports = class LevelModel {
 
         if (y > 0 && this.occludedBy(surrounding.north)) {
           // needs a bottom side AO shadow
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Bottom' });
+          this.shadingPlane.push({ x, y, atlas, type: 'AOeffect_Bottom' });
         } else if (y > 0) {
           if (x < this.planeWidth - 1 && this.occludedBy(surrounding.northEast) &&
             !this.occludedBy(surrounding.east)) {
             // needs a bottom left side AO shadow
-            this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_BottomLeft' });
+            this.shadingPlane.push({ x, y, atlas, type: 'AOeffect_BottomLeft' });
           }
 
           if (!hasRight && x > 0 && this.occludedBy(surrounding.northWest)) {
             // needs a bottom right side AO shadow
-            this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_BottomRight' });
+            this.shadingPlane.push({ x, y, atlas, type: 'AOeffect_BottomRight' });
           }
         }
 
         if (y < this.planeHeight - 1 && this.occludedBy(surrounding.south)) {
           // needs a top side AO shadow
-          this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_Top' });
+          this.shadingPlane.push({ x, y, atlas, type: 'AOeffect_Top' });
         } else if (y < this.planeHeight - 1) {
           if (x < this.planeWidth - 1 && this.occludedBy(surrounding.southEast) &&
             !this.occludedBy(surrounding.east)) {
             // needs a bottom left side AO shadow
-            this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_TopLeft' });
+            this.shadingPlane.push({ x, y, atlas, type: 'AOeffect_TopLeft' });
           }
 
           if (!hasRight && x > 0 && this.occludedBy(surrounding.southWest)) {
             // needs a bottom right side AO shadow
-            this.shadingPlane.push({ x: x, y: y, type: 'AOeffect_TopRight' });
+            this.shadingPlane.push({ x, y, atlas, type: 'AOeffect_TopRight' });
           }
         }
       }
