@@ -727,14 +727,22 @@ module.exports = class LevelView {
 
   playTrack(position, facing, isOnBlock, entity = this.player, completionHandler) {
     entity.onTracks = true;
-    const track = this.controller.levelModel.actionPlane.getMinecartTrack(position, facing);
+    let track = this.controller.levelModel.actionPlane.getMinecartTrack(position, facing);
 
-    if (!track) {
+
+    let offset = FacingDirection.getOffsetFromDirection(facing);
+    let nextPos = [entity.position[0] + offset[0], entity.position[1] + offset[1]];
+
+    if (!track && !this.firstTime(position, nextPos)) {
       entity.onTracks = false;
       if (completionHandler) {
         completionHandler();
       }
       return;
+    }
+
+    if (track === undefined) {
+      track = this.controller.levelModel.actionPlane.getMinecartTrack(nextPos, facing);
     }
 
     let direction;
@@ -753,6 +761,18 @@ module.exports = class LevelView {
         this.playTrack(nextPosition, nextFacing, isOnBlock, entity, completionHandler);
       });
     }
+  }
+
+  /**
+  * Handling the first case of walking onto a track while not currently on one
+  */
+  firstTime(currPos, nextPos) {
+    let nextBlock = this.controller.levelModel.actionPlane.getBlockAt(nextPos);
+    let currBlock = this.controller.levelModel.actionPlane.getBlockAt(currPos);
+    if (!currBlock.blockType.startsWith("rails") && nextBlock.blockType.startsWith("rails")) {
+      return true;
+    }
+    return false;
   }
 
   addHouseBed(bottomCoordinates) {

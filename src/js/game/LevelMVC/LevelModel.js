@@ -262,6 +262,9 @@ module.exports = class LevelModel {
   }
 
   isNextRailValid(block, direction) {
+    if (!block) {
+      return;
+    }
     return this.inverseDirection(block.connectionA) === direction ||
     this.inverseDirection(block.connectionB) === direction ||
     block.connectionA === direction ||

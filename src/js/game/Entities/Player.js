@@ -10,6 +10,7 @@ module.exports = class Player extends BaseEntity {
     this.inventory = {};
     this.movementState = -1;
     this.onTracks = false;
+    this.firstTrack = true;
 
     if (controller.getIsDirectPlayerControl()) {
       this.moveDelayMin = 0;
