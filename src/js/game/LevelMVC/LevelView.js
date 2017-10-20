@@ -1641,7 +1641,10 @@ module.exports = class LevelView {
           break;
       }
 
-      this.shadingGroup.create(sx, sy, atlas, shadowItem.type);
+      const sprite = this.shadingGroup.create(sx, sy, atlas, shadowItem.type);
+      if (atlas === 'AOWater') {
+        sprite.tint = 0x333333;
+      }
     }
   }
 
@@ -2059,7 +2062,6 @@ module.exports = class LevelView {
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Water_", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
-        this.psuedoRandomTint(group, sprite, x, y);
         this.playScaledSpeed(sprite.animations, "idle");
         break;
 
@@ -2084,7 +2086,6 @@ module.exports = class LevelView {
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Lava_", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
-        this.psuedoRandomTint(group, sprite, x, y);
         this.playScaledSpeed(sprite.animations, "idle");
         break;
 
