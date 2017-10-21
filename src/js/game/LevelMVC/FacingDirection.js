@@ -25,6 +25,15 @@ const FacingDirection = Object.freeze({
   turn: function (facing, rotation) {
     return (facing + 4 + (rotation === 'right' ? 1 : -1)) % 4;
   },
+
+  directionToOffset(direction) {
+    switch (direction) {
+      case FacingDirection.North: return [0, -1];
+      case FacingDirection.South: return [0, 1];
+      case FacingDirection.East: return [1, 0];
+      case FacingDirection.West: return [-1, 0];
+    }
+  }
 });
 
 module.exports = FacingDirection;
