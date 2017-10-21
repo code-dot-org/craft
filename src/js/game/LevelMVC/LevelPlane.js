@@ -7,6 +7,7 @@ const {
   opposite,
   turnDirection,
   turn,
+  directionToOffset
 } = require("./FacingDirection.js");
 
 const connectionName = function (connection) {
@@ -127,9 +128,9 @@ module.exports = class LevelPlane {
   }
 
   /**
-  * Changes the block at a desired position to the desired block.
-  * Important note: This is the cornerstone of block placing/destroying.
-  */
+   * Changes the block at a desired position to the desired block.
+   * Important note: This is the cornerstone of block placing/destroying.
+   */
   setBlockAt(position, block) {
     if (!this.inBounds(position)) {
       return;
@@ -141,6 +142,25 @@ module.exports = class LevelPlane {
       let redstoneToRefresh = [];
       if (block.needToRefreshRedstone()) {
         redstoneToRefresh = this.getRedstone();
+      }
+
+      // if we've just removed a block, clean up any rail connections that were
+      // formerly connected to this block
+      if (block.isEmpty) {
+        [North, South, East, West].forEach((direction) => {
+          // if the block in the given cardinal direction is a rail block with a
+          // connection to this one, sever that connection
+          const offset = directionToOffset(direction);
+          const adjacentBlock = this.getBlockAt([position[0] + offset[0], position[1] + offset[1]]);
+          if (adjacentBlock && adjacentBlock.isRail) {
+            if (adjacentBlock.connectionA === opposite(direction)) {
+              adjacentBlock.connectionA = undefined;
+            }
+            if (adjacentBlock.connectionB === opposite(direction)) {
+              adjacentBlock.connectionB = undefined;
+            }
+          }
+        });
       }
 
       this.determineRailType(position, true);
@@ -234,29 +254,15 @@ module.exports = class LevelPlane {
   }
 
   /**
-  * Determines which rail object should be placed given the context of surrounding
-  * indices.
-  */
+   * Determines which rail object should be placed given the context of surrounding
+   * indices.
+   */
   determineRailType(position, updateTouching = false) {
     const block = this.getBlockAt(position);
 
     if (!block || !block.isRail) {
       return;
     }
-
-    if (block.connectionA !== undefined && block.connectionB !== undefined) {
-      return;
-    }
-
-    const mask = this.getOrthogonalMask(position, ({block, relative}) => {
-      if (!block || !block.isRail) {
-        return false;
-      }
-      const a = block.connectionA === undefined || block.connectionA === relative;
-      const b = block.connectionB === undefined || block.connectionB === relative;
-
-      return a || b;
-    });
 
     let powerState = '';
     let priority = RailConnectionPriority;
@@ -265,10 +271,23 @@ module.exports = class LevelPlane {
       priority = PoweredRailConnectionPriority;
     }
 
-    // Look up what type of connection to create, based on the surrounding tracks.
-    [block.connectionA, block.connectionB] = priority[mask];
-    const variant = connectionName(block.connectionA) + connectionName(block.connectionB);
+    if (block.connectionA === undefined || block.connectionB === undefined) {
+      const mask = this.getOrthogonalMask(position, ({block, relative}) => {
+        if (!block || !block.isRail) {
+          return false;
+        }
+        const a = block.connectionA === undefined || block.connectionA === relative;
+        const b = block.connectionB === undefined || block.connectionB === relative;
 
+        return a || b;
+      });
+
+
+      // Look up what type of connection to create, based on the surrounding tracks.
+      [block.connectionA, block.connectionB] = priority[mask];
+    }
+
+    const variant = connectionName(block.connectionA) + connectionName(block.connectionB);
     block.blockType = `rails${powerState}${variant}`;
 
     if (updateTouching) {
