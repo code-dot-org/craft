@@ -28,14 +28,10 @@ const FacingDirection = Object.freeze({
 
   getOffsetFromDirection: function (direction) {
     switch (direction) {
-      case 0:
-        return [0, -1];
-      case 1:
-        return [1, 0];
-      case 2:
-        return [0, 1];
-      case 3:
-        return [-1, 0];
+      case FacingDirection.North: return [0, -1];
+      case FacingDirection.East: return [1, 0];
+      case FacingDirection.South: return [0, 1];
+      case FacingDirection.West: return [-1, 0];
     }
   },
 });
