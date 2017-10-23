@@ -208,6 +208,23 @@ module.exports = class LevelPlane {
   }
 
   /**
+   * Gets the blocks surrounding a given position.
+   * Important note: This DOES to bounds checking. Will be undefined if OOB.
+   */
+  getSurroundingBlocks(position) {
+    return {
+      north: this.getBlockAt(position, 0, -1),
+      northEast: this.getBlockAt(position, 1, -1),
+      east: this.getBlockAt(position, 1, 0),
+      southEast: this.getBlockAt(position, 1, 1),
+      south: this.getBlockAt(position, 0, 1),
+      southWest: this.getBlockAt(position, -1, 1),
+      west: this.getBlockAt(position, -1, 0),
+      northWest: this.getBlockAt(position, -1, -1),
+    };
+  }
+
+  /**
   * Gets the mask of the orthogonal indices around the given position.
   */
   getOrthogonalMask(position, comparator) {

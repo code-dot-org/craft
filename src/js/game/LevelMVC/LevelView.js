@@ -1585,65 +1585,68 @@ module.exports = class LevelView {
     for (index = 0; index < shadingData.length; ++index) {
       shadowItem = shadingData[index];
 
-      atlas = "AO";
+      atlas = shadowItem.atlas;
       sx = 40 * shadowItem.x;
       sy = -22 + 40 * shadowItem.y;
 
-      switch (shadowItem.type) {
-        case "AOeffect_Left":
-          sx += 26;
-          sy += 22;
-          break;
+      if (atlas === 'AO' || atlas === 'blockShadows') {
+        switch (shadowItem.type) {
+          case "AOeffect_Left":
+            sx += 26;
+            sy += 22;
+            break;
 
-        case "AOeffect_Right":
-          sx += 0;
-          sy += 22;
-          break;
+          case "AOeffect_Right":
+            sx += 0;
+            sy += 22;
+            break;
 
-        case "AOeffect_Bottom":
-          sx += 0;
-          sy += 22;
-          break;
+          case "AOeffect_Bottom":
+            sx += 0;
+            sy += 22;
+            break;
 
-        case "AOeffect_BottomLeft":
-          sx += 25;
-          sy += 22;
-          break;
+          case "AOeffect_BottomLeft":
+            sx += 25;
+            sy += 22;
+            break;
 
-        case "AOeffect_BottomRight":
-          sx += 0;
-          sy += 22;
-          break;
+          case "AOeffect_BottomRight":
+            sx += 0;
+            sy += 22;
+            break;
 
-        case "AOeffect_Top":
-          sx += 0;
-          sy += 47;
-          break;
+          case "AOeffect_Top":
+            sx += 0;
+            sy += 47;
+            break;
 
-        case "AOeffect_TopLeft":
-          sx += 25;
-          sy += 47;
-          break;
+          case "AOeffect_TopLeft":
+            sx += 25;
+            sy += 47;
+            break;
 
-        case "AOeffect_TopRight":
-          sx += 0;
-          sy += 47;
-          break;
+          case "AOeffect_TopRight":
+            sx += 0;
+            sy += 47;
+            break;
 
-        case "Shadow_Parts_Fade_base.png":
-          atlas = "blockShadows";
-          sx -= 52;
-          sy += 0;
-          break;
+          case "Shadow_Parts_Fade_base.png":
+            sx -= 52;
+            sy += 0;
+            break;
 
-        case "Shadow_Parts_Fade_top.png":
-          atlas = "blockShadows";
-          sx -= 52;
-          sy += 0;
-          break;
+          case "Shadow_Parts_Fade_top.png":
+            sx -= 52;
+            sy += 0;
+            break;
+        }
       }
 
-      this.shadingGroup.create(sx, sy, atlas, shadowItem.type);
+      const sprite = this.shadingGroup.create(sx, sy, atlas, shadowItem.type);
+      if (atlas === 'WaterAO') {
+        sprite.tint = 0x555555;
+      }
     }
   }
 
@@ -2061,7 +2064,6 @@ module.exports = class LevelView {
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Water_", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
-        this.psuedoRandomTint(group, sprite, x, y);
         this.playScaledSpeed(sprite.animations, "idle");
         break;
 
@@ -2086,7 +2088,6 @@ module.exports = class LevelView {
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Lava_", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
-        this.psuedoRandomTint(group, sprite, x, y);
         this.playScaledSpeed(sprite.animations, "idle");
         break;
 
