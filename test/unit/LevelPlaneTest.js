@@ -295,6 +295,44 @@ test('rail connections: destroy block', t => {
   t.end();
 });
 
+// Placing track after a previously-destroyed T-junction should heal it
+//
+// Before:   After:
+//              ║
+//   ═╗         ║
+//    ║         ║
+test('rail connections: destroy block', t => {
+  const data = new Array(9).fill('');
+  const plane = new LevelPlane(data, 3, 3, true, null, "actionPlane");
+
+  plane.setBlockAt([1, 2], new LevelBlock('rails'));
+  plane.setBlockAt([1, 1], new LevelBlock('rails'));
+  plane.setBlockAt([0, 1], new LevelBlock('rails'));
+
+  // Destroy track block.
+  plane.setBlockAt([0, 1], new LevelBlock(''));
+
+  let expected = [
+    '', '','',
+    '', 'railsSouthWest', '',
+    '', 'railsNorth','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  plane.setBlockAt([1, 0], new LevelBlock('rails'));
+
+  expected = [
+    '', 'railsSouth','',
+    '', 'railsNorthSouth', '',
+    '', 'railsNorth','',
+  ];
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});
+
 //Placing/destroying redstoneWire should update charge propagation throughout
 //a line of wire connected to a redstone torch
 // Before:   After:

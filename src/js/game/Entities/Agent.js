@@ -25,7 +25,7 @@ module.exports = class Agent extends BaseEntity {
         result.plane = "groundPlane";
       }
     } else {
-      if (toPlaceBlock.isRedstone || toPlaceBlock.isRail) {
+      if (toPlaceBlock.isWalkable) {
         result.canPlace = true;
         result.plane = "actionPlane";
       }
