@@ -1177,7 +1177,7 @@ module.exports = class LevelModel {
   }
 
   occludedBy(block) {
-    return block && !block.getIsEmptyOrEntity();
+    return block && !block.getIsEmptyOrEntity() && !block.getIsLiquid();
   }
 
   computeShading(plane) {

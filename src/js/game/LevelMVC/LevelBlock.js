@@ -300,7 +300,7 @@ module.exports = class LevelBlock {
   }
 
   getIsEmptyOrEntity() {
-    return this.isEmpty || this.isEntity || this.getIsLiquid();
+    return this.isEmpty || this.isEntity;
   }
 
   /**
