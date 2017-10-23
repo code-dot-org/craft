@@ -1645,7 +1645,7 @@ module.exports = class LevelView {
 
       const sprite = this.shadingGroup.create(sx, sy, atlas, shadowItem.type);
       if (atlas === 'WaterAO') {
-        sprite.tint = 0x333333;
+        sprite.tint = 0x555555;
       }
     }
   }
