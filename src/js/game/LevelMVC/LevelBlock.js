@@ -73,6 +73,12 @@ module.exports = class LevelBlock {
       this.isUsable = true;
     }
 
+    if (blockType === "invisible") {
+      this.isDestroyable = false;
+      this.isUsable = false;
+      this.isWeaklyPowerable = false;
+    }
+
     if (blockType.startsWith("glass")) {
       this.isSolid = false;
     }
