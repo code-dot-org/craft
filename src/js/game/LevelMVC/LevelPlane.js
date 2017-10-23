@@ -7,6 +7,7 @@ const {
   opposite,
   turnDirection,
   turn,
+  directionToOffset
 } = require("./FacingDirection.js");
 
 const connectionName = function (connection) {
@@ -49,6 +50,8 @@ module.exports = class LevelPlane {
     this.redstoneList = [];
     this.redstoneListON = [];
     this.planeType = planeType;
+    this.playPistonOn = false;
+    this.playPistonOff = false;
 
     for (let index = 0; index < planeData.length; ++index) {
       let block = new LevelBlock(planeData[index]);
@@ -125,9 +128,9 @@ module.exports = class LevelPlane {
   }
 
   /**
-  * Changes the block at a desired position to the desired block.
-  * Important note: This is the cornerstone of block placing/destroying.
-  */
+   * Changes the block at a desired position to the desired block.
+   * Important note: This is the cornerstone of block placing/destroying.
+   */
   setBlockAt(position, block) {
     if (!this.inBounds(position)) {
       return;
@@ -141,10 +144,31 @@ module.exports = class LevelPlane {
         redstoneToRefresh = this.getRedstone();
       }
 
+      // if we've just removed a block, clean up any rail connections that were
+      // formerly connected to this block
+      if (block.isEmpty) {
+        [North, South, East, West].forEach((direction) => {
+          // if the block in the given cardinal direction is a rail block with a
+          // connection to this one, sever that connection
+          const offset = directionToOffset(direction);
+          const adjacentBlock = this.getBlockAt([position[0] + offset[0], position[1] + offset[1]]);
+          if (adjacentBlock && adjacentBlock.isRail) {
+            if (adjacentBlock.connectionA === opposite(direction)) {
+              adjacentBlock.connectionA = undefined;
+            }
+            if (adjacentBlock.connectionB === opposite(direction)) {
+              adjacentBlock.connectionB = undefined;
+            }
+          }
+        });
+      }
+
       this.determineRailType(position, true);
 
       if (this.levelModel && this.levelModel.controller.levelView) {
-        let positionAndTouching = this.getOrthogonalPositions(position).concat([position]);
+        const northEast = [position[0] + 1, position[1] - 1];
+        const southWest = [position[0] - 1, position[1] + 1];
+        let positionAndTouching = this.getOrthogonalPositions(position).concat([position, northEast, southWest]);
         this.levelModel.controller.levelView.refreshActionGroup(positionAndTouching);
         this.levelModel.controller.levelView.refreshActionGroup(redstoneToRefresh);
       }
@@ -232,29 +256,15 @@ module.exports = class LevelPlane {
   }
 
   /**
-  * Determines which rail object should be placed given the context of surrounding
-  * indices.
-  */
+   * Determines which rail object should be placed given the context of surrounding
+   * indices.
+   */
   determineRailType(position, updateTouching = false) {
     const block = this.getBlockAt(position);
 
     if (!block || !block.isRail) {
       return;
     }
-
-    if (block.connectionA !== undefined && block.connectionB !== undefined) {
-      return;
-    }
-
-    const mask = this.getOrthogonalMask(position, ({block, relative}) => {
-      if (!block || !block.isRail) {
-        return false;
-      }
-      const a = block.connectionA === undefined || block.connectionA === relative;
-      const b = block.connectionB === undefined || block.connectionB === relative;
-
-      return a || b;
-    });
 
     let powerState = '';
     let priority = RailConnectionPriority;
@@ -263,10 +273,23 @@ module.exports = class LevelPlane {
       priority = PoweredRailConnectionPriority;
     }
 
-    // Look up what type of connection to create, based on the surrounding tracks.
-    [block.connectionA, block.connectionB] = priority[mask];
-    const variant = connectionName(block.connectionA) + connectionName(block.connectionB);
+    if (block.connectionA === undefined || block.connectionB === undefined) {
+      const mask = this.getOrthogonalMask(position, ({block, relative}) => {
+        if (!block || !block.isRail) {
+          return false;
+        }
+        const a = block.connectionA === undefined || block.connectionA === relative;
+        const b = block.connectionB === undefined || block.connectionB === relative;
 
+        return a || b;
+      });
+
+
+      // Look up what type of connection to create, based on the surrounding tracks.
+      [block.connectionA, block.connectionB] = priority[mask];
+    }
+
+    const variant = connectionName(block.connectionA) + connectionName(block.connectionB);
     block.blockType = `rails${powerState}${variant}`;
 
     if (updateTouching) {
@@ -338,10 +361,27 @@ module.exports = class LevelPlane {
       this.getIronDoors(position);
       this.getPistonState(position);
     });
+    this.playPistonSound();
     return posToRefresh;
   }
 
+  playPistonSound() {
+    if (!this.levelModel) {
+      return;
+    }
+    if (this.playPistonOn) {
+      this.levelModel.controller.audioPlayer.play("pistonOut");
+    } else if (this.playPistonOff) {
+      this.levelModel.controller.audioPlayer.play("pistonIn");
+    }
+    this.playPistonOn = false;
+    this.playPistonOff = false;
+  }
+
   checkEntityConflict(position) {
+    if (!this.levelModel) {
+      return;
+    }
     let captureReturn = false;
     this.levelModel.controller.levelEntity.entityMap.forEach((workingEntity) => {
       if (this.levelModel.controller.positionEquivalence(position, workingEntity.position)) {
@@ -389,7 +429,6 @@ module.exports = class LevelPlane {
       } else if (!block.isPowered) {
         this.deactivatePiston(position);
       }
-
       if (this.levelModel) {
         this.levelModel.controller.updateFowPlane();
         this.levelModel.controller.updateShadingPlane();
@@ -473,10 +512,13 @@ module.exports = class LevelPlane {
       }
     }
 
-
+    if (this.pistonArmBlocked(position, offset)) {
+      return;
+    }
     // Break an object right in front of the piston.
     if (workingNeighbor.isDestroyableUponPush()) {
       this.setBlockAt(pos, new LevelBlock(""));
+      this.playPistonOn = true;
       if (this.levelModel) {
         this.levelModel.controller.levelView.playExplosionAnimation(pos, 2, pos, workingNeighbor.blockType, null, null, this.player);
       }
@@ -490,6 +532,7 @@ module.exports = class LevelPlane {
       let onPiston = new LevelBlock(pistonType += concat);
       this.setBlockAt(position, onPiston);
       this.pushBlocks(blocksPositions, offset[0], offset[1]);
+      this.playPistonOn = true;
     } else if (workingNeighbor.blockType === "") {
       // Nothing to push, so just make the arm.
       let concat = "On";
@@ -501,8 +544,15 @@ module.exports = class LevelPlane {
       let pistonBlock = new LevelBlock(pistonType += concat);
       this.setBlockAt(pos, armBlock);
       this.setBlockAt(position, pistonBlock);
+      this.playPistonOn = true;
     }
   }
+
+  pistonArmBlocked(position, offset) {
+    const workingPosition = [position[0] + offset[0], position[1] + offset[1]];
+    return this.checkEntityConflict(workingPosition);
+  }
+
 
   /**
   * Deactivates a piston at a given position by determining what the arm orientation is.
@@ -578,9 +628,11 @@ module.exports = class LevelPlane {
           this.setBlockAt(stuckBlockPosition, emptyBlock);
         } else {
           this.setBlockAt(armPosition, emptyBlock);
+          this.playPistonOff = true;
         }
       } else {
         this.setBlockAt(armPosition, emptyBlock);
+        this.playPistonOff = true;
       }
     }
     this.setBlockAt(pistonPosition, offPiston);

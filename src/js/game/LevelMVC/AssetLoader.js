@@ -141,6 +141,11 @@ module.exports = class AssetLoader {
         pngPath: `${this.assetRoot}images/LavaPop.png`,
         jsonPath: `${this.assetRoot}images/LavaPop.json`
       },
+      redstoneSparkle: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/Redstone_Sparkle.png`,
+        jsonPath: `${this.assetRoot}images/Redstone_Sparkle.json`
+      },
       fire: {
         type: 'atlasJSON',
         pngPath: `${this.assetRoot}images/Fire.png`,
@@ -373,10 +378,35 @@ module.exports = class AssetLoader {
         mp3: `${this.assetRoot}audio/zombiehurt1.mp3`,
         ogg: `${this.assetRoot}audio/zombiehurt1.ogg`
       },
+      pistonIn: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/piston_in.mp3`,
+        ogg: `${this.assetRoot}audio/piston_in.ogg`
+      },
       zombieHurt2: {
         type: 'sound',
         mp3: `${this.assetRoot}audio/zombiehurt2.mp3`,
         ogg: `${this.assetRoot}audio/zombiehurt2.ogg`
+      },
+      pistonOut: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/piston_out.mp3`,
+        ogg: `${this.assetRoot}audio/piston_out.ogg`
+      },
+      portalAmbient: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/portal.mp3`,
+        ogg: `${this.assetRoot}audio/portal.ogg`
+      },
+      portalTravel: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/travel_portal.mp3`,
+        ogg: `${this.assetRoot}audio/travel_portal.ogg`
+      },
+      pressurePlateClick: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/pressurePlateClick.mp3`,
+        ogg: `${this.assetRoot}audio/pressurePlateClick.ogg`
       },
     };
 
@@ -412,6 +442,11 @@ module.exports = class AssetLoader {
       'zombieBrains',
       'zombieGroan',
       'zombieHurt',
+      'pistonIn',
+      'pistonOut',
+      'portalAmbient',
+      'portalTravel',
+      'pressurePlateClick',
     ];
 
     const CHICKEN_LEVEL_ASSETS = [
@@ -568,6 +603,7 @@ module.exports = class AssetLoader {
         'miningParticles',
         'miniBlocks',
         'lavaPop',
+        'redstoneSparkle',
         'fire',
         'bubbles',
         'explosion',
@@ -614,6 +650,11 @@ module.exports = class AssetLoader {
         'zombieGroan',
         'zombieHurt',
         'zombieHurt2',
+        'pistonIn',
+        'pistonOut',
+        'portalAmbient',
+        'portalTravel',
+        'pressurePlateClick',
       ],
       playerSteve: [
         'playerSteve'

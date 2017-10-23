@@ -1,5 +1,6 @@
 const LevelBlock = require("./LevelBlock.js");
 const FacingDirection = require("./FacingDirection.js");
+const createEvent = require("../../utils").createEvent;
 
 module.exports = class LevelView {
   constructor(controller) {
@@ -112,6 +113,18 @@ module.exports = class LevelView {
       "woolRed": ["Miniblocks", 510, 515],
       "woolSilver": ["Miniblocks", 516, 521],
       "woolYellow": ["Miniblocks", 522, 527],
+      "bookEnchanted": ["Miniblocks", 528, 533],
+      "bucketEmpty": ["Miniblocks", 534, 539],
+      "chest": ["Miniblocks", 540, 545],
+      "compass": ["Miniblocks", 546, 551],
+      "axeDiamond": ["Miniblocks", 552, 557],
+      "pickaxeDiamond": ["Miniblocks", 558, 563],
+      "shovelDiamond": ["Miniblocks", 564, 569],
+      "flintAndSteel": ["Miniblocks", 570, 575],
+      "flint": ["Miniblocks", 576, 581],
+      "mapEmpty": ["Miniblocks", 582, 587],
+      "minecart": ["Miniblocks", 588, 593],
+      "potionBottleDrinkable": ["Miniblocks", 594, 599]
     };
 
     this.blocks = {
@@ -183,6 +196,7 @@ module.exports = class LevelView {
       "tallGrass": ["tallGrass", "", -13, 0],
 
       "lavaPop": ["lavaPop", "LavaPop01", -13, 0],
+      "redstoneSparkle": ["redstoneSparkle", "redstone_sparkle1.png", -25, -8],
       "fire": ["fire", "", -11, 135],
       "bubbles": ["bubbles", "", -11, 135],
       "explosion": ["explosion", "", -70, 60],
@@ -278,16 +292,16 @@ module.exports = class LevelView {
       "pistonArmDownSticky": ["blocks", "piston_arm_down_sticky", -26, -13],
 
       "cactus": ["blocks", "cactus", -13, 0],
-      "dead_bush": ["blocks", "dead_bush", -13, 0],
+      "deadBush": ["blocks", "dead_bush", -13, 0],
       "glowstone": ["blocks", "glowstone", -13, 0],
-      "grass_path": ["blocks", "grass_path", -13, 0],
+      "grassPath": ["blocks", "grass_path", -13, 0],
       "ice": ["blocks", "ice", -13, 0],
       "netherrack": ["blocks", "netherrack", -13, 0],
-      "nether_brick": ["blocks", "nether_brick", -13, 0],
-      "quartz_ore": ["blocks", "quartz_ore", -13, 0],
+      "netherBrick": ["blocks", "nether_brick", -13, 0],
+      "quartzOre": ["blocks", "quartz_ore", -13, 0],
       "snow": ["blocks", "snow", -13, 0],
-      "snowy_grass": ["blocks", "snowy_grass", -13, 0],
-      "top_snow": ["blocks", "top_snow", -13, 0],
+      "snowyGrass": ["blocks", "snowy_grass", -13, 0],
+      "topSnow": ["blocks", "top_snow", -13, 0],
 
       "Nether_Portal": ["blocks", "Nether_Portal0", 0, -58],
 
@@ -980,10 +994,6 @@ module.exports = class LevelView {
     return tween;
   }
 
-  skipHopAnimation(blockType) {
-    return blockType === "cropWheat" || blockType === "torch" || blockType.startsWith("rail") || blockType.startsWith("redstoneWire");
-  }
-
   playPlaceBlockAnimation(position, facing, blockType, blockTypeAtPosition, entity, completionHandler) {
     var jumpAnimName;
     let blockIndex = this.yToIndex(position[1]) + position[0];
@@ -991,7 +1001,8 @@ module.exports = class LevelView {
     if (entity.shouldUpdateSelectionIndicator()) {
       this.setSelectionIndicatorPosition(position[0], position[1]);
     }
-    if (entity === this.agent || this.skipHopAnimation(blockType)) {
+
+    if (entity === this.agent || LevelBlock.isWalkable(blockType)) {
       var signalDetacher = this.playPlayerAnimation("punch", position, facing, false, entity).onComplete.add(() => {
         signalDetacher.detach();
         completionHandler();
@@ -1388,6 +1399,9 @@ module.exports = class LevelView {
           (this.player.inventory[blockType] || 0) + 1;
         sprite.kill();
         this.toDestroy.push(sprite);
+        const event = createEvent('craftCollectibleCollected');
+        event.blockType = blockType;
+        window.dispatchEvent(event);
         if (completionHandler) {
           completionHandler();
         }
@@ -2133,6 +2147,28 @@ module.exports = class LevelView {
         this.playAnimationWithOffset(sprite, "idle", 29, 1);
         break;
 
+      case "redstoneSparkle":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("redstone_sparkle", 0, 24, ".png");
+        for (i = 0; i < 4; ++i) {
+          frameList.push("redstone_sparkle7");
+        }
+        frameList = frameList.concat(Phaser.Animation.generateFrameNames("redstone_sparkle", 8, 13, ".png"));
+        for (i = 0; i < 3; ++i) {
+          frameList.push("redstone_sparkle13");
+        }
+        frameList = frameList.concat(Phaser.Animation.generateFrameNames("redstone_sparkle", 14, 23, ".png"));
+        for (i = 0; i < 8; ++i) {
+          frameList.push("redstone_sparkle1");
+        }
+        sprite.animations.add("idle", frameList, 5, true);
+        this.playAnimationWithOffset(sprite, "idle", Math.floor(Math.random() * 3) + 21, 1);
+        break;
+
       case "fire":
         atlas = this.blocks[blockType][0];
         frame = this.blocks[blockType][1];
@@ -2175,6 +2211,9 @@ module.exports = class LevelView {
 
       case "doorIron":
         sprite = buildDoor(this, "DoorIron");
+        if (this.blockReceivesCornerShadow(x, y)) {
+          sprite.addChild(this.game.make.sprite(-40, 55, "blockShadows", "Shadow_Parts_Fade_overlap.png"));
+        }
         break;
 
       case "tnt":
@@ -2199,12 +2238,33 @@ module.exports = class LevelView {
         yOffset = this.blocks[blockType][3];
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         if (group === this.actionGroup || group === this.groundGroup) {
-          this.psuedoRandomTint(group, sprite, x, y);
+          if (!LevelBlock.isWalkable(blockType)) {
+            this.psuedoRandomTint(group, sprite, x, y);
+          }
+        }
+        if (group === this.actionGroup && this.blockReceivesCornerShadow(x, y)) {
+          let xShadow = -39;
+          let yShadow = 40;
+          if (blockType.startsWith("pistonArm")) {
+            xShadow = -26;
+            yShadow = 53;
+          }
+          sprite.addChild(this.game.make.sprite(xShadow, yShadow, "blockShadows", "Shadow_Parts_Fade_overlap.png"));
         }
         break;
     }
 
     return sprite;
+  }
+
+  blockReceivesCornerShadow(x, y) {
+    const southBlock = this.controller.levelModel.actionPlane.getBlockAt([x, y + 1]);
+    if (!southBlock || (southBlock.blockType && !southBlock.isWalkable)) {
+      return false;
+    }
+
+    const southWestBlock = this.controller.levelModel.actionPlane.getBlockAt([x - 1, y + 1]);
+    return southWestBlock && southWestBlock.blockType && !southWestBlock.isWalkable;
   }
 
   isUnderTree(treeIndex, position) {
