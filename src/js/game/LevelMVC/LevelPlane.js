@@ -7,7 +7,7 @@ const {
   opposite,
   turnDirection,
   turn,
-  directionToOffset
+  getOffsetFromDirection
 } = require("./FacingDirection.js");
 
 const connectionName = function (connection) {
@@ -150,7 +150,7 @@ module.exports = class LevelPlane {
         [North, South, East, West].forEach((direction) => {
           // if the block in the given cardinal direction is a rail block with a
           // connection to this one, sever that connection
-          const offset = directionToOffset(direction);
+          const offset = getOffsetFromDirection(direction);
           const adjacentBlock = this.getBlockAt([position[0] + offset[0], position[1] + offset[1]]);
           if (adjacentBlock && adjacentBlock.isRail) {
             if (adjacentBlock.connectionA === opposite(direction)) {
