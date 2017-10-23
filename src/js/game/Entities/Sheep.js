@@ -309,14 +309,15 @@ module.exports = class Sheep extends BaseEntity {
     }
 
     drop(commandQueueItem, itemType) {
+        if (this.naked) {
+          return;
+        }
         super.drop(commandQueueItem, itemType);
         if (itemType === 'wool') {
-            // default behavior for drop ?
-            if (!this.naked) {
-                let direction = this.controller.levelView.getDirectionName(this.facing);
-                this.naked = true;
-                this.controller.levelView.playScaledSpeed(this.sprite.animations, "naked_idle" + direction, () => { });
-            }
+          // default behavior for drop ?
+          let direction = this.controller.levelView.getDirectionName(this.facing);
+          this.naked = true;
+          this.controller.levelView.playScaledSpeed(this.sprite.animations, "naked_idle" + direction, () => { });
         }
     }
 
