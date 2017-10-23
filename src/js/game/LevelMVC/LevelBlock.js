@@ -34,6 +34,7 @@ module.exports = class LevelBlock {
       this.isEmpty = true;
       this.isPlacable = true;
       this.isUsable = false;
+      this.isWeaklyPowerable = false;
     }
 
     if (this.getIsMiniblock()) {
