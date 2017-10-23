@@ -138,8 +138,6 @@ module.exports = class Player extends BaseEntity {
 
     this.updateHidingTree();
     this.updateHidingBlock(prevPosition);
-    this.collectItems(prevPosition);
-    this.collectItems();
   }
 
   doMoveBackward(commandQueueItem) {
@@ -181,8 +179,6 @@ module.exports = class Player extends BaseEntity {
 
     this.updateHidingTree();
     this.updateHidingBlock(prevPosition);
-    this.collectItems(prevPosition);
-    this.collectItems();
   }
 
   bump(commandQueueItem) {
