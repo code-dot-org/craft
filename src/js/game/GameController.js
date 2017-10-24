@@ -1335,8 +1335,9 @@ class GameController {
         );
       } else if (this.checkMinecartLevelEndAnimation()) {
         this.resultReported = true;
-        this.levelView.playMinecartAnimation(player.isOnBlock,
-          () => { this.handleEndState(true); }, this.levelModel.getUnpoweredRails());
+        this.levelView.playMinecartAnimation(player.isOnBlock, () => {
+          this.handleEndState(true);
+        });
       } else if (this.checkAgentSpawn()) {
         this.resultReported = true;
 
