@@ -19,7 +19,7 @@ module.exports = class Position {
   static isAdjacent(left, right) {
     return directions
         .map(FacingDirection.directionToOffset)
-        .any(offset => Position.equals(Position.add(left, offset), right));
+        .some(offset => Position.equals(Position.add(left, offset), right));
   }
 
   static forward(position, direction) {
