@@ -148,3 +148,37 @@ test('selection indicator', t => {
 
   game.state.start('levelRunner');
 });
+
+test('pick up on rails', t => {
+  const game = new global.Phaser.Game({
+    width: 400,
+    height: 400,
+    renderer: global.Phaser.HEADLESS,
+    state: 'earlyLoad',
+  });
+  game.state.add('levelRunner', {
+    create: () => {
+      mockGameController.game = game;
+      mockGameController.levelModel = levelModel;
+      const view = new LevelView(mockGameController);
+      mockGameController.levelView = view;
+      view.create(levelModel);
+      LevelModel.usePlayer = true;
+
+      for (let i = 0; i < 6; ++i) {
+        view.createMiniBlock(i, 0, "diamondMiniblock");
+      }
+
+      view.player.setMovePosition([0, 0]);
+      view.player.setMovePosition([1, 0]);
+      view.player.setMovePosition([2, 0]);
+
+      t.equals(view.collectibleItems.length, 3);
+
+      setTimeout(() => game.destroy(), 0);
+      t.end();
+    }
+  });
+
+  game.state.start('levelRunner');
+});
