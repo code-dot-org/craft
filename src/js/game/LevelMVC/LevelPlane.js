@@ -458,15 +458,10 @@ module.exports = class LevelPlane {
   }
 
   /**
-  * Activates a piston at a given position to push blocks away from it depending on type.
-  */
+   * Activates a piston at a given position to push blocks away from it
+   * depending on type.
+   */
   activatePiston(position) {
-    let neighbors = this.getOrthogonalBlocks(position);
-    let neighborPosition = Position.getOrthogonalPositions(position);
-
-    let workingNeighbor = null;
-    let pos = [];
-    let offset = [];
     let pistonType = this.getBlockAt(position).blockType;
     if (this.getBlockAt(position).getIsStickyPiston()) {
       pistonType = pistonType.substring(0, pistonType.length - 6);
@@ -475,38 +470,35 @@ module.exports = class LevelPlane {
     if (checkOn === "On") {
       pistonType = pistonType.substring(0, pistonType.length - 2);
     }
-    let armType = "";
 
+    let armType = "";
+    let direction;
     switch (pistonType) {
       case "pistonUp": {
-        workingNeighbor = neighbors.north.block;
-        offset = [0,-1];
-        pos = neighborPosition[0];
+        direction = North;
         armType = "pistonArmUp";
         break;
       }
       case "pistonDown": {
-        workingNeighbor = neighbors.south.block;
-        offset = [0,1];
-        pos = neighborPosition[1];
+        direction = South;
         armType = "pistonArmDown";
         break;
       }
       case "pistonRight": {
-        workingNeighbor = neighbors.east.block;
-        offset = [1,0];
-        pos = neighborPosition[2];
+        direction = East;
         armType = "pistonArmRight";
         break;
       }
       case "pistonLeft": {
-        workingNeighbor = neighbors.west.block;
-        offset = [-1,0];
-        pos = neighborPosition[3];
+        direction = West;
         armType = "pistonArmLeft";
         break;
       }
     }
+
+    const offset = directionToOffset(direction);
+    const pos = Position.forward(position, direction);
+    const workingNeighbor = this.getBlockAt(pos);
 
     if (this.pistonArmBlocked(position, offset)) {
       return;
@@ -551,38 +543,18 @@ module.exports = class LevelPlane {
 
 
   /**
-  * Deactivates a piston at a given position by determining what the arm orientation is.
-  * NOTE: getOrthogonalPositions() does not match the order of the North/East/South/West defined in Facing Directions.
-  * This should be cleaned up in a future PR so we don't have to define the directions here.
-  */
+   * Deactivates a piston at a given position by determining what the arm
+   * orientation is.
+   */
   deactivatePiston(position) {
-    let neighborPosition = Position.getOrthogonalPositions(position);
-    let north = 0;
-    let south = 1;
-    let east = 2;
-    let west = 3;
-
-    let pistonType = this.getBlockAt(position).blockType;
-    if (this._data[this.coordinatesToIndex(position)].getIsStickyPiston()) {
-      pistonType = pistonType.substring(0, pistonType.length - 6);
+    const block = this.getBlockAt(position);
+    if (!block.getIsPiston() || !block.blockType.match("On")) {
+      return;
     }
-    switch (pistonType) {
-      case "pistonUpOn": {
-        this.retractArm(neighborPosition[north], position);
-        break;
-      }
-      case "pistonDownOn": {
-        this.retractArm(neighborPosition[south], position);
-        break;
-      }
-      case "pistonRightOn": {
-        this.retractArm(neighborPosition[east], position);
-        break;
-      }
-      case "pistonLeftOn": {
-        this.retractArm(neighborPosition[west], position);
-        break;
-      }
+
+    const direction = block.getPistonDirection();
+    if (direction !== undefined) {
+      this.retractArm(Position.forward(position, direction), position);
     }
   }
 
