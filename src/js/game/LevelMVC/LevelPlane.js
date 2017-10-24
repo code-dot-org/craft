@@ -7,7 +7,8 @@ const {
   opposite,
   turnDirection,
   turn,
-  directionToOffset
+  directionToOffset,
+  directionToRelative
 } = require("./FacingDirection.js");
 
 const Position = require("./Position");
@@ -462,8 +463,10 @@ module.exports = class LevelPlane {
    * depending on type.
    */
   activatePiston(position) {
-    let pistonType = this.getBlockAt(position).blockType;
-    if (this.getBlockAt(position).getIsStickyPiston()) {
+    const block = this.getBlockAt(position);
+
+    let pistonType = block.blockType;
+    if (block.getIsStickyPiston()) {
       pistonType = pistonType.substring(0, pistonType.length - 6);
     }
     let checkOn = pistonType.substring(pistonType.length - 2, pistonType.length);
@@ -471,30 +474,8 @@ module.exports = class LevelPlane {
       pistonType = pistonType.substring(0, pistonType.length - 2);
     }
 
-    let armType = "";
-    let direction;
-    switch (pistonType) {
-      case "pistonUp": {
-        direction = North;
-        armType = "pistonArmUp";
-        break;
-      }
-      case "pistonDown": {
-        direction = South;
-        armType = "pistonArmDown";
-        break;
-      }
-      case "pistonRight": {
-        direction = East;
-        armType = "pistonArmRight";
-        break;
-      }
-      case "pistonLeft": {
-        direction = West;
-        armType = "pistonArmLeft";
-        break;
-      }
-    }
+    const direction = block.getPistonDirection();
+    let armType = `pistonArm${directionToRelative(direction)}`;
 
     const offset = directionToOffset(direction);
     const pos = Position.forward(position, direction);
@@ -514,7 +495,7 @@ module.exports = class LevelPlane {
       // We've actually got something to push.
       let blocksPositions = this.getBlocksToPush(pos, offset[0], offset[1]);
       let concat = "On";
-      if (this.getBlockAt(position).getIsStickyPiston()) {
+      if (block.getIsStickyPiston()) {
         concat += "Sticky";
       }
       let onPiston = new LevelBlock(pistonType += concat);
@@ -524,7 +505,7 @@ module.exports = class LevelPlane {
     } else if (workingNeighbor.blockType === "") {
       // Nothing to push, so just make the arm.
       let concat = "On";
-      if (this.getBlockAt(position).getIsStickyPiston()) {
+      if (block.getIsStickyPiston()) {
         concat += "Sticky";
         armType += "Sticky";
       }

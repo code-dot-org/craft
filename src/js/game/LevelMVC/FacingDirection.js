@@ -33,6 +33,15 @@ const FacingDirection = Object.freeze({
       case FacingDirection.East: return [1, 0];
       case FacingDirection.West: return [-1, 0];
     }
+  },
+
+  directionToRelative(direction) {
+    switch (direction) {
+      case FacingDirection.North: return "Up";
+      case FacingDirection.South: return "Down";
+      case FacingDirection.East: return "Right";
+      case FacingDirection.West: return "Left";
+    }
   }
 });
 
