@@ -2,12 +2,14 @@ const BaseEntity = require("./BaseEntity.js");
 const EventType = require("../Event/EventType.js");
 
 module.exports = class Sheep extends BaseEntity {
-    constructor(controller, type, identifier, x, y, facing) {
+    constructor(controller, type, identifier, x, y, facing, skipView = false) {
         super(controller, type, identifier, x, y, facing);
         var zOrderYIndex = this.position[1];
         this.offset = [-43, -55];
-        this.prepareSprite();
-        this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex);
+        if (!skipView) {
+          this.prepareSprite();
+          this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex);
+        }
         this.naked = false;
     }
 
@@ -310,15 +312,22 @@ module.exports = class Sheep extends BaseEntity {
 
     drop(commandQueueItem, itemType) {
         if (this.naked) {
-          return;
+          return false;
         }
-        super.drop(commandQueueItem, itemType);
+
+        if (commandQueueItem) {
+          super.drop(commandQueueItem, itemType);
+        }
+
         if (itemType === 'wool') {
           // default behavior for drop ?
-          let direction = this.controller.levelView.getDirectionName(this.facing);
           this.naked = true;
-          this.controller.levelView.playScaledSpeed(this.sprite.animations, "naked_idle" + direction, () => { });
+          if (this.controller.levelView) {
+            let direction = this.controller.levelView.getDirectionName(this.facing);
+            this.controller.levelView.playScaledSpeed(this.sprite.animations, "naked_idle" + direction, () => { });
+          }
         }
+        return true;
     }
 
     takeDamage(callbackCommand) {

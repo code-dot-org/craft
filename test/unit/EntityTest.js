@@ -2,6 +2,7 @@ const test = require('tape');
 
 const LevelBlock = require('../../src/js/game/LevelMVC/LevelBlock');
 const BaseEntity = require('../../src/js/game/Entities/BaseEntity');
+const Sheep = require('../../src/js/game/Entities/Sheep');
 const Player = require('../../src/js/game/Entities/Player');
 const Agent = require('../../src/js/game/Entities/Agent');
 
@@ -70,3 +71,16 @@ test('canPlaceBlockOver', t => {
   t.end();
 });
 
+test('sheep Drop', t => {
+  const sheep = new Sheep(mockGameController, "Sheep", 1, 1, "Sheep", true, 1);
+
+  // Sheep starts !naked
+  t.false(sheep.naked);
+  // if(!naked) drop returns true and sets naked = true;
+  t.true(sheep.drop(null, "wool"));
+  t.true(sheep.naked);
+  // if(naked) drop returns false
+  t.false(sheep.drop(null, "wool"));
+
+  t.end();
+});
