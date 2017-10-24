@@ -31,6 +31,10 @@ module.exports = class BaseEntity {
     return false;
   }
 
+  canPlaceBlock() {
+    return false;
+  }
+
   canTriggerPressurePlates() {
     return false;
   }
