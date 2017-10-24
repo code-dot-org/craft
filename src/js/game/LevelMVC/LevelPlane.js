@@ -545,7 +545,7 @@ module.exports = class LevelPlane {
   }
 
   pistonArmBlocked(position, offset) {
-    const workingPosition = [position[0] + offset[0], position[1] + offset[1]];
+    const workingPosition = Position.add(position, offset);
     return this.checkEntityConflict(workingPosition);
   }
 
@@ -604,21 +604,8 @@ module.exports = class LevelPlane {
     let offPiston = new LevelBlock(newPistonType);
     if (this.getBlockAt(armPosition).getIsPistonArm()) {
       if (this.getBlockAt(pistonPosition).getIsStickyPiston()) {
-        let stuckBlockPosition = [armPosition[0], armPosition[1]];
-        switch (pistonType.getPistonDirection()) {
-          case South:
-            stuckBlockPosition[1] += 1;
-            break;
-          case North:
-            stuckBlockPosition[1] -= 1;
-            break;
-          case West:
-            stuckBlockPosition[0] -= 1;
-            break;
-          case East:
-            stuckBlockPosition[0] += 1;
-            break;
-        }
+        const offset = directionToOffset(pistonType.getPistonDirection());
+        const stuckBlockPosition = Position.add(armPosition, offset);
         if (this.inBounds(stuckBlockPosition) && this.getBlockAt(stuckBlockPosition).isStickable) {
           this.setBlockAt(armPosition, this.getBlockAt(stuckBlockPosition));
           this.setBlockAt(stuckBlockPosition, emptyBlock);
@@ -691,10 +678,8 @@ module.exports = class LevelPlane {
   */
   findPositionInArray(position, array) {
     for (let i = 0; array.length; ++i) {
-      if (position[0] === array[i][0]) {
-        if (position[1] === array[i][1]) {
-          return i;
-        }
+      if (Position.equals(position, array[i])) {
+        return i;
       }
     }
   }
@@ -729,7 +714,7 @@ module.exports = class LevelPlane {
       adjacentBlock.isPowered === false &&
       adjacentBlock.isRedstone) {
       adjacentBlock.isPowered = true;
-      this.redstonePropagation([position[0],position[1]]);
+      this.redstonePropagation([position[0], position[1]]);
     }
   }
 
@@ -744,24 +729,10 @@ module.exports = class LevelPlane {
           return false;
         }
         if (this.getBlockAt(position).getIsPiston()) {
-          let piston = this.getBlockAt(position);
-          let ignoreThisSide = [0, 0];
-          switch (piston.getPistonDirection()) {
-            case South:
-              ignoreThisSide = [0, 1];
-              break;
-            case North:
-              ignoreThisSide = [0, -1];
-              break;
-            case West:
-              ignoreThisSide = [-1, 0];
-              break;
-            case East:
-              ignoreThisSide = [1, 0];
-              break;
-          }
-          let posCheck = [position[0] + ignoreThisSide[0], position[1] + ignoreThisSide[1]];
-          if (posCheck[0] === orthogonalPosition[0] && posCheck[1] === orthogonalPosition[1]) {
+          const piston = this.getBlockAt(position);
+          const ignoreThisSide = directionToOffset(piston.getPistonDirection()) || [0, 0];
+          const posCheck = Position.add(position, ignoreThisSide);
+          if (Position.equals(orthogonalPosition, posCheck)) {
             return false;
           }
         }
