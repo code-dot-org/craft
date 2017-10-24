@@ -209,6 +209,10 @@ module.exports = class LevelBlock {
     return this.isFlat();
   }
 
+  getIsPowerableRail() {
+    return this.isRail && this.isConnectedToRedstone;
+  }
+
   getIsStickyPiston() {
     return this.blockType.substring(this.blockType.length - 6, this.blockType.length) === "Sticky";
   }
