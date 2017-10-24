@@ -41,8 +41,8 @@ module.exports = class Player extends BaseEntity {
   /**
    * @override
    */
-  canPlaceBlock() {
-    return true;
+  canPlaceBlock(block) {
+    return block.isEmpty;
   }
 
   /**

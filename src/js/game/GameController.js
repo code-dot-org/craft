@@ -1189,7 +1189,7 @@ class GameController {
     let blockAtPosition = this.levelModel.actionPlane.getBlockAt(position);
     let blockTypeAtPosition = blockAtPosition.blockType;
 
-    if (this.levelModel.canPlaceBlock(player, blockType)) {
+    if (this.levelModel.canPlaceBlock(player, blockAtPosition)) {
       if (blockTypeAtPosition !== "") {
         this.levelModel.destroyBlock(position);
       }
