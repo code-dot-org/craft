@@ -25,4 +25,8 @@ module.exports = class Position {
   static forward(position, direction) {
     return Position.add(position, FacingDirection.directionToOffset(direction));
   }
+
+  static getOrthogonalPositions(position) {
+    return directions.map(direction => Position.forward(position, direction));
+  }
 };

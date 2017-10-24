@@ -171,7 +171,7 @@ module.exports = class LevelPlane {
       if (this.levelModel && this.levelModel.controller.levelView) {
         const northEast = Position.add(position, [1, -1]);
         const southWest = Position.add(position, [-1, 1]);
-        let positionAndTouching = this.getOrthogonalPositions(position).concat([position, northEast, southWest]);
+        let positionAndTouching = Position.getOrthogonalPositions(position).concat([position, northEast, southWest]);
         this.levelModel.controller.levelView.refreshActionGroup(positionAndTouching);
         this.levelModel.controller.levelView.refreshActionGroup(redstoneToRefresh);
       }
@@ -180,20 +180,6 @@ module.exports = class LevelPlane {
     }
 
     return block;
-  }
-
-  /**
-  * Gets the orthogonal positions around a given position.
-  * Important note: This isn't doing bounds checking.
-  */
-  getOrthogonalPositions(position) {
-    const [x, y] = position;
-    return [
-      [x, y - 1],
-      [x, y + 1],
-      [x + 1, y],
-      [x - 1, y],
-    ];
   }
 
   /**
@@ -303,7 +289,7 @@ module.exports = class LevelPlane {
     block.blockType = `rails${powerState}${variant}`;
 
     if (updateTouching) {
-      this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
+      Position.getOrthogonalPositions(position).forEach(orthogonalPosition => {
         this.determineRailType(orthogonalPosition);
       });
     }
@@ -476,7 +462,7 @@ module.exports = class LevelPlane {
   */
   activatePiston(position) {
     let neighbors = this.getOrthogonalBlocks(position);
-    let neighborPosition = this.getOrthogonalPositions(position);
+    let neighborPosition = Position.getOrthogonalPositions(position);
 
     let workingNeighbor = null;
     let pos = [];
@@ -570,7 +556,7 @@ module.exports = class LevelPlane {
   * This should be cleaned up in a future PR so we don't have to define the directions here.
   */
   deactivatePiston(position) {
-    let neighborPosition = this.getOrthogonalPositions(position);
+    let neighborPosition = Position.getOrthogonalPositions(position);
     let north = 0;
     let south = 1;
     let east = 2;
@@ -727,7 +713,7 @@ module.exports = class LevelPlane {
       block.isPowered = true;
     }
 
-    this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
+    Position.getOrthogonalPositions(position).forEach(orthogonalPosition => {
       this.blockPropagation(orthogonalPosition);
     });
   }
@@ -751,7 +737,7 @@ module.exports = class LevelPlane {
   * Checking power state for objects that are powered by redstone.
   */
   powerCheck(position, canReadCharge = false) {
-    return this.getOrthogonalPositions(position).some(orthogonalPosition => {
+    return Position.getOrthogonalPositions(position).some(orthogonalPosition => {
       const block = this.getBlockAt(orthogonalPosition);
       if (block) {
         if (!block.isWeaklyPowerable) {
@@ -801,7 +787,7 @@ module.exports = class LevelPlane {
       block.isPowered = this.powerCheck(position);
     }
     if (block.isPowered) {
-      this.getOrthogonalPositions(position).forEach(workingPos => {
+      Position.getOrthogonalPositions(position).forEach(workingPos => {
         if (this.inBounds(workingPos)) {
           this.getIronDoors(workingPos);
           this.getPistonState(workingPos);
