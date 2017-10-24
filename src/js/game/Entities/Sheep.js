@@ -2,11 +2,11 @@ const BaseEntity = require("./BaseEntity.js");
 const EventType = require("../Event/EventType.js");
 
 module.exports = class Sheep extends BaseEntity {
-    constructor(controller, type, identifier, x, y, facing, skipView = false) {
+    constructor(controller, type, identifier, x, y, facing) {
         super(controller, type, identifier, x, y, facing);
         var zOrderYIndex = this.position[1];
         this.offset = [-43, -55];
-        if (!skipView) {
+        if (this.controller.levelView) {
           this.prepareSprite();
           this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex);
         }
