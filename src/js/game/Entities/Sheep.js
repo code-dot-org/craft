@@ -6,8 +6,10 @@ module.exports = class Sheep extends BaseEntity {
         super(controller, type, identifier, x, y, facing);
         var zOrderYIndex = this.position[1];
         this.offset = [-43, -55];
-        this.prepareSprite();
-        this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex);
+        if (this.controller.levelView) {
+          this.prepareSprite();
+          this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex);
+        }
         this.naked = false;
     }
 
@@ -309,15 +311,23 @@ module.exports = class Sheep extends BaseEntity {
     }
 
     drop(commandQueueItem, itemType) {
-        super.drop(commandQueueItem, itemType);
-        if (itemType === 'wool') {
-            // default behavior for drop ?
-            if (!this.naked) {
-                let direction = this.controller.levelView.getDirectionName(this.facing);
-                this.naked = true;
-                this.controller.levelView.playScaledSpeed(this.sprite.animations, "naked_idle" + direction, () => { });
-            }
+        if (this.naked) {
+          return false;
         }
+
+        if (commandQueueItem) {
+          super.drop(commandQueueItem, itemType);
+        }
+
+        if (itemType === 'wool') {
+          // default behavior for drop ?
+          this.naked = true;
+          if (this.controller.levelView) {
+            let direction = this.controller.levelView.getDirectionName(this.facing);
+            this.controller.levelView.playScaledSpeed(this.sprite.animations, "naked_idle" + direction, () => { });
+          }
+        }
+        return true;
     }
 
     takeDamage(callbackCommand) {
