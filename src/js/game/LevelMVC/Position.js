@@ -21,4 +21,8 @@ module.exports = class Position {
         .map(FacingDirection.directionToOffset)
         .any(offset => Position.equals(Position.add(left, offset), right));
   }
+
+  static forward(position, direction) {
+    return Position.add(position, FacingDirection.directionToOffset(direction));
+  }
 };

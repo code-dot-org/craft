@@ -10,12 +10,14 @@ const {
   directionToOffset
 } = require("./FacingDirection.js");
 
+const Position = require("./Position");
+
 const connectionName = function (connection) {
   switch (connection) {
-    case 0: return 'North';
-    case 2: return 'South';
-    case 1: return 'East';
-    case 3: return 'West';
+    case North: return 'North';
+    case South: return 'South';
+    case East: return 'East';
+    case West: return 'West';
     default: return '';
   }
 };
@@ -153,7 +155,7 @@ module.exports = class LevelPlane {
           // if the block in the given cardinal direction is a rail block with a
           // connection to this one, sever that connection
           const offset = directionToOffset(direction);
-          const adjacentBlock = this.getBlockAt([position[0] + offset[0], position[1] + offset[1]]);
+          const adjacentBlock = this.getBlockAt(Position.add(position, offset));
           if (adjacentBlock && adjacentBlock.isRail) {
             if (adjacentBlock.connectionA === opposite(direction)) {
               adjacentBlock.connectionA = undefined;
@@ -167,8 +169,8 @@ module.exports = class LevelPlane {
       this.determineRailType(position, true);
 
       if (this.levelModel && this.levelModel.controller.levelView) {
-        const northEast = [position[0] + 1, position[1] - 1];
-        const southWest = [position[0] - 1, position[1] + 1];
+        const northEast = Position.add(position, [1, -1]);
+        const southWest = Position.add(position, [-1, 1]);
         let positionAndTouching = this.getOrthogonalPositions(position).concat([position, northEast, southWest]);
         this.levelModel.controller.levelView.refreshActionGroup(positionAndTouching);
         this.levelModel.controller.levelView.refreshActionGroup(redstoneToRefresh);
@@ -237,16 +239,6 @@ module.exports = class LevelPlane {
     );
   }
 
-  forwardPosition(position, cardinal) {
-    const [x, y] = position;
-    switch (cardinal) {
-      case North: return [x, y - 1];
-      case South: return [x, y + 1];
-      case East: return [x + 1, y];
-      case West: return [x - 1, y];
-    }
-  }
-
   getMinecartTrack(position, facing) {
     const block = this.getBlockAt(position);
 
@@ -257,7 +249,7 @@ module.exports = class LevelPlane {
     const speed = 300;
 
     if (block.connectionA === facing || block.connectionB === facing) {
-      return ["", this.forwardPosition(position, facing), facing, speed];
+      return ["", Position.forward(position, facing), facing, speed];
     }
 
     const incomming = opposite(facing);
@@ -796,11 +788,12 @@ module.exports = class LevelPlane {
   }
 
   powerAllBlocks() {
-    for (let i = 0; i < this._data.length; ++i) {
-      if (this._data[i].blockType !== "" && this._data[i].canHoldCharge()) {
-        this._data[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
+    this.getAllPositions().forEach((position) => {
+      const block = this.getBlockAt(position);
+      if (block.blockType !== "" && block.canHoldCharge()) {
+        block.isPowered = this.powerCheck(position);
       }
-    }
+    });
   }
 
   updateWeakCharge(position, block) {
