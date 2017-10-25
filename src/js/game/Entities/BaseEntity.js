@@ -517,7 +517,7 @@ module.exports = class BaseEntity {
 
     pushBack(commandQueueItem, pushDirection, movementTime, completionHandler) {
         var levelModel = this.controller.levelModel;
-        var pushBackPosition = levelModel.getPushBackPosition(this, pushDirection);
+        var pushBackPosition = Position.forward(this.position, pushDirection);
         var canMoveBack = levelModel.isPositionEmpty(pushBackPosition)[0];
         if (canMoveBack) {
             this.updateHidingBlock(this.position);
