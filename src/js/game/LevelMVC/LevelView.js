@@ -197,7 +197,7 @@ module.exports = class LevelView {
       "tallGrass": ["tallGrass", "", -13, 0],
 
       "lavaPop": ["lavaPop", "LavaPop01", -13, 0],
-      "redstoneSparkle": ["redstoneSparkle", "redstone_sparkle1.png", -25, -8],
+      "redstoneSparkle": ["redstoneSparkle", "redstone_sparkle1.png", 7, 23],
       "fire": ["fire", "", -11, 135],
       "bubbles": ["bubbles", "", -11, 135],
       "explosion": ["explosion", "", -70, 60],
@@ -1025,6 +1025,9 @@ module.exports = class LevelView {
       const group = block.shouldRenderOnGroundPlane() ? this.groundGroup : this.actionGroup;
       const offset = block.shouldRenderOnGroundPlane() ? -0.5 : 0;
       sprite = this.createBlock(group, position[0], position[1] + offset, blockType);
+      if (blockType.startsWith('redstoneWire') && blockType.endsWith('On')) {
+        sprite = this.createBlock(group, position[0], position[1] + offset, "redstoneSparkle");
+      }
     }
 
     if (sprite) {
