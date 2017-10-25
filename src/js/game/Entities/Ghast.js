@@ -2,10 +2,9 @@ const BaseEntity = require("./BaseEntity.js");
 module.exports = class Ghast extends BaseEntity {
     constructor(controller, type, identifier, x, y, facing) {
         super(controller, type, identifier, x, y, facing);
-        var zOrderYIndex = this.position[1];
         this.offset = [-50, -84];
         this.prepareSprite();
-        this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex);
+        this.sprite.sortOrder = this.controller.levelView.yToIndex(Number.MAX_SAFE_INTEGER);
     }
 
     prepareSprite() {
@@ -55,6 +54,13 @@ module.exports = class Ghast extends BaseEntity {
         this.sprite.x = this.offset[0] + 40 * this.position[0];
         this.sprite.y = this.offset[1] + 40 * this.position[1];
     }
+
+  /**
+   * @override
+   */
+  canMoveThrough() {
+    return true;
+  }
 
     playRandomIdle(facing) {
         var facingName,
