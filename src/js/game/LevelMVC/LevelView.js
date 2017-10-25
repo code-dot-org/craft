@@ -1,5 +1,6 @@
 const LevelBlock = require("./LevelBlock.js");
 const FacingDirection = require("./FacingDirection.js");
+const Position = require("./Position.js");
 const createEvent = require("../../utils").createEvent;
 
 module.exports = class LevelView {
@@ -446,29 +447,9 @@ module.exports = class LevelView {
     positionTween.start();
     scaleTween.start();
   }
-  // direction
+
   getDirectionName(facing) {
-    var direction;
-
-    switch (facing) {
-      case FacingDirection.North:
-        direction = "_up";
-        break;
-
-      case FacingDirection.East:
-        direction = "_right";
-        break;
-
-      case FacingDirection.South:
-        direction = "_down";
-        break;
-
-      case FacingDirection.West:
-        direction = "_left";
-        break;
-    }
-
-    return direction;
+    return "_" + FacingDirection.directionToRelative(facing).toLowerCase();
   }
 
   updatePlayerDirection(position, facing) {
@@ -1359,7 +1340,7 @@ module.exports = class LevelView {
       this.positionToScreen(playerPosition), 200, Phaser.Easing.Linear.None);
 
     tween.onComplete.add(() => {
-      const caughtUpToPlayer = this.player.position[0] === playerPosition[0] && this.player.position[1] === playerPosition[1];
+      const caughtUpToPlayer = Position.equals(this.player.position, playerPosition);
       if (sprite.alive && caughtUpToPlayer) {
         this.audioPlayer.play("collectedBlock");
         this.player.inventory[blockType] =
@@ -1524,7 +1505,7 @@ module.exports = class LevelView {
     // We need to add indices to refresh if there are other blocks in the action plane that might
     // conflict with the drawing of refreshed blocks.
     for (let i = 0; i < positions.length; ++i) {
-      const positionBelow = [positions[i][0], positions[i][1] + 1];
+      const positionBelow = Position.south(positions[i]);
       const indexIsValid = this.controller.levelModel.actionPlane.inBounds(positionBelow);
       if (indexIsValid) {
         let blockToCheck = this.controller.levelModel.actionPlane.getBlockAt(positionBelow);

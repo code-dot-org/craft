@@ -231,14 +231,15 @@ module.exports = class BaseEntity {
         let forwardPosition = this.controller.levelModel.getMoveForwardPosition(this);
         var forwardPositionInformation = this.controller.levelModel.canMoveForward(this);
         if (forwardPositionInformation[0]) {
-            let offset = this.directionToOffset(this.facing);
+            let offset = FacingDirection.directionToOffset(this.facing);
+            let reverseOffset = FacingDirection.directionToOffset(FacingDirection.opposite(this.facing));
             let weMovedOnTo = this.handleMoveOnPressurePlate(offset);
             this.doMoveForward(commandQueueItem, forwardPosition);
             if (!weMovedOnTo) {
-              this.handleMoveOffPressurePlate(this.reverseOffset(offset));
+              this.handleMoveOffPressurePlate(reverseOffset);
             }
-            this.handleMoveOffIronDoor(this.reverseOffset(offset));
-            this.handleMoveAwayFromPiston(this.reverseOffset(offset));
+            this.handleMoveOffIronDoor(reverseOffset);
+            this.handleMoveAwayFromPiston(reverseOffset);
         } else {
             this.bump(commandQueueItem);
             this.callBumpEvents(forwardPositionInformation);
@@ -252,14 +253,15 @@ module.exports = class BaseEntity {
         let backwardPosition = this.controller.levelModel.getMoveBackwardPosition(this);
         var backwardPositionInformation = this.controller.levelModel.canMoveBackward(this);
         if (backwardPositionInformation[0]) {
-            let offset = this.directionToOffset(FacingDirection.opposite(this.facing));
+            let offset = FacingDirection.directionToOffset(FacingDirection.opposite(this.facing));
+            let reverseOffset = FacingDirection.directionToOffset(this.facing);
             let weMovedOnTo = this.handleMoveOnPressurePlate(offset);
             this.doMoveBackward(commandQueueItem, backwardPosition);
             if (!weMovedOnTo) {
-              this.handleMoveOffPressurePlate(this.reverseOffset(offset));
+              this.handleMoveOffPressurePlate(reverseOffset);
             }
-            this.handleMoveOffIronDoor(this.reverseOffset(offset));
-            this.handleMoveAwayFromPiston(this.reverseOffset(offset));
+            this.handleMoveOffIronDoor(reverseOffset);
+            this.handleMoveAwayFromPiston(reverseOffset);
         } else {
             this.bump(commandQueueItem);
             this.callBumpEvents(backwardPositionInformation);
@@ -515,7 +517,7 @@ module.exports = class BaseEntity {
 
     pushBack(commandQueueItem, pushDirection, movementTime, completionHandler) {
         var levelModel = this.controller.levelModel;
-        var pushBackPosition = levelModel.getPushBackPosition(this, pushDirection);
+        var pushBackPosition = Position.forward(this.position, pushDirection);
         var canMoveBack = levelModel.isPositionEmpty(pushBackPosition)[0];
         if (canMoveBack) {
             this.updateHidingBlock(this.position);
@@ -677,10 +679,6 @@ module.exports = class BaseEntity {
     return false;
   }
 
-  reverseOffset(offset) {
-    return [offset[0] * -1, offset[1] * -1];
-  }
-
   handleMoveOffIronDoor(moveOffset) {
     const formerPosition = [this.position[0] + moveOffset[0], this.position[1] + moveOffset[1]];
     if (!this.controller.levelModel.inBounds(formerPosition[0], formerPosition[1])) {
@@ -704,30 +702,5 @@ module.exports = class BaseEntity {
         }
       }
     });
-  }
-
-  directionToOffset(direction) {
-    let offset = [0,0];
-    // Direction will ever only not be null if we're calling this as a
-    // function of player movement.
-    switch (direction) {
-      case 0: {
-        offset[1] = -1;
-        break;
-      }
-      case 1: {
-        offset[0] = 1;
-        break;
-      }
-      case 2: {
-        offset[1] = 1;
-        break;
-      }
-      case 3: {
-        offset[0] = -1;
-        break;
-      }
-    }
-    return offset;
   }
 };
