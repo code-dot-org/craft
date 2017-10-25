@@ -1,5 +1,6 @@
 const CommandQueue = require("../CommandQueue/CommandQueue.js");
 const FacingDirection = require("../LevelMVC/FacingDirection.js");
+const Position = require("../LevelMVC/Position.js");
 const EventType = require("../Event/EventType.js");
 const CallbackCommand = require("../CommandQueue/CallbackCommand.js");
 const LevelBlock = require("../LevelMVC/LevelBlock.js");
@@ -695,7 +696,7 @@ module.exports = class BaseEntity {
 
   handleMoveAwayFromPiston(moveOffset) {
     const formerPosition = [this.position[0] + moveOffset[0], this.position[1] + moveOffset[1]];
-    this.controller.levelModel.actionPlane.getOrthogonalPositions(formerPosition).forEach(workingPos => {
+    Position.getOrthogonalPositions(formerPosition).forEach(workingPos => {
       if (this.controller.levelModel.actionPlane.inBounds(workingPos)) {
         const block = this.controller.levelModel.actionPlane.getBlockAt(workingPos);
         if (block.blockType.startsWith("piston") && block.isPowered) {
