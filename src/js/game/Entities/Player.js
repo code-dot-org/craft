@@ -10,7 +10,9 @@ module.exports = class Player extends BaseEntity {
     this.inventory = {};
     this.movementState = -1;
     this.onTracks = false;
+    this.getOffTrack = false;
     this.firstTrack = true;
+    this.railDelayCheck = false;
 
     if (controller.getIsDirectPlayerControl()) {
       this.moveDelayMin = 0;
@@ -93,6 +95,9 @@ module.exports = class Player extends BaseEntity {
     const queueHasOne = this.queue.currentCommand && this.queue.getLength() === 0;
     const timeEllapsed = (+new Date() - this.lastMovement);
     const movementAlmostFinished = timeEllapsed > 300;
+    if (isMoving && timeEllapsed > 800) {
+      this.getOffTrack = true;
+    }
     return !this.onTracks && ((queueIsEmpty || (queueHasOne && movementAlmostFinished)) && isMoving);
   }
 

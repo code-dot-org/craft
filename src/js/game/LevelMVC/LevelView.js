@@ -748,7 +748,8 @@ module.exports = class LevelView {
     let offset = FacingDirection.getOffsetFromDirection(facing);
     let nextPos = [entity.position[0] + offset[0], entity.position[1] + offset[1]];
 
-    if (!track && !this.firstTime(position, nextPos)) {
+    if (entity.getOffTrack || (!track && !this.firstTime(position, nextPos))) {
+      entity.getOffTrack = false;
       entity.onTracks = false;
       if (completionHandler) {
         completionHandler();
