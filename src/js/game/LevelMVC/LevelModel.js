@@ -39,11 +39,7 @@ module.exports = class LevelModel {
     this.shadingPlane = [];
     this.actionPlane = new LevelPlane(this.initialLevelData.actionPlane, this.planeWidth, this.planeHeight, this.controller, this, "actionPlane");
 
-    this.actionPlane.getAllPositions().forEach((position) => {
-      if (this.actionPlane.getBlockAt(position).isRedstoneBattery) {
-        this.actionPlane.redstonePropagation(position);
-      }
-    });
+    this.actionPlane.powerRedstone();
 
     this.actionPlane.getAllPositions().forEach((position) => {
       if (this.actionPlane.getBlockAt(position).isRedstone) {

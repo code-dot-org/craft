@@ -50,8 +50,6 @@ module.exports = class LevelPlane {
     this.width = width;
     this.height = height;
     this.levelModel = LevelModel;
-    this.redstoneList = [];
-    this.redstoneListON = [];
     this.planeType = planeType;
     this.playPistonOn = false;
     this.playPistonOff = false;
@@ -144,7 +142,7 @@ module.exports = class LevelPlane {
 
       let redstoneToRefresh = [];
       if (block.needToRefreshRedstone()) {
-        redstoneToRefresh = this.getRedstone();
+        redstoneToRefresh = this.refreshRedstone();
       }
 
       this.updateWeakCharge(position, block);
@@ -288,6 +286,28 @@ module.exports = class LevelPlane {
   }
 
   /**
+   * Propagate power to (and orient) all redstone wire in the level
+   */
+  powerRedstone() {
+    const redstonePositions = this.getAllPositions().filter((position) => {
+      const block = this.getBlockAt(position);
+      return block.isRedstone || block.isRedstoneBattery;
+    });
+
+    // redstone charge propagation
+    Position.adjacencySets(redstonePositions).forEach((set) => {
+      const somePower = set.some((position) => this.getBlockAt(position).isRedstoneBattery);
+
+      set.forEach((position) => {
+        this.getBlockAt(position).isPowered = somePower;
+        this.determineRedstoneSprite(position);
+      });
+    });
+
+    return redstonePositions;
+  }
+
+  /**
    * Propagate power to (and orient) all powerable rails in the level.
    */
   powerRails() {
@@ -392,43 +412,20 @@ module.exports = class LevelPlane {
   }
 
   /**
-  * Updates the state and sprites of all redstoneWire on the plane.
-  * Important note: This is what kicks off redstone charge propagation and is called
-  * on place/destroy/run/load.... wherever updating charge is important.
-  */
-  getRedstone() {
-    this.redstoneList = [];
-    this.redstoneListON = [];
+   * Updates the state and sprites of all redstoneWire on the plane.
+   * Important note: This is what kicks off redstone charge propagation and is called
+   * on place/destroy/run/load.... wherever updating charge is important.
+   */
+  refreshRedstone() {
+    // power redstone
+    const redstonePositions = this.powerRedstone();
 
-    this.getAllPositions().forEach((position) => {
-      const block = this.getBlockAt(position);
-      if (block.isRedstone) {
-        block.isPowered = false;
-        this.redstoneList.push(position);
-      }
-    });
-
-    this.getAllPositions().forEach((position) => {
-      const block = this.getBlockAt(position);
-      if (block.isRedstoneBattery) {
-        this.redstonePropagation(position);
-      }
-    });
-
-    let posToRefresh = [];
-    for (let i = 0; i < this.redstoneList.length; ++i) {
-      this.determineRedstoneSprite(this.redstoneList[i]);
-      posToRefresh.push(this.redstoneList[i]);
-    }
-    for (let i = 0; i < this.redstoneListON.length; ++i) {
-      this.determineRedstoneSprite(this.redstoneListON[i]);
-      posToRefresh.push(this.redstoneListON[i]);
-    }
-
+    // power all blocks powered by redstone
     this.powerAllBlocks();
 
+    // power rails powered by redstone
     const powerableRails = this.powerRails();
-    posToRefresh.push(...powerableRails);
+    const posToRefresh = redstonePositions.concat(powerableRails);
 
     // Once we're done updating redstoneWire states, check to see if doors and pistons should open/close.
     this.getAllPositions().forEach((position) => {
@@ -686,7 +683,7 @@ module.exports = class LevelPlane {
       }
     }
     if (redo) {
-      this.getRedstone();
+      this.refreshRedstone();
     }
   }
 
@@ -701,51 +698,6 @@ module.exports = class LevelPlane {
       workingPosition = [workingPosition[0] + offsetX, workingPosition[1] + offsetY];
     }
     return pushingBlocks;
-  }
-
-  /**
-  * Silly helper to get the index of a specific position in an array of positions.
-  */
-  findPositionInArray(position, array) {
-    for (let i = 0; array.length; ++i) {
-      if (Position.equals(position, array[i])) {
-        return i;
-      }
-    }
-  }
-
-  /**
-  * If the block at the given position is redstone, this tracks the position, and
-  * propagates power to the surrounding indices.
-  */
-  redstonePropagation(position) {
-    const block = this.getBlockAt(position);
-
-    if (block.isRedstone) {
-      let indexToRemove = this.findPositionInArray(position, this.redstoneList);
-      this.redstoneList.splice(indexToRemove,1);
-      this.redstoneListON.push(position);
-      block.isPowered = true;
-    }
-
-    Position.getOrthogonalPositions(position).forEach(orthogonalPosition => {
-      this.blockPropagation(orthogonalPosition);
-    });
-  }
-
-  /**
-  * The actual recursive propagation functionality for updating Powered state and sending
-  * the propagation call to surrounding indices.
-  */
-  blockPropagation(position) {
-    let adjacentBlock = this.getBlockAt(position);
-
-    if (this.inBounds(position) &&
-      adjacentBlock.isPowered === false &&
-      adjacentBlock.isRedstone) {
-      adjacentBlock.isPowered = true;
-      this.redstonePropagation([position[0], position[1]]);
-    }
   }
 
   /**
