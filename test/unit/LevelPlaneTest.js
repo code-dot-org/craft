@@ -235,36 +235,6 @@ test('rail connections: longer track', t => {
   t.end();
 });
 
-// Placing a straight track next to a disconnected curved track should heal the
-// track into a straight line.
-//
-// Before:   After:
-//              ║
-//   ═╗         ║
-//    ║         ║
-test.skip('rail connections: disconnected curved track should forget old connection', t => {
-  const data = new Array(9).fill('');
-  const plane = new LevelPlane(data, 3, 3, true, null, "actionPlane");
-
-  plane.setBlockAt([0, 1], new LevelBlock('rails'));
-  plane.setBlockAt([1, 1], new LevelBlock('rails'));
-  plane.setBlockAt([1, 2], new LevelBlock('rails'));
-
-  // Destroy west rail and place new north rail.
-  plane.setBlockAt([0, 1], new LevelBlock(''));
-  plane.setBlockAt([1, 0], new LevelBlock('rails'));
-
-  const expected = [
-    '',               'railsSouth',      '',
-    '',               'railsNorthSouth', '',
-    '',               'railsNorth',      '',
-  ];
-
-  t.deepEqual(plane._data.map(block => block.blockType), expected);
-
-  t.end();
-});
-
 // Destroying part of a track should leave T-junctions intact. Don't heal the
 // curved track into a straight segment.
 //
