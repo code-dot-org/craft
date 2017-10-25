@@ -1930,15 +1930,16 @@ module.exports = class LevelView {
       };
 
       const collectiblePosition = this.controller.levelModel.spritePositionToIndex([xOffset, yOffset], [sprite.x, sprite.y]);
+      this.collectibleItems.push([sprite, [xOffset, yOffset], blockType, collectibleDistance]);
       anim.onComplete.add(() => {
         if (this.controller.levelModel.usePlayer) {
           if (distanceBetween(this.player.position, collectiblePosition) < collectibleDistance) {
-            this.playItemAcquireAnimation(this.player.position, this.player.facing, sprite, () => { }, blockType);
+            this.player.collectItems([x,y]);
           }
         }
       });
     }
-    this.collectibleItems.push([sprite, [xOffset, yOffset], blockType, collectibleDistance]);
+
     this.playScaledSpeed(sprite.animations, "animate");
     return sprite;
   }
