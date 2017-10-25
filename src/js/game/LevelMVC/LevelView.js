@@ -447,29 +447,9 @@ module.exports = class LevelView {
     positionTween.start();
     scaleTween.start();
   }
-  // direction
+
   getDirectionName(facing) {
-    var direction;
-
-    switch (facing) {
-      case FacingDirection.North:
-        direction = "_up";
-        break;
-
-      case FacingDirection.East:
-        direction = "_right";
-        break;
-
-      case FacingDirection.South:
-        direction = "_down";
-        break;
-
-      case FacingDirection.West:
-        direction = "_left";
-        break;
-    }
-
-    return direction;
+    return "_" + FacingDirection.directionToRelative(facing).toLowerCase();
   }
 
   updatePlayerDirection(position, facing) {
