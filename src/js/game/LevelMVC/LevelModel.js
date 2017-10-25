@@ -637,8 +637,8 @@ module.exports = class LevelModel {
     return result;
   }
 
-  canPlaceBlock() {
-    return true;
+  canPlaceBlock(entity, blockAtPosition) {
+    return entity.canPlaceBlock(blockAtPosition);
   }
 
   canPlaceBlockForward(blockType = "", entity = this.player) {
