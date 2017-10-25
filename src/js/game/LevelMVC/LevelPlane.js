@@ -254,14 +254,14 @@ module.exports = class LevelPlane {
 
   /**
    * Determine whether or not the blocks at the given positions are powered
-   * rails that are connected to each other
+   * rails that are connected to each other.
    *
    * @param {Posititon} left
    * @param {Posititon} right
    * @return {boolean}
    */
   getPoweredRailsConnected(left, right) {
-    // return early if they're not even adjacent
+    // return early if the positions are not even adjacent
     if (!Position.isAdjacent(left, right)) {
       return false;
     }
@@ -276,17 +276,10 @@ module.exports = class LevelPlane {
 
     // to be connected, both blocks must be oriented either North/South or
     // East/West
-    const bothEastWest =
-      leftBlock.blockType.match('East|West') &&
-      rightBlock.blockType.match('East|West');
-    const bothNorthSouth =
-      leftBlock.blockType.match('North|South') &&
-      rightBlock.blockType.match('North|South');
-
-    if (bothEastWest) {
+    if (leftBlock.getIsHorizontal() && rightBlock.getIsHorizontal()) {
       return Position.equals(Position.forward(left, East), right) ||
           Position.equals(Position.forward(left, West), right);
-    } else if (bothNorthSouth) {
+    } else if (leftBlock.getIsVertical() && rightBlock.getIsVertical()) {
       return Position.equals(Position.forward(left, North), right) ||
           Position.equals(Position.forward(left, South), right);
     } else {
@@ -299,7 +292,7 @@ module.exports = class LevelPlane {
    */
   powerRails() {
     // find all rails that can be powered
-    const powerableRails = this.getAllPositions().filter((position) => (
+    const powerableRails = this.getAllPositions().filter(position => (
       this.getBlockAt(position).getIsPowerableRail()
     ));
 
