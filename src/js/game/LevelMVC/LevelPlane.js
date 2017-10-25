@@ -170,8 +170,8 @@ module.exports = class LevelPlane {
       this.determineRailType(position, true);
 
       if (this.levelModel && this.levelModel.controller.levelView) {
-        const northEast = Position.add(position, [1, -1]);
-        const southWest = Position.add(position, [-1, 1]);
+        const northEast = Position.north(Position.east(position));
+        const southWest = Position.south(Position.west(position));
         let positionAndTouching = Position.getOrthogonalPositions(position).concat([position, northEast, southWest]);
         this.levelModel.controller.levelView.refreshActionGroup(positionAndTouching);
         this.levelModel.controller.levelView.refreshActionGroup(redstoneToRefresh);
