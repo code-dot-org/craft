@@ -333,6 +333,94 @@ test('redstone charge: place block', t => {
   t.end();
 });
 
+test('powered rails: vertical charge propagation', t => {
+  const data = [
+    '', 'railsRedstoneTorch',       '',
+    '', 'railsUnpoweredSouth', '',
+    '', 'railsUnpoweredNorth', '',
+  ];
+  const plane = new LevelPlane(data, 3, 3, true, null, "actionPlane");
+
+  plane.getRedstone();
+  t.equal(plane.getBlockAt([1, 1]).blockType, "railsPoweredSouth");
+  t.equal(plane.getBlockAt([1, 2]).blockType, "railsPoweredNorth");
+
+  t.end();
+});
+
+test('powered rails: horizontal charge propagation', t => {
+  const data = [
+    '', '', '',
+    'railsRedstoneTorch', 'railsUnpoweredEast', 'railsUnpoweredWest',
+    '', '', '',
+  ];
+  const plane = new LevelPlane(data, 3, 3, true, null, "actionPlane");
+
+  plane.getRedstone();
+  t.equal(plane.getBlockAt([1, 1]).blockType, "railsPoweredEast");
+  t.equal(plane.getBlockAt([2, 1]).blockType, "railsPoweredWest");
+
+  t.end();
+});
+
+// Powered: =
+// Unpowered: -
+//
+// Before:              After:
+//            T                    T
+// T║   |     ║         T═════     ║
+//    |         |          |       --
+//            |                    |
+//    |       |            |       |
+// T║   |   |           T═════    --
+//            ║                    ║
+//            T                    T
+test('powered rails: only propagate along straight lines', t => {
+  const TORCH = "railsRedstoneTorch";
+  const RAILS = "railsUnpowered";
+  const EMPTY = "";
+  const data = [
+    EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TORCH, EMPTY,
+    TORCH, RAILS, EMPTY, RAILS, EMPTY, EMPTY, RAILS, EMPTY,
+    EMPTY, EMPTY, RAILS, EMPTY, EMPTY, EMPTY, EMPTY, RAILS,
+    EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, RAILS, EMPTY,
+    EMPTY, EMPTY, RAILS, EMPTY, EMPTY, EMPTY, RAILS, EMPTY,
+    TORCH, RAILS, EMPTY, RAILS, EMPTY, RAILS, EMPTY, EMPTY,
+    EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, RAILS, EMPTY,
+    EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TORCH, EMPTY,
+  ];
+  const plane = new LevelPlane(data, 8, 8, true, null, "actionPlane");
+
+  t.equal(plane.setBlockAt([2, 1], new LevelBlock('railsUnpowered')).blockType, 'railsPoweredEastWest');
+  t.equal(plane.setBlockAt([2, 5], new LevelBlock('railsUnpowered')).blockType, 'railsPoweredEastWest');
+  t.equal(plane.setBlockAt([6, 2], new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
+  t.equal(plane.setBlockAt([6, 5], new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
+
+  const expected = [
+    '',       '',         '',         '',        '', '',        'railsT',   '',
+    'railsT', 'railsPE',  'railsPEW', 'railsPW', '', '',        'railsP',   '',
+    '',       '',         'railsU',   '',        '', '',        'railsUEW', 'railsUW',
+    '',       '',         '',         '',        '', '',        'railsUS',  '',
+    '',       '',         'railsU',   '',        '', '',        'railsUNS', '',
+    'railsT', 'railsPE',  'railsPEW', 'railsPW', '', 'railsUE', 'railsUEW', '',
+    '',       '',         '',         '',        '', '',        'railsP',   '',
+    '',       '',         '',         '',        '', '',        'railsT',   '',
+  ].map(rail => {
+    return rail
+        .replace('T', 'RedstoneTorch')
+        .replace('U', 'Unpowered')
+        .replace('P', 'Powered')
+        .replace('N', 'North')
+        .replace('S', 'South')
+        .replace('E', 'East')
+        .replace('W', 'West');
+  });
+
+  t.deepEqual(plane._data.map(block => block.blockType), expected);
+
+  t.end();
+});
+
 //Placing/destroying redstoneWire should update charge propagation throughout
 //a line of wire connected to a redstone torch
 // Before:   After:

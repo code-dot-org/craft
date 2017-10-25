@@ -253,6 +253,79 @@ module.exports = class LevelPlane {
   }
 
   /**
+   * Determine whether or not the blocks at the given positions are powered
+   * rails that are connected to each other.
+   *
+   * @param {Posititon} left
+   * @param {Posititon} right
+   * @return {boolean}
+   */
+  getPoweredRailsConnected(left, right) {
+    // return early if the positions are not even adjacent
+    if (!Position.isAdjacent(left, right)) {
+      return false;
+    }
+
+    const leftBlock = this.getBlockAt(left);
+    const rightBlock = this.getBlockAt(right);
+
+    // to be connected, both blocks must be powerable rails
+    if (!(leftBlock.getIsPowerableRail() && rightBlock.getIsPowerableRail())) {
+      return false;
+    }
+
+    // to be connected, both blocks must be oriented either North/South or
+    // East/West
+    if (leftBlock.getIsHorizontal() && rightBlock.getIsHorizontal()) {
+      return Position.equals(Position.forward(left, East), right) ||
+          Position.equals(Position.forward(left, West), right);
+    } else if (leftBlock.getIsVertical() && rightBlock.getIsVertical()) {
+      return Position.equals(Position.forward(left, North), right) ||
+          Position.equals(Position.forward(left, South), right);
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Propagate power to (and orient) all powerable rails in the level.
+   */
+  powerRails() {
+    // find all rails that can be powered
+    const powerableRails = this.getAllPositions().filter(position => (
+      this.getBlockAt(position).getIsPowerableRail()
+    ));
+
+    // update powerable rails once to set their orientations
+    powerableRails.forEach((position) => {
+      this.determineRailType(position);
+    });
+
+    // propagate power
+    Position.adjacencySets(
+      powerableRails,
+      this.getPoweredRailsConnected.bind(this)
+    ).forEach(set => {
+      // each set of connected rails should be entirely powered if any of them
+      // is powered
+      const somePower = set.some(position => this.getBlockAt(position).isPowered);
+
+      if (somePower) {
+        set.forEach(position => {
+          this.getBlockAt(position).isPowered = true;
+        });
+      }
+    });
+
+    // update all rails again to set their power state
+    powerableRails.forEach((position) => {
+      this.determineRailType(position);
+    });
+
+    return powerableRails;
+  }
+
+  /**
    * Determines which rail object should be placed given the context of surrounding
    * indices.
    */
@@ -265,8 +338,8 @@ module.exports = class LevelPlane {
 
     let powerState = '';
     let priority = RailConnectionPriority;
-    if (block.isConnectedToRedstone) {
-      powerState = 'Unpowered';
+    if (block.getIsPowerableRail()) {
+      powerState = block.isPowered ? 'Powered' : 'Unpowered';
       priority = PoweredRailConnectionPriority;
     }
 
@@ -353,6 +426,10 @@ module.exports = class LevelPlane {
     }
 
     this.powerAllBlocks();
+
+    const powerableRails = this.powerRails();
+    posToRefresh.push(...powerableRails);
+
     // Once we're done updating redstoneWire states, check to see if doors and pistons should open/close.
     this.getAllPositions().forEach((position) => {
       this.getIronDoors(position);

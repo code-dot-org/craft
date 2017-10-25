@@ -715,15 +715,7 @@ module.exports = class LevelView {
     return tween;
   }
 
-  activateUnpoweredRails(unpoweredRails) {
-    for (var railIndex = 0; railIndex < unpoweredRails.length; railIndex += 2) {
-      var rail = unpoweredRails[railIndex + 1];
-      var position = unpoweredRails[railIndex];
-      this.createActionPlaneBlock(position, rail);
-    }
-  }
-
-  playMinecartAnimation(isOnBlock, completionHandler, unpoweredRails) {
+  playMinecartAnimation(isOnBlock, completionHandler) {
     //start at 3,2
     this.setPlayerPosition(3, 2, isOnBlock);
     const position = [3, 2];
@@ -734,7 +726,6 @@ module.exports = class LevelView {
     this.game.camera.follow(this.player.sprite);
 
     animation.onComplete.add(() => {
-      this.activateUnpoweredRails(unpoweredRails);
       this.playTrack(position, this.player.facing, isOnBlock, this.player, completionHandler);
     });
   }

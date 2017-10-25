@@ -357,19 +357,6 @@ module.exports = class LevelModel {
     return tnt;
   }
 
-  getUnpoweredRails() {
-    var unpoweredRails = [];
-    for (var x = 0; x < this.planeWidth; ++x) {
-      for (var y = 0; y < this.planeHeight; ++y) {
-        var block = this.actionPlane.getBlockAt([x, y]);
-        if (block.blockType.substring(0, 7) === "railsUn") {
-          unpoweredRails.push([x, y], "railsPowered" + block.blockType.substring(14));
-        }
-      }
-    }
-    return unpoweredRails;
-  }
-
   getMoveForwardPosition(entity = this.player) {
     var cx = entity.position[0],
       cy = entity.position[1];
