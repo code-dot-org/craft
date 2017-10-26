@@ -2110,6 +2110,7 @@ module.exports = class LevelView {
         // Establish the three different animations.
         let anim = [];
         let whichAnim = Math.floor(Math.random() * 3);
+        // Pick one of the animations to assign.
         switch (whichAnim) {
           case 0:
             anim = Phaser.Animation.generateFrameNames("redstone_sparkle", 0, 7, ".png");
@@ -2134,7 +2135,7 @@ module.exports = class LevelView {
           backBuffer.push("redstone_sparkle99.png");
         }
 
-        // Add the front buffer to the beginning of the frame list
+        // Organize the animation with a buffer in front and back
         frameList = frontBuffer.concat(frameList);
         frameList = frameList.concat(anim);
         frameList = frameList.concat(backBuffer);
