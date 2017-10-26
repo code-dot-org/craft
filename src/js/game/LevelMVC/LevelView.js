@@ -2107,12 +2107,22 @@ module.exports = class LevelView {
         let posX = xOffset + 40 * x;
         let posY = yOffset + group.yOffset + 40 * y;
         sprite = group.create(posX, posY, atlas, frame);
-        // Generate growing animation frames.
-        frameList = Phaser.Animation.generateFrameNames("redstone_sparkle", 8, 15, ".png");
-        // Reverse to shrink back down.
-        //frameList = frameList.concat(Phaser.Animation.generateFrameNames("redstone_sparkle", 8, 13, ".png"));
+        // Establish the three different animations.
+        let anim = [];
+        let whichAnim = Math.floor(Math.random() * 3);
+        switch (whichAnim) {
+          case 0:
+            anim = Phaser.Animation.generateFrameNames("redstone_sparkle", 0, 7, ".png");
+            break;
+          case 1:
+            anim = Phaser.Animation.generateFrameNames("redstone_sparkle", 8, 15, ".png");
+            break;
+          default:
+            anim = Phaser.Animation.generateFrameNames("redstone_sparkle", 16, 23, ".png");
+            break;
+        }
 
-        // Add a random amount of blank frames on to front and back for delay between loops.
+        // Set up a random amount of blank frames to be put on the front and back for delay between loops.
         let frontDelay = Math.floor(Math.random() * 50) + 5;
         let backDelay = Math.floor(Math.random() * 30) + 20;
         let frontBuffer = [];
@@ -2123,10 +2133,14 @@ module.exports = class LevelView {
         for (i = 0; i < backDelay; ++i) {
           backBuffer.push("redstone_sparkle99.png");
         }
+
+        // Add the front buffer to the beginning of the frame list
         frameList = frontBuffer.concat(frameList);
+        frameList = frameList.concat(anim);
         frameList = frameList.concat(backBuffer);
 
         let animation = sprite.animations.add("idle", frameList, 5, true);
+
         // onLoop, we want to randomize which corner of the index the animation manifests in.
         animation.onLoop.add((sprite) => {
           let xType = Math.floor(Math.random() * 2);
