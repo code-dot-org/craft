@@ -2189,12 +2189,15 @@ module.exports = class LevelView {
   }
 
   addRedstoneSparkle() {
-    const sprite = this.game.make.sprite(20, 25, "redstoneSparkle", "redstone_sparkle99.png");
+    const blank = "redstone_sparkle99.png";
+    const sprite = this.game.make.sprite(20, 25, "redstoneSparkle", blank);
 
     // Establish the three different animations.
-    sprite.animations.add("fizz_0", Phaser.Animation.generateFrameNames("redstone_sparkle", 0, 7, ".png").concat("redstone_sparkle99.png"), 7);
-    sprite.animations.add("fizz_1", Phaser.Animation.generateFrameNames("redstone_sparkle", 8, 15, ".png").concat("redstone_sparkle99.png"), 7);
-    sprite.animations.add("fizz_2", Phaser.Animation.generateFrameNames("redstone_sparkle", 16, 23, ".png").concat("redstone_sparkle99.png"), 7);
+    for (let i = 0; i < 3; i++) {
+      const n = i * 8;
+      const frames = [blank].concat(Phaser.Animation.generateFrameNames("redstone_sparkle", n, n + 7, ".png"), blank);
+      sprite.animations.add(`fizz_${i}`, frames, 7);
+    }
 
     const playRandomSparkle = () => {
       setTimeout(() => {
