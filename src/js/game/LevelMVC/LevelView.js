@@ -2189,42 +2189,33 @@ module.exports = class LevelView {
   }
 
   addRedstoneSparkle() {
-    const sprite = this.game.make.sprite(20, 25, "redstoneSparkle", "redstone_sparkle99");
+    const sprite = this.game.make.sprite(20, 25, "redstoneSparkle", "redstone_sparkle99.png");
+
     // Establish the three different animations.
-    let anim = [];
-    let whichAnim = Math.floor(Math.random() * 3);
-    // Pick one of the animations to assign.
-    switch (whichAnim) {
-      case 0:
-        anim = Phaser.Animation.generateFrameNames("redstone_sparkle", 0, 7, ".png");
-        break;
-      case 1:
-        anim = Phaser.Animation.generateFrameNames("redstone_sparkle", 8, 15, ".png");
-        break;
-      default:
-        anim = Phaser.Animation.generateFrameNames("redstone_sparkle", 16, 23, ".png");
-        break;
-    }
+    const anims = [
+      sprite.animations.add("fizz_0", Phaser.Animation.generateFrameNames("redstone_sparkle", 0, 7, ".png")),
+      sprite.animations.add("fizz_1", Phaser.Animation.generateFrameNames("redstone_sparkle", 8, 15, ".png")),
+      sprite.animations.add("fizz_2", Phaser.Animation.generateFrameNames("redstone_sparkle", 16, 23, ".png")),
+    ];
 
-    // Set up a random amount of blank frames to be put on the front and back for delay between loops.
-    let frontDelay = randomInt(5, 120);
-    let frontBuffer = [];
-    for (let i = 0; i < frontDelay; ++i) {
-      frontBuffer.push("redstone_sparkle99.png");
-    }
-    // Organize the animation with a buffer in front
-    let frameList = frontBuffer.concat(frameList);
-    frameList = frameList.concat(anim);
-
-    let animation = sprite.animations.add("idle", frameList, 5, true);
-
-    // onLoop, we want to randomize which corner of the index the animation manifests in.
-    animation.onLoop.add(sprite => {
-      sprite.position.x = (Math.random() > 0.5) ? 20 : 40;
-      sprite.position.y = (Math.random() > 0.5) ? 25 : 45;
+    anims.forEach(animation => {
+      animation.delay = 5; // Not working?
+      // TODO: add blank "redstone_sparkle99.png" frame
     });
 
-    this.playAnimationWithOffset(sprite, "idle", Math.floor(Math.random() * 3) + 21, 1);
+    const playRandomSparkle = () => {
+      setTimeout(() => {
+        // Pick one of the animations to play.
+        let whichAnim = Math.floor(Math.random() * 3);
+        this.onAnimationEnd(this.playScaledSpeed(sprite.animations, `fizz_${whichAnim}`), playRandomSparkle);
+
+        // Randomize which corner of the index the animation manifests in.
+        sprite.position.x = (Math.random() > 0.5) ? 20 : 40;
+        sprite.position.y = (Math.random() > 0.5) ? 25 : 45;
+      }, randomInt(30, 600) / this.controller.tweenTimeScale);
+    };
+
+    playRandomSparkle();
 
     return sprite;
   }
