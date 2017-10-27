@@ -1,4 +1,5 @@
 const BaseEntity = require("./BaseEntity.js");
+const randomInt = require("./../LevelMVC/Utils.js").randomInt;
 module.exports = class Ghast extends BaseEntity {
     constructor(controller, type, identifier, x, y, facing) {
         super(controller, type, identifier, x, y, facing);
@@ -17,7 +18,6 @@ module.exports = class Ghast extends BaseEntity {
         var frameName = "Ghast";
         this.sprite = actionGroup.create(0, 0, 'ghast', 'Ghast0000.png');
         this.sprite.scale.setTo(1,1);
-        let stillFrameName = ['Ghast0072.png', 'Ghast0048.png', 'Ghast0024.png', 'Ghast0000.png'];
         let idleDelayFrame = 0;
         // [direction][[idle],[shoot]]
         var frameListPerDirection = [[[72, 83], [84, 95]], // down
@@ -29,8 +29,19 @@ module.exports = class Ghast extends BaseEntity {
 
             // idle sequence
             frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][0][0], frameListPerDirection[i][0][1], ".png", 4);
+
+            let randomOffset = randomInt(2, frameList.length);
+            let framesToOffset = [];
+            for (let k = 0; k < randomOffset; ++k) {
+              framesToOffset.push(frameList[0]);
+              frameList.splice(0, 1);
+            }
+            for (let k = 0; k < framesToOffset.length; ++k) {
+              frameList.push(framesToOffset[k]);
+            }
+
             for (var j = 0; j < idleDelayFrame; j++) {
-                frameList.push(stillFrameName[i]);
+                frameList.push(frameList[0]);
             }
             this.sprite.animations.add("idle" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.playRandomIdle(this.facing);
