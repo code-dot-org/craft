@@ -5,6 +5,7 @@ module.exports = class Ghast extends BaseEntity {
         this.offset = [-50, -84];
         this.prepareSprite();
         this.sprite.sortOrder = this.controller.levelView.yToIndex(Number.MAX_SAFE_INTEGER);
+        this.audioDelay = 15;
     }
 
     prepareSprite() {
@@ -71,6 +72,30 @@ module.exports = class Ghast extends BaseEntity {
 
         animationName += facingName;
         this.controller.levelView.playScaledSpeed(this.sprite.animations, animationName);
+
+        if (this.audioDelay > 0) {
+          --this.audioDelay;
+        } else {
+          this.audioDelay = 5;
+          let chance = Math.floor(Math.random() * 5);
+          if (chance === 0) {
+            let soundNum = Math.floor(Math.random() * 4);
+            switch (soundNum) {
+              case 0:
+                this.controller.audioPlayer.play("moan2");
+                break;
+              case 1:
+                this.controller.audioPlayer.play("moan3");
+                break;
+              case 2:
+                this.controller.audioPlayer.play("moan6");
+                break;
+              default:
+                this.controller.audioPlayer.play("moan7");
+                break;
+            }
+          }
+        }
     }
 
 };
