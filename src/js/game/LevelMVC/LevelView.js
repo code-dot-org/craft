@@ -1025,10 +1025,6 @@ module.exports = class LevelView {
       const group = block.shouldRenderOnGroundPlane() ? this.groundGroup : this.actionGroup;
       const offset = block.shouldRenderOnGroundPlane() ? -0.5 : 0;
       sprite = this.createBlock(group, position[0], position[1] + offset, blockType);
-      if (blockType.startsWith('redstoneWire') && blockType.endsWith('On')) {
-        // Please excuse the magic numbers. They're just to offset the sparkle correctly within the index.
-        sprite.addChild(this.createBlock(group, 0.35, 0.05, "redstoneSparkle"));
-      }
     }
 
     if (sprite) {
@@ -2100,68 +2096,6 @@ module.exports = class LevelView {
         this.playAnimationWithOffset(sprite, "idle", 29, 1);
         break;
 
-      case "redstoneSparkle": {
-        atlas = this.blocks[blockType][0];
-        frame = this.blocks[blockType][1];
-        xOffset = this.blocks[blockType][2];
-        yOffset = this.blocks[blockType][3];
-        let posX = xOffset + 40 * x;
-        let posY = yOffset + group.yOffset + 40 * y;
-        sprite = group.create(posX, posY, atlas, frame);
-        // Establish the three different animations.
-        let anim = [];
-        let whichAnim = Math.floor(Math.random() * 3);
-        // Pick one of the animations to assign.
-        switch (whichAnim) {
-          case 0:
-            anim = Phaser.Animation.generateFrameNames("redstone_sparkle", 0, 7, ".png");
-            break;
-          case 1:
-            anim = Phaser.Animation.generateFrameNames("redstone_sparkle", 8, 15, ".png");
-            break;
-          default:
-            anim = Phaser.Animation.generateFrameNames("redstone_sparkle", 16, 23, ".png");
-            break;
-        }
-
-        // Set up a random amount of blank frames to be put on the front and back for delay between loops.
-        let frontDelay = Math.floor(Math.random() * 50) + 5;
-        let backDelay = Math.floor(Math.random() * 30) + 20;
-        let frontBuffer = [];
-        let backBuffer = [];
-        for (i = 0; i < frontDelay; ++i) {
-          frontBuffer.push("redstone_sparkle99.png");
-        }
-        for (i = 0; i < backDelay; ++i) {
-          backBuffer.push("redstone_sparkle99.png");
-        }
-        // Organize the animation with a buffer in front and back
-        frameList = frontBuffer.concat(frameList);
-        frameList = frameList.concat(anim);
-        frameList = frameList.concat(backBuffer);
-
-        let animation = sprite.animations.add("idle", frameList, 5, true);
-
-        // onLoop, we want to randomize which corner of the index the animation manifests in.
-        animation.onLoop.add((sprite) => {
-          let xType = Math.floor(Math.random() * 2);
-          let yType = Math.floor(Math.random() * 2);
-          if (xType) {
-            sprite.position.x = sprite.cameraOffset.x + 20;
-          } else {
-            sprite.position.x = sprite.cameraOffset.x;
-          }
-          if (yType) {
-            sprite.position.y = sprite.cameraOffset.y + 20;
-          } else {
-            sprite.position.y = sprite.cameraOffset.y;
-          }
-        }, this);
-
-        // Play that thing!
-        this.playAnimationWithOffset(sprite, "idle", Math.floor(Math.random() * 3) + 21, 1);
-        break;
-      }
       case "fire":
         atlas = this.blocks[blockType][0];
         frame = this.blocks[blockType][1];
@@ -2244,8 +2178,58 @@ module.exports = class LevelView {
           }
           sprite.addChild(this.game.make.sprite(xShadow, yShadow, "blockShadows", "Shadow_Parts_Fade_overlap.png"));
         }
+        if (blockType.startsWith('redstoneWire') && blockType.endsWith('On')) {
+          sprite.addChild(this.addRedstoneSparkle());
+        }
         break;
     }
+
+    return sprite;
+  }
+
+  addRedstoneSparkle() {
+    const sprite = this.game.make.sprite(20, 25, "redstoneSparkle", "redstone_sparkle99");
+    // Establish the three different animations.
+    let anim = [];
+    let whichAnim = Math.floor(Math.random() * 3);
+    // Pick one of the animations to assign.
+    switch (whichAnim) {
+      case 0:
+        anim = Phaser.Animation.generateFrameNames("redstone_sparkle", 0, 7, ".png");
+        break;
+      case 1:
+        anim = Phaser.Animation.generateFrameNames("redstone_sparkle", 8, 15, ".png");
+        break;
+      default:
+        anim = Phaser.Animation.generateFrameNames("redstone_sparkle", 16, 23, ".png");
+        break;
+    }
+
+    // Set up a random amount of blank frames to be put on the front and back for delay between loops.
+    let frontDelay = Math.floor(Math.random() * 50) + 5;
+    let backDelay = Math.floor(Math.random() * 30) + 20;
+    let frontBuffer = [];
+    let backBuffer = [];
+    for (let i = 0; i < frontDelay; ++i) {
+      frontBuffer.push("redstone_sparkle99.png");
+    }
+    for (let i = 0; i < backDelay; ++i) {
+      backBuffer.push("redstone_sparkle99.png");
+    }
+    // Organize the animation with a buffer in front and back
+    let frameList = frontBuffer.concat(frameList);
+    frameList = frameList.concat(anim);
+    frameList = frameList.concat(backBuffer);
+
+    let animation = sprite.animations.add("idle", frameList, 5, true);
+
+    // onLoop, we want to randomize which corner of the index the animation manifests in.
+    animation.onLoop.add(sprite => {
+      sprite.position.x = (Math.random() > 0.5) ? 20 : 40;
+      sprite.position.y = (Math.random() > 0.5) ? 25 : 45;
+    });
+
+    this.playAnimationWithOffset(sprite, "idle", Math.floor(Math.random() * 3) + 21, 1);
 
     return sprite;
   }
