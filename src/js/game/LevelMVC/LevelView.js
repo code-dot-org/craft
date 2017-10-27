@@ -2,6 +2,7 @@ const LevelBlock = require("./LevelBlock.js");
 const FacingDirection = require("./FacingDirection.js");
 const Position = require("./Position.js");
 const createEvent = require("../../utils").createEvent;
+const randomInt = require("./Utils").randomInt;
 
 module.exports = class LevelView {
   constructor(controller) {
@@ -197,7 +198,7 @@ module.exports = class LevelView {
       "tallGrass": ["tallGrass", "", -13, 0],
 
       "lavaPop": ["lavaPop", "LavaPop01", -13, 0],
-      "redstoneSparkle": ["redstoneSparkle", "redstone_sparkle1.png", -25, -8],
+      "redstoneSparkle": ["redstoneSparkle", "redstone_sparkle1.png", 7, 23],
       "fire": ["fire", "", -11, 135],
       "bubbles": ["bubbles", "", -11, 135],
       "explosion": ["explosion", "", -70, 60],
@@ -2096,28 +2097,6 @@ module.exports = class LevelView {
         this.playAnimationWithOffset(sprite, "idle", 29, 1);
         break;
 
-      case "redstoneSparkle":
-        atlas = this.blocks[blockType][0];
-        frame = this.blocks[blockType][1];
-        xOffset = this.blocks[blockType][2];
-        yOffset = this.blocks[blockType][3];
-        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
-        frameList = Phaser.Animation.generateFrameNames("redstone_sparkle", 0, 24, ".png");
-        for (i = 0; i < 4; ++i) {
-          frameList.push("redstone_sparkle7");
-        }
-        frameList = frameList.concat(Phaser.Animation.generateFrameNames("redstone_sparkle", 8, 13, ".png"));
-        for (i = 0; i < 3; ++i) {
-          frameList.push("redstone_sparkle13");
-        }
-        frameList = frameList.concat(Phaser.Animation.generateFrameNames("redstone_sparkle", 14, 23, ".png"));
-        for (i = 0; i < 8; ++i) {
-          frameList.push("redstone_sparkle1");
-        }
-        sprite.animations.add("idle", frameList, 5, true);
-        this.playAnimationWithOffset(sprite, "idle", Math.floor(Math.random() * 3) + 21, 1);
-        break;
-
       case "fire":
         atlas = this.blocks[blockType][0];
         frame = this.blocks[blockType][1];
@@ -2200,8 +2179,36 @@ module.exports = class LevelView {
           }
           sprite.addChild(this.game.make.sprite(xShadow, yShadow, "blockShadows", "Shadow_Parts_Fade_overlap.png"));
         }
+        if (blockType.startsWith('redstoneWire') && blockType.endsWith('On')) {
+          sprite.addChild(this.addRedstoneSparkle());
+        }
         break;
     }
+
+    return sprite;
+  }
+
+  addRedstoneSparkle() {
+    const sprite = this.game.make.sprite(20, 25, "redstoneSparkle", "redstone_sparkle99.png");
+
+    // Establish the three different animations.
+    sprite.animations.add("fizz_0", Phaser.Animation.generateFrameNames("redstone_sparkle", 0, 7, ".png").concat("redstone_sparkle99.png"), 7);
+    sprite.animations.add("fizz_1", Phaser.Animation.generateFrameNames("redstone_sparkle", 8, 15, ".png").concat("redstone_sparkle99.png"), 7);
+    sprite.animations.add("fizz_2", Phaser.Animation.generateFrameNames("redstone_sparkle", 16, 23, ".png").concat("redstone_sparkle99.png"), 7);
+
+    const playRandomSparkle = () => {
+      setTimeout(() => {
+        // Pick one of the animations to play.
+        let whichAnim = Math.floor(Math.random() * 3);
+        this.onAnimationEnd(this.playScaledSpeed(sprite.animations, `fizz_${whichAnim}`), playRandomSparkle);
+
+        // Randomize which corner of the index the animation manifests in.
+        sprite.position.x = (Math.random() > 0.5) ? 20 : 40;
+        sprite.position.y = (Math.random() > 0.5) ? 25 : 45;
+      }, randomInt(500, 7000) / this.controller.tweenTimeScale);
+    };
+
+    playRandomSparkle();
 
     return sprite;
   }
