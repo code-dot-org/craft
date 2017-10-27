@@ -2207,7 +2207,7 @@ module.exports = class LevelView {
     }
 
     // Set up a random amount of blank frames to be put on the front and back for delay between loops.
-    let frontDelay = randomInt(5, 60);
+    let frontDelay = randomInt(5, 120);
     let frontBuffer = [];
     for (let i = 0; i < frontDelay; ++i) {
       frontBuffer.push("redstone_sparkle99.png");
