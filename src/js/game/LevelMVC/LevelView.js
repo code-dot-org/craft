@@ -2,6 +2,7 @@ const LevelBlock = require("./LevelBlock.js");
 const FacingDirection = require("./FacingDirection.js");
 const Position = require("./Position.js");
 const createEvent = require("../../utils").createEvent;
+const randomInt = require("./Utils").randomInt;
 
 module.exports = class LevelView {
   constructor(controller) {
@@ -2206,20 +2207,14 @@ module.exports = class LevelView {
     }
 
     // Set up a random amount of blank frames to be put on the front and back for delay between loops.
-    let frontDelay = Math.floor(Math.random() * 50) + 5;
-    let backDelay = Math.floor(Math.random() * 30) + 20;
+    let frontDelay = randomInt(5, 60);
     let frontBuffer = [];
-    let backBuffer = [];
     for (let i = 0; i < frontDelay; ++i) {
       frontBuffer.push("redstone_sparkle99.png");
     }
-    for (let i = 0; i < backDelay; ++i) {
-      backBuffer.push("redstone_sparkle99.png");
-    }
-    // Organize the animation with a buffer in front and back
+    // Organize the animation with a buffer in front
     let frameList = frontBuffer.concat(frameList);
     frameList = frameList.concat(anim);
-    frameList = frameList.concat(backBuffer);
 
     let animation = sprite.animations.add("idle", frameList, 5, true);
 
