@@ -40,6 +40,6 @@ module.exports.convertActionPlaneEntitiesToConfig = function (levelConfig) {
   });
 };
 
-module.exports.Range = function (min, max) {
+module.exports.randomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };

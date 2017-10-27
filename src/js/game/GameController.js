@@ -1186,9 +1186,10 @@ class GameController {
   placeBlock(commandQueueItem, blockType) {
     const player = this.getEntity(commandQueueItem.target);
     const position = player.position;
-    let blockTypeAtPosition = this.levelModel.actionPlane.getBlockAt(position).blockType;
+    let blockAtPosition = this.levelModel.actionPlane.getBlockAt(position);
+    let blockTypeAtPosition = blockAtPosition.blockType;
 
-    if (this.levelModel.canPlaceBlock()) {
+    if (this.levelModel.canPlaceBlock(player, blockAtPosition)) {
       if (blockTypeAtPosition !== "") {
         this.levelModel.destroyBlock(position);
       }
@@ -1223,7 +1224,7 @@ class GameController {
         }, this);
       }
     } else {
-      commandQueueItem.failed();
+      commandQueueItem.succeeded();
     }
   }
 
@@ -1331,8 +1332,9 @@ class GameController {
         );
       } else if (this.checkMinecartLevelEndAnimation()) {
         this.resultReported = true;
-        this.levelView.playMinecartAnimation(player.isOnBlock,
-          () => { this.handleEndState(true); }, this.levelModel.getUnpoweredRails());
+        this.levelView.playMinecartAnimation(player.isOnBlock, () => {
+          this.handleEndState(true);
+        });
       } else if (this.checkAgentSpawn()) {
         this.resultReported = true;
 

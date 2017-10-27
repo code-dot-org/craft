@@ -215,6 +215,15 @@
 	"spriteSourceSize": {"x":1,"y":3,"w":1,"h":2},
 	"sourceSize": {"w":8,"h":11},
 	"pivot": {"x":0.5,"y":0.5}
+},
+"redstone_sparkle99.png":
+{
+	"frame": {"x":0,"y":0,"w":1,"h":1},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":1,"w":1,"h":1},
+	"sourceSize": {"w":1,"h":1},
+	"pivot": {"x":0.5,"y":0.5}
 }},
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",

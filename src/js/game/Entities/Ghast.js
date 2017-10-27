@@ -1,12 +1,11 @@
 const BaseEntity = require("./BaseEntity.js");
-const Random = require("./../LevelMVC/Utils.js").Range;
+const randomInt = require("./../LevelMVC/Utils.js").randomInt;
 module.exports = class Ghast extends BaseEntity {
     constructor(controller, type, identifier, x, y, facing) {
         super(controller, type, identifier, x, y, facing);
-        var zOrderYIndex = this.position[1];
         this.offset = [-50, -84];
         this.prepareSprite();
-        this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex);
+        this.sprite.sortOrder = this.controller.levelView.yToIndex(Number.MAX_SAFE_INTEGER);
     }
 
     prepareSprite() {
@@ -31,7 +30,7 @@ module.exports = class Ghast extends BaseEntity {
             // idle sequence
             frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][0][0], frameListPerDirection[i][0][1], ".png", 4);
 
-            let randomOffset = Random(2, frameList.length);
+            let randomOffset = randomInt(2, frameList.length);
             let framesToOffset = [];
             for (let k = 0; k < randomOffset; ++k) {
               framesToOffset.push(frameList[0]);
@@ -66,6 +65,13 @@ module.exports = class Ghast extends BaseEntity {
         this.sprite.x = this.offset[0] + 40 * this.position[0];
         this.sprite.y = this.offset[1] + 40 * this.position[1];
     }
+
+  /**
+   * @override
+   */
+  canMoveThrough() {
+    return true;
+  }
 
     playRandomIdle(facing) {
         var facingName,

@@ -1,6 +1,7 @@
 const LevelPlane = require("./LevelPlane.js");
 const LevelBlock = require("./LevelBlock.js");
 const FacingDirection = require("./FacingDirection.js");
+const Position = require("./Position.js");
 const Player = require("../Entities/Player.js");
 const Agent = require("../Entities/Agent.js");
 
@@ -357,100 +358,12 @@ module.exports = class LevelModel {
     return tnt;
   }
 
-  getUnpoweredRails() {
-    var unpoweredRails = [];
-    for (var x = 0; x < this.planeWidth; ++x) {
-      for (var y = 0; y < this.planeHeight; ++y) {
-        var block = this.actionPlane.getBlockAt([x, y]);
-        if (block.blockType.substring(0, 7) === "railsUn") {
-          unpoweredRails.push([x, y], "railsPowered" + block.blockType.substring(14));
-        }
-      }
-    }
-    return unpoweredRails;
-  }
-
   getMoveForwardPosition(entity = this.player) {
-    var cx = entity.position[0],
-      cy = entity.position[1];
-
-    switch (entity.facing) {
-      case FacingDirection.North:
-        --cy;
-        break;
-
-      case FacingDirection.South:
-        ++cy;
-        break;
-
-      case FacingDirection.West:
-        --cx;
-        break;
-
-      case FacingDirection.East:
-        ++cx;
-        break;
-    }
-
-    return [cx, cy];
+    return Position.forward(entity.position, entity.facing);
   }
 
   getMoveBackwardPosition(entity = this.player) {
-    var cx = entity.position[0],
-      cy = entity.position[1];
-
-    switch (entity.facing) {
-      case FacingDirection.North:
-        ++cy;
-        break;
-
-      case FacingDirection.South:
-        --cy;
-        break;
-
-      case FacingDirection.West:
-        ++cx;
-        break;
-
-      case FacingDirection.East:
-        --cx;
-        break;
-    }
-
-    return [cx, cy];
-  }
-
-  getPushBackPosition(entity, pushedByFacing) {
-    var cx = entity.position[0],
-      cy = entity.position[1];
-
-    switch (pushedByFacing) {
-      case FacingDirection.North:
-        --cy;
-        break;
-
-      case FacingDirection.South:
-        ++cy;
-        break;
-
-      case FacingDirection.West:
-        --cx;
-        break;
-
-      case FacingDirection.East:
-        ++cx;
-        break;
-    }
-
-    return [cx, cy];
-  }
-
-  getMoveDirectionPosition(entity = this.player, facing) {
-    let currentFacing = entity.facing;
-    this.turnToDirection(entity, facing);
-    let position = this.getMoveForwardPosition(entity);
-    this.turnToDirection(entity, currentFacing);
-    return position;
+    return Position.forward(entity.position, FacingDirection.opposite(entity.facing));
   }
 
   isForwardBlockOfType(blockType) {
@@ -481,12 +394,8 @@ module.exports = class LevelModel {
   }
 
   isEntityOfType(position, type) {
-    var entities = this.controller.levelEntity.getEntitiesOfType(type);
-    for (var i = 0; i < entities.length; i++) {
-      var entity = entities[i];
-      return (position[0] === entity.position[0]) && (position[1] === entity.position[1]);
-    }
-    return false;
+    const entities = this.controller.levelEntity.getEntitiesOfType(type);
+    return entities.some(entity => Position.equals(position, entity.position));
   }
 
   isBlockOfTypeOnPlane(position, blockType, plane) {
@@ -728,8 +637,8 @@ module.exports = class LevelModel {
     return result;
   }
 
-  canPlaceBlock() {
-    return true;
+  canPlaceBlock(entity, blockAtPosition) {
+    return entity.canPlaceBlock(blockAtPosition);
   }
 
   canPlaceBlockForward(blockType = "", entity = this.player) {
@@ -797,44 +706,11 @@ module.exports = class LevelModel {
   }
 
   turnLeft(entity = this.player) {
-
-    switch (entity.facing) {
-      case FacingDirection.North:
-        entity.facing = FacingDirection.West;
-        break;
-
-      case FacingDirection.West:
-        entity.facing = FacingDirection.South;
-        break;
-
-      case FacingDirection.South:
-        entity.facing = FacingDirection.East;
-        break;
-
-      case FacingDirection.East:
-        entity.facing = FacingDirection.North;
-        break;
-    }
+    entity.facing = FacingDirection.turn(entity.facing, 'left');
   }
 
   turnRight(entity = this.player) {
-    switch (entity.facing) {
-      case FacingDirection.North:
-        entity.facing = FacingDirection.East;
-        break;
-
-      case FacingDirection.East:
-        entity.facing = FacingDirection.South;
-        break;
-
-      case FacingDirection.South:
-        entity.facing = FacingDirection.West;
-        break;
-
-      case FacingDirection.West:
-        entity.facing = FacingDirection.North;
-        break;
-    }
+    entity.facing = FacingDirection.turn(entity.facing, 'right');
   }
 
   turnToDirection(entity = this.player, direction) {

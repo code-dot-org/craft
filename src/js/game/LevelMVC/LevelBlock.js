@@ -209,6 +209,30 @@ module.exports = class LevelBlock {
     return this.isFlat();
   }
 
+  getIsPowerableRail() {
+    return this.isRail && this.isConnectedToRedstone;
+  }
+
+  /**
+   * Helper method specifically for powered rails, which can only be veritical
+   * or horizontal.
+   *
+   * @return {boolean}
+   */
+  getIsHorizontal() {
+    return this.blockType.match('East|West');
+  }
+
+  /**
+   * Helper method specifically for powered rails, which can only be veritical
+   * or horizontal.
+   *
+   * @return {boolean}
+   */
+  getIsVertical() {
+    return this.blockType.match('North|South');
+  }
+
   getIsStickyPiston() {
     return this.blockType.substring(this.blockType.length - 6, this.blockType.length) === "Sticky";
   }

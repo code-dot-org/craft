@@ -32,12 +32,17 @@ module.exports = class Player extends BaseEntity {
       result.canPlace = true;
       result.plane = "actionPlane";
     }
-
     if (toPlaceBlock.blockType === "cropWheat") {
       result.canPlace = onTopOfBlock.blockType === "farmlandWet";
     }
-
     return result;
+  }
+
+  /**
+   * @override
+   */
+  canPlaceBlock(block) {
+    return block.isEmpty;
   }
 
   /**

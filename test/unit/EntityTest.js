@@ -2,6 +2,7 @@ const test = require('tape');
 
 const LevelBlock = require('../../src/js/game/LevelMVC/LevelBlock');
 const BaseEntity = require('../../src/js/game/Entities/BaseEntity');
+const Sheep = require('../../src/js/game/Entities/Sheep');
 const Player = require('../../src/js/game/Entities/Player');
 const Agent = require('../../src/js/game/Entities/Agent');
 
@@ -70,3 +71,40 @@ test('canPlaceBlockOver', t => {
   t.end();
 });
 
+
+test('canPlaceBlock, by entity case', t => {
+  const walkableBlocks = ["rails", "redstoneWire"].map((type) => new LevelBlock(type));
+  const emptyBlock = new LevelBlock("");
+
+  const player = new Player(mockGameController, "Player", 1, 1, "Player", true, 1);
+  const agent = new Agent(mockGameController, "PlayerAgent", 1, 1, "Agent", true, 1);
+
+  // If there is something in the actionPlane that's walkable, it should still block placement.
+  walkableBlocks.forEach((block) => {
+    t.false(agent.canPlaceBlock(block));
+  });
+  // The Player should follow the same rules.
+  walkableBlocks.forEach((block) => {
+    t.false(player.canPlaceBlock(block));
+  });
+
+  // Blocks should be placeable if the actionPlane is empty.
+  t.true(agent.canPlaceBlock(emptyBlock));
+  t.true(player.canPlaceBlock(emptyBlock));
+
+  t.end();
+});
+
+test('sheep Drop', t => {
+  const sheep = new Sheep(mockGameController, "Sheep", 1, 1, "Sheep", true, 1);
+
+  // Sheep starts !naked
+  t.false(sheep.naked);
+  // if(!naked) drop returns true and sets naked = true;
+  t.true(sheep.drop(null, "wool"));
+  t.true(sheep.naked);
+  // if(naked) drop returns false
+  t.false(sheep.drop(null, "wool"));
+
+  t.end();
+});
