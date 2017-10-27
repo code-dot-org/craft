@@ -63,39 +63,39 @@ module.exports = class Ghast extends BaseEntity {
     return true;
   }
 
-    playRandomIdle(facing) {
-        var facingName,
-            animationName = "";
-        facingName = this.controller.levelView.getDirectionName(facing);
+  playRandomIdle(facing) {
+    var facingName,
+        animationName = "";
+    facingName = this.controller.levelView.getDirectionName(facing);
 
-        animationName += "idle";
+    animationName += "idle";
 
-        animationName += facingName;
-        this.controller.levelView.playScaledSpeed(this.sprite.animations, animationName);
+    animationName += facingName;
+    this.controller.levelView.playScaledSpeed(this.sprite.animations, animationName);
 
-        if (this.audioDelay > 0) {
-          --this.audioDelay;
-        } else {
-          this.audioDelay = 5;
-          let chance = Math.floor(Math.random() * 5);
-          if (chance === 0) {
-            let soundNum = Math.floor(Math.random() * 4);
-            switch (soundNum) {
-              case 0:
-                this.controller.audioPlayer.play("moan2");
-                break;
-              case 1:
-                this.controller.audioPlayer.play("moan3");
-                break;
-              case 2:
-                this.controller.audioPlayer.play("moan6");
-                break;
-              default:
-                this.controller.audioPlayer.play("moan7");
-                break;
-            }
-          }
+    if (this.audioDelay > 0) {
+      --this.audioDelay;
+    } else {
+    this.audioDelay = 5;
+    let chance = Math.floor(Math.random() * 5);
+    if (chance === 0) {
+      let soundNum = Math.floor(Math.random() * 4);
+      switch (soundNum) {
+        case 0:
+          this.controller.audioPlayer.play("moan2");
+          break;
+        case 1:
+          this.controller.audioPlayer.play("moan3");
+          break;
+        case 2:
+          this.controller.audioPlayer.play("moan6");
+          break;
+        default:
+          this.controller.audioPlayer.play("moan7");
+          break;
         }
+      }
     }
+  }
 
 };
