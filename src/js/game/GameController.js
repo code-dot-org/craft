@@ -990,10 +990,6 @@ class GameController {
   }
 
   use(commandQueueItem) {
-    if (this.levelData.isAgentLevel) {
-      commandQueueItem.succeeded();
-      return;
-    }
     let player = this.levelModel.player;
     let frontPosition = this.levelModel.getMoveForwardPosition(player);
     let frontEntity = this.levelEntity.getEntityAt(frontPosition);
