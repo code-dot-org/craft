@@ -2192,15 +2192,9 @@ module.exports = class LevelView {
     const sprite = this.game.make.sprite(20, 25, "redstoneSparkle", "redstone_sparkle99.png");
 
     // Establish the three different animations.
-    const anims = [
-      sprite.animations.add("fizz_0", Phaser.Animation.generateFrameNames("redstone_sparkle", 0, 7, ".png"), 7),
-      sprite.animations.add("fizz_1", Phaser.Animation.generateFrameNames("redstone_sparkle", 8, 15, ".png"), 7),
-      sprite.animations.add("fizz_2", Phaser.Animation.generateFrameNames("redstone_sparkle", 16, 23, ".png"), 7),
-    ];
-
-    anims.forEach(animation => {
-      // TODO: add blank "redstone_sparkle99.png" frame
-    });
+    sprite.animations.add("fizz_0", Phaser.Animation.generateFrameNames("redstone_sparkle", 0, 7, ".png").concat("redstone_sparkle99.png"), 7);
+    sprite.animations.add("fizz_1", Phaser.Animation.generateFrameNames("redstone_sparkle", 8, 15, ".png").concat("redstone_sparkle99.png"), 7);
+    sprite.animations.add("fizz_2", Phaser.Animation.generateFrameNames("redstone_sparkle", 16, 23, ".png").concat("redstone_sparkle99.png"), 7);
 
     const playRandomSparkle = () => {
       setTimeout(() => {
@@ -2211,7 +2205,7 @@ module.exports = class LevelView {
         // Randomize which corner of the index the animation manifests in.
         sprite.position.x = (Math.random() > 0.5) ? 20 : 40;
         sprite.position.y = (Math.random() > 0.5) ? 25 : 45;
-      }, randomInt(500, 3000) / this.controller.tweenTimeScale);
+      }, randomInt(500, 7000) / this.controller.tweenTimeScale);
     };
 
     playRandomSparkle();
