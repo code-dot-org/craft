@@ -2,6 +2,7 @@ const LevelBlock = require("./LevelBlock.js");
 const FacingDirection = require("./FacingDirection.js");
 const Position = require("./Position.js");
 const createEvent = require("../../utils").createEvent;
+const Random = require("./Utils").Range;
 
 module.exports = class LevelView {
   constructor(controller) {
@@ -1025,10 +1026,6 @@ module.exports = class LevelView {
       const group = block.shouldRenderOnGroundPlane() ? this.groundGroup : this.actionGroup;
       const offset = block.shouldRenderOnGroundPlane() ? -0.5 : 0;
       sprite = this.createBlock(group, position[0], position[1] + offset, blockType);
-      if (blockType.startsWith('redstoneWire') && blockType.endsWith('On')) {
-        // Please excuse the magic numbers. They're just to offset the sparkle correctly within the index.
-        sprite.addChild(this.createBlock(group, 0.35, 0.05, "redstoneSparkle"));
-      }
     }
 
     if (sprite) {
@@ -1991,6 +1988,10 @@ module.exports = class LevelView {
       return sprite;
     };
 
+    if (blockType.startsWith("redstone")) {
+      console.log("whgat");
+    }
+
     switch (blockType) {
       case "treeAcacia": //0,7
         buildTree(this, [0, 7]);
@@ -2125,8 +2126,8 @@ module.exports = class LevelView {
         }
 
         // Set up a random amount of blank frames to be put on the front and back for delay between loops.
-        let frontDelay = Math.floor(Math.random() * 50) + 5;
-        let backDelay = Math.floor(Math.random() * 30) + 20;
+        let frontDelay = Random(5,55);
+        let backDelay = Random(20,50);
         let frontBuffer = [];
         let backBuffer = [];
         for (i = 0; i < frontDelay; ++i) {
@@ -2159,7 +2160,7 @@ module.exports = class LevelView {
         }, this);
 
         // Play that thing!
-        this.playAnimationWithOffset(sprite, "idle", Math.floor(Math.random() * 3) + 21, 1);
+        this.playAnimationWithOffset(sprite, "idle", Random(24,27), 1);
         break;
       }
       case "fire":
@@ -2245,6 +2246,12 @@ module.exports = class LevelView {
           sprite.addChild(this.game.make.sprite(xShadow, yShadow, "blockShadows", "Shadow_Parts_Fade_overlap.png"));
         }
         break;
+    }
+
+    // If we're making a charged redstoneWire, we need to do this again to make the sparkles
+    if (blockType.startsWith('redstoneWire') && blockType.endsWith('On')) {
+      // Please excuse the magic numbers. They're just to offset the sparkle correctly within the index.
+      sprite.addChild(this.createBlock(group, 0.35, 0.05, "redstoneSparkle"));
     }
 
     return sprite;
