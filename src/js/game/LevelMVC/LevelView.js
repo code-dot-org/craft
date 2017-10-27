@@ -1026,7 +1026,8 @@ module.exports = class LevelView {
       const offset = block.shouldRenderOnGroundPlane() ? -0.5 : 0;
       sprite = this.createBlock(group, position[0], position[1] + offset, blockType);
       if (blockType.startsWith('redstoneWire') && blockType.endsWith('On')) {
-        sprite = this.createBlock(group, position[0], position[1] + -0.5, "redstoneSparkle");
+        // Please excuse the magic numbers. They're just to offset the sparkle correctly within the index.
+        sprite.addChild(this.createBlock(group, 0.35, 0.05, "redstoneSparkle"));
       }
     }
 
@@ -2134,7 +2135,6 @@ module.exports = class LevelView {
         for (i = 0; i < backDelay; ++i) {
           backBuffer.push("redstone_sparkle99.png");
         }
-
         // Organize the animation with a buffer in front and back
         frameList = frontBuffer.concat(frameList);
         frameList = frameList.concat(anim);
