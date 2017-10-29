@@ -189,6 +189,10 @@ module.exports = class LevelBlock {
         this.isEntity = true;
       }
     }
+
+    if (blockType.startsWith("flower")) {
+      this.isWalkable = true;
+    }
   }
 
   /**

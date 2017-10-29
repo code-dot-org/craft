@@ -2170,7 +2170,7 @@ module.exports = class LevelView {
             this.psuedoRandomTint(group, sprite, x, y);
           }
         }
-        if (group === this.actionGroup && this.blockReceivesCornerShadow(x, y)) {
+        if (group === this.actionGroup && !LevelBlock.isWalkable(blockType) && this.blockReceivesCornerShadow(x, y)) {
           let xShadow = -39;
           let yShadow = 40;
           if (blockType.startsWith("pistonArm")) {
