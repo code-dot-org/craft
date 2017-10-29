@@ -5,7 +5,7 @@
 	"frame": {"x":0,"y":0,"w":12,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":28,"y":22,"w":12,"h":40},
+	"spriteSourceSize": {"x":28,"y":0,"w":12,"h":40},
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
@@ -14,7 +14,7 @@
 	"frame": {"x":24,"y":16,"w":40,"h":8},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":0,"y":54,"w":40,"h":8},
+	"spriteSourceSize": {"x":0,"y":32,"w":40,"h":8},
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
@@ -23,7 +23,7 @@
 	"frame": {"x":48,"y":24,"w":10,"h":8},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":0,"y":54,"w":10,"h":8},
+	"spriteSourceSize": {"x":0,"y":32,"w":10,"h":8},
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
@@ -32,7 +32,7 @@
 	"frame": {"x":48,"y":32,"w":10,"h":8},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":30,"y":54,"w":10,"h":8},
+	"spriteSourceSize": {"x":30,"y":32,"w":10,"h":8},
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
@@ -41,7 +41,7 @@
 	"frame": {"x":24,"y":24,"w":12,"h":16},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":28,"y":22,"w":12,"h":16},
+	"spriteSourceSize": {"x":28,"y":0,"w":12,"h":16},
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
@@ -50,7 +50,7 @@
 	"frame": {"x":36,"y":24,"w":12,"h":16},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":0,"y":22,"w":12,"h":16},
+	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":16},
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
@@ -59,7 +59,7 @@
 	"frame": {"x":12,"y":0,"w":12,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":0,"y":22,"w":12,"h":40},
+	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":40},
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
@@ -68,7 +68,7 @@
 	"frame": {"x":24,"y":0,"w":40,"h":16},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":0,"y":22,"w":40,"h":16},
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":16},
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 }},
