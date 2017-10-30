@@ -291,7 +291,7 @@ module.exports = class LevelModel {
         offset[0] = -1;
         break;
     }
-    return [entity.position[0] + offset[0], entity.position[1] + offset[1]];
+    return Position.add(entity.position, offset);
   }
 
   getEntityCount(entityType) {
