@@ -1900,22 +1900,23 @@ module.exports = class LevelView {
     sprite = this.actionGroup.create(xOffset + 40 * x, yOffset + 40 * y, atlas, "");
     const anim = sprite.animations.add("animate", frameList, 10, false);
 
+    // If direct player control, we have stuff to do to manage miniblock pick up
     if (this.controller.getIsDirectPlayerControl()) {
       const distanceBetween = function (position, position2) {
         return Math.sqrt(Math.pow(position[0] - position2[0], 2) + Math.pow(position[1] - position2[1], 2));
       };
 
       const collectiblePosition = this.controller.levelModel.spritePositionToIndex([xOffset, yOffset], [sprite.x, sprite.y]);
+      this.collectibleItems.push([sprite, [xOffset, yOffset], blockType, collectibleDistance]);
       anim.onComplete.add(() => {
         if (this.controller.levelModel.usePlayer) {
           if (distanceBetween(this.player.position, collectiblePosition) < collectibleDistance) {
-            this.playItemAcquireAnimation(this.player.position, this.player.facing, sprite, () => { }, blockType);
-          } else {
-            this.collectibleItems.push([sprite, [xOffset, yOffset], blockType, collectibleDistance]);
+            this.player.collectItems([x,y]);
           }
         }
       });
     }
+
     this.playScaledSpeed(sprite.animations, "animate");
     return sprite;
   }

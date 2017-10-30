@@ -53,6 +53,14 @@ module.exports = class Player extends BaseEntity {
   }
 
   /**
+   * @override
+   */
+  setMovePosition(position) {
+    super.setMovePosition(position);
+    this.collectItems(this.position);
+  }
+
+  /**
    * player walkable stuff
    */
   walkableCheck(block) {
@@ -135,8 +143,6 @@ module.exports = class Player extends BaseEntity {
 
     this.updateHidingTree();
     this.updateHidingBlock(prevPosition);
-    this.collectItems(prevPosition);
-    this.collectItems();
   }
 
   doMoveBackward(commandQueueItem) {
@@ -178,8 +184,6 @@ module.exports = class Player extends BaseEntity {
 
     this.updateHidingTree();
     this.updateHidingBlock(prevPosition);
-    this.collectItems(prevPosition);
-    this.collectItems();
   }
 
   bump(commandQueueItem) {
