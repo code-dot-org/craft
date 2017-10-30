@@ -52,5 +52,40 @@ module.exports = class AdjacencySet {
       this.sets.push([position]);
     }
   }
+
+  /**
+   * Find the set containing a specified position, if it exists
+   *
+   * @return {(Postion[]|undefined)}
+   */
+  find(position) {
+    return this.sets.find((set) => set.some((other) => Position.equals(position, other)));
+  }
+
+  /**
+   * Remove a position from our adjacency sets if it exists, updating existing
+   * sets as necessary.
+   *
+   * NOTE that this operation is O(N), not the O(1) that you would expect from
+   * a full disjoint-set implementation.
+   *
+   * @param {Position} position
+   * @return {boolean} whether or not the specified position existed in the sets
+   */
+  remove(position) {
+    const containingSet = this.find(position);
+
+    if (!containingSet) {
+      return false;
+    }
+
+    this.sets.splice(this.sets.indexOf(containingSet), 1);
+    const newSet = containingSet.filter((other) => !Position.equals(position, other));
+    if (newSet.length) {
+      const newSets = new AdjacencySet(newSet, this.comparisonFunction).sets;
+      this.sets.push(...newSets);
+    }
+    return true;
+  }
 };
 

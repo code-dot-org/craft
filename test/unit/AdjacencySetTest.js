@@ -62,3 +62,28 @@ test('addAdjacency', t => {
   t.deepEqual(set.sets, [[[0, 0], [1, 1], [0, 1]]]);
   t.end();
 });
+
+test('removeAdjacency', t => {
+  const set = new AdjacencySet([[0, 0], [1, 1], [1, 0], [2, 2], [2, 3], [0, 2]]);
+
+  t.true(set.remove([0, 2]));
+  t.deepEqual(set.sets, [
+    [[0, 0], [1, 1], [1, 0]],
+    [[2, 2], [2, 3]],
+  ]);
+
+  t.true(set.remove([1, 0]));
+  t.deepEqual(set.sets, [
+    [[2, 2], [2, 3]],
+    [[0, 0]],
+    [[1, 1]],
+  ]);
+
+  t.true(set.remove([2, 2]));
+  t.deepEqual(set.sets, [
+    [[0, 0]],
+    [[1, 1]],
+    [[2, 3]],
+  ]);
+  t.end();
+});
