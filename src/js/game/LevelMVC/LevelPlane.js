@@ -12,6 +12,7 @@ const {
 } = require("./FacingDirection.js");
 
 const Position = require("./Position");
+const AdjacencySet = require("./AdjacencySet");
 
 const connectionName = function (connection) {
   switch (connection) {
@@ -295,7 +296,7 @@ module.exports = class LevelPlane {
     });
 
     // redstone charge propagation
-    Position.adjacencySets(redstonePositions).forEach((set) => {
+    new AdjacencySet(redstonePositions).sets.forEach((set) => {
       const somePower = set.some((position) => this.getBlockAt(position).isRedstoneBattery);
 
       set.forEach((position) => {
@@ -322,10 +323,10 @@ module.exports = class LevelPlane {
     });
 
     // propagate power
-    Position.adjacencySets(
+    new AdjacencySet(
       powerableRails,
       this.getPoweredRailsConnected.bind(this)
-    ).forEach(set => {
+    ).sets.forEach(set => {
       // each set of connected rails should be entirely powered if any of them
       // is powered
       const somePower = set.some(position => this.getBlockAt(position).isPowered);
