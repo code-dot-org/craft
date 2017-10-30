@@ -7,15 +7,18 @@ const {
   opposite,
   turnDirection,
   turn,
-  getOffsetFromDirection
+  directionToOffset,
+  directionToRelative
 } = require("./FacingDirection.js");
+
+const Position = require("./Position");
 
 const connectionName = function (connection) {
   switch (connection) {
-    case 0: return 'North';
-    case 2: return 'South';
-    case 1: return 'East';
-    case 3: return 'West';
+    case North: return 'North';
+    case South: return 'South';
+    case East: return 'East';
+    case West: return 'West';
     default: return '';
   }
 };
@@ -47,8 +50,6 @@ module.exports = class LevelPlane {
     this.width = width;
     this.height = height;
     this.levelModel = LevelModel;
-    this.redstoneList = [];
-    this.redstoneListON = [];
     this.planeType = planeType;
     this.playPistonOn = false;
     this.playPistonOff = false;
@@ -141,8 +142,10 @@ module.exports = class LevelPlane {
 
       let redstoneToRefresh = [];
       if (block.needToRefreshRedstone()) {
-        redstoneToRefresh = this.getRedstone();
+        redstoneToRefresh = this.refreshRedstone();
       }
+
+      this.updateWeakCharge(position, block);
 
       // if we've just removed a block, clean up any rail connections that were
       // formerly connected to this block
@@ -150,8 +153,8 @@ module.exports = class LevelPlane {
         [North, South, East, West].forEach((direction) => {
           // if the block in the given cardinal direction is a rail block with a
           // connection to this one, sever that connection
-          const offset = getOffsetFromDirection(direction);
-          const adjacentBlock = this.getBlockAt([position[0] + offset[0], position[1] + offset[1]]);
+          const offset = directionToOffset(direction);
+          const adjacentBlock = this.getBlockAt(Position.add(position, offset));
           if (adjacentBlock && adjacentBlock.isRail) {
             if (adjacentBlock.connectionA === opposite(direction)) {
               adjacentBlock.connectionA = undefined;
@@ -162,13 +165,12 @@ module.exports = class LevelPlane {
           }
         });
       }
-
       this.determineRailType(position, true);
 
       if (this.levelModel && this.levelModel.controller.levelView) {
-        const northEast = [position[0] + 1, position[1] - 1];
-        const southWest = [position[0] - 1, position[1] + 1];
-        let positionAndTouching = this.getOrthogonalPositions(position).concat([position, northEast, southWest]);
+        const northEast = Position.north(Position.east(position));
+        const southWest = Position.south(Position.west(position));
+        let positionAndTouching = Position.getOrthogonalPositions(position).concat([position, northEast, southWest]);
         this.levelModel.controller.levelView.refreshActionGroup(positionAndTouching);
         this.levelModel.controller.levelView.refreshActionGroup(redstoneToRefresh);
       }
@@ -177,20 +179,6 @@ module.exports = class LevelPlane {
     }
 
     return block;
-  }
-
-  /**
-  * Gets the orthogonal positions around a given position.
-  * Important note: This isn't doing bounds checking.
-  */
-  getOrthogonalPositions(position) {
-    const [x, y] = position;
-    return [
-      [x, y - 1],
-      [x, y + 1],
-      [x + 1, y],
-      [x - 1, y],
-    ];
   }
 
   /**
@@ -207,6 +195,23 @@ module.exports = class LevelPlane {
   }
 
   /**
+   * Gets the blocks surrounding a given position.
+   * Important note: This DOES to bounds checking. Will be undefined if OOB.
+   */
+  getSurroundingBlocks(position) {
+    return {
+      north: this.getBlockAt(position, 0, -1),
+      northEast: this.getBlockAt(position, 1, -1),
+      east: this.getBlockAt(position, 1, 0),
+      southEast: this.getBlockAt(position, 1, 1),
+      south: this.getBlockAt(position, 0, 1),
+      southWest: this.getBlockAt(position, -1, 1),
+      west: this.getBlockAt(position, -1, 0),
+      northWest: this.getBlockAt(position, -1, -1),
+    };
+  }
+
+  /**
   * Gets the mask of the orthogonal indices around the given position.
   */
   getOrthogonalMask(position, comparator) {
@@ -219,16 +224,6 @@ module.exports = class LevelPlane {
     );
   }
 
-  forwardPosition(position, cardinal) {
-    const [x, y] = position;
-    switch (cardinal) {
-      case North: return [x, y - 1];
-      case South: return [x, y + 1];
-      case East: return [x + 1, y];
-      case West: return [x - 1, y];
-    }
-  }
-
   getMinecartTrack(position, facing) {
     const block = this.getBlockAt(position);
 
@@ -239,7 +234,7 @@ module.exports = class LevelPlane {
     const speed = 300;
 
     if (block.connectionA === facing || block.connectionB === facing) {
-      return ["", this.forwardPosition(position, facing), facing, speed];
+      return ["", Position.forward(position, facing), facing, speed];
     }
 
     const incomming = opposite(facing);
@@ -256,6 +251,101 @@ module.exports = class LevelPlane {
   }
 
   /**
+   * Determine whether or not the blocks at the given positions are powered
+   * rails that are connected to each other.
+   *
+   * @param {Posititon} left
+   * @param {Posititon} right
+   * @return {boolean}
+   */
+  getPoweredRailsConnected(left, right) {
+    // return early if the positions are not even adjacent
+    if (!Position.isAdjacent(left, right)) {
+      return false;
+    }
+
+    const leftBlock = this.getBlockAt(left);
+    const rightBlock = this.getBlockAt(right);
+
+    // to be connected, both blocks must be powerable rails
+    if (!(leftBlock.getIsPowerableRail() && rightBlock.getIsPowerableRail())) {
+      return false;
+    }
+
+    // to be connected, both blocks must be oriented either North/South or
+    // East/West
+    if (leftBlock.getIsHorizontal() && rightBlock.getIsHorizontal()) {
+      return Position.equals(Position.forward(left, East), right) ||
+          Position.equals(Position.forward(left, West), right);
+    } else if (leftBlock.getIsVertical() && rightBlock.getIsVertical()) {
+      return Position.equals(Position.forward(left, North), right) ||
+          Position.equals(Position.forward(left, South), right);
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Propagate power to (and orient) all redstone wire in the level
+   */
+  powerRedstone() {
+    const redstonePositions = this.getAllPositions().filter((position) => {
+      const block = this.getBlockAt(position);
+      return block.isRedstone || block.isRedstoneBattery;
+    });
+
+    // redstone charge propagation
+    Position.adjacencySets(redstonePositions).forEach((set) => {
+      const somePower = set.some((position) => this.getBlockAt(position).isRedstoneBattery);
+
+      set.forEach((position) => {
+        this.getBlockAt(position).isPowered = somePower;
+        this.determineRedstoneSprite(position);
+      });
+    });
+
+    return redstonePositions;
+  }
+
+  /**
+   * Propagate power to (and orient) all powerable rails in the level.
+   */
+  powerRails() {
+    // find all rails that can be powered
+    const powerableRails = this.getAllPositions().filter(position => (
+      this.getBlockAt(position).getIsPowerableRail()
+    ));
+
+    // update powerable rails once to set their orientations
+    powerableRails.forEach((position) => {
+      this.determineRailType(position);
+    });
+
+    // propagate power
+    Position.adjacencySets(
+      powerableRails,
+      this.getPoweredRailsConnected.bind(this)
+    ).forEach(set => {
+      // each set of connected rails should be entirely powered if any of them
+      // is powered
+      const somePower = set.some(position => this.getBlockAt(position).isPowered);
+
+      if (somePower) {
+        set.forEach(position => {
+          this.getBlockAt(position).isPowered = true;
+        });
+      }
+    });
+
+    // update all rails again to set their power state
+    powerableRails.forEach((position) => {
+      this.determineRailType(position);
+    });
+
+    return powerableRails;
+  }
+
+  /**
    * Determines which rail object should be placed given the context of surrounding
    * indices.
    */
@@ -268,8 +358,8 @@ module.exports = class LevelPlane {
 
     let powerState = '';
     let priority = RailConnectionPriority;
-    if (block.isConnectedToRedstone) {
-      powerState = 'Unpowered';
+    if (block.getIsPowerableRail()) {
+      powerState = block.isPowered ? 'Powered' : 'Unpowered';
       priority = PoweredRailConnectionPriority;
     }
 
@@ -293,7 +383,7 @@ module.exports = class LevelPlane {
     block.blockType = `rails${powerState}${variant}`;
 
     if (updateTouching) {
-      this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
+      Position.getOrthogonalPositions(position).forEach(orthogonalPosition => {
         this.determineRailType(orthogonalPosition);
       });
     }
@@ -322,40 +412,21 @@ module.exports = class LevelPlane {
   }
 
   /**
-  * Updates the state and sprites of all redstoneWire on the plane.
-  * Important note: This is what kicks off redstone charge propagation and is called
-  * on place/destroy/run/load.... wherever updating charge is important.
-  */
-  getRedstone() {
-    this.redstoneList = [];
-    this.redstoneListON = [];
+   * Updates the state and sprites of all redstoneWire on the plane.
+   * Important note: This is what kicks off redstone charge propagation and is called
+   * on place/destroy/run/load.... wherever updating charge is important.
+   */
+  refreshRedstone() {
+    // power redstone
+    const redstonePositions = this.powerRedstone();
 
-    this.getAllPositions().forEach((position) => {
-      const block = this.getBlockAt(position);
-      if (block.isRedstone) {
-        block.isPowered = false;
-        this.redstoneList.push(position);
-      }
-    });
-
-    this.getAllPositions().forEach((position) => {
-      const block = this.getBlockAt(position);
-      if (block.isRedstoneBattery) {
-        this.redstonePropagation(position);
-      }
-    });
-
-    let posToRefresh = [];
-    for (let i = 0; i < this.redstoneList.length; ++i) {
-      this.determineRedstoneSprite(this.redstoneList[i]);
-      posToRefresh.push(this.redstoneList[i]);
-    }
-    for (let i = 0; i < this.redstoneListON.length; ++i) {
-      this.determineRedstoneSprite(this.redstoneListON[i]);
-      posToRefresh.push(this.redstoneListON[i]);
-    }
-
+    // power all blocks powered by redstone
     this.powerAllBlocks();
+
+    // power rails powered by redstone
+    const powerableRails = this.powerRails();
+    const posToRefresh = redstonePositions.concat(powerableRails);
+
     // Once we're done updating redstoneWire states, check to see if doors and pistons should open/close.
     this.getAllPositions().forEach((position) => {
       this.getIronDoors(position);
@@ -462,55 +533,27 @@ module.exports = class LevelPlane {
   }
 
   /**
-  * Activates a piston at a given position to push blocks away from it depending on type.
-  */
+   * Activates a piston at a given position to push blocks away from it
+   * depending on type.
+   */
   activatePiston(position) {
-    let neighbors = this.getOrthogonalBlocks(position);
-    let neighborPosition = this.getOrthogonalPositions(position);
+    const block = this.getBlockAt(position);
 
-    let workingNeighbor = null;
-    let pos = [];
-    let offset = [];
-    let pistonType = this.getBlockAt(position).blockType;
-    if (this.getBlockAt(position).getIsStickyPiston()) {
+    let pistonType = block.blockType;
+    if (block.getIsStickyPiston()) {
       pistonType = pistonType.substring(0, pistonType.length - 6);
     }
     let checkOn = pistonType.substring(pistonType.length - 2, pistonType.length);
     if (checkOn === "On") {
       pistonType = pistonType.substring(0, pistonType.length - 2);
     }
-    let armType = "";
 
-    switch (pistonType) {
-      case "pistonUp": {
-        workingNeighbor = neighbors.north.block;
-        offset = [0,-1];
-        pos = neighborPosition[0];
-        armType = "pistonArmUp";
-        break;
-      }
-      case "pistonDown": {
-        workingNeighbor = neighbors.south.block;
-        offset = [0,1];
-        pos = neighborPosition[1];
-        armType = "pistonArmDown";
-        break;
-      }
-      case "pistonRight": {
-        workingNeighbor = neighbors.east.block;
-        offset = [1,0];
-        pos = neighborPosition[2];
-        armType = "pistonArmRight";
-        break;
-      }
-      case "pistonLeft": {
-        workingNeighbor = neighbors.west.block;
-        offset = [-1,0];
-        pos = neighborPosition[3];
-        armType = "pistonArmLeft";
-        break;
-      }
-    }
+    const direction = block.getPistonDirection();
+    let armType = `pistonArm${directionToRelative(direction)}`;
+
+    const offset = directionToOffset(direction);
+    const pos = Position.forward(position, direction);
+    const workingNeighbor = this.getBlockAt(pos);
 
     if (this.pistonArmBlocked(position, offset)) {
       return;
@@ -526,7 +569,7 @@ module.exports = class LevelPlane {
       // We've actually got something to push.
       let blocksPositions = this.getBlocksToPush(pos, offset[0], offset[1]);
       let concat = "On";
-      if (this.getBlockAt(position).getIsStickyPiston()) {
+      if (block.getIsStickyPiston()) {
         concat += "Sticky";
       }
       let onPiston = new LevelBlock(pistonType += concat);
@@ -536,7 +579,7 @@ module.exports = class LevelPlane {
     } else if (workingNeighbor.blockType === "") {
       // Nothing to push, so just make the arm.
       let concat = "On";
-      if (this.getBlockAt(position).getIsStickyPiston()) {
+      if (block.getIsStickyPiston()) {
         concat += "Sticky";
         armType += "Sticky";
       }
@@ -549,44 +592,24 @@ module.exports = class LevelPlane {
   }
 
   pistonArmBlocked(position, offset) {
-    const workingPosition = [position[0] + offset[0], position[1] + offset[1]];
+    const workingPosition = Position.add(position, offset);
     return this.checkEntityConflict(workingPosition);
   }
 
 
   /**
-  * Deactivates a piston at a given position by determining what the arm orientation is.
-  * NOTE: getOrthogonalPositions() does not match the order of the North/East/South/West defined in Facing Directions.
-  * This should be cleaned up in a future PR so we don't have to define the directions here.
-  */
+   * Deactivates a piston at a given position by determining what the arm
+   * orientation is.
+   */
   deactivatePiston(position) {
-    let neighborPosition = this.getOrthogonalPositions(position);
-    let north = 0;
-    let south = 1;
-    let east = 2;
-    let west = 3;
-
-    let pistonType = this.getBlockAt(position).blockType;
-    if (this._data[this.coordinatesToIndex(position)].getIsStickyPiston()) {
-      pistonType = pistonType.substring(0, pistonType.length - 6);
+    const block = this.getBlockAt(position);
+    if (!block.getIsPiston() || !block.blockType.match("On")) {
+      return;
     }
-    switch (pistonType) {
-      case "pistonUpOn": {
-        this.retractArm(neighborPosition[north], position);
-        break;
-      }
-      case "pistonDownOn": {
-        this.retractArm(neighborPosition[south], position);
-        break;
-      }
-      case "pistonRightOn": {
-        this.retractArm(neighborPosition[east], position);
-        break;
-      }
-      case "pistonLeftOn": {
-        this.retractArm(neighborPosition[west], position);
-        break;
-      }
+
+    const direction = block.getPistonDirection();
+    if (direction !== undefined) {
+      this.retractArm(Position.forward(position, direction), position);
     }
   }
 
@@ -608,21 +631,8 @@ module.exports = class LevelPlane {
     let offPiston = new LevelBlock(newPistonType);
     if (this.getBlockAt(armPosition).getIsPistonArm()) {
       if (this.getBlockAt(pistonPosition).getIsStickyPiston()) {
-        let stuckBlockPosition = [armPosition[0], armPosition[1]];
-        switch (pistonType.getPistonDirection()) {
-          case South:
-            stuckBlockPosition[1] += 1;
-            break;
-          case North:
-            stuckBlockPosition[1] -= 1;
-            break;
-          case West:
-            stuckBlockPosition[0] -= 1;
-            break;
-          case East:
-            stuckBlockPosition[0] += 1;
-            break;
-        }
+        const offset = directionToOffset(pistonType.getPistonDirection());
+        const stuckBlockPosition = Position.add(armPosition, offset);
         if (this.inBounds(stuckBlockPosition) && this.getBlockAt(stuckBlockPosition).isStickable) {
           this.setBlockAt(armPosition, this.getBlockAt(stuckBlockPosition));
           this.setBlockAt(stuckBlockPosition, emptyBlock);
@@ -673,7 +683,7 @@ module.exports = class LevelPlane {
       }
     }
     if (redo) {
-      this.getRedstone();
+      this.refreshRedstone();
     }
   }
 
@@ -691,81 +701,20 @@ module.exports = class LevelPlane {
   }
 
   /**
-  * Silly helper to get the index of a specific position in an array of positions.
-  */
-  findPositionInArray(position, array) {
-    for (let i = 0; array.length; ++i) {
-      if (position[0] === array[i][0]) {
-        if (position[1] === array[i][1]) {
-          return i;
-        }
-      }
-    }
-  }
-
-  /**
-  * If the block at the given position is redstone, this tracks the position, and
-  * propagates power to the surrounding indices.
-  */
-  redstonePropagation(position) {
-    const block = this.getBlockAt(position);
-
-    if (block.isRedstone) {
-      let indexToRemove = this.findPositionInArray(position, this.redstoneList);
-      this.redstoneList.splice(indexToRemove,1);
-      this.redstoneListON.push(position);
-      block.isPowered = true;
-    }
-
-    this.getOrthogonalPositions(position).forEach(orthogonalPosition => {
-      this.blockPropagation(orthogonalPosition);
-    });
-  }
-
-  /**
-  * The actual recursive propagation functionality for updating Powered state and sending
-  * the propagation call to surrounding indices.
-  */
-  blockPropagation(position) {
-    let adjacentBlock = this.getBlockAt(position);
-
-    if (this.inBounds(position) &&
-      adjacentBlock.isPowered === false &&
-      adjacentBlock.isRedstone) {
-      adjacentBlock.isPowered = true;
-      this.redstonePropagation([position[0],position[1]]);
-    }
-  }
-
-  /**
   * Checking power state for objects that are powered by redstone.
   */
   powerCheck(position, canReadCharge = false) {
-    return this.getOrthogonalPositions(position).some(orthogonalPosition => {
+    return Position.getOrthogonalPositions(position).some(orthogonalPosition => {
       const block = this.getBlockAt(orthogonalPosition);
       if (block) {
         if (!block.isWeaklyPowerable) {
           return false;
         }
         if (this.getBlockAt(position).getIsPiston()) {
-          let piston = this.getBlockAt(position);
-          let ignoreThisSide = [0, 0];
-          switch (piston.getPistonDirection()) {
-            case South:
-              ignoreThisSide = [0, 1];
-              break;
-            case North:
-              ignoreThisSide = [0, -1];
-              break;
-            case West:
-              ignoreThisSide = [-1, 0];
-              break;
-            case East:
-              ignoreThisSide = [1, 0];
-              break;
-          }
-          let posCheck = [position[0] + ignoreThisSide[0], position[1] + ignoreThisSide[1]];
-          if (posCheck[0] === orthogonalPosition[0] && posCheck[1] === orthogonalPosition[1]) {
+          const piston = this.getBlockAt(position);
+          const ignoreThisSide = directionToOffset(piston.getPistonDirection()) || [0, 0];
+          const posCheck = Position.add(position, ignoreThisSide);
+          if (Position.equals(orthogonalPosition, posCheck)) {
             return false;
           }
         }
@@ -778,10 +727,25 @@ module.exports = class LevelPlane {
   }
 
   powerAllBlocks() {
-    for (let i = 0; i < this._data.length; ++i) {
-      if (this._data[i].blockType !== "" && this._data[i].canHoldCharge()) {
-        this._data[i].isPowered = this.powerCheck(this.indexToCoordinates(i));
+    this.getAllPositions().forEach((position) => {
+      const block = this.getBlockAt(position);
+      if (block.blockType !== "" && block.canHoldCharge()) {
+        block.isPowered = this.powerCheck(position);
       }
+    });
+  }
+
+  updateWeakCharge(position, block) {
+    if (block.isWeaklyPowerable) {
+      block.isPowered = this.powerCheck(position);
+    }
+    if (block.isPowered) {
+      Position.getOrthogonalPositions(position).forEach(workingPos => {
+        if (this.inBounds(workingPos)) {
+          this.getIronDoors(workingPos);
+          this.getPistonState(workingPos);
+        }
+      });
     }
   }
 

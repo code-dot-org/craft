@@ -36,6 +36,13 @@ module.exports = class Agent extends BaseEntity {
   /**
    * @override
    */
+  canPlaceBlock(block) {
+    return block.isEmpty;
+  }
+
+  /**
+   * @override
+   */
   canMoveThrough() {
     return true;
   }

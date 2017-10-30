@@ -22,3 +22,9 @@ module.exports.createEvent = function createEvent(type, bubbles = false, cancela
   }
   return customEvent;
 };
+
+module.exports.bisect = function bisect(array, conditional) {
+  const positive = array.filter(x => conditional(x));
+  const negative = array.filter(x => !conditional(x));
+  return [positive, negative];
+};

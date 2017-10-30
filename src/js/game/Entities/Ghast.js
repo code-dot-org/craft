@@ -1,11 +1,12 @@
 const BaseEntity = require("./BaseEntity.js");
+const randomInt = require("./../LevelMVC/Utils.js").randomInt;
 module.exports = class Ghast extends BaseEntity {
     constructor(controller, type, identifier, x, y, facing) {
         super(controller, type, identifier, x, y, facing);
-        var zOrderYIndex = this.position[1];
         this.offset = [-50, -84];
         this.prepareSprite();
-        this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex);
+        this.sprite.sortOrder = this.controller.levelView.yToIndex(Number.MAX_SAFE_INTEGER);
+        this.audioDelay = 15;
     }
 
     prepareSprite() {
@@ -18,7 +19,6 @@ module.exports = class Ghast extends BaseEntity {
         var frameName = "Ghast";
         this.sprite = actionGroup.create(0, 0, 'ghast', 'Ghast0000.png');
         this.sprite.scale.setTo(1,1);
-        let stillFrameName = ['Ghast0072.png', 'Ghast0048.png', 'Ghast0024.png', 'Ghast0000.png'];
         let idleDelayFrame = 0;
         // [direction][[idle],[shoot]]
         var frameListPerDirection = [[[72, 83], [84, 95]], // down
@@ -30,8 +30,19 @@ module.exports = class Ghast extends BaseEntity {
 
             // idle sequence
             frameList = Phaser.Animation.generateFrameNames(frameName, frameListPerDirection[i][0][0], frameListPerDirection[i][0][1], ".png", 4);
+
+            let randomOffset = randomInt(2, frameList.length);
+            let framesToOffset = [];
+            for (let k = 0; k < randomOffset; ++k) {
+              framesToOffset.push(frameList[0]);
+              frameList.splice(0, 1);
+            }
+            for (let k = 0; k < framesToOffset.length; ++k) {
+              frameList.push(framesToOffset[k]);
+            }
+
             for (var j = 0; j < idleDelayFrame; j++) {
-                frameList.push(stillFrameName[i]);
+                frameList.push(frameList[0]);
             }
             this.sprite.animations.add("idle" + facingName, frameList, frameRate, false).onComplete.add(() => {
                 this.playRandomIdle(this.facing);
@@ -56,15 +67,46 @@ module.exports = class Ghast extends BaseEntity {
         this.sprite.y = this.offset[1] + 40 * this.position[1];
     }
 
-    playRandomIdle(facing) {
-        var facingName,
-            animationName = "";
-        facingName = this.controller.levelView.getDirectionName(facing);
+  /**
+   * @override
+   */
+  canMoveThrough() {
+    return true;
+  }
 
-        animationName += "idle";
+  playRandomIdle(facing) {
+    var facingName,
+        animationName = "";
+    facingName = this.controller.levelView.getDirectionName(facing);
 
-        animationName += facingName;
-        this.controller.levelView.playScaledSpeed(this.sprite.animations, animationName);
+    animationName += "idle";
+
+    animationName += facingName;
+    this.controller.levelView.playScaledSpeed(this.sprite.animations, animationName);
+
+    if (this.audioDelay > 0) {
+      --this.audioDelay;
+    } else {
+    this.audioDelay = 5;
+    let chance = Math.floor(Math.random() * 5);
+    if (chance === 0) {
+      let soundNum = Math.floor(Math.random() * 4);
+      switch (soundNum) {
+        case 0:
+          this.controller.audioPlayer.play("moan2");
+          break;
+        case 1:
+          this.controller.audioPlayer.play("moan3");
+          break;
+        case 2:
+          this.controller.audioPlayer.play("moan6");
+          break;
+        default:
+          this.controller.audioPlayer.play("moan7");
+          break;
+        }
+      }
     }
+  }
 
 };

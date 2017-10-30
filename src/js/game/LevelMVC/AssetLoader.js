@@ -56,6 +56,16 @@ module.exports = class AssetLoader {
         pngPath: `${this.assetRoot}images/AO.png`,
         jsonPath: `${this.assetRoot}images/AO.json`
       },
+      LavaGlow: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/LavaGlow.png`,
+        jsonPath: `${this.assetRoot}images/LavaGlow.json`
+      },
+      WaterAO: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/WaterAO.png`,
+        jsonPath: `${this.assetRoot}images/WaterAO.json`
+      },
       blockShadows: {
         type: 'atlasJSON',
         pngPath: `${this.assetRoot}images/Block_Shadows.png`,
@@ -408,6 +418,27 @@ module.exports = class AssetLoader {
         mp3: `${this.assetRoot}audio/pressurePlateClick.mp3`,
         ogg: `${this.assetRoot}audio/pressurePlateClick.ogg`
       },
+      moan2: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/moan2.mp3`,
+        ogg: `${this.assetRoot}audio/moan2.ogg`
+      },
+      moan3: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/moan3.mp3`,
+        ogg: `${this.assetRoot}audio/moan3.ogg`
+      },
+      moan6: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/moan6.mp3`,
+        ogg: `${this.assetRoot}audio/moan6.ogg`
+      },
+      moan7: {
+        type: 'sound',
+        mp3: `${this.assetRoot}audio/moan7.mp3`,
+        ogg: `${this.assetRoot}audio/moan7.ogg`
+      },
+
     };
 
     const ALL_SOUND_ASSETS = [
@@ -447,6 +478,10 @@ module.exports = class AssetLoader {
       'portalAmbient',
       'portalTravel',
       'pressurePlateClick',
+      'moan2',
+      'moan3',
+      'moan6',
+      'moan7',
     ];
 
     const CHICKEN_LEVEL_ASSETS = [
@@ -531,6 +566,8 @@ module.exports = class AssetLoader {
         'finishOverlay',
         'bed',
         'AO',
+        'LavaGlow',
+        'WaterAO',
         'blockShadows',
         'undergroundFow',
         'blocks',
@@ -585,6 +622,8 @@ module.exports = class AssetLoader {
         'finishOverlay',
         'bed',
         'AO',
+        'LavaGlow',
+        'WaterAO',
         'blockShadows',
         'undergroundFow',
         'blocks',
@@ -655,6 +694,10 @@ module.exports = class AssetLoader {
         'portalAmbient',
         'portalTravel',
         'pressurePlateClick',
+        'moan2',
+        'moan3',
+        'moan6',
+        'moan7',
       ],
       playerSteve: [
         'playerSteve'

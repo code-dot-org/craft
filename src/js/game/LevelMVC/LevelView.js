@@ -1,6 +1,8 @@
 const LevelBlock = require("./LevelBlock.js");
 const FacingDirection = require("./FacingDirection.js");
+const Position = require("./Position.js");
 const createEvent = require("../../utils").createEvent;
+const randomInt = require("./Utils").randomInt;
 
 module.exports = class LevelView {
   constructor(controller) {
@@ -196,7 +198,7 @@ module.exports = class LevelView {
       "tallGrass": ["tallGrass", "", -13, 0],
 
       "lavaPop": ["lavaPop", "LavaPop01", -13, 0],
-      "redstoneSparkle": ["redstoneSparkle", "redstone_sparkle1.png", -25, -8],
+      "redstoneSparkle": ["redstoneSparkle", "redstone_sparkle1.png", 7, 23],
       "fire": ["fire", "", -11, 135],
       "bubbles": ["bubbles", "", -11, 135],
       "explosion": ["explosion", "", -70, 60],
@@ -446,29 +448,9 @@ module.exports = class LevelView {
     positionTween.start();
     scaleTween.start();
   }
-  // direction
+
   getDirectionName(facing) {
-    var direction;
-
-    switch (facing) {
-      case FacingDirection.North:
-        direction = "_up";
-        break;
-
-      case FacingDirection.East:
-        direction = "_right";
-        break;
-
-      case FacingDirection.South:
-        direction = "_down";
-        break;
-
-      case FacingDirection.West:
-        direction = "_left";
-        break;
-    }
-
-    return direction;
+    return "_" + FacingDirection.directionToRelative(facing).toLowerCase();
   }
 
   updatePlayerDirection(position, facing) {
@@ -715,15 +697,7 @@ module.exports = class LevelView {
     return tween;
   }
 
-  activateUnpoweredRails(unpoweredRails) {
-    for (var railIndex = 0; railIndex < unpoweredRails.length; railIndex += 2) {
-      var rail = unpoweredRails[railIndex + 1];
-      var position = unpoweredRails[railIndex];
-      this.createActionPlaneBlock(position, rail);
-    }
-  }
-
-  playMinecartAnimation(isOnBlock, completionHandler, unpoweredRails) {
+  playMinecartAnimation(isOnBlock, completionHandler) {
     //start at 3,2
     this.setPlayerPosition(3, 2, isOnBlock);
     const position = [3, 2];
@@ -734,7 +708,6 @@ module.exports = class LevelView {
     this.game.camera.follow(this.player.sprite);
 
     animation.onComplete.add(() => {
-      this.activateUnpoweredRails(unpoweredRails);
       this.playTrack(position, this.player.facing, isOnBlock, this.player, completionHandler);
     });
   }
@@ -1235,7 +1208,7 @@ module.exports = class LevelView {
     let miningParticlesOffsetY = miningParticlesData[miningParticlesIndex][2];
     let miningParticles = this.actionGroup.create(miningParticlesOffsetX + 40 * destroyPosition[0], miningParticlesOffsetY + 40 * destroyPosition[1], "miningParticles", "MiningParticles" + miningParticlesFirstFrame);
     miningParticles.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
-    this.onAnimationEnd(miningParticles.animations.add("miningParticles", Phaser.Animation.generateFrameNames("miningParticles", miningParticlesFirstFrame, miningParticlesFirstFrame + 11, "", 0), 30, false), () => {
+    this.onAnimationEnd(miningParticles.animations.add("miningParticles", Phaser.Animation.generateFrameNames("MiningParticles", miningParticlesFirstFrame, miningParticlesFirstFrame + 11, "", 0), 30, false), () => {
       miningParticles.kill();
       this.toDestroy.push(miningParticles);
     });
@@ -1393,7 +1366,7 @@ module.exports = class LevelView {
       this.positionToScreen(playerPosition), 200, Phaser.Easing.Linear.None);
 
     tween.onComplete.add(() => {
-      const caughtUpToPlayer = this.player.position[0] === playerPosition[0] && this.player.position[1] === playerPosition[1];
+      const caughtUpToPlayer = Position.equals(this.player.position, playerPosition);
       if (sprite.alive && caughtUpToPlayer) {
         this.audioPlayer.play("collectedBlock");
         this.player.inventory[blockType] =
@@ -1558,7 +1531,7 @@ module.exports = class LevelView {
     // We need to add indices to refresh if there are other blocks in the action plane that might
     // conflict with the drawing of refreshed blocks.
     for (let i = 0; i < positions.length; ++i) {
-      const positionBelow = [positions[i][0], positions[i][1] + 1];
+      const positionBelow = Position.south(positions[i]);
       const indexIsValid = this.controller.levelModel.actionPlane.inBounds(positionBelow);
       if (indexIsValid) {
         let blockToCheck = this.controller.levelModel.actionPlane.getBlockAt(positionBelow);
@@ -1610,65 +1583,68 @@ module.exports = class LevelView {
     for (index = 0; index < shadingData.length; ++index) {
       shadowItem = shadingData[index];
 
-      atlas = "AO";
+      atlas = shadowItem.atlas;
       sx = 40 * shadowItem.x;
       sy = -22 + 40 * shadowItem.y;
 
-      switch (shadowItem.type) {
-        case "AOeffect_Left":
-          sx += 26;
-          sy += 22;
-          break;
+      if (atlas === 'AO' || atlas === 'blockShadows') {
+        switch (shadowItem.type) {
+          case "AOeffect_Left":
+            sx += 26;
+            sy += 22;
+            break;
 
-        case "AOeffect_Right":
-          sx += 0;
-          sy += 22;
-          break;
+          case "AOeffect_Right":
+            sx += 0;
+            sy += 22;
+            break;
 
-        case "AOeffect_Bottom":
-          sx += 0;
-          sy += 22;
-          break;
+          case "AOeffect_Bottom":
+            sx += 0;
+            sy += 22;
+            break;
 
-        case "AOeffect_BottomLeft":
-          sx += 25;
-          sy += 22;
-          break;
+          case "AOeffect_BottomLeft":
+            sx += 25;
+            sy += 22;
+            break;
 
-        case "AOeffect_BottomRight":
-          sx += 0;
-          sy += 22;
-          break;
+          case "AOeffect_BottomRight":
+            sx += 0;
+            sy += 22;
+            break;
 
-        case "AOeffect_Top":
-          sx += 0;
-          sy += 47;
-          break;
+          case "AOeffect_Top":
+            sx += 0;
+            sy += 47;
+            break;
 
-        case "AOeffect_TopLeft":
-          sx += 25;
-          sy += 47;
-          break;
+          case "AOeffect_TopLeft":
+            sx += 25;
+            sy += 47;
+            break;
 
-        case "AOeffect_TopRight":
-          sx += 0;
-          sy += 47;
-          break;
+          case "AOeffect_TopRight":
+            sx += 0;
+            sy += 47;
+            break;
 
-        case "Shadow_Parts_Fade_base.png":
-          atlas = "blockShadows";
-          sx -= 52;
-          sy += 0;
-          break;
+          case "Shadow_Parts_Fade_base.png":
+            sx -= 52;
+            sy += 0;
+            break;
 
-        case "Shadow_Parts_Fade_top.png":
-          atlas = "blockShadows";
-          sx -= 52;
-          sy += 0;
-          break;
+          case "Shadow_Parts_Fade_top.png":
+            sx -= 52;
+            sy += 0;
+            break;
+        }
       }
 
-      this.shadingGroup.create(sx, sy, atlas, shadowItem.type);
+      const sprite = this.shadingGroup.create(sx, sy, atlas, shadowItem.type);
+      if (atlas === 'WaterAO') {
+        sprite.tint = 0x555555;
+      }
     }
   }
 
@@ -1949,22 +1925,23 @@ module.exports = class LevelView {
     sprite = this.actionGroup.create(xOffset + 40 * x, yOffset + 40 * y, atlas, "");
     const anim = sprite.animations.add("animate", frameList, 10, false);
 
+    // If direct player control, we have stuff to do to manage miniblock pick up
     if (this.controller.getIsDirectPlayerControl()) {
       const distanceBetween = function (position, position2) {
         return Math.sqrt(Math.pow(position[0] - position2[0], 2) + Math.pow(position[1] - position2[1], 2));
       };
 
       const collectiblePosition = this.controller.levelModel.spritePositionToIndex([xOffset, yOffset], [sprite.x, sprite.y]);
+      this.collectibleItems.push([sprite, [xOffset, yOffset], blockType, collectibleDistance]);
       anim.onComplete.add(() => {
         if (this.controller.levelModel.usePlayer) {
           if (distanceBetween(this.player.position, collectiblePosition) < collectibleDistance) {
-            this.playItemAcquireAnimation(this.player.position, this.player.facing, sprite, () => { }, blockType);
-          } else {
-            this.collectibleItems.push([sprite, [xOffset, yOffset], blockType, collectibleDistance]);
+            this.player.collectItems([x,y]);
           }
         }
       });
     }
+
     this.playScaledSpeed(sprite.animations, "animate");
     return sprite;
   }
@@ -2086,7 +2063,6 @@ module.exports = class LevelView {
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Water_", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
-        this.psuedoRandomTint(group, sprite, x, y);
         this.playScaledSpeed(sprite.animations, "idle");
         break;
 
@@ -2111,7 +2087,6 @@ module.exports = class LevelView {
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Lava_", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
-        this.psuedoRandomTint(group, sprite, x, y);
         this.playScaledSpeed(sprite.animations, "idle");
         break;
 
@@ -2146,28 +2121,6 @@ module.exports = class LevelView {
         }
         sprite.animations.add("idle", frameList, 5, true);
         this.playAnimationWithOffset(sprite, "idle", 29, 1);
-        break;
-
-      case "redstoneSparkle":
-        atlas = this.blocks[blockType][0];
-        frame = this.blocks[blockType][1];
-        xOffset = this.blocks[blockType][2];
-        yOffset = this.blocks[blockType][3];
-        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
-        frameList = Phaser.Animation.generateFrameNames("redstone_sparkle", 0, 24, ".png");
-        for (i = 0; i < 4; ++i) {
-          frameList.push("redstone_sparkle7");
-        }
-        frameList = frameList.concat(Phaser.Animation.generateFrameNames("redstone_sparkle", 8, 13, ".png"));
-        for (i = 0; i < 3; ++i) {
-          frameList.push("redstone_sparkle13");
-        }
-        frameList = frameList.concat(Phaser.Animation.generateFrameNames("redstone_sparkle", 14, 23, ".png"));
-        for (i = 0; i < 8; ++i) {
-          frameList.push("redstone_sparkle1");
-        }
-        sprite.animations.add("idle", frameList, 5, true);
-        this.playAnimationWithOffset(sprite, "idle", Math.floor(Math.random() * 3) + 21, 1);
         break;
 
       case "fire":
@@ -2243,7 +2196,7 @@ module.exports = class LevelView {
             this.psuedoRandomTint(group, sprite, x, y);
           }
         }
-        if (group === this.actionGroup && this.blockReceivesCornerShadow(x, y)) {
+        if (group === this.actionGroup && !LevelBlock.isWalkable(blockType) && this.blockReceivesCornerShadow(x, y)) {
           let xShadow = -39;
           let yShadow = 40;
           if (blockType.startsWith("pistonArm")) {
@@ -2252,8 +2205,39 @@ module.exports = class LevelView {
           }
           sprite.addChild(this.game.make.sprite(xShadow, yShadow, "blockShadows", "Shadow_Parts_Fade_overlap.png"));
         }
+        if (blockType.startsWith('redstoneWire') && blockType.endsWith('On')) {
+          sprite.addChild(this.addRedstoneSparkle());
+        }
         break;
     }
+
+    return sprite;
+  }
+
+  addRedstoneSparkle() {
+    const blank = "redstone_sparkle99.png";
+    const sprite = this.game.make.sprite(20, 25, "redstoneSparkle", blank);
+
+    // Establish the three different animations.
+    for (let i = 0; i < 3; i++) {
+      const n = i * 8;
+      const frames = [blank].concat(Phaser.Animation.generateFrameNames("redstone_sparkle", n, n + 7, ".png"), blank);
+      sprite.animations.add(`fizz_${i}`, frames, 7);
+    }
+
+    const playRandomSparkle = () => {
+      setTimeout(() => {
+        // Pick one of the animations to play.
+        let whichAnim = Math.floor(Math.random() * 3);
+        this.onAnimationEnd(this.playScaledSpeed(sprite.animations, `fizz_${whichAnim}`), playRandomSparkle);
+
+        // Randomize which corner of the index the animation manifests in.
+        sprite.position.x = (Math.random() > 0.5) ? 20 : 40;
+        sprite.position.y = (Math.random() > 0.5) ? 25 : 45;
+      }, randomInt(500, 7000) / this.controller.tweenTimeScale);
+    };
+
+    playRandomSparkle();
 
     return sprite;
   }

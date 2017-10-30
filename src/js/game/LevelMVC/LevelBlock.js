@@ -34,6 +34,7 @@ module.exports = class LevelBlock {
       this.isEmpty = true;
       this.isPlacable = true;
       this.isUsable = false;
+      this.isWeaklyPowerable = false;
     }
 
     if (this.getIsMiniblock()) {
@@ -188,6 +189,10 @@ module.exports = class LevelBlock {
         this.isEntity = true;
       }
     }
+
+    if (blockType.startsWith("flower")) {
+      this.isWalkable = true;
+    }
   }
 
   /**
@@ -210,6 +215,30 @@ module.exports = class LevelBlock {
 
   shouldRenderOnGroundPlane() {
     return this.isFlat();
+  }
+
+  getIsPowerableRail() {
+    return this.isRail && this.isConnectedToRedstone;
+  }
+
+  /**
+   * Helper method specifically for powered rails, which can only be veritical
+   * or horizontal.
+   *
+   * @return {boolean}
+   */
+  getIsHorizontal() {
+    return this.blockType.match('East|West');
+  }
+
+  /**
+   * Helper method specifically for powered rails, which can only be veritical
+   * or horizontal.
+   *
+   * @return {boolean}
+   */
+  getIsVertical() {
+    return this.blockType.match('North|South');
   }
 
   getIsStickyPiston() {

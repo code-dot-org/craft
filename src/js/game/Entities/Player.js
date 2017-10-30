@@ -33,12 +33,17 @@ module.exports = class Player extends BaseEntity {
       result.canPlace = true;
       result.plane = "actionPlane";
     }
-
     if (toPlaceBlock.blockType === "cropWheat") {
       result.canPlace = onTopOfBlock.blockType === "farmlandWet";
     }
-
     return result;
+  }
+
+  /**
+   * @override
+   */
+  canPlaceBlock(block) {
+    return block.isEmpty;
   }
 
   /**
@@ -46,6 +51,14 @@ module.exports = class Player extends BaseEntity {
    */
   shouldUpdateSelectionIndicator() {
     return true;
+  }
+
+  /**
+   * @override
+   */
+  setMovePosition(position) {
+    super.setMovePosition(position);
+    this.collectItems(this.position);
   }
 
   /**
@@ -140,8 +153,6 @@ module.exports = class Player extends BaseEntity {
 
     this.updateHidingTree();
     this.updateHidingBlock(prevPosition);
-    this.collectItems(prevPosition);
-    this.collectItems();
   }
 
   doMoveBackward(commandQueueItem) {
@@ -183,8 +194,6 @@ module.exports = class Player extends BaseEntity {
 
     this.updateHidingTree();
     this.updateHidingBlock(prevPosition);
-    this.collectItems(prevPosition);
-    this.collectItems();
   }
 
   bump(commandQueueItem) {
