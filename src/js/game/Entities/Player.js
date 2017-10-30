@@ -62,8 +62,7 @@ module.exports = class Player extends BaseEntity {
   // "Events" levels allow the player to move around with the arrow keys, and
   // perform actions with the space bar.
   updateMovement() {
-    const allowMovement = this.controller.attemptRunning || this.controller.getCanMoveBeforeRunButtonClick();
-    if (!this.controller.getIsDirectPlayerControl() || !allowMovement) {
+    if (!this.controller.attemptRunning || !this.controller.getIsDirectPlayerControl()) {
       return;
     }
 
