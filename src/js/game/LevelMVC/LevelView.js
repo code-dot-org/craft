@@ -1596,7 +1596,7 @@ module.exports = class LevelView {
       if (atlas === 'AO' || atlas === 'blockShadows') {
         switch (shadowItem.type) {
           case "AOeffect_Left":
-            sx += 26;
+            sx += 25;
             break;
 
           case "AOeffect_Right":
