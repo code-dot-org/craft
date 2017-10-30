@@ -718,7 +718,7 @@ module.exports = class LevelView {
     // Need to get track on current position to avoid mishandling immediate turns
     let track = this.controller.levelModel.actionPlane.getMinecartTrack(position, facing);
 
-    let offset = FacingDirection.getOffsetFromDirection(facing);
+    let offset = FacingDirection.directionToOffset(facing);
     let nextPos = [entity.position[0] + offset[0], entity.position[1] + offset[1]];
 
     if (entity.getOffTrack || (!track && !this.isFirstTimeOnRails(position, nextPos))) {
