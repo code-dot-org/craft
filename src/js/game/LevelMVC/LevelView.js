@@ -1562,55 +1562,6 @@ module.exports = class LevelView {
       sx = 40 * shadowItem.x;
       sy = 40 * shadowItem.y;
 
-      if (atlas === 'AO' || atlas === 'blockShadows') {
-        switch (shadowItem.type) {
-          case "AOeffect_Left":
-            sx += 25;
-            break;
-
-          case "AOeffect_Right":
-            sx += 0;
-            break;
-
-          case "AOeffect_Bottom":
-            sx += 0;
-            break;
-
-          case "AOeffect_BottomLeft":
-            sx += 25;
-            break;
-
-          case "AOeffect_BottomRight":
-            sx += 0;
-            break;
-
-          case "AOeffect_Top":
-            sx += 0;
-            sy += 25;
-            break;
-
-          case "AOeffect_TopLeft":
-            sx += 25;
-            sy += 25;
-            break;
-
-          case "AOeffect_TopRight":
-            sx += 0;
-            sy += 25;
-            break;
-
-          case "Shadow_Parts_Fade_base.png":
-            sx -= 52;
-            sy -= 22;
-            break;
-
-          case "Shadow_Parts_Fade_top.png":
-            sx -= 52;
-            sy -= 22;
-            break;
-        }
-      }
-
       const sprite = this.shadingGroup.create(sx, sy, atlas, shadowItem.type);
       if (atlas === 'WaterAO') {
         sprite.tint = 0x555555;
