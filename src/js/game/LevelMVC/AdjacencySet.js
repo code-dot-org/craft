@@ -21,14 +21,20 @@ module.exports = class AdjacencySet {
   }
 
   /**
-   * Add a position to our adjacency sets, updating existing sets as necessary
+   * Add a position to our adjacency sets if it doesn't already exist, updating
+   * existing sets as necessary
    *
    * NOTE that this operation is O(N), not the O(1) that you would expect from
    * a full disjoint-set implementation.
    *
    * @param {Position} position
+   * @return {boolean} whether or not the specified position was newly added
    */
   add(position) {
+    if (this.find(position)) {
+      return false;
+    }
+
     const adjacent = this.sets.filter(set =>
       set.some(other => this.comparisonFunction(position, other))
     );
@@ -51,6 +57,8 @@ module.exports = class AdjacencySet {
       // set
       this.sets.push([position]);
     }
+
+    return true;
   }
 
   /**
