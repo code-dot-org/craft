@@ -21,6 +21,15 @@ module.exports = class AdjacencySet {
   }
 
   /**
+   * Flatten the set of sets down to a single array of Positions
+   *
+   * @return {Position[]}
+   */
+  flattenSets() {
+    return this.sets.reduce((acc, cur) => acc.concat(cur), []);
+  }
+
+  /**
    * Add a position to our adjacency sets if it doesn't already exist, updating
    * existing sets as necessary
    *

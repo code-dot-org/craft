@@ -62,8 +62,8 @@ module.exports = class LevelPlane {
       this._data.push(block);
     }
 
-    if (isActionPlane) {
-      this.determineRedstoneAdjacencySet();
+    if (this.isActionPlane()) {
+      this.redstoneAdjacencySet = this.createRedstoneAdjacencySet();
     }
   }
 
@@ -310,16 +310,16 @@ module.exports = class LevelPlane {
       });
     });
 
-    return this.redstoneAdjacencySet.sets.reduce((acc, cur) => acc.concat(cur), []);
+    return this.redstoneAdjacencySet.flattenSets();
   }
 
-  determineRedstoneAdjacencySet() {
+  createRedstoneAdjacencySet() {
     const redstonePositions = this.getAllPositions().filter((position) => {
       const block = this.getBlockAt(position);
       return block.isRedstone || block.isRedstoneBattery;
     });
 
-    this.redstoneAdjacencySet = new AdjacencySet(redstonePositions);
+    return new AdjacencySet(redstonePositions);
   }
 
   /**
