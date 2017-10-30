@@ -2202,6 +2202,10 @@ module.exports = class LevelView {
 
     const playRandomSparkle = () => {
       setTimeout(() => {
+        if (!sprite.alive) {
+          return;
+        }
+
         // Pick one of the animations to play.
         let whichAnim = Math.floor(Math.random() * 3);
         this.onAnimationEnd(this.playScaledSpeed(sprite.animations, `fizz_${whichAnim}`), playRandomSparkle);
