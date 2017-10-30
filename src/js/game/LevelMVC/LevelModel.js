@@ -272,14 +272,10 @@ module.exports = class LevelModel {
     if (!block) {
       return;
     }
-    return this.inverseDirection(block.connectionA) === direction ||
-    this.inverseDirection(block.connectionB) === direction ||
-    block.connectionA === direction ||
-    block.connectionB === direction;
-  }
-
-  inverseDirection(direction) {
-    return (direction + 2) % 4;
+    return FacingDirection.opposite(block.connectionA) === direction ||
+      FacingDirection.opposite(block.connectionB) === direction ||
+      block.connectionA === direction ||
+      block.connectionB === direction;
   }
 
   getNextRailPosition(entity = this.player) {

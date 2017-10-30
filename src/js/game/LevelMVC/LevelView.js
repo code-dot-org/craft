@@ -748,7 +748,7 @@ module.exports = class LevelView {
     let offset = FacingDirection.getOffsetFromDirection(facing);
     let nextPos = [entity.position[0] + offset[0], entity.position[1] + offset[1]];
 
-    if (entity.getOffTrack || (!track && !this.firstTime(position, nextPos))) {
+    if (entity.getOffTrack || (!track && !this.isFirstTimeOnRails(position, nextPos))) {
       entity.getOffTrack = false;
       entity.onTracks = false;
       if (completionHandler) {
@@ -785,10 +785,10 @@ module.exports = class LevelView {
   /**
   * Handling the first case of walking onto a track while not currently on one
   */
-  firstTime(currPos, nextPos) {
+  isFirstTimeOnRails(currPos, nextPos) {
     let nextBlock = this.controller.levelModel.actionPlane.getBlockAt(nextPos);
     let currBlock = this.controller.levelModel.actionPlane.getBlockAt(currPos);
-    if (!currBlock.blockType.startsWith("rails") && nextBlock.blockType.startsWith("rails")) {
+    if (!currBlock.isRails() && nextBlock.isRails()) {
       return true;
     }
     return false;

@@ -11,8 +11,6 @@ module.exports = class Player extends BaseEntity {
     this.movementState = -1;
     this.onTracks = false;
     this.getOffTrack = false;
-    this.firstTrack = true;
-    this.railDelayCheck = false;
 
     if (controller.getIsDirectPlayerControl()) {
       this.moveDelayMin = 0;
@@ -96,6 +94,8 @@ module.exports = class Player extends BaseEntity {
     const timeEllapsed = (+new Date() - this.lastMovement);
     const movementAlmostFinished = timeEllapsed > 300;
     if (isMoving && timeEllapsed > 800) {
+      // Delay of 800 ms so that the first move onto a rail completes the moveDirection command.
+      // Without the delay, the moveDirection conflicts with the onRails check and cancels rail riding as soon as it starts.
       this.getOffTrack = true;
     }
     return !this.onTracks && ((queueIsEmpty || (queueHasOne && movementAlmostFinished)) && isMoving);
