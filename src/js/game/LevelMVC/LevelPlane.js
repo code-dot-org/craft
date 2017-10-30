@@ -61,6 +61,10 @@ module.exports = class LevelPlane {
       block.isWalkable = block.isWalkable || !isActionPlane;
       this._data.push(block);
     }
+
+    if (isActionPlane) {
+      this.determineRedstoneAdjacencySet();
+    }
   }
 
   /**
@@ -140,6 +144,12 @@ module.exports = class LevelPlane {
     this._data[this.coordinatesToIndex(position)] = block;
 
     if (this.isActionPlane()) {
+
+      if (block.isRedstone || block.isRedstoneBattery) {
+        this.redstoneAdjacencySet.add(position);
+      } else {
+        this.redstoneAdjacencySet.remove(position);
+      }
 
       let redstoneToRefresh = [];
       if (block.needToRefreshRedstone()) {
@@ -290,13 +300,8 @@ module.exports = class LevelPlane {
    * Propagate power to (and orient) all redstone wire in the level
    */
   powerRedstone() {
-    const redstonePositions = this.getAllPositions().filter((position) => {
-      const block = this.getBlockAt(position);
-      return block.isRedstone || block.isRedstoneBattery;
-    });
-
     // redstone charge propagation
-    new AdjacencySet(redstonePositions).sets.forEach((set) => {
+    this.redstoneAdjacencySet.sets.forEach((set) => {
       const somePower = set.some((position) => this.getBlockAt(position).isRedstoneBattery);
 
       set.forEach((position) => {
@@ -305,7 +310,16 @@ module.exports = class LevelPlane {
       });
     });
 
-    return redstonePositions;
+    return this.redstoneAdjacencySet.sets.reduce((acc, cur) => acc.concat(cur), []);
+  }
+
+  determineRedstoneAdjacencySet() {
+    const redstonePositions = this.getAllPositions().filter((position) => {
+      const block = this.getBlockAt(position);
+      return block.isRedstone || block.isRedstoneBattery;
+    });
+
+    this.redstoneAdjacencySet = new AdjacencySet(redstonePositions);
   }
 
   /**
