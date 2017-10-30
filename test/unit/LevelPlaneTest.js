@@ -341,7 +341,7 @@ test('powered rails: vertical charge propagation', t => {
   ];
   const plane = new LevelPlane(data, 3, 3, true, null, "actionPlane");
 
-  plane.getRedstone();
+  plane.refreshRedstone();
   t.equal(plane.getBlockAt([1, 1]).blockType, "railsPoweredSouth");
   t.equal(plane.getBlockAt([1, 2]).blockType, "railsPoweredNorth");
 
@@ -356,7 +356,7 @@ test('powered rails: horizontal charge propagation', t => {
   ];
   const plane = new LevelPlane(data, 3, 3, true, null, "actionPlane");
 
-  plane.getRedstone();
+  plane.refreshRedstone();
   t.equal(plane.getBlockAt([1, 1]).blockType, "railsPoweredEast");
   t.equal(plane.getBlockAt([2, 1]).blockType, "railsPoweredWest");
 
