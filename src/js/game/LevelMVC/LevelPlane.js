@@ -45,11 +45,11 @@ const PoweredRailConnectionPriority = [
 ];
 
 module.exports = class LevelPlane {
-  constructor(planeData, width, height, isActionPlane = false, LevelModel = null, planeType = null) {
+  constructor(planeData, width, height, levelModel, planeType) {
     this._data = [];
     this.width = width;
     this.height = height;
-    this.levelModel = LevelModel;
+    this.levelModel = levelModel;
     this.planeType = planeType;
     this.playPistonOn = false;
     this.playPistonOff = false;
@@ -57,7 +57,7 @@ module.exports = class LevelPlane {
     for (let index = 0; index < planeData.length; ++index) {
       let block = new LevelBlock(planeData[index]);
       // TODO(bjordan): put this truth in constructor like other attrs
-      block.isWalkable = block.isWalkable || !isActionPlane;
+      block.isWalkable = block.isWalkable || !this.isActionPlane();
       this._data.push(block);
     }
   }
