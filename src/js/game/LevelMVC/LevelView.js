@@ -718,8 +718,7 @@ module.exports = class LevelView {
     // Need to get track on current position to avoid mishandling immediate turns
     let track = this.controller.levelModel.actionPlane.getMinecartTrack(position, facing);
 
-    let offset = FacingDirection.directionToOffset(facing);
-    let nextPos = [entity.position[0] + offset[0], entity.position[1] + offset[1]];
+    let nextPos = Position.forward(entity.position, facing);
 
     if (entity.getOffTrack || (!track && !this.isFirstTimeOnRails(position, nextPos))) {
       entity.getOffTrack = false;
@@ -761,7 +760,7 @@ module.exports = class LevelView {
   isFirstTimeOnRails(currPos, nextPos) {
     let nextBlock = this.controller.levelModel.actionPlane.getBlockAt(nextPos);
     let currBlock = this.controller.levelModel.actionPlane.getBlockAt(currPos);
-    if (!currBlock.isRails() && nextBlock.isRails()) {
+    if (!currBlock.isRail && nextBlock.isRail) {
       return true;
     }
     return false;

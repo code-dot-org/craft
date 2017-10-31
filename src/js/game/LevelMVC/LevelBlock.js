@@ -209,10 +209,6 @@ module.exports = class LevelBlock {
         this.blockType.startsWith("pressurePlate");
   }
 
-  isRails() {
-    return this.blockType.startsWith("rails") && this.blockType !== "railsRedstoneTorch";
-  }
-
   shouldRenderOnGroundPlane() {
     return this.isFlat();
   }
