@@ -39,10 +39,10 @@ test('sanity', t => {
 
   t.equal(model.planeArea(), 25);
 
-  t.assert(model.inBounds(2, 4));
-  t.false(model.inBounds(-1, 1));
-  t.false(model.inBounds(5, 3));
-  t.false(model.inBounds(3, 5));
+  t.assert(model.inBounds([2, 4]));
+  t.false(model.inBounds([-1, 1]));
+  t.false(model.inBounds([5, 3]));
+  t.false(model.inBounds([3, 5]));
 
   t.equal(model.yToIndex(2), 10);
 

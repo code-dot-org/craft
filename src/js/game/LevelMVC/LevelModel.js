@@ -30,7 +30,8 @@ module.exports = class LevelModel {
     return this.planeWidth * this.planeHeight;
   }
 
-  inBounds(x, y) {
+  inBounds(position) {
+    const [x, y] = position;
     return x >= 0 && x < this.planeWidth && y >= 0 && y < this.planeHeight;
   }
 
@@ -150,25 +151,25 @@ module.exports = class LevelModel {
 
     // above
     position = [this.player.position[0], this.player.position[1] - 1];
-    if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
+    if (this.inBounds(position) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
       return true;
     }
 
     // below
     position = [this.player.position[0], this.player.position[1] + 1];
-    if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
+    if (this.inBounds(position) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
       return true;
     }
 
     // left
     position = [this.player.position[0] + 1, this.player.position[1]];
-    if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
+    if (this.inBounds(position) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
       return true;
     }
 
     // Right
     position = [this.player.position[0] - 1, this.player.position[1]];
-    if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
+    if (this.inBounds(position) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
       return true;
     }
 
@@ -183,25 +184,25 @@ module.exports = class LevelModel {
 
       // above
       position = [entity.position[0], entity.position[1] - 1];
-      if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
+      if (this.inBounds(position) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
         return true;
       }
 
       // below
       position = [entity.position[0], entity.position[1] + 1];
-      if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
+      if (this.inBounds(position) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
         return true;
       }
 
       // left
       position = [entity.position[0] + 1, entity.position[1]];
-      if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
+      if (this.inBounds(position) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
         return true;
       }
 
       // Right
       position = [entity.position[0] - 1, entity.position[1]];
-      if (this.inBounds(position[0], position[1]) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
+      if (this.inBounds(position) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
         return true;
       }
     }
@@ -419,8 +420,7 @@ module.exports = class LevelModel {
   isBlockOfTypeOnPlane(position, blockType, plane) {
     var result = false;
 
-    let [x, y] = position;
-    if (this.inBounds(x, y)) {
+    if (this.inBounds(position)) {
 
       if (blockType === "empty") {
         result = plane.getBlockAt(position).isEmpty;
@@ -601,9 +601,8 @@ module.exports = class LevelModel {
 
   isPositionEmpty(position, entity = this.player) {
     var result = [false,];
-    let [x, y] = position;
 
-    if (this.inBounds(x, y)) {
+    if (this.inBounds(position)) {
       if (!this.actionPlane.getBlockAt(position).isWalkable) {
         result.push("notWalkable");
       }
@@ -673,9 +672,7 @@ module.exports = class LevelModel {
   }
 
   getPlaneToPlaceOn(position) {
-    let [x, y] = position;
-
-    if (this.inBounds(x, y)) {
+    if (this.inBounds(position)) {
       let actionBlock = this.actionPlane.getBlockAt(position);
       if (actionBlock.isPlacable) {
         let groundBlock = this.groundPlane.getBlockAt(position);
@@ -694,9 +691,8 @@ module.exports = class LevelModel {
 
     if (!entity.isOnBlock) {
       let blockForwardPosition = this.getMoveForwardPosition(entity);
-      let [x, y] = blockForwardPosition;
 
-      if (this.inBounds(x, y)) {
+      if (this.inBounds(blockForwardPosition)) {
         let block = this.actionPlane.getBlockAt(blockForwardPosition);
         result = !block.isEmpty && (block.isDestroyable || block.isUsable);
       }
@@ -778,7 +774,7 @@ module.exports = class LevelModel {
     var block = null;
     let [x, y] = [position[0], position[1]];
 
-    if (this.inBounds(x, y)) {
+    if (this.inBounds(position)) {
       block = this.actionPlane.getBlockAt(position);
       if (block !== null) {
         block.position = [x, y];
@@ -795,9 +791,8 @@ module.exports = class LevelModel {
     var block = null;
 
     let blockForwardPosition = this.getMoveForwardPosition(entity);
-    let [x, y] = blockForwardPosition;
 
-    if (this.inBounds(x, y)) {
+    if (this.inBounds(blockForwardPosition)) {
       block = this.actionPlane.getBlockAt(blockForwardPosition);
       if (block !== null) {
 
@@ -961,7 +956,7 @@ module.exports = class LevelModel {
         for (var xIndex = currentTorch[0] - 2; xIndex <= (currentTorch[0] + 2); ++xIndex) {
 
           //Ensure we're looking inside the map
-          if (!this.inBounds(xIndex, yIndex)) {
+          if (!this.inBounds([xIndex, yIndex])) {
             continue;
           }
 
@@ -989,7 +984,7 @@ module.exports = class LevelModel {
       for (var xIndex = x - 2; xIndex <= (x + 2); ++xIndex) {
 
         //Ensure we're looking inside the map
-        if (!this.inBounds(xIndex, yIndex)) {
+        if (!this.inBounds([xIndex, yIndex])) {
           continue;
         }
 
