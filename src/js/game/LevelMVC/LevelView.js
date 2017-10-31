@@ -714,14 +714,26 @@ module.exports = class LevelView {
 
   playTrack(position, facing, isOnBlock, entity = this.player, completionHandler) {
     entity.onTracks = true;
-    const track = this.controller.levelModel.actionPlane.getMinecartTrack(position, facing);
 
-    if (!track) {
+    // Need to get track on current position to avoid mishandling immediate turns
+    let track = this.controller.levelModel.actionPlane.getMinecartTrack(position, facing);
+
+    let nextPos = Position.forward(entity.position, facing);
+
+    if (entity.getOffTrack || (!track && !this.isFirstTimeOnRails(position, nextPos))) {
+      entity.getOffTrack = false;
       entity.onTracks = false;
       if (completionHandler) {
         completionHandler();
       }
       return;
+    }
+
+    // If track is undefined, it means the player was not on a rail
+    // but if we reached this, that means we're trying to get on a rail for the first time
+    // and we need to grab that track -in front of us-
+    if (track === undefined) {
+      track = this.controller.levelModel.actionPlane.getMinecartTrack(nextPos, facing);
     }
 
     let direction;
@@ -740,6 +752,18 @@ module.exports = class LevelView {
         this.playTrack(nextPosition, nextFacing, isOnBlock, entity, completionHandler);
       });
     }
+  }
+
+  /**
+  * Handling the first case of walking onto a track while not currently on one
+  */
+  isFirstTimeOnRails(currPos, nextPos) {
+    let nextBlock = this.controller.levelModel.actionPlane.getBlockAt(nextPos);
+    let currBlock = this.controller.levelModel.actionPlane.getBlockAt(currPos);
+    if (!currBlock.isRail && nextBlock.isRail) {
+      return true;
+    }
+    return false;
   }
 
   addHouseBed(bottomCoordinates) {

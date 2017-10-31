@@ -258,6 +258,28 @@ module.exports = class LevelModel {
     return this.controller.score;
   }
 
+  shouldRide(direction) {
+    let player = this.player;
+    let frontPosition = this.getNextRailPosition(player);
+    let frontBlock = this.actionPlane.getBlockAt(frontPosition);
+    return this.isNextRailValid(frontBlock, direction);
+  }
+
+  isNextRailValid(block, direction) {
+    if (!block) {
+      return;
+    }
+    return FacingDirection.opposite(block.connectionA) === direction ||
+      FacingDirection.opposite(block.connectionB) === direction ||
+      block.connectionA === direction ||
+      block.connectionB === direction;
+  }
+
+  getNextRailPosition(entity = this.player) {
+    const offset = FacingDirection.directionToOffset(entity.movementState) || [0, 0];
+    return Position.add(entity.position, offset);
+  }
+
   getEntityCount(entityType) {
     var entityList = this.controller.levelEntity.getEntitiesOfType(entityType);
     return entityList.length;

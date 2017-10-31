@@ -10,6 +10,7 @@ module.exports = class Player extends BaseEntity {
     this.inventory = {};
     this.movementState = -1;
     this.onTracks = false;
+    this.getOffTrack = false;
 
     if (controller.getIsDirectPlayerControl()) {
       this.moveDelayMin = 0;
@@ -75,6 +76,10 @@ module.exports = class Player extends BaseEntity {
       return;
     }
 
+    if (this.onTracks) {
+      this.collectItems(this.position);
+    }
+
     if (this.canUpdateMovement()) {
       // Arrow key
       if (this.movementState >= 0) {
@@ -101,6 +106,11 @@ module.exports = class Player extends BaseEntity {
     const queueHasOne = this.queue.currentCommand && this.queue.getLength() === 0;
     const timeEllapsed = (+new Date() - this.lastMovement);
     const movementAlmostFinished = timeEllapsed > 300;
+    if (isMoving && timeEllapsed > 800) {
+      // Delay of 800 ms so that the first move onto a rail completes the moveDirection command.
+      // Without the delay, the moveDirection conflicts with the onRails check and cancels rail riding as soon as it starts.
+      this.getOffTrack = true;
+    }
     return !this.onTracks && ((queueIsEmpty || (queueHasOne && movementAlmostFinished)) && isMoving);
   }
 
