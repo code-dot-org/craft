@@ -1,4 +1,3 @@
-const utils = require("../../utils");
 const FacingDirection = require("./FacingDirection");
 
 const directions = [
@@ -46,48 +45,5 @@ module.exports = class Position {
 
   static getOrthogonalPositions(position) {
     return directions.map(direction => Position.forward(position, direction));
-  }
-
-  /**
-   * Group an array of positions into sets of connected positions. Default
-   * definition of "connected" is "orthogonally adjacent", but that can be
-   * overridden.
-   *
-   * NOTE that this operation is O(N^2), not the O(N) that you would expect from a
-   * full disjoint-set implementation.
-   *
-   * @param {Position[]} positions
-   * @param {Function} [comparisonFunction = Position.isAdjacent]
-   *
-   * @return {Position[][]} set of sets of connected positions
-   */
-  static adjacencySets(positions, comparisonFunction) {
-    if (comparisonFunction === undefined) {
-      comparisonFunction = Position.isAdjacent;
-    }
-
-    let sets = [];
-    positions.forEach((position) => {
-      const [adjacent, nonadjacent] = utils.bisect(sets, (set) => set.some((other) => comparisonFunction(position, other)));
-      if (adjacent.length === 1) {
-        // if this position is adjacent to exactly one set, simply add it to the
-        // set
-        adjacent[0].push(position);
-      } else if (adjacent.length > 1) {
-        // if this position unites several new sets into one mutual adjacency,
-        // combine them all and add this position to the new set
-        const newSet = [];
-        adjacent.forEach((s) => newSet.push(...s));
-        newSet.push(position);
-        sets = nonadjacent;
-        sets.push(newSet);
-      } else {
-        // if this position is all by itself, let it be the initial entry in a new
-        // set
-        sets.push([position]);
-      }
-    });
-
-    return sets;
   }
 };

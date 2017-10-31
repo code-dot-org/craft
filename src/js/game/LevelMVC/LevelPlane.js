@@ -12,6 +12,7 @@ const {
 } = require("./FacingDirection.js");
 
 const Position = require("./Position");
+const AdjacencySet = require("./AdjacencySet");
 
 const connectionName = function (connection) {
   switch (connection) {
@@ -59,6 +60,10 @@ module.exports = class LevelPlane {
       // TODO(bjordan): put this truth in constructor like other attrs
       block.isWalkable = block.isWalkable || !this.isActionPlane();
       this._data.push(block);
+    }
+
+    if (this.isActionPlane()) {
+      this.redstoneAdjacencySet = this.createRedstoneAdjacencySet();
     }
   }
 
@@ -139,6 +144,12 @@ module.exports = class LevelPlane {
     this._data[this.coordinatesToIndex(position)] = block;
 
     if (this.isActionPlane()) {
+
+      if (block.isRedstone || block.isRedstoneBattery) {
+        this.redstoneAdjacencySet.add(position);
+      } else {
+        this.redstoneAdjacencySet.remove(position);
+      }
 
       let redstoneToRefresh = [];
       if (block.needToRefreshRedstone()) {
@@ -289,13 +300,8 @@ module.exports = class LevelPlane {
    * Propagate power to (and orient) all redstone wire in the level
    */
   powerRedstone() {
-    const redstonePositions = this.getAllPositions().filter((position) => {
-      const block = this.getBlockAt(position);
-      return block.isRedstone || block.isRedstoneBattery;
-    });
-
     // redstone charge propagation
-    Position.adjacencySets(redstonePositions).forEach((set) => {
+    this.redstoneAdjacencySet.sets.forEach((set) => {
       const somePower = set.some((position) => this.getBlockAt(position).isRedstoneBattery);
 
       set.forEach((position) => {
@@ -304,7 +310,16 @@ module.exports = class LevelPlane {
       });
     });
 
-    return redstonePositions;
+    return this.redstoneAdjacencySet.flattenSets();
+  }
+
+  createRedstoneAdjacencySet() {
+    const redstonePositions = this.getAllPositions().filter((position) => {
+      const block = this.getBlockAt(position);
+      return block.isRedstone || block.isRedstoneBattery;
+    });
+
+    return new AdjacencySet(redstonePositions);
   }
 
   /**
@@ -322,10 +337,10 @@ module.exports = class LevelPlane {
     });
 
     // propagate power
-    Position.adjacencySets(
+    new AdjacencySet(
       powerableRails,
       this.getPoweredRailsConnected.bind(this)
-    ).forEach(set => {
+    ).sets.forEach(set => {
       // each set of connected rails should be entirely powered if any of them
       // is powered
       const somePower = set.some(position => this.getBlockAt(position).isPowered);
