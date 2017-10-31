@@ -147,66 +147,30 @@ module.exports = class LevelModel {
     if (!this.usePlayer) {
       return false;
     }
-    var position;
 
-    // above
-    position = [this.player.position[0], this.player.position[1] - 1];
-    if (this.inBounds(position) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
-      return true;
-    }
-
-    // below
-    position = [this.player.position[0], this.player.position[1] + 1];
-    if (this.inBounds(position) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
-      return true;
-    }
-
-    // left
-    position = [this.player.position[0] + 1, this.player.position[1]];
-    if (this.inBounds(position) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
-      return true;
-    }
-
-    // Right
-    position = [this.player.position[0] - 1, this.player.position[1]];
-    if (this.inBounds(position) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
-      return true;
-    }
-
-    return false;
+    return Position.getOrthogonalPositions(this.player.position).some(position => {
+      return (
+        this.inBounds(position) &&
+        (this.isBlockOfType(position, blockType) ||
+          this.isEntityOfType(position, blockType) ||
+          this.groundPlane.getBlockAt(position).blockType === blockType)
+      );
+    });
   }
 
   isEntityNextTo(entityType, blockType) {
-    var entityList = this.controller.levelEntity.getEntitiesOfType(entityType);
-    for (var i = 0; i < entityList.length; i++) {
-      var entity = entityList[i];
-      var position;
+    const entityList = this.controller.levelEntity.getEntitiesOfType(entityType);
 
-      // above
-      position = [entity.position[0], entity.position[1] - 1];
-      if (this.inBounds(position) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
-        return true;
-      }
-
-      // below
-      position = [entity.position[0], entity.position[1] + 1];
-      if (this.inBounds(position) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
-        return true;
-      }
-
-      // left
-      position = [entity.position[0] + 1, entity.position[1]];
-      if (this.inBounds(position) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
-        return true;
-      }
-
-      // Right
-      position = [entity.position[0] - 1, entity.position[1]];
-      if (this.inBounds(position) && (this.isBlockOfType(position, blockType) || this.isEntityOfType(position, blockType) || this.groundPlane.getBlockAt(position).blockType === blockType)) {
-        return true;
-      }
-    }
-    return false;
+    return entityList.some(entity => {
+      return Position.getOrthogonalPositions(entity.position).some(position => {
+        return (
+          this.inBounds(position) &&
+          (this.isBlockOfType(position, blockType) ||
+            this.isEntityOfType(position, blockType) ||
+            this.groundPlane.getBlockAt(position).blockType === blockType)
+        );
+      });
+    });
   }
 
   isEntityOnBlocktype(entityType, blockType, count = 1) {
@@ -225,7 +189,7 @@ module.exports = class LevelModel {
     var entityList = this.controller.levelEntity.getEntitiesOfType(entityType);
     for (var i = 0; i < entityList.length; i++) {
       var entity = entityList[i];
-      if (entity.position[0] === position[0] && entity.position[1] === position[1]) {
+      if (Position.equals(entity.position, position)) {
         return true;
       }
     }
