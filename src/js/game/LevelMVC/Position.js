@@ -46,4 +46,16 @@ module.exports = class Position {
   static getOrthogonalPositions(position) {
     return directions.map(direction => Position.forward(position, direction));
   }
+
+  /**
+   * Gets all eight surrounding positions - orthogonal and diagonal
+   */
+  static getSurroundingPositions(position) {
+    return Position.getOrthogonalPositions(position).concat([
+      Position.north(Position.east(position)),
+      Position.north(Position.west(position)),
+      Position.south(Position.east(position)),
+      Position.south(Position.west(position)),
+    ]);
+  }
 };

@@ -482,7 +482,7 @@ module.exports = class LevelModel {
 
   getEntityAt(position) {
     for (var entity of this.controller.levelEntity.entityMap) {
-      if (entity[1].position[0] === position[0] && entity[1].position[1] === position[1]) {
+      if (Position.equals(entity[1].position, position)) {
         return entity[1];
       }
     }
@@ -500,52 +500,13 @@ module.exports = class LevelModel {
   }
 
   getAllBorderingPosition(position, blockType) {
-    var p;
     var allFoundObjects = [false];
-    //Check all 8 directions
 
-    //Top Right
-    p = [position[0] + 1, position[1] + 1];
-    if (this.checkPositionForTypeAndPush(blockType, p, allFoundObjects)) {
-      allFoundObjects[0] = true;
-    }
-    //Top Left
-    p = [position[0] - 1, position[1] + 1];
-    if (this.checkPositionForTypeAndPush(blockType, p, allFoundObjects)) {
-      allFoundObjects[0] = true;
-    }
-    //Bot Right
-    p = [position[0] + 1, position[1] - 1];
-    if (this.checkPositionForTypeAndPush(blockType, p, allFoundObjects)) {
-      allFoundObjects[0] = true;
-    }
-    //Bot Left
-    p = [position[0] - 1, position[1] - 1];
-    if (this.checkPositionForTypeAndPush(blockType, p, allFoundObjects)) {
-      allFoundObjects[0] = true;
-    }
-
-    //Check cardinal Directions
-    //Top
-    p = [position[0], position[1] + 1];
-    if (this.checkPositionForTypeAndPush(blockType, p, allFoundObjects)) {
-      allFoundObjects[0] = true;
-    }
-    //Bot
-    p = [position[0], position[1] - 1];
-    if (this.checkPositionForTypeAndPush(blockType, p, allFoundObjects)) {
-      allFoundObjects[0] = true;
-    }
-    //Right
-    p = [position[0] + 1, position[1]];
-    if (this.checkPositionForTypeAndPush(blockType, p, allFoundObjects)) {
-      allFoundObjects[0] = true;
-    }
-    //Left
-    p = [position[0] - 1, position[1]];
-    if (this.checkPositionForTypeAndPush(blockType, p, allFoundObjects)) {
-      allFoundObjects[0] = true;
-    }
+    Position.getSurroundingPositions(position).forEach((surroundingPosition) => {
+      if (this.checkPositionForTypeAndPush(blockType, surroundingPosition, allFoundObjects)) {
+        allFoundObjects[0] = true;
+      }
+    });
 
     return allFoundObjects;
   }
