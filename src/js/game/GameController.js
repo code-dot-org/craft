@@ -1124,7 +1124,7 @@ class GameController {
   }
 
   destroyBlockWithoutPlayerInteraction(position) {
-    if (!this.levelModel.inBounds(position[0], position[1])) {
+    if (!this.levelModel.inBounds(position)) {
       return;
     }
     let block = this.levelModel.actionPlane.getBlockAt(position);

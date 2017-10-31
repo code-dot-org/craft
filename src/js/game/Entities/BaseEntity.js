@@ -689,7 +689,7 @@ module.exports = class BaseEntity {
 
   handleMoveOffIronDoor(moveOffset) {
     const formerPosition = [this.position[0] + moveOffset[0], this.position[1] + moveOffset[1]];
-    if (!this.controller.levelModel.inBounds(formerPosition[0], formerPosition[1])) {
+    if (!this.controller.levelModel.inBounds(formerPosition)) {
       return;
     }
 

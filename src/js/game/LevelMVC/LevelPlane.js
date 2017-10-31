@@ -104,18 +104,13 @@ module.exports = class LevelPlane {
    * Gets the block at the desired position within the plane, optionally with an
    * offset
    *
-   * @param {Number[]} position - [x, y] coordinates of block
-   * @param {Number} [offsetX=0]
-   * @param {Number} [offsetY=0]
+   * @param {Position} position - [x, y] coordinates of block
    *
    * @return {LevelBlock}
    */
-  getBlockAt(position, offsetX = 0, offsetY = 0) {
-    const [x, y] = position;
-    const target = [x + offsetX, y + offsetY];
-
-    if (this.inBounds(target)) {
-      return this._data[this.coordinatesToIndex(target)];
+  getBlockAt(position) {
+    if (this.inBounds(position)) {
+      return this._data[this.coordinatesToIndex(position)];
     }
   }
 
@@ -196,10 +191,10 @@ module.exports = class LevelPlane {
   */
   getOrthogonalBlocks(position) {
     return {
-      north: {block: this.getBlockAt(position, 0, -1), relative: South},
-      south: {block: this.getBlockAt(position, 0, 1), relative: North},
-      east: {block: this.getBlockAt(position, 1, 0), relative: West},
-      west: {block: this.getBlockAt(position, -1, 0), relative: East},
+      north: {block: this.getBlockAt(Position.north(position)), relative: South},
+      south: {block: this.getBlockAt(Position.south(position)), relative: North},
+      east: {block: this.getBlockAt(Position.east(position)), relative: West},
+      west: {block: this.getBlockAt(Position.west(position)), relative: East},
     };
   }
 
@@ -209,14 +204,14 @@ module.exports = class LevelPlane {
    */
   getSurroundingBlocks(position) {
     return {
-      north: this.getBlockAt(position, 0, -1),
-      northEast: this.getBlockAt(position, 1, -1),
-      east: this.getBlockAt(position, 1, 0),
-      southEast: this.getBlockAt(position, 1, 1),
-      south: this.getBlockAt(position, 0, 1),
-      southWest: this.getBlockAt(position, -1, 1),
-      west: this.getBlockAt(position, -1, 0),
-      northWest: this.getBlockAt(position, -1, -1),
+      north: this.getBlockAt(Position.add(position, [0, -1])),
+      northEast: this.getBlockAt(Position.add(position, [1, -1])),
+      east: this.getBlockAt(Position.add(position, [1, 0])),
+      southEast: this.getBlockAt(Position.add(position, [1, 1])),
+      south: this.getBlockAt(Position.add(position, [0, 1])),
+      southWest: this.getBlockAt(Position.add(position, [-1, 1])),
+      west: this.getBlockAt(Position.add(position, [-1, 0])),
+      northWest: this.getBlockAt(Position.add(position, [-1, -1])),
     };
   }
 
@@ -580,14 +575,14 @@ module.exports = class LevelPlane {
       }
     } else if (workingNeighbor.blockType !== "" && !workingNeighbor.getIsPistonArm()) {
       // We've actually got something to push.
-      let blocksPositions = this.getBlocksToPush(pos, offset[0], offset[1]);
+      let blocksPositions = this.getBlocksToPush(pos, offset);
       let concat = "On";
       if (block.getIsStickyPiston()) {
         concat += "Sticky";
       }
       let onPiston = new LevelBlock(pistonType += concat);
       this.setBlockAt(position, onPiston);
-      this.pushBlocks(blocksPositions, offset[0], offset[1]);
+      this.pushBlocks(blocksPositions, offset);
       this.playPistonOn = true;
     } else if (workingNeighbor.blockType === "") {
       // Nothing to push, so just make the arm.
@@ -662,27 +657,30 @@ module.exports = class LevelPlane {
   }
 
   /**
-  * Goes through a list of blocks and shuffles them over 1 index in a given direction.
-  */
-  pushBlocks(blocksPositions, offsetX = 0, offsetY = 0) {
+   * Goes through a list of blocks and shuffles them over 1 index in a given direction.
+   *
+   * @param {Position[]} blocksPositions
+   * @param {Position} [offset=[0, 0]]
+   */
+  pushBlocks(blocksPositions, offset = [0, 0]) {
     let pistonType = "";
     let redo = false;
-    if (offsetX === 1) {
+    if (offset[0] === 1) {
       pistonType = "pistonArmRight";
-    } else if (offsetX === -1) {
+    } else if (offset[0] === -1) {
       pistonType = "pistonArmLeft";
     } else {
-      if (offsetY === 1) {
+      if (offset[1] === 1) {
         pistonType = "pistonArmDown";
-      } else if (offsetY === -1) {
+      } else if (offset[1] === -1) {
         pistonType = "pistonArmUp";
       } else {
-          // There is no offset, so we're not putting down anything.
+        // There is no offset, so we're not putting down anything.
       }
     }
     let armBlock = new LevelBlock(pistonType);
     for (let i = blocksPositions.length - 1; i >= 0; --i) {
-      let destination = [blocksPositions[i][0] + offsetX, blocksPositions[i][1] + offsetY];
+      let destination = Position.add(blocksPositions[i], offset);
       let block = this.getBlockAt(blocksPositions[i]);
       if (this.inBounds(destination) && this.getBlockAt(destination).isDestroyableUponPush()) {
         if (this.levelModel) {
@@ -701,14 +699,16 @@ module.exports = class LevelPlane {
   }
 
   /**
-  * Returns a list of blocks in a given direction to be shuffled over later.
-  */
-  getBlocksToPush(position, offsetX = 0, offsetY = 0) {
+   * Returns a list of blocks in a given direction to be shuffled over later.
+   * @param {Position} position
+   * @param {Position} [offset=[0, 0]]
+   */
+  getBlocksToPush(position, offset = [0, 0]) {
     let pushingBlocks = [];
     let workingPosition = position;
     while (this.inBounds(workingPosition) && this.getBlockAt(workingPosition).getIsPushable()) {
       pushingBlocks.push(workingPosition);
-      workingPosition = [workingPosition[0] + offsetX, workingPosition[1] + offsetY];
+      workingPosition = Position.add(workingPosition, offset);
     }
     return pushingBlocks;
   }
