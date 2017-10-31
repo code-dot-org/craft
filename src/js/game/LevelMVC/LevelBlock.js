@@ -209,6 +209,12 @@ module.exports = class LevelBlock {
         this.blockType.startsWith("pressurePlate");
   }
 
+  skipsDestructionOverlay() {
+    return this.isRedstone ||
+      this.blockType === "torch" ||
+      this.blockType === "railsRedstoneTorch";
+  }
+
   shouldRenderOnGroundPlane() {
     return this.isFlat();
   }
@@ -373,6 +379,10 @@ module.exports = class LevelBlock {
    */
   static isFlat(blockType) {
     return new LevelBlock(blockType).isFlat();
+  }
+
+  static skipsDestructionOverlay(blockType) {
+    return new LevelBlock(blockType).skipsDestructionOverlay();
   }
 
   /**
