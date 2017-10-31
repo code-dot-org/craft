@@ -104,18 +104,13 @@ module.exports = class LevelPlane {
    * Gets the block at the desired position within the plane, optionally with an
    * offset
    *
-   * @param {Number[]} position - [x, y] coordinates of block
-   * @param {Number} [offsetX=0]
-   * @param {Number} [offsetY=0]
+   * @param {Position} position - [x, y] coordinates of block
    *
    * @return {LevelBlock}
    */
-  getBlockAt(position, offsetX = 0, offsetY = 0) {
-    const [x, y] = position;
-    const target = [x + offsetX, y + offsetY];
-
-    if (this.inBounds(target)) {
-      return this._data[this.coordinatesToIndex(target)];
+  getBlockAt(position) {
+    if (this.inBounds(position)) {
+      return this._data[this.coordinatesToIndex(position)];
     }
   }
 
@@ -196,10 +191,10 @@ module.exports = class LevelPlane {
   */
   getOrthogonalBlocks(position) {
     return {
-      north: {block: this.getBlockAt(position, 0, -1), relative: South},
-      south: {block: this.getBlockAt(position, 0, 1), relative: North},
-      east: {block: this.getBlockAt(position, 1, 0), relative: West},
-      west: {block: this.getBlockAt(position, -1, 0), relative: East},
+      north: {block: this.getBlockAt(Position.north(position)), relative: South},
+      south: {block: this.getBlockAt(Position.south(position)), relative: North},
+      east: {block: this.getBlockAt(Position.east(position)), relative: West},
+      west: {block: this.getBlockAt(Position.west(position)), relative: East},
     };
   }
 
@@ -209,14 +204,14 @@ module.exports = class LevelPlane {
    */
   getSurroundingBlocks(position) {
     return {
-      north: this.getBlockAt(position, 0, -1),
-      northEast: this.getBlockAt(position, 1, -1),
-      east: this.getBlockAt(position, 1, 0),
-      southEast: this.getBlockAt(position, 1, 1),
-      south: this.getBlockAt(position, 0, 1),
-      southWest: this.getBlockAt(position, -1, 1),
-      west: this.getBlockAt(position, -1, 0),
-      northWest: this.getBlockAt(position, -1, -1),
+      north: this.getBlockAt(Position.add(position, [0, -1])),
+      northEast: this.getBlockAt(Position.add(position, [1, -1])),
+      east: this.getBlockAt(Position.add(position, [1, 0])),
+      southEast: this.getBlockAt(Position.add(position, [1, 1])),
+      south: this.getBlockAt(Position.add(position, [0, 1])),
+      southWest: this.getBlockAt(Position.add(position, [-1, 1])),
+      west: this.getBlockAt(Position.add(position, [-1, 0])),
+      northWest: this.getBlockAt(Position.add(position, [-1, -1])),
     };
   }
 
