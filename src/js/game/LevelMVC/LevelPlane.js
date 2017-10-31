@@ -56,8 +56,6 @@ module.exports = class LevelPlane {
 
     for (let index = 0; index < planeData.length; ++index) {
       let block = new LevelBlock(planeData[index]);
-      // TODO(bjordan): put this truth in constructor like other attrs
-      block.isWalkable = block.isWalkable || !this.isActionPlane();
       this._data.push(block);
     }
   }
