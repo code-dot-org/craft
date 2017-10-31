@@ -7,6 +7,13 @@ module.exports = class Ghast extends BaseEntity {
         this.prepareSprite();
         this.sprite.sortOrder = this.controller.levelView.yToIndex(Number.MAX_SAFE_INTEGER);
         this.audioDelay = 15;
+        this.anchor = [this.sprite.position.x, this.sprite.position.y];
+        this.movingUp = false;
+        if (this.sprite.position.x > 60) {
+          this.movingUp = true;
+        }
+        this.pauseTime = 0;
+        this.scaleMod = 1;
     }
 
     prepareSprite() {
@@ -72,6 +79,31 @@ module.exports = class Ghast extends BaseEntity {
    */
   canMoveThrough() {
     return true;
+  }
+
+  tick() {
+    super.tick();
+    if (this.movingUp) {
+      if (this.sprite.position.y > this.anchor[1] / 4) {
+        this.sprite.position.y -= 1;
+      } else {
+        this.pauseTime += 1;
+        if (this.pauseTime > 0) {
+          this.pauseTime = 0;
+          this.movingUp = false;
+        }
+      }
+    } else {
+      if (this.sprite.position.y < this.anchor[1] * 2) {
+        this.sprite.position.y += 1;
+      } else {
+        this.pauseTime += 1;
+        if (this.pauseTime > 0) {
+          this.pauseTime = 0;
+          this.movingUp = true;
+        }
+      }
+    }
   }
 
   playRandomIdle(facing) {
