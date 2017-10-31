@@ -83,24 +83,24 @@ module.exports = class Ghast extends BaseEntity {
 
   tick() {
     super.tick();
-    if (this.movingUp) {
-      if (this.sprite.position.y > this.anchor[1] / 4) {
-        this.sprite.position.y -= 1;
-      } else {
-        this.pauseTime += 1;
-        if (this.pauseTime > 0) {
-          this.pauseTime = 0;
-          this.movingUp = false;
-        }
-      }
-    } else {
-      if (this.sprite.position.y < this.anchor[1] * 2) {
+    if (!this.movingUp) {
+      if (this.sprite.position.y < 215) {
         this.sprite.position.y += 1;
       } else {
         this.pauseTime += 1;
         if (this.pauseTime > 0) {
           this.pauseTime = 0;
           this.movingUp = true;
+        }
+      }
+    } else {
+      if (this.sprite.position.y > 150) {
+        this.sprite.position.y -= 1;
+      } else {
+        this.pauseTime += 1;
+        if (this.pauseTime > 0) {
+          this.pauseTime = 0;
+          this.movingUp = false;
         }
       }
     }
