@@ -1157,7 +1157,7 @@ module.exports = class LevelView {
       afterDestroy();
     } else {
       let destroyOverlay = this.actionGroup.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
-      if (blockType.startsWith("rails")) {
+      if (LevelBlock.isFlat(blockType)) {
         let cropRect = new Phaser.Rectangle(0, 0, 60, 40);
         destroyOverlay.position.y += 20;
         destroyOverlay.crop(cropRect);
