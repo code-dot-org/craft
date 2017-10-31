@@ -1174,13 +1174,18 @@ module.exports = class LevelView {
       this.playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, true, entity);
     };
 
-    if (LevelBlock.isFlat(blockType)) {
+    if (LevelBlock.skipsDestructionOverlay(blockType)) {
       // "flat" blocks are by definition not cube shaped and so shouldn't accept
       // the cube-shaped destroy overlay animation. In this case, destroy the
       // block immediately without waiting for the animation.
       afterDestroy();
     } else {
       const destroyOverlay = this.actionGroup.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
+      if (LevelBlock.isFlat(blockType)) {
+        const cropRect = new Phaser.Rectangle(0, 0, 60, 40);
+        destroyOverlay.position.y += 20;
+        destroyOverlay.crop(cropRect);
+      }
       destroyOverlay.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
       this.onAnimationEnd(destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false), () => {
         destroyOverlay.kill();
