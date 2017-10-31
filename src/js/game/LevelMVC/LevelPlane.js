@@ -582,7 +582,7 @@ module.exports = class LevelPlane {
       }
       let onPiston = new LevelBlock(pistonType += concat);
       this.setBlockAt(position, onPiston);
-      this.pushBlocks(blocksPositions, offset[0], offset[1]);
+      this.pushBlocks(blocksPositions, offset);
       this.playPistonOn = true;
     } else if (workingNeighbor.blockType === "") {
       // Nothing to push, so just make the arm.
@@ -657,27 +657,30 @@ module.exports = class LevelPlane {
   }
 
   /**
-  * Goes through a list of blocks and shuffles them over 1 index in a given direction.
-  */
-  pushBlocks(blocksPositions, offsetX = 0, offsetY = 0) {
+   * Goes through a list of blocks and shuffles them over 1 index in a given direction.
+   *
+   * @param {Position[]} blocksPositions
+   * @param {Position} [offset=[0, 0]]
+   */
+  pushBlocks(blocksPositions, offset = [0, 0]) {
     let pistonType = "";
     let redo = false;
-    if (offsetX === 1) {
+    if (offset[0] === 1) {
       pistonType = "pistonArmRight";
-    } else if (offsetX === -1) {
+    } else if (offset[0] === -1) {
       pistonType = "pistonArmLeft";
     } else {
-      if (offsetY === 1) {
+      if (offset[1] === 1) {
         pistonType = "pistonArmDown";
-      } else if (offsetY === -1) {
+      } else if (offset[1] === -1) {
         pistonType = "pistonArmUp";
       } else {
-          // There is no offset, so we're not putting down anything.
+        // There is no offset, so we're not putting down anything.
       }
     }
     let armBlock = new LevelBlock(pistonType);
     for (let i = blocksPositions.length - 1; i >= 0; --i) {
-      let destination = [blocksPositions[i][0] + offsetX, blocksPositions[i][1] + offsetY];
+      let destination = Position.add(blocksPositions[i], offset);
       let block = this.getBlockAt(blocksPositions[i]);
       if (this.inBounds(destination) && this.getBlockAt(destination).isDestroyableUponPush()) {
         if (this.levelModel) {
