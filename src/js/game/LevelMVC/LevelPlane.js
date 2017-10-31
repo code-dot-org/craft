@@ -580,7 +580,7 @@ module.exports = class LevelPlane {
       }
     } else if (workingNeighbor.blockType !== "" && !workingNeighbor.getIsPistonArm()) {
       // We've actually got something to push.
-      let blocksPositions = this.getBlocksToPush(pos, offset[0], offset[1]);
+      let blocksPositions = this.getBlocksToPush(pos, offset);
       let concat = "On";
       if (block.getIsStickyPiston()) {
         concat += "Sticky";
@@ -701,14 +701,16 @@ module.exports = class LevelPlane {
   }
 
   /**
-  * Returns a list of blocks in a given direction to be shuffled over later.
-  */
-  getBlocksToPush(position, offsetX = 0, offsetY = 0) {
+   * Returns a list of blocks in a given direction to be shuffled over later.
+   * @param {Position} position
+   * @param {Position} [offset=[0, 0]]
+   */
+  getBlocksToPush(position, offset = [0, 0]) {
     let pushingBlocks = [];
     let workingPosition = position;
     while (this.inBounds(workingPosition) && this.getBlockAt(workingPosition).getIsPushable()) {
       pushingBlocks.push(workingPosition);
-      workingPosition = [workingPosition[0] + offsetX, workingPosition[1] + offsetY];
+      workingPosition = Position.add(workingPosition, offset);
     }
     return pushingBlocks;
   }
