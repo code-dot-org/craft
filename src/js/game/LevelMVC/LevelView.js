@@ -344,6 +344,8 @@ module.exports = class LevelView {
       "terracottaSilver": ["blocks", "Terracotta_Silver", -13, 0],
       "terracottaWhite": ["blocks", "Terracotta_White", -13, 0],
       "terracottaYellow": ["blocks", "Terracotta_Yellow", -13, 0],
+
+      "invisible": ["blocks", "Invisible", 0, 0],
     };
     this.actionPlaneBlocks = [];
     this.toDestroy = [];
