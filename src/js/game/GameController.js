@@ -127,14 +127,6 @@ class GameController {
   }
 
   /**
-   * Can the Player move as soon as the level loads?
-   * @return {boolean}
-   */
-  getCanMoveBeforeRunButtonClick() {
-    return this.levelData.isAgentLevel;
-  }
-
-  /**
    * @param {Object} levelConfig
    */
   loadLevel(levelConfig) {
