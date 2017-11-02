@@ -420,6 +420,10 @@ class GameController {
     return this.game.canvas.toDataURL("image/png");
   }
 
+  getCanvas() {
+    return this.game.canvas;
+  }
+
   // command record
 
   initializeCommandRecord() {
