@@ -61,7 +61,7 @@ test('Agent 1: Leave House', t => {
 
       resolve();
     });
-  }), 1);
+  }));
 });
 
 test('Agent 2: Open Doors', t => {
@@ -108,7 +108,7 @@ test('Agent 2: Open Doors', t => {
 
       resolve();
     });
-  }), 1);
+  }));
 });
 
 test('Agent 3: Open Doors 2.0', t => {
@@ -161,7 +161,7 @@ test('Agent 3: Open Doors 2.0', t => {
 
       resolve();
     });
-  }), 1);
+  }));
 });
 
 test('Agent 4: Walk on Water', t => {
@@ -201,7 +201,6 @@ test('Agent 4: Walk on Water', t => {
       api.moveForward(null, 'Player');
       api.turnRight(null, 'Player');
       api.moveForward(null, 'Player');
-      api.moveForward(null, 'Player');
       api.turnLeft(null, 'Player');
       for (let i = 0; i < 5; ++i) {
         api.moveForward(null, 'Player');
@@ -220,7 +219,7 @@ test('Agent 4: Walk on Water', t => {
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.agent.position, [2, 5]);
+      t.deepEqual(levelModel.agent.position, [3, 1]);
 
       t.deepEqual(levelModel.player.position, [9, 1]);
       t.assert(success);
@@ -228,7 +227,7 @@ test('Agent 4: Walk on Water', t => {
 
       resolve();
     });
-  }), 1);
+  }));
 });
 
 test('Agent 5: Open Doors 2.0', t => {
@@ -286,7 +285,7 @@ test('Agent 5: Open Doors 2.0', t => {
 
       resolve();
     });
-  }), 1);
+  }));
 });
 
 test('Agent 6: Build Bridge with one turn', t => {
@@ -339,7 +338,7 @@ test('Agent 6: Build Bridge with one turn', t => {
 
       resolve();
     });
-  }), 1);
+  }));
 });
 
 test('Agent 7: Build Bridge with multiple turns', t => {
@@ -394,7 +393,7 @@ test('Agent 7: Build Bridge with multiple turns', t => {
 
       resolve();
     });
-  }), 1);
+  }));
 });
 
 test('Agent 8: Build Bridge with Functions', t => {
@@ -444,7 +443,7 @@ test('Agent 8: Build Bridge with Functions', t => {
 
       resolve();
     });
-  }), 1);
+  }));
 });
 
 test('Agent 9: Clear Path', t => {
@@ -506,7 +505,7 @@ test('Agent 9: Clear Path', t => {
 
       resolve();
     });
-  }), 1);
+  }));
 });
 
 test('Agent 10: Ride Rails', t => {
@@ -514,7 +513,7 @@ test('Agent 10: Ride Rails', t => {
 
     const funcLong = () => {
       for (let i = 0; i < 3; ++i) {
-        //api.destroyBlock(null, 'PlayerAgent');
+        api.destroyBlock(null, 'PlayerAgent');
         api.moveForward(null, 'PlayerAgent');
         api.placeBlock(null, 'rails', 'PlayerAgent');
       }
@@ -522,7 +521,7 @@ test('Agent 10: Ride Rails', t => {
 
     const funcShort = () => {
       for (let i = 0; i < 2; ++i) {
-        //api.destroyBlock(null, 'PlayerAgent');
+        api.destroyBlock(null, 'PlayerAgent');
         api.moveForward(null, 'PlayerAgent');
         api.placeBlock(null, 'rails', 'PlayerAgent');
       }
@@ -551,14 +550,35 @@ test('Agent 10: Ride Rails', t => {
 
     setTimeout(() => {
     // Once the path is clear, move the player to the finish square.
-
-    }, 1000);
+      api.turnRight(null, 'Player');
+      api.arrowDown(1);
+    }, 12000);
+    setTimeout(() => {
+    // Once the path is clear, move the player to the finish square.
+      api.arrowUp(1);
+    }, 13000);
+    setTimeout(() => {
+    // Once the path is clear, move the player to the finish square.
+      api.moveForward(null, 'Player');
+      api.moveForward(null, 'Player');
+      for (let i = 0; i < 2; ++i) {
+        api.turnLeft(null, 'Player');
+        api.moveForward(null, 'Player');
+        api.moveForward(null, 'Player');
+      }
+      api.turnLeft(null, 'Player');
+      api.moveForward(null, 'Player');
+      api.turnRight(null, 'Player');
+      for (let i = 0; i < 3; ++i) {
+        api.moveForward(null, 'Player');
+      }
+    }, 18000);
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
       t.deepEqual(levelModel.agent.position, [9, 2]);
 
-      t.deepEqual(levelModel.player.position, [7, 3]);
+      t.deepEqual(levelModel.player.position, [4, 3]);
       t.end();
 
       resolve();
@@ -595,42 +615,42 @@ test('Agent 11: The Nether', t => {
 
     setTimeout(() => {
     // Once the bridge is built, move the player to the finish square.
-      api.turnLeft(null, 'PlayerAgent');
-      api.moveForward(null, 'PlayerAgent');
-      api.turnRight(null, 'PlayerAgent');
-      api.moveForward(null, 'PlayerAgent');
-      api.moveForward(null, 'PlayerAgent');
-      api.turnRight(null, 'PlayerAgent');
+      api.turnLeft(null, 'Player');
+      api.moveForward(null, 'Player');
+      api.turnRight(null, 'Player');
+      api.moveForward(null, 'Player');
+      api.moveForward(null, 'Player');
+      api.turnRight(null, 'Player');
       for (let i = 0; i < 5; ++i) {
-        api.moveForward(null, 'PlayerAgent');
+        api.moveForward(null, 'Player');
       }
-      api.turnLeft(null, 'PlayerAgent');
+      api.turnLeft(null, 'Player');
       for (let i = 0; i < 5; ++i) {
-        api.moveForward(null, 'PlayerAgent');
+        api.moveForward(null, 'Player');
       }
-      api.turnLeft(null, 'PlayerAgent');
+      api.turnLeft(null, 'Player');
       for (let i = 0; i < 2; ++i) {
-        api.moveForward(null, 'PlayerAgent');
+        api.moveForward(null, 'Player');
       }
-      api.turnRight(null, 'PlayerAgent');
+      api.turnRight(null, 'Player');
       for (let i = 0; i < 2; ++i) {
-        api.moveForward(null, 'PlayerAgent');
+        api.moveForward(null, 'Player');
       }
-      api.turnRight(null, 'PlayerAgent');
-      api.moveForward(null, 'PlayerAgent');
+      api.turnRight(null, 'Player');
+      api.moveForward(null, 'Player');
       //Player collects the diamond
-      api.turnRight(null, 'PlayerAgent');
-      api.turnRight(null, 'PlayerAgent');
-      api.moveForward(null, 'PlayerAgent');
-      api.turnLeft(null, 'PlayerAgent');
+      api.turnRight(null, 'Player');
+      api.turnRight(null, 'Player');
+      api.moveForward(null, 'Player');
+      api.turnLeft(null, 'Player');
       for (let i = 0; i < 2; ++i) {
-        api.moveForward(null, 'PlayerAgent');
+        api.moveForward(null, 'Player');
       }
-      api.turnRight(null, 'PlayerAgent');
+      api.turnRight(null, 'Player');
       for (let i = 0; i < 3; ++i) {
-        api.moveForward(null, 'PlayerAgent');
+        api.moveForward(null, 'Player');
       }
-    }, 1000);
+    }, 3000);
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
@@ -641,6 +661,6 @@ test('Agent 11: The Nether', t => {
 
       resolve();
     });
-  }), 1);
+  }));
 });
 
