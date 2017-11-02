@@ -618,6 +618,7 @@ test('Agent 11: The Nether', t => {
       }
       api.turnRight(null, 'PlayerAgent');
       api.moveForward(null, 'PlayerAgent');
+      //Player collects the diamond
       api.turnRight(null, 'PlayerAgent');
       api.turnRight(null, 'PlayerAgent');
       api.moveForward(null, 'PlayerAgent');
