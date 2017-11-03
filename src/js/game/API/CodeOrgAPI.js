@@ -1,6 +1,8 @@
 const PlaceBlockCommand = require("../CommandQueue/PlaceBlockCommand.js");
 const PlaceInFrontCommand = require("../CommandQueue/PlaceInFrontCommand.js");
 const PlaceBehindCommand = require("../CommandQueue/PlaceBehindCommand.js");
+const PlaceLeftCommand = require("../CommandQueue/PlaceLeftCommand.js");
+const PlaceRightCommand = require("../CommandQueue/PlaceRightCommand.js");
 const MoveForwardCommand = require("../CommandQueue/MoveForwardCommand.js");
 const MoveBackwardCommand = require("../CommandQueue/MoveBackwardCommand.js");
 const WhileCommand = require("../CommandQueue/WhileCommand.js");
@@ -172,6 +174,14 @@ module.exports.get = function (controller) {
 
     placeBehind: function (highlightCallback, blockType, targetEntity) {
       controller.addCommand(new PlaceBehindCommand(controller, highlightCallback, blockType, targetEntity), targetEntity);
+    },
+
+    placeLeft: function (highlightCallback, blockType, targetEntity) {
+      controller.addCommand(new PlaceLeftCommand(controller, highlightCallback, blockType, targetEntity), targetEntity);
+    },
+
+    placeRight: function (highlightCallback, blockType, targetEntity) {
+      controller.addCommand(new PlaceRightCommand(controller, highlightCallback, blockType, targetEntity), targetEntity);
     },
 
     tillSoil: function (highlightCallback, targetEntity) {

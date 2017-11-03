@@ -349,6 +349,14 @@ module.exports = class LevelModel {
     return Position.forward(entity.position, FacingDirection.opposite(entity.facing));
   }
 
+  getMoveLeftPosition(entity = this.player) {
+    return Position.forward(entity.position, (entity.facing + 1) % 4);
+  }
+
+  getMoveRightPosition(entity = this.player) {
+    return Position.forward(entity.position, (entity.facing + 3) % 4);
+  }
+
   isForwardBlockOfType(blockType) {
     let blockForwardPosition = this.getMoveForwardPosition();
 
@@ -609,6 +617,32 @@ module.exports = class LevelModel {
     return this.getPlaneToPlaceOn(this.getMoveBackwardPosition(entity), entity) !== null;
   }
 
+  canPlaceBlockLeft(blockType = "", entity = this.player) {
+    if (entity.isOnBlock) {
+      return false;
+    }
+    let plane = this.getPlaneToPlaceOn(this.getMoveLeftPosition(entity), entity);
+    if (plane === this.groundPlane) {
+      if (blockType === "redstoneWire" || blockType.substring(0,5) === "rails" && this.groundPlane.getBlockAt(this.getMoveLeftPosition())) {
+        return false;
+      }
+    }
+    return this.getPlaneToPlaceOn(this.getMoveLeftPosition(entity), entity) !== null;
+  }
+
+  canPlaceBlockRight(blockType = "", entity = this.player) {
+    if (entity.isOnBlock) {
+      return false;
+    }
+    let plane = this.getPlaneToPlaceOn(this.getMoveRightPosition(entity), entity);
+    if (plane === this.groundPlane) {
+      if (blockType === "redstoneWire" || blockType.substring(0,5) === "rails" && this.groundPlane.getBlockAt(this.getMoveRightPosition())) {
+        return false;
+      }
+    }
+    return this.getPlaneToPlaceOn(this.getMoveRightPosition(entity), entity) !== null;
+  }
+
   getPlaneToPlaceOn(position, entity) {
     if (this.inBounds(position)) {
       if (entity === this.agent) {
@@ -713,6 +747,28 @@ module.exports = class LevelModel {
 
   placeBlockBehind(blockType, targetPlane, entity = this.player) {
     let blockPosition = this.getMoveBackwardPosition(entity);
+
+    //for placing wetland for crops in free play
+    if (blockType === "watering") {
+      blockType = "farmlandWet";
+      targetPlane = this.groundPlane;
+    }
+    return targetPlane.setBlockAt(blockPosition, new LevelBlock(blockType));
+  }
+
+  placeBlockLeft(blockType, targetPlane, entity = this.player) {
+    let blockPosition = this.getMoveLeftPosition(entity);
+
+    //for placing wetland for crops in free play
+    if (blockType === "watering") {
+      blockType = "farmlandWet";
+      targetPlane = this.groundPlane;
+    }
+    return targetPlane.setBlockAt(blockPosition, new LevelBlock(blockType));
+  }
+
+  placeBlockRight(blockType, targetPlane, entity = this.player) {
+    let blockPosition = this.getMoveRightPosition(entity);
 
     //for placing wetland for crops in free play
     if (blockType === "watering") {
