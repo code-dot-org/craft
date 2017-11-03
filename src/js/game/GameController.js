@@ -1280,7 +1280,7 @@ class GameController {
     }
 
     forwardPosition = this.levelModel.getMoveForwardPosition(player);
-    placementPlane = this.levelModel.getPlaneToPlaceOn(forwardPosition);
+    placementPlane = this.levelModel.getPlaneToPlaceOn(forwardPosition, player);
     if (this.levelModel.isBlockOfTypeOnPlane(forwardPosition, "lava", placementPlane)) {
       soundEffect = () => this.levelView.audioPlayer.play("fizz");
     }
@@ -1316,7 +1316,7 @@ class GameController {
     }
 
     behindPosition = this.levelModel.getMoveBackwardPosition(player);
-    placementPlane = this.levelModel.getPlaneToPlaceOn(behindPosition);
+    placementPlane = this.levelModel.getPlaneToPlaceOn(behindPosition, player);
     if (this.levelModel.isBlockOfTypeOnPlane(behindPosition, "lava", placementPlane)) {
       soundEffect = () => this.levelView.audioPlayer.play("fizz");
     }

@@ -587,30 +587,33 @@ module.exports = class LevelModel {
     if (entity.isOnBlock) {
       return false;
     }
-    let plane = this.getPlaneToPlaceOn(this.getMoveForwardPosition(entity));
+    let plane = this.getPlaneToPlaceOn(this.getMoveForwardPosition(entity), entity);
     if (plane === this.groundPlane) {
       if (blockType === "redstoneWire" || blockType.substring(0,5) === "rails" && this.groundPlane.getBlockAt(this.getMoveForwardPosition())) {
         return false;
       }
     }
-    return this.getPlaneToPlaceOn(this.getMoveForwardPosition(entity)) !== null;
+    return this.getPlaneToPlaceOn(this.getMoveForwardPosition(entity), entity) !== null;
   }
 
   canPlaceBlockBehind(blockType = "", entity = this.player) {
     if (entity.isOnBlock) {
       return false;
     }
-    let plane = this.getPlaneToPlaceOn(this.getMoveBackwardPosition(entity));
+    let plane = this.getPlaneToPlaceOn(this.getMoveBackwardPosition(entity), entity);
     if (plane === this.groundPlane) {
       if (blockType === "redstoneWire" || blockType.substring(0,5) === "rails" && this.groundPlane.getBlockAt(this.getMoveBackwardPosition())) {
         return false;
       }
     }
-    return this.getPlaneToPlaceOn(this.getMoveBackwardPosition(entity)) !== null;
+    return this.getPlaneToPlaceOn(this.getMoveBackwardPosition(entity), entity) !== null;
   }
 
-  getPlaneToPlaceOn(position) {
+  getPlaneToPlaceOn(position, entity) {
     if (this.inBounds(position)) {
+      if (entity === this.agent) {
+        return this.actionPlane;
+      }
       let actionBlock = this.actionPlane.getBlockAt(position);
       if (actionBlock.isPlacable) {
         let groundBlock = this.groundPlane.getBlockAt(position);
