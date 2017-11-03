@@ -273,7 +273,7 @@ test('Agent 5: Open Doors 2.0', t => {
       api.moveForward(null, 'Player');
       api.turnLeft(null, 'Player');
       api.moveForward(null, 'Player');
-    }, 1000);
+    }, 1500);
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
@@ -431,7 +431,7 @@ test('Agent 8: Build Bridge with Functions', t => {
       api.turnRight(null, 'Player');
       api.moveForward(null, 'Player');
       api.moveForward(null, 'Player');
-    }, 1000);
+    }, 10000);
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
@@ -493,7 +493,7 @@ test('Agent 9: Clear Path', t => {
       api.turnRight(null, 'Player');
       api.moveForward(null, 'Player');
       api.moveForward(null, 'Player');
-    }, 1000);
+    }, 2000);
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
@@ -552,11 +552,11 @@ test('Agent 10: Ride Rails', t => {
     // Once the path is clear, move the player to the finish square.
       api.turnRight(null, 'Player');
       api.arrowDown(1);
-    }, 12000);
+    }, 22000);
     setTimeout(() => {
     // Once the path is clear, move the player to the finish square.
       api.arrowUp(1);
-    }, 13000);
+    }, 23000);
     setTimeout(() => {
     // Once the path is clear, move the player to the finish square.
       api.moveForward(null, 'Player');
@@ -572,7 +572,7 @@ test('Agent 10: Ride Rails', t => {
       for (let i = 0; i < 3; ++i) {
         api.moveForward(null, 'Player');
       }
-    }, 18000);
+    }, 28000);
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
