@@ -1285,8 +1285,44 @@ class GameController {
       soundEffect = () => this.levelView.audioPlayer.play("fizz");
     }
 
-    this.levelView.playPlaceBlockInFrontAnimation(player, this.levelModel.player.position, this.levelModel.player.facing, forwardPosition, () => {
+    this.levelView.playPlaceBlockInFrontAnimation(player, player.position, player.facing, forwardPosition, () => {
       this.levelModel.placeBlockForward(blockType, placementPlane, player);
+      this.levelView.refreshGroundGroup();
+
+      this.updateFowPlane();
+      this.updateShadingPlane();
+      soundEffect();
+      this.delayBy(200, () => {
+        this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
+      });
+      this.delayPlayerMoveBy(200, 400, () => {
+        commandQueueItem.succeeded();
+      });
+    });
+  }
+
+  placeBlockBehind(commandQueueItem, blockType) {
+    let player = this.getEntity(commandQueueItem.target);
+    let behindPosition,
+      placementPlane,
+      soundEffect = () => { };
+
+    if (!this.levelModel.canPlaceBlockBehind(blockType, player)) {
+      this.levelView.playPunchAirAnimation(player.position, player.facing, player.position, () => {
+        this.levelView.playIdleAnimation(player.position, player.facing, false, player);
+        commandQueueItem.succeeded();
+      }, player);
+      return;
+    }
+
+    behindPosition = this.levelModel.getMoveBackwardPosition(player);
+    placementPlane = this.levelModel.getPlaneToPlaceOn(behindPosition);
+    if (this.levelModel.isBlockOfTypeOnPlane(behindPosition, "lava", placementPlane)) {
+      soundEffect = () => this.levelView.audioPlayer.play("fizz");
+    }
+
+    this.levelView.playPlaceBlockInFrontAnimation(player, player.position, player.facing, behindPosition, () => {
+      this.levelModel.placeBlockBehind(blockType, placementPlane, player);
       this.levelView.refreshGroundGroup();
 
       this.updateFowPlane();
