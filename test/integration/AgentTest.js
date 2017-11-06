@@ -95,7 +95,7 @@ test('Agent 2: Open Doors', t => {
       for (let i = 0; i < 2; ++i) {
         api.moveForward(null, 'Player');
       }
-    }, 1000);
+    }, 2000);
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
