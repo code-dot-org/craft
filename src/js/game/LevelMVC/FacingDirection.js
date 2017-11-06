@@ -13,6 +13,14 @@ const FacingDirection = Object.freeze({
     }
   },
 
+  left: function (facing) {
+    return (facing + 3) % 4;
+  },
+
+  right: function (facing) {
+    return (facing + 1) % 4;
+  },
+
   turnDirection: function (from, to) {
     switch (from) {
       case FacingDirection.North: return to === FacingDirection.East ? 'right' : 'left';

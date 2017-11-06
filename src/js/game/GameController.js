@@ -1301,13 +1301,13 @@ class GameController {
     });
   }
 
-  placeBlockLeft(commandQueueItem, blockType) {
+  placeBlockDirection(commandQueueItem, blockType, direction) {
     let player = this.getEntity(commandQueueItem.target);
-    let forwardPosition,
+    let position,
       placementPlane,
       soundEffect = () => { };
 
-    if (!this.levelModel.canPlaceBlockLeft(blockType, player)) {
+    if (!this.levelModel.canPlaceBlockDirection(blockType, player, direction)) {
       this.levelView.playPunchAirAnimation(player.position, player.facing, player.position, () => {
         this.levelView.playIdleAnimation(player.position, player.facing, false, player);
         commandQueueItem.succeeded();
@@ -1315,86 +1315,14 @@ class GameController {
       return;
     }
 
-    forwardPosition = this.levelModel.getMoveLeftPosition(player);
-    placementPlane = this.levelModel.getPlaneToPlaceOn(forwardPosition, player);
-    if (this.levelModel.isBlockOfTypeOnPlane(forwardPosition, "lava", placementPlane)) {
+    position = this.levelModel.getMoveDirectionPosition(player, direction);
+    placementPlane = this.levelModel.getPlaneToPlaceOn(position, player);
+    if (this.levelModel.isBlockOfTypeOnPlane(position, "lava", placementPlane)) {
       soundEffect = () => this.levelView.audioPlayer.play("fizz");
     }
 
-    this.levelView.playPlaceBlockInFrontAnimation(player, player.position, player.facing, forwardPosition, () => {
-      this.levelModel.placeBlockLeft(blockType, placementPlane, player);
-      this.levelView.refreshGroundGroup();
-
-      this.updateFowPlane();
-      this.updateShadingPlane();
-      soundEffect();
-      this.delayBy(200, () => {
-        this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
-      });
-      this.delayPlayerMoveBy(200, 400, () => {
-        commandQueueItem.succeeded();
-      });
-    });
-  }
-
-  placeBlockRight(commandQueueItem, blockType) {
-    let player = this.getEntity(commandQueueItem.target);
-    let forwardPosition,
-      placementPlane,
-      soundEffect = () => { };
-
-    if (!this.levelModel.canPlaceBlockRight(blockType, player)) {
-      this.levelView.playPunchAirAnimation(player.position, player.facing, player.position, () => {
-        this.levelView.playIdleAnimation(player.position, player.facing, false, player);
-        commandQueueItem.succeeded();
-      }, player);
-      return;
-    }
-
-    forwardPosition = this.levelModel.getMoveRightPosition(player);
-    placementPlane = this.levelModel.getPlaneToPlaceOn(forwardPosition, player);
-    if (this.levelModel.isBlockOfTypeOnPlane(forwardPosition, "lava", placementPlane)) {
-      soundEffect = () => this.levelView.audioPlayer.play("fizz");
-    }
-
-    this.levelView.playPlaceBlockInFrontAnimation(player, player.position, player.facing, forwardPosition, () => {
-      this.levelModel.placeBlockRight(blockType, placementPlane, player);
-      this.levelView.refreshGroundGroup();
-
-      this.updateFowPlane();
-      this.updateShadingPlane();
-      soundEffect();
-      this.delayBy(200, () => {
-        this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
-      });
-      this.delayPlayerMoveBy(200, 400, () => {
-        commandQueueItem.succeeded();
-      });
-    });
-  }
-
-  placeBlockBehind(commandQueueItem, blockType) {
-    let player = this.getEntity(commandQueueItem.target);
-    let behindPosition,
-      placementPlane,
-      soundEffect = () => { };
-
-    if (!this.levelModel.canPlaceBlockBehind(blockType, player)) {
-      this.levelView.playPunchAirAnimation(player.position, player.facing, player.position, () => {
-        this.levelView.playIdleAnimation(player.position, player.facing, false, player);
-        commandQueueItem.succeeded();
-      }, player);
-      return;
-    }
-
-    behindPosition = this.levelModel.getMoveBackwardPosition(player);
-    placementPlane = this.levelModel.getPlaneToPlaceOn(behindPosition, player);
-    if (this.levelModel.isBlockOfTypeOnPlane(behindPosition, "lava", placementPlane)) {
-      soundEffect = () => this.levelView.audioPlayer.play("fizz");
-    }
-
-    this.levelView.playPlaceBlockInFrontAnimation(player, player.position, player.facing, behindPosition, () => {
-      this.levelModel.placeBlockBehind(blockType, placementPlane, player);
+    this.levelView.playPlaceBlockInFrontAnimation(player, player.position, player.facing, position, () => {
+      this.levelModel.placeBlockDirection(blockType, placementPlane, player, direction);
       this.levelView.refreshGroundGroup();
 
       this.updateFowPlane();

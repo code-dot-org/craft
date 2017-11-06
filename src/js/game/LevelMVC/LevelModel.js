@@ -345,16 +345,17 @@ module.exports = class LevelModel {
     return Position.forward(entity.position, entity.facing);
   }
 
-  getMoveBackwardPosition(entity = this.player) {
-    return Position.forward(entity.position, FacingDirection.opposite(entity.facing));
-  }
-
-  getMoveLeftPosition(entity = this.player) {
-    return Position.forward(entity.position, (entity.facing + 3) % 4);
-  }
-
-  getMoveRightPosition(entity = this.player) {
-    return Position.forward(entity.position, (entity.facing + 1) % 4);
+  getMoveDirectionPosition(entity, direction) {
+    switch (direction) {
+      case FacingDirection.North:
+        return Position.forward(entity.position, entity.facing);
+      case FacingDirection.South:
+        return Position.forward(entity.position, FacingDirection.opposite(entity.facing));
+      case FacingDirection.East:
+        return Position.forward(entity.position, FacingDirection.right(entity.facing));
+      case FacingDirection.West:
+        return Position.forward(entity.position, FacingDirection.left(entity.facing));
+    }
   }
 
   isForwardBlockOfType(blockType) {
@@ -591,6 +592,19 @@ module.exports = class LevelModel {
     return entity.canPlaceBlock(blockAtPosition);
   }
 
+  canPlaceBlockDirection(blockType = "", entity , direction) {
+    if (entity.isOnBlock) {
+      return false;
+    }
+    let plane = this.getPlaneToPlaceOn(this.getMoveDirectionPosition(entity, direction), entity);
+    if (plane === this.groundPlane) {
+      if (blockType === "redstoneWire" || blockType.substring(0,5) === "rails" && this.groundPlane.getBlockAt(this.getMoveDirectionPosition(entity, direction))) {
+        return false;
+      }
+    }
+    return this.getPlaneToPlaceOn(this.getMoveDirectionPosition(entity, direction), entity) !== null;
+  }
+
   canPlaceBlockForward(blockType = "", entity = this.player) {
     if (entity.isOnBlock) {
       return false;
@@ -602,45 +616,6 @@ module.exports = class LevelModel {
       }
     }
     return this.getPlaneToPlaceOn(this.getMoveForwardPosition(entity), entity) !== null;
-  }
-
-  canPlaceBlockBehind(blockType = "", entity = this.player) {
-    if (entity.isOnBlock) {
-      return false;
-    }
-    let plane = this.getPlaneToPlaceOn(this.getMoveBackwardPosition(entity), entity);
-    if (plane === this.groundPlane) {
-      if (blockType === "redstoneWire" || blockType.substring(0,5) === "rails" && this.groundPlane.getBlockAt(this.getMoveBackwardPosition())) {
-        return false;
-      }
-    }
-    return this.getPlaneToPlaceOn(this.getMoveBackwardPosition(entity), entity) !== null;
-  }
-
-  canPlaceBlockLeft(blockType = "", entity = this.player) {
-    if (entity.isOnBlock) {
-      return false;
-    }
-    let plane = this.getPlaneToPlaceOn(this.getMoveLeftPosition(entity), entity);
-    if (plane === this.groundPlane) {
-      if (blockType === "redstoneWire" || blockType.substring(0,5) === "rails" && this.groundPlane.getBlockAt(this.getMoveLeftPosition())) {
-        return false;
-      }
-    }
-    return this.getPlaneToPlaceOn(this.getMoveLeftPosition(entity), entity) !== null;
-  }
-
-  canPlaceBlockRight(blockType = "", entity = this.player) {
-    if (entity.isOnBlock) {
-      return false;
-    }
-    let plane = this.getPlaneToPlaceOn(this.getMoveRightPosition(entity), entity);
-    if (plane === this.groundPlane) {
-      if (blockType === "redstoneWire" || blockType.substring(0,5) === "rails" && this.groundPlane.getBlockAt(this.getMoveRightPosition())) {
-        return false;
-      }
-    }
-    return this.getPlaneToPlaceOn(this.getMoveRightPosition(entity), entity) !== null;
   }
 
   getPlaneToPlaceOn(position, entity) {
@@ -745,30 +720,8 @@ module.exports = class LevelModel {
     return targetPlane.setBlockAt(blockPosition, new LevelBlock(blockType));
   }
 
-  placeBlockBehind(blockType, targetPlane, entity = this.player) {
-    let blockPosition = this.getMoveBackwardPosition(entity);
-
-    //for placing wetland for crops in free play
-    if (blockType === "watering") {
-      blockType = "farmlandWet";
-      targetPlane = this.groundPlane;
-    }
-    return targetPlane.setBlockAt(blockPosition, new LevelBlock(blockType));
-  }
-
-  placeBlockLeft(blockType, targetPlane, entity = this.player) {
-    let blockPosition = this.getMoveLeftPosition(entity);
-
-    //for placing wetland for crops in free play
-    if (blockType === "watering") {
-      blockType = "farmlandWet";
-      targetPlane = this.groundPlane;
-    }
-    return targetPlane.setBlockAt(blockPosition, new LevelBlock(blockType));
-  }
-
-  placeBlockRight(blockType, targetPlane, entity = this.player) {
-    let blockPosition = this.getMoveRightPosition(entity);
+  placeBlockDirection(blockType, targetPlane, entity, direction) {
+    let blockPosition = this.getMoveDirectionPosition(entity, direction);
 
     //for placing wetland for crops in free play
     if (blockType === "watering") {
