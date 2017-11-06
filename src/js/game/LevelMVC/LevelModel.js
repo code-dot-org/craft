@@ -350,11 +350,11 @@ module.exports = class LevelModel {
   }
 
   getMoveLeftPosition(entity = this.player) {
-    return Position.forward(entity.position, (entity.facing + 1) % 4);
+    return Position.forward(entity.position, (entity.facing + 3) % 4);
   }
 
   getMoveRightPosition(entity = this.player) {
-    return Position.forward(entity.position, (entity.facing + 3) % 4);
+    return Position.forward(entity.position, (entity.facing + 1) % 4);
   }
 
   isForwardBlockOfType(blockType) {

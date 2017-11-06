@@ -1,6 +1,6 @@
 const BaseCommand = require("./BaseCommand.js");
 
-module.exports = class PlaceLeftCommand extends BaseCommand {
+module.exports = class PlaceRightCommand extends BaseCommand {
   constructor(gameController, highlightCallback, blockType, targetEntity) {
     super(gameController, highlightCallback, targetEntity);
 
@@ -13,6 +13,6 @@ module.exports = class PlaceLeftCommand extends BaseCommand {
 
   begin() {
     super.begin();
-    this.GameController.placeBlockLeft(this, this.BlockType);
+    this.GameController.placeBlockRight(this, this.BlockType);
   }
 };

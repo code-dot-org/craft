@@ -13,6 +13,6 @@ module.exports = class PlaceRightCommand extends BaseCommand {
 
   begin() {
     super.begin();
-    this.GameController.placeBlockRight(this, this.BlockType);
+    this.GameController.placeBlockLeft(this, this.BlockType);
   }
 };
