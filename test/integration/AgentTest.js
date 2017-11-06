@@ -508,7 +508,7 @@ test('Agent 9: Clear Path', t => {
   }));
 });
 
-test('Agent 10: Ride Rails', t => {
+/*test.only('Agent 10: Ride Rails', t => {
   attempt('agent10', api => new Promise(resolve => {
 
     const funcLong = () => {
@@ -584,7 +584,7 @@ test('Agent 10: Ride Rails', t => {
       resolve();
     });
   }), 1);
-});
+});*/
 
 test('Agent 11: The Nether', t => {
   attempt('agent11', api => new Promise(resolve => {
