@@ -493,7 +493,7 @@ test('Agent 9: Clear Path', t => {
       api.turnRight(null, 'Player');
       api.moveForward(null, 'Player');
       api.moveForward(null, 'Player');
-    }, 2000);
+    }, 3000);
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
