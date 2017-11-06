@@ -650,7 +650,7 @@ test('Agent 11: The Nether', t => {
       for (let i = 0; i < 3; ++i) {
         api.moveForward(null, 'Player');
       }
-    }, 3000);
+    }, 5000);
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
