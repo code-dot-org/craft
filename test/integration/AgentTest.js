@@ -508,7 +508,7 @@ test('Agent 9: Clear Path', t => {
   }));
 });
 
-/*test.only('Agent 10: Ride Rails', t => {
+/*test('Agent 10: Ride Rails', t => {
   attempt('agent10', api => new Promise(resolve => {
 
     const funcLong = () => {
@@ -550,16 +550,11 @@ test('Agent 9: Clear Path', t => {
 
     setTimeout(() => {
     // Once the path is clear, move the player to the finish square.
-      api.turnRight(null, 'Player');
-      api.arrowDown(1);
-    }, 22000);
+      api.moveDirection(null, 'Player', 1);
+    }, 15000);
     setTimeout(() => {
     // Once the path is clear, move the player to the finish square.
-      api.arrowUp(1);
-    }, 23000);
-    setTimeout(() => {
-    // Once the path is clear, move the player to the finish square.
-      api.moveForward(null, 'Player');
+      api.moveDirection(null, 'Player', 1);
       api.moveForward(null, 'Player');
       for (let i = 0; i < 2; ++i) {
         api.turnLeft(null, 'Player');
@@ -572,7 +567,7 @@ test('Agent 9: Clear Path', t => {
       for (let i = 0; i < 3; ++i) {
         api.moveForward(null, 'Player');
       }
-    }, 28000);
+    }, 20000);
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
@@ -583,7 +578,7 @@ test('Agent 9: Clear Path', t => {
 
       resolve();
     });
-  }), 1);
+  }));
 });*/
 
 test('Agent 11: The Nether', t => {
@@ -664,3 +659,33 @@ test('Agent 11: The Nether', t => {
   }));
 });
 
+test('Agent 12: Walk the 20x20', t => {
+  attempt('agent12', api => new Promise(resolve => {
+
+    for (let i = 0; i < 18; ++i) {
+      api.moveForward(null, 'PlayerAgent');
+    }
+    api.turnLeft(null, 'PlayerAgent');
+    for (let i = 0; i < 18; ++i) {
+      api.moveForward(null, 'PlayerAgent');
+    }
+
+    for (let i = 0; i < 19; ++i) {
+      api.moveForward(null, 'Player');
+    }
+    api.turnRight(null, 'Player');
+    for (let i = 0; i < 19; ++i) {
+      api.moveForward(null, 'Player');
+    }
+
+    // Check the solutions
+    api.startAttempt((success, levelModel) => {
+      t.deepEqual(levelModel.agent.position, [18, 19]);
+
+      t.deepEqual(levelModel.player.position, [19, 19]);
+      t.end();
+
+      resolve();
+    });
+  }));
+});
