@@ -64,16 +64,8 @@ test('Rails: Moving On to Ride', t => {
       for (let i = 0; i < 8; ++i) {
         api.moveDirection(null, 'Player', 1);
       }
-    }, 10000);
+    }, 1000);
 
-        // Move the agent out of the way, so that the arm extends
-    setTimeout(() => {
-      api.arrowUp(1);
-    }, 500);
-
-    setTimeout(() => {
-      api.arrowDown(1);
-    }, 10000);
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
@@ -83,6 +75,6 @@ test('Rails: Moving On to Ride', t => {
 
       resolve();
     });
-  }), 1);
+  }));
 });
 
