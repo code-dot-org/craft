@@ -508,7 +508,6 @@ test('Agent 9: Clear Path', t => {
   }));
 });
 
-
 /*test('Agent 10: Ride Rails', t => {
   attempt('agent10', api => new Promise(resolve => {
 

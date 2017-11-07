@@ -64,7 +64,7 @@ test('Rails: Moving On to Ride', t => {
       for (let i = 0; i < 8; ++i) {
         api.moveDirection(null, 'Player', 1);
       }
-    }, 1000);
+    }, 10000);
 
 
     // Check the solutions
