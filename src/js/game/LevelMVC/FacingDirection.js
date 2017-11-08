@@ -4,6 +4,15 @@ const FacingDirection = Object.freeze({
   South: 2,
   West: 3,
 
+  getRelativeDirection: function (absoluteDirection) {
+    switch (absoluteDirection) {
+      case FacingDirection.North: return "Forward";
+      case FacingDirection.South: return "Behind";
+      case FacingDirection.East: return "Right";
+      case FacingDirection.West: return "Left";
+    }
+  },
+
   opposite: function (facing) {
     switch (facing) {
       case FacingDirection.North: return FacingDirection.South;
@@ -14,11 +23,11 @@ const FacingDirection = Object.freeze({
   },
 
   left: function (facing) {
-    return (facing + 3) % 4;
+    return this.turn(facing, 'left');
   },
 
   right: function (facing) {
-    return (facing + 1) % 4;
+    return this.turn(facing, 'right');
   },
 
   turnDirection: function (from, to) {
@@ -31,7 +40,7 @@ const FacingDirection = Object.freeze({
   },
 
   turn: function (facing, rotation) {
-    return (facing + 4 + (rotation === 'right' ? 1 : -1)) % 4;
+    return (facing + 4 + (rotation === 'right' ? 1 : -1)) % 4; // still speechless that JS has a mod bug...
   },
 
   directionToOffset: function (direction) {

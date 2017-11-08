@@ -1266,39 +1266,7 @@ class GameController {
   }
 
   placeBlockForward(commandQueueItem, blockType) {
-    let player = this.getEntity(commandQueueItem.target);
-    let forwardPosition,
-      placementPlane,
-      soundEffect = () => { };
-
-    if (!this.levelModel.canPlaceBlockForward(blockType, player)) {
-      this.levelView.playPunchAirAnimation(player.position, player.facing, player.position, () => {
-        this.levelView.playIdleAnimation(player.position, player.facing, false, player);
-        commandQueueItem.succeeded();
-      }, player);
-      return;
-    }
-
-    forwardPosition = this.levelModel.getMoveForwardPosition(player);
-    placementPlane = this.levelModel.getPlaneToPlaceOn(forwardPosition, player);
-    if (this.levelModel.isBlockOfTypeOnPlane(forwardPosition, "lava", placementPlane)) {
-      soundEffect = () => this.levelView.audioPlayer.play("fizz");
-    }
-
-    this.levelView.playPlaceBlockInFrontAnimation(player, player.position, player.facing, forwardPosition, () => {
-      this.levelModel.placeBlockForward(blockType, placementPlane, player);
-      this.levelView.refreshGroundGroup();
-
-      this.updateFowPlane();
-      this.updateShadingPlane();
-      soundEffect();
-      this.delayBy(200, () => {
-        this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
-      });
-      this.delayPlayerMoveBy(200, 400, () => {
-        commandQueueItem.succeeded();
-      });
-    });
+    this.placeBlockDirection(commandQueueItem, blockType, 0);
   }
 
   placeBlockDirection(commandQueueItem, blockType, direction) {
