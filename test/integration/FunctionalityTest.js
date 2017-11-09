@@ -95,6 +95,6 @@ test.only('Pressure Plate: Moving On to Rail', t => {
 
       resolve();
     });
-  }), 1);
+  }));
 });
 
