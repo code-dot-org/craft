@@ -740,6 +740,9 @@ module.exports = class LevelView {
       // non-iterable instance error. If getTrack fails with currPos and nextPos, just call the whole thing off.
       // so that we don't reach the const assignment below.
       if (track === undefined) {
+        if (completionHandler) {
+          completionHandler();
+        }
         return;
       }
     }
