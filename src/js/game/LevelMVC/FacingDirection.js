@@ -31,7 +31,7 @@ const FacingDirection = Object.freeze({
   },
 
   turn: function (facing, rotation) {
-    return (facing + 4 + (rotation === 'right' ? 1 : -1)) % 4; // still speechless that JS has a mod bug...
+    return (facing + 4 + (rotation === 'right' ? 1 : -1)) % 4;
   },
 
   directionToOffset: function (direction) {
