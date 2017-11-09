@@ -1,5 +1,6 @@
 const PlaceBlockCommand = require("../CommandQueue/PlaceBlockCommand.js");
 const PlaceInFrontCommand = require("../CommandQueue/PlaceInFrontCommand.js");
+const PlaceDirectionCommand = require("../CommandQueue/PlaceDirectionCommand.js");
 const MoveForwardCommand = require("../CommandQueue/MoveForwardCommand.js");
 const MoveBackwardCommand = require("../CommandQueue/MoveBackwardCommand.js");
 const MoveDirectionCommand = require("../CommandQueue/MoveDirectionCommand.js");
@@ -168,6 +169,10 @@ module.exports.get = function (controller) {
 
     placeBlock: function (highlightCallback, blockType, targetEntity) {
       controller.addCommand(new PlaceBlockCommand(controller, highlightCallback, blockType, targetEntity), targetEntity);
+    },
+
+    placeDirection: function (highlightCallback, blockType, targetEntity, direction) {
+      controller.addCommand(new PlaceDirectionCommand(controller, highlightCallback, blockType, targetEntity, direction), targetEntity, direction);
     },
 
     placeInFront: function (highlightCallback, blockType, targetEntity) {

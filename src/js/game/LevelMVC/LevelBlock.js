@@ -212,6 +212,10 @@ module.exports = class LevelBlock {
         this.blockType.startsWith("pressurePlate");
   }
 
+  notValidOnGroundPlane() {
+    return this.blockType.startsWith("rails") || this.blockType.startsWith("redstone");
+  }
+
   skipsDestructionOverlay() {
     return this.isRedstone ||
       this.blockType === "torch" ||
@@ -386,6 +390,10 @@ module.exports = class LevelBlock {
 
   static skipsDestructionOverlay(blockType) {
     return new LevelBlock(blockType).skipsDestructionOverlay();
+  }
+
+  static notValidOnGroundPlane(blockType) {
+    return new LevelBlock(blockType).notValidOnGroundPlane();
   }
 
   /**
