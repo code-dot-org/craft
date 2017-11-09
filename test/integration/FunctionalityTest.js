@@ -78,3 +78,23 @@ test('Rails: Moving On to Ride', t => {
   }));
 });
 
+test.only('Pressure Plate: Moving On to Rail', t => {
+  attempt('functionality03', api => new Promise(resolve => {
+
+    // Have the player walk onto the rails and ride them to the end of the track.
+    api.moveDirection(null, 'Player', 2);
+    api.moveDirection(null, 'Player', 1);
+
+
+    // Check the solutions
+    api.startAttempt((success, levelModel) => {
+      t.deepEqual(levelModel.player.position, [6, 2]);
+      t.notOk(levelModel.actionPlane._data[0].isPowered);
+      t.assert(success);
+      t.end();
+
+      resolve();
+    });
+  }), 1);
+});
+
