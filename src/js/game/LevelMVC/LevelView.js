@@ -736,6 +736,12 @@ module.exports = class LevelView {
     // and we need to grab that track -in front of us-
     if (track === undefined) {
       track = this.controller.levelModel.actionPlane.getMinecartTrack(nextPos, facing);
+      // Having a weird bug on publish where rail destruction while riding causes a destructure of
+      // non-iterable instance error. If getTrack fails with currPos and nextPos, just call the whole thing off.
+      // so that we don't reach the const assignment below.
+      if (track === undefined) {
+        return;
+      }
     }
 
     let direction;
