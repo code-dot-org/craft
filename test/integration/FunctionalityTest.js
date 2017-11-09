@@ -78,7 +78,7 @@ test('Rails: Moving On to Ride', t => {
   }));
 });
 
-test.only('Pressure Plate: Moving On to Rail', t => {
+test('Pressure Plate: Moving On to Rail', t => {
   attempt('functionality03', api => new Promise(resolve => {
 
     // Have the player walk onto the rails and ride them to the end of the track.
