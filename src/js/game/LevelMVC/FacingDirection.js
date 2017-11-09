@@ -4,15 +4,6 @@ const FacingDirection = Object.freeze({
   South: 2,
   West: 3,
 
-  getRelativeDirection: function (absoluteDirection) {
-    switch (absoluteDirection) {
-      case FacingDirection.North: return "Forward";
-      case FacingDirection.South: return "Behind";
-      case FacingDirection.East: return "Right";
-      case FacingDirection.West: return "Left";
-    }
-  },
-
   opposite: function (facing) {
     switch (facing) {
       case FacingDirection.North: return FacingDirection.South;

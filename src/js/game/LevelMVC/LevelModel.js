@@ -346,17 +346,11 @@ module.exports = class LevelModel {
   }
 
   getMoveDirectionPosition(entity, direction) {
-    const relativeDirection = FacingDirection.getRelativeDirection(direction);
-    switch (relativeDirection) {
-      case "Forward":
-        return Position.forward(entity.position, entity.facing);
-      case "Behind":
-        return Position.forward(entity.position, FacingDirection.opposite(entity.facing));
-      case "Right":
-        return Position.forward(entity.position, FacingDirection.right(entity.facing));
-      case "Left":
-        return Position.forward(entity.position, FacingDirection.left(entity.facing));
+    let absoluteDirection = entity.facing;
+    for (let i = 0; i < direction; ++i) {
+      absoluteDirection = FacingDirection.turn(absoluteDirection, 'right');
     }
+    return Position.forward(entity.position, absoluteDirection);
   }
 
   isForwardBlockOfType(blockType) {
