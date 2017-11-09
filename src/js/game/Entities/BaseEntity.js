@@ -711,4 +711,10 @@ module.exports = class BaseEntity {
       }
     });
   }
+
+  handleGetOnRails(direction) {
+    this.getOffTrack = false;
+    this.handleMoveOffPressurePlate([0,0]);
+    this.controller.levelView.playTrack(this.position, direction, true, this, null);
+  }
 };

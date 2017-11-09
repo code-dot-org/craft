@@ -764,10 +764,7 @@ class GameController {
     player.movementState = direction;
     let shouldRide = this.levelModel.shouldRide(direction);
     if (shouldRide) {
-      /* We have to pass in the player's current position, not forward position, to appropirately
-         handle starting a minecart ride on a corner. */
-      player.getOffTrack = false;
-      this.levelView.playTrack(player.position, direction, true, player, null);
+      player.handleGetOnRails(direction);
       commandQueueItem.succeeded();
     } else {
       this.execute(commandQueueItem, 'moveDirection', direction);
