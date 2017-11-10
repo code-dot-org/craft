@@ -25,7 +25,12 @@ module.exports = class LevelEntity {
     if (levelData.entities !== undefined) {
       for (var i = 0; i < levelData.entities.length; i++) {
         let data = levelData.entities[i];
-        let entity = this.createEntity(data[0], this.id++, data[1], data[2], data[3]);
+        let entity = null;
+        if (data.length > 4 && data[0] === 'ghast') {
+          entity = this.createEntity(data[0], this.id++, data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8]);
+        } else {
+          entity = this.createEntity(data[0], this.id++, data[1], data[2], data[3]);
+        }
         entity.updateHidingTree();
         entity.updateHidingBlock();
       }
@@ -57,7 +62,7 @@ module.exports = class LevelEntity {
     return false;
   }
 
-  createEntity(type, identifier, x, y, facing) {
+  createEntity(type, identifier, x, y, facing, pattern, variant, primeScalar, secondScalar, speed) {
     var entity = null;
     if (!this.entityMap.has(identifier)) {
       switch (type) {
@@ -80,7 +85,7 @@ module.exports = class LevelEntity {
           entity = new Chicken(this.controller, type, identifier, x, y, facing);
           break;
         case 'ghast':
-          entity = new Ghast(this.controller, type, identifier, x, y, facing);
+          entity = new Ghast(this.controller, type, identifier, x, y, facing, pattern, variant, primeScalar, secondScalar, speed);
           break;
         default:
           entity = new BaseEntity(this.controller, type, identifier, x, y, facing);

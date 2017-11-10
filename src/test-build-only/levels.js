@@ -56,15 +56,15 @@ module.exports = Object.assign({
     ],
 
     actionPlane: [
-      "grass", "ice", "grass", "pistonLeft", "redstoneWire", "pressurePlateUp", "redstoneWire", "redstoneWire", "", "",
-      "", "", "", "", "", "", "", "redstoneWire", "", "",
-      "redstoneWire", "redstoneWire", "redstoneWire", "", "", "", "", "grass", "doorIron", "grass",
-      "redstoneWire", "", "redstoneWire", "", "", "", "", "", "", "",
-      "redstoneWire", "redstoneWire", "redstoneWire", "", "", "rails", "rails", "rails", "", "",
-      "redstoneWire", "", "redstoneWire", "", "", "", "", "rails", "", "",
-      "redstoneWire", "redstoneWire", "redstoneWire", "", "", "", "", "rails", "rails", "",
-      "", "railsRedstoneTorch", "", "", "", "", "rails", "", "rails", "",
-      "", "", "", "", "", "", "rails", "rails", "rails", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "",
       "", "", "", "", "", "", "", "", "", "",
     ],
 
@@ -84,6 +84,10 @@ module.exports = Object.assign({
     failureCheckFunction: function (verificationAPI) {
       return false;
     },
+
+    // normal format: ['name', x, y, facing]
+    // ghast format: ['name', x, y, facing, pattern, variant, prime scalar, second scalar, speed]
+    entities: [['ghast', 3, 3, 2, "box", 0, 3, 3, 0.1], ['sheep', 1, 1, 2]],
 
     verificationFunction: function (verificationAPI) {
       return false;

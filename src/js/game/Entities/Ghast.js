@@ -1,19 +1,43 @@
 const BaseEntity = require("./BaseEntity.js");
 const randomInt = require("./../LevelMVC/Utils.js").randomInt;
 module.exports = class Ghast extends BaseEntity {
-    constructor(controller, type, identifier, x, y, facing) {
+    constructor(controller, type, identifier, x, y, facing, pattern = null, variant = null, primaryScalar = null, secondaryScalar = null, speed = null) {
         super(controller, type, identifier, x, y, facing);
         this.offset = [-50, -84];
         this.prepareSprite();
         this.sprite.sortOrder = this.controller.levelView.yToIndex(Number.MAX_SAFE_INTEGER);
         this.audioDelay = 15;
-        this.anchor = [this.sprite.position.x, this.sprite.position.y];
-        this.movingUp = false;
-        if (this.sprite.position.x > 60) {
-          this.movingUp = true;
+        if (pattern !== null) {
+          this.movingUp = false;
+          if (this.sprite.position.x > 60) {
+            this.movingUp = true;
+          }
+          this.pauseTime = 0;
+          this.scaleMod = 1;
+
+          // init format: entities: [['ghast', x, y, facing, pattern, variant, primary scalar, secondary scalar]],
+          this.flightAnchor = {x: this.sprite.position.x, y: this.sprite.position.y};
+          this.details = {pattern: pattern, variant: variant};
+          this.primaryScalar = primaryScalar;
+          this.secondaryScalar = secondaryScalar;
+          this.speed = speed;
+          this.trigCounter = 0;
+          this.t = 0;
+          this.boxVertTracker = 0;
+
+          // I just want these to be enums...
+          this.boxVariants = {
+            topLeft: 0,
+            topRight: 1,
+            bottomRight: 2,
+            bottomLeft: 3
+          };
+
+          this.sinusoidalVariants = {
+            horizontal: 0,
+            vertical: 1
+          };
         }
-        this.pauseTime = 0;
-        this.scaleMod = 1;
     }
 
     prepareSprite() {
@@ -83,27 +107,7 @@ module.exports = class Ghast extends BaseEntity {
 
   tick() {
     super.tick();
-    if (!this.movingUp) {
-      if (this.sprite.position.y < 215) {
-        this.sprite.position.y += 1;
-      } else {
-        this.pauseTime += 1;
-        if (this.pauseTime > 0) {
-          this.pauseTime = 0;
-          this.movingUp = true;
-        }
-      }
-    } else {
-      if (this.sprite.position.y > 150) {
-        this.sprite.position.y -= 1;
-      } else {
-        this.pauseTime += 1;
-        if (this.pauseTime > 0) {
-          this.pauseTime = 0;
-          this.movingUp = false;
-        }
-      }
-    }
+    this.fly();
   }
 
   playRandomIdle(facing) {
@@ -119,26 +123,133 @@ module.exports = class Ghast extends BaseEntity {
     if (this.audioDelay > 0) {
       --this.audioDelay;
     } else {
-    this.audioDelay = 5;
-    let chance = Math.floor(Math.random() * 5);
-    if (chance === 0) {
-      let soundNum = Math.floor(Math.random() * 4);
-      switch (soundNum) {
-        case 0:
-          this.controller.audioPlayer.play("moan2");
-          break;
-        case 1:
-          this.controller.audioPlayer.play("moan3");
-          break;
-        case 2:
-          this.controller.audioPlayer.play("moan6");
-          break;
-        default:
-          this.controller.audioPlayer.play("moan7");
-          break;
+      this.audioDelay = 5;
+      let chance = Math.floor(Math.random() * 5);
+      if (chance === 0) {
+        let soundNum = Math.floor(Math.random() * 4);
+        this.playMoan(soundNum);
+      }
+    }
+  }
+
+  playMoan(number) {
+    switch (number) {
+      case 0:
+        this.controller.audioPlayer.play("moan2");
+        break;
+      case 1:
+        this.controller.audioPlayer.play("moan3");
+        break;
+      case 2:
+        this.controller.audioPlayer.play("moan6");
+        break;
+      default:
+        this.controller.audioPlayer.play("moan7");
+        break;
+    }
+  }
+
+// this.pattern = {type: <type>, specifics: <orientation or starting justification>};
+  fly() {
+    switch (this.details.pattern) {
+      case "box":
+        this.box(this.details.variant);
+        break;
+      case "sinusoidal":
+        this.sinusoidal(this.details.variant);
+        break;
+      default:
+        //do nothing
+    }
+  }
+
+  sinusoidal(variant) {
+    let mainAxis = null;
+    let offAxis = null;
+    if (variant === this.sinusoidalVariants.vertical) {
+      mainAxis = 'y';
+      offAxis = 'x';
+    } else if (variant === this.sinusoidalVariants.horizontal) {
+      mainAxis = 'x';
+      offAxis = 'y';
+    } else {
+      return;
+    }
+
+    if (!this.movingUp) { // flying along the main axis, positive direction
+      if (this.sprite.position[mainAxis] < this.flightAnchor[mainAxis] + (40 * this.primaryScalar)) {
+        this.sprite.position[mainAxis] += this.speed;
+      } else {
+        this.pauseTime += 1;
+        if (this.pauseTime > 0) {
+          this.pauseTime = 0;
+          this.movingUp = true;
+        }
+      }
+    } else { // Flying along the main axis, negative direction
+      if (this.sprite.position[mainAxis] > this.flightAnchor[mainAxis] - (40 * this.primaryScalar)) {
+        this.sprite.position[mainAxis] -= this.speed;
+      } else {
+        this.pauseTime += 1;
+        if (this.pauseTime > 0) {
+          this.pauseTime = 0;
+          this.movingUp = false;
         }
       }
     }
+
+
+    this.sprite.position[offAxis] = this.flightAnchor[offAxis] + (Math.cos(this.trigCounter) * this.secondaryScalar);
+    this.trigCounter += this.speed/60;
+  }
+
+  box(corner) {
+    const vertices = this.getBoxVerts(corner);
+    let origin = this.boxVertTracker;
+    let destination = 0;
+    if (origin !== 3) {
+      destination = this.boxVertTracker + 1;
+    }
+
+    this.t += (this.speed / 60);
+    if (this.t > 1) {
+      this.t = 1;
+    }
+    let pos = this.lerp(vertices[origin], vertices[destination], this.t);
+
+
+    if (pos[0] === vertices[destination][0] && pos[1] === vertices[destination][1]) {
+      this.t = 0;
+      if (this.boxVertTracker < 3) {
+        ++this.boxVertTracker;
+      } else {
+        this.boxVertTracker = 0;
+      }
+    }
+
+
+    this.sprite.position.x = pos[0];
+    this.sprite.position.y = pos[1];
+  }
+
+  getBoxVerts(startingCorner) {
+    const x = this.flightAnchor.x;
+    const y = this.flightAnchor.y;
+    switch (startingCorner) {
+      case this.boxVariants.topLeft:
+        return [[x,y], [x + (40 * this.primaryScalar), y], [x + (40 * this.primaryScalar), y + (40 * this.secondaryScalar)], [x, y + (40 * this.secondaryScalar)]];
+      case this.boxVariants.topRight:
+        return [[x,y], [x, y + (40 * this.secondaryScalar)], [x - (40 * this.primaryScalar), y + (40 * this.secondaryScalar)], [x - (40 * this.primaryScalar), y]];
+      case this.boxVariants.bottomRight:
+        return [[x,y], [x - (40 * this.primaryScalar), y], [x - (40 * this.primaryScalar), y - (40 * this.secondaryScalar)], [x, y - (40 * this.secondaryScalar)]];
+      case this.boxVariants.bottomLeft:
+        return [[x,y], [x, y - (40 * this.secondaryScalar)], [x + (40 * this.primaryScalar), y - (40 * this.secondaryScalar)], [x + (40 * this.primaryScalar), y]];
+    }
+  }
+
+  lerp(a, b, t) {
+    //HOW does js standard Math class not have a lerp function...
+    return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
   }
 
 };
