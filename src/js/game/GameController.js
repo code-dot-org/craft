@@ -197,10 +197,6 @@ class GameController {
     this.assetLoader.loadPacks(this.levelData.assetPacks.beforeLoad);
   }
 
-  isEdge() {
-    return /Edge\/\d./i.test(navigator.userAgent);
-  }
-
   create() {
     this.levelView.create(this.levelModel);
     this.game.time.slowMotion = this.initialSlowMotion;
@@ -269,10 +265,6 @@ class GameController {
     this.game.input.keyboard.addKey(Phaser.Keyboard.UP).onDown.add(() => {
       this.player.movementState = FacingDirection.North;
       this.player.updateMovement();
-      if (this.isEdge()) {
-        this.player.movementState = -1;
-        this.player.updateMovement();
-      }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.UP).onUp.add(() => {
       if (this.player.movementState === FacingDirection.North) {
@@ -283,10 +275,6 @@ class GameController {
     this.game.input.keyboard.addKey(Phaser.Keyboard.W).onDown.add(() => {
       this.player.movementState = FacingDirection.North;
       this.player.updateMovement();
-      if (this.isEdge()) {
-        this.player.movementState = -1;
-        this.player.updateMovement();
-      }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.W).onUp.add(() => {
       if (this.player.movementState === FacingDirection.North) {
@@ -297,10 +285,6 @@ class GameController {
     this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onDown.add(() => {
       this.player.movementState = FacingDirection.East;
       this.player.updateMovement();
-      if (this.isEdge()) {
-        this.player.movementState = -1;
-        this.player.updateMovement();
-      }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onUp.add(() => {
       if (this.player.movementState === FacingDirection.East) {
@@ -311,10 +295,6 @@ class GameController {
     this.game.input.keyboard.addKey(Phaser.Keyboard.D).onDown.add(() => {
       this.player.movementState = FacingDirection.East;
       this.player.updateMovement();
-      if (this.isEdge()) {
-        this.player.movementState = -1;
-        this.player.updateMovement();
-      }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.D).onUp.add(() => {
       if (this.player.movementState === FacingDirection.East) {
@@ -325,10 +305,6 @@ class GameController {
     this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN).onDown.add(() => {
       this.player.movementState = FacingDirection.South;
       this.player.updateMovement();
-      if (this.isEdge()) {
-        this.player.movementState = -1;
-        this.player.updateMovement();
-      }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN).onUp.add(() => {
       if (this.player.movementState === FacingDirection.South) {
@@ -339,10 +315,6 @@ class GameController {
     this.game.input.keyboard.addKey(Phaser.Keyboard.S).onDown.add(() => {
       this.player.movementState = FacingDirection.South;
       this.player.updateMovement();
-      if (this.isEdge()) {
-        this.player.movementState = -1;
-        this.player.updateMovement();
-      }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.S).onUp.add(() => {
       if (this.player.movementState === FacingDirection.South) {
@@ -353,10 +325,6 @@ class GameController {
     this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT).onDown.add(() => {
       this.player.movementState = FacingDirection.West;
       this.player.updateMovement();
-      if (this.isEdge()) {
-        this.player.movementState = -1;
-        this.player.updateMovement();
-      }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT).onUp.add(() => {
       if (this.player.movementState === FacingDirection.West) {
@@ -367,10 +335,6 @@ class GameController {
     this.game.input.keyboard.addKey(Phaser.Keyboard.A).onDown.add(() => {
       this.player.movementState = FacingDirection.West;
       this.player.updateMovement();
-      if (this.isEdge()) {
-        this.agent.movementState = -1;
-        this.agent.updateMovement();
-      }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.A).onUp.add(() => {
       if (this.player.movementState === FacingDirection.West) {
@@ -381,10 +345,6 @@ class GameController {
     this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).onDown.add(() => {
       this.player.movementState = -2;
       this.player.updateMovement();
-      if (this.isEdge()) {
-        this.player.movementState = -1;
-        this.player.updateMovement();
-      }
     });
     this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).onUp.add(() => {
       if (this.player.movementState === -2) {
