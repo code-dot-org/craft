@@ -262,95 +262,31 @@ class GameController {
     if (!this.levelModel.usePlayer) {
       return;
     }
-    this.game.input.keyboard.addKey(Phaser.Keyboard.UP).onDown.add(() => {
-      this.player.movementState = FacingDirection.North;
-      this.player.updateMovement();
-    });
-    this.game.input.keyboard.addKey(Phaser.Keyboard.UP).onUp.add(() => {
-      if (this.player.movementState === FacingDirection.North) {
-        this.player.movementState = -1;
-      }
-      this.player.updateMovement();
-    });
-    this.game.input.keyboard.addKey(Phaser.Keyboard.W).onDown.add(() => {
-      this.player.movementState = FacingDirection.North;
-      this.player.updateMovement();
-    });
-    this.game.input.keyboard.addKey(Phaser.Keyboard.W).onUp.add(() => {
-      if (this.player.movementState === FacingDirection.North) {
-        this.player.movementState = -1;
-      }
-      this.player.updateMovement();
-    });
-    this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onDown.add(() => {
-      this.player.movementState = FacingDirection.East;
-      this.player.updateMovement();
-    });
-    this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onUp.add(() => {
-      if (this.player.movementState === FacingDirection.East) {
-        this.player.movementState = -1;
-      }
-      this.player.updateMovement();
-    });
-    this.game.input.keyboard.addKey(Phaser.Keyboard.D).onDown.add(() => {
-      this.player.movementState = FacingDirection.East;
-      this.player.updateMovement();
-    });
-    this.game.input.keyboard.addKey(Phaser.Keyboard.D).onUp.add(() => {
-      if (this.player.movementState === FacingDirection.East) {
-        this.player.movementState = -1;
-      }
-      this.player.updateMovement();
-    });
-    this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN).onDown.add(() => {
-      this.player.movementState = FacingDirection.South;
-      this.player.updateMovement();
-    });
-    this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN).onUp.add(() => {
-      if (this.player.movementState === FacingDirection.South) {
-        this.player.movementState = -1;
-      }
-      this.player.updateMovement();
-    });
-    this.game.input.keyboard.addKey(Phaser.Keyboard.S).onDown.add(() => {
-      this.player.movementState = FacingDirection.South;
-      this.player.updateMovement();
-    });
-    this.game.input.keyboard.addKey(Phaser.Keyboard.S).onUp.add(() => {
-      if (this.player.movementState === FacingDirection.South) {
-        this.player.movementState = -1;
-      }
-      this.player.updateMovement();
-    });
-    this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT).onDown.add(() => {
-      this.player.movementState = FacingDirection.West;
-      this.player.updateMovement();
-    });
-    this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT).onUp.add(() => {
-      if (this.player.movementState === FacingDirection.West) {
-        this.player.movementState = -1;
-      }
-      this.player.updateMovement();
-    });
-    this.game.input.keyboard.addKey(Phaser.Keyboard.A).onDown.add(() => {
-      this.player.movementState = FacingDirection.West;
-      this.player.updateMovement();
-    });
-    this.game.input.keyboard.addKey(Phaser.Keyboard.A).onUp.add(() => {
-      if (this.player.movementState === FacingDirection.West) {
-        this.player.movementState = -1;
-      }
-      this.player.updateMovement();
-    });
-    this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).onDown.add(() => {
-      this.player.movementState = -2;
-      this.player.updateMovement();
-    });
-    this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).onUp.add(() => {
-      if (this.player.movementState === -2) {
-        this.player.movementState = -1;
-      }
-      this.player.updateMovement();
+
+    const keysToMovementState = {
+      [Phaser.Keyboard.UP]: FacingDirection.North,
+      [Phaser.Keyboard.W]: FacingDirection.North,
+      [Phaser.Keyboard.RIGHT]: FacingDirection.East,
+      [Phaser.Keyboard.D]: FacingDirection.East,
+      [Phaser.Keyboard.DOWN]: FacingDirection.South,
+      [Phaser.Keyboard.S]: FacingDirection.South,
+      [Phaser.Keyboard.LEFT]: FacingDirection.West,
+      [Phaser.Keyboard.A]: FacingDirection.West,
+      [Phaser.Keyboard.SPACEBAR]: -2
+    };
+
+    Object.keys(keysToMovementState).forEach((key) => {
+      const movementState = keysToMovementState[key];
+      this.game.input.keyboard.addKey(key).onDown.add(() => {
+        this.player.movementState = movementState;
+        this.player.updateMovement();
+      });
+      this.game.input.keyboard.addKey(key).onUp.add(() => {
+        if (this.player.movementState === movementState) {
+          this.player.movementState = -1;
+        }
+        this.player.updateMovement();
+      });
     });
   }
 
