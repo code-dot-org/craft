@@ -524,7 +524,7 @@ module.exports = class LevelModel {
   }
 
   canMoveBackward(entity = this.player) {
-    const [x, y] = this.getMoveBackwardPosition(entity);
+    const [x, y] = this.getMoveDirectionPosition(entity, 2);
     return this.isPositionEmpty([x, y], entity);
   }
 
@@ -643,7 +643,7 @@ module.exports = class LevelModel {
   }
 
   moveBackward(entity = this.player) {
-    let blockBackwardPosition = this.getMoveBackwardPosition(entity);
+    let blockBackwardPosition = this.getMoveDirectionPosition(entity, 2);
     this.moveTo(blockBackwardPosition, entity);
   }
 

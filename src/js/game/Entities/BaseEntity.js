@@ -258,7 +258,7 @@ module.exports = class BaseEntity {
         if (record) {
             this.controller.addCommandRecord("moveBackward", this.type, commandQueueItem.repeat);
         }
-        let backwardPosition = this.controller.levelModel.getMoveBackwardPosition(this);
+        let backwardPosition = this.controller.levelModel.getMoveDirectionPosition(this, 2);
         var backwardPositionInformation = this.controller.levelModel.canMoveBackward(this);
         if (backwardPositionInformation[0]) {
             let offset = FacingDirection.directionToOffset(FacingDirection.opposite(this.facing));
