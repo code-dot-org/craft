@@ -10,6 +10,7 @@ const LevelEntity = require("./LevelMVC/LevelEntity.js");
 const AssetLoader = require("./LevelMVC/AssetLoader.js");
 
 const CodeOrgAPI = require("./API/CodeOrgAPI.js");
+const Position = require("./LevelMVC/Position.js");
 
 var GAME_WIDTH = 400;
 var GAME_HEIGHT = 400;
@@ -1182,13 +1183,17 @@ class GameController {
       soundEffect = () => this.levelView.audioPlayer.play("fizz");
     }
 
-    this.levelView.playPlaceBlockInFrontAnimation(player, player.position, player.facing, position, () => {
-      this.levelModel.placeBlockDirection(blockType, placementPlane, player, direction);
-      this.levelView.refreshGroundGroup();
 
-      this.updateFowPlane();
-      this.updateShadingPlane();
-      soundEffect();
+    this.levelView.playPlaceBlockInFrontAnimation(player, player.position, player.facing, position, () => {
+      if (!this.checkConflict(position, placementPlane)) {
+        this.levelModel.placeBlockDirection(blockType, placementPlane, player, direction);
+        this.levelView.refreshGroundGroup();
+
+        this.updateFowPlane();
+        this.updateShadingPlane();
+        soundEffect();
+      }
+
       this.delayBy(200, () => {
         this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
       });
@@ -1196,6 +1201,22 @@ class GameController {
         commandQueueItem.succeeded();
       });
     });
+  }
+
+  checkConflict(position, placementPlane) {
+    var conflict = false;
+    this.levelEntity.entityMap.forEach( workingEntity => {
+      if (Position.equals(workingEntity.position, position)) {
+        conflict = true;
+      }
+    });
+
+    if ((this.levelModel.actionPlane === placementPlane && placementPlane.getBlockAt(position).blockType !== "") ||
+        this.levelModel.groundDecorationPlane.getBlockAt(position).blockType !== "") {
+      conflict = true;
+    }
+
+    return conflict;
   }
 
   checkSolution() {
