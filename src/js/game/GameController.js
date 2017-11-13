@@ -1185,14 +1185,12 @@ class GameController {
 
 
     this.levelView.playPlaceBlockInFrontAnimation(player, player.position, player.facing, position, () => {
-      if (!this.checkConflict(position, placementPlane)) {
-        this.levelModel.placeBlockDirection(blockType, placementPlane, player, direction);
-        this.levelView.refreshGroundGroup();
+      this.levelModel.placeBlockDirection(blockType, placementPlane, player, direction);
+      this.levelView.refreshGroundGroup();
 
-        this.updateFowPlane();
-        this.updateShadingPlane();
-        soundEffect();
-      }
+      this.updateFowPlane();
+      this.updateShadingPlane();
+      soundEffect();
 
       this.delayBy(200, () => {
         this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);

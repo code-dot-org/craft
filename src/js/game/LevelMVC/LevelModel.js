@@ -597,7 +597,27 @@ module.exports = class LevelModel {
         return false;
       }
     }
+
+    if (this.checkConflict(this.getMoveDirectionPosition(entity, direction), plane)) {
+      return false;
+    }
     return this.getPlaneToPlaceOn(this.getMoveDirectionPosition(entity, direction), entity) !== null;
+  }
+
+  checkConflict(position, placementPlane) {
+    var conflict = false;
+    this.controller.levelEntity.entityMap.forEach( workingEntity => {
+      if (Position.equals(workingEntity.position, position)) {
+        conflict = true;
+      }
+    });
+
+    if ((this.actionPlane === placementPlane && placementPlane.getBlockAt(position).blockType !== "") ||
+        this.groundDecorationPlane.getBlockAt(position).blockType !== "") {
+      conflict = true;
+    }
+
+    return conflict;
   }
 
   canPlaceBlockForward(blockType = "", entity = this.player) {
