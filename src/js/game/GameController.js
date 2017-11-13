@@ -761,7 +761,6 @@ class GameController {
 
   moveDirection(commandQueueItem, direction) {
     let player = this.levelModel.player;
-    player.movementState = direction;
     let shouldRide = this.levelModel.shouldRide(direction);
     if (shouldRide) {
       player.handleGetOnRails(direction);
@@ -769,7 +768,6 @@ class GameController {
     } else {
       this.execute(commandQueueItem, 'moveDirection', direction);
     }
-    player.movementState = -1;
   }
 
   turn(commandQueueItem, direction) {
