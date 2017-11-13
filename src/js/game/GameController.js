@@ -10,7 +10,6 @@ const LevelEntity = require("./LevelMVC/LevelEntity.js");
 const AssetLoader = require("./LevelMVC/AssetLoader.js");
 
 const CodeOrgAPI = require("./API/CodeOrgAPI.js");
-const Position = require("./LevelMVC/Position.js");
 
 var GAME_WIDTH = 400;
 var GAME_HEIGHT = 400;
@@ -1199,22 +1198,6 @@ class GameController {
         commandQueueItem.succeeded();
       });
     });
-  }
-
-  checkConflict(position, placementPlane) {
-    var conflict = false;
-    this.levelEntity.entityMap.forEach( workingEntity => {
-      if (Position.equals(workingEntity.position, position)) {
-        conflict = true;
-      }
-    });
-
-    if ((this.levelModel.actionPlane === placementPlane && placementPlane.getBlockAt(position).blockType !== "") ||
-        this.levelModel.groundDecorationPlane.getBlockAt(position).blockType !== "") {
-      conflict = true;
-    }
-
-    return conflict;
   }
 
   checkSolution() {
