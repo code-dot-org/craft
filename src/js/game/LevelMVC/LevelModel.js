@@ -606,7 +606,7 @@ module.exports = class LevelModel {
 
   checkConflict(position, placementPlane) {
     var conflict = false;
-    this.controller.levelEntity.entityMap.forEach( workingEntity => {
+    this.controller.levelEntity.entityMap.forEach ( workingEntity => {
       if (Position.equals(workingEntity.position, position)) {
         conflict = true;
       }

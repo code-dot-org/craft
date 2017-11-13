@@ -1182,7 +1182,6 @@ class GameController {
       soundEffect = () => this.levelView.audioPlayer.play("fizz");
     }
 
-
     this.levelView.playPlaceBlockInFrontAnimation(player, player.position, player.facing, position, () => {
       this.levelModel.placeBlockDirection(blockType, placementPlane, player, direction);
       this.levelView.refreshGroundGroup();
