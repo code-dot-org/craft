@@ -598,25 +598,19 @@ module.exports = class LevelModel {
       }
     }
 
-    if (this.checkConflict(this.getMoveDirectionPosition(entity, direction), plane)) {
+    if (this.checkEntityConflict(this.getMoveDirectionPosition(entity, direction))) {
       return false;
     }
     return this.getPlaneToPlaceOn(this.getMoveDirectionPosition(entity, direction), entity) !== null;
   }
 
-  checkConflict(position, placementPlane) {
+  checkEntityConflict(position) {
     var conflict = false;
-    this.controller.levelEntity.entityMap.forEach ( workingEntity => {
-      if (Position.equals(workingEntity.position, position)) {
+    this.controller.levelEntity.entityMap.forEach(entity => {
+      if (Position.equals(entity.position, position)) {
         conflict = true;
       }
     });
-
-    if ((this.actionPlane === placementPlane && placementPlane.getBlockAt(position).blockType !== "") ||
-        this.groundDecorationPlane.getBlockAt(position).blockType !== "") {
-      conflict = true;
-    }
-
     return conflict;
   }
 

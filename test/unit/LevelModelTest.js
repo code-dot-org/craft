@@ -57,8 +57,8 @@ test('place block: entity conflict', t => {
   const model = new LevelModel(levelDefinition, mockGameController);
 
   // player at 0,2 should cause conflict
-  t.true(model.checkConflict([0,2], model.actionPlane));
-  t.false(model.checkConflict([0,3], model.actionPlane));
+  t.true(model.checkEntityConflict([0, 2]));
+  t.false(model.checkEntityConflict([0, 3]));
 
   t.end();
 });
@@ -68,11 +68,11 @@ test('place block: block conflict', t => {
   const model = new LevelModel(levelDefinition, mockGameController);
 
   model.placeBlock("grass");
-  model.player.position = [0,0];
+  model.player.position = [0, 0];
 
   // player at 0,0 so only the grass block is left to cause conflict
-  t.true(model.checkConflict([0,2], model.actionPlane));
-  t.false(model.checkConflict([0,3], model.actionPlane));
+  t.true(model.checkEntityConflict([0, 2]));
+  t.false(model.checkEntityConflict([0, 3]));
 
   t.end();
 });
