@@ -1,14 +1,16 @@
 const BaseEntity = require("./BaseEntity.js");
 const randomInt = require("./../LevelMVC/Utils.js").randomInt;
 module.exports = class Ghast extends BaseEntity {
-    constructor(controller, type, identifier, x, y, facing, move = true) {
+    constructor(controller, type, identifier, x, y, facing, move = null) {
         super(controller, type, identifier, x, y, facing);
         this.offset = [-50, -84];
         this.prepareSprite();
         this.sprite.sortOrder = this.controller.levelView.yToIndex(Number.MAX_SAFE_INTEGER);
         this.audioDelay = 15;
-        if (move) {
-          this.patrol();
+        if (move === 'A') {
+          this.patrolA();
+        } else if (move === 'B') {
+          this.patrolB();
         }
     }
 
@@ -116,12 +118,27 @@ module.exports = class Ghast extends BaseEntity {
     }
   }
 
-  patrol() {
-    const end = {
-      x: (this.offset[0] + 40 * this.position[0]),
-      y: (this.offset[1] + 40 * this.position[1] + 80),
-    };
-    this.controller.levelView.addResettableTween(this.sprite).to(end,
-      randomInt(2500, 3500), Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
+  patrolA() {
+    const options = [Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true];
+
+    this.controller.levelView.addResettableTween(this.sprite).to({
+        y: (this.offset[1] + 40 * this.position[1] + 80),
+      }, randomInt(2500, 3500), ...options);
+
+    this.controller.levelView.addResettableTween(this.sprite).to({
+        x: (this.offset[0] + 40 * this.position[0] + 10),
+      }, randomInt(1500, 2000), ...options);
+  }
+
+  patrolB() {
+    const options = [Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true];
+
+    this.controller.levelView.addResettableTween(this.sprite).to({
+      y: (this.offset[1] + 40 * this.position[1] - 80),
+    }, randomInt(2500, 3500), ...options);
+
+    this.controller.levelView.addResettableTween(this.sprite).to({
+      x: (this.offset[0] + 40 * this.position[0] - 10),
+    }, randomInt(1500, 2000), ...options);
   }
 };
