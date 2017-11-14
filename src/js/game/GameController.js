@@ -1189,6 +1189,7 @@ class GameController {
       this.updateFowPlane();
       this.updateShadingPlane();
       soundEffect();
+
       this.delayBy(200, () => {
         this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
       });

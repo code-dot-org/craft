@@ -3,6 +3,7 @@ const test = require('tape');
 const LevelModel = require('../../src/js/game/LevelMVC/LevelModel');
 const LevelEntity = require('../../src/js/game/LevelMVC/LevelEntity');
 
+
 const makePlane = (n, type) => new Array(n).fill(type);
 const makeLevelDefinition = (width, height) => {
   let size = width * height;
@@ -47,6 +48,31 @@ test('sanity', t => {
   t.equal(model.yToIndex(2), 10);
 
   t.assert(model.isPlayerAt([0, 2]));
+
+  t.end();
+});
+
+test('place block: entity conflict', t => {
+  const levelDefinition = makeLevelDefinition(5, 5);
+  const model = new LevelModel(levelDefinition, mockGameController);
+
+  // player at 0,2 should cause conflict
+  t.true(model.checkEntityConflict([0, 2]));
+  t.false(model.checkEntityConflict([0, 3]));
+
+  t.end();
+});
+
+test('place block: block conflict', t => {
+  const levelDefinition = makeLevelDefinition(5, 5);
+  const model = new LevelModel(levelDefinition, mockGameController);
+
+  model.placeBlock("grass");
+  model.player.position = [0, 0];
+
+  // player at 0,0 so only the grass block is left to cause conflict
+  t.true(model.checkEntityConflict([0, 2]));
+  t.false(model.checkEntityConflict([0, 3]));
 
   t.end();
 });

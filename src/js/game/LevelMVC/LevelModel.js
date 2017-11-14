@@ -597,7 +597,21 @@ module.exports = class LevelModel {
         return false;
       }
     }
+
+    if (this.checkEntityConflict(this.getMoveDirectionPosition(entity, direction))) {
+      return false;
+    }
     return this.getPlaneToPlaceOn(this.getMoveDirectionPosition(entity, direction), entity) !== null;
+  }
+
+  checkEntityConflict(position) {
+    var conflict = false;
+    this.controller.levelEntity.entityMap.forEach(entity => {
+      if (Position.equals(entity.position, position)) {
+        conflict = true;
+      }
+    });
+    return conflict;
   }
 
   canPlaceBlockForward(blockType = "", entity = this.player) {
