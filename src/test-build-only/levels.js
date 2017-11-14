@@ -86,8 +86,8 @@ module.exports = Object.assign({
     },
 
     // normal format: ['name', x, y, facing]
-    // ghast format: ['name', x, y, facing, pattern, variant, prime scalar, second scalar, speed]
-    entities: [['ghast', 3, 3, 2, "box", 0, 3, 3, 0.1], ['sheep', 1, 1, 2]],
+    // ghast format: ['name', x, y, facing, move]
+    entities: [['ghast', 3, 3, 2, true], ['sheep', 1, 1, 2]],
 
     verificationFunction: function (verificationAPI) {
       return false;
