@@ -7,9 +7,9 @@ module.exports = class Ghast extends BaseEntity {
         this.prepareSprite();
         this.sprite.sortOrder = this.controller.levelView.yToIndex(Number.MAX_SAFE_INTEGER);
         this.audioDelay = 15;
-        if (move === 'A') {
+        if (x < 5) {
           this.patrolA();
-        } else if (move === 'B') {
+        } else {
           this.patrolB();
         }
     }
