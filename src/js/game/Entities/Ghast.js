@@ -121,7 +121,7 @@ module.exports = class Ghast extends BaseEntity {
       x: (this.offset[0] + 40 * this.position[0]),
       y: (this.offset[1] + 40 * this.position[1] + 80),
     };
-    this.controller.levelView.addResettableTween(this.sprite).to(end, 3000,
-      Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
+    this.controller.levelView.addResettableTween(this.sprite).to(end,
+      randomInt(2500, 3500), Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
   }
 };
