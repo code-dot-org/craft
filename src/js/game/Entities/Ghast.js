@@ -1,12 +1,15 @@
 const BaseEntity = require("./BaseEntity.js");
 const randomInt = require("./../LevelMVC/Utils.js").randomInt;
 module.exports = class Ghast extends BaseEntity {
-    constructor(controller, type, identifier, x, y, facing) {
+    constructor(controller, type, identifier, x, y, facing, move = null) {
         super(controller, type, identifier, x, y, facing);
         this.offset = [-50, -84];
         this.prepareSprite();
         this.sprite.sortOrder = this.controller.levelView.yToIndex(Number.MAX_SAFE_INTEGER);
         this.audioDelay = 15;
+        if (move) {
+          this.patrol();
+        }
     }
 
     prepareSprite() {
@@ -87,26 +90,38 @@ module.exports = class Ghast extends BaseEntity {
     if (this.audioDelay > 0) {
       --this.audioDelay;
     } else {
-    this.audioDelay = 5;
-    let chance = Math.floor(Math.random() * 5);
-    if (chance === 0) {
-      let soundNum = Math.floor(Math.random() * 4);
-      switch (soundNum) {
-        case 0:
-          this.controller.audioPlayer.play("moan2");
-          break;
-        case 1:
-          this.controller.audioPlayer.play("moan3");
-          break;
-        case 2:
-          this.controller.audioPlayer.play("moan6");
-          break;
-        default:
-          this.controller.audioPlayer.play("moan7");
-          break;
-        }
+      this.audioDelay = 5;
+      let chance = Math.floor(Math.random() * 5);
+      if (chance === 0) {
+        let soundNum = Math.floor(Math.random() * 4);
+        this.playMoan(soundNum);
       }
     }
   }
 
+  playMoan(number) {
+    switch (number) {
+      case 0:
+        this.controller.audioPlayer.play("moan2");
+        break;
+      case 1:
+        this.controller.audioPlayer.play("moan3");
+        break;
+      case 2:
+        this.controller.audioPlayer.play("moan6");
+        break;
+      default:
+        this.controller.audioPlayer.play("moan7");
+        break;
+    }
+  }
+
+  patrol() {
+    const end = {
+      x: (this.offset[0] + 40 * this.position[0]),
+      y: (this.offset[1] + 40 * this.position[1] + 80),
+    };
+    this.controller.levelView.addResettableTween(this.sprite).to(end,
+      randomInt(2500, 3500), Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
+  }
 };
