@@ -532,6 +532,9 @@ module.exports = class LevelModel {
     var result = [false,];
 
     if (this.inBounds(position)) {
+      if (this.actionPlane.getBlockAt(position).isOpen) {
+        this.actionPlane.getBlockAt(position).isWalkable = true;
+      }
       if (!this.actionPlane.getBlockAt(position).isWalkable) {
         result.push("notWalkable");
       }
