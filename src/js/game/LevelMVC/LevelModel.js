@@ -225,7 +225,7 @@ module.exports = class LevelModel {
 
   shouldRide(direction) {
     let player = this.player;
-    let frontPosition = this.getNextRailPosition(player);
+    let frontPosition = this.getNextRailPosition(player, direction);
     let frontBlock = this.actionPlane.getBlockAt(frontPosition);
     return this.isNextRailValid(frontBlock, direction);
   }
@@ -240,8 +240,8 @@ module.exports = class LevelModel {
       block.connectionB === direction;
   }
 
-  getNextRailPosition(entity = this.player) {
-    const offset = FacingDirection.directionToOffset(entity.movementState) || [0, 0];
+  getNextRailPosition(entity = this.player, direction) {
+    const offset = FacingDirection.directionToOffset(direction) || [0, 0];
     return Position.add(entity.position, offset);
   }
 

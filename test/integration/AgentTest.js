@@ -551,7 +551,7 @@ test('Agent 9: Clear Path', t => {
     setTimeout(() => {
     // Once the path is clear, move the player to the finish square.
       api.moveDirection(null, 'Player', 1);
-    }, 15000);
+    }, 7000);
     setTimeout(() => {
     // Once the path is clear, move the player to the finish square.
       api.moveDirection(null, 'Player', 1);
@@ -567,7 +567,7 @@ test('Agent 9: Clear Path', t => {
       for (let i = 0; i < 3; ++i) {
         api.moveForward(null, 'Player');
       }
-    }, 20000);
+    }, 15000);
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
