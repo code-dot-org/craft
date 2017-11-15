@@ -1191,7 +1191,7 @@ class GameController {
       soundEffect();
 
       this.delayBy(200, () => {
-        this.levelView.playIdleAnimation(this.levelModel.player.position, this.levelModel.player.facing, false);
+        this.levelView.playIdleAnimation(player.position, player.facing, false, player);
       });
       this.delayPlayerMoveBy(200, 400, () => {
         commandQueueItem.succeeded();
