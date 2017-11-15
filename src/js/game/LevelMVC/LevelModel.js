@@ -591,7 +591,7 @@ module.exports = class LevelModel {
     if (entity.isOnBlock) {
       return false;
     }
-    let plane = this.getPlaneToPlaceOn(this.getMoveDirectionPosition(entity, direction), entity);
+    let plane = this.getPlaneToPlaceOn(this.getMoveDirectionPosition(entity, direction), entity, blockType);
     if (plane === this.groundPlane) {
       if (LevelBlock.notValidOnGroundPlane(blockType) && this.groundPlane.getBlockAt(this.getMoveDirectionPosition(entity, direction))) {
         return false;
@@ -601,7 +601,7 @@ module.exports = class LevelModel {
     if (this.checkEntityConflict(this.getMoveDirectionPosition(entity, direction))) {
       return false;
     }
-    return this.getPlaneToPlaceOn(this.getMoveDirectionPosition(entity, direction), entity) !== null;
+    return this.getPlaneToPlaceOn(this.getMoveDirectionPosition(entity, direction), entity, blockType) !== null;
   }
 
   checkEntityConflict(position) {
@@ -618,10 +618,14 @@ module.exports = class LevelModel {
     return this.canPlaceBlockDirection(blockType, entity, 0);
   }
 
-  getPlaneToPlaceOn(position, entity) {
+  getPlaneToPlaceOn(position, entity, blockType) {
     if (this.inBounds(position)) {
       let actionBlock = this.actionPlane.getBlockAt(position);
       if (entity === this.agent && actionBlock.isEmpty) {
+        let groundBlock = this.groundPlane.getBlockAt(position);
+        if (groundBlock.getIsLiquid() && LevelBlock.getCanFall(blockType)) {
+          return this.groundPlane;
+        }
         return this.actionPlane;
       }
       if (actionBlock.isPlacable) {

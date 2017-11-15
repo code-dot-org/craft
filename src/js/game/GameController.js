@@ -1177,7 +1177,7 @@ class GameController {
     }
 
     position = this.levelModel.getMoveDirectionPosition(player, direction);
-    placementPlane = this.levelModel.getPlaneToPlaceOn(position, player);
+    placementPlane = this.levelModel.getPlaneToPlaceOn(position, player, blockType);
     if (this.levelModel.isBlockOfTypeOnPlane(position, "lava", placementPlane)) {
       soundEffect = () => this.levelView.audioPlayer.play("fizz");
     }
