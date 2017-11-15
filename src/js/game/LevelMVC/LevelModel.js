@@ -620,10 +620,10 @@ module.exports = class LevelModel {
 
   getPlaneToPlaceOn(position, entity) {
     if (this.inBounds(position)) {
-      if (entity === this.agent) {
+      let actionBlock = this.actionPlane.getBlockAt(position);
+      if (entity === this.agent && actionBlock.isEmpty) {
         return this.actionPlane;
       }
-      let actionBlock = this.actionPlane.getBlockAt(position);
       if (actionBlock.isPlacable) {
         let groundBlock = this.groundPlane.getBlockAt(position);
         if (groundBlock.isPlacable) {
