@@ -2280,7 +2280,7 @@ module.exports = class LevelView {
     const position = this.controller.levelModel.actionPlane.indexToCoordinates(index);
     this.playDoorAnimation(position, open, () => {
       const block = this.controller.levelModel.actionPlane.getBlockAt(position);
-      block.isWalkable = !block.isWalkable;
+      block.isWalkable = block.isOpen;
       if (block.blockType !== "doorIron") {
         // Iron doors don't need to set the player animation to Idle, because they're not opened with 'use'.
         this.playIdleAnimation(player.position, player.facing, player.isOnBlock, player);
