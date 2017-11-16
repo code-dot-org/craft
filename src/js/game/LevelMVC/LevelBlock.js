@@ -358,12 +358,21 @@ module.exports = class LevelBlock {
   }
 
   /**
-   * Static to determine if a block would fall from Action Plane into Ground Plane
+   * Static to determine if a block would fall from Action Plane into Ground Plane.
    * @param {String} blockType
    * @return {boolean}
    */
   static getCanFall(blockType) {
     return new LevelBlock(blockType).getCanFall();
+  }
+
+  /**
+   * Static to determine if a block is placeable over water at all.
+   * @param {String} blockType
+   * @return {boolean}
+   */
+  static getIsPlaceableInLiquid(blockType) {
+    return new LevelBlock(blockType).getIsPlaceableInLiquid();
   }
 
   /**

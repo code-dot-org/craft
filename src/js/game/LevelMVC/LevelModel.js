@@ -623,8 +623,12 @@ module.exports = class LevelModel {
       let actionBlock = this.actionPlane.getBlockAt(position);
       if (entity === this.agent && actionBlock.isEmpty) {
         let groundBlock = this.groundPlane.getBlockAt(position);
-        if (groundBlock.getIsLiquid() && LevelBlock.getCanFall(blockType)) {
-          return this.groundPlane;
+        if (groundBlock.getIsLiquid()) {
+          if (LevelBlock.getCanFall(blockType)) {
+            return this.groundPlane;
+          } else if (!LevelBlock.getIsPlaceableInLiquid(blockType)) {
+            return null;
+          }
         }
         return this.actionPlane;
       }
