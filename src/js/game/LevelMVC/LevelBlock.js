@@ -279,6 +279,11 @@ module.exports = class LevelBlock {
         this.blockType === "lava";
   }
 
+  getCanFall() {
+    return this.blockType === "sand" ||
+        this.blockType === "gravel";
+  }
+
   /**
    * Can this block be placed in liquid to replace a liquid block? Should
    * generally be true for all "standard" blocks like cobblestone and dirt, and
@@ -350,6 +355,24 @@ module.exports = class LevelBlock {
 
   getIsEmptyOrEntity() {
     return this.isEmpty || this.isEntity;
+  }
+
+  /**
+   * Static to determine if a block would fall from Action Plane into Ground Plane.
+   * @param {String} blockType
+   * @return {boolean}
+   */
+  static getCanFall(blockType) {
+    return new LevelBlock(blockType).getCanFall();
+  }
+
+  /**
+   * Static to determine if a block is placeable over water at all.
+   * @param {String} blockType
+   * @return {boolean}
+   */
+  static getIsPlaceableInLiquid(blockType) {
+    return new LevelBlock(blockType).getIsPlaceableInLiquid();
   }
 
   /**
