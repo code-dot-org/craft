@@ -773,7 +773,7 @@ module.exports = class LevelView {
   isFirstTimeOnRails(currPos, nextPos) {
     let nextBlock = this.controller.levelModel.actionPlane.getBlockAt(nextPos);
     let currBlock = this.controller.levelModel.actionPlane.getBlockAt(currPos);
-    if (!currBlock.isRail && nextBlock.isRail) {
+    if ((nextBlock && currBlock) && (!currBlock.isRail && nextBlock.isRail)) {
       return true;
     }
     return false;
