@@ -31,7 +31,8 @@ module.exports = class LevelModel {
   }
 
   inBounds(position) {
-    const [x, y] = position;
+    const x = position[0];
+    const y = position[1];
     return x >= 0 && x < this.planeWidth && y >= 0 && y < this.planeHeight;
   }
 
@@ -57,7 +58,8 @@ module.exports = class LevelModel {
     this.isDaytime = this.initialLevelData.isDaytime === undefined || this.initialLevelData.isDaytime;
 
     let levelData = Object.create(this.initialLevelData);
-    let [x, y] = levelData.playerStartPosition;
+    let x = levelData.playerStartPosition[0];
+    let y = levelData.playerStartPosition[1];
     if (this.initialLevelData.usePlayer !== undefined) {
       this.usePlayer = this.initialLevelData.usePlayer;
     } else {
@@ -95,7 +97,7 @@ module.exports = class LevelModel {
   spawnAgent(levelData, positionOverride, directionOverride) {
     this.usingAgent = true;
 
-    const [x, y] = (positionOverride !== undefined)
+    const position = (positionOverride !== undefined)
       ? positionOverride
       : levelData.agentStartPosition;
 
@@ -106,8 +108,8 @@ module.exports = class LevelModel {
     const name = "PlayerAgent";
     const key = "Agent";
 
-    const startingBlock = this.actionPlane.getBlockAt([x, y]);
-    this.agent = new Agent(this.controller, name, x, y, key, !startingBlock.getIsEmptyOrEntity(), direction);
+    const startingBlock = this.actionPlane.getBlockAt(position);
+    this.agent = new Agent(this.controller, name, position[0], position[1], key, !startingBlock.getIsEmptyOrEntity(), direction);
     this.controller.levelEntity.pushEntity(this.agent);
     this.controller.agent = this.agent;
   }
@@ -516,16 +518,16 @@ module.exports = class LevelModel {
   }
 
   canMoveForward(entity = this.player) {
-    const [x, y] = this.getMoveForwardPosition(entity);
-    if (!this.controller.followingPlayer() && (x > 9 || y > 9)) {
+    const position = this.getMoveForwardPosition(entity);
+    if (!this.controller.followingPlayer() && (position[0] > 9 || position[1] > 9)) {
       return false;
     }
-    return this.isPositionEmpty([x, y], entity);
+    return this.isPositionEmpty(position, entity);
   }
 
   canMoveBackward(entity = this.player) {
-    const [x, y] = this.getMoveDirectionPosition(entity, 2);
-    return this.isPositionEmpty([x, y], entity);
+    const position = this.getMoveDirectionPosition(entity, 2);
+    return this.isPositionEmpty(position, entity);
   }
 
   isPositionEmpty(position, entity = this.player) {
@@ -734,12 +736,11 @@ module.exports = class LevelModel {
 
   destroyBlock(position) {
     var block = null;
-    let [x, y] = [position[0], position[1]];
 
     if (this.inBounds(position)) {
       block = this.actionPlane.getBlockAt(position);
       if (block !== null) {
-        block.position = [x, y];
+        block.position = position;
 
         if (block.isDestroyable) {
           this.actionPlane.setBlockAt(position, new LevelBlock(""));

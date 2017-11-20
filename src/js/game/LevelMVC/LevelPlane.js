@@ -69,7 +69,8 @@ module.exports = class LevelPlane {
   * Determines whether the position in question is within the bounds of the plane.
   */
   inBounds(position) {
-    const [x, y] = position;
+    const x = position[0];
+    const y = position[1];
     return x >= 0 && x < this.width && y >= 0 && y < this.height;
   }
 

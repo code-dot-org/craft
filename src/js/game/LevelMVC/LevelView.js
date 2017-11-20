@@ -1411,8 +1411,10 @@ module.exports = class LevelView {
    * @return {{x: number, y: number}}
    */
   positionToScreen(position, isOnBlock = false, entity = this.player) {
-    const [x, y] = position;
-    const [xOffset, yOffset] = entity.offset;
+    const x = position[0];
+    const y = position[1];
+    const xOffset = entity.offset[0];
+    const yOffset = entity.offset[1];
     return {
       x: xOffset + 40 * x,
       y: yOffset + (isOnBlock ? -23 : 0) + 40 * y,

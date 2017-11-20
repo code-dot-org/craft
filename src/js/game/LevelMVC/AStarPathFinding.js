@@ -7,7 +7,8 @@ module.exports = class AStarPathFinding {
 
   createGrid() {
     return this.levelModel.actionPlane.getAllPositions().map((position) => {
-      const [x, y] = position;
+      const x = position[0];
+      const y = position[1];
       return {
         x: x,
         y: y,
