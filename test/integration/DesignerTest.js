@@ -1,5 +1,6 @@
 const test = require("tape");
 const attempt = require("../helpers/RunLevel.js");
+const Position = require("../../src/js/game/LevelMVC/Position");
 
 test('Designer 1: Chicken Move (fail)', t => {
   attempt('designer01', api => new Promise(resolve => {
@@ -96,7 +97,7 @@ test('Designer 5: Add Shear Sheep Behavior (push back)', t => {
     api.moveForward(null, 'Player');
 
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.player.position, [5, 3]);
+      t.true(Position.equals(levelModel.player.position, [5, 3]));
       t.equal(levelModel.getEntityAt([6, 3]), undefined);
       t.equal(levelModel.getEntityAt([7, 3]).type, 'sheep');
       t.assert(!success);
@@ -219,7 +220,7 @@ test('Designer 7: Explode Stone Wall', t => {
     }
 
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.player.position, [7, 4]);
+      t.true(Position.equals(levelModel.player.position, [7, 4]));
       t.assert(success);
       t.end();
 
