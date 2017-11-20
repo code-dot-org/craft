@@ -59,6 +59,12 @@ module.exports = class Position {
     return directions.map(direction => Position.forward(position, direction));
   }
 
+  static manhattanDistance(left, right) {
+    const d1 = Math.abs(right.x - left.x);
+    const d2 = Math.abs(right.y - left.y);
+    return d1 + d2;
+  }
+
   static absoluteDistanceSquare(left, right) {
     return Math.pow(left[0] - right[0], 2) + Math.pow(left[1] - right[1], 2);
   }

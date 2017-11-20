@@ -87,7 +87,7 @@ module.exports = class LevelPlane {
   indexToCoordinates(index) {
     let y = Math.floor(index / this.width);
     let x = index - (y * this.width);
-    return [x, y];
+    return new Position(x, y);
   }
 
   /**
