@@ -18,6 +18,7 @@ global.Phaser.AnimationManager.prototype.play = () => {};
 const LevelView = require('../../src/js/game/LevelMVC/LevelView');
 const LevelModel = require('../../src/js/game/LevelMVC/LevelModel');
 const LevelEntity = require('../../src/js/game/LevelMVC/LevelEntity');
+const Position = require('../../src/js/game/LevelMVC/Position');
 
 const mockGameController = {
   levelEntity: new LevelEntity({}),
@@ -169,9 +170,9 @@ test('pick up on rails', t => {
         view.createMiniBlock(i, 0, "diamondMiniblock");
       }
 
-      view.player.setMovePosition([0, 0]);
-      view.player.setMovePosition([1, 0]);
-      view.player.setMovePosition([2, 0]);
+      view.player.setMovePosition(new Position(0, 0));
+      view.player.setMovePosition(new Position(1, 0));
+      view.player.setMovePosition(new Position(2, 0));
 
       t.equals(view.collectibleItems.length, 3);
 

@@ -10,7 +10,7 @@ module.exports = class BaseEntity {
     this.queue = new CommandQueue(controller);
     this.controller = controller;
     this.game = controller.game;
-    this.position = [x, y];
+    this.position = new Position(x, y);
     this.type = type;
     // temp
     this.facing = facing;
@@ -152,7 +152,7 @@ module.exports = class BaseEntity {
         const actionPlane = this.controller.levelModel.actionPlane;
 
         let frontBlockCheck = function (entity, position) {
-            let frontPosition = [position[0], position[1] + 1];
+            let frontPosition = Position.south(position);
             const frontBlock = actionPlane.getBlockAt(frontPosition);
             if (frontBlock && !frontBlock.isTransparent) {
                 var sprite = levelView.actionPlaneBlocks[levelView.coordinatesToIndex(frontPosition)];
@@ -167,8 +167,8 @@ module.exports = class BaseEntity {
         };
 
         let prevBlockCheck = function (entity, position) {
-            let frontPosition = [position[0], position[1] + 1];
-            if (frontPosition[1] < 10) {
+            let frontPosition = Position.south(position);
+            if (frontPosition.y < 10) {
                 var sprite = levelView.actionPlaneBlocks[levelView.coordinatesToIndex(frontPosition)];
                 if (sprite !== null) {
                     var tween = entity.controller.levelView.addResettableTween(sprite).to({
@@ -313,31 +313,31 @@ module.exports = class BaseEntity {
 
         var currentDistance = Position.absoluteDistanceSquare(moveAwayPosition, this.position);
         // this entity is on the right side and can move to right
-        if (moveAwayPosition[0] <= this.position[0] && this.controller.levelModel.canMoveDirection(this, FacingDirection.East)[0]) {
-            bestPosition = [FacingDirection.East, [this.position[0] + 1, this.position[1]]];
+        if (moveAwayPosition.x <= this.position.x && this.controller.levelModel.canMoveDirection(this, FacingDirection.East)[0]) {
+            bestPosition = [FacingDirection.East, Position.east(this.position)];
         }
         // this entity is on the left side and can move to left
-        if (moveAwayPosition[0] >= this.position[0] && this.controller.levelModel.canMoveDirection(this, FacingDirection.West)[0]) {
+        if (moveAwayPosition.x >= this.position.x && this.controller.levelModel.canMoveDirection(this, FacingDirection.West)[0]) {
             if (bestPosition.length > 0) {
-                bestPosition = comparePositions(moveAwayPosition, bestPosition, [FacingDirection.West, [this.position[0] - 1, this.position[1]]]);
+                bestPosition = comparePositions(moveAwayPosition, bestPosition, [FacingDirection.West, Position.west(this.position)]);
             } else {
-                bestPosition = [FacingDirection.West, [this.position[0] - 1, this.position[1]]];
+                bestPosition = [FacingDirection.West, Position.west(this.position)];
             }
         }
         // this entity is on the up side and can move to up
-        if (moveAwayPosition[1] >= this.position[1] && this.controller.levelModel.canMoveDirection(this, FacingDirection.North)[0]) {
+        if (moveAwayPosition.y >= this.position.y && this.controller.levelModel.canMoveDirection(this, FacingDirection.North)[0]) {
             if (bestPosition.length > 0) {
-                bestPosition = comparePositions(moveAwayPosition, bestPosition, [FacingDirection.North, [this.position[0], this.position[1] - 1]]);
+                bestPosition = comparePositions(moveAwayPosition, bestPosition, [FacingDirection.North, Position.north(this.position)]);
             } else {
-                bestPosition = [FacingDirection.North, [this.position[0], this.position[1] - 1]];
+                bestPosition = [FacingDirection.North, Position.north(this.position)];
             }
         }
         // this entity is on the down side and can move to down
-        if (moveAwayPosition[1] <= this.position[1] && this.controller.levelModel.canMoveDirection(this, FacingDirection.South)[0]) {
+        if (moveAwayPosition.y <= this.position.y && this.controller.levelModel.canMoveDirection(this, FacingDirection.South)[0]) {
             if (bestPosition.length > 0) {
-                bestPosition = comparePositions(moveAwayPosition, bestPosition, [FacingDirection.South, [this.position[0], this.position[1] + 1]]);
+                bestPosition = comparePositions(moveAwayPosition, bestPosition, [FacingDirection.South, Position.south(this.position)]);
             } else {
-                bestPosition = [FacingDirection.South, [this.position[0], this.position[1] + 1]];
+                bestPosition = [FacingDirection.South, Position.south(this.position)];
             }
         }
         // terminate the action since it's impossible to move
@@ -367,43 +367,44 @@ module.exports = class BaseEntity {
                    ? position2
                    : position1;
         };
+
         // this entity is on the right side and can move to right
-        if (moveTowardPosition[0] >= this.position[0] && this.controller.levelModel.canMoveDirection(this, FacingDirection.East)[0]) {
-            bestPosition = [FacingDirection.East, [this.position[0] + 1, this.position[1]]];
+        if (moveTowardPosition.x >= this.position.x && this.controller.levelModel.canMoveDirection(this, FacingDirection.East)[0]) {
+            bestPosition = [FacingDirection.East, Position.east(this.position)];
         }
         // this entity is on the left side and can move to left
-        if (moveTowardPosition[0] <= this.position[0] && this.controller.levelModel.canMoveDirection(this, FacingDirection.West)[0]) {
+        if (moveTowardPosition.x <= this.position.x && this.controller.levelModel.canMoveDirection(this, FacingDirection.West)[0]) {
             if (bestPosition.length > 0) {
-                bestPosition = comparePositions(moveTowardPosition, bestPosition, [FacingDirection.West, [this.position[0] - 1, this.position[1]]]);
+                bestPosition = comparePositions(moveTowardPosition, bestPosition, [FacingDirection.West, Position.west(this.position)]);
             } else {
-                bestPosition = [FacingDirection.West, [this.position[0] - 1, this.position[1]]];
+                bestPosition = [FacingDirection.West, Position.west(this.position)];
             }
         }
         // this entity is on the up side and can move to up
-        if (moveTowardPosition[1] <= this.position[1] && this.controller.levelModel.canMoveDirection(this, FacingDirection.North)[0]) {
+        if (moveTowardPosition.y <= this.position.y && this.controller.levelModel.canMoveDirection(this, FacingDirection.North)[0]) {
             if (bestPosition.length > 0) {
-                bestPosition = comparePositions(moveTowardPosition, bestPosition, [FacingDirection.North, [this.position[0], this.position[1] - 1]]);
+                bestPosition = comparePositions(moveTowardPosition, bestPosition, [FacingDirection.North, Position.north(this.position)]);
             } else {
-                bestPosition = [FacingDirection.North, [this.position[0], this.position[1] - 1]];
+                bestPosition = [FacingDirection.North, Position.north(this.position)];
             }
         }
         // this entity is on the down side and can move to down
-        if (moveTowardPosition[1] >= this.position[1] && this.controller.levelModel.canMoveDirection(this, FacingDirection.South)[0]) {
+        if (moveTowardPosition.y >= this.position.y && this.controller.levelModel.canMoveDirection(this, FacingDirection.South)[0]) {
             if (bestPosition.length > 0) {
-                bestPosition = comparePositions(moveTowardPosition, bestPosition, [FacingDirection.South, [this.position[0], this.position[1] + 1]]);
+                bestPosition = comparePositions(moveTowardPosition, bestPosition, [FacingDirection.South, Position.south(this.position)]);
             } else {
-                bestPosition = [FacingDirection.South, [this.position[0], this.position[1] + 1]];
+                bestPosition = [FacingDirection.South, Position.south(this.position)];
             }
         }
         // terminate the action since it's impossible to move
         if (Position.absoluteDistanceSquare(this.position, moveTowardPosition) === 1) {
             if (this.position.x < moveTowardPosition.x) {
                 this.facing = FacingDirection.East;
-            } else if (this.position[0] > moveTowardPosition[0]) {
+            } else if (this.position.x > moveTowardPosition.x) {
                 this.facing = FacingDirection.West;
-            } else if (this.position[1] < moveTowardPosition[1]) {
+            } else if (this.position.y < moveTowardPosition.y) {
                 this.facing = FacingDirection.South;
-            } else if (this.position[1] > moveTowardPosition[1]) {
+            } else if (this.position.y > moveTowardPosition.y) {
                 this.facing = FacingDirection.North;
             }
             this.updateAnimationDirection();
@@ -425,11 +426,11 @@ module.exports = class BaseEntity {
     moveTo(commandQueueItem, moveTowardTo) {
         if (Position.absoluteDistanceSquare(moveTowardTo.position, this.position) === 1) {
             /// north
-            if (moveTowardTo.position[1] - this.position[1] === -1) {
+            if (moveTowardTo.position.y - this.position.y === -1) {
                 this.moveDirection(commandQueueItem, FacingDirection.North);
-            } else if (moveTowardTo.position[1] - this.position[1] === 1) {
+            } else if (moveTowardTo.position.y - this.position.y === 1) {
                 this.moveDirection(commandQueueItem, FacingDirection.South);
-            } else if (moveTowardTo.position[0] - this.position[0] === 1) {
+            } else if (moveTowardTo.position.x - this.position.x === 1) {
                 this.moveDirection(commandQueueItem, FacingDirection.East);
             } else {
                 this.moveDirection(commandQueueItem, FacingDirection.West);
@@ -648,7 +649,7 @@ module.exports = class BaseEntity {
   }
 
   handleMoveOffPressurePlate(moveOffset) {
-    const previousPosition = [this.position[0] + moveOffset[0], this.position[1] + moveOffset[1]];
+    const previousPosition = Position.add(this.position, moveOffset);
     const isMovingOffOf = this.controller.levelModel.actionPlane.getBlockAt(previousPosition).blockType === "pressurePlateDown";
     const destinationBlock = this.controller.levelModel.actionPlane.getBlockAt(this.position);
     let remainOn = false;
@@ -670,7 +671,7 @@ module.exports = class BaseEntity {
   }
 
   handleMoveOnPressurePlate(moveOffset) {
-    const targetPosition = [this.position[0] + moveOffset[0], this.position[1] + moveOffset[1]];
+    const targetPosition = Position.add(this.position, moveOffset);
     const isMovingOnToPlate = this.controller.levelModel.actionPlane.getBlockAt(targetPosition).blockType === "pressurePlateUp";
     if (isMovingOnToPlate) {
       this.controller.audioPlayer.play("pressurePlateClick");
@@ -682,7 +683,7 @@ module.exports = class BaseEntity {
   }
 
   handleMoveOffIronDoor(moveOffset) {
-    const formerPosition = [this.position[0] + moveOffset[0], this.position[1] + moveOffset[1]];
+    const formerPosition = Position.add(this.position, moveOffset);
     if (!this.controller.levelModel.inBounds(formerPosition)) {
       return;
     }
@@ -690,12 +691,12 @@ module.exports = class BaseEntity {
     const wasOnDoor = this.controller.levelModel.actionPlane.getBlockAt(formerPosition).blockType === "doorIron";
     const isOnDoor = this.controller.levelModel.actionPlane.getBlockAt(this.position).blockType === "doorIron";
     if (wasOnDoor && !isOnDoor) {
-      this.controller.levelModel.actionPlane.findDoorToAnimate([-1, -1]);
+      this.controller.levelModel.actionPlane.findDoorToAnimate(new Position(-1, -1));
     }
   }
 
   handleMoveAwayFromPiston(moveOffset) {
-    const formerPosition = [this.position[0] + moveOffset[0], this.position[1] + moveOffset[1]];
+    const formerPosition = Position.add(this.position, moveOffset);
     Position.getOrthogonalPositions(formerPosition).forEach(workingPos => {
       if (this.controller.levelModel.actionPlane.inBounds(workingPos)) {
         const block = this.controller.levelModel.actionPlane.getBlockAt(workingPos);
@@ -708,7 +709,7 @@ module.exports = class BaseEntity {
 
   handleGetOnRails(direction) {
     this.getOffTrack = false;
-    this.handleMoveOffPressurePlate([0,0]);
+    this.handleMoveOffPressurePlate(new Position(0, 0));
     this.controller.levelView.playTrack(this.position, direction, true, this, null);
   }
 };
