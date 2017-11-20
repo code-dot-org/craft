@@ -771,13 +771,9 @@ module.exports = class LevelView {
   * Handling the first case of walking onto a track while not currently on one
   */
   isFirstTimeOnRails(currPos, nextPos) {
-    if (!this.controller.levelModel.actionPlane.inBounds(currPos) ||
-        !this.controller.levelModel.actionPlane.inBounds(nextPos)) {
-      return false;
-    }
     let nextBlock = this.controller.levelModel.actionPlane.getBlockAt(nextPos);
     let currBlock = this.controller.levelModel.actionPlane.getBlockAt(currPos);
-    if (!currBlock.isRail && nextBlock.isRail) {
+    if ((nextBlock && currBlock) && (!currBlock.isRail && nextBlock.isRail)) {
       return true;
     }
     return false;
