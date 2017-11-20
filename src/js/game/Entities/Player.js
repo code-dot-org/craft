@@ -1,5 +1,6 @@
 const BaseEntity = require("./BaseEntity.js");
 const CallbackCommand = require("../CommandQueue/CallbackCommand.js");
+const Position = require("../LevelMVC/Position");
 
 module.exports = class Player extends BaseEntity {
   constructor(controller, type, x, y, name, isOnBlock, facing) {
@@ -219,9 +220,6 @@ module.exports = class Player extends BaseEntity {
   collectItems(targetPosition = this.position) {
     // collectible check
     var collectibles = this.controller.levelView.collectibleItems;
-    var distanceBetween = function (position, position2) {
-      return Math.sqrt(Math.pow(position[0] - position2[0], 2) + Math.pow(position[1] - position2[1], 2));
-    };
     for (var i = 0; i < collectibles.length; i++) {
       const [sprite, offset, blockType, collectibleDistance] = collectibles[i];
       // already collected item
@@ -229,7 +227,7 @@ module.exports = class Player extends BaseEntity {
         collectibles.splice(i, 1);
       } else {
         let collectiblePosition = this.controller.levelModel.spritePositionToIndex(offset, [sprite.x, sprite.y]);
-        if (distanceBetween(targetPosition, collectiblePosition) < collectibleDistance) {
+        if (Position.absoluteDistanceSquare(targetPosition, collectiblePosition) < collectibleDistance) {
           this.controller.levelView.playItemAcquireAnimation(this.position, this.facing, sprite, () => { }, blockType);
           collectibles.splice(i, 1);
         }

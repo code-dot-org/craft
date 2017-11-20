@@ -307,13 +307,11 @@ module.exports = class BaseEntity {
         this.controller.addCommandRecord("moveAway", this.type, commandQueueItem.repeat);
         var moveAwayPosition = moveAwayFrom.position;
         var bestPosition = [];
-        let absoluteDistanceSquare = function (position1, position2) {
-            return Math.pow(position1[0] - position2[0], 2) + Math.pow(position1[1] - position2[1], 2);
-        };
         let comparePositions = function (moveAwayPosition, position1, position2) {
-            return absoluteDistanceSquare(position1[1], moveAwayPosition) < absoluteDistanceSquare(position2[1], moveAwayPosition) ? position2 : position1;
+            return Position.absoluteDistanceSquare(position1[1], moveAwayPosition) < Position.absoluteDistanceSquare(position2[1], moveAwayPosition) ? position2 : position1;
         };
-        var currentDistance = absoluteDistanceSquare(moveAwayPosition, this.position);
+
+        var currentDistance = Position.absoluteDistanceSquare(moveAwayPosition, this.position);
         // this entity is on the right side and can move to right
         if (moveAwayPosition[0] <= this.position[0] && this.controller.levelModel.canMoveDirection(this, FacingDirection.East)[0]) {
             bestPosition = [FacingDirection.East, [this.position[0] + 1, this.position[1]]];
@@ -343,7 +341,7 @@ module.exports = class BaseEntity {
             }
         }
         // terminate the action since it's impossible to move
-        if (bestPosition.length === 0 || currentDistance >= absoluteDistanceSquare(moveAwayPosition, bestPosition[1])) {
+        if (bestPosition.length === 0 || currentDistance >= Position.absoluteDistanceSquare(moveAwayPosition, bestPosition[1])) {
             commandQueueItem.succeeded();
         } else {
             // execute the best result
@@ -363,11 +361,11 @@ module.exports = class BaseEntity {
         this.controller.addCommandRecord("moveToward", this.type, commandQueueItem.repeat);
         var moveTowardPosition = moveTowardTo.position;
         var bestPosition = [];
-        let absoluteDistanceSquare = function (position1, position2) {
-            return Math.pow(position1[0] - position2[0], 2) + Math.pow(position1[1] - position2[1], 2);
-        };
         let comparePositions = function (moveTowardPosition, position1, position2) {
-            return absoluteDistanceSquare(position1[1], moveTowardPosition) > absoluteDistanceSquare(position2[1], moveTowardPosition) ? position2 : position1;
+          return Position.absoluteDistanceSquare(position1[1], moveTowardPosition) >
+                 Position.absoluteDistanceSquare(position2[1], moveTowardPosition)
+                   ? position2
+                   : position1;
         };
         // this entity is on the right side and can move to right
         if (moveTowardPosition[0] >= this.position[0] && this.controller.levelModel.canMoveDirection(this, FacingDirection.East)[0]) {
@@ -398,8 +396,8 @@ module.exports = class BaseEntity {
             }
         }
         // terminate the action since it's impossible to move
-        if (absoluteDistanceSquare(this.position, moveTowardPosition) === 1) {
-            if (this.position[0] < moveTowardPosition[0]) {
+        if (Position.absoluteDistanceSquare(this.position, moveTowardPosition) === 1) {
+            if (this.position.x < moveTowardPosition.x) {
                 this.facing = FacingDirection.East;
             } else if (this.position[0] > moveTowardPosition[0]) {
                 this.facing = FacingDirection.West;
@@ -425,11 +423,7 @@ module.exports = class BaseEntity {
 
 
     moveTo(commandQueueItem, moveTowardTo) {
-
-        let absoluteDistanceSquare = function (position1, position2) {
-            return Math.sqrt(Math.pow(position1[0] - position2[0], 2) + Math.pow(position1[1] - position2[1], 2));
-        };
-        if (absoluteDistanceSquare(moveTowardTo.position, this.position) === 1) {
+        if (Position.absoluteDistanceSquare(moveTowardTo.position, this.position) === 1) {
             /// north
             if (moveTowardTo.position[1] - this.position[1] === -1) {
                 this.moveDirection(commandQueueItem, FacingDirection.North);
@@ -612,7 +606,7 @@ module.exports = class BaseEntity {
     }
 
     getDistance(entity) {
-        return Math.abs(Math.pow(this.position[0] - entity.position[0], 2) + Math.pow(this.position[1] - entity.position[1], 2));
+      return Position.absoluteDistanceSquare(this.position, entity.position);
     }
 
     blowUp(commandQueueItem, explosionPosition) {

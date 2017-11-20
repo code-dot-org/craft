@@ -59,6 +59,10 @@ module.exports = class Position {
     return directions.map(direction => Position.forward(position, direction));
   }
 
+  static absoluteDistanceSquare(left, right) {
+    return Math.pow(left[0] - right[0], 2) + Math.pow(left[1] - right[1], 2);
+  }
+
   /**
    * Gets all eight surrounding positions - orthogonal and diagonal
    */
