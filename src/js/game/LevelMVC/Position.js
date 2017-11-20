@@ -9,8 +9,20 @@ const directions = [
 
 module.exports = class Position {
 
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+
+    // Temporarily shadow x and y under array indices, for backwards
+    // compatibility with old [x, y] position arrays.
+    // TODO elijah: remove this once we are fully converted over to actual
+    // Position instances
+    this[0] = x;
+    this[1] = y;
+  }
+
   static add(left, right) {
-    return [left[0] + right[0], left[1] + right[1]];
+    return new Position(left[0] + right[0], left[1] + right[1]);
   }
 
   static equals(left, right) {
