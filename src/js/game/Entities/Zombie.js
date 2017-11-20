@@ -64,9 +64,9 @@ module.exports = class Zombie extends BaseEntity {
         var frameName = "Zombie_";
         this.sprite = actionGroup.create(0, 0, 'zombie', 'Zombie_001.png');
         // update sort order and position
-        this.sprite.sortOrder = this.controller.levelView.yToIndex(this.position[1]);
-        this.sprite.x = this.offset[0] + 40 * this.position[0];
-        this.sprite.y = this.offset[1] + 40 * this.position[1];
+        this.sprite.sortOrder = this.controller.levelView.yToIndex(this.position.y);
+        this.sprite.x = this.offset[0] + 40 * this.position.x;
+        this.sprite.y = this.offset[1] + 40 * this.position.y;
         // add burning sprite
         this.burningSprite = [actionGroup.create(this.sprite.x + this.burningSpriteOffset[0], this.sprite.y + this.burningSpriteOffset[1], 'burningInSun', "BurningFront_001.png"),
         actionGroup.create(this.sprite.x + this.burningSpriteOffset[0], this.sprite.y + this.burningSpriteOffset[1], 'burningInSun', "BurningBehind_001.png")];
