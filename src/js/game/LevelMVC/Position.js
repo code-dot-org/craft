@@ -80,4 +80,16 @@ module.exports = class Position {
       Position.south(Position.west(position)),
     ]);
   }
+
+  /**
+   * A simple factory method to create Position instances from old [x, y]
+   * position arrays. While we are transitioning fully to Position instances,
+   * this can be used to easily convert from the old form to the new form. Once
+   * we have finished transitioning, this should exclusively be used to parse
+   * position arrays in initial level data into Position instances, and all code
+   * should be using only Position instances.
+   */
+  static fromArray(position) {
+    return new Position(position[0], position[1]);
+  }
 };
