@@ -46,7 +46,6 @@
     "karma-coverage": "^1.1.1",
     "karma-tap": "^3.1.1",
     "nyc": "^11.2.1",
-    "istanbul": "^0.4.5",
     "phaser": "^2.6.2",
     "sinon": "^3.2.1",
     "tape": "^4.8.0"
