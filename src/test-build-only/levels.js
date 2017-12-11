@@ -16,11 +16,11 @@ module.exports = Object.assign({
 
     playerName: "SteveEvents",
     isAgentLevel: true,
-    earlyLoadAssetPacks: ['allAssetsMinusPlayer'],
+    earlyLoadAssetPacks: ['heroAllAssetsMinusPlayer'],
     earlyLoadNiceToHaveAssetPacks: ['playerSteveEvents', 'playerAgent'],
 
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteveEvents', 'playerAgent'],
+      beforeLoad: ['heroAllAssetsMinusPlayer', 'playerSteveEvents', 'playerAgent'],
       afterLoad: [],
     },
 
