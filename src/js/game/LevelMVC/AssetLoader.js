@@ -617,7 +617,6 @@ module.exports = class AssetLoader {
       designerAllAssetsMinusPlayer: [
         'entityShadow',
         'selectionIndicator',
-        'shadeLayer',
         'tallGrass',
         'finishOverlay',
         'bed',
