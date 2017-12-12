@@ -1,6 +1,6 @@
 {
   "name": "@code-dot-org/craft",
-  "version": "0.0.22",
+  "version": "0.1.0",
   "description": "Top-down 2D game engine for the Craft app type. See NOTICE for restrictions on use.",
   "main": "build/js/app.bundled.js",
   "scripts": {
