@@ -740,6 +740,7 @@ module.exports = class AssetLoader {
         'zombie',
         'cow',
         'chicken',
+        'burningInSun',
         'ghast',
         'chickenHurt',
         'chickenBawk',
