@@ -58,15 +58,22 @@ module.exports = class LevelModel {
     this.isDaytime = this.initialLevelData.isDaytime === undefined || this.initialLevelData.isDaytime;
 
     let levelData = Object.create(this.initialLevelData);
-    let x = levelData.playerStartPosition[0];
-    let y = levelData.playerStartPosition[1];
+    const position = Position.fromArray(levelData.playerStartPosition);
     if (this.initialLevelData.usePlayer !== undefined) {
       this.usePlayer = this.initialLevelData.usePlayer;
     } else {
       this.usePlayer = true;
     }
     if (this.usePlayer) {
-      this.player = new Player(this.controller, "Player", x, y, this.initialLevelData.playerName || "Steve", !this.actionPlane.getBlockAt([x, y]).getIsEmptyOrEntity(), levelData.playerStartDirection);
+      this.player = new Player(
+        this.controller,
+        'Player',
+        position.x,
+        position.y,
+        this.initialLevelData.playerName || 'Steve',
+        !this.actionPlane.getBlockAt(position).getIsEmptyOrEntity(),
+        levelData.playerStartDirection
+      );
       this.controller.levelEntity.pushEntity(this.player);
       this.controller.player = this.player;
 
@@ -99,7 +106,7 @@ module.exports = class LevelModel {
 
     const position = (positionOverride !== undefined)
       ? positionOverride
-      : levelData.agentStartPosition;
+      : Position.fromArray(levelData.agentStartPosition);
 
     const direction = (directionOverride !== undefined)
         ? directionOverride
@@ -109,7 +116,7 @@ module.exports = class LevelModel {
     const key = "Agent";
 
     const startingBlock = this.actionPlane.getBlockAt(position);
-    this.agent = new Agent(this.controller, name, position[0], position[1], key, !startingBlock.getIsEmptyOrEntity(), direction);
+    this.agent = new Agent(this.controller, name, position.x, position.y, key, !startingBlock.getIsEmptyOrEntity(), direction);
     this.controller.levelEntity.pushEntity(this.agent);
     this.controller.agent = this.agent;
   }

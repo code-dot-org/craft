@@ -1241,7 +1241,7 @@ class GameController {
         const levelEndAnimation = this.levelView.playLevelEndAnimation(player.position, player.facing, player.isOnBlock);
 
         levelEndAnimation.onComplete.add(() => {
-          this.levelModel.spawnAgent(null, [3, 4], 2); // This will spawn the Agent at [3, 4], facing South.
+          this.levelModel.spawnAgent(null, new Position(3, 4), 2); // This will spawn the Agent at [3, 4], facing South.
           this.levelView.agent = this.agent;
           this.levelView.resetEntity(this.agent);
 
