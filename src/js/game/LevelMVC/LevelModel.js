@@ -305,13 +305,12 @@ module.exports = class LevelModel {
     if (!this.usePlayer) {
       return false;
     }
-    return this.player.position[0] === position[0] &&
-      this.player.position[1] === position[1];
+    return Position.equals(this.player.position, position);
   }
 
   spritePositionToIndex(offset, spritePosition) {
-    var position = [spritePosition[0] - offset[0], spritePosition[1] - offset[1]];
-    return [position[0] / 40, position[1] / 40];
+    const position = Position.subtract(spritePosition, offset);
+    return new Position(position.x / 40, position.y / 40);
   }
 
   solutionMapMatchesResultMap(solutionMap) {
@@ -520,7 +519,7 @@ module.exports = class LevelModel {
 
   canMoveForward(entity = this.player) {
     const position = this.getMoveForwardPosition(entity);
-    if (!this.controller.followingPlayer() && (position[0] > 9 || position[1] > 9)) {
+    if (!this.controller.followingPlayer() && (position.x > 9 || position.y > 9)) {
       return false;
     }
     return this.isPositionEmpty(position, entity);
@@ -673,7 +672,7 @@ module.exports = class LevelModel {
   }
 
   moveTo(position, entity = this.player) {
-    entity.setMovePosition(new Position(position[0], position[1]));
+    entity.setMovePosition(position);
 
     if (this.actionPlane.getBlockAt(position).isEmpty) {
       entity.isOnBlock = false;
@@ -900,9 +899,14 @@ module.exports = class LevelModel {
     var emissives = [];
     for (var y = 0; y < this.planeHeight; ++y) {
       for (var x = 0; x < this.planeWidth; ++x) {
-        let position = [x, y];
-        if (!this.actionPlane.getBlockAt(position).isEmpty && this.actionPlane.getBlockAt(position).isEmissive || this.groundPlane.getBlockAt(position).isEmissive && this.actionPlane.getBlockAt(position).isEmpty) {
-          emissives.push([x, y]);
+        let position = new Position(x, y);
+        if (
+          (!this.actionPlane.getBlockAt(position).isEmpty &&
+            this.actionPlane.getBlockAt(position).isEmissive) ||
+          (this.groundPlane.getBlockAt(position).isEmissive &&
+            this.actionPlane.getBlockAt(position).isEmpty)
+        ) {
+          emissives.push(position);
         }
       }
     }

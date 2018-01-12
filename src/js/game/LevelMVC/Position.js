@@ -25,6 +25,10 @@ module.exports = class Position {
     return new Position(left[0] + right[0], left[1] + right[1]);
   }
 
+  static subtract(left, right) {
+    return new Position(left[0] - right[0], left[1] - right[1]);
+  }
+
   static equals(left, right) {
     return left[0] === right[0] && left[1] === right[1];
   }
