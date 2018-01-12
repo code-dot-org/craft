@@ -141,7 +141,7 @@ module.exports = class LevelModel {
   }
 
   getHouseBottomRight() {
-    return this.initialLevelData.houseBottomRight;
+    return Position.fromArray(this.initialLevelData.houseBottomRight);
   }
 
   // Verifications
@@ -243,7 +243,7 @@ module.exports = class LevelModel {
   }
 
   getNextRailPosition(entity = this.player, direction) {
-    const offset = FacingDirection.directionToOffset(direction) || [0, 0];
+    const offset = FacingDirection.directionToOffset(direction) || new Position(0, 0);
     return Position.add(entity.position, offset);
   }
 
@@ -331,16 +331,10 @@ module.exports = class LevelModel {
   }
 
   getTnt() {
-    var tnt = [];
-    for (var x = 0; x < this.planeWidth; ++x) {
-      for (var y = 0; y < this.planeHeight; ++y) {
-        var block = this.actionPlane.getBlockAt([x, y]);
-        if (block.blockType === "tnt") {
-          tnt.push([x, y]);
-        }
-      }
-    }
-    return tnt;
+    return this.actionPlane.getAllPositions().filter((position) => {
+      const block = this.actionPlane.getBlockAt(position);
+      return (block && block.blockType === "tnt");
+    });
   }
 
   getMoveForwardPosition(entity = this.player) {

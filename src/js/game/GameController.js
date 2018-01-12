@@ -3,6 +3,7 @@ const CallbackCommand = require("./CommandQueue/CallbackCommand.js");
 
 const EventType = require("./Event/EventType.js");
 const FacingDirection = require("./LevelMVC/FacingDirection.js");
+const Position = require("./LevelMVC/Position.js");
 
 const LevelModel = require("./LevelMVC/LevelModel.js");
 const LevelView = require("./LevelMVC/LevelView.js");
@@ -1209,9 +1210,9 @@ class GameController {
       if (this.checkHouseBuiltEndAnimation()) {
         this.resultReported = true;
         var houseBottomRight = this.levelModel.getHouseBottomRight();
-        var inFrontOfDoor = [houseBottomRight[0] - 1, houseBottomRight[1] + 2];
-        var bedPosition = [houseBottomRight[0], houseBottomRight[1]];
-        var doorPosition = [houseBottomRight[0] - 1, houseBottomRight[1] + 1];
+        var inFrontOfDoor = new Position(houseBottomRight.x - 1, houseBottomRight.y + 2);
+        var bedPosition = new Position(houseBottomRight.x, houseBottomRight.y);
+        var doorPosition = new Position(houseBottomRight.x - 1, houseBottomRight.y + 1);
         this.levelModel.moveTo(inFrontOfDoor);
         this.levelView.playSuccessHouseBuiltAnimation(
           player.position,
