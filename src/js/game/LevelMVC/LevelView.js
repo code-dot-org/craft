@@ -373,7 +373,7 @@ module.exports = class LevelView {
   resetEntity(entity) {
     this.preparePlayerSprite(entity.name, entity);
     entity.sprite.animations.stop();
-    this.setPlayerPosition(entity.position[0], entity.position[1], entity.isOnBlock, entity);
+    this.setPlayerPosition(entity.position, entity.isOnBlock, entity);
     if (entity.shouldUpdateSelectionIndicator()) {
       this.setSelectionIndicatorPosition(entity.position[0], entity.position[1]);
       this.selectionIndicator.visible = true;
@@ -701,8 +701,8 @@ module.exports = class LevelView {
 
   playMinecartAnimation(isOnBlock, completionHandler) {
     //start at 3,2
-    this.setPlayerPosition(3, 2, isOnBlock);
-    const position = [3, 2];
+    const position = new Position(3, 2);
+    this.setPlayerPosition(position, isOnBlock);
     this.player.facing = 2;
 
     const animation = this.playLevelEndAnimation(position, this.player.facing, isOnBlock, completionHandler, false);
@@ -844,7 +844,7 @@ module.exports = class LevelView {
 
     tweenToW.onComplete.add(() => {
       this.selectionIndicator.visible = false;
-      this.setPlayerPosition(position[0], position[1], isOnBlock);
+      this.setPlayerPosition(position, isOnBlock);
       tweenWToC.start();
     });
     if (playSuccessAnimation) {
@@ -1421,8 +1421,13 @@ module.exports = class LevelView {
     };
   }
 
-  setPlayerPosition(x, y, isOnBlock, entity = this.player) {
-    const screen = this.positionToScreen([x, y], isOnBlock, entity);
+  /**
+   * @param {Position} position
+   * @param {boolean} isOnBlock
+   * @param {Entity} entity
+   */
+  setPlayerPosition(position, isOnBlock, entity = this.player) {
+    const screen = this.positionToScreen(position, isOnBlock, entity);
     entity.sprite.x = screen.x;
     entity.sprite.y = screen.y;
     entity.sprite.sortOrder = this.yToIndex(screen.y) + entity.getSortOrderOffset();
@@ -1498,7 +1503,7 @@ module.exports = class LevelView {
 
     for (y = 0; y < this.controller.levelModel.planeHeight; ++y) {
       for (x = 0; x < this.controller.levelModel.planeWidth; ++x) {
-        let position = [x, y];
+        let position = new Position(x, y);
         sprite = null;
 
         const groundBlock = levelData.groundDecorationPlane.getBlockAt(position);
@@ -1518,7 +1523,7 @@ module.exports = class LevelView {
 
     for (y = 0; y < this.controller.levelModel.planeHeight; ++y) {
       for (x = 0; x < this.controller.levelModel.planeWidth; ++x) {
-        let position = [x, y];
+        let position = new Position(x, y);
         if (!levelData.fluffPlane.getBlockAt(position).isEmpty) {
           sprite = this.createBlock(this.fluffGroup, x, y, levelData.fluffPlane.getBlockAt(position).blockType);
         }
@@ -1530,7 +1535,7 @@ module.exports = class LevelView {
     this.groundGroup.removeAll(true);
     for (var y = 0; y < this.controller.levelModel.planeHeight; ++y) {
       for (var x = 0; x < this.controller.levelModel.planeWidth; ++x) {
-        let position = [x, y];
+        let position = new Position(x, y);
         const groundBlock = this.controller.levelModel.groundPlane.getBlockAt(position);
         var sprite = this.createBlock(this.groundGroup, x, y, groundBlock.blockType);
 
@@ -1540,7 +1545,7 @@ module.exports = class LevelView {
 
         const actionBlock = this.controller.levelModel.actionPlane.getBlockAt(position);
         if (actionBlock && actionBlock.shouldRenderOnGroundPlane()) {
-          this.createActionPlaneBlock([x, y], actionBlock.blockType);
+          this.createActionPlaneBlock(position, actionBlock.blockType);
         }
       }
     }
@@ -1929,6 +1934,8 @@ module.exports = class LevelView {
   }
 
   createBlock(group, x, y, blockType) {
+    const position = new Position(x, y);
+
     var i,
       sprite = null,
       frameList,
@@ -1936,6 +1943,7 @@ module.exports = class LevelView {
       frame,
       xOffset,
       yOffset;
+
 
     var buildTree = function (levelView, frame) {
       let type = blockType.substring(4);
@@ -1949,7 +1957,7 @@ module.exports = class LevelView {
 
         levelView.playScaledSpeed(logSprite.fluff.animations, "despawn");
       };
-      levelView.trees.push({ sprite: sprite, type: blockType, position: [x, y] });
+      levelView.trees.push({ sprite: sprite, type: blockType, position: position });
     };
 
     const buildDoor = (levelView, type) => {
@@ -2143,10 +2151,10 @@ module.exports = class LevelView {
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("TNTexplosion", 0, 8, "", 0);
         sprite.animations.add("explode", frameList, 7, false).onComplete.add(() => {
-          this.playExplosionCloudAnimation([x, y]);
+          this.playExplosionCloudAnimation(position);
           sprite.kill();
           this.toDestroy.push(sprite);
-          this.actionPlaneBlocks[this.coordinatesToIndex([x, y])] = null;
+          this.actionPlaneBlocks[this.coordinatesToIndex(position)] = null;
         });
         break;
 
