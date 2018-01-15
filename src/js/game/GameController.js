@@ -3,6 +3,7 @@ const CallbackCommand = require("./CommandQueue/CallbackCommand.js");
 
 const EventType = require("./Event/EventType.js");
 const FacingDirection = require("./LevelMVC/FacingDirection.js");
+const Position = require("./LevelMVC/Position.js");
 
 const LevelModel = require("./LevelMVC/LevelModel.js");
 const LevelView = require("./LevelMVC/LevelView.js");
@@ -1209,9 +1210,9 @@ class GameController {
       if (this.checkHouseBuiltEndAnimation()) {
         this.resultReported = true;
         var houseBottomRight = this.levelModel.getHouseBottomRight();
-        var inFrontOfDoor = [houseBottomRight[0] - 1, houseBottomRight[1] + 2];
-        var bedPosition = [houseBottomRight[0], houseBottomRight[1]];
-        var doorPosition = [houseBottomRight[0] - 1, houseBottomRight[1] + 1];
+        var inFrontOfDoor = new Position(houseBottomRight.x - 1, houseBottomRight.y + 2);
+        var bedPosition = new Position(houseBottomRight.x, houseBottomRight.y);
+        var doorPosition = new Position(houseBottomRight.x - 1, houseBottomRight.y + 1);
         this.levelModel.moveTo(inFrontOfDoor);
         this.levelView.playSuccessHouseBuiltAnimation(
           player.position,
@@ -1240,7 +1241,7 @@ class GameController {
         const levelEndAnimation = this.levelView.playLevelEndAnimation(player.position, player.facing, player.isOnBlock);
 
         levelEndAnimation.onComplete.add(() => {
-          this.levelModel.spawnAgent(null, [3, 4], 2); // This will spawn the Agent at [3, 4], facing South.
+          this.levelModel.spawnAgent(null, new Position(3, 4), 2); // This will spawn the Agent at [3, 4], facing South.
           this.levelView.agent = this.agent;
           this.levelView.resetEntity(this.agent);
 

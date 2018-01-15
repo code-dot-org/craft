@@ -66,18 +66,22 @@ module.exports = class LevelPlane {
   }
 
   /**
-  * Determines whether the position in question is within the bounds of the plane.
-  */
+   * Determines whether the position in question is within the bounds of the plane.
+   */
   inBounds(position) {
-    const [x, y] = position;
-    return x >= 0 && x < this.width && y >= 0 && y < this.height;
+    return (
+      position.x >= 0 &&
+      position.x < this.width &&
+      position.y >= 0 &&
+      position.y < this.height
+    );
   }
 
   /**
-  * Converts coordinates to a index
-  */
+   * Converts coordinates to a index
+   */
   coordinatesToIndex(position) {
-    return position[1] * this.width + position[0];
+    return position.y * this.width + position.x;
   }
 
   /**
@@ -86,7 +90,7 @@ module.exports = class LevelPlane {
   indexToCoordinates(index) {
     let y = Math.floor(index / this.width);
     let x = index - (y * this.width);
-    return [x, y];
+    return new Position(x, y);
   }
 
   /**
@@ -109,6 +113,7 @@ module.exports = class LevelPlane {
    * @return {LevelBlock}
    */
   getBlockAt(position) {
+    position = Position.fromArray(position);
     if (this.inBounds(position)) {
       return this._data[this.coordinatesToIndex(position)];
     }
@@ -131,6 +136,7 @@ module.exports = class LevelPlane {
    * Important note: This is the cornerstone of block placing/destroying.
    */
   setBlockAt(position, block) {
+    position = Position.fromArray(position);
     if (!this.inBounds(position)) {
       return;
     }
@@ -204,14 +210,14 @@ module.exports = class LevelPlane {
    */
   getSurroundingBlocks(position) {
     return {
-      north: this.getBlockAt(Position.add(position, [0, -1])),
-      northEast: this.getBlockAt(Position.add(position, [1, -1])),
-      east: this.getBlockAt(Position.add(position, [1, 0])),
-      southEast: this.getBlockAt(Position.add(position, [1, 1])),
-      south: this.getBlockAt(Position.add(position, [0, 1])),
-      southWest: this.getBlockAt(Position.add(position, [-1, 1])),
-      west: this.getBlockAt(Position.add(position, [-1, 0])),
-      northWest: this.getBlockAt(Position.add(position, [-1, -1])),
+      north: this.getBlockAt(Position.north(position)),
+      northEast: this.getBlockAt(Position.north(Position.east(position))),
+      east: this.getBlockAt(Position.east(position)),
+      southEast: this.getBlockAt(Position.south(Position.east(position))),
+      south: this.getBlockAt(Position.south(position)),
+      southWest: this.getBlockAt(Position.south(Position.west(position))),
+      west: this.getBlockAt(Position.west(position)),
+      northWest: this.getBlockAt(Position.north(Position.west(position))),
     };
   }
 
@@ -474,6 +480,7 @@ module.exports = class LevelPlane {
   * Evaluates what state Iron Doors on the map should be in.
   */
   getIronDoors(position) {
+    position = Position.fromArray(position);
     const block = this.getBlockAt(position);
     const index = this.coordinatesToIndex(position);
 
@@ -680,7 +687,7 @@ module.exports = class LevelPlane {
     }
     let armBlock = new LevelBlock(pistonType);
     for (let i = blocksPositions.length - 1; i >= 0; --i) {
-      let destination = Position.add(blocksPositions[i], offset);
+      let destination = Position.add(blocksPositions[i], Position.fromArray(offset));
       let block = this.getBlockAt(blocksPositions[i]);
       if (this.inBounds(destination) && this.getBlockAt(destination).isDestroyableUponPush()) {
         if (this.levelModel) {
@@ -708,7 +715,7 @@ module.exports = class LevelPlane {
     let workingPosition = position;
     while (this.inBounds(workingPosition) && this.getBlockAt(workingPosition).getIsPushable()) {
       pushingBlocks.push(workingPosition);
-      workingPosition = Position.add(workingPosition, offset);
+      workingPosition = Position.add(workingPosition, Position.fromArray(offset));
     }
     return pushingBlocks;
   }
@@ -725,7 +732,7 @@ module.exports = class LevelPlane {
         }
         if (this.getBlockAt(position).getIsPiston()) {
           const piston = this.getBlockAt(position);
-          const ignoreThisSide = directionToOffset(piston.getPistonDirection()) || [0, 0];
+          const ignoreThisSide = directionToOffset(piston.getPistonDirection()) || new Position(0, 0);
           const posCheck = Position.add(position, ignoreThisSide);
           if (Position.equals(orthogonalPosition, posCheck)) {
             return false;

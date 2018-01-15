@@ -9,8 +9,24 @@ const directions = [
 
 module.exports = class Position {
 
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+
+    // Temporarily shadow x and y under array indices, for backwards
+    // compatibility with old [x, y] position arrays.
+    // TODO elijah: remove this once we are fully converted over to actual
+    // Position instances
+    this[0] = x;
+    this[1] = y;
+  }
+
   static add(left, right) {
-    return [left[0] + right[0], left[1] + right[1]];
+    return new Position(left[0] + right[0], left[1] + right[1]);
+  }
+
+  static subtract(left, right) {
+    return new Position(left[0] - right[0], left[1] - right[1]);
   }
 
   static equals(left, right) {
@@ -47,6 +63,16 @@ module.exports = class Position {
     return directions.map(direction => Position.forward(position, direction));
   }
 
+  static manhattanDistance(left, right) {
+    const d1 = Math.abs(right.x - left.x);
+    const d2 = Math.abs(right.y - left.y);
+    return d1 + d2;
+  }
+
+  static absoluteDistanceSquare(left, right) {
+    return Math.pow(left[0] - right[0], 2) + Math.pow(left[1] - right[1], 2);
+  }
+
   /**
    * Gets all eight surrounding positions - orthogonal and diagonal
    */
@@ -57,5 +83,17 @@ module.exports = class Position {
       Position.south(Position.east(position)),
       Position.south(Position.west(position)),
     ]);
+  }
+
+  /**
+   * A simple factory method to create Position instances from old [x, y]
+   * position arrays. While we are transitioning fully to Position instances,
+   * this can be used to easily convert from the old form to the new form. Once
+   * we have finished transitioning, this should exclusively be used to parse
+   * position arrays in initial level data into Position instances, and all code
+   * should be using only Position instances.
+   */
+  static fromArray(position) {
+    return new Position(position[0], position[1]);
   }
 };

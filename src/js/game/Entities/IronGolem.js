@@ -2,10 +2,9 @@ const BaseEntity = require("./BaseEntity.js");
 module.exports = class IronGolem extends BaseEntity {
     constructor(controller, type, identifier, x, y, facing) {
         super(controller, type, identifier, x, y, facing);
-        var zOrderYIndex = this.position[1];
         this.offset = [-43, -55];
         this.prepareSprite();
-        this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex);
+        this.sprite.sortOrder = this.controller.levelView.yToIndex(this.position.y);
     }
 
     prepareSprite() {

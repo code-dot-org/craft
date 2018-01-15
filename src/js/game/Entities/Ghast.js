@@ -68,8 +68,8 @@ module.exports = class Ghast extends BaseEntity {
         }
         // initialize
         this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + this.controller.levelView.getDirectionName(this.facing));
-        this.sprite.x = this.offset[0] + 40 * this.position[0];
-        this.sprite.y = this.offset[1] + 40 * this.position[1];
+        this.sprite.x = this.offset[0] + 40 * this.position.x;
+        this.sprite.y = this.offset[1] + 40 * this.position.y;
     }
 
   /**
@@ -122,11 +122,11 @@ module.exports = class Ghast extends BaseEntity {
     const options = [Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true];
 
     this.controller.levelView.addResettableTween(this.sprite).to({
-        y: (this.offset[1] + 40 * this.position[1] + 80),
+        y: (this.offset[1] + 40 * this.position.y + 80),
       }, randomInt(2500, 3500), ...options);
 
     this.controller.levelView.addResettableTween(this.sprite).to({
-        x: (this.offset[0] + 40 * this.position[0] + 10),
+        x: (this.offset[0] + 40 * this.position.x + 10),
       }, randomInt(1500, 2000), ...options);
   }
 
@@ -134,11 +134,11 @@ module.exports = class Ghast extends BaseEntity {
     const options = [Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true];
 
     this.controller.levelView.addResettableTween(this.sprite).to({
-      y: (this.offset[1] + 40 * this.position[1] - 80),
+      y: (this.offset[1] + 40 * this.position.y - 80),
     }, randomInt(2500, 3500), ...options);
 
     this.controller.levelView.addResettableTween(this.sprite).to({
-      x: (this.offset[0] + 40 * this.position[0] - 10),
+      x: (this.offset[0] + 40 * this.position.x - 10),
     }, randomInt(1500, 2000), ...options);
   }
 };

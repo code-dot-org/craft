@@ -4,11 +4,10 @@ const EventType = require("../Event/EventType.js");
 module.exports = class Sheep extends BaseEntity {
     constructor(controller, type, identifier, x, y, facing) {
         super(controller, type, identifier, x, y, facing);
-        var zOrderYIndex = this.position[1];
         this.offset = [-43, -55];
         if (this.controller.levelView) {
           this.prepareSprite();
-          this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex);
+          this.sprite.sortOrder = this.controller.levelView.yToIndex(this.position.y);
         }
         this.naked = false;
     }
@@ -254,8 +253,8 @@ module.exports = class Sheep extends BaseEntity {
 
         // initialize
         this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + this.controller.levelView.getDirectionName(this.facing));
-        this.sprite.x = this.offset[0] + 40 * this.position[0];
-        this.sprite.y = this.offset[1] + 40 * this.position[1];
+        this.sprite.x = this.offset[0] + 40 * this.position.x;
+        this.sprite.y = this.offset[1] + 40 * this.position.y;
     }
 
     playRandomIdle(facing) {

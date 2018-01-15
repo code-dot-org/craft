@@ -1,10 +1,11 @@
 const test = require("tape");
 const attempt = require("../helpers/RunLevel.js");
+const Position = require("../../src/js/game/LevelMVC/Position");
 
 test('Adventurer 1: Move to Sheep (fail)', t => {
   attempt('adventurer01', api => new Promise(resolve => {
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.player.position, [3, 4]);
+      t.true(Position.equals(levelModel.player.position, [3, 4]));
       t.assert(!success);
       t.end();
 
@@ -19,7 +20,7 @@ test('Adventurer 1: Move to Sheep (pass)', t => {
     api.moveForward(null, 'Player');
 
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.player.position, [5, 4]);
+      t.true(Position.equals(levelModel.player.position, [5, 4]));
       t.assert(success);
       t.end();
 
@@ -35,7 +36,7 @@ test('Adventurer 2: Chop Tree', t => {
     api.destroyBlock(null, 'Player');
 
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.player.position, [4, 5]);
+      t.true(Position.equals(levelModel.player.position, [4, 5]));
       t.assert(success);
       t.end();
 
@@ -54,7 +55,7 @@ test('Adventurer 3: Shear Sheep', t => {
     api.use(null, 'Player');
 
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.player.position, [4, 4]);
+      t.true(Position.equals(levelModel.player.position, [4, 4]));
       t.assert(success);
       t.end();
 
@@ -74,7 +75,7 @@ test('Adventurer 4: Chop Trees', t => {
     }
 
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.player.position, [3, 4]);
+      t.true(Position.equals(levelModel.player.position, [3, 4]));
       t.assert(success);
       t.end();
 
@@ -91,7 +92,7 @@ test('Adventurer 5: Place Wall', t => {
     }
 
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.player.position, [2, 6]);
+      t.true(Position.equals(levelModel.player.position, [2, 6]));
       t.assert(success);
       t.end();
 
@@ -111,7 +112,7 @@ test('Adventurer 6: House Frame Chosen', t => {
     }
 
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.player.position, [6, 6]);
+      t.true(Position.equals(levelModel.player.position, [6, 6]));
       t.assert(success);
       t.end();
 
@@ -126,7 +127,7 @@ test('Adventurer 7: Plant Crops (fail)', t => {
     api.moveForward(null, 'Player');
 
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.player.position, [5, 7]);
+      t.true(Position.equals(levelModel.player.position, [5, 7]));
       t.assert(levelModel.isPlayerStandingInWater());
       t.assert(!success);
       t.end();
@@ -151,7 +152,7 @@ test('Adventurer 7: Plant Crops (pass)', t => {
     }
 
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.player.position, [4, 7]);
+      t.true(Position.equals(levelModel.player.position, [4, 7]));
       t.assert(success);
       t.end();
 
@@ -173,7 +174,7 @@ test('Adventurer 8: Avoid Monsters', t => {
     api.moveForward(null, 'Player');
 
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.player.position, [4, 2]);
+      t.true(Position.equals(levelModel.player.position, [4, 2]));
       t.assert(success);
       t.end();
 
@@ -192,7 +193,7 @@ test('Adventurer 9: Mining Coal', t => {
     }
 
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.player.position, [3, 6]);
+      t.true(Position.equals(levelModel.player.position, [3, 6]));
       t.assert(success);
       t.end();
 
@@ -207,7 +208,7 @@ test('Adventurer 10: Iron (fail)', t => {
     api.moveForward(null, 'Player');
 
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.player.position, [3, 4]);
+      t.true(Position.equals(levelModel.player.position, [3, 4]));
       t.assert(levelModel.isPlayerStandingInLava());
       t.assert(!success);
       t.end();
@@ -227,7 +228,7 @@ test('Adventurer 10: Iron (pass)', t => {
     }
 
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.player.position, [3, 2]);
+      t.true(Position.equals(levelModel.player.position, [3, 2]));
       t.assert(success);
       t.end();
 
@@ -247,7 +248,7 @@ test('Adventurer 11: Avoiding Lava', t => {
     }
 
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.player.position, [8, 4]);
+      t.true(Position.equals(levelModel.player.position, [8, 4]));
       t.assert(success);
       t.end();
 
@@ -270,7 +271,7 @@ test('Adventurer 12: If Statements', t => {
     }
 
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.player.position, [3, 2]);
+      t.true(Position.equals(levelModel.player.position, [3, 2]));
       t.assert(success);
       t.end();
 
@@ -290,7 +291,7 @@ test('Adventurer 13: Powered Minecart', t => {
     }
 
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.player.position, [11, 7]);
+      t.true(Position.equals(levelModel.player.position, [11, 7]));
       t.assert(success);
       t.end();
 
@@ -309,7 +310,7 @@ test('Adventurer 14: Free Play 20x20', t => {
     api.placeBlock(null, 'tnt', 'Player');
 
     api.startAttempt((success, levelModel) => {
-      t.deepEqual(levelModel.player.position, [7, 9]);
+      t.true(Position.equals(levelModel.player.position, [7, 9]));
       t.assert(success);
       t.end();
 

@@ -1,3 +1,5 @@
+const Position = require("./Position");
+
 module.exports = class AStarPathFinding {
   constructor(model) {
     this.levelModel = model;
@@ -7,10 +9,8 @@ module.exports = class AStarPathFinding {
 
   createGrid() {
     return this.levelModel.actionPlane.getAllPositions().map((position) => {
-      const [x, y] = position;
       return {
-        x: x,
-        y: y,
+        position: position,
         cost: 1,    // cost is 1 so that all blocks are treated the same but could do something with lava, water.
         f: 0, g: 0, h: 0, visited: false, closed: false, parent: null
       };
@@ -29,12 +29,6 @@ module.exports = class AStarPathFinding {
     }
   }
 
-  manhattanDistance(a, b) {
-    const d1 = Math.abs (b.x - a.x);
-    const d2 = Math.abs (b.y - a.y);
-    return d1 + d2;
-  }
-
   getNode(position) {
     const index = this.levelModel.coordinatesToIndex(position);
     if (this.levelModel.inBounds(position) &&                        // is the node within bounds
@@ -47,10 +41,10 @@ module.exports = class AStarPathFinding {
 
   getNeighbors(node) {
     let neighbors = [];
-    const west = this.getNode([node.x - 1, node.y]);
-    const east = this.getNode([node.x + 1, node.y]);
-    const south = this.getNode([node.x, node.y - 1]);
-    const north = this.getNode([node.x, node.y + 1]);
+    const west = this.getNode(Position.west(node.position));
+    const east = this.getNode(Position.east(node.position));
+    const south = this.getNode(Position.south(node.position));
+    const north = this.getNode(Position.north(node.position));
 
     // west
     if (west) {
@@ -78,8 +72,8 @@ module.exports = class AStarPathFinding {
     // Ensure we are in a starting state.
     this.reset();
 
-    const startIndex = this.levelModel.coordinatesToIndex(startPosition);
-    const endIndex = this.levelModel.coordinatesToIndex(endPosition);
+    const startIndex = this.levelModel.coordinatesToIndex(startPosition.position);
+    const endIndex = this.levelModel.coordinatesToIndex(endPosition.position);
 
     const endNode = this.grid[endIndex];
 
@@ -126,7 +120,7 @@ module.exports = class AStarPathFinding {
           dirtyFlag = true;
 
           neighbor.visited = true;
-          neighbor.h = this.manhattanDistance(neighbor, endNode);
+          neighbor.h = Position.manhattanDistance(neighbor.position, endNode.position);
           openList.push(neighbor);
         } else if (gScore < neighbor.g) {
           // We've already visited this node, but it now has a better score, let's try it again.

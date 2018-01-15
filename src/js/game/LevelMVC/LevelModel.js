@@ -31,7 +31,8 @@ module.exports = class LevelModel {
   }
 
   inBounds(position) {
-    const [x, y] = position;
+    const x = position[0];
+    const y = position[1];
     return x >= 0 && x < this.planeWidth && y >= 0 && y < this.planeHeight;
   }
 
@@ -57,14 +58,22 @@ module.exports = class LevelModel {
     this.isDaytime = this.initialLevelData.isDaytime === undefined || this.initialLevelData.isDaytime;
 
     let levelData = Object.create(this.initialLevelData);
-    let [x, y] = levelData.playerStartPosition;
+    const position = Position.fromArray(levelData.playerStartPosition);
     if (this.initialLevelData.usePlayer !== undefined) {
       this.usePlayer = this.initialLevelData.usePlayer;
     } else {
       this.usePlayer = true;
     }
     if (this.usePlayer) {
-      this.player = new Player(this.controller, "Player", x, y, this.initialLevelData.playerName || "Steve", !this.actionPlane.getBlockAt([x, y]).getIsEmptyOrEntity(), levelData.playerStartDirection);
+      this.player = new Player(
+        this.controller,
+        'Player',
+        position.x,
+        position.y,
+        this.initialLevelData.playerName || 'Steve',
+        !this.actionPlane.getBlockAt(position).getIsEmptyOrEntity(),
+        levelData.playerStartDirection
+      );
       this.controller.levelEntity.pushEntity(this.player);
       this.controller.player = this.player;
 
@@ -95,9 +104,9 @@ module.exports = class LevelModel {
   spawnAgent(levelData, positionOverride, directionOverride) {
     this.usingAgent = true;
 
-    const [x, y] = (positionOverride !== undefined)
+    const position = (positionOverride !== undefined)
       ? positionOverride
-      : levelData.agentStartPosition;
+      : Position.fromArray(levelData.agentStartPosition);
 
     const direction = (directionOverride !== undefined)
         ? directionOverride
@@ -106,8 +115,8 @@ module.exports = class LevelModel {
     const name = "PlayerAgent";
     const key = "Agent";
 
-    const startingBlock = this.actionPlane.getBlockAt([x, y]);
-    this.agent = new Agent(this.controller, name, x, y, key, !startingBlock.getIsEmptyOrEntity(), direction);
+    const startingBlock = this.actionPlane.getBlockAt(position);
+    this.agent = new Agent(this.controller, name, position.x, position.y, key, !startingBlock.getIsEmptyOrEntity(), direction);
     this.controller.levelEntity.pushEntity(this.agent);
     this.controller.agent = this.agent;
   }
@@ -139,7 +148,7 @@ module.exports = class LevelModel {
   }
 
   getHouseBottomRight() {
-    return this.initialLevelData.houseBottomRight;
+    return Position.fromArray(this.initialLevelData.houseBottomRight);
   }
 
   // Verifications
@@ -241,7 +250,7 @@ module.exports = class LevelModel {
   }
 
   getNextRailPosition(entity = this.player, direction) {
-    const offset = FacingDirection.directionToOffset(direction) || [0, 0];
+    const offset = FacingDirection.directionToOffset(direction) || new Position(0, 0);
     return Position.add(entity.position, offset);
   }
 
@@ -296,13 +305,12 @@ module.exports = class LevelModel {
     if (!this.usePlayer) {
       return false;
     }
-    return this.player.position[0] === position[0] &&
-      this.player.position[1] === position[1];
+    return Position.equals(this.player.position, position);
   }
 
   spritePositionToIndex(offset, spritePosition) {
-    var position = [spritePosition[0] - offset[0], spritePosition[1] - offset[1]];
-    return [position[0] / 40, position[1] / 40];
+    const position = Position.subtract(spritePosition, offset);
+    return new Position(position.x / 40, position.y / 40);
   }
 
   solutionMapMatchesResultMap(solutionMap) {
@@ -329,16 +337,10 @@ module.exports = class LevelModel {
   }
 
   getTnt() {
-    var tnt = [];
-    for (var x = 0; x < this.planeWidth; ++x) {
-      for (var y = 0; y < this.planeHeight; ++y) {
-        var block = this.actionPlane.getBlockAt([x, y]);
-        if (block.blockType === "tnt") {
-          tnt.push([x, y]);
-        }
-      }
-    }
-    return tnt;
+    return this.actionPlane.getAllPositions().filter((position) => {
+      const block = this.actionPlane.getBlockAt(position);
+      return (block && block.blockType === "tnt");
+    });
   }
 
   getMoveForwardPosition(entity = this.player) {
@@ -516,16 +518,16 @@ module.exports = class LevelModel {
   }
 
   canMoveForward(entity = this.player) {
-    const [x, y] = this.getMoveForwardPosition(entity);
-    if (!this.controller.followingPlayer() && (x > 9 || y > 9)) {
+    const position = this.getMoveForwardPosition(entity);
+    if (!this.controller.followingPlayer() && (position.x > 9 || position.y > 9)) {
       return false;
     }
-    return this.isPositionEmpty([x, y], entity);
+    return this.isPositionEmpty(position, entity);
   }
 
   canMoveBackward(entity = this.player) {
-    const [x, y] = this.getMoveDirectionPosition(entity, 2);
-    return this.isPositionEmpty([x, y], entity);
+    const position = this.getMoveDirectionPosition(entity, 2);
+    return this.isPositionEmpty(position, entity);
   }
 
   isPositionEmpty(position, entity = this.player) {
@@ -734,12 +736,11 @@ module.exports = class LevelModel {
 
   destroyBlock(position) {
     var block = null;
-    let [x, y] = [position[0], position[1]];
 
     if (this.inBounds(position)) {
       block = this.actionPlane.getBlockAt(position);
       if (block !== null) {
-        block.position = [x, y];
+        block.position = position;
 
         if (block.isDestroyable) {
           this.actionPlane.setBlockAt(position, new LevelBlock(""));
@@ -894,31 +895,44 @@ module.exports = class LevelModel {
     this.fowPlane[index] = fowObject;
   }
 
+  /**
+   * @return {Position[]}
+   */
   getAllEmissives() {
     var emissives = [];
     for (var y = 0; y < this.planeHeight; ++y) {
       for (var x = 0; x < this.planeWidth; ++x) {
-        let position = [x, y];
-        if (!this.actionPlane.getBlockAt(position).isEmpty && this.actionPlane.getBlockAt(position).isEmissive || this.groundPlane.getBlockAt(position).isEmissive && this.actionPlane.getBlockAt(position).isEmpty) {
-          emissives.push([x, y]);
+        let position = new Position(x, y);
+        if (
+          (!this.actionPlane.getBlockAt(position).isEmpty &&
+            this.actionPlane.getBlockAt(position).isEmissive) ||
+          (this.groundPlane.getBlockAt(position).isEmissive &&
+            this.actionPlane.getBlockAt(position).isEmpty)
+        ) {
+          emissives.push(position);
         }
       }
     }
     return emissives;
   }
 
+  /**
+   * @param {Position[]}
+   */
   findBlocksAffectedByEmissives(emissives) {
     var blocksTouchedByEmissives = {};
     //find emissives that are close enough to light us.
     for (var torch in emissives) {
       var currentTorch = emissives[torch];
-      let y = currentTorch[1];
-      let x = currentTorch[0];
-      for (var yIndex = currentTorch[1] - 2; yIndex <= (currentTorch[1] + 2); ++yIndex) {
-        for (var xIndex = currentTorch[0] - 2; xIndex <= (currentTorch[0] + 2); ++xIndex) {
+      let x = currentTorch.x;
+      let y = currentTorch.y;
+      for (var yIndex = currentTorch.y - 2; yIndex <= (y + 2); ++yIndex) {
+        for (var xIndex = currentTorch.x - 2; xIndex <= (x + 2); ++xIndex) {
+
+          let position = new Position(xIndex, yIndex);
 
           //Ensure we're looking inside the map
-          if (!this.inBounds([xIndex, yIndex])) {
+          if (!this.inBounds(position)) {
             continue;
           }
 
@@ -929,7 +943,7 @@ module.exports = class LevelModel {
           }
 
           //we want unique copies so we use a map.
-          blocksTouchedByEmissives[yIndex.toString() + xIndex.toString()] = [xIndex, yIndex];
+          blocksTouchedByEmissives[yIndex.toString() + xIndex.toString()] = position;
         }
       }
     }
@@ -939,14 +953,17 @@ module.exports = class LevelModel {
 
   findEmissivesThatTouch(position, emissives) {
     var emissivesThatTouch = [];
-    let y = position[1];
-    let x = position[0];
+    let y = position.y;
+    let x = position.x;
+
     //find emissives that are close enough to light us.
     for (var yIndex = y - 2; yIndex <= (y + 2); ++yIndex) {
       for (var xIndex = x - 2; xIndex <= (x + 2); ++xIndex) {
 
+        let touchingPosition = new Position(xIndex, yIndex);
+
         //Ensure we're looking inside the map
-        if (!this.inBounds([xIndex, yIndex])) {
+        if (!this.inBounds(touchingPosition)) {
           continue;
         }
 
@@ -956,7 +973,7 @@ module.exports = class LevelModel {
         }
 
         for (var torch in emissives) {
-          if (emissives[torch][0] === xIndex && emissives[torch][1] === yIndex) {
+          if (Position.equals(emissives[torch], touchingPosition)) {
             emissivesThatTouch.push(emissives[torch]);
           }
         }
@@ -983,8 +1000,9 @@ module.exports = class LevelModel {
 
       for (y = 0; y < this.planeHeight; ++y) {
         for (x = 0; x < this.planeWidth; ++x) {
-          const groundBlock = this.groundPlane.getBlockAt([x, y]);
-          const actionBlock = this.actionPlane.getBlockAt([x, y]);
+          const position = new Position(x, y);
+          const groundBlock = this.groundPlane.getBlockAt(position);
+          const actionBlock = this.actionPlane.getBlockAt(position);
 
           if (groundBlock.isEmissive && actionBlock.isEmpty ||
             (!actionBlock.isEmpty && actionBlock.isEmissive)) {
@@ -1042,10 +1060,12 @@ module.exports = class LevelModel {
       x = index % this.planeWidth;
       y = Math.floor(index / this.planeWidth);
 
+      const position = new Position(x, y);
+
       hasRight = false;
 
-      const block = plane.getBlockAt([x, y]);
-      const groundBlock = this.groundPlane.getBlockAt([x, y]);
+      const block = plane.getBlockAt(position);
+      const groundBlock = this.groundPlane.getBlockAt(position);
       if (block.isEmpty || block.isTransparent || block.getIsLiquid()) {
         let atlas = 'AO';
         if (block.blockType === 'lava') {
@@ -1074,7 +1094,7 @@ module.exports = class LevelModel {
         }
 
         // Neighbor AO.
-        const surrounding = plane.getSurroundingBlocks([x, y]);
+        const surrounding = plane.getSurroundingBlocks(position);
         if (x < this.planeWidth - 1 && this.occludedBy(surrounding.east)) {
           // needs a left side AO shadow
           this.shadingPlane.push({ x, y, atlas, type: 'AOeffect_Left' });
@@ -1094,7 +1114,7 @@ module.exports = class LevelModel {
             });
 
             if (y > 0 && x > 0 &&
-              plane.getBlockAt([x - 1, y - 1]).getIsEmptyOrEntity()) {
+              plane.getBlockAt(Position.north(Position.west(position))).getIsEmptyOrEntity()) {
               this.shadingPlane.push({
                 x,
                 y,
