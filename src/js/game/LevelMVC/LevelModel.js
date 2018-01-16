@@ -58,13 +58,13 @@ module.exports = class LevelModel {
     this.isDaytime = this.initialLevelData.isDaytime === undefined || this.initialLevelData.isDaytime;
 
     let levelData = Object.create(this.initialLevelData);
-    const position = Position.fromArray(levelData.playerStartPosition);
     if (this.initialLevelData.usePlayer !== undefined) {
       this.usePlayer = this.initialLevelData.usePlayer;
     } else {
       this.usePlayer = true;
     }
     if (this.usePlayer) {
+      const position = Position.fromArray(levelData.playerStartPosition);
       this.player = new Player(
         this.controller,
         'Player',
