@@ -194,7 +194,17 @@ module.exports = class LevelModel {
     return resultCount >= count;
   }
 
+  /**
+   * @param {string} entityType
+   * @param {Position|Number[]} position to check against as either a Position
+   *        instance or an array of the form [x, y]. Array-style position is
+   *        supported for compability with the verification API
+   */
   isEntityAt(entityType, position) {
+    if (Array.isArray(position)) {
+      position = Position.fromArray(position);
+    }
+
     var entityList = this.controller.levelEntity.getEntitiesOfType(entityType);
     for (var i = 0; i < entityList.length; i++) {
       var entity = entityList[i];
@@ -301,9 +311,18 @@ module.exports = class LevelModel {
     return blocksOfType.length;
   }
 
+  /**
+   * @param {Position|Number[]} position to check against as either a Position
+   *        instance or an array of the form [x, y]. Array-style position is
+   *        supported for compability with the verification API
+   */
   isPlayerAt(position) {
     if (!this.usePlayer) {
       return false;
+    }
+
+    if (Array.isArray(position)) {
+      position = Position.fromArray(position);
     }
     return Position.equals(this.player.position, position);
   }
