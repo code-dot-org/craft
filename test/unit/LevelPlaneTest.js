@@ -3,6 +3,7 @@ const test = require('tape');
 const LevelPlane = require('../../src/js/game/LevelMVC/LevelPlane');
 const LevelBlock = require('../../src/js/game/LevelMVC/LevelBlock');
 const FacingDirection = require('../../src/js/game/LevelMVC/FacingDirection');
+const Position = require('../../src/js/game/LevelMVC/Position');
 
 test('get blocks', t => {
   const data = [
@@ -12,29 +13,29 @@ test('get blocks', t => {
   ];
   const plane = new LevelPlane(data, 4, 3, null, "actionPlane");
 
-  t.equal(plane.getBlockAt([0, 0]).blockType, 'grass');
-  t.equal(plane.getBlockAt([2, 1]).blockType, 'water');
-  t.equal(plane.getBlockAt([2, 2]).blockType, 'stone');
-  t.equal(plane.getBlockAt([1, 0]).blockType, 'dirt');
-  t.equal(plane.getBlockAt([-1, -1], undefined));
-  t.equal(plane.getBlockAt([4, 1]), undefined);
-  t.equal(plane.getBlockAt([2, 3]), undefined);
+  t.equal(plane.getBlockAt(new Position(0, 0)).blockType, 'grass');
+  t.equal(plane.getBlockAt(new Position(2, 1)).blockType, 'water');
+  t.equal(plane.getBlockAt(new Position(2, 2)).blockType, 'stone');
+  t.equal(plane.getBlockAt(new Position(1, 0)).blockType, 'dirt');
+  t.equal(plane.getBlockAt(new Position(-1, -1), undefined));
+  t.equal(plane.getBlockAt(new Position(4, 1)), undefined);
+  t.equal(plane.getBlockAt(new Position(2, 3)), undefined);
 
-  t.deepEqual(plane.getOrthogonalBlocks([1, 1]), {
+  t.deepEqual(plane.getOrthogonalBlocks(new Position(1, 1)), {
     north: {block: new LevelBlock('dirt'), relative: FacingDirection.South},
     south: {block: new LevelBlock('dirt'), relative: FacingDirection.North},
     east: {block: new LevelBlock('water'), relative: FacingDirection.West},
     west: {block: new LevelBlock('water'), relative: FacingDirection.East},
   });
 
-  t.deepEqual(plane.getOrthogonalBlocks([2, 0]), {
+  t.deepEqual(plane.getOrthogonalBlocks(new Position(2, 0)), {
     north: {block: undefined, relative: FacingDirection.South},
     south: {block: new LevelBlock('water'), relative: FacingDirection.North},
     east: {block: new LevelBlock('sand'), relative: FacingDirection.West},
     west: {block: new LevelBlock('dirt'), relative: FacingDirection.East},
   });
 
-  t.deepEqual(plane.getOrthogonalBlocks([2, 3]), {
+  t.deepEqual(plane.getOrthogonalBlocks(new Position(2, 3)), {
     north: {block: new LevelBlock('stone'), relative: FacingDirection.South},
     south: {block: undefined, relative: FacingDirection.North},
     east: {block: undefined, relative: FacingDirection.West},
@@ -54,21 +55,21 @@ test('redstone wires', t => {
   const plane = new LevelPlane(data, 6, 4, null, "actionPlane");
 
   // Place the test pattern.
-  plane.setBlockAt([0, 0], new LevelBlock('redstoneWire'));
-  plane.setBlockAt([2, 0], new LevelBlock('redstoneWire'));
-  plane.setBlockAt([3, 0], new LevelBlock('redstoneWire'));
-  plane.setBlockAt([4, 0], new LevelBlock('redstoneWire'));
-  plane.setBlockAt([1, 1], new LevelBlock('redstoneWire'));
-  plane.setBlockAt([2, 1], new LevelBlock('redstoneWire'));
-  plane.setBlockAt([4, 1], new LevelBlock('redstoneWire'));
-  plane.setBlockAt([0, 2], new LevelBlock('redstoneWire'));
-  plane.setBlockAt([1, 2], new LevelBlock('redstoneWire'));
-  plane.setBlockAt([2, 2], new LevelBlock('redstoneWire'));
-  plane.setBlockAt([3, 2], new LevelBlock('redstoneWire'));
-  plane.setBlockAt([5, 2], new LevelBlock('redstoneWire'));
-  plane.setBlockAt([1, 3], new LevelBlock('redstoneWire'));
-  plane.setBlockAt([4, 3], new LevelBlock('redstoneWire'));
-  plane.setBlockAt([5, 3], new LevelBlock('redstoneWire'));
+  plane.setBlockAt(new Position(0, 0), new LevelBlock('redstoneWire'));
+  plane.setBlockAt(new Position(2, 0), new LevelBlock('redstoneWire'));
+  plane.setBlockAt(new Position(3, 0), new LevelBlock('redstoneWire'));
+  plane.setBlockAt(new Position(4, 0), new LevelBlock('redstoneWire'));
+  plane.setBlockAt(new Position(1, 1), new LevelBlock('redstoneWire'));
+  plane.setBlockAt(new Position(2, 1), new LevelBlock('redstoneWire'));
+  plane.setBlockAt(new Position(4, 1), new LevelBlock('redstoneWire'));
+  plane.setBlockAt(new Position(0, 2), new LevelBlock('redstoneWire'));
+  plane.setBlockAt(new Position(1, 2), new LevelBlock('redstoneWire'));
+  plane.setBlockAt(new Position(2, 2), new LevelBlock('redstoneWire'));
+  plane.setBlockAt(new Position(3, 2), new LevelBlock('redstoneWire'));
+  plane.setBlockAt(new Position(5, 2), new LevelBlock('redstoneWire'));
+  plane.setBlockAt(new Position(1, 3), new LevelBlock('redstoneWire'));
+  plane.setBlockAt(new Position(4, 3), new LevelBlock('redstoneWire'));
+  plane.setBlockAt(new Position(5, 3), new LevelBlock('redstoneWire'));
 
   let expected = [
     '',          null,        'DownRight', 'Horizontal','DownLeft',  null,
@@ -80,10 +81,10 @@ test('redstone wires', t => {
   t.deepEqual(plane._data.map(block => block.blockType), expected);
 
   // Destroy a few wires.
-  plane.setBlockAt([2, 1], new LevelBlock(''));
-  plane.setBlockAt([3, 0], new LevelBlock(''));
-  plane.setBlockAt([0, 2], new LevelBlock(''));
-  plane.setBlockAt([5, 3], new LevelBlock(''));
+  plane.setBlockAt(new Position(2, 1), new LevelBlock(''));
+  plane.setBlockAt(new Position(3, 0), new LevelBlock(''));
+  plane.setBlockAt(new Position(0, 2), new LevelBlock(''));
+  plane.setBlockAt(new Position(5, 3), new LevelBlock(''));
 
   expected = [
     '',          null,        '',          null,        'Vertical',   null,
@@ -116,10 +117,10 @@ test('rail connections: T-junctions', t => {
   ];
   const plane = new LevelPlane(data, 7, 6, null, "actionPlane");
 
-  t.equal(plane.setBlockAt([1, 0], new LevelBlock('rails')).blockType, 'railsSouthEast');
-  t.equal(plane.setBlockAt([5, 1], new LevelBlock('rails')).blockType, 'railsSouthEast');
-  t.equal(plane.setBlockAt([1, 4], new LevelBlock('rails')).blockType, 'railsNorthEast');
-  t.equal(plane.setBlockAt([5, 4], new LevelBlock('rails')).blockType, 'railsSouthWest');
+  t.equal(plane.setBlockAt(new Position(1, 0), new LevelBlock('rails')).blockType, 'railsSouthEast');
+  t.equal(plane.setBlockAt(new Position(5, 1), new LevelBlock('rails')).blockType, 'railsSouthEast');
+  t.equal(plane.setBlockAt(new Position(1, 4), new LevelBlock('rails')).blockType, 'railsNorthEast');
+  t.equal(plane.setBlockAt(new Position(5, 4), new LevelBlock('rails')).blockType, 'railsSouthWest');
 
   const expected = [
     'rails',  'railsSE','railsW', '',       '',       'rails',  '',
@@ -156,10 +157,10 @@ test('rail connections: unpowered T-junctions', t => {
   ];
   const plane = new LevelPlane(data, 7, 6, null, "actionPlane");
 
-  t.equal(plane.setBlockAt([1, 0], new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
-  t.equal(plane.setBlockAt([5, 1], new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
-  t.equal(plane.setBlockAt([1, 4], new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
-  t.equal(plane.setBlockAt([5, 4], new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
+  t.equal(plane.setBlockAt(new Position(1, 0), new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
+  t.equal(plane.setBlockAt(new Position(5, 1), new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
+  t.equal(plane.setBlockAt(new Position(1, 4), new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
+  t.equal(plane.setBlockAt(new Position(5, 4), new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
 
   const expected = [
     'railsE',  'railsUEW','railsW',  '',        '',        'rails',   '',
@@ -186,10 +187,10 @@ test('rail connections: 2x2 loop', t => {
   const data = new Array(4).fill('');
   const plane = new LevelPlane(data, 2, 2, null, "actionPlane");
 
-  t.equal(plane.setBlockAt([1, 0], new LevelBlock('rails')).blockType, 'rails');
-  t.equal(plane.setBlockAt([0, 0], new LevelBlock('rails')).blockType, 'railsEast');
-  t.equal(plane.setBlockAt([0, 1], new LevelBlock('rails')).blockType, 'railsNorth');
-  t.equal(plane.setBlockAt([1, 1], new LevelBlock('rails')).blockType, 'railsNorthWest');
+  t.equal(plane.setBlockAt(new Position(1, 0), new LevelBlock('rails')).blockType, 'rails');
+  t.equal(plane.setBlockAt(new Position(0, 0), new LevelBlock('rails')).blockType, 'railsEast');
+  t.equal(plane.setBlockAt(new Position(0, 1), new LevelBlock('rails')).blockType, 'railsNorth');
+  t.equal(plane.setBlockAt(new Position(1, 1), new LevelBlock('rails')).blockType, 'railsNorthWest');
 
   const expected = [
     'railsSouthEast', 'railsSouthWest',
@@ -211,17 +212,17 @@ test('rail connections: longer track', t => {
   const data = new Array(16).fill('');
   const plane = new LevelPlane(data, 4, 4, null, "actionPlane");
 
-  plane.setBlockAt([0, 0], new LevelBlock('rails'));
-  plane.setBlockAt([1, 1], new LevelBlock('rails'));
-  plane.setBlockAt([1, 0], new LevelBlock('rails'));
-  plane.setBlockAt([1, 2], new LevelBlock('rails'));
-  plane.setBlockAt([1, 3], new LevelBlock('rails'));
-  plane.setBlockAt([2, 3], new LevelBlock('rails'));
-  plane.setBlockAt([3, 3], new LevelBlock('rails'));
-  plane.setBlockAt([3, 2], new LevelBlock('rails'));
-  plane.setBlockAt([2, 2], new LevelBlock('rails'));
-  plane.setBlockAt([2, 1], new LevelBlock('rails'));
-  plane.setBlockAt([3, 1], new LevelBlock('rails'));
+  plane.setBlockAt(new Position(0, 0), new LevelBlock('rails'));
+  plane.setBlockAt(new Position(1, 1), new LevelBlock('rails'));
+  plane.setBlockAt(new Position(1, 0), new LevelBlock('rails'));
+  plane.setBlockAt(new Position(1, 2), new LevelBlock('rails'));
+  plane.setBlockAt(new Position(1, 3), new LevelBlock('rails'));
+  plane.setBlockAt(new Position(2, 3), new LevelBlock('rails'));
+  plane.setBlockAt(new Position(3, 3), new LevelBlock('rails'));
+  plane.setBlockAt(new Position(3, 2), new LevelBlock('rails'));
+  plane.setBlockAt(new Position(2, 2), new LevelBlock('rails'));
+  plane.setBlockAt(new Position(2, 1), new LevelBlock('rails'));
+  plane.setBlockAt(new Position(3, 1), new LevelBlock('rails'));
 
   const expected = [
     'railsEast',      'railsSouthWest', '',               '',
@@ -246,13 +247,13 @@ test('rail connections: destroy block', t => {
   const data = new Array(9).fill('');
   const plane = new LevelPlane(data, 3, 3, null, "actionPlane");
 
-  plane.setBlockAt([0, 1], new LevelBlock('rails'));
-  plane.setBlockAt([1, 1], new LevelBlock('rails'));
-  plane.setBlockAt([1, 2], new LevelBlock('rails'));
-  plane.setBlockAt([1, 0], new LevelBlock('rails'));
+  plane.setBlockAt(new Position(0, 1), new LevelBlock('rails'));
+  plane.setBlockAt(new Position(1, 1), new LevelBlock('rails'));
+  plane.setBlockAt(new Position(1, 2), new LevelBlock('rails'));
+  plane.setBlockAt(new Position(1, 0), new LevelBlock('rails'));
 
   // Destroy track block.
-  plane.setBlockAt([0, 1], new LevelBlock(''));
+  plane.setBlockAt(new Position(0, 1), new LevelBlock(''));
 
   const expected = [
     '',               'rails','',
@@ -275,12 +276,12 @@ test('rail connections: destroy block', t => {
   const data = new Array(9).fill('');
   const plane = new LevelPlane(data, 3, 3, null, "actionPlane");
 
-  plane.setBlockAt([1, 2], new LevelBlock('rails'));
-  plane.setBlockAt([1, 1], new LevelBlock('rails'));
-  plane.setBlockAt([0, 1], new LevelBlock('rails'));
+  plane.setBlockAt(new Position(1, 2), new LevelBlock('rails'));
+  plane.setBlockAt(new Position(1, 1), new LevelBlock('rails'));
+  plane.setBlockAt(new Position(0, 1), new LevelBlock('rails'));
 
   // Destroy track block.
-  plane.setBlockAt([0, 1], new LevelBlock(''));
+  plane.setBlockAt(new Position(0, 1), new LevelBlock(''));
 
   let expected = [
     '', '','',
@@ -290,7 +291,7 @@ test('rail connections: destroy block', t => {
 
   t.deepEqual(plane._data.map(block => block.blockType), expected);
 
-  plane.setBlockAt([1, 0], new LevelBlock('rails'));
+  plane.setBlockAt(new Position(1, 0), new LevelBlock('rails'));
 
   expected = [
     '', 'railsSouth','',
@@ -317,10 +318,10 @@ test('redstone charge: place block', t => {
   ];
   const plane = new LevelPlane(data, 3, 3, null, "actionPlane");
 
-  plane.setBlockAt([2, 0], new LevelBlock('redstoneWire'));
-  plane.setBlockAt([2, 1], new LevelBlock('redstoneWire'));
-  plane.setBlockAt([2, 2], new LevelBlock('redstoneWire'));
-  plane.setBlockAt([0, 2], new LevelBlock('redstoneWire'));
+  plane.setBlockAt(new Position(2, 0), new LevelBlock('redstoneWire'));
+  plane.setBlockAt(new Position(2, 1), new LevelBlock('redstoneWire'));
+  plane.setBlockAt(new Position(2, 2), new LevelBlock('redstoneWire'));
+  plane.setBlockAt(new Position(0, 2), new LevelBlock('redstoneWire'));
 
   const expected = [
     '',         'railsRedstoneTorch','redstoneWireDownLeftOn',
@@ -342,8 +343,8 @@ test('powered rails: vertical charge propagation', t => {
   const plane = new LevelPlane(data, 3, 3, null, "actionPlane");
 
   plane.refreshRedstone();
-  t.equal(plane.getBlockAt([1, 1]).blockType, "railsPoweredSouth");
-  t.equal(plane.getBlockAt([1, 2]).blockType, "railsPoweredNorth");
+  t.equal(plane.getBlockAt(new Position(1, 1)).blockType, "railsPoweredSouth");
+  t.equal(plane.getBlockAt(new Position(1, 2)).blockType, "railsPoweredNorth");
 
   t.end();
 });
@@ -357,8 +358,8 @@ test('powered rails: horizontal charge propagation', t => {
   const plane = new LevelPlane(data, 3, 3, null, "actionPlane");
 
   plane.refreshRedstone();
-  t.equal(plane.getBlockAt([1, 1]).blockType, "railsPoweredEast");
-  t.equal(plane.getBlockAt([2, 1]).blockType, "railsPoweredWest");
+  t.equal(plane.getBlockAt(new Position(1, 1)).blockType, "railsPoweredEast");
+  t.equal(plane.getBlockAt(new Position(2, 1)).blockType, "railsPoweredWest");
 
   t.end();
 });
@@ -391,10 +392,10 @@ test('powered rails: only propagate along straight lines', t => {
   ];
   const plane = new LevelPlane(data, 8, 8, null, "actionPlane");
 
-  t.equal(plane.setBlockAt([2, 1], new LevelBlock('railsUnpowered')).blockType, 'railsPoweredEastWest');
-  t.equal(plane.setBlockAt([2, 5], new LevelBlock('railsUnpowered')).blockType, 'railsPoweredEastWest');
-  t.equal(plane.setBlockAt([6, 2], new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
-  t.equal(plane.setBlockAt([6, 5], new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
+  t.equal(plane.setBlockAt(new Position(2, 1), new LevelBlock('railsUnpowered')).blockType, 'railsPoweredEastWest');
+  t.equal(plane.setBlockAt(new Position(2, 5), new LevelBlock('railsUnpowered')).blockType, 'railsPoweredEastWest');
+  t.equal(plane.setBlockAt(new Position(6, 2), new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
+  t.equal(plane.setBlockAt(new Position(6, 5), new LevelBlock('railsUnpowered')).blockType, 'railsUnpoweredEastWest');
 
   const expected = [
     '',       '',         '',         '',        '', '',        'railsT',   '',
@@ -435,7 +436,7 @@ test('redstone charge: destroy block', t => {
   ];
   const plane = new LevelPlane(data, 3, 3, null, "actionPlane");
 
-  plane.setBlockAt([2, 0], new LevelBlock(''));
+  plane.setBlockAt(new Position(2, 0), new LevelBlock(''));
 
   const expected = [
     '',         'railsRedstoneTorch',            '',
@@ -462,7 +463,7 @@ test('torch charge: destroy block', t => {
   ];
   const plane = new LevelPlane(data, 3, 3, null, "actionPlane");
 
-  plane.setBlockAt([1, 0], new LevelBlock(''));
+  plane.setBlockAt(new Position(1, 0), new LevelBlock(''));
 
   const expected = [
     '',                  '',         'redstoneWireVertical',
@@ -489,7 +490,7 @@ test('torch charge: place block', t => {
   ];
   const plane = new LevelPlane(data, 3, 3, null, "actionPlane");
 
-  plane.setBlockAt([1, 2], new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt(new Position(1, 2), new LevelBlock('railsRedstoneTorch'));
 
   const expected = [
     'redstoneWire',         '',         'redstoneWireVerticalOn',
@@ -510,10 +511,10 @@ test('iron door open: place block', t => {
   ];
   const plane = new LevelPlane(data, 3, 3, null, "actionPlane");
 
-  plane.setBlockAt([1, 0], new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt(new Position(1, 0), new LevelBlock('railsRedstoneTorch'));
 
-  t.false(plane.getBlockAt([2, 2]).isOpen);
-  t.true(plane.getBlockAt([0, 2]).isOpen);
+  t.false(plane.getBlockAt(new Position(2, 2)).isOpen);
+  t.true(plane.getBlockAt(new Position(0, 2)).isOpen);
 
   t.end();
 });
@@ -526,10 +527,10 @@ test('iron door close: destroy block', t => {
   ];
   const plane = new LevelPlane(data, 3, 3, null, "actionPlane");
 
-  plane.setBlockAt([0, 0], new LevelBlock(''));
+  plane.setBlockAt(new Position(0, 0), new LevelBlock(''));
 
-  t.false(plane.getBlockAt([2, 2]).isOpen);
-  t.false(plane.getBlockAt([1, 2]).isOpen);
+  t.false(plane.getBlockAt(new Position(2, 2)).isOpen);
+  t.false(plane.getBlockAt(new Position(1, 2)).isOpen);
 
   t.end();
 });
@@ -545,7 +546,7 @@ test('piston activate: place block', t => {
   ];
   const plane = new LevelPlane(data, 8, 6, null, "actionPlane");
 
-  plane.setBlockAt([4, 2], new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt(new Position(4, 2), new LevelBlock('railsRedstoneTorch'));
 
   const expected = [
     '','grass','pistonArmLeft','pistonLeftOn','','pistonRightOn','pistonArmRight','grass',
@@ -572,7 +573,7 @@ test('piston deactivate: destroy block', t => {
   ];
   const plane = new LevelPlane(data, 8, 6, null, "actionPlane");
 
-  plane.setBlockAt([4, 2], new LevelBlock(''));
+  plane.setBlockAt(new Position(4, 2), new LevelBlock(''));
 
   const expected = [
     '','grass','','pistonLeft','','pistonRight','','grass',
@@ -599,7 +600,7 @@ test('sticky piston activate: place block', t => {
   ];
   const plane = new LevelPlane(data, 8, 6, null, "actionPlane");
 
-  plane.setBlockAt([4, 2], new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt(new Position(4, 2), new LevelBlock('railsRedstoneTorch'));
 
   const expected = [
     '','grass','pistonArmLeft','pistonLeftOnSticky','','pistonRightOnSticky','pistonArmRight','grass',
@@ -626,7 +627,7 @@ test('sticky piston deactivate: destroy block', t => {
   ];
   const plane = new LevelPlane(data, 8, 6, null, "actionPlane");
 
-  plane.setBlockAt([4, 2], new LevelBlock(''));
+  plane.setBlockAt(new Position(4, 2), new LevelBlock(''));
 
   const expected = [
     '','','grass','pistonLeftSticky','','pistonRightSticky','grass','',
@@ -653,7 +654,7 @@ test('piston destroy torch: adjacent to piston', t => {
   ];
   const plane = new LevelPlane(data, 8, 6, null, "actionPlane");
 
-  plane.setBlockAt([3, 2], new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt(new Position(3, 2), new LevelBlock('railsRedstoneTorch'));
 
   const expected = [
     '','','pistonArmLeft','pistonLeftOn','','','','',
@@ -680,7 +681,7 @@ test('piston destroy torch: not adjacent to piston', t => {
   ];
   const plane = new LevelPlane(data, 8, 6, null, "actionPlane");
 
-  plane.setBlockAt([3, 2], new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt(new Position(3, 2), new LevelBlock('railsRedstoneTorch'));
 
   const expected = [
     '','grass','pistonArmLeft','pistonLeftOn','','','','',
@@ -707,7 +708,7 @@ test('piston destroy door: adjacent to piston', t => {
   ];
   const plane = new LevelPlane(data, 8, 6, null, "actionPlane");
 
-  plane.setBlockAt([3, 2], new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt(new Position(3, 2), new LevelBlock('railsRedstoneTorch'));
 
   const expected = [
     '','','pistonArmLeft','pistonLeftOn','','','','',
@@ -734,7 +735,7 @@ test('piston destroy door: not adjacent to piston', t => {
   ];
   const plane = new LevelPlane(data, 8, 6, null, "actionPlane");
 
-  plane.setBlockAt([3, 2], new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt(new Position(3, 2), new LevelBlock('railsRedstoneTorch'));
 
   const expected = [
     '','grass','pistonArmLeft','pistonLeftOn','','','','',
@@ -761,7 +762,7 @@ test('piston destroy pressure Plate: adjacent to piston', t => {
   ];
   const plane = new LevelPlane(data, 8, 6, null, "actionPlane");
 
-  plane.setBlockAt([3, 2], new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt(new Position(3, 2), new LevelBlock('railsRedstoneTorch'));
 
   const expected = [
     '','','pistonArmLeft','pistonLeftOn','','','','',
@@ -788,7 +789,7 @@ test('piston destroy door: not adjacent to piston', t => {
   ];
   const plane = new LevelPlane(data, 8, 6, null, "actionPlane");
 
-  plane.setBlockAt([3, 2], new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt(new Position(3, 2), new LevelBlock('railsRedstoneTorch'));
 
   const expected = [
     '','grass','pistonArmLeft','pistonLeftOn','','','','',
@@ -815,7 +816,7 @@ test('piston destroy redstoneWire: adjacent to piston', t => {
   ];
   const plane = new LevelPlane(data, 8, 6, null, "actionPlane");
 
-  plane.setBlockAt([3, 2], new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt(new Position(3, 2), new LevelBlock('railsRedstoneTorch'));
 
   const expected = [
     '','','pistonArmLeft','pistonLeftOn','','','','',
@@ -842,7 +843,7 @@ test('piston destroy redstoneWire: not adjacent to piston', t => {
   ];
   const plane = new LevelPlane(data, 8, 6, null, "actionPlane");
 
-  plane.setBlockAt([3, 2], new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt(new Position(3, 2), new LevelBlock('railsRedstoneTorch'));
 
   const expected = [
     '','grass','pistonArmLeft','pistonLeftOn','','','','',
@@ -869,7 +870,7 @@ test('piston directional power: torch at arm side', t => {
   ];
   const plane = new LevelPlane(data, 8, 6, null, "actionPlane");
 
-  plane.setBlockAt([2, 0], new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt(new Position(2, 0), new LevelBlock('railsRedstoneTorch'));
 
   const expected = [
     '','','railsRedstoneTorch','pistonLeft','','','','',
@@ -896,7 +897,7 @@ test('sticky piston directional power: torch at arm side', t => {
   ];
   const plane = new LevelPlane(data, 8, 6, null, "actionPlane");
 
-  plane.setBlockAt([2, 0], new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt(new Position(2, 0), new LevelBlock('railsRedstoneTorch'));
 
   const expected = [
     '','','railsRedstoneTorch','pistonLeftSticky','','','','',
@@ -923,10 +924,10 @@ test('certain objets arent weakly charged', t => {
   ];
   const plane = new LevelPlane(data, 8, 6, null, "actionPlane");
 
-  plane.setBlockAt([0, 5], new LevelBlock('railsRedstoneTorch'));
-  plane.setBlockAt([2, 5], new LevelBlock('railsRedstoneTorch'));
-  plane.setBlockAt([4, 5], new LevelBlock('railsRedstoneTorch'));
-  plane.setBlockAt([6, 5], new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt(new Position(0, 5), new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt(new Position(2, 5), new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt(new Position(4, 5), new LevelBlock('railsRedstoneTorch'));
+  plane.setBlockAt(new Position(6, 5), new LevelBlock('railsRedstoneTorch'));
 
   const expected = [
     '','','','','','','','',
@@ -953,10 +954,10 @@ test('Sticky piston grabbing, do not pull', t => {
   ];
   const plane = new LevelPlane(data, 8, 6, null, "actionPlane");
 
-  plane.setBlockAt([0, 5], new LevelBlock(''));
-  plane.setBlockAt([2, 5], new LevelBlock(''));
-  plane.setBlockAt([4, 5], new LevelBlock(''));
-  plane.setBlockAt([6, 5], new LevelBlock(''));
+  plane.setBlockAt(new Position(0, 5), new LevelBlock(''));
+  plane.setBlockAt(new Position(2, 5), new LevelBlock(''));
+  plane.setBlockAt(new Position(4, 5), new LevelBlock(''));
+  plane.setBlockAt(new Position(6, 5), new LevelBlock(''));
 
   const expected = [
     '','','','','','','','',
@@ -983,10 +984,10 @@ test('Sticky piston grabbing, do pull', t => {
   ];
   const plane = new LevelPlane(data, 8, 6, null, "actionPlane");
 
-  plane.setBlockAt([0, 5], new LevelBlock(''));
-  plane.setBlockAt([2, 5], new LevelBlock(''));
-  plane.setBlockAt([4, 5], new LevelBlock(''));
-  plane.setBlockAt([6, 5], new LevelBlock(''));
+  plane.setBlockAt(new Position(0, 5), new LevelBlock(''));
+  plane.setBlockAt(new Position(2, 5), new LevelBlock(''));
+  plane.setBlockAt(new Position(4, 5), new LevelBlock(''));
+  plane.setBlockAt(new Position(6, 5), new LevelBlock(''));
 
   const expected = [
     '','','','','','','','',
@@ -1013,7 +1014,7 @@ test('Weak Charge: placeblock', t => {
   ];
   const plane = new LevelPlane(data, 8, 6, null, "actionPlane");
 
-  plane.setBlockAt([0, 1], new LevelBlock('grass'));
+  plane.setBlockAt(new Position(0, 1), new LevelBlock('grass'));
 
   const expected = [
     '','','','','','','','',
@@ -1040,7 +1041,7 @@ test('weak charge: destroy block', t => {
   ];
   const plane = new LevelPlane(data, 8, 6, null, "actionPlane");
 
-  plane.setBlockAt([0, 1], new LevelBlock(''));
+  plane.setBlockAt(new Position(0, 1), new LevelBlock(''));
 
   const expected = [
     '','','','','','','','',
