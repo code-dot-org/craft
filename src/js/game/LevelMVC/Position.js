@@ -33,14 +33,21 @@ module.exports = class Position {
     return left[0] === right[0] && left[1] === right[1];
   }
 
+  static directionToOffsetPosition(direction) {
+    const offset = FacingDirection.directionToOffset(direction);
+    if (offset) {
+      return Position.fromArray(offset);
+    }
+  }
+
   static isAdjacent(left, right) {
     return directions
-      .map(FacingDirection.directionToOffset)
+      .map(Position.directionToOffsetPosition)
       .some(offset => Position.equals(Position.add(left, offset), right));
   }
 
   static forward(position, direction) {
-    return Position.add(position, FacingDirection.directionToOffset(direction));
+    return Position.add(position, Position.directionToOffsetPosition(direction));
   }
 
   static north(position) {

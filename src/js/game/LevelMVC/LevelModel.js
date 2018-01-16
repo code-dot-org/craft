@@ -250,7 +250,7 @@ module.exports = class LevelModel {
   }
 
   getNextRailPosition(entity = this.player, direction) {
-    const offset = FacingDirection.directionToOffset(direction) || new Position(0, 0);
+    const offset = Position.directionToOffsetPosition(direction) || new Position(0, 0);
     return Position.add(entity.position, offset);
   }
 
