@@ -1890,6 +1890,7 @@ module.exports = class LevelView {
     const frameEnd = this.miniBlocks[frame][2];
     const xOffset = -10 - (xOffsetRange / 2) + (Math.random() * xOffsetRange);
     const yOffset = 0 - (yOffsetRange / 2) + (Math.random() * yOffsetRange) + this.actionGroup.yOffset;
+    const offset = new Position(xOffset, yOffset);
 
     frameList = Phaser.Animation.generateFrameNames(framePrefix, frameStart, frameEnd, ".png", 3);
     sprite = this.actionGroup.create(xOffset + 40 * x, yOffset + 40 * y, atlas, "");
@@ -1898,15 +1899,15 @@ module.exports = class LevelView {
     // If direct player control, we have stuff to do to manage miniblock pick up
     if (this.controller.getIsDirectPlayerControl()) {
       const distanceBetween = function (position, position2) {
-        return Math.sqrt(Math.pow(position[0] - position2[0], 2) + Math.pow(position[1] - position2[1], 2));
+        return Math.sqrt(Math.pow(position.x - position2.x, 2) + Math.pow(position.y - position2.y, 2));
       };
 
-      const collectiblePosition = this.controller.levelModel.spritePositionToIndex([xOffset, yOffset], [sprite.x, sprite.y]);
-      this.collectibleItems.push([sprite, [xOffset, yOffset], blockType, collectibleDistance]);
+      const collectiblePosition = this.controller.levelModel.spritePositionToIndex(offset, new Position(sprite.x, sprite.y));
+      this.collectibleItems.push([sprite, offset, blockType, collectibleDistance]);
       anim.onComplete.add(() => {
         if (this.controller.levelModel.usePlayer) {
           if (distanceBetween(this.player.position, collectiblePosition) < collectibleDistance) {
-            this.player.collectItems([x,y]);
+            this.player.collectItems(new Position(x, y));
           }
         }
       });

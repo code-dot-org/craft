@@ -226,7 +226,7 @@ module.exports = class Player extends BaseEntity {
       if (sprite === null) {
         collectibles.splice(i, 1);
       } else {
-        let collectiblePosition = this.controller.levelModel.spritePositionToIndex(offset, [sprite.x, sprite.y]);
+        let collectiblePosition = this.controller.levelModel.spritePositionToIndex(offset, new Position(sprite.x, sprite.y));
         if (Position.absoluteDistanceSquare(targetPosition, collectiblePosition) < collectibleDistance) {
           this.controller.levelView.playItemAcquireAnimation(this.position, this.facing, sprite, () => { }, blockType);
           collectibles.splice(i, 1);
