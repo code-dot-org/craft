@@ -7,7 +7,6 @@ const {
   opposite,
   turnDirection,
   turn,
-  directionToOffset,
   directionToRelative
 } = require("./FacingDirection.js");
 
@@ -163,7 +162,7 @@ module.exports = class LevelPlane {
         [North, South, East, West].forEach((direction) => {
           // if the block in the given cardinal direction is a rail block with a
           // connection to this one, sever that connection
-          const offset = directionToOffset(direction);
+          const offset = Position.directionToOffsetPosition(direction);
           const adjacentBlock = this.getBlockAt(Position.add(position, offset));
           if (adjacentBlock && adjacentBlock.isRail) {
             if (adjacentBlock.connectionA === opposite(direction)) {
@@ -566,7 +565,7 @@ module.exports = class LevelPlane {
     const direction = block.getPistonDirection();
     let armType = `pistonArm${directionToRelative(direction)}`;
 
-    const offset = directionToOffset(direction);
+    const offset = Position.directionToOffsetPosition(direction);
     const pos = Position.forward(position, direction);
     const workingNeighbor = this.getBlockAt(pos);
 
@@ -646,7 +645,7 @@ module.exports = class LevelPlane {
     let offPiston = new LevelBlock(newPistonType);
     if (this.getBlockAt(armPosition).getIsPistonArm()) {
       if (this.getBlockAt(pistonPosition).getIsStickyPiston()) {
-        const offset = directionToOffset(pistonType.getPistonDirection());
+        const offset = Position.directionToOffsetPosition(pistonType.getPistonDirection());
         const stuckBlockPosition = Position.add(armPosition, offset);
         if (this.inBounds(stuckBlockPosition) && this.getBlockAt(stuckBlockPosition).isStickable) {
           this.setBlockAt(armPosition, this.getBlockAt(stuckBlockPosition));
@@ -732,7 +731,7 @@ module.exports = class LevelPlane {
         }
         if (this.getBlockAt(position).getIsPiston()) {
           const piston = this.getBlockAt(position);
-          const ignoreThisSide = directionToOffset(piston.getPistonDirection()) || new Position(0, 0);
+          const ignoreThisSide = Position.directionToOffsetPosition(piston.getPistonDirection()) || new Position(0, 0);
           const posCheck = Position.add(position, ignoreThisSide);
           if (Position.equals(orthogonalPosition, posCheck)) {
             return false;

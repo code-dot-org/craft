@@ -97,9 +97,9 @@ test('Designer 5: Add Shear Sheep Behavior (push back)', t => {
     api.moveForward(null, 'Player');
 
     api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.player.position, [5, 3]));
-      t.equal(levelModel.getEntityAt([6, 3]), undefined);
-      t.equal(levelModel.getEntityAt([7, 3]).type, 'sheep');
+      t.true(Position.equals(levelModel.player.position, new Position(5, 3)));
+      t.equal(levelModel.getEntityAt(new Position(6, 3)), undefined);
+      t.equal(levelModel.getEntityAt(new Position(7, 3)).type, 'sheep');
       t.assert(!success);
       t.end();
 
@@ -220,7 +220,7 @@ test('Designer 7: Explode Stone Wall', t => {
     }
 
     api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.player.position, [7, 4]));
+      t.true(Position.equals(levelModel.player.position, new Position(7, 4)));
       t.assert(success);
       t.end();
 

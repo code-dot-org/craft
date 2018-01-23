@@ -96,7 +96,7 @@ test('canPlaceBlock, by entity case', t => {
 });
 
 test('sheep Drop', t => {
-  const sheep = new Sheep(mockGameController, "Sheep", 1, 1, "Sheep", true, 1);
+  const sheep = new Sheep(mockGameController, "Sheep", "Sheep", 1, 1, 1);
 
   // Sheep starts !naked
   t.false(sheep.naked);

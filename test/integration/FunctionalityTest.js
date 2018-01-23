@@ -13,8 +13,8 @@ test('Pistons: Entity Obstruction 1', t => {
     api.startAttempt((success, levelModel) => {
       t.deepEqual(levelModel.actionPlane._data[21].blockType, "");
 
-      t.true(Position.equals(levelModel.player.position, [4, 3]));
-      t.true(Position.equals(levelModel.agent.position, [1, 2]));
+      t.true(Position.equals(levelModel.player.position, new Position(4, 3)));
+      t.true(Position.equals(levelModel.agent.position, new Position(1, 2)));
       t.assert(success);
       t.end();
 
@@ -44,8 +44,8 @@ test('Pistons: Entity Obstruction 2', t => {
     api.startAttempt((success, levelModel) => {
       t.deepEqual(levelModel.actionPlane._data[21].blockType, "pistonArmLeft");
 
-      t.true(Position.equals(levelModel.player.position, [4, 3]));
-      t.true(Position.equals(levelModel.agent.position, [1, 3]));
+      t.true(Position.equals(levelModel.player.position, new Position(4, 3)));
+      t.true(Position.equals(levelModel.agent.position, new Position(1, 3)));
       t.assert(success);
       t.end();
 
@@ -70,7 +70,7 @@ test('Rails: Moving On to Ride', t => {
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.player.position, [9, 9]));
+      t.true(Position.equals(levelModel.player.position, new Position(9, 9)));
       t.assert(success);
       t.end();
 
@@ -89,7 +89,7 @@ test('Pressure Plate: Moving On to Rail', t => {
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.player.position, [6, 2]));
+      t.true(Position.equals(levelModel.player.position, new Position(6, 2)));
       t.notOk(levelModel.actionPlane._data[0].isPowered);
       t.assert(success);
       t.end();

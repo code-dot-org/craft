@@ -239,8 +239,8 @@ module.exports = class BaseEntity {
         let forwardPosition = this.controller.levelModel.getMoveForwardPosition(this);
         var forwardPositionInformation = this.controller.levelModel.canMoveForward(this);
         if (forwardPositionInformation[0]) {
-            let offset = FacingDirection.directionToOffset(this.facing);
-            let reverseOffset = FacingDirection.directionToOffset(FacingDirection.opposite(this.facing));
+            let offset = Position.directionToOffsetPosition(this.facing);
+            let reverseOffset = Position.directionToOffsetPosition(FacingDirection.opposite(this.facing));
             let weMovedOnTo = this.handleMoveOnPressurePlate(offset);
             this.doMoveForward(commandQueueItem, forwardPosition);
             if (!weMovedOnTo) {
@@ -261,8 +261,8 @@ module.exports = class BaseEntity {
         let backwardPosition = this.controller.levelModel.getMoveDirectionPosition(this, 2);
         var backwardPositionInformation = this.controller.levelModel.canMoveBackward(this);
         if (backwardPositionInformation[0]) {
-            let offset = FacingDirection.directionToOffset(FacingDirection.opposite(this.facing));
-            let reverseOffset = FacingDirection.directionToOffset(this.facing);
+            let offset = Position.directionToOffsetPosition(FacingDirection.opposite(this.facing));
+            let reverseOffset = Position.directionToOffsetPosition(this.facing);
             let weMovedOnTo = this.handleMoveOnPressurePlate(offset);
             this.doMoveBackward(commandQueueItem, backwardPosition);
             if (!weMovedOnTo) {

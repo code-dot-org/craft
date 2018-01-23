@@ -58,13 +58,13 @@ module.exports = class LevelModel {
     this.isDaytime = this.initialLevelData.isDaytime === undefined || this.initialLevelData.isDaytime;
 
     let levelData = Object.create(this.initialLevelData);
-    const position = Position.fromArray(levelData.playerStartPosition);
     if (this.initialLevelData.usePlayer !== undefined) {
       this.usePlayer = this.initialLevelData.usePlayer;
     } else {
       this.usePlayer = true;
     }
     if (this.usePlayer) {
+      const position = Position.fromArray(levelData.playerStartPosition);
       this.player = new Player(
         this.controller,
         'Player',
@@ -194,7 +194,17 @@ module.exports = class LevelModel {
     return resultCount >= count;
   }
 
+  /**
+   * @param {string} entityType
+   * @param {Position|Number[]} position to check against as either a Position
+   *        instance or an array of the form [x, y]. Array-style position is
+   *        supported for compability with the verification API
+   */
   isEntityAt(entityType, position) {
+    if (Array.isArray(position)) {
+      position = Position.fromArray(position);
+    }
+
     var entityList = this.controller.levelEntity.getEntitiesOfType(entityType);
     for (var i = 0; i < entityList.length; i++) {
       var entity = entityList[i];
@@ -250,7 +260,7 @@ module.exports = class LevelModel {
   }
 
   getNextRailPosition(entity = this.player, direction) {
-    const offset = FacingDirection.directionToOffset(direction) || new Position(0, 0);
+    const offset = Position.directionToOffsetPosition(direction) || new Position(0, 0);
     return Position.add(entity.position, offset);
   }
 
@@ -301,9 +311,18 @@ module.exports = class LevelModel {
     return blocksOfType.length;
   }
 
+  /**
+   * @param {Position|Number[]} position to check against as either a Position
+   *        instance or an array of the form [x, y]. Array-style position is
+   *        supported for compability with the verification API
+   */
   isPlayerAt(position) {
     if (!this.usePlayer) {
       return false;
+    }
+
+    if (Array.isArray(position)) {
+      position = Position.fromArray(position);
     }
     return Position.equals(this.player.position, position);
   }

@@ -54,9 +54,9 @@ test('Agent 1: Leave House', t => {
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, [3, 8]));
+      t.true(Position.equals(levelModel.agent.position, new Position(3, 8)));
 
-      t.true(Position.equals(levelModel.player.position, [8, 8]));
+      t.true(Position.equals(levelModel.player.position, new Position(8, 8)));
       t.assert(success);
       t.end();
 
@@ -101,9 +101,9 @@ test('Agent 2: Open Doors', t => {
     // Check the solutions
     api.startAttempt((success, levelModel) => {
       t.assert(levelModel.usingAgent);
-      t.true(Position.equals(levelModel.agent.position, [2, 5]));
+      t.true(Position.equals(levelModel.agent.position, new Position(2, 5)));
 
-      t.true(Position.equals(levelModel.player.position, [6, 1]));
+      t.true(Position.equals(levelModel.player.position, new Position(6, 1)));
       t.assert(success);
       t.end();
 
@@ -154,9 +154,9 @@ test('Agent 3: Open Doors 2.0', t => {
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, [0, 5]));
+      t.true(Position.equals(levelModel.agent.position, new Position(0, 5)));
 
-      t.true(Position.equals(levelModel.player.position, [9, 2]));
+      t.true(Position.equals(levelModel.player.position, new Position(9, 2)));
       t.assert(success);
       t.end();
 
@@ -220,9 +220,9 @@ test('Agent 4: Walk on Water', t => {
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, [3, 1]));
+      t.true(Position.equals(levelModel.agent.position, new Position(3, 1)));
 
-      t.true(Position.equals(levelModel.player.position, [9, 1]));
+      t.true(Position.equals(levelModel.player.position, new Position(9, 1)));
       t.assert(success);
       t.end();
 
@@ -278,9 +278,9 @@ test('Agent 5: Open Doors 2.0', t => {
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, [8, 3]));
+      t.true(Position.equals(levelModel.agent.position, new Position(8, 3)));
 
-      t.true(Position.equals(levelModel.player.position, [9, 1]));
+      t.true(Position.equals(levelModel.player.position, new Position(9, 1)));
       t.assert(success);
       t.end();
 
@@ -331,9 +331,9 @@ test('Agent 6: Build Bridge with one turn', t => {
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, [5, 3]));
+      t.true(Position.equals(levelModel.agent.position, new Position(5, 3)));
 
-      t.true(Position.equals(levelModel.player.position, [3, 1]));
+      t.true(Position.equals(levelModel.player.position, new Position(3, 1)));
       t.assert(success);
       t.end();
 
@@ -386,9 +386,9 @@ test('Agent 7: Build Bridge with multiple turns', t => {
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, [6, 2]));
+      t.true(Position.equals(levelModel.agent.position, new Position(6, 2)));
 
-      t.true(Position.equals(levelModel.player.position, [5, 1]));
+      t.true(Position.equals(levelModel.player.position, new Position(5, 1)));
       t.assert(success);
       t.end();
 
@@ -436,9 +436,9 @@ test('Agent 8: Build Bridge with Functions', t => {
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, [7, 7]));
+      t.true(Position.equals(levelModel.agent.position, new Position(7, 7)));
 
-      t.true(Position.equals(levelModel.player.position, [9, 2]));
+      t.true(Position.equals(levelModel.player.position, new Position(9, 2)));
       t.assert(success);
       t.end();
 
@@ -498,9 +498,9 @@ test('Agent 9: Clear Path', t => {
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, [8, 3]));
+      t.true(Position.equals(levelModel.agent.position, new Position(8, 3)));
 
-      t.true(Position.equals(levelModel.player.position, [4, 1]));
+      t.true(Position.equals(levelModel.player.position, new Position(4, 1)));
       t.assert(success);
       t.end();
 
@@ -577,9 +577,9 @@ test('Agent 9: Clear Path', t => {
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, [9, 2]));
+      t.true(Position.equals(levelModel.agent.position, new Position(9, 2)));
 
-      t.true(Position.equals(levelModel.player.position, [4, 3]));
+      t.true(Position.equals(levelModel.player.position, new Position(4, 3)));
       t.end();
 
       resolve();
@@ -655,9 +655,9 @@ test('Agent 11: The Nether', t => {
 
     // Check the solutions
     api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, [7, 2]));
+      t.true(Position.equals(levelModel.agent.position, new Position(7, 2)));
 
-      t.true(Position.equals(levelModel.player.position, [4, 2]));
+      t.true(Position.equals(levelModel.player.position, new Position(4, 2)));
       t.end();
 
       resolve();

@@ -2,15 +2,16 @@ const test = require('tape');
 
 const LevelModel = require('../../src/js/game/LevelMVC/LevelModel');
 const LevelEntity = require('../../src/js/game/LevelMVC/LevelEntity');
+const Position = require('../../src/js/game/LevelMVC/Position');
 
 
 const makePlane = (n, type) => new Array(n).fill(type);
 const makeLevelDefinition = (width, height) => {
   let size = width * height;
   return {
-    playerStartPosition: [0, 2],
+    playerStartPosition: new Position(0, 2),
     playerStartDirection: 1,
-    agentStartPosition: [0, 1],
+    agentStartPosition: new Position(0, 1),
     agentStartDirection: 1,
     playerName: 'Alex',
     groundPlane: makePlane(size, 'grass'),
@@ -40,14 +41,14 @@ test('sanity', t => {
 
   t.equal(model.planeArea(), 25);
 
-  t.assert(model.inBounds([2, 4]));
-  t.false(model.inBounds([-1, 1]));
-  t.false(model.inBounds([5, 3]));
-  t.false(model.inBounds([3, 5]));
+  t.assert(model.inBounds(new Position(2, 4)));
+  t.false(model.inBounds(new Position(-1, 1)));
+  t.false(model.inBounds(new Position(5, 3)));
+  t.false(model.inBounds(new Position(3, 5)));
 
   t.equal(model.yToIndex(2), 10);
 
-  t.assert(model.isPlayerAt([0, 2]));
+  t.assert(model.isPlayerAt(new Position(0, 2)));
 
   t.end();
 });
@@ -57,8 +58,8 @@ test('place block: entity conflict', t => {
   const model = new LevelModel(levelDefinition, mockGameController);
 
   // player at 0,2 should cause conflict
-  t.true(model.checkEntityConflict([0, 2]));
-  t.false(model.checkEntityConflict([0, 3]));
+  t.true(model.checkEntityConflict(new Position(0, 2)));
+  t.false(model.checkEntityConflict(new Position(0, 3)));
 
   t.end();
 });
@@ -68,11 +69,11 @@ test('place block: block conflict', t => {
   const model = new LevelModel(levelDefinition, mockGameController);
 
   model.placeBlock("grass");
-  model.player.position = [0, 0];
+  model.player.position = new Position(0, 0);
 
   // player at 0,0 so only the grass block is left to cause conflict
-  t.true(model.checkEntityConflict([0, 2]));
-  t.false(model.checkEntityConflict([0, 3]));
+  t.true(model.checkEntityConflict(new Position(0, 2)));
+  t.false(model.checkEntityConflict(new Position(0, 3)));
 
   t.end();
 });

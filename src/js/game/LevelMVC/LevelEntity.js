@@ -7,6 +7,8 @@ const Cow = require("../Entities/Cow.js");
 const Chicken = require("../Entities/Chicken.js");
 const Ghast = require("../Entities/Ghast.js");
 
+const Position = require("./Position");
+
 
 /**
  * Handling non-player entities inside of the level
@@ -99,7 +101,7 @@ module.exports = class LevelEntity {
   isSpawnableInBetween(minX, minY, maxX, maxY) {
     for (var i = minX; i <= maxX; i++) {
       for (var j = minY; j <= maxY; j++) {
-        if (this.controller.levelModel.isPositionEmpty([i, j])[0]) {
+        if (this.controller.levelModel.isPositionEmpty(new Position(i, j))[0]) {
           return true;
         }
       }
@@ -116,20 +118,32 @@ module.exports = class LevelEntity {
     let height = levelModel.planeHeight;
     if (spawnDirection === "middle") {
       if (this.isSpawnableInBetween(Math.floor(0.25 * width), Math.floor(0.25 * height), Math.floor(0.75 * width), Math.floor(0.75 * height))) {
-        let position = [getRandomInt(Math.floor(0.25 * width), Math.floor(0.75 * width)), getRandomInt(Math.floor(0.25 * height), Math.floor(0.75 * height))];
+        let position = new Position(
+          getRandomInt(Math.floor(0.25 * width), Math.floor(0.75 * width)),
+          getRandomInt(Math.floor(0.25 * height), Math.floor(0.75 * height))
+        );
         while (!levelModel.isPositionEmpty(position)[0]) {
-          position = [getRandomInt(Math.floor(0.25 * width), Math.floor(0.75 * width)), getRandomInt(Math.floor(0.25 * height), Math.floor(0.75 * height))];
+          position = new Position(
+            getRandomInt(Math.floor(0.25 * width), Math.floor(0.75 * width)),
+            getRandomInt(Math.floor(0.25 * height), Math.floor(0.75 * height))
+          );
         }
-        return this.createEntity(type, this.id++, position[0], position[1], getRandomInt(0, 3));
+        return this.createEntity(type, this.id++, position.x, position.y, getRandomInt(0, 3));
       } else {
         if (!this.isSpawnableInBetween(1, 1, width - 2, height - 2)) {
           return null;
         }
-        let position = [getRandomInt(1, width - 2), getRandomInt(1, height - 2)];
+        let position = new Position(
+          getRandomInt(1, width - 2),
+          getRandomInt(1, height - 2)
+        );
         while (!levelModel.isPositionEmpty(position)[0]) {
-          position = [getRandomInt(1, width - 2), getRandomInt(1, height - 2)];
+          position = new Position(
+            getRandomInt(1, width - 2),
+            getRandomInt(1, height - 2)
+          );
         }
-        return this.createEntity(type, this.id++, position[0], position[1], getRandomInt(0, 3));
+        return this.createEntity(type, this.id++, position.x, position.y, getRandomInt(0, 3));
       }
     } else if (spawnDirection === "left") {
       let xIndex = 0;
@@ -137,7 +151,7 @@ module.exports = class LevelEntity {
       while (xIndex < width && columnFull) {
         columnFull = true;
         for (let i = 0; i < height; i++) {
-          if (levelModel.isPositionEmpty([xIndex, i])[0]) {
+          if (levelModel.isPositionEmpty(new Position(xIndex, i))[0]) {
             columnFull = false;
             break;
           }
@@ -147,11 +161,11 @@ module.exports = class LevelEntity {
         }
       }
       if (xIndex < width) {
-        let position = [xIndex, getRandomInt(0, height - 1)];
+        let position = new Position(xIndex, getRandomInt(0, height - 1));
         while (!levelModel.isPositionEmpty(position)[0]) {
-          position = [xIndex, getRandomInt(0, height - 1)];
+          position = new Position(xIndex, getRandomInt(0, height - 1));
         }
-        return this.createEntity(type, this.id++, position[0], position[1], getRandomInt(0, 3));
+        return this.createEntity(type, this.id++, position.x, position.y, getRandomInt(0, 3));
       }
     } else if (spawnDirection === "right") {
       let xIndex = width - 1;
@@ -159,7 +173,7 @@ module.exports = class LevelEntity {
       while (xIndex > -1 && columnFull) {
         columnFull = true;
         for (let i = 0; i < height; i++) {
-          if (levelModel.isPositionEmpty([xIndex, i])[0]) {
+          if (levelModel.isPositionEmpty(new Position(xIndex, i))[0]) {
             columnFull = false;
             break;
           }
@@ -169,11 +183,11 @@ module.exports = class LevelEntity {
         }
       }
       if (xIndex > -1) {
-        let position = [xIndex, getRandomInt(0, height - 1)];
+        let position = new Position(xIndex, getRandomInt(0, height - 1));
         while (!levelModel.isPositionEmpty(position)[0]) {
-          position = [xIndex, getRandomInt(0, height - 1)];
+          position = new Position(xIndex, getRandomInt(0, height - 1));
         }
-        return this.createEntity(type, this.id++, position[0], position[1], getRandomInt(0, 3));
+        return this.createEntity(type, this.id++, position.x, position.y, getRandomInt(0, 3));
       }
     } else if (spawnDirection === "up") {
       let yIndex = 0;
@@ -181,7 +195,7 @@ module.exports = class LevelEntity {
       while (yIndex < height && rowFull) {
         rowFull = true;
         for (let i = 0; i < width; i++) {
-          if (levelModel.isPositionEmpty([i, yIndex])[0]) {
+          if (levelModel.isPositionEmpty(new Position(i, yIndex))[0]) {
             rowFull = false;
             break;
           }
@@ -191,11 +205,11 @@ module.exports = class LevelEntity {
         }
       }
       if (yIndex < height) {
-        let position = [getRandomInt(0, height - 1), yIndex];
+        let position = new Position(getRandomInt(0, height - 1), yIndex);
         while (!levelModel.isPositionEmpty(position)[0]) {
-          position = [getRandomInt(0, height - 1), yIndex];
+          position = new Position(getRandomInt(0, height - 1), yIndex);
         }
-        return this.createEntity(type, this.id++, position[0], position[1], getRandomInt(0, 3));
+        return this.createEntity(type, this.id++, position.x, position.y, getRandomInt(0, 3));
       }
     } else if (spawnDirection === "down") {
       let yIndex = height - 1;
@@ -203,7 +217,7 @@ module.exports = class LevelEntity {
       while (yIndex > -1 && rowFull) {
         rowFull = true;
         for (let i = 0; i < width; i++) {
-          if (levelModel.isPositionEmpty([i, yIndex])[0]) {
+          if (levelModel.isPositionEmpty(new Position(i, yIndex))[0]) {
             rowFull = false;
             break;
           }
@@ -213,11 +227,11 @@ module.exports = class LevelEntity {
         }
       }
       if (yIndex > -1) {
-        let position = [getRandomInt(0, height - 1), yIndex];
+        let position = new Position(getRandomInt(0, height - 1), yIndex);
         while (!levelModel.isPositionEmpty(position)[0]) {
-          position = [getRandomInt(0, height - 1), yIndex];
+          position = new Position(getRandomInt(0, height - 1), yIndex);
         }
-        return this.createEntity(type, this.id++, position[0], position[1], getRandomInt(0, 3));
+        return this.createEntity(type, this.id++, position.x, position.y, getRandomInt(0, 3));
       }
     }
     return null;
@@ -247,7 +261,7 @@ module.exports = class LevelEntity {
   getEntityAt(position) {
     for (var value of this.entityMap) {
       let entity = value[1];
-      if (entity.position[0] === position[0] && entity.position[1] === position[1]) {
+      if (Position.equals(position, entity.position)) {
         return entity;
       }
     }
