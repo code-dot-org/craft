@@ -621,6 +621,8 @@ module.exports = class AssetLoader {
         'finishOverlay',
         'bed',
         'AO',
+        'LavaGlow',
+        'WaterAO',
         'blockShadows',
         'undergroundFow',
         'blocks',
