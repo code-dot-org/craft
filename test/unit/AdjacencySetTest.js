@@ -34,7 +34,7 @@ test('AdjacencySets', t => {
 test('AdjacencySets - custom comparison function', t => {
   // can override the comparison function
   const sameColumn = (left, right) => {
-    return left[0] === right[0];
+    return left.x === right.x;
   };
 
   t.deepEqual(new AdjacencySet([

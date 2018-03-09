@@ -31,8 +31,8 @@ module.exports = class LevelModel {
   }
 
   inBounds(position) {
-    const x = position[0];
-    const y = position[1];
+    const x = position.x;
+    const y = position.y;
     return x >= 0 && x < this.planeWidth && y >= 0 && y < this.planeHeight;
   }
 
@@ -432,7 +432,7 @@ module.exports = class LevelModel {
   }
 
   coordinatesToIndex(coordinates) {
-    return this.yToIndex(coordinates[1]) + coordinates[0];
+    return this.yToIndex(coordinates.y) + coordinates.x;
   }
 
   checkPositionForTypeAndPush(blockType, position, objectArray) {
@@ -500,8 +500,8 @@ module.exports = class LevelModel {
     var woolType = "wool_orange";
 
     //Place this block here
-    //this.createBlock(this.groundPlane, startingPosition[0], startingPosition[1], woolType);
-    var helperStartData = [0, startingPosition[0], startingPosition[1]];
+    //this.createBlock(this.groundPlane, startingPosition.x, startingPosition.y, woolType);
+    var helperStartData = [0, startingPosition.x, startingPosition.y];
     return this.houseGroundToFloorHelper(helperStartData, woolType, []);
   }
 

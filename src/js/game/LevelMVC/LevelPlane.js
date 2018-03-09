@@ -666,19 +666,19 @@ module.exports = class LevelPlane {
    * Goes through a list of blocks and shuffles them over 1 index in a given direction.
    *
    * @param {Position[]} blocksPositions
-   * @param {Position} [offset=[0, 0]]
+   * @param {Position} [offset=new Position(0, 0)]
    */
-  pushBlocks(blocksPositions, offset = [0, 0]) {
+  pushBlocks(blocksPositions, offset = new Position(0, 0)) {
     let pistonType = "";
     let redo = false;
-    if (offset[0] === 1) {
+    if (offset.x === 1) {
       pistonType = "pistonArmRight";
-    } else if (offset[0] === -1) {
+    } else if (offset.x === -1) {
       pistonType = "pistonArmLeft";
     } else {
-      if (offset[1] === 1) {
+      if (offset.y === 1) {
         pistonType = "pistonArmDown";
-      } else if (offset[1] === -1) {
+      } else if (offset.y === -1) {
         pistonType = "pistonArmUp";
       } else {
         // There is no offset, so we're not putting down anything.
@@ -707,9 +707,9 @@ module.exports = class LevelPlane {
   /**
    * Returns a list of blocks in a given direction to be shuffled over later.
    * @param {Position} position
-   * @param {Position} [offset=[0, 0]]
+   * @param {Position} [offset=new Position(0, 0)]
    */
-  getBlocksToPush(position, offset = [0, 0]) {
+  getBlocksToPush(position, offset = new Position(0, 0)) {
     let pushingBlocks = [];
     let workingPosition = position;
     while (this.inBounds(workingPosition) && this.getBlockAt(workingPosition).getIsPushable()) {

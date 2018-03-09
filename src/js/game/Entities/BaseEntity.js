@@ -85,7 +85,7 @@ module.exports = class BaseEntity {
     var levelView = this.controller.levelView;
     var tween;
     // update z order
-    var zOrderYIndex = position[1] + (facing === FacingDirection.North ? 1 : 0);
+    var zOrderYIndex = position.y + (facing === FacingDirection.North ? 1 : 0);
     this.sprite.sortOrder = this.controller.levelView.yToIndex(zOrderYIndex) + 1;
     // stepping sound
     levelView.playBlockSound(groundType);
@@ -93,7 +93,7 @@ module.exports = class BaseEntity {
     levelView.playScaledSpeed(this.sprite.animations, this.getWalkAnimation());
     setTimeout(() => {
       tween = this.controller.levelView.addResettableTween(this.sprite).to({
-        x: (this.offset[0] + 40 * position[0]), y: (this.offset[1] + 40 * position[1])
+        x: (this.offset.x + 40 * position.x), y: (this.offset.y + 40 * position.y)
       }, 300, Phaser.Easing.Linear.None);
       tween.onComplete.add(() => {
         levelView.playScaledSpeed(this.sprite.animations, this.getIdleAnimation());
@@ -308,7 +308,7 @@ module.exports = class BaseEntity {
         var moveAwayPosition = moveAwayFrom.position;
         var bestPosition = [];
         let comparePositions = function (moveAwayPosition, position1, position2) {
-            return Position.absoluteDistanceSquare(position1[1], moveAwayPosition) < Position.absoluteDistanceSquare(position2[1], moveAwayPosition) ? position2 : position1;
+            return Position.absoluteDistanceSquare(position1.y, moveAwayPosition) < Position.absoluteDistanceSquare(position2.y, moveAwayPosition) ? position2 : position1;
         };
 
         var currentDistance = Position.absoluteDistanceSquare(moveAwayPosition, this.position);
@@ -362,8 +362,8 @@ module.exports = class BaseEntity {
         var moveTowardPosition = moveTowardTo.position;
         var bestPosition = [];
         let comparePositions = function (moveTowardPosition, position1, position2) {
-          return Position.absoluteDistanceSquare(position1[1], moveTowardPosition) >
-                 Position.absoluteDistanceSquare(position2[1], moveTowardPosition)
+          return Position.absoluteDistanceSquare(position1.y, moveTowardPosition) >
+                 Position.absoluteDistanceSquare(position2.y, moveTowardPosition)
                    ? position2
                    : position1;
         };
@@ -527,7 +527,7 @@ module.exports = class BaseEntity {
             this.position = pushBackPosition;
             this.updateHidingTree();
             var tween = this.controller.levelView.addResettableTween(this.sprite).to({
-                x: (this.offset[0] + 40 * this.position[0]), y: (this.offset[1] + 40 * this.position[1])
+                x: (this.offset.x + 40 * this.position.x), y: (this.offset.y + 40 * this.position.y)
             }, movementTime, Phaser.Easing.Linear.None);
             tween.onComplete.add(() => {
                 setTimeout(() => {
@@ -612,19 +612,19 @@ module.exports = class BaseEntity {
 
     blowUp(commandQueueItem, explosionPosition) {
         let pushBackDirection = FacingDirection.South;
-        if (explosionPosition[0] > this.position[0]) {
+        if (explosionPosition.x > this.position.x) {
             pushBackDirection = FacingDirection.West;
             this.facing = FacingDirection.East;
             this.updateAnimationDirection();
-        } else if (explosionPosition[0] < this.position[0]) {
+        } else if (explosionPosition.x < this.position.x) {
             pushBackDirection = FacingDirection.East;
             this.facing = FacingDirection.West;
             this.updateAnimationDirection();
-        } else if (explosionPosition[1] > this.position[1]) {
+        } else if (explosionPosition.y > this.position.y) {
             pushBackDirection = FacingDirection.North;
             this.facing = FacingDirection.South;
             this.updateAnimationDirection();
-        } else if (explosionPosition[1] < this.position[1]) {
+        } else if (explosionPosition.y < this.position.y) {
             pushBackDirection = FacingDirection.South;
             this.facing = FacingDirection.North;
             this.updateAnimationDirection();
@@ -666,7 +666,7 @@ module.exports = class BaseEntity {
     if (isMovingOffOf && !remainOn) {
       this.controller.audioPlayer.play("pressurePlateClick");
       const block = new LevelBlock('pressurePlateUp');
-      this.controller.levelModel.actionPlane.setBlockAt(previousPosition, block, moveOffset[0], moveOffset[1]);
+      this.controller.levelModel.actionPlane.setBlockAt(previousPosition, block, moveOffset.x, moveOffset.y);
     }
   }
 
