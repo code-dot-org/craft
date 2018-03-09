@@ -22,7 +22,7 @@ module.exports = class LevelView {
     this.fluffGroup = null;
     this.fowGroup = null;
     this.collectibleItems = [];
-    //{sprite : sprite, type : blockType, position : [x,y]}
+    //{sprite : sprite, type : blockType, position : Position}
     this.trees = [];
 
     this.miniBlocks = {
@@ -375,7 +375,7 @@ module.exports = class LevelView {
     entity.sprite.animations.stop();
     this.setPlayerPosition(entity.position, entity.isOnBlock, entity);
     if (entity.shouldUpdateSelectionIndicator()) {
-      this.setSelectionIndicatorPosition(entity.position[0], entity.position[1]);
+      this.setSelectionIndicatorPosition(entity.position.x, entity.position.y);
       this.selectionIndicator.visible = true;
     }
     this.playIdleAnimation(entity.position, entity.facing, entity.isOnBlock, entity);
@@ -458,13 +458,13 @@ module.exports = class LevelView {
   updatePlayerDirection(position, facing) {
     let direction = this.getDirectionName(facing);
 
-    this.setSelectionIndicatorPosition(position[0], position[1]);
+    this.setSelectionIndicatorPosition(position.x, position.y);
     this.playScaledSpeed(this.player.sprite.animations, "idle" + direction);
   }
   // animations
 
   playDoorAnimation(position, open, completionHandler) {
-    let blockIndex = (this.yToIndex(position[1])) + position[0];
+    let blockIndex = (this.yToIndex(position.y)) + position.x;
     let block = this.actionPlaneBlocks[blockIndex];
     let animationName = open ? "open" : "close";
     const animation = this.playScaledSpeed(block.animations, animationName);
@@ -476,7 +476,7 @@ module.exports = class LevelView {
 
   playPlayerAnimation(animationName, position, facing, isOnBlock = false, entity = this.player) {
     let direction = this.getDirectionName(facing);
-    entity.sprite.sortOrder = this.yToIndex(position[1]) + entity.getSortOrderOffset();
+    entity.sprite.sortOrder = this.yToIndex(position.y) + entity.getSortOrderOffset();
 
     let animName = animationName + direction;
     return this.playScaledSpeed(entity.sprite.animations, animName);
@@ -517,7 +517,7 @@ module.exports = class LevelView {
       tween;
 
     this.playPlayerAnimation("fail", position, facing, isOnBlock);
-    this.createBlock(this.fluffGroup, position[0], position[1], "bubbles");
+    this.createBlock(this.fluffGroup, position.x, position.y, "bubbles");
 
     sprite = this.fluffGroup.create(0, 0, "finishOverlay");
     var [scaleX, scaleY] = this.controller.scaleFromOriginal();
@@ -542,7 +542,7 @@ module.exports = class LevelView {
       tween;
 
     this.playPlayerAnimation("jumpUp", position, facing, isOnBlock);
-    this.createBlock(this.fluffGroup, position[0], position[1], "fire");
+    this.createBlock(this.fluffGroup, position.x, position.y, "fire");
 
     sprite = this.fluffGroup.create(0, 0, "finishOverlay");
     var [scaleX, scaleY] = this.controller.scaleFromOriginal();
@@ -604,7 +604,7 @@ module.exports = class LevelView {
   }
 
   flashBlock(position) {
-    let blockIndex = (this.yToIndex(position[1])) + position[0];
+    let blockIndex = (this.yToIndex(position.y)) + position.x;
     let block = this.actionPlaneBlocks[blockIndex];
     return this.flashSpriteToWhite(block);
   }
@@ -653,7 +653,7 @@ module.exports = class LevelView {
   }
 
   playExplodingCreeperAnimation(position, facing, destroyPosition, isOnBlock, completionHandler) {
-    let blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
+    let blockIndex = (this.yToIndex(destroyPosition.y)) + destroyPosition.x;
     let blockToExplode = this.actionPlaneBlocks[blockIndex];
 
     var creeperExplodeAnimation = blockToExplode.animations.getAnimation("explode");
@@ -672,11 +672,11 @@ module.exports = class LevelView {
   }
 
   playExplosionCloudAnimation(position) {
-    this.createBlock(this.fluffGroup, position[0], position[1], "explosion");
+    this.createBlock(this.fluffGroup, position.x, position.y, "explosion");
   }
 
   coordinatesToIndex(coordinates) {
-    return (this.yToIndex(coordinates[1])) + coordinates[0];
+    return (this.yToIndex(coordinates.y)) + coordinates.x;
   }
 
   playMinecartTurnAnimation(position, isUp, isOnBlock, completionHandler, turnDirection) {
@@ -694,7 +694,7 @@ module.exports = class LevelView {
     tween = this.addResettableTween(this.player.sprite).to(
       this.positionToScreen(nextPosition), speed, Phaser.Easing.Linear.None);
     tween.start();
-    this.player.sprite.sortOrder = this.yToIndex(nextPosition[1]) + 10;
+    this.player.sprite.sortOrder = this.yToIndex(nextPosition.y) + 10;
 
     return tween;
   }
@@ -905,7 +905,7 @@ module.exports = class LevelView {
    */
   playMoveForwardAnimation(entity, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, completionHandler) {
     // make sure to render high for when moving north after placing a block
-    const targetYIndex = entity.position[1] + (facing === FacingDirection.North ? 1 : 0);
+    const targetYIndex = entity.position.y + (facing === FacingDirection.North ? 1 : 0);
     this.playWalkAnimation(entity, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, targetYIndex, completionHandler);
   }
 
@@ -914,7 +914,7 @@ module.exports = class LevelView {
    */
   playMoveBackwardAnimation(entity, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, completionHandler) {
     // make sure to render high for when moving north after placing a block
-    const targetYIndex = entity.position[1] + (facing === FacingDirection.South ? 1 : 0);
+    const targetYIndex = entity.position.y + (facing === FacingDirection.South ? 1 : 0);
     this.playWalkAnimation(entity, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, targetYIndex, completionHandler);
   }
 
@@ -926,7 +926,7 @@ module.exports = class LevelView {
     this.playBlockSound(groundType);
 
     if (entity.shouldUpdateSelectionIndicator()) {
-      this.setSelectionIndicatorPosition(position[0], position[1]);
+      this.setSelectionIndicatorPosition(position.x, position.y);
     }
 
     if (!shouldJumpDown) {
@@ -982,10 +982,10 @@ module.exports = class LevelView {
 
   playPlaceBlockAnimation(position, facing, blockType, blockTypeAtPosition, entity, completionHandler) {
     var jumpAnimName;
-    let blockIndex = this.yToIndex(position[1]) + position[0];
+    let blockIndex = this.yToIndex(position.y) + position.x;
 
     if (entity.shouldUpdateSelectionIndicator()) {
-      this.setSelectionIndicatorPosition(position[0], position[1]);
+      this.setSelectionIndicatorPosition(position.x, position.y);
     }
 
     if (entity === this.agent || LevelBlock.isWalkable(blockType)) {
@@ -1007,7 +1007,7 @@ module.exports = class LevelView {
 
       this.playScaledSpeed(this.player.sprite.animations, jumpAnimName);
       var placementTween = this.addResettableTween(this.player.sprite).to({
-        y: (-55 + 40 * position[1])
+        y: (-55 + 40 * position.y)
       }, 125, Phaser.Easing.Cubic.EaseOut);
 
       placementTween.onComplete.addOnce(() => {
@@ -1023,7 +1023,7 @@ module.exports = class LevelView {
   }
 
   playPlaceBlockInFrontAnimation(entity = this.player, playerPosition, facing, blockPosition, completionHandler) {
-    this.setSelectionIndicatorPosition(blockPosition[0], blockPosition[1]);
+    this.setSelectionIndicatorPosition(blockPosition.x, blockPosition.y);
 
     this.playPlayerAnimation("punch", playerPosition, facing, false, entity).onComplete.addOnce(() => {
       completionHandler();
@@ -1038,7 +1038,7 @@ module.exports = class LevelView {
 
   createActionPlaneBlock(position, blockType) {
     const block = new LevelBlock(blockType);
-    const blockIndex = (this.yToIndex(position[1])) + position[0];
+    const blockIndex = (this.yToIndex(position.y)) + position.x;
 
     // Remove the old sprite at this position, if there is one.
     this.actionGroup.remove(this.actionPlaneBlocks[blockIndex]);
@@ -1054,7 +1054,7 @@ module.exports = class LevelView {
     if (block.getIsMiniblock()) {
       // miniblocks defined on the action plane like this should have a
       // closer collectible range and a narrower drop offset than normal
-      sprite = this.createMiniBlock(position[0], position[1], blockType, {
+      sprite = this.createMiniBlock(position.x, position.y, blockType, {
         collectibleDistance: 1,
         xOffsetRange: 10,
         yOffsetRange: 10
@@ -1062,11 +1062,11 @@ module.exports = class LevelView {
     } else {
       const group = block.shouldRenderOnGroundPlane() ? this.groundGroup : this.actionGroup;
       const offset = block.shouldRenderOnGroundPlane() ? -0.5 : 0;
-      sprite = this.createBlock(group, position[0], position[1] + offset, blockType);
+      sprite = this.createBlock(group, position.x, position.y + offset, blockType);
     }
 
     if (sprite) {
-      sprite.sortOrder = this.yToIndex(position[1]);
+      sprite.sortOrder = this.yToIndex(position.y);
       this.correctForShadowOverlay(blockType, sprite);
     }
 
@@ -1074,7 +1074,7 @@ module.exports = class LevelView {
   }
 
   playShearAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
-    let blockIndex = this.yToIndex(destroyPosition[1]) + destroyPosition[0];
+    let blockIndex = this.yToIndex(destroyPosition.y) + destroyPosition.x;
     let blockToShear = this.actionPlaneBlocks[blockIndex];
 
     blockToShear.animations.stop(null, true);
@@ -1086,10 +1086,10 @@ module.exports = class LevelView {
   }
 
   playShearSheepAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler) {
-    this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
+    this.setSelectionIndicatorPosition(destroyPosition.x, destroyPosition.y);
 
     this.onAnimationEnd(this.playPlayerAnimation("punch", playerPosition, facing, false), () => {
-      let blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
+      let blockIndex = (this.yToIndex(destroyPosition.y)) + destroyPosition.x;
       let blockToShear = this.actionPlaneBlocks[blockIndex];
 
       blockToShear.animations.stop(null, true);
@@ -1102,11 +1102,11 @@ module.exports = class LevelView {
   }
 
   destroyBlockWithoutPlayerInteraction(destroyPosition) {
-    let blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
+    let blockIndex = (this.yToIndex(destroyPosition.y)) + destroyPosition.x;
     let blockToDestroy = this.actionPlaneBlocks[blockIndex];
 
-    let destroyOverlay = this.actionGroup.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
-    destroyOverlay.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
+    let destroyOverlay = this.actionGroup.create(-12 + 40 * destroyPosition.x, -22 + 40 * destroyPosition.y, "destroyOverlay", "destroy1");
+    destroyOverlay.sortOrder = this.yToIndex(destroyPosition.y) + 2;
     this.onAnimationEnd(destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false), () => {
       this.actionPlaneBlocks[blockIndex] = null;
 
@@ -1126,7 +1126,7 @@ module.exports = class LevelView {
 
   playDestroyBlockAnimation(playerPosition, facing, destroyPosition, blockType, entity, completionHandler) {
     if (entity.shouldUpdateSelectionIndicator()) {
-      this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
+      this.setSelectionIndicatorPosition(destroyPosition.x, destroyPosition.y);
     }
 
     var playerAnimation = undefined;
@@ -1150,7 +1150,7 @@ module.exports = class LevelView {
 
   playPunchAnimation(playerPosition, facing, destroyPosition, animationType, completionHandler, entity = this.player) {
     if (entity.shouldUpdateSelectionIndicator()) {
-      this.setSelectionIndicatorPosition(destroyPosition[0], destroyPosition[1]);
+      this.setSelectionIndicatorPosition(destroyPosition.x, destroyPosition.y);
     }
     this.onAnimationEnd(this.playPlayerAnimation(animationType, playerPosition, facing, false, entity), () => {
       completionHandler();
@@ -1167,7 +1167,7 @@ module.exports = class LevelView {
    * immediately.
    */
   playBlockDestroyOverlayAnimation(playerPosition, facing, destroyPosition, blockType, entity, completionHandler) {
-    const blockIndex = (this.yToIndex(destroyPosition[1])) + destroyPosition[0];
+    const blockIndex = (this.yToIndex(destroyPosition.y)) + destroyPosition.x;
     const blockToDestroy = this.actionPlaneBlocks[blockIndex];
 
     const afterDestroy = () => {
@@ -1180,7 +1180,7 @@ module.exports = class LevelView {
       this.controller.updateFowPlane();
 
       if (entity.shouldUpdateSelectionIndicator()) {
-        this.setSelectionIndicatorPosition(playerPosition[0], playerPosition[1]);
+        this.setSelectionIndicatorPosition(playerPosition.x, playerPosition.y);
       }
 
       this.audioPlayer.play('dig_wood1');
@@ -1193,13 +1193,13 @@ module.exports = class LevelView {
       // block immediately without waiting for the animation.
       afterDestroy();
     } else {
-      const destroyOverlay = this.actionGroup.create(-12 + 40 * destroyPosition[0], -22 + 40 * destroyPosition[1], "destroyOverlay", "destroy1");
+      const destroyOverlay = this.actionGroup.create(-12 + 40 * destroyPosition.x, -22 + 40 * destroyPosition.y, "destroyOverlay", "destroy1");
       if (LevelBlock.isFlat(blockType)) {
         const cropRect = new Phaser.Rectangle(0, 0, 60, 40);
         destroyOverlay.position.y += 20;
         destroyOverlay.crop(cropRect);
       }
-      destroyOverlay.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
+      destroyOverlay.sortOrder = this.yToIndex(destroyPosition.y) + 2;
       this.onAnimationEnd(destroyOverlay.animations.add("destroy", Phaser.Animation.generateFrameNames("destroy", 1, 12, "", 0), 30, false), () => {
         destroyOverlay.kill();
         this.toDestroy.push(destroyOverlay);
@@ -1223,8 +1223,8 @@ module.exports = class LevelView {
     let miningParticlesFirstFrame = miningParticlesData[miningParticlesIndex][0];
     let miningParticlesOffsetX = miningParticlesData[miningParticlesIndex][1];
     let miningParticlesOffsetY = miningParticlesData[miningParticlesIndex][2];
-    let miningParticles = this.actionGroup.create(miningParticlesOffsetX + 40 * destroyPosition[0], miningParticlesOffsetY + 40 * destroyPosition[1], "miningParticles", "MiningParticles" + miningParticlesFirstFrame);
-    miningParticles.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
+    let miningParticles = this.actionGroup.create(miningParticlesOffsetX + 40 * destroyPosition.x, miningParticlesOffsetY + 40 * destroyPosition.y, "miningParticles", "MiningParticles" + miningParticlesFirstFrame);
+    miningParticles.sortOrder = this.yToIndex(destroyPosition.y) + 2;
     this.onAnimationEnd(miningParticles.animations.add("miningParticles", Phaser.Animation.generateFrameNames("MiningParticles", miningParticlesFirstFrame, miningParticlesFirstFrame + 11, "", 0), 30, false), () => {
       miningParticles.kill();
       this.toDestroy.push(miningParticles);
@@ -1233,7 +1233,7 @@ module.exports = class LevelView {
   }
 
   playExplosionAnimation(playerPosition, facing, destroyPosition, blockType, completionHandler, placeBlock, entity = this.player) {
-    var explodeAnim = this.actionGroup.create(-36 + 40 * destroyPosition[0], -30 + 40 * destroyPosition[1], "blockExplode", "BlockBreakParticle0");
+    var explodeAnim = this.actionGroup.create(-36 + 40 * destroyPosition.x, -30 + 40 * destroyPosition.y, "blockExplode", "BlockBreakParticle0");
 
     switch (blockType) {
       case "treeAcacia":
@@ -1322,7 +1322,7 @@ module.exports = class LevelView {
         break;
     }
 
-    explodeAnim.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
+    explodeAnim.sortOrder = this.yToIndex(destroyPosition.y) + 2;
     this.onAnimationEnd(explodeAnim.animations.add("explode", Phaser.Animation.generateFrameNames("BlockBreakParticle", 0, 7, "", 0), 30, false), () => {
       explodeAnim.kill();
       this.toDestroy.push(explodeAnim);
@@ -1345,10 +1345,10 @@ module.exports = class LevelView {
   }
 
   playItemDropAnimation(destroyPosition, blockType, completionHandler) {
-    var sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
+    var sprite = this.createMiniBlock(destroyPosition.x, destroyPosition.y, blockType);
 
     if (sprite) {
-      sprite.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
+      sprite.sortOrder = this.yToIndex(destroyPosition.y) + 2;
     }
 
     if (this.controller.getIsDirectPlayerControl()) {
@@ -1411,8 +1411,8 @@ module.exports = class LevelView {
    * @return {{x: number, y: number}}
    */
   positionToScreen(position, isOnBlock = false, entity = this.player) {
-    const x = position[0];
-    const y = position[1];
+    const x = position.x;
+    const y = position.y;
     const xOffset = entity.offset[0];
     const yOffset = entity.offset[1];
     return {
@@ -2237,7 +2237,7 @@ module.exports = class LevelView {
     }
     var fluffPositions = this.treeFluffTypes[this.trees[treeIndex].type];
     for (var i = 0; i < fluffPositions.length; i++) {
-      if (this.trees[treeIndex].position[0] + fluffPositions[i][0] === position[0] && this.trees[treeIndex].position[1] + fluffPositions[i][1] === position[1]) {
+      if (this.trees[treeIndex].position.x + fluffPositions[i][0] === position.x && this.trees[treeIndex].position.y + fluffPositions[i][1] === position.y) {
         return true;
       }
     }
@@ -2296,7 +2296,7 @@ module.exports = class LevelView {
         // Iron doors don't need to set the player animation to Idle, because they're not opened with 'use'.
         this.playIdleAnimation(player.position, player.facing, player.isOnBlock, player);
       }
-      this.setSelectionIndicatorPosition(player.position[0], player.position[1]);
+      this.setSelectionIndicatorPosition(player.position.x, player.position.y);
     });
   }
 
