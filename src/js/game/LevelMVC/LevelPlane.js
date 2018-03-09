@@ -468,7 +468,7 @@ module.exports = class LevelPlane {
     }
     let captureReturn = false;
     this.levelModel.controller.levelEntity.entityMap.forEach((workingEntity) => {
-      if (this.levelModel.controller.positionEquivalence(position, workingEntity.position)) {
+      if (Position.equals(position, workingEntity.position)) {
         captureReturn = true;
       }
     });

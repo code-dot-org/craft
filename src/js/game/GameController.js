@@ -608,10 +608,6 @@ class GameController {
     }
   }
 
-  positionEquivalence(lhs, rhs) {
-    return (lhs[0] === rhs[0] && lhs[1] === rhs[1]);
-  }
-
   /**
    * Run a command. If no `commandQueueItem.target` is provided, the command
    * will be applied to all targets.
@@ -725,18 +721,12 @@ class GameController {
         let entities = this.levelEntity.entityMap;
         for (let value of entities) {
           let entity = value[1];
-          for (let i = -1; i <= 1; i++) {
-            for (let j = -1; j <= 1; j++) {
-              if (i === 0 && j === 0) {
-                continue;
-              }
-              let position = [targetEntity.position[0] + i, targetEntity.position[1] + j];
-              this.destroyBlockWithoutPlayerInteraction(position);
-              if (entity.position[0] === targetEntity.position[0] + i && entity.position[1] === targetEntity.position[1] + j) {
-                entity.blowUp(commandQueueItem, targetEntity.position);
-              }
+          Position.getOrthogonalPositions(targetEntity.position).forEach(function (position) {
+            this.destroyBlockWithoutPlayerInteraction(position);
+            if (Position.equals(entity.position, position)) {
+              entity.blowUp(commandQueueItem, targetEntity.position);
             }
-          }
+          });
         }
 
         let callbackCommand = new CallbackCommand(this, () => { }, () => { this.destroyEntity(callbackCommand, targetEntity.identifier); }, targetEntity.identifier);

@@ -657,9 +657,11 @@ module.exports = class BaseEntity {
       remainOn = true;
     }
     this.controller.levelEntity.entityMap.forEach((workingEntity) => {
-      if (workingEntity.identifier !== this.identifier
-      && workingEntity.canTriggerPressurePlates()
-      && this.controller.positionEquivalence(workingEntity.position, previousPosition)) {
+      if (
+        workingEntity.identifier !== this.identifier &&
+        workingEntity.canTriggerPressurePlates() &&
+        Position.equals(workingEntity.position, previousPosition)
+      ) {
         remainOn = true;
       }
     });
