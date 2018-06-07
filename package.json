@@ -2,8 +2,9 @@
   "name": "@code-dot-org/craft",
   "version": "0.1.2",
   "description": "Top-down 2D game engine for the Craft app type. See NOTICE for restrictions on use.",
-  "main": "build/js/app.bundled.js",
+  "main": "dist/main.js",
   "scripts": {
+    "build": "webpack -p",
     "codecov": "nyc report --reporter=text-lcov > ./coverage/unit.lcov && codecov",
     "publish": "grunt publish",
     "test:unit": "nyc tape ./test/unit/*.js",
@@ -19,12 +20,16 @@
   "license": "SEE LICENSE IN LICENSE",
   "browserify-shim": {},
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
     "babelify": "^6.3.0",
     "browserify": "^10.2.4",
     "browserify-istanbul": "^2.0.0",
     "browserify-shim": "^3.8.9",
     "canvas": "^1.6.6",
     "codecov": "^2.3.0",
+    "copy-webpack-plugin": "^4.5.1",
     "eslint": "^2.8.0",
     "grunt": "^0.4.5",
     "grunt-aws-s3-gzip": "^0.10.1",
@@ -48,6 +53,8 @@
     "nyc": "^11.2.1",
     "phaser": "^2.6.2",
     "sinon": "^3.2.1",
-    "tape": "^4.8.0"
+    "tape": "^4.8.0",
+    "webpack": "^4.10.2",
+    "webpack-cli": "^2.1.5"
   }
 }
