@@ -5,6 +5,7 @@
   "main": "dist/main.js",
   "scripts": {
     "build": "webpack -p",
+    "dev": "webpack-dev-server",
     "codecov": "nyc report --reporter=text-lcov > ./coverage/unit.lcov && codecov",
     "publish": "grunt publish",
     "test:unit": "nyc tape ./test/unit/*.js",
@@ -55,6 +56,7 @@
     "sinon": "^3.2.1",
     "tape": "^4.8.0",
     "webpack": "^4.10.2",
-    "webpack-cli": "^2.1.5"
+    "webpack-cli": "^2.1.5",
+    "webpack-dev-server": "^3.1.4"
   }
 }

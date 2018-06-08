@@ -1,4 +1,6 @@
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const path = require('path');
+
 module.exports = {
   output: {
     libraryTarget: 'umd',
@@ -17,5 +19,10 @@ module.exports = {
       from: "src/assets",
       to: "assets"
     }])
-  ]
+  ],
+  devServer: {
+    contentBase: [
+      path.join(__dirname, "demo"),
+    ]
+  }
 };
