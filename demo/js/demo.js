@@ -1,93 +1,4 @@
-/* global $, GameController, Sounds */
-
-var demoLevels = {
-  default: {
-    instructions: "Nighttime is boring with no zombies (sheep at this time). Get the Zombies spawning at night, and get them to chase you.",
-    useAgent: true,
-
-    playerStartPosition: [3, 4],
-    agentStartPosition: [3, 6],
-
-    // up: 0, right: 1, down: 2, left: 3
-    playerStartDirection: 1,
-    agentStartDirection: 1,
-
-    playerName: "SteveEvents",
-    isAgentLevel: true,
-    earlyLoadAssetPacks: ['heroAllAssetsMinusPlayer'],
-    earlyLoadNiceToHaveAssetPacks: ['playerSteveEvents', 'playerAgent'],
-
-    assetPacks: {
-      beforeLoad: ['heroAllAssetsMinusPlayer', 'playerSteveEvents', 'playerAgent'],
-      afterLoad: [],
-    },
-
-    levelVerificationTimeout : -1,
-    timeoutResult : function () {
-      return false;
-    },
-
-    groundPlane: [
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "water", "water", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-    ],
-
-    groundDecorationPlane: [
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-    ],
-
-    actionPlane: [
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-    ],
-
-    fluffPlane: [
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-    ],
-
-    failureCheckFunction: function () {
-      return false;
-    },
-
-    verificationFunction: function () {
-      return false;
-    },
-  }
-};
+/* global $, GameController, levels, Sounds */
 
 var defaults = {
   assetPacks: {
@@ -108,7 +19,7 @@ function getParameterByName(name) {
 }
 
 var levelParam = getParameterByName('level');
-var testLevelToLoad = demoLevels[levelParam] || demoLevels['default'];
+var testLevelToLoad = levels[levelParam] || levels['default'];
 testLevelToLoad = Object.assign({}, defaults, testLevelToLoad);
 
 // Initialize test instance of game, exposed to window for debugging.
@@ -128,7 +39,7 @@ var gameController = new GameController({
 gameController.loadLevel(testLevelToLoad);
 
 var $levelselect = $('#level-load');
-Object.keys(demoLevels).forEach(key => {
+Object.keys(levels).forEach(key => {
   $levelselect.append($('<option/>', {text: key, selected: key === levelParam}));
 });
 
