@@ -16,13 +16,13 @@ module.exports = {
       loader: "babel-loader",
     }, {
       test: /\.(png|svg|jpg|gif|json|mp3|ogg|txt|wav)$/,
-      loader: 'file-loader'
+      loader: 'file-loader',
     }]
   },
   plugins: [
     new CopyWebpackPlugin([{
       from: "src/assets",
-      to: "assets"
+      to: "assets",
     }])
   ],
   devServer: {
