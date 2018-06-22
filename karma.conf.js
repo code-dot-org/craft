@@ -3,7 +3,7 @@ module.exports = config => {
     basePath: '',
     frameworks: ['tap', 'browserify'],
     files: [
-      {pattern: 'src/test-build-only/phaser.js'},
+      {pattern: 'node_modules/phaser/build/phaser.js'},
       {pattern: 'test/integration/*.js'},
       {pattern: 'src/assets/**/*.*', watched: false, included: false},
     ],

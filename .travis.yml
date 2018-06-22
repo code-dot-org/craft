@@ -18,10 +18,10 @@ notifications:
   email: false
 
 before_deploy:
-  - npm run publish
+  - npm run build && cp -r dist/* demo/
 
 deploy:
-  local_dir: build
+  local_dir: demo
   provider: pages
   skip_cleanup: true
   github_token: $GITHUB_TOKEN

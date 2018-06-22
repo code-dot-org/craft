@@ -1,8 +1,9 @@
-const AdventurerLevels = require("../../test/helpers/AdventurerLevels");
-const AgentLevels = require("../../test/helpers/AgentLevels");
-const DesignerLevels = require("../../test/helpers/DesignerLevels");
+const AdventurerLevels = require("../test/helpers/AdventurerLevels");
+const AgentLevels = require("../test/helpers/AgentLevels");
+const DesignerLevels = require("../test/helpers/DesignerLevels");
 
-module.exports = Object.assign({
+module.exports = {};
+module.exports.levels = Object.assign({
   default: {
     instructions: "Nighttime is boring with no zombies (sheep at this time). Get the Zombies spawning at night, and get them to chase you.",
     useAgent: true,
