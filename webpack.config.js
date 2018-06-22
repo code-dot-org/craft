@@ -29,5 +29,10 @@ module.exports = {
     contentBase: [
       path.join(__dirname, "demo"),
     ]
+  },
+  performance: {
+    assetFilter: function (assetFilename) {
+      return !(/^assets/.test(assetFilename));
+    }
   }
 };
