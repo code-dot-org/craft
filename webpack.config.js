@@ -23,16 +23,18 @@ module.exports = {
     new CopyWebpackPlugin([{
       from: "src/assets",
       to: "assets",
-    }])
+    }]),
   ],
   devServer: {
     contentBase: [
       path.join(__dirname, "demo"),
-    ]
+    ],
   },
   performance: {
     assetFilter: function (assetFilename) {
       return !(/^assets/.test(assetFilename));
-    }
+    },
+    maxAssetSize: 300000,
+    maxEntrypointSize: 300000,
   }
 };
