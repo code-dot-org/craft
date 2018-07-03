@@ -4,7 +4,6 @@ const PlaceDirectionCommand = require("../CommandQueue/PlaceDirectionCommand.js"
 const MoveForwardCommand = require("../CommandQueue/MoveForwardCommand.js");
 const MoveBackwardCommand = require("../CommandQueue/MoveBackwardCommand.js");
 const MoveDirectionCommand = require("../CommandQueue/MoveDirectionCommand.js");
-const WhileCommand = require("../CommandQueue/WhileCommand.js");
 const IfBlockAheadCommand = require("../CommandQueue/IfBlockAheadCommand.js");
 const CallbackCommand = require("../CommandQueue/CallbackCommand.js");
 const RepeatCommand = require("../CommandQueue/RepeatCommand.js");
@@ -181,10 +180,6 @@ module.exports.get = function (controller) {
 
     tillSoil: function (highlightCallback, targetEntity) {
       controller.addCommand(new PlaceInFrontCommand(controller, highlightCallback, 'watering', targetEntity));
-    },
-
-    whilePathAhead: function (highlightCallback, blockType, targetEntity, codeBlock) {
-      controller.addCommand(new WhileCommand(controller, highlightCallback, blockType, targetEntity, codeBlock), targetEntity);
     },
 
     ifBlockAhead: function (highlightCallback, blockType, targetEntity, codeBlock) {
