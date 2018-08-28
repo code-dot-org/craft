@@ -4,9 +4,9 @@ _Note: proprietary materials fall under different rules, per the [LICENSE](https
 
 ## Local Setup (all platforms)
 
-### Node.js and Grunt
+### Node.js
 
-You will need to first install [Node.js](http://nodejs.org/download/) and the grunt-cli: `npm install -g grunt-cli`.
+You will need to first install [Node.js](http://nodejs.org/download/)
 
 ### Setup Your Project
 
@@ -21,7 +21,7 @@ Next, inside the project, you need to install the project's various NPM dependen
 
 And you should now be ready to spin up a development build of your new project:
 
-    grunt
+    npm run dev
     
 A browser should open with a Minecraft Hour of Code test page displayed:
 
@@ -29,14 +29,14 @@ A browser should open with a Minecraft Hour of Code test page displayed:
 
 ## Developing
 
-All of the files required to run the game live in the `src` folder, including any javascript, images, HTML ([ejs](http://www.embeddedjs.com/) templated), and CSS. When the default `grunt` task is invoked, these files are compiled to a `build` directory.
+All of the files required to run the game live in the `src` folder, including any javascript, images, HTML ([ejs](http://www.embeddedjs.com/) templated), and CSS. When the default `npm build` task is invoked, these files are compiled to a `dist` directory.
 
-Files in the `build` directory will always be generated and excluded from Git by the `.gitignore`, as such these will removed without warning and should generally not be edited.
+Files in the `dist` directory will always be generated and excluded from Git by the `.gitignore`, as such these will removed without warning and should generally not be edited.
 
 ### What's being used?
 
-* [NPM](https://www.npmjs.org/) via [Browserify](http://browserify.org/), [JsHint](http://www.jshint.com/), Browserify inline [source maps](http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/), dev server with livereload (auto refresh), [.gitignore](https://github.com/serby/GitIgnore).
-* ES6 via babelify
+* [NPM](https://www.npmjs.org/) via [webpack](https://webpack.js.org/), [eslint](https://eslint.org/), dev server with livereload (auto refresh), [.gitignore](https://github.com/serby/GitIgnore).
+* ES6 via [babel](https://babeljs.io/)
 
 ### Recommendations
 
@@ -51,15 +51,21 @@ Files in the `build` directory will always be generated and excluded from Git by
 * [Kenney.nl assets](http://kenney.nl/assets) — public domain placeholder assets for spritesheets, backgrounds, etc.
 * [Freesound](https://freesound.org/) — public domain placeholder sounds
 
-#### Browserify
-
-[Substack's Browserify Handbook](https://github.com/substack/browserify-handbook).
-
 ### Available Targets
 
-#### `grunt`
+#### `npm run`
+
+Display a list of all scripts that can be run with NPM. Notable options include:
+
+##### `npm run build`
+
+##### `npm run dev`
 
 Configures and runs an un-minified development build optimised for fast watch performance with source maps and live reload. Opens browser window pointing to a test page on first build.
+
+##### `npm run lint`
+
+##### `npm run test:unit`
 
 ### Updating or adding libraries
 

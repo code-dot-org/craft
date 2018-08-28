@@ -45,7 +45,7 @@ test('Designer 2: Four Chicken Move', t => {
 
       resolve();
     });
-  }));
+  }), 0.5);
 });
 
 test('Designer 3: Four Chicken Random Move', t => {
