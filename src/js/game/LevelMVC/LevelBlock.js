@@ -193,8 +193,14 @@ module.exports = class LevelBlock {
       }
     }
 
-    if (blockType.startsWith("flower")) {
+    if (
+      blockType.startsWith("flower") ||
+      blockType.endsWith("Coral") ||
+      blockType.endsWith("CoralFan") ||
+      blockType === 'seaPickles'
+    ) {
       this.isWalkable = true;
+      this.isTransparent = true;
     }
   }
 
