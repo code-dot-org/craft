@@ -1647,6 +1647,15 @@
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
+"Stripped_Oak":
+{
+	"frame": {"x":0,"y":1057,"w":40,"h":60},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":2,"w":40,"h":60},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
 "Invisible":
 {
 	"frame": {"x":511,"y":0,"w":1,"h":1},

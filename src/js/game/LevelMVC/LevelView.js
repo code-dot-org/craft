@@ -345,6 +345,9 @@ module.exports = class LevelView {
       "terracottaWhite": ["blocks", "Terracotta_White", -13, 0],
       "terracottaYellow": ["blocks", "Terracotta_Yellow", -13, 0],
 
+      // 2018 blocks.
+      "strippedOak": ["blocks", "Stripped_Oak", -13, 0],
+
       "invisible": ["blocks", "Invisible", 0, 0],
     };
     this.actionPlaneBlocks = [];
