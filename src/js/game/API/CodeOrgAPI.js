@@ -151,12 +151,12 @@ module.exports.get = function (controller) {
       controller.addCommand(callbackCommand);
     },
 
-    turnRight: function (highlightCallback, targetEntity) {
-      this.turn(highlightCallback, 'right', targetEntity);
+    turnRight: function (highlightCallback, targetEntity, onFinish) {
+      this.turn(highlightCallback, 'right', targetEntity, onFinish);
     },
 
-    turnLeft: function (highlightCallback, targetEntity) {
-      this.turn(highlightCallback, 'left', targetEntity);
+    turnLeft: function (highlightCallback, targetEntity, onFinish) {
+      this.turn(highlightCallback, 'left', targetEntity, onFinish);
     },
 
     destroyBlock: function (highlightCallback, targetEntity) {
