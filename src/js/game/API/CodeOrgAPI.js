@@ -87,8 +87,8 @@ module.exports.get = function (controller) {
       controller.addCommand(new MoveDirectionCommand(controller, highlightCallback, targetEntity, direction), targetEntity);
     },
 
-    moveForward: function (highlightCallback, targetEntity) {
-      controller.addCommand(new MoveForwardCommand(controller, highlightCallback, targetEntity), targetEntity);
+    moveForward: function (highlightCallback, targetEntity, onFinish) {
+      controller.addCommand(new MoveForwardCommand(controller, highlightCallback, targetEntity), targetEntity, onFinish);
     },
 
     moveBackward: function (highlightCallback, targetEntity) {
@@ -137,10 +137,10 @@ module.exports.get = function (controller) {
       controller.addCommand(callbackCommand);
     },
 
-    turn: function (highlightCallback, direction, targetEntity) {
+    turn: function (highlightCallback, direction, targetEntity, onFinish) {
       const callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
         controller.turn(callbackCommand, direction === 'right' ? 1 : -1);
-      }, targetEntity);
+      }, targetEntity, onFinish);
       controller.addCommand(callbackCommand);
     },
 

@@ -95,6 +95,9 @@ module.exports = class CommandQueue {
 
       // check if command is done
       if (this.currentCommand.isSucceeded()) {
+        if (this.currentCommand.onFinish) {
+          this.currentCommand.onFinish();
+        }
         this.currentCommand = null;
       } else if (this.currentCommand.isFailed()) {
         this.state = CommandState.FAILURE;

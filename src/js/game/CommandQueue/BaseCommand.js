@@ -1,12 +1,13 @@
 const CommandState = require("./CommandState.js");
 
 module.exports = class BaseCommand {
-  constructor(gameController, highlightCallback, targetEntity) {
+  constructor(gameController, highlightCallback, targetEntity, onFinish) {
     this.GameController = gameController;
     this.Game = gameController.game;
     this.HighlightCallback = highlightCallback;
     this.state = CommandState.NOT_STARTED;
     this.target = targetEntity;
+    this.onFinish = onFinish;
     this.repeat = false;
   }
 
