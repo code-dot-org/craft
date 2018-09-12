@@ -1284,7 +1284,7 @@ class GameController {
       } else {
         this.endLevel(true);
       }
-    } else if (this.levelModel.isFailed() || !this.getIsDirectPlayerControl()) {
+    } else if (this.levelModel.isFailed() || !(this.getIsDirectPlayerControl() || this.levelData.isAquaticLevel)) {
       // For "Events" levels, check the final state to see if it's failed.
       // Procedural levels only call `checkSolution` after all code has run, so
       // fail if we didn't pass the success condition.
