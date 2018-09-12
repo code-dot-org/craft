@@ -2,7 +2,7 @@ const BaseCommand = require("./BaseCommand.js");
 
 module.exports = class MoveDirectionCommand extends BaseCommand {
   constructor(gameController, highlightCallback, targetEntity, direction) {
-    super(gameController, highlightCallback, targetEntity, direction);
+    super(gameController, highlightCallback, targetEntity);
     this.Direciton = direction;
   }
 
