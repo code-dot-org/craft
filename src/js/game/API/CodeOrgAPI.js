@@ -88,7 +88,7 @@ module.exports.get = function (controller) {
     },
 
     moveForward: function (highlightCallback, targetEntity, onFinish) {
-      controller.addCommand(new MoveForwardCommand(controller, highlightCallback, targetEntity), targetEntity, onFinish);
+      controller.addCommand(new MoveForwardCommand(controller, highlightCallback, targetEntity, onFinish), targetEntity);
     },
 
     moveBackward: function (highlightCallback, targetEntity) {
