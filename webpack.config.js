@@ -19,6 +19,9 @@ module.exports = {
       loader: 'file-loader',
     }]
   },
+  optimization: {
+    minimize: !process.env.DEV,
+  },
   plugins: [
     new CopyWebpackPlugin([{
       from: "src/assets",
