@@ -26,6 +26,14 @@ module.exports = class LevelModel {
     this.initialAgentState = Object.create(this.agent);
   }
 
+  isUnderwater() {
+    return !!this.getOceanType();
+  }
+
+  getOceanType() {
+    return this.initialLevelData.ocean;
+  }
+
   planeArea() {
     return this.planeWidth * this.planeHeight;
   }

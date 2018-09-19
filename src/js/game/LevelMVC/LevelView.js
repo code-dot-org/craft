@@ -437,6 +437,10 @@ module.exports = class LevelView {
       }
     }
 
+    if (levelModel.isUnderwater()) {
+      this.addOceanOverlay(levelModel.getOceanType() === 'warm' ? 0x435ee : 0x3938c9);
+    }
+
     this.updateShadingGroup(levelModel.shadingPlane);
     this.updateFowGroup(levelModel.fowPlane);
 
@@ -545,6 +549,13 @@ module.exports = class LevelView {
       this.playIdleAnimation(position, facing, isOnBlock, entity);
     });
     return animation;
+  }
+
+  addOceanOverlay(tint) {
+    const sprite = this.fluffGroup.create(0, 0, "finishOverlay");
+    [sprite.scale.x, sprite.scale.y] = this.controller.scaleFromOriginal();
+    sprite.alpha = 0.3;
+    sprite.tint = tint;
   }
 
   playDrownFailureAnimation(position, facing, isOnBlock, completionHandler) {
