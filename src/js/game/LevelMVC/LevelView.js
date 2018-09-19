@@ -438,7 +438,7 @@ module.exports = class LevelView {
     }
 
     if (levelModel.isUnderwater()) {
-      this.addOceanOverlay(levelModel.getOceanType() === 'warm' ? 0x435ee : 0x3938c9);
+      this.addOceanOverlay(levelModel.getOceanType() === 'warm' ? 0x43d5ee : 0x3938c9);
     }
 
     this.updateShadingGroup(levelModel.shadingPlane);
