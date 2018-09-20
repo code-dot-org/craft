@@ -4,7 +4,8 @@
 // other .eslintrc.js files for those rules.
 module.exports = {
   "globals": {
-    "Phaser": true
+    "Phaser": true,
+    "PIXI": true
   },
   "plugins": [
   ],
