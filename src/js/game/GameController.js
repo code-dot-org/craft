@@ -51,7 +51,7 @@ class GameController {
       forceSetTimeOut: gameControllerConfig.forceSetTimeOut,
       width: GAME_WIDTH,
       height: GAME_HEIGHT,
-      renderer: Phaser.WEBGL,
+      renderer: Phaser.CANVAS,
       parent: gameControllerConfig.containerId,
       state: 'earlyLoad',
       // TODO(bjordan): remove now that using canvas?
