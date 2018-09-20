@@ -116,7 +116,6 @@ module.exports = class LevelBlock {
     }
 
     if (blockType === "cropWheat") {
-      this.isEmissive = false;
       this.isEntity = true;
       this.isWalkable = true;
       this.isUsable = true;
@@ -202,6 +201,10 @@ module.exports = class LevelBlock {
       blockType === 'seaPickles'
     ) {
       this.isWalkable = true;
+    }
+
+    if (blockType === 'seaPickes' || blockType === 'seaLantern' || blockType === 'magmaBlock') {
+      this.isEmissive = true;
     }
   }
 

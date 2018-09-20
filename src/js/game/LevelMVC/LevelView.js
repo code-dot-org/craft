@@ -455,9 +455,7 @@ module.exports = class LevelView {
   }
 
   update() {
-    var i;
-
-    for (i = 0; i < this.toDestroy.length; ++i) {
+    for (let i = 0; i < this.toDestroy.length; ++i) {
       this.toDestroy[i].destroy();
     }
     this.toDestroy = [];
@@ -552,6 +550,11 @@ module.exports = class LevelView {
   }
 
   addOceanOverlay(tint) {
+    const surface = this.fluffGroup.create(0, 0, "underwaterOverlay");
+    [surface.scale.x, surface.scale.y] = this.controller.scaleFromOriginal();
+    surface.alpha = 0.6;
+    surface.blendMode = PIXI.blendModes.OVERLAY;
+
     const sprite = this.fluffGroup.create(0, 0, "finishOverlay");
     [sprite.scale.x, sprite.scale.y] = this.controller.scaleFromOriginal();
     sprite.alpha = 0.3;
