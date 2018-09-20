@@ -12,6 +12,19 @@ module.exports = class LevelView {
 
     this.baseShading = null;
 
+    this.uniforms = {time: {type: '1f', value: 0}};
+    this.waveShader = new Phaser.Filter(this.game, this.uniforms, [`
+      precision lowp float;
+      varying vec2 vTextureCoord;
+      uniform sampler2D uSampler;
+      uniform float time;
+
+      void main(void) {
+        float offset = sin(1.0 / log(vTextureCoord.y * 0.5) * vTextureCoord.y * 100.0 - time / 20.0) * 0.001;
+        gl_FragColor = texture2D(uSampler, vTextureCoord + vec2(offset, 0.0));
+      }
+    `]);
+
     this.player = null;
     this.agent = null;
     this.selectionIndicator = null;
@@ -439,6 +452,8 @@ module.exports = class LevelView {
 
     if (levelModel.isUnderwater()) {
       this.addOceanOverlay(levelModel.getOceanType() === 'warm' ? 0x43d5ee : 0x3938c9);
+
+      this.game.world.filters = [this.waveShader];
     }
 
     this.updateShadingGroup(levelModel.shadingPlane);
@@ -455,9 +470,9 @@ module.exports = class LevelView {
   }
 
   update() {
-    var i;
+    this.uniforms.time.value++;
 
-    for (i = 0; i < this.toDestroy.length; ++i) {
+    for (let i = 0; i < this.toDestroy.length; ++i) {
       this.toDestroy[i].destroy();
     }
     this.toDestroy = [];
