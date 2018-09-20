@@ -20,8 +20,9 @@ module.exports = class LevelView {
       uniform float time;
 
       void main(void) {
-        float offset = sin(1.0 / log(vTextureCoord.y * 0.5) * vTextureCoord.y * 100.0 - time / 20.0) * 0.001;
-        gl_FragColor = texture2D(uSampler, vTextureCoord + vec2(offset, 0.0));
+        float offsetA = sin(vTextureCoord.y * 31.0 + time / 18.0) * 0.001;
+        float offsetB = sin(vTextureCoord.y * 57.0 + time / 18.0) * 0.0005;
+        gl_FragColor = texture2D(uSampler, vTextureCoord + vec2(offsetA + offsetB, 0.0));
       }
     `]);
 
