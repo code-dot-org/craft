@@ -552,7 +552,7 @@ module.exports = class LevelView {
   }
 
   addOceanOverlay(tint) {
-    const sprite = this.fluffGroup.create(0, 0, "finishOverlay");
+    const sprite = this.fluffGroup.create(0, 0, "underwaterOverlay");
     [sprite.scale.x, sprite.scale.y] = this.controller.scaleFromOriginal();
     sprite.alpha = 0.3;
     sprite.tint = tint;
