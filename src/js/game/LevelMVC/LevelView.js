@@ -4,6 +4,10 @@ const Position = require("./Position.js");
 const createEvent = require("../../utils").createEvent;
 const randomInt = require("./Utils").randomInt;
 
+// Hack: `PIXI.canUseNewCanvasBlendModes()` sometimes erroneously returns false.
+// It's supported in all browsers we support.
+PIXI.canUseNewCanvasBlendModes = () => true;
+
 module.exports = class LevelView {
   constructor(controller) {
     this.controller = controller;
