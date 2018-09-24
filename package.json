@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "build": "webpack -p",
-    "dev": "webpack-dev-server",
+    "dev": "webpack-dev-server --mode development",
     "codecov": "nyc report --reporter=text-lcov > ./coverage/unit.lcov && codecov",
     "test:unit": "nyc tape ./test/unit/*.js",
     "test:integration": "karma start",
