@@ -439,31 +439,31 @@ module.exports = class LevelView {
       "crackedStoneBricks": ["blocks", "Cracked_Stone_Bricks", -13, 0],
       "decorativeStoneBricks": ["blocks", "Decorative_Stone_Bricks", -13, 0],
       "magmaBlock": ["blocks", "Magma_Block", -13, 0],
-      "blueCoralBlock": ["blocks", "Blue_Coral_Block", -13, 0],
-      "pinkCoralBlock": ["blocks", "Pink_Coral_Block", -13, 0],
-      "magentaCoralBlock": ["blocks", "Magenta_Coral_Block", -13, 0],
-      "redCoralBlock": ["blocks", "Red_Coral_Block", -13, 0],
-      "yellowCoralBlock": ["blocks", "Yellow_Coral_Block", -13, 0],
-      "deadCoralBlock": ["blocks", "Dead_Coral_Block", -13, 0],
-      "prismarine": ["blocks", "Prismarine", -13, 0],
-      "darkPrismarine": ["blocks", "Dark_Prismarine", -13, 0],
-      "seaLantern": ["blocks", "Sea_Lantern", -13, 0],
-      "packedIce": ["blocks", "Packed_Ice", -13, 0],
-      "blueIce": ["blocks", "Blue_Ice", -13, 0],
-      "blackConcrete": ["blocks", "Black_Concrete", -13, 0],
-      "blueCoral": ["blocks", "Blue_Coral", -13, 0],
-      "pinkCoral": ["blocks", "Pink_Coral", -13, 0],
-      "magentaCoral": ["blocks", "Magenta_Coral", -13, 0],
-      "redCoral": ["blocks", "Red_Coral", -13, 0],
-      "yellowCoral": ["blocks", "Yellow_Coral", -13, 0],
+      "blueCoralBlock": ["blocks", "Coral_Block_Blue", -13, 0],
+      "pinkCoralBlock": ["blocks", "Coral_Block_Pink", -13, 0],
+      "magentaCoralBlock": ["blocks", "Coral_Block_Magenta", -13, 0],
+      "redCoralBlock": ["blocks", "Coral_Block_Red", -13, 0],
+      "yellowCoralBlock": ["blocks", "Coral_Block_Yellow", -13, 0],
+      "deadCoralBlock": ["blocks", "Coral_Block_Dead", -13, 0],
+      "prismarine": ["blocks", "Prismarine0", -13, 0],
+      "darkPrismarine": ["blocks", "Prismarine_Dark", -13, 0],
+      "seaLantern": ["blocks", "Sea_Lantern0", -13, 0],
+      "packedIce": ["blocks", "Ice_Packed", -13, 0],
+      "blueIce": ["blocks", "Ice_Blue", -13, 0],
+      "blackConcrete": ["blocks", "Concrete_Black", -13, 0],
+      "blueCoral": ["blocks", "Coral_Blue", -13, 0],
+      "pinkCoral": ["blocks", "Coral_Pink", -13, 0],
+      "magentaCoral": ["blocks", "Coral_Magenta", -13, 0],
+      "redCoral": ["blocks", "Coral_Red", -13, 0],
+      "yellowCoral": ["blocks", "Coral_Yellow", -13, 0],
       "seaGrass": ["blocks", "Sea_Grass", -13, 0],
       "kelp": ["blocks", "Kelp", -13, 0],
       "polishedGranite": ["blocks", "Polished_Granite", -13, 0],
-      "blueCoralFan": ["blocks", "Blue_Coral_Fan", -13, 0],
-      "pinkCoralFan": ["blocks", "Pink_Coral_Fan", -13, 0],
-      "magentaCoralFan": ["blocks", "Magenta_Coral_Fan", -13, 0],
-      "redCoralFan": ["blocks", "Red_Coral_Fan", -13, 0],
-      "yellowCoralFan": ["blocks", "Yellow_Coral_Fan", -13, 0],
+      "blueCoralFan": ["blocks", "Coral_Fan_Blue", -13, 0],
+      "pinkCoralFan": ["blocks", "Coral_Fan_Pink", -13, 0],
+      "magentaCoralFan": ["blocks", "Coral_Fan_Magenta", -13, 0],
+      "redCoralFan": ["blocks", "Coral_Fan_Red", -13, 0],
+      "yellowCoralFan": ["blocks", "Coral_Fan_Yellow", -13, 0],
       "seaPickles": ["blocks", "Sea_Pickles", -13, 0],
 
       "invisible": ["blocks", "Invisible", 0, 0],
@@ -2195,6 +2195,29 @@ module.exports = class LevelView {
         yOffset = this.blocks[blockType][3];
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Lava_", 0, 5, "", 0);
+        sprite.animations.add("idle", frameList, 5, true);
+        this.playScaledSpeed(sprite.animations, "idle");
+        break;
+
+      case "prismarine":
+        debugger;
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Prismarine", 0, 5, "", 0);
+        sprite.animations.add("idle", frameList, 5, true);
+        this.playScaledSpeed(sprite.animations, "idle");
+        break;
+
+      case "seaLantern":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Sea_Lantern", 0, 4, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
         this.playScaledSpeed(sprite.animations, "idle");
         break;
