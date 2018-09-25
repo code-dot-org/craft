@@ -390,7 +390,7 @@ module.exports = class LevelView {
       "snowyGrass": ["blocks", "snowy_grass", -13, 0],
       "topSnow": ["blocks", "top_snow", -13, 0],
 
-      "Nether_Portal": ["blocks", "Nether_Portal0", 0, -58],
+      "Nether_Portal": ["blocks", "NetherPortal1", 0, -58],
 
       //hooking up all old blocks that we had assets for but never used in previous years
       "bedFoot": ["blocks", "Bed_Foot", -13, 0],
@@ -2273,13 +2273,13 @@ module.exports = class LevelView {
         this.playScaledSpeed(sprite.animations, "idle");
         break;
 
-      case "Nether_Portal":
+      case "NetherPortal":
         atlas = this.blocks[blockType][0];
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
-        frameList = Phaser.Animation.generateFrameNames("Nether_Portal", 0, 5, "", 0);
+        frameList = Phaser.Animation.generateFrameNames("NetherPortal", 1, 6, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
         this.playScaledSpeed(sprite.animations, "idle");
         break;
