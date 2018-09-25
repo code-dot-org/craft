@@ -608,10 +608,6 @@ class GameController {
     }
   }
 
-  positionEquivalence(lhs, rhs) {
-    return (lhs[0] === rhs[0] && lhs[1] === rhs[1]);
-  }
-
   /**
    * Run a command. If no `commandQueueItem.target` is provided, the command
    * will be applied to all targets.
@@ -725,18 +721,12 @@ class GameController {
         let entities = this.levelEntity.entityMap;
         for (let value of entities) {
           let entity = value[1];
-          for (let i = -1; i <= 1; i++) {
-            for (let j = -1; j <= 1; j++) {
-              if (i === 0 && j === 0) {
-                continue;
-              }
-              let position = [targetEntity.position[0] + i, targetEntity.position[1] + j];
-              this.destroyBlockWithoutPlayerInteraction(position);
-              if (entity.position[0] === targetEntity.position[0] + i && entity.position[1] === targetEntity.position[1] + j) {
-                entity.blowUp(commandQueueItem, targetEntity.position);
-              }
+          Position.getOrthogonalPositions(targetEntity.position).forEach(function (position) {
+            this.destroyBlockWithoutPlayerInteraction(position);
+            if (Position.equals(entity.position, position)) {
+              entity.blowUp(commandQueueItem, targetEntity.position);
             }
-          }
+          });
         }
 
         let callbackCommand = new CallbackCommand(this, () => { }, () => { this.destroyEntity(callbackCommand, targetEntity.identifier); }, targetEntity.identifier);
@@ -894,7 +884,7 @@ class GameController {
     const isFrontBlockDoor = frontBlock === undefined ? false : frontBlock.blockType === "door";
     if (frontEntity !== null && frontEntity !== this.agent) {
       // push use command to execute general use behavior of the entity before executing the event
-      this.levelView.setSelectionIndicatorPosition(frontPosition[0], frontPosition[1]);
+      this.levelView.setSelectionIndicatorPosition(frontPosition.x, frontPosition.y);
       this.levelView.onAnimationEnd(this.levelView.playPlayerAnimation("punch", player.position, player.facing, false), () => {
 
         frontEntity.queue.startPushHighPriorityCommands();
@@ -916,10 +906,10 @@ class GameController {
         } else {
           commandQueueItem.waitForOtherQueue = true;
         }
-        setTimeout(() => { this.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]); }, 0);
+        setTimeout(() => { this.levelView.setSelectionIndicatorPosition(player.position.x, player.position.y); }, 0);
       });
     } else if (isFrontBlockDoor) {
-      this.levelView.setSelectionIndicatorPosition(frontPosition[0], frontPosition[1]);
+      this.levelView.setSelectionIndicatorPosition(frontPosition.x, frontPosition.y);
       this.levelView.onAnimationEnd(this.levelView.playPlayerAnimation("punch", player.position, player.facing, false), () => {
         this.audioPlayer.play("doorOpen");
         // if it's not walable, then open otherwise, close
@@ -927,7 +917,7 @@ class GameController {
         this.levelView.playDoorAnimation(frontPosition, canOpen, () => {
           frontBlock.isWalkable = !frontBlock.isWalkable;
           this.levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
-          this.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]);
+          this.levelView.setSelectionIndicatorPosition(player.position.x, player.position.y);
           commandQueueItem.succeeded();
         });
       });
@@ -936,7 +926,7 @@ class GameController {
       commandQueueItem.succeeded();
     } else {
       this.levelView.playPunchDestroyAirAnimation(player.position, player.facing, this.levelModel.getMoveForwardPosition(), () => {
-        this.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]);
+        this.levelView.setSelectionIndicatorPosition(player.position.x, player.position.y);
         this.levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
         this.delayPlayerMoveBy(0, 0, () => {
           commandQueueItem.succeeded();
@@ -1000,7 +990,7 @@ class GameController {
       // if there is a entity in front of the player
     } else {
       this.levelView.playPunchDestroyAirAnimation(player.position, player.facing, this.levelModel.getMoveForwardPosition(player), () => {
-        this.levelView.setSelectionIndicatorPosition(player.position[0], player.position[1]);
+        this.levelView.setSelectionIndicatorPosition(player.position.x, player.position.y);
         this.levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock, player);
         this.delayPlayerMoveBy(0, 0, () => {
           commandQueueItem.succeeded();
@@ -1046,7 +1036,7 @@ class GameController {
         }
         this.levelView.destroyBlockWithoutPlayerInteraction(destroyPosition);
         this.levelView.playExplosionAnimation(this.levelModel.player.position, this.levelModel.player.facing, position, blockType, () => { }, false);
-        this.levelView.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
+        this.levelView.createMiniBlock(destroyPosition.x, destroyPosition.y, blockType);
         this.updateFowPlane();
         this.updateShadingPlane();
       } else if (block.isUsable) {
@@ -1094,7 +1084,7 @@ class GameController {
         this.levelModel.player.updateHidingBlock(player.position);
         if (this.checkMinecartLevelEndAnimation() && blockType === "rail") {
           // Special 'minecart' level places a mix of regular and powered tracks, depending on location.
-          if (player.position[1] < 7) {
+          if (player.position.y < 7) {
             blockType = "railsUnpoweredVertical";
           } else {
             blockType = "rails";
