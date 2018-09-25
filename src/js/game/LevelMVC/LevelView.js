@@ -43,7 +43,6 @@ module.exports = class LevelView {
       "logJungle",
       "logOak",
       "logSpruce",
-      "logSpruceSnowy",
       "planksAcacia",
       "planksBirch",
       "planksJungle",
@@ -432,39 +431,59 @@ module.exports = class LevelView {
       "terracottaYellow": ["blocks", "Terracotta_Yellow", -13, 0],
 
       // 2018 blocks.
-      "strippedOak": ["blocks", "Stripped_Oak", -13, 0],
-      "strippedDarkOak": ["blocks", "Stripped_Dark_Oak", -13, 0],
-      "stoneBricks": ["blocks", "Stone_Bricks", -13, 0],
-      "mossyStoneBricks": ["blocks", "Mossy_Stone_Bricks", -13, 0],
-      "crackedStoneBricks": ["blocks", "Cracked_Stone_Bricks", -13, 0],
-      "decorativeStoneBricks": ["blocks", "Decorative_Stone_Bricks", -13, 0],
-      "magmaBlock": ["blocks", "Magma_Block", -13, 0],
-      "blueCoralBlock": ["blocks", "Coral_Block_Blue", -13, 0],
-      "pinkCoralBlock": ["blocks", "Coral_Block_Pink", -13, 0],
-      "magentaCoralBlock": ["blocks", "Coral_Block_Magenta", -13, 0],
-      "redCoralBlock": ["blocks", "Coral_Block_Red", -13, 0],
-      "yellowCoralBlock": ["blocks", "Coral_Block_Yellow", -13, 0],
-      "deadCoralBlock": ["blocks", "Coral_Block_Dead", -13, 0],
-      "prismarine": ["blocks", "Prismarine0", -13, 0],
-      "darkPrismarine": ["blocks", "Prismarine_Dark", -13, 0],
-      "seaLantern": ["blocks", "Sea_Lantern0", -13, 0],
-      "packedIce": ["blocks", "Ice_Packed", -13, 0],
-      "blueIce": ["blocks", "Ice_Blue", -13, 0],
-      "blackConcrete": ["blocks", "Concrete_Black", -13, 0],
-      "blueCoral": ["blocks", "Coral_Blue", -13, 0],
-      "pinkCoral": ["blocks", "Coral_Pink", -13, 0],
-      "magentaCoral": ["blocks", "Coral_Magenta", -13, 0],
-      "redCoral": ["blocks", "Coral_Red", -13, 0],
-      "yellowCoral": ["blocks", "Coral_Yellow", -13, 0],
-      "seaGrass": ["blocks", "Sea_Grass", -13, 0],
-      "kelp": ["blocks", "Kelp", -13, 0],
-      "polishedGranite": ["blocks", "Polished_Granite", -13, 0],
-      "blueCoralFan": ["blocks", "Coral_Fan_Blue", -13, 0],
-      "pinkCoralFan": ["blocks", "Coral_Fan_Pink", -13, 0],
-      "magentaCoralFan": ["blocks", "Coral_Fan_Magenta", -13, 0],
-      "redCoralFan": ["blocks", "Coral_Fan_Red", -13, 0],
-      "yellowCoralFan": ["blocks", "Coral_Fan_Yellow", -13, 0],
-      "seaPickles": ["blocks", "Sea_Pickles", -13, 0],
+      "strippedOak": ["blocks", "Stripped_Oak", -12, 0],
+      "strippedDarkOak": ["blocks", "Stripped_Dark_Oak", -12, 0],
+      "stoneBricks": ["blocks", "Stone_Bricks", -12, 0],
+      "mossyStoneBricks": ["blocks", "Mossy_Stone_Bricks", -12, 0],
+      "crackedStoneBricks": ["blocks", "Cracked_Stone_Bricks", -12, 0],
+      "decorativeStoneBricks": ["blocks", "Decorative_Stone_Bricks", -12, 0],
+      "magmaBlock": ["blocks", "Magma_Block0", -12, 0],
+      "blueCoralBlock": ["blocks", "Coral_Block_Blue", -12, 0],
+      "pinkCoralBlock": ["blocks", "Coral_Block_Pink", -12, 0],
+      "magentaCoralBlock": ["blocks", "Coral_Block_Magenta", -12, 0],
+      "redCoralBlock": ["blocks", "Coral_Block_Red", -12, 0],
+      "yellowCoralBlock": ["blocks", "Coral_Block_Yellow", -12, 0],
+      "deadCoralBlock": ["blocks", "Coral_Block_Dead_Blue", -12, 0],
+      "blueDeadCoralBlock": ["blocks", "Coral_Block_Dead_Blue", -12, 0],
+      "pinkDeadCoralBlock": ["blocks", "Coral_Block_Dead_Pink", -12, 0],
+      "magentaDeadCoralBlock": ["blocks", "Coral_Block_Dead_Magenta", -12, 0],
+      "readDeadCoralBlock": ["blocks", "Coral_Block_Dead_Red", -12, 0],
+      "yellowDeadCoralBlock": ["blocks", "Coral_Block_Dead_Yellow", -12, 0],
+      "prismarine": ["blocks", "Prismarine0", -12, 0],
+      "darkPrismarine": ["blocks", "Prismarine_Dark", -12, 0],
+      "seaLantern": ["blocks", "Sea_Lantern0", -12, 0],
+      "packedIce": ["blocks", "Ice_Packed", -12, 0],
+      "blueIce": ["blocks", "Ice_Blue", -12, 0],
+      "blackConcrete": ["blocks", "Concrete_Black", -12, 0],
+      "blueCoral": ["blocks", "Coral_Blue", -12, 0],
+      "pinkCoral": ["blocks", "Coral_Pink", -12, 0],
+      "magentaCoral": ["blocks", "Coral_Magenta", -12, 0],
+      "redCoral": ["blocks", "Coral_Red", -12, 0],
+      "yellowCoral": ["blocks", "Coral_Yellow", -12, 0],
+      "seaGrass": ["blocks", "Seagrass0", -12, 0],
+      "kelp": ["blocks", "KelpSingle_0", -12, 0],
+      "polishedGranite": ["blocks", "Polished_Granite", -12, 0],
+      "blueCoralFan": ["blocks", "Coral_Fan_Blue_Bottom", -12, 0],
+      "pinkCoralFan": ["blocks", "Coral_Fan_Pink_Bottom", -12, 0],
+      "magentaCoralFan": ["blocks", "Coral_Fan_Magenta_Bottom", -12, 0],
+      "redCoralFan": ["blocks", "Coral_Fan_Red_Bottom", -12, 0],
+      "yellowCoralFan": ["blocks", "Coral_Fan_Yellow_Bottom", -12, 0],
+      "blueCoralFanTop": ["blocks", "Coral_Fan_Blue_Top", -12, 0],
+      "pinkCoralFanTop": ["blocks", "Coral_Fan_Pink_Top", -12, 0],
+      "magentaCoralFanTop": ["blocks", "Coral_Fan_Magenta_Top", -12, 0],
+      "redCoralFanTop": ["blocks", "Coral_Fan_Red_Top", -12, 0],
+      "yellowCoralFanTop": ["blocks", "Coral_Fan_Yellow_Top", -12, 0],
+      "blueCoralFanLeft": ["blocks", "Coral_Fan_Blue_Left", -12, 0],
+      "pinkCoralFanLeft": ["blocks", "Coral_Fan_Pink_Left", -12, 0],
+      "magentaCoralFanLeft": ["blocks", "Coral_Fan_Magenta_Left", -12, 0],
+      "redCoralFanLeft": ["blocks", "Coral_Fan_Red_Left", -12, 0],
+      "yellowCoralFanLeft": ["blocks", "Coral_Fan_Yellow_Left", -12, 0],
+      "blueCoralFanRight": ["blocks", "Coral_Fan_Blue_Right", -12, 0],
+      "pinkCoralFanRight": ["blocks", "Coral_Fan_Pink_Right", -12, 0],
+      "magentaCoralFanRight": ["blocks", "Coral_Fan_Magenta_Right", -12, 0],
+      "redCoralFanRight": ["blocks", "Coral_Fan_Red_Right", -12, 0],
+      "yellowCoralFanRight": ["blocks", "Coral_Fan_Yellow_Right", -12, 0],
+      "seaPickles": ["blocks", "SeaPickle", -12, 0],
 
       "invisible": ["blocks", "Invisible", 0, 0],
     };
@@ -2199,8 +2218,18 @@ module.exports = class LevelView {
         this.playScaledSpeed(sprite.animations, "idle");
         break;
 
+      case "magmaBlock":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Magma_Block", 0, 5, "", 0);
+        sprite.animations.add("idle", frameList, 5, true);
+        this.playScaledSpeed(sprite.animations, "idle");
+        break;
+
       case "prismarine":
-        debugger;
         atlas = this.blocks[blockType][0];
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
@@ -2218,6 +2247,28 @@ module.exports = class LevelView {
         yOffset = this.blocks[blockType][3];
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Sea_Lantern", 0, 4, "", 0);
+        sprite.animations.add("idle", frameList, 5, true);
+        this.playScaledSpeed(sprite.animations, "idle");
+        break;
+
+      case "seaGrass":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Seagrass", 0, 5, "", 0);
+        sprite.animations.add("idle", frameList, 5, true);
+        this.playScaledSpeed(sprite.animations, "idle");
+        break;
+
+      case "kelp":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("KelpSingle_", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
         this.playScaledSpeed(sprite.animations, "idle");
         break;
