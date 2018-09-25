@@ -1,5 +1,6 @@
 const AdventurerLevels = require("../test/helpers/AdventurerLevels");
 const AgentLevels = require("../test/helpers/AgentLevels");
+const AquaticLevels = require("../test/helpers/AquaticLevels");
 const DesignerLevels = require("../test/helpers/DesignerLevels");
 
 module.exports = {};
@@ -90,4 +91,4 @@ module.exports.levels = Object.assign({
       return false;
     },
   },
-}, AdventurerLevels, AgentLevels, DesignerLevels);
+}, AdventurerLevels, AgentLevels, AquaticLevels, DesignerLevels);

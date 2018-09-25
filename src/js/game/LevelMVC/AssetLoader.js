@@ -815,6 +815,7 @@ module.exports = class AssetLoader {
         'selectionIndicator',
         'tallGrass',
         'finishOverlay',
+        'underwaterOverlay',
         'bed',
         'AO',
         'LavaGlow',
