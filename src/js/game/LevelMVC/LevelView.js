@@ -31,109 +31,188 @@ module.exports = class LevelView {
     //{sprite : sprite, type : blockType, position : [x,y]}
     this.trees = [];
 
-    this.miniBlocks = {
-      "dirt": ["Miniblocks", 0, 5],
-      "dirtCoarse": ["Miniblocks", 6, 11],
-      "sand": ["Miniblocks", 12, 17],
-      "gravel": ["Miniblocks", 18, 23],
-      "bricks": ["Miniblocks", 24, 29],
-      "logAcacia": ["Miniblocks", 30, 35],
-      "logBirch": ["Miniblocks", 36, 41],
-      "logJungle": ["Miniblocks", 42, 47],
-      "logOak": ["Miniblocks", 48, 53],
-      "logSpruce": ["Miniblocks", 54, 59],
-      "logSpruceSnowy": ["Miniblocks", 54, 59],
-      "planksAcacia": ["Miniblocks", 60, 65],
-      "planksBirch": ["Miniblocks", 66, 71],
-      "planksJungle": ["Miniblocks", 72, 77],
-      "planksOak": ["Miniblocks", 78, 83],
-      "planksSpruce": ["Miniblocks", 84, 89],
-      "cobblestone": ["Miniblocks", 90, 95],
-      "sandstone": ["Miniblocks", 96, 101],
-      "wool": ["Miniblocks", 102, 107],
-      "redstoneDust": ["Miniblocks", 108, 113],
-      "lapisLazuli": ["Miniblocks", 114, 119],
-      "ingotIron": ["Miniblocks", 120, 125],
-      "ingotGold": ["Miniblocks", 126, 131],
-      "emerald": ["Miniblocks", 132, 137],
-      "diamond": ["Miniblocks", 138, 143],
-      "coal": ["Miniblocks", 144, 149],
-      "bucketWater": ["Miniblocks", 150, 155],
-      "bucketLava": ["Miniblocks", 156, 161],
-      "gunPowder": ["Miniblocks", 162, 167],
-      "wheat": ["Miniblocks", 168, 173],
-      "potato": ["Miniblocks", 174, 179],
-      "carrots": ["Miniblocks", 180, 185],
-      "milk": ["Miniblocks", 186, 191],
-      "egg": ["Miniblocks", 192, 197],
-      "poppy": ["Miniblocks", 198, 203],
-      "daisy": ["Miniblocks", 204, 209],
-      "dandelion": ["Miniblocks", 210, 215],
-      "bed": ["Miniblocks", 216, 221],
-      "cactus": ["Miniblocks", 222, 227],
-      "clay": ["Miniblocks", 228, 233],
-      "deadbush": ["Miniblocks", 234, 239],
-      "doorIron": ["Miniblocks", 240, 245],
-      "doorOak": ["Miniblocks", 246, 251],
-      "glowstoneDust": ["Miniblocks", 252, 257],
-      "hardenedClay": ["Miniblocks", 258, 263],
-      "hardenedClayBlack": ["Miniblocks", 264, 269],
-      "hardenedClayBlue": ["Miniblocks", 270, 275],
-      "hardenedClayBrown": ["Miniblocks", 276, 281],
-      "hardenedClayCyan": ["Miniblocks", 282, 287],
-      "hardenedClayGray": ["Miniblocks", 288, 293],
-      "hardenedClayGreen": ["Miniblocks", 294, 299],
-      "hardenedClayLightBlue": ["Miniblocks", 300, 305],
-      "hardenedClayLime": ["Miniblocks", 306, 311],
-      "hardenedClayMagenta": ["Miniblocks", 312, 317],
-      "hardenedClayOrange": ["Miniblocks", 318, 323],
-      "hardenedClayPink": ["Miniblocks", 324, 329],
-      "hardenedClayPurple": ["Miniblocks", 330, 335],
-      "hardenedClayRed": ["Miniblocks", 336, 341],
-      "hardenedClaySilver": ["Miniblocks", 342, 347],
-      "hardenedClayWhite": ["Miniblocks", 348, 353],
-      "hardenedClayYellow": ["Miniblocks", 354, 359],
-      "netherbrick": ["Miniblocks", 360, 365],
-      "netherrack": ["Miniblocks", 366, 371],
-      "obsidian": ["Miniblocks", 372, 377],
-      "piston": ["Miniblocks", 378, 383],
-      "pressurePlateOak": ["Miniblocks", 384, 389],
-      "netherQuartz": ["Miniblocks", 390, 395],
-      "railGolden": ["Miniblocks", 396, 401],
-      "railNormal": ["Miniblocks", 402, 407],
-      "redstoneTorch": ["Miniblocks", 408, 413],
-      "reeds": ["Miniblocks", 414, 419],
-      "seedsWheat": ["Miniblocks", 420, 425],
-      "snow": ["Miniblocks", 426, 431],
-      "snowBall": ["Miniblocks", 432, 437],
-      "woolBlack": ["Miniblocks", 438, 443],
-      "woolBlue": ["Miniblocks", 444, 449],
-      "woolBrown": ["Miniblocks", 450, 455],
-      "woolCyan": ["Miniblocks", 456, 461],
-      "woolGray": ["Miniblocks", 462, 467],
-      "woolGreen": ["Miniblocks", 468, 473],
-      "woolLightBlue": ["Miniblocks", 474, 479],
-      "woolLime": ["Miniblocks", 480, 485],
-      "woolMagenta": ["Miniblocks", 486, 491],
-      "woolOrange": ["Miniblocks", 492, 497],
-      "woolPink": ["Miniblocks", 498, 503],
-      "woolLPurple": ["Miniblocks", 504, 509],
-      "woolRed": ["Miniblocks", 510, 515],
-      "woolSilver": ["Miniblocks", 516, 521],
-      "woolYellow": ["Miniblocks", 522, 527],
-      "bookEnchanted": ["Miniblocks", 528, 533],
-      "bucketEmpty": ["Miniblocks", 534, 539],
-      "chest": ["Miniblocks", 540, 545],
-      "compass": ["Miniblocks", 546, 551],
-      "axeDiamond": ["Miniblocks", 552, 557],
-      "pickaxeDiamond": ["Miniblocks", 558, 563],
-      "shovelDiamond": ["Miniblocks", 564, 569],
-      "flintAndSteel": ["Miniblocks", 570, 575],
-      "flint": ["Miniblocks", 576, 581],
-      "mapEmpty": ["Miniblocks", 582, 587],
-      "minecart": ["Miniblocks", 588, 593],
-      "potionBottleDrinkable": ["Miniblocks", 594, 599]
-    };
+    this.miniBlocks = {};
+    [
+      "dirt",
+      "dirtCoarse",
+      "sand",
+      "gravel",
+      "bricks",
+      "logAcacia",
+      "logBirch",
+      "logJungle",
+      "logOak",
+      "logSpruce",
+      "planksAcacia",
+      "planksBirch",
+      "planksJungle",
+      "planksOak",
+      "planksSpruce",
+      "cobblestone",
+      "sandstone",
+      "wool",
+      "redstoneDust",
+      "lapisLazuli",
+      "ingotIron",
+      "ingotGold",
+      "emerald",
+      "diamond",
+      "coal",
+      "bucketWater",
+      "bucketLava",
+      "gunPowder",
+      "wheat",
+      "potato",
+      "carrots",
+      "milk",
+      "egg",
+      "poppy",
+      "daisy",
+      "dandelion",
+      "bed",
+      "cactus",
+      "clay",
+      "deadbush",
+      "doorIron",
+      "doorOak",
+      "glowstoneDust",
+      "hardenedClay",
+      "hardenedClayBlack",
+      "hardenedClayBlue",
+      "hardenedClayBrown",
+      "hardenedClayCyan",
+      "hardenedClayGray",
+      "hardenedClayGreen",
+      "hardenedClayLightBlue",
+      "hardenedClayLime",
+      "hardenedClayMagenta",
+      "hardenedClayOrange",
+      "hardenedClayPink",
+      "hardenedClayPurple",
+      "hardenedClayRed",
+      "hardenedClaySilver",
+      "hardenedClayWhite",
+      "hardenedClayYellow",
+      "netherbrick",
+      "netherrack",
+      "obsidian",
+      "piston",
+      "pressurePlateOak",
+      "netherQuartz",
+      "railGolden",
+      "railNormal",
+      "redstoneTorch",
+      "reeds",
+      "seedsWheat",
+      "snow",
+      "snowBall",
+      "woolBlack",
+      "woolBlue",
+      "woolBrown",
+      "woolCyan",
+      "woolGray",
+      "woolGreen",
+      "woolLightBlue",
+      "woolLime",
+      "woolMagenta",
+      "woolOrange",
+      "woolPink",
+      "woolLPurple",
+      "woolRed",
+      "woolSilver",
+      "woolYellow",
+      "bookEnchanted",
+      "bucketEmpty",
+      "chest",
+      "compass",
+      "axeDiamond",
+      "pickaxeDiamond",
+      "shovelDiamond",
+      "flintAndSteel",
+      "flint",
+      "mapEmpty",
+      "minecart",
+      "potionBottleDrinkable",
+      "yellowCoral",
+      "yellowCoralFan",
+      "blackConcrete",
+      "blueConcretePowder",
+      "blueConcrete",
+      "blueCoralFan",
+      "blueCoral",
+      "brownConcretePowder",
+      "brownConcrete",
+      "cyanConcretePowder",
+      "cyanConcrete",
+      "deadBlueCoralBlock",
+      "deadBlueCoralFan",
+      "deadMagentaCoralBlock",
+      "deadMagentaCoralFan",
+      "deadPinkCoralBlock",
+      "deadPinkCoralFan",
+      "deadRedCoralBlock",
+      "deadRedCoralFan",
+      "deadYellowCoralBlock",
+      "deadYellowCoralFan",
+      "granite",
+      "grayConcretePowder",
+      "grayConcrete",
+      "greenConcretePowder",
+      "greenConcrete",
+      "lightBlueConcretePowder",
+      "lightBlueConcrete",
+      "lightGrayConcretePowder",
+      "lightGrayConcrete",
+      "limeConcretePowder",
+      "limeConcrete",
+      "magentaConcretePowder",
+      "magentaConcrete",
+      "magentaCoralBlock",
+      "magentaCoralFan",
+      "magentaCoral",
+      "orangeConcretePowder",
+      "orangeConcrete",
+      "pinkConcretePowder",
+      "pinkConcrete",
+      "pinkCoralBlock",
+      "pinkCoralFan",
+      "pinkCoral",
+      "polishedGranite",
+      "purpleConcretePowder",
+      "purpleConcrete",
+      "redConcretePowder",
+      "redConcrete",
+      "redCoralBlock",
+      "redCoralFan",
+      "redCoral",
+      "seaPickle",
+      "strippedAcacia",
+      "strippedBirch",
+      "strippedDarkOak",
+      "strippedJungle",
+      "strippedOak",
+      "strippedSpruce",
+      "whiteConcretePowder",
+      "whiteConcrete",
+      "yellowConcretePowder",
+      "yellowConcrete",
+      "yellowCoralBlock",
+      "blackConcretePowder",
+      "nautilus",
+      "heartOfTheSea",
+      "stoneBricks",
+      "mossyStoneBricks",
+      "crackedStoneBricks",
+      "chisledStoneBricks",
+      "magmaBlock",
+      "prismarine",
+      "darkPrismarine",
+      "seaLantern",
+      "packedIce",
+      "blueIce",
+    ].forEach((miniBlock, n) => {
+      this.miniBlocks[miniBlock] = ["Miniblocks", n * 6, n * 6 + 5];
+    });
 
     this.blocks = {
       "bedrock": ["blocks", "Bedrock", -13, 0],
@@ -311,7 +390,7 @@ module.exports = class LevelView {
       "snowyGrass": ["blocks", "snowy_grass", -13, 0],
       "topSnow": ["blocks", "top_snow", -13, 0],
 
-      "Nether_Portal": ["blocks", "Nether_Portal0", 0, -58],
+      "Nether_Portal": ["blocks", "NetherPortal1", 0, -58],
 
       //hooking up all old blocks that we had assets for but never used in previous years
       "bedFoot": ["blocks", "Bed_Foot", -13, 0],
@@ -352,39 +431,59 @@ module.exports = class LevelView {
       "terracottaYellow": ["blocks", "Terracotta_Yellow", -13, 0],
 
       // 2018 blocks.
-      "strippedOak": ["blocks", "Stripped_Oak", -13, 0],
-      "strippedDarkOak": ["blocks", "Stripped_Dark_Oak", -13, 0],
-      "stoneBricks": ["blocks", "Stone_Bricks", -13, 0],
-      "mossyStoneBricks": ["blocks", "Mossy_Stone_Bricks", -13, 0],
-      "crackedStoneBricks": ["blocks", "Cracked_Stone_Bricks", -13, 0],
-      "decorativeStoneBricks": ["blocks", "Decorative_Stone_Bricks", -13, 0],
-      "magmaBlock": ["blocks", "Magma_Block", -13, 0],
-      "blueCoralBlock": ["blocks", "Blue_Coral_Block", -13, 0],
-      "pinkCoralBlock": ["blocks", "Pink_Coral_Block", -13, 0],
-      "magentaCoralBlock": ["blocks", "Magenta_Coral_Block", -13, 0],
-      "redCoralBlock": ["blocks", "Red_Coral_Block", -13, 0],
-      "yellowCoralBlock": ["blocks", "Yellow_Coral_Block", -13, 0],
-      "deadCoralBlock": ["blocks", "Dead_Coral_Block", -13, 0],
-      "prismarine": ["blocks", "Prismarine", -13, 0],
-      "darkPrismarine": ["blocks", "Dark_Prismarine", -13, 0],
-      "seaLantern": ["blocks", "Sea_Lantern", -13, 0],
-      "packedIce": ["blocks", "Packed_Ice", -13, 0],
-      "blueIce": ["blocks", "Blue_Ice", -13, 0],
-      "blackConcrete": ["blocks", "Black_Concrete", -13, 0],
-      "blueCoral": ["blocks", "Blue_Coral", -13, 0],
-      "pinkCoral": ["blocks", "Pink_Coral", -13, 0],
-      "magentaCoral": ["blocks", "Magenta_Coral", -13, 0],
-      "redCoral": ["blocks", "Red_Coral", -13, 0],
-      "yellowCoral": ["blocks", "Yellow_Coral", -13, 0],
-      "seaGrass": ["blocks", "Sea_Grass", -13, 0],
-      "kelp": ["blocks", "Kelp", -13, 0],
-      "polishedGranite": ["blocks", "Polished_Granite", -13, 0],
-      "blueCoralFan": ["blocks", "Blue_Coral_Fan", -13, 0],
-      "pinkCoralFan": ["blocks", "Pink_Coral_Fan", -13, 0],
-      "magentaCoralFan": ["blocks", "Magenta_Coral_Fan", -13, 0],
-      "redCoralFan": ["blocks", "Red_Coral_Fan", -13, 0],
-      "yellowCoralFan": ["blocks", "Yellow_Coral_Fan", -13, 0],
-      "seaPickles": ["blocks", "Sea_Pickles", -13, 0],
+      "strippedOak": ["blocks", "Stripped_Oak", -12, 0],
+      "strippedDarkOak": ["blocks", "Stripped_Dark_Oak", -12, 0],
+      "stoneBricks": ["blocks", "Stone_Bricks", -12, 0],
+      "mossyStoneBricks": ["blocks", "Mossy_Stone_Bricks", -12, 0],
+      "crackedStoneBricks": ["blocks", "Cracked_Stone_Bricks", -12, 0],
+      "decorativeStoneBricks": ["blocks", "Decorative_Stone_Bricks", -12, 0],
+      "magmaBlock": ["blocks", "Magma_Block0", -12, 0],
+      "blueCoralBlock": ["blocks", "Coral_Block_Blue", -12, 0],
+      "pinkCoralBlock": ["blocks", "Coral_Block_Pink", -12, 0],
+      "magentaCoralBlock": ["blocks", "Coral_Block_Magenta", -12, 0],
+      "redCoralBlock": ["blocks", "Coral_Block_Red", -12, 0],
+      "yellowCoralBlock": ["blocks", "Coral_Block_Yellow", -12, 0],
+      "deadCoralBlock": ["blocks", "Coral_Block_Dead_Blue", -12, 0],
+      "blueDeadCoralBlock": ["blocks", "Coral_Block_Dead_Blue", -12, 0],
+      "pinkDeadCoralBlock": ["blocks", "Coral_Block_Dead_Pink", -12, 0],
+      "magentaDeadCoralBlock": ["blocks", "Coral_Block_Dead_Magenta", -12, 0],
+      "readDeadCoralBlock": ["blocks", "Coral_Block_Dead_Red", -12, 0],
+      "yellowDeadCoralBlock": ["blocks", "Coral_Block_Dead_Yellow", -12, 0],
+      "prismarine": ["blocks", "Prismarine0", -12, 0],
+      "darkPrismarine": ["blocks", "Prismarine_Dark", -12, 0],
+      "seaLantern": ["blocks", "Sea_Lantern0", -12, 0],
+      "packedIce": ["blocks", "Ice_Packed", -12, 0],
+      "blueIce": ["blocks", "Ice_Blue", -12, 0],
+      "blackConcrete": ["blocks", "Concrete_Black", -12, 0],
+      "blueCoral": ["blocks", "Coral_Blue", -12, 0],
+      "pinkCoral": ["blocks", "Coral_Pink", -12, 0],
+      "magentaCoral": ["blocks", "Coral_Magenta", -12, 0],
+      "redCoral": ["blocks", "Coral_Red", -12, 0],
+      "yellowCoral": ["blocks", "Coral_Yellow", -12, 0],
+      "seaGrass": ["blocks", "Seagrass0", -12, 0],
+      "kelp": ["blocks", "KelpSingle_0", -12, 0],
+      "polishedGranite": ["blocks", "Polished_Granite", -12, 0],
+      "blueCoralFan": ["blocks", "Coral_Fan_Blue_Bottom", -12, 0],
+      "pinkCoralFan": ["blocks", "Coral_Fan_Pink_Bottom", -12, 0],
+      "magentaCoralFan": ["blocks", "Coral_Fan_Magenta_Bottom", -12, 0],
+      "redCoralFan": ["blocks", "Coral_Fan_Red_Bottom", -12, 0],
+      "yellowCoralFan": ["blocks", "Coral_Fan_Yellow_Bottom", -12, 0],
+      "blueCoralFanTop": ["blocks", "Coral_Fan_Blue_Top", -12, 0],
+      "pinkCoralFanTop": ["blocks", "Coral_Fan_Pink_Top", -12, 0],
+      "magentaCoralFanTop": ["blocks", "Coral_Fan_Magenta_Top", -12, 0],
+      "redCoralFanTop": ["blocks", "Coral_Fan_Red_Top", -12, 0],
+      "yellowCoralFanTop": ["blocks", "Coral_Fan_Yellow_Top", -12, 0],
+      "blueCoralFanLeft": ["blocks", "Coral_Fan_Blue_Left", -12, 0],
+      "pinkCoralFanLeft": ["blocks", "Coral_Fan_Pink_Left", -12, 0],
+      "magentaCoralFanLeft": ["blocks", "Coral_Fan_Magenta_Left", -12, 0],
+      "redCoralFanLeft": ["blocks", "Coral_Fan_Red_Left", -12, 0],
+      "yellowCoralFanLeft": ["blocks", "Coral_Fan_Yellow_Left", -12, 0],
+      "blueCoralFanRight": ["blocks", "Coral_Fan_Blue_Right", -12, 0],
+      "pinkCoralFanRight": ["blocks", "Coral_Fan_Pink_Right", -12, 0],
+      "magentaCoralFanRight": ["blocks", "Coral_Fan_Magenta_Right", -12, 0],
+      "redCoralFanRight": ["blocks", "Coral_Fan_Red_Right", -12, 0],
+      "yellowCoralFanRight": ["blocks", "Coral_Fan_Yellow_Right", -12, 0],
+      "seaPickles": ["blocks", "SeaPickle", -12, 0],
 
       "invisible": ["blocks", "Invisible", 0, 0],
     };
@@ -2119,13 +2218,68 @@ module.exports = class LevelView {
         this.playScaledSpeed(sprite.animations, "idle");
         break;
 
-      case "Nether_Portal":
+      case "magmaBlock":
         atlas = this.blocks[blockType][0];
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
-        frameList = Phaser.Animation.generateFrameNames("Nether_Portal", 0, 5, "", 0);
+        frameList = Phaser.Animation.generateFrameNames("Magma_Block", 0, 5, "", 0);
+        sprite.animations.add("idle", frameList, 5, true);
+        this.playScaledSpeed(sprite.animations, "idle");
+        break;
+
+      case "prismarine":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Prismarine", 0, 5, "", 0);
+        sprite.animations.add("idle", frameList, 5, true);
+        this.playScaledSpeed(sprite.animations, "idle");
+        break;
+
+      case "seaLantern":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Sea_Lantern", 0, 4, "", 0);
+        sprite.animations.add("idle", frameList, 5, true);
+        this.playScaledSpeed(sprite.animations, "idle");
+        break;
+
+      case "seaGrass":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Seagrass", 0, 5, "", 0);
+        sprite.animations.add("idle", frameList, 5, true);
+        this.playScaledSpeed(sprite.animations, "idle");
+        break;
+
+      case "kelp":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("KelpSingle_", 0, 5, "", 0);
+        sprite.animations.add("idle", frameList, 5, true);
+        this.playScaledSpeed(sprite.animations, "idle");
+        break;
+
+      case "NetherPortal":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("NetherPortal", 1, 6, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
         this.playScaledSpeed(sprite.animations, "idle");
         break;
