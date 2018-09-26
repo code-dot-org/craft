@@ -390,6 +390,9 @@ module.exports = class LevelView {
       "snowyGrass": ["blocks", "snowy_grass", -13, 0],
       "topSnow": ["blocks", "top_snow", -13, 0],
 
+      "sandDeep": ["blocks", "Sand_Deep", -13, 0],
+      "gravelDeep": ["blocks", "Gravel_Deep", -13, 0],
+
       "Nether_Portal": ["blocks", "NetherPortal1", 0, -58],
 
       //hooking up all old blocks that we had assets for but never used in previous years
@@ -463,27 +466,44 @@ module.exports = class LevelView {
       "seaGrass": ["blocks", "Seagrass0", -12, 0],
       "kelp": ["blocks", "KelpSingle_0", -12, 0],
       "polishedGranite": ["blocks", "Polished_Granite", -12, 0],
-      "blueCoralFan": ["blocks", "Coral_Fan_Blue_Bottom", -12, 0],
-      "pinkCoralFan": ["blocks", "Coral_Fan_Pink_Bottom", -12, 0],
-      "magentaCoralFan": ["blocks", "Coral_Fan_Magenta_Bottom", -12, 0],
-      "redCoralFan": ["blocks", "Coral_Fan_Red_Bottom", -12, 0],
-      "yellowCoralFan": ["blocks", "Coral_Fan_Yellow_Bottom", -12, 0],
-      "blueCoralFanTop": ["blocks", "Coral_Fan_Blue_Top", -12, 0],
-      "pinkCoralFanTop": ["blocks", "Coral_Fan_Pink_Top", -12, 0],
-      "magentaCoralFanTop": ["blocks", "Coral_Fan_Magenta_Top", -12, 0],
-      "redCoralFanTop": ["blocks", "Coral_Fan_Red_Top", -12, 0],
-      "yellowCoralFanTop": ["blocks", "Coral_Fan_Yellow_Top", -12, 0],
-      "blueCoralFanLeft": ["blocks", "Coral_Fan_Blue_Left", -12, 0],
-      "pinkCoralFanLeft": ["blocks", "Coral_Fan_Pink_Left", -12, 0],
-      "magentaCoralFanLeft": ["blocks", "Coral_Fan_Magenta_Left", -12, 0],
-      "redCoralFanLeft": ["blocks", "Coral_Fan_Red_Left", -12, 0],
-      "yellowCoralFanLeft": ["blocks", "Coral_Fan_Yellow_Left", -12, 0],
-      "blueCoralFanRight": ["blocks", "Coral_Fan_Blue_Right", -12, 0],
-      "pinkCoralFanRight": ["blocks", "Coral_Fan_Pink_Right", -12, 0],
-      "magentaCoralFanRight": ["blocks", "Coral_Fan_Magenta_Right", -12, 0],
-      "redCoralFanRight": ["blocks", "Coral_Fan_Red_Right", -12, 0],
-      "yellowCoralFanRight": ["blocks", "Coral_Fan_Yellow_Right", -12, 0],
+      "coralFanBlueBottom": ["blocks", "Coral_Fan_Blue_Bottom", -12, 0],
+      "coralFanPinkBottom": ["blocks", "Coral_Fan_Pink_Bottom", -12, 0],
+      "coralFanMagentaBottom": ["blocks", "Coral_Fan_Magenta_Bottom", -12, 0],
+      "coralFanRedBottom": ["blocks", "Coral_Fan_Red_Bottom", -12, 0],
+      "coralFanYellowFanBottom": ["blocks", "Coral_Fan_Yellow_Bottom", -12, 0],
+      "coralFanBlueTop": ["blocks", "Coral_Fan_Blue_Top", -12, 0],
+      "coralFanPinkTop": ["blocks", "Coral_Fan_Pink_Top", -12, 0],
+      "coralFanMagentaTop": ["blocks", "Coral_Fan_Magenta_Top", -12, 0],
+      "coralFanRedTop": ["blocks", "Coral_Fan_Red_Top", -12, 0],
+      "coralFanYellowFanTop": ["blocks", "Coral_Fan_Yellow_Top", -12, 0],
+      "coralFanBlueLeft": ["blocks", "Coral_Fan_Blue_Left", -12, 0],
+      "coralFanPinkLeft": ["blocks", "Coral_Fan_Pink_Left", -12, 0],
+      "coralFanMagentaLeft": ["blocks", "Coral_Fan_Magenta_Left", -12, 0],
+      "coralFanRedLeft": ["blocks", "Coral_Fan_Red_Left", -12, 0],
+      "coralFanYellowFanLeft": ["blocks", "Coral_Fan_Yellow_Left", -12, 0],
+      "coralFanBlueRight": ["blocks", "Coral_Fan_Blue_Right", -12, 0],
+      "coralFanPinkRight": ["blocks", "Coral_Fan_Pink_Right", -12, 0],
+      "coralFanMagentaRight": ["blocks", "Coral_Fan_Magenta_Right", -12, 0],
+      "coralFanRedRight": ["blocks", "Coral_Fan_Red_Right", -12, 0],
+      "coralFanYellowFanRight": ["blocks", "Coral_Fan_Yellow_Right", -12, 0],
       "seaPickles": ["blocks", "SeaPickle", -12, 0],
+      "coralPlantBlue": ["blocks", "Coral_Plant_Blue", -12, 0],
+      "coralPlantBlueDeep": ["blocks", "Coral_Plant_Blue_Sand", -12, 0],
+      "coralPlantPink": ["blocks", "Coral_Plant_Pink", -12, 0],
+      "coralPlantPinkDeep": ["blocks", "Coral_Plant_Pink_Sand", -12, 0],
+      "coralPlantMagenta": ["blocks", "Coral_Plant_Magenta", -12, 0],
+      "coralPlantMagentaDeep": ["blocks", "Coral_Plant_Magenta_Sand", -12, 0],
+      "coralPlantRed": ["blocks", "Coral_Plant_Red", -12, 0],
+      "coralPlantRedDeep": ["blocks", "Coral_Plant_Red_Sand", -12, 0],
+      "coralPlantYellow": ["blocks", "Coral_Plant_Yellow", -12, 0],
+      "coralPlantYellowDeep": ["blocks", "Coral_Plant_Yellow_Sand", -12, 0],
+
+      // Old block names, for compat until we can remove them from levels.
+      "blueCoralFan": ["blocks", "Coral_Plant_Blue", -12, 0],
+      "pinkCoralFan": ["blocks", "Coral_Plant_Pink", -12, 0],
+      "magentaCoralFan": ["blocks", "Coral_Plant_Magenta", -12, 0],
+      "redCoralFan": ["blocks", "Coral_Plant_Red", -12, 0],
+      "yellowCoralFan": ["blocks", "Coral_Plant_Yellow", -12, 0],
 
       "invisible": ["blocks", "Invisible", 0, 0],
     };
@@ -655,10 +675,19 @@ module.exports = class LevelView {
   }
 
   addOceanOverlay(tint) {
-    const surface = this.fluffGroup.create(0, 0, "underwaterOverlay");
-    [surface.scale.x, surface.scale.y] = this.controller.scaleFromOriginal();
-    surface.alpha = 0.6;
-    surface.blendMode = PIXI.blendModes.OVERLAY;
+    for (let [x, y] of [[0, 0], [200, 0], [0, 200], [200, 200]]) {
+      const surface = this.fluffGroup.create(x, y, "underwaterOverlay", "water_still_grey00.png");
+      const frameList = Phaser.Animation.generateFrameNames("water_still_grey", 0, 31, ".png", 2);
+      surface.animations.add("idle", frameList, 5, true);
+      this.playScaledSpeed(surface.animations, "idle");
+
+      [surface.scale.x, surface.scale.y] = this.controller.scaleFromOriginal();
+      surface.scale.x *= 400 / 32;
+      surface.scale.y *= 400 / 32;
+      surface.alpha = 1;
+      surface.smoothed = false;
+      surface.blendMode = PIXI.blendModes.OVERLAY;
+    }
 
     const sprite = this.fluffGroup.create(0, 0, "finishOverlay");
     [sprite.scale.x, sprite.scale.y] = this.controller.scaleFromOriginal();
@@ -1517,7 +1546,7 @@ module.exports = class LevelView {
     }
   }
 
-  playScaledSpeed(animationManager, name) {
+  playScaledSpeed(animationManager, name, factor = 1) {
     var animation = animationManager.getAnimation(name);
     if (animation === null) {
       console.log("can't find animation name : " + name);
@@ -1526,7 +1555,7 @@ module.exports = class LevelView {
         animation.originalFps = 1000 / animation.delay;
       }
       var fps = this.controller.originalFpsToScaled(animation.originalFps);
-      return animationManager.play(name, fps);
+      return animationManager.play(name, fps * factor);
     }
   }
 
@@ -2237,7 +2266,7 @@ module.exports = class LevelView {
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Prismarine", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
-        this.playScaledSpeed(sprite.animations, "idle");
+        this.playScaledSpeed(sprite.animations, "idle", 0.1);
         break;
 
       case "seaLantern":

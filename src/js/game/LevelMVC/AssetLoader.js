@@ -23,8 +23,9 @@ module.exports = class AssetLoader {
         path: `${this.assetRoot}images/WhiteRect.png`
       },
       underwaterOverlay: {
-        type: 'image',
-        path: `${this.assetRoot}images/Underwater.png`
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/Water_Caustics.png`,
+        jsonPath: `${this.assetRoot}images/Water_Caustics.json`
       },
       bed: {
         type: 'image',
