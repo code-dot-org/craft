@@ -648,7 +648,7 @@ module.exports = class LevelView {
   }
 
   playIdleAnimation(position, facing, isOnBlock, entity = this.player) {
-    const animationName = this.controller.levelModel.isUnderwater() ? "swim" : "idle";
+    const animationName = "idle";
     this.playPlayerAnimation(animationName, position, facing, isOnBlock, entity);
   }
 
@@ -1117,7 +1117,7 @@ module.exports = class LevelView {
     }
 
     if (!shouldJumpDown) {
-      const animationName = this.controller.levelModel.isUnderwater() ? "swim" : "walk";
+      const animationName = "walk";
       this.playScaledSpeed(entity.sprite.animations, animationName + this.getDirectionName(facing));
       tween = this.addResettableTween(entity.sprite).to(
         this.positionToScreen(position, isOnBlock, entity), 180, Phaser.Easing.Linear.None);
@@ -1978,19 +1978,18 @@ module.exports = class LevelView {
     entity.sprite.animations.add('mineCart_turnright_up', Phaser.Animation.generateFrameNames("Minecart_", 8, 8, "", 2), frameRate, false);
 
     if (this.controller.levelModel.isUnderwater()) {
-      let frameRate = 5;
-      let swimBase = 299;
-      entity.sprite.animations.add("float_down", Phaser.Animation.generateFrameNames("Player_", swimBase, swimBase, "", 3), frameRate, true);
-      entity.sprite.animations.add("swim_down", Phaser.Animation.generateFrameNames("Player_", swimBase + 1, swimBase + 4, "", 3), frameRate, true);
-      swimBase += 7;
-      entity.sprite.animations.add("float_left", Phaser.Animation.generateFrameNames("Player_", swimBase, swimBase, "", 3), frameRate, true);
-      entity.sprite.animations.add("swim_left", Phaser.Animation.generateFrameNames("Player_", swimBase + 1, swimBase + 4, "", 3), frameRate, true);
-      swimBase += 7;
-      entity.sprite.animations.add("float_up", Phaser.Animation.generateFrameNames("Player_", swimBase, swimBase, "", 3), frameRate, true);
-      entity.sprite.animations.add("swim_up", Phaser.Animation.generateFrameNames("Player_", swimBase + 1, swimBase + 4, "", 3), frameRate, true);
-      swimBase += 7;
-      entity.sprite.animations.add("float_right", Phaser.Animation.generateFrameNames("Player_", swimBase, swimBase, "", 3), frameRate, true);
-      entity.sprite.animations.add("swim_right", Phaser.Animation.generateFrameNames("Player_", swimBase + 1, swimBase + 4, "", 3), frameRate, true);
+      let frameRate = 10;
+
+      for (let [direction, offset] of [["down", 299], ["left", 306], ["up", 313], ["right", 320]]) {
+        entity.sprite.animations.add("idle_" + direction, Phaser.Animation.generateFrameNames("Player_", offset, offset, "", 3), frameRate, true);
+        entity.sprite.animations.add("walk_" + direction, Phaser.Animation.generateFrameNames("Player_", offset + 1, offset + 4, "", 3), frameRate, true);
+      }
+
+      for (let [direction, offset] of [["down", 327], ["left", 333], ["up", 345], ["right", 339]]) {
+        entity.sprite.animations.add("bump_" + direction, Phaser.Animation.generateFrameNames("Player_", offset, offset + 5, "", 3), frameRate, false).onStart.add(() => {
+          this.audioPlayer.play("bump");
+        });
+      }
     }
 
     if (this.controller.levelModel.isInBoat()) {
