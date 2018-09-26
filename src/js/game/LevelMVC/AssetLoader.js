@@ -56,6 +56,16 @@ module.exports = class AssetLoader {
         pngPath: `${this.assetRoot}images/Agent.png`,
         jsonPath: `${this.assetRoot}images/Agent.json`
       },
+      playerSteveAquatic: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/Steve_2018.png`,
+        jsonPath: `${this.assetRoot}images/Steve_2018.json`
+      },
+      playerAlexAquatic: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/Alex_2018.png`,
+        jsonPath: `${this.assetRoot}images/Alex_2018.json`
+      },
       AO: {
         type: 'atlasJSON',
         pngPath: `${this.assetRoot}images/AO.png`,
@@ -910,6 +920,12 @@ module.exports = class AssetLoader {
       ],
       playerAgent: [
         'playerAgent'
+      ],
+      playerSteveAquatic: [
+        'playerSteveAquatic'
+      ],
+      playerAlexAquatic: [
+        'playerAlexAquatic'
       ],
       grass: [
         'tallGrass'
