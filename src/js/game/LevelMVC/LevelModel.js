@@ -34,6 +34,10 @@ module.exports = class LevelModel {
     return this.initialLevelData.ocean;
   }
 
+  isInBoat() {
+    return this.initialLevelData.boat;
+  }
+
   planeArea() {
     return this.planeWidth * this.planeHeight;
   }

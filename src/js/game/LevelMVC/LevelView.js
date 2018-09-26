@@ -587,6 +587,9 @@ module.exports = class LevelView {
   }
 
   render() {
+    if (this.controller.levelModel.isUnderwater()) {
+      this.player.sprite.sortOrder = 1000;
+    }
     this.actionGroup.sort('sortOrder');
     this.fluffGroup.sort('z');
   }
@@ -645,7 +648,7 @@ module.exports = class LevelView {
   }
 
   playIdleAnimation(position, facing, isOnBlock, entity = this.player) {
-    const animationName = this.controller.levelModel.isUnderwater() ? "float" : "idle";
+    const animationName = this.controller.levelModel.isUnderwater() ? "swim" : "idle";
     this.playPlayerAnimation(animationName, position, facing, isOnBlock, entity);
   }
 
@@ -1975,7 +1978,7 @@ module.exports = class LevelView {
     entity.sprite.animations.add('mineCart_turnright_up', Phaser.Animation.generateFrameNames("Minecart_", 8, 8, "", 2), frameRate, false);
 
     if (this.controller.levelModel.isUnderwater()) {
-      let frameRate = 10;
+      let frameRate = 5;
       let swimBase = 299;
       entity.sprite.animations.add("float_down", Phaser.Animation.generateFrameNames("Player_", swimBase, swimBase, "", 3), frameRate, true);
       entity.sprite.animations.add("swim_down", Phaser.Animation.generateFrameNames("Player_", swimBase + 1, swimBase + 4, "", 3), frameRate, true);
@@ -1988,6 +1991,20 @@ module.exports = class LevelView {
       swimBase += 7;
       entity.sprite.animations.add("float_right", Phaser.Animation.generateFrameNames("Player_", swimBase, swimBase, "", 3), frameRate, true);
       entity.sprite.animations.add("swim_right", Phaser.Animation.generateFrameNames("Player_", swimBase + 1, swimBase + 4, "", 3), frameRate, true);
+    }
+
+    if (this.controller.levelModel.isInBoat()) {
+      let frameRate = 10;
+
+      entity.sprite.animations.add("walk_down", Phaser.Animation.generateFrameNames("Boat_", 9, 13, "", 2), frameRate, true);
+      entity.sprite.animations.add("walk_left", Phaser.Animation.generateFrameNames("Boat_", 15, 19, "", 2), frameRate, true);
+      entity.sprite.animations.add("walk_up", Phaser.Animation.generateFrameNames("Boat_", 21, 25, "", 2), frameRate, true);
+      entity.sprite.animations.add("walk_right", Phaser.Animation.generateFrameNames("Boat_", 27, 31, "", 2), frameRate, true);
+
+      for (let [direction, offset] of [["down", 9], ["left", 15], ["up", 21], ["right", 27]]) {
+        console.log(direction);
+        entity.sprite.animations.add("idle_" + direction, Phaser.Animation.generateFrameNames("Boat_", offset, offset, "", 2), frameRate, true);
+      }
     }
   }
 
