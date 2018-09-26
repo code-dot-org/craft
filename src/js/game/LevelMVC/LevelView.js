@@ -1996,14 +1996,15 @@ module.exports = class LevelView {
     if (this.controller.levelModel.isInBoat()) {
       let frameRate = 10;
 
-      entity.sprite.animations.add("walk_down", Phaser.Animation.generateFrameNames("Boat_", 9, 13, "", 2), frameRate, true);
-      entity.sprite.animations.add("walk_left", Phaser.Animation.generateFrameNames("Boat_", 15, 19, "", 2), frameRate, true);
-      entity.sprite.animations.add("walk_up", Phaser.Animation.generateFrameNames("Boat_", 21, 25, "", 2), frameRate, true);
-      entity.sprite.animations.add("walk_right", Phaser.Animation.generateFrameNames("Boat_", 27, 31, "", 2), frameRate, true);
-
       for (let [direction, offset] of [["down", 9], ["left", 15], ["up", 21], ["right", 27]]) {
-        console.log(direction);
         entity.sprite.animations.add("idle_" + direction, Phaser.Animation.generateFrameNames("Boat_", offset, offset, "", 2), frameRate, true);
+        entity.sprite.animations.add("walk_" + direction, Phaser.Animation.generateFrameNames("Boat_", offset, offset + 4, "", 2), frameRate, true);
+      }
+
+      for (let [direction, offset] of [["down", 51], ["left", 63], ["up", 69], ["right", 57]]) {
+        entity.sprite.animations.add("bump_" + direction, Phaser.Animation.generateFrameNames("Boat_", offset, offset + 5, "", 2), frameRate, false).onStart.add(() => {
+          this.audioPlayer.play("bump");
+        });
       }
     }
   }

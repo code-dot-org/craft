@@ -591,6 +591,11 @@ module.exports = class LevelModel {
         }
       }
 
+      if (this.groundPlane.getBlockAt(position).blockType !== "water" && this.isInBoat()) {
+        result.push("notWater");
+        return result;
+      }
+
       var frontEntity = this.getEntityAt(position);
       if (frontEntity !== undefined) {
         result.push("frontEntity");
