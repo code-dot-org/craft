@@ -655,17 +655,19 @@ module.exports = class LevelView {
   }
 
   addOceanOverlay(tint) {
-    const surface = this.fluffGroup.create(0, 0, "underwaterOverlay", "water_still_grey00.png");
-    const frameList = Phaser.Animation.generateFrameNames("water_still_grey", 0, 31, ".png", 2);
-    surface.animations.add("idle", frameList, 5, true);
-    this.playScaledSpeed(surface.animations, "idle");
+    for (let [x, y] of [[0, 0], [200, 0], [0, 200], [200, 200]]) {
+      const surface = this.fluffGroup.create(x, y, "underwaterOverlay", "water_still_grey00.png");
+      const frameList = Phaser.Animation.generateFrameNames("water_still_grey", 0, 31, ".png", 2);
+      surface.animations.add("idle", frameList, 5, true);
+      this.playScaledSpeed(surface.animations, "idle");
 
-    [surface.scale.x, surface.scale.y] = this.controller.scaleFromOriginal();
-    surface.scale.x *= 400 / 16;
-    surface.scale.y *= 400 / 16;
-    surface.alpha = 1;
-    surface.smoothed = false;
-    surface.blendMode = PIXI.blendModes.OVERLAY;
+      [surface.scale.x, surface.scale.y] = this.controller.scaleFromOriginal();
+      surface.scale.x *= 400 / 32;
+      surface.scale.y *= 400 / 32;
+      surface.alpha = 1;
+      surface.smoothed = false;
+      surface.blendMode = PIXI.blendModes.OVERLAY;
+    }
 
     const sprite = this.fluffGroup.create(0, 0, "finishOverlay");
     [sprite.scale.x, sprite.scale.y] = this.controller.scaleFromOriginal();
@@ -2244,7 +2246,7 @@ module.exports = class LevelView {
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Prismarine", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
-        this.playScaledSpeed(sprite.animations, "idle", 0.2);
+        this.playScaledSpeed(sprite.animations, "idle", 0.1);
         break;
 
       case "seaLantern":
