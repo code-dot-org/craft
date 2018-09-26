@@ -645,7 +645,8 @@ module.exports = class LevelView {
   }
 
   playIdleAnimation(position, facing, isOnBlock, entity = this.player) {
-    this.playPlayerAnimation("idle", position, facing, isOnBlock, entity);
+    const animationName = this.controller.levelModel.isUnderwater() ? "float" : "idle";
+    this.playPlayerAnimation(animationName, position, facing, isOnBlock, entity);
   }
 
   playSuccessAnimation(position, facing, isOnBlock, completionHandler, entity = this.player) {
@@ -1113,8 +1114,8 @@ module.exports = class LevelView {
     }
 
     if (!shouldJumpDown) {
-      const animName = 'walk' + this.getDirectionName(facing);
-      this.playScaledSpeed(entity.sprite.animations, animName);
+      const animationName = this.controller.levelModel.isUnderwater() ? "swim" : "walk";
+      this.playScaledSpeed(entity.sprite.animations, animationName + this.getDirectionName(facing));
       tween = this.addResettableTween(entity.sprite).to(
         this.positionToScreen(position, isOnBlock, entity), 180, Phaser.Easing.Linear.None);
     } else {
@@ -1972,6 +1973,22 @@ module.exports = class LevelView {
     entity.sprite.animations.add('mineCart_up', Phaser.Animation.generateFrameNames("Minecart_", 9, 9, "", 2), frameRate, false);
     entity.sprite.animations.add('mineCart_turnleft_up', Phaser.Animation.generateFrameNames("Minecart_", 10, 10, "", 2), frameRate, false);
     entity.sprite.animations.add('mineCart_turnright_up', Phaser.Animation.generateFrameNames("Minecart_", 8, 8, "", 2), frameRate, false);
+
+    if (this.controller.levelModel.isUnderwater()) {
+      let frameRate = 10;
+      let swimBase = 299;
+      entity.sprite.animations.add("float_down", Phaser.Animation.generateFrameNames("Player_", swimBase, swimBase, "", 3), frameRate, true);
+      entity.sprite.animations.add("swim_down", Phaser.Animation.generateFrameNames("Player_", swimBase + 1, swimBase + 4, "", 3), frameRate, true);
+      swimBase += 7;
+      entity.sprite.animations.add("float_left", Phaser.Animation.generateFrameNames("Player_", swimBase, swimBase, "", 3), frameRate, true);
+      entity.sprite.animations.add("swim_left", Phaser.Animation.generateFrameNames("Player_", swimBase + 1, swimBase + 4, "", 3), frameRate, true);
+      swimBase += 7;
+      entity.sprite.animations.add("float_up", Phaser.Animation.generateFrameNames("Player_", swimBase, swimBase, "", 3), frameRate, true);
+      entity.sprite.animations.add("swim_up", Phaser.Animation.generateFrameNames("Player_", swimBase + 1, swimBase + 4, "", 3), frameRate, true);
+      swimBase += 7;
+      entity.sprite.animations.add("float_right", Phaser.Animation.generateFrameNames("Player_", swimBase, swimBase, "", 3), frameRate, true);
+      entity.sprite.animations.add("swim_right", Phaser.Animation.generateFrameNames("Player_", swimBase + 1, swimBase + 4, "", 3), frameRate, true);
+    }
   }
 
   playerFrameName(n) {
