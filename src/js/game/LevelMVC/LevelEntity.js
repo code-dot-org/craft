@@ -1,14 +1,14 @@
-const BaseEntity = require("../Entities/BaseEntity.js");
-const Sheep = require("../Entities/Sheep.js");
-const Zombie = require("../Entities/Zombie.js");
-const IronGolem = require("../Entities/IronGolem.js");
-const Creeper = require("../Entities/Creeper.js");
-const Cow = require("../Entities/Cow.js");
-const Chicken = require("../Entities/Chicken.js");
-const Ghast = require("../Entities/Ghast.js");
+const BaseEntity = require("../Entities/BaseEntity");
+const Sheep = require("../Entities/Sheep");
+const Zombie = require("../Entities/Zombie");
+const IronGolem = require("../Entities/IronGolem");
+const Creeper = require("../Entities/Creeper");
+const Cow = require("../Entities/Cow");
+const Chicken = require("../Entities/Chicken");
+const Ghast = require("../Entities/Ghast");
+const Boat = require("../Entities/Boat");
 
 const Position = require("./Position");
-
 
 /**
  * Handling non-player entities inside of the level
@@ -83,6 +83,9 @@ module.exports = class LevelEntity {
           break;
         case 'ghast':
           entity = new Ghast(this.controller, type, identifier, x, y, facing, pattern);
+          break;
+        case 'boat':
+          entity = new Boat(this.controller, type, identifier, x, y, facing);
           break;
         default:
           entity = new BaseEntity(this.controller, type, identifier, x, y, facing);

@@ -34,6 +34,10 @@ module.exports = class LevelModel {
     return this.initialLevelData.ocean;
   }
 
+  isInBoat() {
+    return this.initialLevelData.boat;
+  }
+
   planeArea() {
     return this.planeWidth * this.planeHeight;
   }
@@ -585,6 +589,11 @@ module.exports = class LevelModel {
         } else {
           return [true];
         }
+      }
+
+      if (this.groundPlane.getBlockAt(position).blockType !== "water" && this.isInBoat()) {
+        result.push("notWater");
+        return result;
       }
 
       var frontEntity = this.getEntityAt(position);

@@ -20,6 +20,14 @@ module.exports = class Player extends BaseEntity {
       this.moveDelayMin = 30;
       this.moveDelayMax = 200;
     }
+
+    if (controller.levelData.ocean) {
+      this.offset = [-26, -26];
+    }
+
+    if (controller.levelData.boat) {
+      this.offset = [-27, -30];
+    }
   }
 
   /**
@@ -136,7 +144,7 @@ module.exports = class Player extends BaseEntity {
     levelView.playMoveForwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, () => {
       levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
 
-      if (levelModel.isPlayerStandingInWater()) {
+      if (levelModel.isPlayerStandingInWater() && !levelModel.isInBoat()) {
         levelView.playDrownFailureAnimation(player.position, player.facing, player.isOnBlock, () => {
           this.controller.handleEndState(false);
         });
@@ -177,7 +185,7 @@ module.exports = class Player extends BaseEntity {
     levelView.playMoveBackwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, () => {
       levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock, player);
 
-      if (levelModel.isPlayerStandingInWater()) {
+      if (levelModel.isPlayerStandingInWater() && !levelModel.isInBoat()) {
         levelView.playDrownFailureAnimation(player.position, player.facing, player.isOnBlock, () => {
           this.controller.handleEndState(false);
         });

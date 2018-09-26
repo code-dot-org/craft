@@ -194,7 +194,7 @@ module.exports = class LevelBlock {
 
     if (
       blockType.startsWith("flower") ||
-      /coral/i.test(blockType) ||
+      (/coral/i.test(blockType) && !/Block/.test(blockType)) ||
       blockType === 'seaGrass' ||
       blockType === 'kelp' ||
       blockType === 'seaPickles'

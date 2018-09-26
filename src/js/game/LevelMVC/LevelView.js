@@ -587,6 +587,9 @@ module.exports = class LevelView {
   }
 
   render() {
+    if (this.controller.levelModel.isUnderwater()) {
+      this.player.sprite.sortOrder = 1000;
+    }
     this.actionGroup.sort('sortOrder');
     this.fluffGroup.sort('z');
   }
@@ -645,7 +648,8 @@ module.exports = class LevelView {
   }
 
   playIdleAnimation(position, facing, isOnBlock, entity = this.player) {
-    this.playPlayerAnimation("idle", position, facing, isOnBlock, entity);
+    const animationName = "idle";
+    this.playPlayerAnimation(animationName, position, facing, isOnBlock, entity);
   }
 
   playSuccessAnimation(position, facing, isOnBlock, completionHandler, entity = this.player) {
@@ -1059,10 +1063,10 @@ module.exports = class LevelView {
   }
 
   playBlockSound(groundType) {
-    var oreString = groundType.substring(0, 3);
-    if (groundType === "water" || groundType === "lava") {
+    if (groundType === "water" || groundType === "lava" || this.controller.levelModel.isUnderwater()) {
       return;
     }
+    const oreString = groundType.substring(0, 3);
     if (groundType === "stone" || groundType === "cobblestone" || groundType === "bedrock" ||
       oreString === "ore" || groundType === "bricks") {
       this.audioPlayer.play("stepStone");
@@ -1113,8 +1117,8 @@ module.exports = class LevelView {
     }
 
     if (!shouldJumpDown) {
-      const animName = 'walk' + this.getDirectionName(facing);
-      this.playScaledSpeed(entity.sprite.animations, animName);
+      const animationName = "walk";
+      this.playScaledSpeed(entity.sprite.animations, animationName + this.getDirectionName(facing));
       tween = this.addResettableTween(entity.sprite).to(
         this.positionToScreen(position, isOnBlock, entity), 180, Phaser.Easing.Linear.None);
     } else {
@@ -1972,6 +1976,43 @@ module.exports = class LevelView {
     entity.sprite.animations.add('mineCart_up', Phaser.Animation.generateFrameNames("Minecart_", 9, 9, "", 2), frameRate, false);
     entity.sprite.animations.add('mineCart_turnleft_up', Phaser.Animation.generateFrameNames("Minecart_", 10, 10, "", 2), frameRate, false);
     entity.sprite.animations.add('mineCart_turnright_up', Phaser.Animation.generateFrameNames("Minecart_", 8, 8, "", 2), frameRate, false);
+
+    if (this.controller.levelModel.isUnderwater()) {
+      let frameRate = 10;
+
+      for (let [direction, offset] of [["down", 299], ["left", 306], ["up", 313], ["right", 320]]) {
+        entity.sprite.animations.add("idle_" + direction, Phaser.Animation.generateFrameNames("Player_", offset, offset, "", 3), frameRate, true);
+        entity.sprite.animations.add("walk_" + direction, Phaser.Animation.generateFrameNames("Player_", offset + 1, offset + 4, "", 3), frameRate, true);
+      }
+
+      for (let [direction, offset] of [["down", 327], ["left", 333], ["up", 345], ["right", 339]]) {
+        entity.sprite.animations.add("bump_" + direction, Phaser.Animation.generateFrameNames("Player_", offset, offset + 5, "", 3), frameRate, false).onStart.add(() => {
+          this.audioPlayer.play("bump");
+        });
+      }
+
+      for (let [direction, offset] of [["down", 351], ["left", 354], ["up", 360], ["right", 357]]) {
+        entity.sprite.animations.add("punch_" + direction, Phaser.Animation.generateFrameNames("Player_", offset, offset + 2, "", 3), frameRate, false).onComplete.add(() => {
+          this.audioPlayer.play("punch");
+        });
+      }
+    }
+
+    if (this.controller.levelModel.isInBoat()) {
+      let frameRate = 10;
+
+      for (let [direction, offset] of [["down", 9], ["left", 15], ["up", 21], ["right", 27]]) {
+        entity.sprite.animations.add("idle_" + direction, Phaser.Animation.generateFrameNames("Boat_", offset, offset, "", 2), frameRate, true);
+        entity.sprite.animations.add("walk_" + direction, Phaser.Animation.generateFrameNames("Boat_", offset, offset + 4, "", 2), frameRate, true);
+        entity.sprite.animations.add("celebrate_" + direction, ["Boat_49", "Boat_50", "Boat_49", "Boat_50", "Boat_49"], frameRate / 2, false);
+      }
+
+      for (let [direction, offset] of [["down", 51], ["left", 63], ["up", 69], ["right", 57]]) {
+        entity.sprite.animations.add("bump_" + direction, Phaser.Animation.generateFrameNames("Boat_", offset, offset + 5, "", 2), frameRate, false).onStart.add(() => {
+          this.audioPlayer.play("bump");
+        });
+      }
+    }
   }
 
   playerFrameName(n) {
