@@ -655,9 +655,16 @@ module.exports = class LevelView {
   }
 
   addOceanOverlay(tint) {
-    const surface = this.fluffGroup.create(0, 0, "underwaterOverlay");
+    const surface = this.fluffGroup.create(0, 0, "underwaterOverlay", "water_still_grey00.png");
+    const frameList = Phaser.Animation.generateFrameNames("water_still_grey", 0, 31, ".png", 2);
+    surface.animations.add("idle", frameList, 5, true);
+    this.playScaledSpeed(surface.animations, "idle");
+
     [surface.scale.x, surface.scale.y] = this.controller.scaleFromOriginal();
-    surface.alpha = 0.6;
+    surface.scale.x *= 400 / 16;
+    surface.scale.y *= 400 / 16;
+    surface.alpha = 1;
+    surface.smoothed = false;
     surface.blendMode = PIXI.blendModes.OVERLAY;
 
     const sprite = this.fluffGroup.create(0, 0, "finishOverlay");
@@ -1517,7 +1524,7 @@ module.exports = class LevelView {
     }
   }
 
-  playScaledSpeed(animationManager, name) {
+  playScaledSpeed(animationManager, name, factor = 1) {
     var animation = animationManager.getAnimation(name);
     if (animation === null) {
       console.log("can't find animation name : " + name);
@@ -1526,7 +1533,7 @@ module.exports = class LevelView {
         animation.originalFps = 1000 / animation.delay;
       }
       var fps = this.controller.originalFpsToScaled(animation.originalFps);
-      return animationManager.play(name, fps);
+      return animationManager.play(name, fps * factor);
     }
   }
 
@@ -2237,7 +2244,7 @@ module.exports = class LevelView {
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Prismarine", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
-        this.playScaledSpeed(sprite.animations, "idle");
+        this.playScaledSpeed(sprite.animations, "idle", 0.2);
         break;
 
       case "seaLantern":
