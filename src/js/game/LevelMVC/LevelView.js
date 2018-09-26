@@ -1990,6 +1990,12 @@ module.exports = class LevelView {
           this.audioPlayer.play("bump");
         });
       }
+
+      for (let [direction, offset] of [["down", 351], ["left", 354], ["up", 360], ["right", 357]]) {
+        entity.sprite.animations.add("punch_" + direction, Phaser.Animation.generateFrameNames("Player_", offset, offset + 2, "", 3), frameRate, false).onComplete.add(() => {
+          this.audioPlayer.play("punch");
+        });
+      }
     }
 
     if (this.controller.levelModel.isInBoat()) {
