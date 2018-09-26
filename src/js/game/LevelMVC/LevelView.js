@@ -1999,6 +1999,7 @@ module.exports = class LevelView {
       for (let [direction, offset] of [["down", 9], ["left", 15], ["up", 21], ["right", 27]]) {
         entity.sprite.animations.add("idle_" + direction, Phaser.Animation.generateFrameNames("Boat_", offset, offset, "", 2), frameRate, true);
         entity.sprite.animations.add("walk_" + direction, Phaser.Animation.generateFrameNames("Boat_", offset, offset + 4, "", 2), frameRate, true);
+        entity.sprite.animations.add("celebrate_" + direction, ["Boat_49", "Boat_50", "Boat_49", "Boat_50", "Boat_49"], frameRate / 2, false);
       }
 
       for (let [direction, offset] of [["down", 51], ["left", 63], ["up", 69], ["right", 57]]) {
