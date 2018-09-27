@@ -497,7 +497,6 @@ module.exports = class LevelView {
       "coralPlantRedDeep": ["blocks", "Coral_Plant_Red_Sand", -12, 0],
       "coralPlantYellow": ["blocks", "Coral_Plant_Yellow", -12, 0],
       "coralPlantYellowDeep": ["blocks", "Coral_Plant_Yellow_Sand", -12, 0],
-      "chest": ["blocks", "Chest0", -12, 0],
 
       // Old block names, for compat until we can remove them from levels.
       "blueCoralFan": ["blocks", "Coral_Plant_Blue", -12, 0],
@@ -506,6 +505,7 @@ module.exports = class LevelView {
       "redCoralFan": ["blocks", "Coral_Plant_Red", -12, 0],
       "yellowCoralFan": ["blocks", "Coral_Plant_Yellow", -12, 0],
 
+      "chest": ["blocks", "Chest0", -12, -20],
       "invisible": ["blocks", "Invisible", 0, 0],
     };
     this.actionPlaneBlocks = [];
@@ -635,6 +635,12 @@ module.exports = class LevelView {
       animation.updateCurrentFrame();
       completionHandler();
     });
+  }
+
+  playOpenChestAnimation(position) {
+    const blockIndex = (this.yToIndex(position[1])) + position[0];
+    const block = this.actionPlaneBlocks[blockIndex];
+    this.playScaledSpeed(block.animations, "open");
   }
 
   playPlayerAnimation(animationName, position, facing, isOnBlock = false, entity = this.player) {
@@ -2327,7 +2333,7 @@ module.exports = class LevelView {
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Seagrass", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
-        this.playScaledSpeed(sprite.animations, "idle");
+        this.playScaledSpeed(sprite.animations, "idle", 0.5);
         break;
 
       case "kelp":
@@ -2338,7 +2344,17 @@ module.exports = class LevelView {
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("KelpSingle_", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
-        this.playScaledSpeed(sprite.animations, "idle");
+        this.playScaledSpeed(sprite.animations, "idle", 0.5);
+        break;
+
+      case "chest":
+        atlas = this.blocks[blockType][0];
+        frame = this.blocks[blockType][1];
+        xOffset = this.blocks[blockType][2];
+        yOffset = this.blocks[blockType][3];
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
+        frameList = Phaser.Animation.generateFrameNames("Chest", 0, 2, "", 0);
+        sprite.animations.add("open", frameList, 5, false);
         break;
 
       case "NetherPortal":

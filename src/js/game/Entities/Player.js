@@ -153,6 +153,12 @@ module.exports = class Player extends BaseEntity {
           this.controller.handleEndState(false);
         });
       } else {
+        Position.getOrthogonalPositions(player.position).forEach(ortho => {
+          const block = levelModel.actionPlane.getBlockAt(ortho);
+          if (block && block.blockType === "chest") {
+            levelView.playOpenChestAnimation(ortho);
+          }
+        });
         this.controller.delayPlayerMoveBy(this.moveDelayMin, this.moveDelayMax, () => {
           commandQueueItem.succeeded();
         });
