@@ -497,6 +497,7 @@ module.exports = class LevelView {
       "coralPlantRedDeep": ["blocks", "Coral_Plant_Red_Sand", -12, 0],
       "coralPlantYellow": ["blocks", "Coral_Plant_Yellow", -12, 0],
       "coralPlantYellowDeep": ["blocks", "Coral_Plant_Yellow_Sand", -12, 0],
+      "chest": ["blocks", "Chest0", -12, 0],
 
       // Old block names, for compat until we can remove them from levels.
       "blueCoralFan": ["blocks", "Coral_Plant_Blue", -12, 0],
