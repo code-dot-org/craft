@@ -587,9 +587,6 @@ module.exports = class LevelView {
   }
 
   render() {
-    if (this.controller.levelModel.isUnderwater()) {
-      this.player.sprite.sortOrder = 1000;
-    }
     this.actionGroup.sort('sortOrder');
     this.fluffGroup.sort('z');
   }
@@ -648,7 +645,7 @@ module.exports = class LevelView {
   }
 
   playIdleAnimation(position, facing, isOnBlock, entity = this.player) {
-    const animationName = "idle";
+    const animationName = this.controller.levelModel.isUnderwater() ? "walk" : "idle";
     this.playPlayerAnimation(animationName, position, facing, isOnBlock, entity);
   }
 
@@ -1982,7 +1979,7 @@ module.exports = class LevelView {
 
       for (let [direction, offset] of [["down", 299], ["left", 306], ["up", 313], ["right", 320]]) {
         entity.sprite.animations.add("idle_" + direction, Phaser.Animation.generateFrameNames("Player_", offset, offset, "", 3), frameRate, true);
-        entity.sprite.animations.add("walk_" + direction, Phaser.Animation.generateFrameNames("Player_", offset + 1, offset + 4, "", 3), frameRate, true);
+        entity.sprite.animations.add("walk_" + direction, Phaser.Animation.generateFrameNames("Player_", offset + 1, offset + 4, "", 3), frameRate / 2, true);
       }
 
       for (let [direction, offset] of [["down", 327], ["left", 333], ["up", 345], ["right", 339]]) {
