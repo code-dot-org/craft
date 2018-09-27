@@ -141,29 +141,7 @@ module.exports = class Player extends BaseEntity {
       groundType = levelModel.groundPlane.getBlockAt(player.position).blockType;
     }
 
-    levelView.playMoveForwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, () => {
-      levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock);
-
-      if (levelModel.isPlayerStandingInWater() && !levelModel.isInBoat()) {
-        levelView.playDrownFailureAnimation(player.position, player.facing, player.isOnBlock, () => {
-          this.controller.handleEndState(false);
-        });
-      } else if (levelModel.isPlayerStandingInLava()) {
-        levelView.playBurnInLavaAnimation(player.position, player.facing, player.isOnBlock, () => {
-          this.controller.handleEndState(false);
-        });
-      } else {
-        Position.getOrthogonalPositions(player.position).forEach(ortho => {
-          const block = levelModel.actionPlane.getBlockAt(ortho);
-          if (block && block.blockType === "chest") {
-            levelView.playOpenChestAnimation(ortho);
-          }
-        });
-        this.controller.delayPlayerMoveBy(this.moveDelayMin, this.moveDelayMax, () => {
-          commandQueueItem.succeeded();
-        });
-      }
-    });
+    levelView.playMoveForwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, () => this.afterMove(commandQueueItem));
 
     this.updateHidingTree();
     this.updateHidingBlock(prevPosition);
@@ -188,26 +166,36 @@ module.exports = class Player extends BaseEntity {
       groundType = levelModel.actionPlane.getBlockAt(player.position).blockType;
     }
 
-    levelView.playMoveBackwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, () => {
-      levelView.playIdleAnimation(player.position, player.facing, player.isOnBlock, player);
-
-      if (levelModel.isPlayerStandingInWater() && !levelModel.isInBoat()) {
-        levelView.playDrownFailureAnimation(player.position, player.facing, player.isOnBlock, () => {
-          this.controller.handleEndState(false);
-        });
-      } else if (levelModel.isPlayerStandingInLava()) {
-        levelView.playBurnInLavaAnimation(player.position, player.facing, player.isOnBlock, () => {
-          this.controller.handleEndState(false);
-        });
-      } else {
-        this.controller.delayPlayerMoveBy(this.moveDelayMin, this.moveDelayMax, () => {
-          commandQueueItem.succeeded();
-        });
-      }
-    });
+    levelView.playMoveBackwardAnimation(player, prevPosition, player.facing, jumpOff, player.isOnBlock, groundType, () => this.afterMove(commandQueueItem));
 
     this.updateHidingTree();
     this.updateHidingBlock(prevPosition);
+  }
+
+  afterMove(commandQueueItem) {
+    const levelModel = this.controller.levelModel;
+    const levelView = this.controller.levelView;
+    levelView.playIdleAnimation(this.position, this.facing, this.isOnBlock);
+
+    if (levelModel.isPlayerStandingInWater() && !levelModel.isInBoat()) {
+      levelView.playDrownFailureAnimation(this.position, this.facing, this.isOnBlock, () => {
+        this.controller.handleEndState(false);
+      });
+    } else if (levelModel.isPlayerStandingInLava()) {
+      levelView.playBurnInLavaAnimation(this.position, this.facing, this.isOnBlock, () => {
+        this.controller.handleEndState(false);
+      });
+    } else {
+      Position.getOrthogonalPositions(this.position).forEach(ortho => {
+        const block = levelModel.actionPlane.getBlockAt(ortho);
+        if (block && block.blockType === "chest") {
+          levelView.playOpenChestAnimation(ortho);
+        }
+      });
+      this.controller.delayPlayerMoveBy(this.moveDelayMin, this.moveDelayMax, () => {
+        commandQueueItem.succeeded();
+      });
+    }
   }
 
   bump(commandQueueItem) {
