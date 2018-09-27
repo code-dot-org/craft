@@ -176,6 +176,17 @@ test('LevelModel', (t) => {
 
       t.end();
     });
+
+    t.test('returns an empty block when checking outside the level boundary', (t) => {
+      const levelDefinition = makeLevelDefinition(1, 1);
+      levelDefinition.playerStartPosition = [0, 0];
+      levelDefinition.playerStartDirection = 1; // right
+
+      let levelModel = new LevelModel(levelDefinition, mockGameController);
+      t.equal(levelModel.getForwardBlockType(), '');
+
+      t.end();
+    });
   });
 
   t.test('isPlayerNextTo', (t) => {
