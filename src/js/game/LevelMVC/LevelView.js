@@ -2454,8 +2454,7 @@ module.exports = class LevelView {
 
       default:
         if (!this.blocks[blockType]) {
-          console.warn(`Unknown block type: ${blockType}`);
-          blockType = 'transparent';
+          throw new Error(`Unknown block type: ${blockType}`);
         }
         atlas = this.blocks[blockType][0];
         frame = this.blocks[blockType][1];
