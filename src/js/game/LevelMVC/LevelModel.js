@@ -401,7 +401,11 @@ module.exports = class LevelModel {
   }
 
   getForwardBlockType() {
-    return this.getForwardBlock().blockType;
+    const forwardBlock = this.getForwardBlock();
+    if (forwardBlock) {
+      return forwardBlock.blockType;
+    }
+    return "";
   }
 
   getForwardBlock() {
