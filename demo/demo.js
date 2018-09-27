@@ -57,6 +57,10 @@ $('#reset-button').click(function () {
   gameController.codeOrgAPI.startAttempt(() => {});
 });
 
+if (!gameController.levelData.isAgentLevel) {
+  $('#entity-select').hide();
+}
+
 window.addEventListener('keydown', e => {
   if (e.target !== document.body) {
     e.preventDefault();
@@ -65,6 +69,10 @@ window.addEventListener('keydown', e => {
 
   var target = $('input[name=target]:checked').val();
   var instance = target === 'Player' ? gameController.player : gameController.agent;
+
+  if (instance.queue.getLength() > 0) {
+    return;
+  }
 
   switch (e.keyCode) {
     case 8:
@@ -79,35 +87,21 @@ window.addEventListener('keydown', e => {
       break;
     case 38:
     case 87:
-      instance.movementState = 0;
-      instance.updateMovement();
+      gameController.codeOrgAPI.moveDirection(null, target, 0);
       break;
     case 40:
     case 83:
-      instance.movementState = 2;
-      instance.updateMovement();
+      gameController.codeOrgAPI.moveDirection(null, target, 2);
       break;
     case 37:
     case 65:
-      instance.movementState = 3;
-      instance.updateMovement();
+      gameController.codeOrgAPI.moveDirection(null, target, 3);
       break;
     case 39:
     case 68:
-      instance.movementState = 1;
-      instance.updateMovement();
+      gameController.codeOrgAPI.moveDirection(null, target, 1);
       break;
   }
-}, true);
-
-window.addEventListener('keyup', e => {
-  e.stopImmediatePropagation();
-
-  var target = $('input[name=target]:checked').val();
-  var instance = target === 'Player' ? gameController.player : gameController.agent;
-
-  instance.movementState = -1;
-  instance.updateMovement();
 }, true);
 
 window.gameController = gameController;
