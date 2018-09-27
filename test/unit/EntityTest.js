@@ -90,7 +90,7 @@ test('canPlaceBlockOver', t => {
   t.end();
 });
 
-test.only('playerCanOpenTreasureChest', t => {
+test('playerCanOpenTreasureChest', t => {
   const player = new Player(mockGameController, "Player", 1, 1, "Player", true, 1);
   player.updateHidingBlock = () => {};
   mockGameController.levelModel.moveForward = () => {
