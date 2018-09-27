@@ -1,6 +1,7 @@
 const test = require('tape');
 
 const LevelBlock = require('../../src/js/game/LevelMVC/LevelBlock');
+const LevelPlane = require('../../src/js/game/LevelMVC/LevelPlane');
 const BaseEntity = require('../../src/js/game/Entities/BaseEntity');
 const Sheep = require('../../src/js/game/Entities/Sheep');
 const Player = require('../../src/js/game/Entities/Player');
@@ -8,7 +9,25 @@ const Agent = require('../../src/js/game/Entities/Agent');
 
 const mockGameController = {
   getIsDirectPlayerControl: () => false,
+  delayPlayerMoveBy: () => {},
   levelData: {},
+  levelModel: {
+    isPlayerStandingInWater: () => false,
+    isPlayerStandingInLava: () => false,
+  },
+  levelView: {
+    trees: [],
+    collectibleItems: [],
+    playMoveForwardAnimation: (entity, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, completionHandler) => {
+      completionHandler();
+    },
+    playIdleAnimation: () => {},
+    playOpenChestAnimation: () => {},
+  }
+};
+
+const mockPlane = {
+  getBlockAt: () => new LevelBlock(""),
 };
 
 test('canPlaceBlockOver', t => {
@@ -71,6 +90,29 @@ test('canPlaceBlockOver', t => {
   t.end();
 });
 
+test.only('playerCanOpenTreasureChest', t => {
+  const player = new Player(mockGameController, "Player", 1, 1, "Player", true, 1);
+  player.updateHidingBlock = () => {};
+  mockGameController.levelModel.moveForward = () => {
+    player.setMovePosition([2, 1]);
+  };
+  mockGameController.levelModel.groundPlane = mockPlane;
+
+  const data = [
+    '', '', '', '',
+    '', '', '', 'chest',
+    '', '', '', '',
+  ];
+  const actionPlane = new LevelPlane(data, 4, 3, null, "actionPlane");
+  const chest = actionPlane.getBlockAt([3, 1]);
+  mockGameController.levelModel.actionPlane = actionPlane;
+
+  t.equal(chest.isOpen, false);
+  player.doMoveForward();
+  t.equal(chest.isOpen, true);
+
+  t.end();
+});
 
 test('canPlaceBlock, by entity case', t => {
   const walkableBlocks = ["rails", "redstoneWire"].map((type) => new LevelBlock(type));

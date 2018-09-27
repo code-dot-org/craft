@@ -188,7 +188,8 @@ module.exports = class Player extends BaseEntity {
     } else {
       Position.getOrthogonalPositions(this.position).forEach(ortho => {
         const block = levelModel.actionPlane.getBlockAt(ortho);
-        if (block && block.blockType === "chest") {
+        if (block && block.blockType === "chest" && !block.isOpen) {
+          block.isOpen = true;
           levelView.playOpenChestAnimation(ortho);
         }
       });
