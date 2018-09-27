@@ -15,15 +15,6 @@ const mockGameController = {
     isPlayerStandingInWater: () => false,
     isPlayerStandingInLava: () => false,
   },
-  levelView: {
-    trees: [],
-    collectibleItems: [],
-    playMoveForwardAnimation: (entity, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, completionHandler) => {
-      completionHandler();
-    },
-    playIdleAnimation: () => {},
-    playOpenChestAnimation: () => {},
-  }
 };
 
 const mockPlane = {
@@ -91,12 +82,24 @@ test('canPlaceBlockOver', t => {
 });
 
 test('playerCanOpenTreasureChest', t => {
-  const player = new Player(mockGameController, "Player", 1, 1, "Player", true, 1);
+  const controller = Object.assign({}, mockGameController, {
+    levelView: {
+      trees: [],
+      collectibleItems: [],
+      playMoveForwardAnimation: (entity, oldPosition, facing, shouldJumpDown, isOnBlock, groundType, completionHandler) => {
+        completionHandler();
+      },
+      playIdleAnimation: () => {},
+      playOpenChestAnimation: () => {},
+    },
+  });
+
+  const player = new Player(controller, "Player", 1, 1, "Player", true, 1);
   player.updateHidingBlock = () => {};
-  mockGameController.levelModel.moveForward = () => {
+  controller.levelModel.moveForward = () => {
     player.setMovePosition([2, 1]);
   };
-  mockGameController.levelModel.groundPlane = mockPlane;
+  controller.levelModel.groundPlane = mockPlane;
 
   const data = [
     '', '', '', '',
@@ -105,7 +108,7 @@ test('playerCanOpenTreasureChest', t => {
   ];
   const actionPlane = new LevelPlane(data, 4, 3, null, "actionPlane");
   const chest = actionPlane.getBlockAt([3, 1]);
-  mockGameController.levelModel.actionPlane = actionPlane;
+  controller.levelModel.actionPlane = actionPlane;
 
   t.equal(chest.isOpen, false);
   player.doMoveForward();
