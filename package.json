@@ -48,7 +48,7 @@
     "sinon": "^3.2.1",
     "tape": "^4.8.0",
     "watchify": "^3.11.0",
-    "webpack": "^4.10.2",
+    "webpack": "4.19.1",
     "webpack-cli": "^2.1.5",
     "webpack-dev-server": "^3.1.4"
   }
