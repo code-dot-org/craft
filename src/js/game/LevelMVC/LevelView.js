@@ -2309,10 +2309,9 @@ module.exports = class LevelView {
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
-        const options = [1500, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true];
-        const tween = this.addResettableTween(sprite).to({
-          alpha: 0.5,
-        }, ...options);
+        frameList = Phaser.Animation.generateFrameNames("Prismarine", 0, 5, "", 0);
+        sprite.animations.add("idle", frameList, 5, true);
+        this.playScaledSpeed(sprite.animations, "idle", 0.1);
         break;
 
       case "seaLantern":
