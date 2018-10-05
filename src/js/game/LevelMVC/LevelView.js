@@ -2112,7 +2112,7 @@ module.exports = class LevelView {
     const anim = sprite.animations.add("animate", frameList, 10, false);
 
     // If direct player control, we have stuff to do to manage miniblock pick up
-    if (this.controller.getIsDirectPlayerControl()) {
+    if (this.controller.getIsDirectPlayerControl() || this.controller.levelData.isAquaticLevel) {
       const distanceBetween = function (position, position2) {
         return Math.sqrt(Math.pow(position.x - position2.x, 2) + Math.pow(position.y - position2.y, 2));
       };
