@@ -36,13 +36,13 @@ module.exports = class Dolphin extends BaseEntity {
       let facingName = this.controller.levelView.getDirectionName(i);
       let frameList = Phaser.Animation.generateFrameNames("Dolphin", frameListPerDirection[i][0], frameListPerDirection[i][1], ".png", 2);
       this.sprite.animations.add("idle"+facingName, frameList, frameRate, false).onComplete.add(() => {
-          this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle"+facingName);
+          this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle"+facingName,.5);
       });
     }
     // Initialize
     let facingName = this.controller.levelView.getDirectionName(this.facing);
     console.log(facingName);
-    this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + facingName);
+    this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + facingName,.5);
     console.log(this.facing);
     this.sprite.x = this.offset[0] + 40 * this.position.x;
     this.sprite.y = this.offset[1] + 40 * this.position.y;
