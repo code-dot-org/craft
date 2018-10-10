@@ -581,17 +581,13 @@ module.exports = class LevelModel {
       // Prevent walking into water/lava in levels where the player is
       // controlled by arrow keys. In levels where the player is controlled by
       // blocks, let them drown.
-      if (this.groundPlane.getBlockAt(position).blockType === "water") {
+      const blockTypeAtPosition = this.groundPlane.getBlockAt(position).blockType;
+      const frontEntity = this.getEntityAt(position);
+      if (['water', 'lava'].includes(blockTypeAtPosition)) {
         if (this.controller.getIsDirectPlayerControl()) {
-          result.push("water");
+          result.push(blockTypeAtPosition);
         } else {
-          return [true];
-        }
-      } else if (this.groundPlane.getBlockAt(position).blockType === "lava") {
-        if (this.controller.getIsDirectPlayerControl()) {
-          result.push("lava");
-        } else {
-          return [true];
+          return [frontEntity === undefined || frontEntity.canMoveThrough()];
         }
       }
 
@@ -600,7 +596,6 @@ module.exports = class LevelModel {
         return result;
       }
 
-      var frontEntity = this.getEntityAt(position);
       if (frontEntity !== undefined) {
         result.push("frontEntity");
         result.push(frontEntity);
