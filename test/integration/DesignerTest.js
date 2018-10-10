@@ -177,15 +177,15 @@ test('Designer 6: Lead Cows to Grass', t => {
 
 
 test('Designer 7: Cannot walk into lava', t => {
-  attempt('designer07', (api, levelModel) => {
+  attempt('designer07', async (api, levelModel) => {
+    t.plan(1);
     const moveForward = () => new Promise(r => api.moveForward(null, 'Player', r));
     const turnLeft = () => new Promise(r => api.turnLeft(null, 'Player', r));
-    return turnLeft()
-      .then(moveForward)
-      .then(() => {
-        t.true(Position.equals(levelModel.player.position, new Position(3, 1)));
-        t.end();
-      });
+
+    await turnLeft();
+    await moveForward();
+
+    t.true(Position.equals(levelModel.player.position, new Position(3, 1)));
   });
 });
 
