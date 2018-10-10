@@ -17,5 +17,5 @@ test('Aquatic 2: Move to boat (pass)', t => {
         t.deepEqual(levelModel.player.position, new Position(7, 3));
         t.end();
       });
-  }, 1);
+  });
 });
