@@ -2,20 +2,10 @@ const test = require("tape");
 const attempt = require("../helpers/RunLevel.js");
 const Position = require("../../src/js/game/LevelMVC/Position");
 
-test('Aquatic 2: Move to boat (pass)', t => {
+test.only('Aquatic 2: Move to boat (pass)', t => {
   attempt('aquatic02', (api, levelModel) => {
-    function moveForward() {
-      return new Promise((resolve) => {
-        api.moveForward(null, 'Player', resolve);
-      });
-    }
-
-    function turnRight() {
-      return new Promise((resolve) => {
-        api.turnRight(null, 'Player', resolve);
-      });
-    }
-
+    const moveForward = () => new Promise(r => api.moveForward(null, 'Player', r));
+    const turnRight = () => new Promise(r => api.turnRight(null, 'Player', r));
     return moveForward()
       .then(turnRight)
       .then(moveForward)
