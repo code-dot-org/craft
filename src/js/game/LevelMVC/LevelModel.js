@@ -578,36 +578,53 @@ module.exports = class LevelModel {
         }
         result.push("notEmpty");
       }
-      // Prevent walking into water/lava in levels where the player is
-      // controlled by arrow keys. In levels where the player is controlled by
-      // blocks, let them drown.
-      if (this.groundPlane.getBlockAt(position).blockType === "water") {
-        if (this.controller.getIsDirectPlayerControl()) {
+      if (this.controller.getIsDirectPlayerControl()) {
+        // Prevent walking into water/lava in levels where the player is
+        // controlled by arrow keys. In levels where the player is controlled by
+        // blocks, let them drown.
+        if (this.groundPlane.getBlockAt(position).blockType === "water") {
           result.push("water");
-        } else {
-          return [true];
-        }
-      } else if (this.groundPlane.getBlockAt(position).blockType === "lava") {
-        if (this.controller.getIsDirectPlayerControl()) {
+        } else if (this.groundPlane.getBlockAt(position).blockType === "lava") {
           result.push("lava");
-        } else {
+        }
+
+        if (this.groundPlane.getBlockAt(position).blockType !== "water" && this.isInBoat()) {
+          result.push("notWater");
+          return result;
+        }
+
+        var frontEntity = this.getEntityAt(position);
+        if (frontEntity !== undefined) {
+          result.push("frontEntity");
+          result.push(frontEntity);
+        }
+        let groundBlock = this.groundPlane.getBlockAt(position);
+        let actionBlock = this.actionPlane.getBlockAt(position);
+        result[0] = entity.hasPermissionToWalk(actionBlock, frontEntity, groundBlock);
+      } else {
+        // Prevent walking into water/lava in levels where the player is
+        // controlled by arrow keys. In levels where the player is controlled by
+        // blocks, let them drown.
+        if (this.groundPlane.getBlockAt(position).blockType === "water") {
+          return [true];
+        } else if (this.groundPlane.getBlockAt(position).blockType === "lava") {
           return [true];
         }
-      }
 
-      if (this.groundPlane.getBlockAt(position).blockType !== "water" && this.isInBoat()) {
-        result.push("notWater");
-        return result;
-      }
+        if (this.groundPlane.getBlockAt(position).blockType !== "water" && this.isInBoat()) {
+          result.push("notWater");
+          return result;
+        }
 
-      var frontEntity = this.getEntityAt(position);
-      if (frontEntity !== undefined) {
-        result.push("frontEntity");
-        result.push(frontEntity);
+        var frontEntity = this.getEntityAt(position);
+        if (frontEntity !== undefined) {
+          result.push("frontEntity");
+          result.push(frontEntity);
+        }
+        let groundBlock = this.groundPlane.getBlockAt(position);
+        let actionBlock = this.actionPlane.getBlockAt(position);
+        result[0] = entity.hasPermissionToWalk(actionBlock, frontEntity, groundBlock);
       }
-      let groundBlock = this.groundPlane.getBlockAt(position);
-      let actionBlock = this.actionPlane.getBlockAt(position);
-      result[0] = entity.hasPermissionToWalk(actionBlock, frontEntity, groundBlock);
     } else {
       result.push("outBound");
     }
