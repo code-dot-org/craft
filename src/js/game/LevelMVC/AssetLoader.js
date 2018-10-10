@@ -707,7 +707,6 @@ module.exports = class AssetLoader {
       ],
       heroAllAssetsMinusPlayer: [
         'entityShadow',
-        'dolphin',
         'selectionIndicator',
         'tallGrass',
         'finishOverlay',
