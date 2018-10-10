@@ -586,8 +586,8 @@ module.exports = class LevelModel {
       if (['water', 'lava'].includes(blockTypeAtPosition)) {
         if (this.controller.getIsDirectPlayerControl()) {
           result.push(blockTypeAtPosition);
-        } else {
-          return [frontEntity === undefined || frontEntity.canMoveThrough()];
+        } else if (frontEntity === undefined || frontEntity.canMoveThrough()) {
+          return [true];
         }
       }
 
