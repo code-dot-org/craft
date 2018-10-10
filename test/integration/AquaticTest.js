@@ -3,19 +3,29 @@ const attempt = require("../helpers/RunLevel.js");
 const Position = require("../../src/js/game/LevelMVC/Position");
 
 test('Aquatic 2: Move to boat (pass)', t => {
-  attempt('aquatic02', api => new Promise(resolve => {
-    api.moveForward(null, 'Player');
-    api.turnRight(null, 'Player');
-    for (let i = 0; i < 5; i++) {
-      api.moveForward(null, 'Player');
+  attempt('aquatic02', (api, levelModel) => {
+    function moveForward() {
+      return new Promise((resolve) => {
+        api.moveForward(null, 'Player', resolve);
+      });
     }
 
-    api.startAttempt((success, levelModel) => {
-      t.assert(success);
-      t.deepEqual(levelModel.player.position, new Position(7, 3));
-      t.end();
+    function turnRight() {
+      return new Promise((resolve) => {
+        api.turnRight(null, 'Player', resolve);
+      });
+    }
 
-      resolve();
-    });
-  }), 1);
+    return moveForward()
+      .then(turnRight)
+      .then(moveForward)
+      .then(moveForward)
+      .then(moveForward)
+      .then(moveForward)
+      .then(moveForward)
+      .then(() => {
+        t.deepEqual(levelModel.player.position, new Position(7, 3));
+        t.end();
+      });
+  }, 1);
 });
