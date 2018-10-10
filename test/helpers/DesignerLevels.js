@@ -115,7 +115,7 @@ module.exports = {
     usePlayer: true,
     playerStartPosition: [3, 1],
     playerStartDirection: 2,
-    levelVerificationTimeout: -1,
+    levelVerificationTimeout: 60000,
     timeoutResult: () => false,
     verificationFunction: verificationAPI  => {
       const successPositions = [[7, 4] , [7, 5]];

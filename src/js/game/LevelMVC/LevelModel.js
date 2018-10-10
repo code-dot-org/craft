@@ -566,7 +566,7 @@ module.exports = class LevelModel {
   }
 
   isPositionEmpty(position, entity = this.player) {
-    var result = [false,];
+    var result = [false];
 
     if (this.inBounds(position)) {
       if (!this.actionPlane.getBlockAt(position).isWalkable) {
