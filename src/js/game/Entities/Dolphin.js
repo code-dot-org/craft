@@ -10,14 +10,23 @@ module.exports = class Dolphin extends BaseEntity {
   }
 
   getFrameForDirection() {
-
+    switch (this.facing) {
+      case FacingDirection.North:
+        return 'Dolphin09';
+      case FacingDirection.South:
+        return 'Dolphin27';
+      case FacingDirection.East:
+        return 'Dolphin00';
+      case FacingDirection.West:
+        return 'Dolphin18';
+    }
   }
 
   prepareSprite() {
     const actionGroup = this.controller.levelView.actionGroup;
     const frame = this.getFrameForDirection();
-    this.sprite = actionGroup.create(0, 0, 'dolphin', 'Dolphin00.png');
-    // Initialize.
+    this.sprite = actionGroup.create(0, 0, 'dolphin', frame+'.png');
+    // Initialize
     this.sprite.x = this.offset[0] + 40 * this.position.x;
     this.sprite.y = this.offset[1] + 40 * this.position.y;
   }
