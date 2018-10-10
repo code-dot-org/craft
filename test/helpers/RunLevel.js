@@ -2,12 +2,13 @@ const sinon = require("sinon");
 const GameController = require("../../src/js/game/GameController");
 const AdventurerLevels = require("./AdventurerLevels");
 const AgentLevels = require("./AgentLevels");
+const AquaticLevels = require("./AquaticLevels");
 const DesignerLevels = require("./DesignerLevels");
 const FunctionalityLevels = require("./FunctionalityLevels");
 
 sinon.stub(Math, "random").returns(0.5);
 
-const levels = Object.assign({}, AdventurerLevels, AgentLevels, DesignerLevels, FunctionalityLevels);
+const levels = Object.assign({}, AdventurerLevels, AgentLevels, AquaticLevels, DesignerLevels, FunctionalityLevels);
 
 const defaults = {
   assetPacks: {

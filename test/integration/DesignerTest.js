@@ -175,6 +175,20 @@ test('Designer 6: Lead Cows to Grass', t => {
   }));
 });
 
+
+test('Designer 7: Cannot walk into lava', t => {
+  attempt('designer07', (api, levelModel) => {
+    const moveForward = () => new Promise(r => api.moveForward(null, 'Player', r));
+    const turnLeft = () => new Promise(r => api.turnLeft(null, 'Player', r));
+    return turnLeft()
+      .then(moveForward)
+      .then(() => {
+        t.true(Position.equals(levelModel.player.position, new Position(3, 1)));
+        t.end();
+      });
+  });
+});
+
 test('Designer 7: Explode Stone Wall', t => {
   attempt('designer07', api => new Promise(resolve => {
     // Make the creeper move towards the sheep.
