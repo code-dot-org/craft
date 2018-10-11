@@ -3,34 +3,28 @@ const attempt = require("../helpers/RunLevel.js");
 const Position = require("../../src/js/game/LevelMVC/Position");
 
 test('Designer 1: Chicken Move (fail)', t => {
-  attempt('designer01', api => new Promise(resolve => {
-    api.startAttempt(success => {
-      t.assert(!success);
-      t.end();
-
-      resolve();
-    });
-  }));
+  attempt('designer01', async api => {
+    const success = await api.startAttempt();
+    t.assert(!success);
+    t.end();
+  });
 });
 
 test('Designer 1: Chicken Move (pass)', t => {
-  attempt('designer01', api => new Promise(resolve => {
+  attempt('designer01', async api => {
     api.onEventTriggered(null, 'chicken', 2, event => {
       api.moveForward(null, event.targetIdentifier);
       api.turnLeft(null, event.targetIdentifier);
     });
 
-    api.startAttempt(success => {
-      t.assert(success);
-      t.end();
-
-      resolve();
-    });
-  }));
+    const success = await api.startAttempt();
+    t.assert(success);
+    t.end();
+  });
 });
 
 test('Designer 2: Four Chicken Move', t => {
-  attempt('designer02', api => new Promise(resolve => {
+  attempt('designer02', async api => {
     api.onEventTriggered(null, 'chicken', 2, event => {
       api.repeat(null, () => {
         api.drop(null, 'diamond', event.targetIdentifier);
@@ -39,17 +33,14 @@ test('Designer 2: Four Chicken Move', t => {
       }, -1, event.targetIdentifier);
     });
 
-    api.startAttempt(success => {
-      t.assert(success);
-      t.end();
-
-      resolve();
-    });
-  }), 0.5);
+    const success = await api.startAttempt();
+    t.assert(success);
+    t.end();
+  }, 0.5);
 });
 
 test('Designer 3: Four Chicken Random Move', t => {
-  attempt('designer03', api => new Promise(resolve => {
+  attempt('designer03', async api => {
     api.onEventTriggered(null, 'chicken', 2, event => {
       api.repeat(null, () => {
         // Movement isn't actually random because we've stubbed `Math.random()`
@@ -60,34 +51,28 @@ test('Designer 3: Four Chicken Random Move', t => {
       }, -1, event.targetIdentifier);
     });
 
-    api.startAttempt(success => {
-      t.assert(success);
-      t.end();
-
-      resolve();
-    });
-  }));
+    const success = await api.startAttempt();
+    t.assert(success);
+    t.end();
+  });
 });
 
 test('Designer 4: Move Player Inside House', t => {
-  attempt('designer04', api => new Promise(resolve => {
+  attempt('designer04', async api => {
     for (let i = 0; i < 5; i++) {
       api.moveForward(null, 'Player');
     }
     api.use(null, 'Player');
     api.moveForward(null, 'Player');
 
-    api.startAttempt(success => {
-      t.assert(success);
-      t.end();
-
-      resolve();
-    });
-  }));
+    const success = await api.startAttempt();
+    t.assert(success);
+    t.end();
+  });
 });
 
 test('Designer 5: Add Shear Sheep Behavior (push back)', t => {
-  attempt('designer05', api => new Promise(resolve => {
+  attempt('designer05', async (api, levelModel) => {
     // Move to the sheep and push it back 1 space.
     for (let i = 0; i < 4; i++) {
       api.moveForward(null, 'Player');
@@ -96,20 +81,17 @@ test('Designer 5: Add Shear Sheep Behavior (push back)', t => {
     api.moveForward(null, 'Player');
     api.moveForward(null, 'Player');
 
-    api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.player.position, new Position(5, 3)));
-      t.equal(levelModel.getEntityAt(new Position(6, 3)), undefined);
-      t.equal(levelModel.getEntityAt(new Position(7, 3)).type, 'sheep');
-      t.assert(!success);
-      t.end();
-
-      resolve();
-    });
-  }));
+    const success = await api.startAttempt();
+    t.true(Position.equals(levelModel.player.position, new Position(5, 3)));
+    t.equal(levelModel.getEntityAt(new Position(6, 3)), undefined);
+    t.equal(levelModel.getEntityAt(new Position(7, 3)).type, 'sheep');
+    t.assert(!success);
+    t.end();
+  });
 });
 
 test('Designer 5: Add Shear Sheep Behavior (fail)', t => {
-  attempt('designer05', api => new Promise(resolve => {
+  attempt('designer05', async api => {
     // Move to the sheep without defining the sheep `use` behavior.
     for (let i = 0; i < 4; i++) {
       api.moveForward(null, 'Player');
@@ -118,17 +100,14 @@ test('Designer 5: Add Shear Sheep Behavior (fail)', t => {
     api.moveForward(null, 'Player');
     api.use(null, 'Player');
 
-    api.startAttempt(success => {
-      t.assert(!success);
-      t.end();
-
-      resolve();
-    });
-  }));
+    const success = await api.startAttempt();
+    t.assert(!success);
+    t.end();
+  });
 });
 
 test('Designer 5: Add Shear Sheep Behavior (pass)', t => {
-  attempt('designer05', api => new Promise(resolve => {
+  attempt('designer05', async api => {
     // Set up the sheep `use` behavior to drop wool.
     api.onEventTriggered(null, 'sheep', 1, event => {
       api.drop(null, 'wool', event.targetIdentifier);
@@ -142,17 +121,14 @@ test('Designer 5: Add Shear Sheep Behavior (pass)', t => {
     api.moveForward(null, 'Player');
     api.use(null, 'Player');
 
-    api.startAttempt(success => {
-      t.assert(success);
-      t.end();
-
-      resolve();
-    });
-  }));
+    const success = api.startAttempt();
+    t.assert(success);
+    t.end();
+  });
 });
 
 test('Designer 6: Lead Cows to Grass', t => {
-  attempt('designer06', api => new Promise(resolve => {
+  attempt('designer06', async api => {
     // Define cow follow behavior as user code.
     api.onEventTriggered(null, 'cow', 2, event => {
       api.repeat(null, () => {
@@ -166,13 +142,10 @@ test('Designer 6: Lead Cows to Grass', t => {
     api.moveForward(null, 'Player');
     api.moveForward(null, 'Player');
 
-    api.startAttempt(success => {
-      t.assert(success);
-      t.end();
-
-      resolve();
-    });
-  }));
+    const success = await api.startAttempt();
+    t.assert(success);
+    t.end();
+  });
 });
 
 
@@ -190,7 +163,7 @@ test('Designer 7: Cannot walk into lava', t => {
 });
 
 test('Designer 7: Explode Stone Wall', t => {
-  attempt('designer07', api => new Promise(resolve => {
+  attempt('designer07', async (api, levelModel) => {
     // Make the creeper move towards the sheep.
     api.onEventTriggered(null, 'creeper', 2, event => {
       api.turnLeft(null, event.targetIdentifier);
@@ -233,18 +206,15 @@ test('Designer 7: Explode Stone Wall', t => {
       api.moveForward(null, 'Player');
     }
 
-    api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.player.position, new Position(7, 4)));
-      t.assert(success);
-      t.end();
-
-      resolve();
-    });
-  }), 0.5);
+    const success = await api.startAttempt();
+    t.true(Position.equals(levelModel.player.position, new Position(7, 4)));
+    t.assert(success);
+    t.end();
+  }, 0.5);
 });
 
 test('Designer 8: Trapped by Zombies', t => {
-  attempt('designer08', api => new Promise(resolve => {
+  attempt('designer08', async api => {
     // Define iron golem behavior as user code.
     api.onEventTriggered(null, 'ironGolem', 2, event => {
       api.repeat(null, () => {
@@ -253,27 +223,21 @@ test('Designer 8: Trapped by Zombies', t => {
       }, -1, event.targetIdentifier);
     });
 
-    api.startAttempt(success => {
-      t.assert(success);
-      t.end();
-
-      resolve();
-    });
-  }));
+    const success = await api.startAttempt();
+    t.assert(success);
+    t.end();
+  });
 });
 
 test('Designer 9: Spawn Entity', t => {
-  attempt('designer09', api => new Promise(resolve => {
+  attempt('designer09', async api => {
     api.spawnEntity(null, 'sheep', 'middle');
     api.onEventTriggered(null, 'sheep', 2, event => {
       api.moveToward(null, event.targetIdentifier, 'Player');
     });
 
-    api.startAttempt(success => {
-      t.assert(success);
-      t.end();
-
-      resolve();
-    });
-  }));
+    const success = await api.startAttempt();
+    t.assert(success);
+    t.end();
+  });
 });
