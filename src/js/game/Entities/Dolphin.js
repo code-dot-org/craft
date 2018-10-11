@@ -30,7 +30,6 @@ module.exports = class Dolphin extends BaseEntity {
     [0, 7]]; // left
     const frame = this.getFrameForDirection();
     const actionGroup = this.controller.levelView.actionGroup;
-    console.log(this.facing);
     this.sprite = actionGroup.create(0, 0, 'dolphin', frame+'.png');
     for (var i = 0; i < 4; i++) {
       let facingName = this.controller.levelView.getDirectionName(i);
@@ -41,9 +40,7 @@ module.exports = class Dolphin extends BaseEntity {
     }
     // Initialize
     let facingName = this.controller.levelView.getDirectionName(this.facing);
-    console.log(facingName);
     this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + facingName,.5);
-    console.log(this.facing);
     this.sprite.x = this.offset[0] + 40 * this.position.x;
     this.sprite.y = this.offset[1] + 40 * this.position.y;
   }
