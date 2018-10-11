@@ -213,7 +213,12 @@ module.exports.get = function (controller) {
       });
       controller.addCommand(callbackCommand);
     },
-
+    spawnEntityAt: function (highlightCallback, type, spawnX, spawnY, spawnDirection) {
+      var callbackCommand=new CallbackCommand(controller,highlightCallback,() => {
+        controller.spawnEntityAt(callbackCommand,type,spawnX,spawnY, spawnDirection);
+      });
+      controller.addCommand(callbackCommand);
+    },
     destroyEntity: function (highlightCallback, targetEntity) {
       var callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
         controller.destroyEntity(callbackCommand, targetEntity);
