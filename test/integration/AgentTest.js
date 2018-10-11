@@ -483,7 +483,7 @@ test('Agent 9: Clear Path', t => {
 });
 
 /*test.only('Agent 10: Ride Rails', t => {
-  attempt('agent10', api => new Promise(resolve => {
+  attempt('agent10', async (api, levelModel) => {
 
     const funcLong = () => {
       for (let i = 0; i < 3; ++i) {
@@ -549,15 +549,12 @@ test('Agent 9: Clear Path', t => {
     }, 28000);
 
     // Check the solutions
-    api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, new Position(9, 2)));
+    const success = await api.startAttempt();
+    t.true(Position.equals(levelModel.agent.position, new Position(9, 2)));
 
-      t.true(Position.equals(levelModel.player.position, new Position(4, 3)));
-      t.end();
-
-      resolve();
-    });
-  }), 1);
+    t.true(Position.equals(levelModel.player.position, new Position(4, 3)));
+    t.end();
+  }, 1);
 });*/
 
 test('Agent 11: The Nether', t => {
