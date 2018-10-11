@@ -26,14 +26,21 @@ module.exports.get = function (controller) {
      * @param {Function} onAttemptComplete - callback with two parameters,
      * "success", i.e., true if attempt was successful (level completed),
      * false if unsuccessful (level not completed), and the current level model.
+     * @return {Promise.<boolean>} a promise for a success value when
+     *   attempt is complete.
      */
     startAttempt: function (onAttemptComplete) {
-      controller.OnCompleteCallback = onAttemptComplete;
-      controller.setPlayerActionDelayByQueueLength();
-      controller.queue.begin();
-      controller.run();
-      controller.attemptRunning = true;
-      controller.resultReported = false;
+      return new Promise(resolve => {
+        controller.OnCompleteCallback = (...args) => {
+          onAttemptComplete && onAttemptComplete(...args);
+          resolve(args[0]);
+        };
+        controller.setPlayerActionDelayByQueueLength();
+        controller.queue.begin();
+        controller.run();
+        controller.attemptRunning = true;
+        controller.resultReported = false;
+      });
     },
 
     resetAttempt: function () {
