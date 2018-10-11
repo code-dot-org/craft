@@ -206,7 +206,7 @@ module.exports.get = function (controller) {
       });
       controller.addCommand(callbackCommand);
     },
-    spawnEntityAt: function(highlightCallback, type, spawnX, spawnY, spawnDirection) {
+    spawnEntityAt: function (highlightCallback, type, spawnX, spawnY, spawnDirection) {
       var callbackCommand=new CallbackCommand(controller,highlightCallback,() => {
         controller.spawnEntityAt(callbackCommand,type,spawnX,spawnY, spawnDirection);
       });
