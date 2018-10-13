@@ -251,6 +251,11 @@ module.exports = class AssetLoader {
         pngPath: `${this.assetRoot}images/Ghast.png`,
         jsonPath: `${this.assetRoot}images/Ghast.json`
       },
+      salmon: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/entities/Salmon_2018.png`,
+        jsonPath: `${this.assetRoot}images/entities/Salmon_2018.json`
+      },
       dig_wood1: {
         type: 'sound',
         mp3: `${this.assetRoot}audio/dig_wood1.mp3`,
@@ -808,6 +813,7 @@ module.exports = class AssetLoader {
         'crops',
         'torch',
         'dolphin',
+        'salmon',
         'destroyOverlay',
         'blockExplode',
         'miningParticles',
@@ -848,6 +854,7 @@ module.exports = class AssetLoader {
         'blocks',
         'cod',
         'dolphin',
+        'salmon',
         'leavesAcacia',
         'leavesBirch',
         'leavesJungle',
