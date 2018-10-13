@@ -12,7 +12,7 @@
     "codecov": "nyc report --reporter=text-lcov > ./coverage/unit.lcov && codecov",
     "test:unit": "tape ./test/unit/*.js",
     "test:integration": "karma start",
-    "test": "npm run lint && nyc npm run test:unit && npm run test:integration",
+    "test": "npm run lint && nyc tape ./test/unit/*.js && npm run test:integration",
     "lint": "eslint --ext .js src/js test",
     "preversion": "npm run test:unit",
     "version": "npm run build",
