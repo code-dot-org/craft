@@ -1308,7 +1308,7 @@ module.exports = class LevelView {
     }
 
     var playerAnimation = undefined;
-    if (entity === this.agent) {
+    if (entity === this.agent || this.controller.levelModel.isUnderwater()) {
       playerAnimation = "punchDestroy";
     } else {
       playerAnimation = blockType.match(/(ore|stone|clay|bricks|bedrock)/) ? "mine" : "punchDestroy";
@@ -1983,9 +1983,12 @@ module.exports = class LevelView {
       }
 
       for (let [direction, offset] of [["down", 351], ["left", 354], ["up", 360], ["right", 357]]) {
-        entity.sprite.animations.add("punch_" + direction, Phaser.Animation.generateFrameNames("Player_", offset, offset + 2, "", 3), frameRate, false).onComplete.add(() => {
+        const singlePunch = Phaser.Animation.generateFrameNames("Player_", offset, offset + 2, "", 3);
+        entity.sprite.animations.add("punch_" + direction, singlePunch, frameRate, false).onComplete.add(() => {
           this.audioPlayer.play("punch");
         });
+
+        entity.sprite.animations.add("punchDestroy_" + direction, singlePunch.concat(singlePunch).concat(singlePunch), frameRate, false);
       }
     }
 
