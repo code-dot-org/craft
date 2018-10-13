@@ -236,6 +236,11 @@ module.exports = class AssetLoader {
         pngPath: `${this.assetRoot}images/Chicken.png`,
         jsonPath: `${this.assetRoot}images/Chicken.json`
       },
+      cod: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/entities/Cod_2018.png`,
+        jsonPath: `${this.assetRoot}images/entities/Cod_2018.json`
+      },
       dolphin: {
         type: 'atlasJSON',
         pngPath: `${this.assetRoot}images/entities/Dolphin_2018.png`,
@@ -799,6 +804,7 @@ module.exports = class AssetLoader {
         'undergroundFow',
         'blocks',
         'leavesJungle',
+        'cod',
         'crops',
         'torch',
         'dolphin',
@@ -840,6 +846,7 @@ module.exports = class AssetLoader {
         'blockShadows',
         'undergroundFow',
         'blocks',
+        'cod',
         'dolphin',
         'leavesAcacia',
         'leavesBirch',
