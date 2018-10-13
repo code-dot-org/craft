@@ -9,6 +9,7 @@ const Dolphin = require("../Entities/Dolphin");
 const Cod = require("../Entities/Cod");
 const Salmon = require("../Entities/Salmon");
 const Squid = require("../Entities/Squid");
+const TropicalFish = require("../Entities/TropicalFish");
 const Ghast = require("../Entities/Ghast");
 const Boat = require("../Entities/Boat");
 
@@ -54,7 +55,8 @@ module.exports = class LevelEntity {
   }
 
   isFriendlyEntity(type) {
-    const friendlyEntityList = ['sheep', 'ironGolem', 'cow', 'chicken','cod','codSurface','dolphin','dolphinSurface','salmon','salmonSurface','squid'];
+    const friendlyEntityList = ['sheep', 'ironGolem', 'cow', 'chicken','cod','codSurface',
+    'dolphin','dolphinSurface','salmon','salmonSurface','squid','tropicalFish','tropicalFishSurface'];
     for (var i = 0; i < friendlyEntityList.length; i++) {
       if (type === friendlyEntityList[i]) {
         return true;
@@ -111,6 +113,12 @@ module.exports = class LevelEntity {
           break;
         case 'squid':
           entity = new Squid(this.controller, type, identifier, x, y, facing);
+          break;
+        case 'tropicalFish':
+          entity = new TropicalFish(this.controller, type, identifier, x, y, facing, false);
+          break;
+        case 'tropicalFishSurface':
+          entity = new TropicalFish(this.controller, type, identifier, x, y, facing, true);
           break;
         default:
           entity = new BaseEntity(this.controller, type, identifier, x, y, facing);

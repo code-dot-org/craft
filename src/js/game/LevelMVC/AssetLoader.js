@@ -261,6 +261,11 @@ module.exports = class AssetLoader {
         pngPath: `${this.assetRoot}images/entities/Squid_2018.png`,
         jsonPath: `${this.assetRoot}images/entities/Squid_2018.json`
       },
+      tropicalFish: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/entities/Tropical_Fish_2018.png`,
+        jsonPath: `${this.assetRoot}images/entities/Tropical_Fish_2018.json`
+      },
       dig_wood1: {
         type: 'sound',
         mp3: `${this.assetRoot}audio/dig_wood1.mp3`,
@@ -820,6 +825,7 @@ module.exports = class AssetLoader {
         'dolphin',
         'salmon',
         'squid',
+        'tropicalFish',
         'destroyOverlay',
         'blockExplode',
         'miningParticles',
@@ -862,6 +868,7 @@ module.exports = class AssetLoader {
         'dolphin',
         'salmon',
         'squid',
+        'tropicalFish',
         'leavesAcacia',
         'leavesBirch',
         'leavesJungle',

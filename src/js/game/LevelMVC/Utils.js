@@ -17,7 +17,7 @@ module.exports.convertActionPlaneEntitiesToConfig = function (levelConfig) {
     for (var i = 0; i < plane.length; i++) {
       var item = plane[i];
 
-      if (item.match(/sheep|zombie|ironGolem|creeper|cod|cow|chicken|dolphin|ghast|boat|salmon|squid/)) {
+      if (item.match(/sheep|zombie|ironGolem|creeper|cod|cow|chicken|dolphin|ghast|boat|salmon|squid|tropicalFish/)) {
         const suffixToDirection = {
           Up: FacingDirection.North,
           Down: FacingDirection.South,
