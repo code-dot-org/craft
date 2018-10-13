@@ -236,6 +236,11 @@ module.exports = class AssetLoader {
         pngPath: `${this.assetRoot}images/Chicken.png`,
         jsonPath: `${this.assetRoot}images/Chicken.json`
       },
+      dolphin: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/entities/Dolphin_2018.png`,
+        jsonPath: `${this.assetRoot}images/entities/Dolphin_2018.json`
+      },
       ghast: {
         type: 'atlasJSON',
         pngPath: `${this.assetRoot}images/Ghast.png`,
@@ -796,6 +801,7 @@ module.exports = class AssetLoader {
         'leavesJungle',
         'crops',
         'torch',
+        'dolphin',
         'destroyOverlay',
         'blockExplode',
         'miningParticles',
@@ -834,6 +840,7 @@ module.exports = class AssetLoader {
         'blockShadows',
         'undergroundFow',
         'blocks',
+        'dolphin',
         'leavesAcacia',
         'leavesBirch',
         'leavesJungle',
