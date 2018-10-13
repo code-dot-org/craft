@@ -83,7 +83,10 @@ module.exports = class LevelEntity {
           entity = new Chicken(this.controller, type, identifier, x, y, facing);
           break;
         case 'dolphin':
-          entity = new Dolphin(this.controller, type, identifier, x, y, facing);
+          entity = new Dolphin(this.controller, type, identifier, x, y, facing, false);
+          break;
+        case 'dolphinSurface':
+          entity = new Dolphin(this.controller, type, identifier, x, y, facing, true);
           break;
         case 'ghast':
           entity = new Ghast(this.controller, type, identifier, x, y, facing, pattern);
