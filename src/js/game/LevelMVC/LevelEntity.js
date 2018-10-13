@@ -8,6 +8,7 @@ const Chicken = require("../Entities/Chicken");
 const Dolphin = require("../Entities/Dolphin");
 const Cod = require("../Entities/Cod");
 const Salmon = require("../Entities/Salmon");
+const SeaTurtle = require("../Entities/SeaTurtle");
 const Squid = require("../Entities/Squid");
 const TropicalFish = require("../Entities/TropicalFish");
 const Ghast = require("../Entities/Ghast");
@@ -56,7 +57,8 @@ module.exports = class LevelEntity {
 
   isFriendlyEntity(type) {
     const friendlyEntityList = ['sheep', 'ironGolem', 'cow', 'chicken','cod','codSurface',
-    'dolphin','dolphinSurface','salmon','salmonSurface','squid','tropicalFish','tropicalFishSurface'];
+    'dolphin','dolphinSurface','salmon','salmonSurface','seaTurtle','seaTurtleSurface',
+    'squid','tropicalFish','tropicalFishSurface'];
     for (var i = 0; i < friendlyEntityList.length; i++) {
       if (type === friendlyEntityList[i]) {
         return true;
@@ -110,6 +112,12 @@ module.exports = class LevelEntity {
           break;
         case 'salmonSurface':
           entity = new Salmon(this.controller, type, identifier, x, y, facing, true);
+          break;
+        case 'seaTurtle':
+          entity = new SeaTurtle(this.controller, type, identifier, x, y, facing, false);
+          break;
+        case 'seaTurtleSurface':
+          entity = new SeaTurtle(this.controller, type, identifier, x, y, facing, true);
           break;
         case 'squid':
           entity = new Squid(this.controller, type, identifier, x, y, facing);

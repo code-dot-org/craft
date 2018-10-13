@@ -256,6 +256,11 @@ module.exports = class AssetLoader {
         pngPath: `${this.assetRoot}images/entities/Salmon_2018.png`,
         jsonPath: `${this.assetRoot}images/entities/Salmon_2018.json`
       },
+      seaTurtle: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/entities/Sea_Turtle_2018.png`,
+        jsonPath: `${this.assetRoot}images/entities/Sea_Turtle_2018.json`
+      },
       squid: {
         type: 'atlasJSON',
         pngPath: `${this.assetRoot}images/entities/Squid_2018.png`,
@@ -824,6 +829,7 @@ module.exports = class AssetLoader {
         'torch',
         'dolphin',
         'salmon',
+        'seaTurtle',
         'squid',
         'tropicalFish',
         'destroyOverlay',
@@ -867,6 +873,7 @@ module.exports = class AssetLoader {
         'cod',
         'dolphin',
         'salmon',
+        'seaTurtle',
         'squid',
         'tropicalFish',
         'leavesAcacia',
