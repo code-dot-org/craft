@@ -56,8 +56,8 @@ module.exports = class LevelEntity {
   }
 
   isFriendlyEntity(type) {
-    const friendlyEntityList = ['sheep', 'ironGolem', 'cow', 'chicken','cod','codSurface',
-    'dolphin','dolphinSurface','salmon','salmonSurface','seaTurtle','seaTurtleSurface',
+    const friendlyEntityList = ['sheep', 'ironGolem', 'cow', 'chicken','cod',
+    'dolphin','salmon','seaTurtle','seaTurtleSurface',
     'squid','tropicalFish','tropicalFishSurface'];
     for (var i = 0; i < friendlyEntityList.length; i++) {
       if (type === friendlyEntityList[i]) {
@@ -90,16 +90,10 @@ module.exports = class LevelEntity {
           entity = new Chicken(this.controller, type, identifier, x, y, facing);
           break;
         case 'cod':
-          entity = new Cod(this.controller, type, identifier, x, y, facing, false);
-          break;
-        case 'codSurface':
-          entity = new Cod(this.controller, type, identifier, x, y, facing, true);
+          entity = new Cod(this.controller, type, identifier, x, y, facing);
           break;
         case 'dolphin':
-          entity = new Dolphin(this.controller, type, identifier, x, y, facing, false);
-          break;
-        case 'dolphinSurface':
-          entity = new Dolphin(this.controller, type, identifier, x, y, facing, true);
+          entity = new Dolphin(this.controller, type, identifier, x, y, facing);
           break;
         case 'ghast':
           entity = new Ghast(this.controller, type, identifier, x, y, facing, pattern);
@@ -108,25 +102,16 @@ module.exports = class LevelEntity {
           entity = new Boat(this.controller, type, identifier, x, y, facing);
           break;
         case 'salmon':
-          entity = new Salmon(this.controller, type, identifier, x, y, facing, false);
-          break;
-        case 'salmonSurface':
-          entity = new Salmon(this.controller, type, identifier, x, y, facing, true);
+          entity = new Salmon(this.controller, type, identifier, x, y, facing);
           break;
         case 'seaTurtle':
-          entity = new SeaTurtle(this.controller, type, identifier, x, y, facing, false);
-          break;
-        case 'seaTurtleSurface':
-          entity = new SeaTurtle(this.controller, type, identifier, x, y, facing, true);
+          entity = new SeaTurtle(this.controller, type, identifier, x, y, facing);
           break;
         case 'squid':
           entity = new Squid(this.controller, type, identifier, x, y, facing);
           break;
         case 'tropicalFish':
-          entity = new TropicalFish(this.controller, type, identifier, x, y, facing, false);
-          break;
-        case 'tropicalFishSurface':
-          entity = new TropicalFish(this.controller, type, identifier, x, y, facing, true);
+          entity = new TropicalFish(this.controller, type, identifier, x, y, facing);
           break;
         default:
           entity = new BaseEntity(this.controller, type, identifier, x, y, facing);

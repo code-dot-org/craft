@@ -2,24 +2,15 @@ const BaseEntity = require("./BaseEntity");
 const FacingDirection = require("../LevelMVC/FacingDirection");
 
 module.exports = class Cod extends BaseEntity {
-  constructor(controller, type, identifier, x, y, facing, isSurface) {
+  constructor(controller, type, identifier, x, y, facing) {
     super(controller, type, identifier, x, y, facing);
-    this.isSurface=isSurface;
-    this.offset = this.isSurface ? [-0, 10] : [0, 10];
+    this.offset = [0, 10];
     this.prepareSprite();
     this.sprite.sortOrder = this.controller.levelView.yToIndex(this.position.y);
   }
 
   getFrameForDirection() {
-    if (this.isSurface) {
-      switch (this.facing) {
-        case FacingDirection.East:
-          return 'Cod_Surface00';
-        default:
-          return 'Cod_Surface06';
-      }
-
-    } else {
+    if (this.controller.levelModel.isUnderwater()) {
       switch (this.facing) {
         case FacingDirection.North:
           return 'Cod00';
@@ -30,6 +21,14 @@ module.exports = class Cod extends BaseEntity {
         case FacingDirection.West:
           return 'Cod15';
       }
+    } else {
+      switch (this.facing) {
+        case FacingDirection.East:
+          return 'Cod_Surface00';
+        default:
+          return 'Cod_Surface06';
+      }
+
     }
   }
   prepareSprite() {
@@ -37,16 +36,16 @@ module.exports = class Cod extends BaseEntity {
     const frame = this.getFrameForDirection();
     const actionGroup = this.controller.levelView.actionGroup;
     this.sprite = actionGroup.create(0, 0, 'cod', frame+'.png');
-    let frameBase = this.isSurface ? 'Cod_Surface' : 'Cod';
-    let frameListPerDirection = [[0, 3], // up
-      [5, 8], // right
-      [10, 13], // down
-      [15, 18]]; // left
-    if (this.isSurface) {
-      frameListPerDirection = [[6, 12], // up
+    let frameBase = this.controller.levelModel.isUnderwater() ? 'Cod' : 'Cod_Surface';
+    let frameListPerDirection = [[6, 12], // up
       [0, 5], // right
       [6, 12], // down
       [6, 12]]; // left
+    if (this.controller.levelModel.isUnderwater()) {
+      frameListPerDirection = [[0, 3], // up
+      [5, 8], // right
+      [10, 13], // down
+      [15, 18]]; // left
     }
     for (var i = 0; i < 4; i++) {
       let facingName = this.controller.levelView.getDirectionName(i);
