@@ -505,9 +505,6 @@ module.exports = class LevelBlock {
       case "grass":
         frame = "dirt";
         break;
-      case "wool_orange":
-        frame = "wool";
-        break;
       case "tnt":
         frame = "gunPowder";
         break;
