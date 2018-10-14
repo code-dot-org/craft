@@ -236,6 +236,11 @@ module.exports = class AssetLoader {
         pngPath: `${this.assetRoot}images/Chicken.png`,
         jsonPath: `${this.assetRoot}images/Chicken.json`
       },
+      cod: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/entities/Cod_2018.png`,
+        jsonPath: `${this.assetRoot}images/entities/Cod_2018.json`
+      },
       dolphin: {
         type: 'atlasJSON',
         pngPath: `${this.assetRoot}images/entities/Dolphin_2018.png`,
@@ -245,6 +250,26 @@ module.exports = class AssetLoader {
         type: 'atlasJSON',
         pngPath: `${this.assetRoot}images/Ghast.png`,
         jsonPath: `${this.assetRoot}images/Ghast.json`
+      },
+      salmon: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/entities/Salmon_2018.png`,
+        jsonPath: `${this.assetRoot}images/entities/Salmon_2018.json`
+      },
+      seaTurtle: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/entities/Sea_Turtle_2018.png`,
+        jsonPath: `${this.assetRoot}images/entities/Sea_Turtle_2018.json`
+      },
+      squid: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/entities/Squid_2018.png`,
+        jsonPath: `${this.assetRoot}images/entities/Squid_2018.json`
+      },
+      tropicalFish: {
+        type: 'atlasJSON',
+        pngPath: `${this.assetRoot}images/entities/Tropical_Fish_2018.png`,
+        jsonPath: `${this.assetRoot}images/entities/Tropical_Fish_2018.json`
       },
       dig_wood1: {
         type: 'sound',
@@ -799,9 +824,14 @@ module.exports = class AssetLoader {
         'undergroundFow',
         'blocks',
         'leavesJungle',
+        'cod',
         'crops',
         'torch',
         'dolphin',
+        'salmon',
+        'seaTurtle',
+        'squid',
+        'tropicalFish',
         'destroyOverlay',
         'blockExplode',
         'miningParticles',
@@ -840,7 +870,12 @@ module.exports = class AssetLoader {
         'blockShadows',
         'undergroundFow',
         'blocks',
+        'cod',
         'dolphin',
+        'salmon',
+        'seaTurtle',
+        'squid',
+        'tropicalFish',
         'leavesAcacia',
         'leavesBirch',
         'leavesJungle',

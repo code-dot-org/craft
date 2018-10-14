@@ -1,10 +1,10 @@
 const BaseEntity = require("./BaseEntity");
 const FacingDirection = require("../LevelMVC/FacingDirection");
 
-module.exports = class Dolphin extends BaseEntity {
+module.exports = class Salmon extends BaseEntity {
   constructor(controller, type, identifier, x, y, facing) {
     super(controller, type, identifier, x, y, facing);
-    this.offset = this.controller.levelModel.isUnderwater() ? [-8, -8] : [-40, -16];
+    this.offset = [0,0];
     this.prepareSprite();
     this.sprite.sortOrder = this.controller.levelView.yToIndex(this.position.y);
   }
@@ -13,39 +13,39 @@ module.exports = class Dolphin extends BaseEntity {
     if (this.controller.levelModel.isUnderwater()) {
       switch (this.facing) {
         case FacingDirection.North:
-          return 'Dolphin09';
+          return 'Salmon08';
         case FacingDirection.South:
-          return 'Dolphin27';
+          return 'Salmon24';
         case FacingDirection.East:
-          return 'Dolphin18';
+          return 'Salmon16';
         case FacingDirection.West:
-          return 'Dolphin00';
+          return 'Salmon00';
       }
+
     } else {
       switch (this.facing) {
         case FacingDirection.East:
-          return 'Dolphin_Surface15';
+          return 'Salmon_Surface00';
         default:
-          return 'Dolphin_Surface00';
+          return 'Salmon_Surface13';
       }
+    }
   }
-}
   prepareSprite() {
     let frameRate = 12;
-    console.log(this.controller.levelModel.isUnderwater());
     const frame = this.getFrameForDirection();
     const actionGroup = this.controller.levelView.actionGroup;
-    this.sprite = actionGroup.create(0, 0, 'dolphin', frame+'.png');
-    let frameBase = this.controller.levelModel.isUnderwater() ? 'Dolphin' : 'Dolphin_Surface';
-    let frameListPerDirection = [[0, 14], // up
-      [15, 29], // right
-      [0, 14], // down
-      [0, 14]]; // left
+    this.sprite = actionGroup.create(0, 0, 'salmon', frame+'.png');
+    let frameBase = this.controller.levelModel.isUnderwater() ? 'Salmon' : 'Salmon_Surface';
+    let frameListPerDirection = [[13, 25], // up
+      [0, 12], // right
+      [13, 25], // down
+      [13, 25]]; // left
     if (this.controller.levelModel.isUnderwater()) {
-      frameListPerDirection = [[9, 16], // up
-      [18, 25], // right
-      [27, 34], // down
-      [0, 7]]; // left
+      frameListPerDirection = [[8, 14], // up
+      [16, 22], // right
+      [24, 30], // down
+      [0, 6]]; // left
     }
     for (var i = 0; i < 4; i++) {
       let facingName = this.controller.levelView.getDirectionName(i);

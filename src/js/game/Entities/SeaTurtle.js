@@ -1,10 +1,10 @@
 const BaseEntity = require("./BaseEntity");
 const FacingDirection = require("../LevelMVC/FacingDirection");
 
-module.exports = class Dolphin extends BaseEntity {
+module.exports = class SeaTurtle extends BaseEntity {
   constructor(controller, type, identifier, x, y, facing) {
     super(controller, type, identifier, x, y, facing);
-    this.offset = this.controller.levelModel.isUnderwater() ? [-8, -8] : [-40, -16];
+    this.offset = this.controller.levelModel.isUnderwater() ? [-16,-16] : [-8, 0];
     this.prepareSprite();
     this.sprite.sortOrder = this.controller.levelView.yToIndex(this.position.y);
   }
@@ -13,39 +13,40 @@ module.exports = class Dolphin extends BaseEntity {
     if (this.controller.levelModel.isUnderwater()) {
       switch (this.facing) {
         case FacingDirection.North:
-          return 'Dolphin09';
+          return 'Sea_Turtle00';
         case FacingDirection.South:
-          return 'Dolphin27';
+          return 'Sea_Turtle10';
         case FacingDirection.East:
-          return 'Dolphin18';
+          return 'Sea_Turtle05';
         case FacingDirection.West:
-          return 'Dolphin00';
+          return 'Sea_Turtle15';
       }
+
     } else {
       switch (this.facing) {
         case FacingDirection.East:
-          return 'Dolphin_Surface15';
+          return 'Sea_Turtle_Surface13';
         default:
-          return 'Dolphin_Surface00';
+          return 'Sea_Turtle_Surface00';
       }
+    }
   }
-}
   prepareSprite() {
     let frameRate = 12;
-    console.log(this.controller.levelModel.isUnderwater());
     const frame = this.getFrameForDirection();
     const actionGroup = this.controller.levelView.actionGroup;
-    this.sprite = actionGroup.create(0, 0, 'dolphin', frame+'.png');
-    let frameBase = this.controller.levelModel.isUnderwater() ? 'Dolphin' : 'Dolphin_Surface';
-    let frameListPerDirection = [[0, 14], // up
-      [15, 29], // right
-      [0, 14], // down
-      [0, 14]]; // left
+    this.sprite = actionGroup.create(0, 0, 'seaTurtle', frame+'.png');
+    this.sprite.scale.setTo(.75,.75);
+    let frameBase = this.controller.levelModel.isUnderwater() ? 'Sea_Turtle' : 'Sea_Turtle_Surface';
+    let frameListPerDirection = [[0, 12], // up
+      [13, 25], // right
+      [0, 12], // down
+      [0, 12]]; // left
     if (this.controller.levelModel.isUnderwater()) {
-      frameListPerDirection = [[9, 16], // up
-      [18, 25], // right
-      [27, 34], // down
-      [0, 7]]; // left
+      frameListPerDirection = [[0, 3], // up
+      [5, 8], // right
+      [10, 13], // down
+      [15, 18]]; // left
     }
     for (var i = 0; i < 4; i++) {
       let facingName = this.controller.levelView.getDirectionName(i);

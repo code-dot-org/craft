@@ -1,577 +1,577 @@
 {"frames": {
 
-"squid00.png":
+"Squid00.png":
 {
 	"frame": {"x":0,"y":1453,"w":52,"h":88},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":127,"y":108,"w":52,"h":88},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid01.png":
+"Squid01.png":
 {
 	"frame": {"x":198,"y":94,"w":57,"h":97},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":125,"y":99,"w":57,"h":97},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid02.png":
+"Squid02.png":
 {
 	"frame": {"x":166,"y":1191,"w":78,"h":105},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":114,"y":91,"w":78,"h":105},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid03.png":
+"Squid03.png":
 {
 	"frame": {"x":151,"y":1374,"w":52,"h":88},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":127,"y":108,"w":52,"h":88},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid04.png":
+"Squid04.png":
 {
 	"frame": {"x":203,"y":1374,"w":52,"h":88},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":127,"y":108,"w":52,"h":88},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid05.png":
+"Squid05.png":
 {
 	"frame": {"x":52,"y":1462,"w":52,"h":88},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":127,"y":108,"w":52,"h":88},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid06.png":
+"Squid06.png":
 {
 	"frame": {"x":104,"y":1462,"w":52,"h":88},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":127,"y":108,"w":52,"h":88},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid07.png":
+"Squid07.png":
 {
 	"frame": {"x":156,"y":1462,"w":52,"h":88},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":127,"y":108,"w":52,"h":88},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid08.png":
+"Squid08.png":
 {
 	"frame": {"x":180,"y":566,"w":75,"h":78},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":121,"y":118,"w":75,"h":78},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid09.png":
+"Squid09.png":
 {
 	"frame": {"x":87,"y":900,"w":86,"h":92},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":121,"y":104,"w":86,"h":92},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid10.png":
+"Squid10.png":
 {
 	"frame": {"x":94,"y":371,"w":93,"h":101},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":121,"y":95,"w":93,"h":101},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid11.png":
+"Squid11.png":
 {
 	"frame": {"x":0,"y":1282,"w":77,"h":78},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":119,"y":118,"w":77,"h":78},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid12.png":
+"Squid12.png":
 {
 	"frame": {"x":180,"y":644,"w":75,"h":78},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":122,"y":118,"w":75,"h":78},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid13.png":
+"Squid13.png":
 {
 	"frame": {"x":157,"y":1296,"w":75,"h":78},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":121,"y":118,"w":75,"h":78},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid14.png":
+"Squid14.png":
 {
 	"frame": {"x":77,"y":1303,"w":74,"h":78},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":122,"y":118,"w":74,"h":78},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid15.png":
+"Squid15.png":
 {
 	"frame": {"x":180,"y":566,"w":75,"h":78},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":121,"y":118,"w":75,"h":78},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid16.png":
+"Squid16.png":
 {
 	"frame": {"x":0,"y":795,"w":87,"h":69},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":121,"y":127,"w":87,"h":69},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid17.png":
+"Squid17.png":
 {
 	"frame": {"x":0,"y":340,"w":94,"h":79},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":121,"y":127,"w":94,"h":79},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid18.png":
+"Squid18.png":
 {
 	"frame": {"x":0,"y":181,"w":98,"h":88},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":121,"y":127,"w":98,"h":88},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid19.png":
+"Squid19.png":
 {
 	"frame": {"x":87,"y":831,"w":87,"h":69},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":121,"y":127,"w":87,"h":69},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid20.png":
+"Squid20.png":
 {
 	"frame": {"x":0,"y":643,"w":88,"h":70},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":120,"y":126,"w":88,"h":70},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid21.png":
+"Squid21.png":
 {
 	"frame": {"x":0,"y":864,"w":87,"h":69},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":121,"y":127,"w":87,"h":69},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid22.png":
+"Squid22.png":
 {
 	"frame": {"x":87,"y":761,"w":87,"h":70},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":121,"y":126,"w":87,"h":70},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid23.png":
+"Squid23.png":
 {
 	"frame": {"x":0,"y":795,"w":87,"h":69},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":121,"y":127,"w":87,"h":69},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid24.png":
+"Squid24.png":
 {
 	"frame": {"x":86,"y":992,"w":85,"h":85},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":120,"y":125,"w":85,"h":85},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid25.png":
+"Squid25.png":
 {
 	"frame": {"x":96,"y":279,"w":95,"h":92},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":120,"y":125,"w":95,"h":92},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid26.png":
+"Squid26.png":
 {
 	"frame": {"x":99,"y":94,"w":99,"h":96},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":120,"y":125,"w":99,"h":96},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid27.png":
+"Squid27.png":
 {
 	"frame": {"x":174,"y":793,"w":82,"h":85},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":122,"y":125,"w":82,"h":85},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid28.png":
+"Squid28.png":
 {
 	"frame": {"x":0,"y":1102,"w":84,"h":86},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":121,"y":123,"w":84,"h":86},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid29.png":
+"Squid29.png":
 {
 	"frame": {"x":171,"y":1020,"w":85,"h":85},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":120,"y":125,"w":85,"h":85},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid30.png":
+"Squid30.png":
 {
 	"frame": {"x":170,"y":1105,"w":84,"h":86},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":120,"y":123,"w":84,"h":86},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid31.png":
+"Squid31.png":
 {
 	"frame": {"x":86,"y":992,"w":85,"h":85},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":120,"y":125,"w":85,"h":85},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid32.png":
+"Squid32.png":
 {
 	"frame": {"x":183,"y":473,"w":52,"h":93},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":127,"y":125,"w":52,"h":93},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid33.png":
+"Squid33.png":
 {
 	"frame": {"x":194,"y":191,"w":57,"h":94},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":125,"y":125,"w":57,"h":94},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid34.png":
+"Squid34.png":
 {
 	"frame": {"x":0,"y":1188,"w":79,"h":94},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":114,"y":125,"w":79,"h":94},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid35.png":
+"Squid35.png":
 {
 	"frame": {"x":201,"y":0,"w":52,"h":94},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":127,"y":124,"w":52,"h":94},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid36.png":
+"Squid36.png":
 {
 	"frame": {"x":191,"y":285,"w":52,"h":94},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":127,"y":124,"w":52,"h":94},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid37.png":
+"Squid37.png":
 {
 	"frame": {"x":0,"y":1360,"w":52,"h":93},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":127,"y":125,"w":52,"h":93},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid38.png":
+"Squid38.png":
 {
 	"frame": {"x":187,"y":379,"w":52,"h":94},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":127,"y":124,"w":52,"h":94},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid39.png":
+"Squid39.png":
 {
 	"frame": {"x":183,"y":473,"w":52,"h":93},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":127,"y":125,"w":52,"h":93},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid40.png":
+"Squid40.png":
 {
 	"frame": {"x":88,"y":679,"w":87,"h":82},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":99,"y":126,"w":87,"h":82},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid41.png":
+"Squid41.png":
 {
 	"frame": {"x":98,"y":190,"w":96,"h":89},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":90,"y":126,"w":96,"h":89},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid42.png":
+"Squid42.png":
 {
 	"frame": {"x":101,"y":0,"w":100,"h":94},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":86,"y":126,"w":100,"h":94},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid43.png":
+"Squid43.png":
 {
 	"frame": {"x":0,"y":933,"w":86,"h":85},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":99,"y":122,"w":86,"h":85},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid44.png":
+"Squid44.png":
 {
 	"frame": {"x":0,"y":1018,"w":85,"h":84},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":99,"y":123,"w":85,"h":84},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid45.png":
+"Squid45.png":
 {
 	"frame": {"x":0,"y":713,"w":87,"h":82},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":99,"y":126,"w":87,"h":82},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid46.png":
+"Squid46.png":
 {
 	"frame": {"x":85,"y":1077,"w":85,"h":83},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":99,"y":124,"w":85,"h":83},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid47.png":
+"Squid47.png":
 {
 	"frame": {"x":88,"y":679,"w":87,"h":82},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":99,"y":126,"w":87,"h":82},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid48.png":
+"Squid48.png":
 {
 	"frame": {"x":93,"y":472,"w":90,"h":69},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":98,"y":127,"w":90,"h":69},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid49.png":
+"Squid49.png":
 {
 	"frame": {"x":0,"y":269,"w":96,"h":71},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":92,"y":127,"w":96,"h":71},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid50.png":
+"Squid50.png":
 {
 	"frame": {"x":0,"y":0,"w":101,"h":84},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":87,"y":124,"w":101,"h":84},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid51.png":
+"Squid51.png":
 {
 	"frame": {"x":0,"y":505,"w":90,"h":69},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":98,"y":127,"w":90,"h":69},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid52.png":
+"Squid52.png":
 {
 	"frame": {"x":90,"y":541,"w":90,"h":69},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":98,"y":127,"w":90,"h":69},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid53.png":
+"Squid53.png":
 {
 	"frame": {"x":0,"y":574,"w":90,"h":69},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":98,"y":127,"w":90,"h":69},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid54.png":
+"Squid54.png":
 {
 	"frame": {"x":90,"y":610,"w":90,"h":69},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":98,"y":127,"w":90,"h":69},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid55.png":
+"Squid55.png":
 {
 	"frame": {"x":93,"y":472,"w":90,"h":69},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":98,"y":127,"w":90,"h":69},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid56.png":
+"Squid56.png":
 {
 	"frame": {"x":174,"y":878,"w":82,"h":71},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":106,"y":125,"w":82,"h":71},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid57.png":
+"Squid57.png":
 {
 	"frame": {"x":0,"y":419,"w":93,"h":86},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":95,"y":110,"w":93,"h":86},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid58.png":
+"Squid58.png":
 {
 	"frame": {"x":0,"y":84,"w":99,"h":97},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":89,"y":99,"w":99,"h":97},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid59.png":
+"Squid59.png":
 {
 	"frame": {"x":79,"y":1231,"w":78,"h":72},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":106,"y":124,"w":78,"h":72},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid60.png":
+"Squid60.png":
 {
 	"frame": {"x":175,"y":722,"w":81,"h":71},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":106,"y":125,"w":81,"h":71},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid61.png":
+"Squid61.png":
 {
 	"frame": {"x":173,"y":949,"w":82,"h":71},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":106,"y":125,"w":82,"h":71},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid62.png":
+"Squid62.png":
 {
 	"frame": {"x":84,"y":1160,"w":82,"h":71},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":106,"y":125,"w":82,"h":71},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"squid63.png":
+"Squid63.png":
 {
 	"frame": {"x":174,"y":878,"w":82,"h":71},
 	"rotated": false,
-	"trimmed": true,
+	"trimmed": false,
 	"spriteSourceSize": {"x":106,"y":125,"w":82,"h":71},
 	"sourceSize": {"w":307,"h":307},
 	"pivot": {"x":0.5,"y":0.5}
