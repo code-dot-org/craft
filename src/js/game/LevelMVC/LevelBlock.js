@@ -202,7 +202,7 @@ module.exports = class LevelBlock {
       this.isWalkable = true;
     }
 
-    if (blockType === 'seaPickes' || blockType === 'seaLantern' || blockType === 'magmaBlock') {
+    if (blockType === 'seaPickles' || blockType === 'seaLantern' || blockType === 'magmaBlock') {
       this.isEmissive = true;
     }
   }
