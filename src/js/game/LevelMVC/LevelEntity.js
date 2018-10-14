@@ -57,8 +57,8 @@ module.exports = class LevelEntity {
 
   isFriendlyEntity(type) {
     const friendlyEntityList = ['sheep', 'ironGolem', 'cow', 'chicken','cod',
-    'dolphin','salmon','seaTurtle','seaTurtleSurface',
-    'squid','tropicalFish','tropicalFishSurface'];
+    'dolphin','salmon','seaTurtle','seaTurtle',
+    'squid','tropicalFish'];
     for (var i = 0; i < friendlyEntityList.length; i++) {
       if (type === friendlyEntityList[i]) {
         return true;
