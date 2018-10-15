@@ -2019,15 +2019,13 @@ module.exports = class LevelView {
    * @param {Number} [overrides.yOffsetRange=40]
    */
   createMiniBlock(x, y, blockType, overrides = {}) {
-    let sprite = null;
-
     const collectibleDistance = overrides.collectibleDistance || 2;
     const xOffsetRange = overrides.xOffsetRange || 40;
     const yOffsetRange = overrides.yOffsetRange || 40;
 
     const frame = LevelBlock.getMiniblockFrame(blockType);
     if (!(frame && this.miniBlocks[frame])) {
-      return sprite;
+      return null;
     }
 
     const atlas = "miniBlocks";
@@ -2035,7 +2033,10 @@ module.exports = class LevelView {
     const yOffset = 3 - (yOffsetRange / 2) + (Math.random() * yOffsetRange);
     const offset = new Position(xOffset, yOffset);
 
-    sprite = this.actionGroup.create(xOffset + 40 * x, yOffset + 40 * y, atlas, this.miniBlocks[frame] + ".png");
+    const sprite = this.actionGroup.create(xOffset + 40 * x, yOffset + 40 * y, atlas, "shadow.png");
+    const item = this.actionGroup.create(0, 0, atlas, this.miniBlocks[frame] + ".png");
+    sprite.addChild(item);
+
     const bounce = k => {
       if (k < 0.2) {
         return 1;
@@ -2051,8 +2052,7 @@ module.exports = class LevelView {
         return 0;
       }
     };
-    const tween = this.addResettableTween(sprite)
-      .to({y: yOffset + 40 * y - 8}, 350, bounce);
+    const tween = this.addResettableTween(item).to({y: -8}, 350, bounce);
 
     // If direct player control, we have stuff to do to manage miniblock pick up
     if (this.controller.getIsDirectPlayerControl() || this.controller.levelData.isAquaticLevel) {

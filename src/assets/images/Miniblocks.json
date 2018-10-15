@@ -1391,7 +1391,7 @@
 	"frame": {"x":986,"y":40,"w":22,"h":17},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":21,"y":47,"w":22,"h":17},
+	"spriteSourceSize": {"x":0,"y":18,"w":22,"h":17},
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
