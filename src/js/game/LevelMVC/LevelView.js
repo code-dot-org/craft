@@ -31,188 +31,119 @@ module.exports = class LevelView {
     //{sprite : sprite, type : blockType, position : [x,y]}
     this.trees = [];
 
-    this.miniBlocks = {};
-    [
-      "dirt",
-      "dirtCoarse",
-      "sand",
-      "gravel",
-      "bricks",
-      "logAcacia",
-      "logBirch",
-      "logJungle",
-      "logOak",
-      "logSpruce",
-      "planksAcacia",
-      "planksBirch",
-      "planksJungle",
-      "planksOak",
-      "planksSpruce",
-      "cobblestone",
-      "sandstone",
-      "wool",
-      "redstoneDust",
-      "lapisLazuli",
-      "ingotIron",
-      "ingotGold",
-      "emerald",
-      "diamond",
-      "coal",
-      "bucketWater",
-      "bucketLava",
-      "gunPowder",
-      "wheat",
-      "potato",
-      "carrots",
-      "milk",
-      "egg",
-      "poppy",
-      "daisy",
-      "dandelion",
-      "bed",
-      "cactus",
-      "clay",
-      "deadbush",
-      "doorIron",
-      "doorOak",
-      "glowstoneDust",
-      "hardenedClay",
-      "hardenedClayBlack",
-      "hardenedClayBlue",
-      "hardenedClayBrown",
-      "hardenedClayCyan",
-      "hardenedClayGray",
-      "hardenedClayGreen",
-      "hardenedClayLightBlue",
-      "hardenedClayLime",
-      "hardenedClayMagenta",
-      "hardenedClayOrange",
-      "hardenedClayPink",
-      "hardenedClayPurple",
-      "hardenedClayRed",
-      "hardenedClaySilver",
-      "hardenedClayWhite",
-      "hardenedClayYellow",
-      "netherbrick",
-      "netherrack",
-      "obsidian",
-      "piston",
-      "pressurePlateOak",
-      "netherQuartz",
-      "railGolden",
-      "railNormal",
-      "redstoneTorch",
-      "reeds",
-      "seedsWheat",
-      "snow",
-      "snowBall",
-      "woolBlack",
-      "woolBlue",
-      "woolBrown",
-      "woolCyan",
-      "woolGray",
-      "woolGreen",
-      "woolLightBlue",
-      "woolLime",
-      "woolMagenta",
-      "woolOrange",
-      "woolPink",
-      "woolLPurple",
-      "woolRed",
-      "woolSilver",
-      "woolYellow",
-      "bookEnchanted",
-      "bucketEmpty",
-      "chest",
-      "compass",
-      "axeDiamond",
-      "pickaxeDiamond",
-      "shovelDiamond",
-      "flintAndSteel",
-      "flint",
-      "mapEmpty",
-      "minecart",
-      "potionBottleDrinkable",
-      "yellowCoral",
-      "yellowCoralFan",
-      "blackConcrete",
-      "blueConcretePowder",
-      "blueConcrete",
-      "blueCoralFan",
-      "blueCoral",
-      "brownConcretePowder",
-      "brownConcrete",
-      "cyanConcretePowder",
-      "cyanConcrete",
-      "deadBlueCoralBlock",
-      "deadBlueCoralFan",
-      "deadMagentaCoralBlock",
-      "deadMagentaCoralFan",
-      "deadPinkCoralBlock",
-      "deadPinkCoralFan",
-      "deadRedCoralBlock",
-      "deadRedCoralFan",
-      "deadYellowCoralBlock",
-      "deadYellowCoralFan",
-      "granite",
-      "grayConcretePowder",
-      "grayConcrete",
-      "greenConcretePowder",
-      "greenConcrete",
-      "lightBlueConcretePowder",
-      "lightBlueConcrete",
-      "lightGrayConcretePowder",
-      "lightGrayConcrete",
-      "limeConcretePowder",
-      "limeConcrete",
-      "magentaConcretePowder",
-      "magentaConcrete",
-      "magentaCoralBlock",
-      "magentaCoralFan",
-      "magentaCoral",
-      "orangeConcretePowder",
-      "orangeConcrete",
-      "pinkConcretePowder",
-      "pinkConcrete",
-      "pinkCoralBlock",
-      "pinkCoralFan",
-      "pinkCoral",
-      "polishedGranite",
-      "purpleConcretePowder",
-      "purpleConcrete",
-      "redConcretePowder",
-      "redConcrete",
-      "redCoralBlock",
-      "redCoralFan",
-      "redCoral",
-      "seaPickle",
-      "strippedAcacia",
-      "strippedBirch",
-      "strippedDarkOak",
-      "strippedJungle",
-      "strippedOak",
-      "strippedSpruce",
-      "whiteConcretePowder",
-      "whiteConcrete",
-      "yellowConcretePowder",
-      "yellowConcrete",
-      "yellowCoralBlock",
-      "blackConcretePowder",
-      "nautilus",
-      "heartOfTheSea",
-      "stoneBricks",
-      "mossyStoneBricks",
-      "crackedStoneBricks",
-      "chisledStoneBricks",
-      "magmaBlock",
-      "prismarine",
-      "darkPrismarine",
-      "seaLantern",
-      "packedIce",
-      "blueIce",
-    ].forEach((miniBlock, n) => {
-      this.miniBlocks[miniBlock] = ["Miniblocks", n * 6, n * 6 + 5];
-    });
+    this.miniBlocks = {
+      bed: "bed",
+      boat: "boat",
+      bookEnchanted: "book_enchanted",
+      bricks: "bricks",
+      bucketEmpty: "bucket_empty",
+      bucketLava: "bucket_lava",
+      milk: "bucket_milk",
+      bucketWater: "bucket_water",
+      cactus: "cactus",
+      carrots: "carrot",
+      chest: "chest",
+      clay: "clay_ball",
+      coal: "coal",
+      dirtCoarse: "coarse_dirt",
+      cobblestone: "cobblestone",
+      compass: "compass",
+      blackConcrete: "concrete_black",
+      blueConcrete: "concrete_blue",
+      brownConcrete: "concrete_brown",
+      blackConcretePowder: "concrete_powder_black",
+      blueConcretePowder: "concrete_powder_blue",
+      brownConcretePowder: "concrete_powder_brown",
+      deadbush: "deadbush",
+      diamond: "diamond",
+      axeDiamond: "diamond_axe",
+      pickaxeDiamond: "diamond_pickaxe",
+      shovelDiamond: "diamond_shovel",
+      dirt: "dirt",
+      door: "door",
+      doorIron: "door_iron",
+      egg: "egg",
+      emerald: "emerald",
+      flint: "flint",
+      flintAndSteel: "flint_and_steel",
+      daisy: "flower_daisy",
+      dandelion: "flower_dandelion",
+      poppy: "flower_rose",
+      glowstoneDust: "glowstone_dust",
+      ingotGold: "gold_ingot",
+      gravel: "gravel",
+      gunPowder: "gunpowder",
+      hardenedClay: "hardend_clay",
+      hardenedClayBlack: "hardened_clay_stained_black",
+      hardenedClayBlue: "hardened_clay_stained_blue",
+      hardenedClayBrown: "hardened_clay_stained_brown",
+      hardenedClayCyan: "hardened_clay_stained_cyan",
+      hardenedClayGray: "hardened_clay_stained_gray",
+      hardenedClayGreen: "hardened_clay_stained_green",
+      hardenedClayLightBlue: "hardened_clay_stained_light_blue",
+      hardenedClayLime: "hardened_clay_stained_lime",
+      hardenedClayMagenta: "hardened_clay_stained_magenta",
+      hardenedClayOrange: "hardened_clay_stained_orange",
+      hardenedClayPink: "hardened_clay_stained_pink",
+      hardenedClayPurple: "hardened_clay_stained_purple",
+      hardenedClayRed: "hardened_clay_stained_red",
+      hardenedClaySilver: "hardened_clay_stained_silver",
+      hardenedClayWhite: "hardened_clay_stained_white",
+      hardenedClayYellow: "hardened_clay_stained_yellow",
+      ingotIron: "iron_ingot",
+      lapisLazuli: "lapis_lazuli",
+      logAcacia: "log_acacia",
+      logBirch: "log_birch",
+      logJungle: "log_jungle",
+      logOak: "log_oak",
+      logSpruce: "log_spruce",
+      mapEmpty: "map_empty",
+      minecart: "minecart_normal",
+      nautilus: "nautilus",
+      netherbrick: "netherbrick",
+      netherrack: "netherrack",
+      obsidian: "obsidian",
+      piston: "piston",
+      planksAcacia: "planks_acacia",
+      planksBirch: "planks_birch",
+      planksJungle: "planks_jungle",
+      planksOak: "planks_oak",
+      planksSpruce: "planks_spruce",
+      potato: "potato",
+      potion: "potion_bottle_drinkable",
+      pressurePlateOak: "pressure_plate_oak",
+      quartzOre: "quartz",
+      railGolden: "rail_golden",
+      railNormal: "rail_normal",
+      redstoneDust: "redstone_dust",
+      redstoneTorch: "redstone_torch",
+      reeds: "reeds",
+      sand: "sand",
+      sandstone: "sandstone",
+      seedsWheat: "seeds_wheat",
+      snow: "snow",
+      snowBall: "snowball",
+      tnt: "tnt",
+      torch: "torch",
+      turtle: "turtle",
+      cropWheat: "wheat",
+      wool_black: "wool_colored_black",
+      wool_blue: "wool_colored_blue",
+      wool_brown: "wool_colored_brown",
+      wool_cyan: "wool_colored_cyan",
+      wool_gray: "wool_colored_gray",
+      wool_green: "wool_colored_green",
+      wool_light_blue: "wool_colored_light_blue",
+      wool_lime: "wool_colored_lime",
+      wool_magenta: "wool_colored_magenta",
+      wool_orange: "wool_colored_orange",
+      wool_pink: "wool_colored_pink",
+      wool_purple: "wool_colored_purple",
+      wool_red: "wool_colored_red",
+      wool_silver: "wool_colored_silver",
+      wool: "wool_colored_white",
+      wool_yellow: "wool_colored_yellow",
+    };
 
     this.blocks = {
       "bedrock": ["blocks", "Bedrock", -13, 0],
@@ -1523,21 +1454,19 @@ module.exports = class LevelView {
   }
 
   playItemDropAnimation(destroyPosition, blockType, completionHandler) {
-    var sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
+    let autoAcquire;
+    if (this.controller.getIsDirectPlayerControl() && completionHandler) {
+      completionHandler();
+    } else {
+      autoAcquire = () => {
+        const player = this.controller.levelModel.player;
+        this.playItemAcquireAnimation(player.position, player.facing, sprite, completionHandler, blockType);
+      };
+    }
+    const sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType, {onComplete: autoAcquire});
 
     if (sprite) {
       sprite.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
-    }
-
-    if (this.controller.getIsDirectPlayerControl()) {
-      if (completionHandler) {
-        completionHandler();
-      }
-    } else {
-      this.onAnimationEnd(this.playScaledSpeed(sprite.animations, "animate"), () => {
-        const player = this.controller.levelModel.player;
-        this.playItemAcquireAnimation(player.position, player.facing, sprite, completionHandler, blockType);
-      });
     }
   }
 
@@ -1555,10 +1484,11 @@ module.exports = class LevelView {
   }
 
   playItemAcquireAnimation(playerPosition, facing, sprite, completionHandler, blockType) {
-    var tween;
-
-    tween = this.addResettableTween(sprite).to(
-      this.positionToScreen(playerPosition), 200, Phaser.Easing.Linear.None);
+    const target = this.positionToScreen(playerPosition);
+    const tween = this.addResettableTween(sprite).to({
+      x: target.x + 20,
+      y: target.y + 20,
+    }, 200, Phaser.Easing.Linear.None);
 
     tween.onComplete.add(() => {
       const caughtUpToPlayer = Position.equals(this.player.position, playerPosition);
@@ -2087,29 +2017,44 @@ module.exports = class LevelView {
    * @param {Number} [overrides.yOffsetRange=40]
    */
   createMiniBlock(x, y, blockType, overrides = {}) {
-    let sprite = null,
-      frameList;
-
     const collectibleDistance = overrides.collectibleDistance || 2;
     const xOffsetRange = overrides.xOffsetRange || 40;
     const yOffsetRange = overrides.yOffsetRange || 40;
 
     const frame = LevelBlock.getMiniblockFrame(blockType);
     if (!(frame && this.miniBlocks[frame])) {
-      return sprite;
+      return null;
     }
 
     const atlas = "miniBlocks";
-    const framePrefix = this.miniBlocks[frame][0];
-    const frameStart = this.miniBlocks[frame][1];
-    const frameEnd = this.miniBlocks[frame][2];
-    const xOffset = -10 - (xOffsetRange / 2) + (Math.random() * xOffsetRange);
-    const yOffset = 0 - (yOffsetRange / 2) + (Math.random() * yOffsetRange) + this.actionGroup.yOffset;
+    const xOffset = 9 - (xOffsetRange / 2) + (Math.random() * xOffsetRange);
+    const yOffset = 3 - (yOffsetRange / 2) + (Math.random() * yOffsetRange);
     const offset = new Position(xOffset, yOffset);
 
-    frameList = Phaser.Animation.generateFrameNames(framePrefix, frameStart, frameEnd, ".png", 3);
-    sprite = this.actionGroup.create(xOffset + 40 * x, yOffset + 40 * y, atlas, "");
-    const anim = sprite.animations.add("animate", frameList, 10, false);
+    const sprite = this.actionGroup.create(xOffset + 40 * x, yOffset + 40 * y, atlas, "shadow.png");
+    const item = this.actionGroup.create(0, 0, atlas, this.miniBlocks[frame] + ".png");
+    sprite.addChild(item);
+
+    const bounce = k => {
+      if (k < 0.2) {
+        return 1;
+      } else if (k < 0.4) {
+        return 2;
+      } else if (k < 0.6) {
+        return 1;
+      } else if (k < 0.8) {
+        return 0;
+      } else if (k < 1) {
+        return 1;
+      } else {
+        return 0;
+      }
+    };
+    const tween = this.addResettableTween(item).to({y: -8}, 350, bounce);
+
+    if (overrides.onComplete) {
+      tween.onComplete.add(overrides.onComplete);
+    }
 
     // If direct player control, we have stuff to do to manage miniblock pick up
     if (this.controller.getIsDirectPlayerControl() || this.controller.levelData.isAquaticLevel) {
@@ -2119,7 +2064,7 @@ module.exports = class LevelView {
 
       const collectiblePosition = this.controller.levelModel.spritePositionToIndex(offset, new Position(sprite.x, sprite.y));
       this.collectibleItems.push([sprite, offset, blockType, collectibleDistance]);
-      anim.onComplete.add(() => {
+      tween.onComplete.add(() => {
         if (this.controller.levelModel.usePlayer) {
           if (distanceBetween(this.player.position, collectiblePosition) < collectibleDistance) {
             this.player.collectItems(new Position(x, y));
@@ -2128,7 +2073,7 @@ module.exports = class LevelView {
       });
     }
 
-    this.playScaledSpeed(sprite.animations, "animate");
+    tween.start();
     return sprite;
   }
 
