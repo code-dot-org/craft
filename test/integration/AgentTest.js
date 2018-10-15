@@ -3,7 +3,7 @@ const attempt = require("../helpers/RunLevel.js");
 const Position = require("../../src/js/game/LevelMVC/Position");
 
 test('Agent 1: Leave House', t => {
-  attempt('agent01', api => new Promise(resolve => {
+  attempt('agent01', async (api, levelModel) => {
     // Have the Agent move forward once onto a pressure plate.
     api.moveForward(null, 'PlayerAgent');
 
@@ -53,20 +53,17 @@ test('Agent 1: Leave House', t => {
     }, 1000);
 
     // Check the solutions
-    api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, new Position(3, 8)));
+    const success = await api.startAttempt();
+    t.true(Position.equals(levelModel.agent.position, new Position(3, 8)));
 
-      t.true(Position.equals(levelModel.player.position, new Position(8, 8)));
-      t.assert(success);
-      t.end();
-
-      resolve();
-    });
-  }));
+    t.true(Position.equals(levelModel.player.position, new Position(8, 8)));
+    t.assert(success);
+    t.end();
+  });
 });
 
 test('Agent 2: Open Doors', t => {
-  attempt('agent02', api => new Promise(resolve => {
+  attempt('agent02', async (api, levelModel) => {
 
     // Have the Agent move to the diamond path pressure plate.
     for (let i = 0; i < 4; ++i) {
@@ -99,21 +96,18 @@ test('Agent 2: Open Doors', t => {
     }, 2000);
 
     // Check the solutions
-    api.startAttempt((success, levelModel) => {
-      t.assert(levelModel.usingAgent);
-      t.true(Position.equals(levelModel.agent.position, new Position(2, 5)));
+    const success = await api.startAttempt();
+    t.assert(levelModel.usingAgent);
+    t.true(Position.equals(levelModel.agent.position, new Position(2, 5)));
 
-      t.true(Position.equals(levelModel.player.position, new Position(6, 1)));
-      t.assert(success);
-      t.end();
-
-      resolve();
-    });
-  }));
+    t.true(Position.equals(levelModel.player.position, new Position(6, 1)));
+    t.assert(success);
+    t.end();
+  });
 });
 
 test('Agent 3: Open Doors 2.0', t => {
-  attempt('agent03', api => new Promise(resolve => {
+  attempt('agent03', async (api, levelModel) => {
 
     // Have the Agent move to the diamond path pressure plate.
     for (let i = 0; i < 4; ++i) {
@@ -153,20 +147,17 @@ test('Agent 3: Open Doors 2.0', t => {
     }, 1000);
 
     // Check the solutions
-    api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, new Position(0, 5)));
+    const success = await api.startAttempt();
+    t.true(Position.equals(levelModel.agent.position, new Position(0, 5)));
 
-      t.true(Position.equals(levelModel.player.position, new Position(9, 2)));
-      t.assert(success);
-      t.end();
-
-      resolve();
-    });
-  }));
+    t.true(Position.equals(levelModel.player.position, new Position(9, 2)));
+    t.assert(success);
+    t.end();
+  });
 });
 
 test('Agent 4: Walk on Water', t => {
-  attempt('agent04', api => new Promise(resolve => {
+  attempt('agent04', async (api, levelModel) => {
 
     // Have the Agent move to the diamond path pressure plate.
     for (let i = 0; i < 6; ++i) {
@@ -219,20 +210,17 @@ test('Agent 4: Walk on Water', t => {
     }, 1000);
 
     // Check the solutions
-    api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, new Position(3, 1)));
+    const success = await api.startAttempt();
+    t.true(Position.equals(levelModel.agent.position, new Position(3, 1)));
 
-      t.true(Position.equals(levelModel.player.position, new Position(9, 1)));
-      t.assert(success);
-      t.end();
-
-      resolve();
-    });
-  }));
+    t.true(Position.equals(levelModel.player.position, new Position(9, 1)));
+    t.assert(success);
+    t.end();
+  });
 });
 
 test('Agent 5: Open Doors 2.0', t => {
-  attempt('agent05', api => new Promise(resolve => {
+  attempt('agent05', async (api, levelModel) => {
 
     // Have the Agent move to the diamond path pressure plate.
     for (let i = 0; i < 5; ++i) {
@@ -277,20 +265,17 @@ test('Agent 5: Open Doors 2.0', t => {
     }, 1500);
 
     // Check the solutions
-    api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, new Position(8, 3)));
+    const success = await api.startAttempt();
+    t.true(Position.equals(levelModel.agent.position, new Position(8, 3)));
 
-      t.true(Position.equals(levelModel.player.position, new Position(9, 1)));
-      t.assert(success);
-      t.end();
-
-      resolve();
-    });
-  }));
+    t.true(Position.equals(levelModel.player.position, new Position(9, 1)));
+    t.assert(success);
+    t.end();
+  });
 });
 
 test('Agent 6: Build Bridge with one turn', t => {
-  attempt('agent06', api => new Promise(resolve => {
+  attempt('agent06', async (api, levelModel) => {
     // Have the Agent build a bridge.
     for (let i = 0; i < 3; i++) {
       api.moveForward(null, 'PlayerAgent');
@@ -330,20 +315,17 @@ test('Agent 6: Build Bridge with one turn', t => {
     }, 1000);
 
     // Check the solutions
-    api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, new Position(5, 3)));
+    const success = await api.startAttempt();
+    t.true(Position.equals(levelModel.agent.position, new Position(5, 3)));
 
-      t.true(Position.equals(levelModel.player.position, new Position(3, 1)));
-      t.assert(success);
-      t.end();
-
-      resolve();
-    });
-  }));
+    t.true(Position.equals(levelModel.player.position, new Position(3, 1)));
+    t.assert(success);
+    t.end();
+  });
 });
 
 test('Agent 7: Build Bridge with multiple turns', t => {
-  attempt('agent07', api => new Promise(resolve => {
+  attempt('agent07', async (api, levelModel) => {
     // Have the Agent build a bridge.
     for (let i = 0; i < 3; i++) {
       api.moveForward(null, 'PlayerAgent');
@@ -385,20 +367,17 @@ test('Agent 7: Build Bridge with multiple turns', t => {
     }, 1000);
 
     // Check the solutions
-    api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, new Position(6, 2)));
+    const success = await api.startAttempt();
+    t.true(Position.equals(levelModel.agent.position, new Position(6, 2)));
 
-      t.true(Position.equals(levelModel.player.position, new Position(5, 1)));
-      t.assert(success);
-      t.end();
-
-      resolve();
-    });
-  }));
+    t.true(Position.equals(levelModel.player.position, new Position(5, 1)));
+    t.assert(success);
+    t.end();
+  });
 });
 
 test('Agent 8: Build Bridge with Functions', t => {
-  attempt('agent08', api => new Promise(resolve => {
+  attempt('agent08', async (api, levelModel) => {
 
     const func = () => {
       for (let i = 0; i < 2; ++i) {
@@ -435,20 +414,17 @@ test('Agent 8: Build Bridge with Functions', t => {
     }, 10000);
 
     // Check the solutions
-    api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, new Position(7, 7)));
+    const success = await api.startAttempt();
+    t.true(Position.equals(levelModel.agent.position, new Position(7, 7)));
 
-      t.true(Position.equals(levelModel.player.position, new Position(9, 2)));
-      t.assert(success);
-      t.end();
-
-      resolve();
-    });
-  }));
+    t.true(Position.equals(levelModel.player.position, new Position(9, 2)));
+    t.assert(success);
+    t.end();
+  });
 });
 
 test('Agent 9: Clear Path', t => {
-  attempt('agent09', api => new Promise(resolve => {
+  attempt('agent09', async (api, levelModel) => {
 
     const func = () => {
       api.destroyBlock(null, 'PlayerAgent');
@@ -497,20 +473,17 @@ test('Agent 9: Clear Path', t => {
     }, 5000);
 
     // Check the solutions
-    api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, new Position(8, 3)));
+    const success = await api.startAttempt();
+    t.true(Position.equals(levelModel.agent.position, new Position(8, 3)));
 
-      t.true(Position.equals(levelModel.player.position, new Position(4, 1)));
-      t.assert(success);
-      t.end();
-
-      resolve();
-    });
-  }));
+    t.true(Position.equals(levelModel.player.position, new Position(4, 1)));
+    t.assert(success);
+    t.end();
+  });
 });
 
 /*test.only('Agent 10: Ride Rails', t => {
-  attempt('agent10', api => new Promise(resolve => {
+  attempt('agent10', async (api, levelModel) => {
 
     const funcLong = () => {
       for (let i = 0; i < 3; ++i) {
@@ -576,19 +549,16 @@ test('Agent 9: Clear Path', t => {
     }, 28000);
 
     // Check the solutions
-    api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, new Position(9, 2)));
+    const success = await api.startAttempt();
+    t.true(Position.equals(levelModel.agent.position, new Position(9, 2)));
 
-      t.true(Position.equals(levelModel.player.position, new Position(4, 3)));
-      t.end();
-
-      resolve();
-    });
-  }), 1);
+    t.true(Position.equals(levelModel.player.position, new Position(4, 3)));
+    t.end();
+  }, 1);
 });*/
 
 test('Agent 11: The Nether', t => {
-  attempt('agent11', api => new Promise(resolve => {
+  attempt('agent11', async (api, levelModel) => {
 
     const funcLong = () => {
       for (let i = 0; i < 5; ++i) {
@@ -654,14 +624,11 @@ test('Agent 11: The Nether', t => {
     }, 15000);
 
     // Check the solutions
-    api.startAttempt((success, levelModel) => {
-      t.true(Position.equals(levelModel.agent.position, new Position(7, 2)));
+    await api.startAttempt();
+    t.true(Position.equals(levelModel.agent.position, new Position(7, 2)));
 
-      t.true(Position.equals(levelModel.player.position, new Position(4, 2)));
-      t.end();
-
-      resolve();
-    });
-  }));
+    t.true(Position.equals(levelModel.player.position, new Position(4, 2)));
+    t.end();
+  });
 });
 

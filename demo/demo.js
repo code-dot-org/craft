@@ -32,7 +32,7 @@ var gameController = new GameController({
   earlyLoadAssetPacks: testLevelToLoad.earlyLoadAssetPacks,
   earlyLoadNiceToHaveAssetPacks: testLevelToLoad.earlyLoadNiceToHaveAssetPacks,
   afterAssetsLoaded: () => {
-    gameController.codeOrgAPI.startAttempt(() => {});
+    gameController.codeOrgAPI.startAttempt();
   },
 });
 
@@ -54,7 +54,7 @@ $('input[type=range]').on('input', function () {
 
 $('#reset-button').click(function () {
   gameController.codeOrgAPI.resetAttempt();
-  gameController.codeOrgAPI.startAttempt(() => {});
+  gameController.codeOrgAPI.startAttempt();
 });
 
 if (!gameController.levelData.isAgentLevel) {
