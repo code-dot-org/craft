@@ -2029,7 +2029,7 @@ module.exports = class LevelView {
     }
 
     const atlas = "miniBlocks";
-    const xOffset = 8 - (xOffsetRange / 2) + (Math.random() * xOffsetRange);
+    const xOffset = 9 - (xOffsetRange / 2) + (Math.random() * xOffsetRange);
     const yOffset = 3 - (yOffsetRange / 2) + (Math.random() * yOffsetRange);
     const offset = new Position(xOffset, yOffset);
 
