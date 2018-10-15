@@ -1454,21 +1454,19 @@ module.exports = class LevelView {
   }
 
   playItemDropAnimation(destroyPosition, blockType, completionHandler) {
-    var sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType);
+    let autoAcquire;
+    if (this.controller.getIsDirectPlayerControl() && completionHandler) {
+      completionHandler();
+    } else {
+      autoAcquire = () => {
+        const player = this.controller.levelModel.player;
+        this.playItemAcquireAnimation(player.position, player.facing, sprite, completionHandler, blockType);
+      };
+    }
+    const sprite = this.createMiniBlock(destroyPosition[0], destroyPosition[1], blockType, {onComplete: autoAcquire});
 
     if (sprite) {
       sprite.sortOrder = this.yToIndex(destroyPosition[1]) + 2;
-    }
-
-    if (this.controller.getIsDirectPlayerControl()) {
-      if (completionHandler) {
-        completionHandler();
-      }
-    } else {
-      this.onAnimationEnd(this.playScaledSpeed(sprite.animations, "animate"), () => {
-        const player = this.controller.levelModel.player;
-        this.playItemAcquireAnimation(player.position, player.facing, sprite, completionHandler, blockType);
-      });
     }
   }
 
@@ -2053,6 +2051,10 @@ module.exports = class LevelView {
       }
     };
     const tween = this.addResettableTween(item).to({y: -8}, 350, bounce);
+
+    if (overrides.onComplete) {
+      tween.onComplete.add(overrides.onComplete);
+    }
 
     // If direct player control, we have stuff to do to manage miniblock pick up
     if (this.controller.getIsDirectPlayerControl() || this.controller.levelData.isAquaticLevel) {
