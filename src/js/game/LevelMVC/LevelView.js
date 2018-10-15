@@ -2035,8 +2035,23 @@ module.exports = class LevelView {
     const offset = new Position(xOffset, yOffset);
 
     sprite = this.actionGroup.create(xOffset + 40 * x, yOffset + 40 * y, atlas, this.miniBlocks[frame] + ".png");
+    const bounce = k => {
+      if (k < 0.2) {
+        return 1;
+      } else if (k < 0.4) {
+        return 2;
+      } else if (k < 0.6) {
+        return 1;
+      } else if (k < 0.8) {
+        return 0;
+      } else if (k < 1) {
+        return 1;
+      } else {
+        return 0;
+      }
+    };
     const tween = this.addResettableTween(sprite)
-      .to({y: yOffset + 40 * y + 5}, 100, Phaser.Easing.Bounce.Out, false, 0, 1, true);
+      .to({y: yOffset + 40 * y - 8}, 350, bounce);
 
     // If direct player control, we have stuff to do to manage miniblock pick up
     if (this.controller.getIsDirectPlayerControl() || this.controller.levelData.isAquaticLevel) {
