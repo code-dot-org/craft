@@ -1486,10 +1486,11 @@ module.exports = class LevelView {
   }
 
   playItemAcquireAnimation(playerPosition, facing, sprite, completionHandler, blockType) {
-    var tween;
-
-    tween = this.addResettableTween(sprite).to(
-      this.positionToScreen(playerPosition), 200, Phaser.Easing.Linear.None);
+    const target = this.positionToScreen(playerPosition);
+    const tween = this.addResettableTween(sprite).to({
+      x: target.x + 20,
+      y: target.y + 20,
+    }, 200, Phaser.Easing.Linear.None);
 
     tween.onComplete.add(() => {
       const caughtUpToPlayer = Position.equals(this.player.position, playerPosition);
