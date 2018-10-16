@@ -384,6 +384,7 @@ module.exports = class LevelView {
       "readDeadCoralBlock": ["blocks", "Coral_Block_Dead_Red", -12, 0],
       "yellowDeadCoralBlock": ["blocks", "Coral_Block_Dead_Yellow", -12, 0],
       "prismarine": ["blocks", "Prismarine0", -12, 0],
+      "prismarineBricks": ["blocks", "Prismarine_Bricks", -12, 0],
       "darkPrismarine": ["blocks", "Prismarine_Dark", -12, 0],
       "seaLantern": ["blocks", "Sea_Lantern0", -12, 0],
       "packedIce": ["blocks", "Ice_Packed", -12, 0],
