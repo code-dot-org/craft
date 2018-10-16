@@ -368,6 +368,7 @@ module.exports = class LevelView {
       "strippedOak": ["blocks", "Stripped_Oak", -12, 0],
       "strippedDarkOak": ["blocks", "Stripped_Dark_Oak", -12, 0],
       "stoneBricks": ["blocks", "Stone_Bricks", -12, 0],
+      "chiseledStoneBricks": ["blocks", "Stone_Bricks_Chisled", -12, 0],
       "mossyStoneBricks": ["blocks", "Stone_Bricks_Mossy", -12, 0],
       "crackedStoneBricks": ["blocks", "Stone_Bricks_Cracked", -12, 0],
       "magmaBlock": ["blocks", "Magma_Block0", -12, 0],
@@ -422,6 +423,10 @@ module.exports = class LevelView {
       "coralPlantRedDeep": ["blocks", "Coral_Plant_Red_Sand", -12, 0],
       "coralPlantYellow": ["blocks", "Coral_Plant_Yellow", -12, 0],
       "coralPlantYellowDeep": ["blocks", "Coral_Plant_Yellow_Sand", -12, 0],
+      "magmaUnderwater": ["blocks", "Magma_Bubble_Boat0", -12, 0],
+      "magmaUnderwaterDeep": ["blocks", "Magma_Bubble_Deep0", -12, 0],
+      "bubbleColumn": ["blocks", "Bubble_Column0", -12, 0],
+      "conduit": ["blocks", "Conduit00", -12, 0],
 
       "chest": ["blocks", "Chest0", -12, -20],
       "invisible": ["blocks", "Invisible", 0, 0],
