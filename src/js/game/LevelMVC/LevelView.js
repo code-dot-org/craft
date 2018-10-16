@@ -561,6 +561,15 @@ module.exports = class LevelView {
     });
   }
 
+  playOpenConduitAnimation(position) {
+    const blockIndex = (this.yToIndex(position[1])) + position[0];
+    const block = this.actionPlaneBlocks[blockIndex];
+    const animation = this.playScaledSpeed(block.animations, "activation");
+    this.onAnimationEnd(animation, () => {
+      this.playScaledSpeed(block.animations, "open");
+    });
+  }
+
   playOpenChestAnimation(position) {
     const blockIndex = (this.yToIndex(position[1])) + position[0];
     const block = this.actionPlaneBlocks[blockIndex];
@@ -2280,8 +2289,16 @@ module.exports = class LevelView {
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
-        frameList = Phaser.Animation.generateFrameNames("Conduit", 3, 10, "", 2);
+        frameList = Phaser.Animation.generateFrameNames("Conduit", 0, 0, "", 2);
         sprite.animations.add("idle", frameList, 5, true);
+
+        frameList = Phaser.Animation.generateFrameNames("Conduit", 3, 10, "", 2);
+        sprite.animations.add("open", frameList, 5, true);
+
+        frameList = Phaser.Animation.generateFrameNames("Conduit", 0, 10, "", 2);
+        sprite.animations.add("activation", frameList, 5, false);
+
+
         this.playScaledSpeed(sprite.animations, "idle");
         break;
 
