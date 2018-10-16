@@ -102,6 +102,20 @@ module.exports = class LevelBlock {
       this.isPlacable = true;
     }
 
+    if (blockType === "magmaUnderwater") {
+      this.isEmissive = true;
+    }
+
+    if (blockType === "bubbleColumn") {
+      this.isSolid = false;
+      this.isEntity = true;
+    }
+
+    if (blockType === "conduit") {
+      this.isSolid = false;
+      this.isEntity = true;
+    }
+
     if (blockType === "water") {
       this.isPlacable = true;
     }
