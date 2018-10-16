@@ -942,7 +942,9 @@ module.exports = class LevelModel {
           (!this.actionPlane.getBlockAt(position).isEmpty &&
             this.actionPlane.getBlockAt(position).isEmissive) ||
           (this.groundPlane.getBlockAt(position).isEmissive &&
-            this.actionPlane.getBlockAt(position).isEmpty)
+            this.actionPlane.getBlockAt(position).isEmpty) ||
+          (this.actionPlane.getBlockAt(position).isEmpty &&
+            this.groundDecorationPlane.getBlockAt(position).isEmissive)
         ) {
           emissives.push(position);
         }
@@ -1038,9 +1040,10 @@ module.exports = class LevelModel {
           const position = new Position(x, y);
           const groundBlock = this.groundPlane.getBlockAt(position);
           const actionBlock = this.actionPlane.getBlockAt(position);
-
+          const decorationBlock = this.groundDecorationPlane.getBlockAt(position);
           if (groundBlock.isEmissive && actionBlock.isEmpty ||
-            (!actionBlock.isEmpty && actionBlock.isEmissive)) {
+            (!actionBlock.isEmpty && actionBlock.isEmissive) ||
+            (actionBlock.isEmpty && decorationBlock.isEmissive)) {
             this.clearFowAround(x, y);
           }
         }
