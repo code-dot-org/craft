@@ -187,6 +187,8 @@ module.exports = class LevelPlane {
       this.levelModel.controller.levelView.refreshGroundGroup();
     }
 
+    this.activateConduits();
+
     return block;
   }
 
@@ -766,6 +768,32 @@ module.exports = class LevelPlane {
         }
       });
     }
+  }
+
+  getConduitRingPositions(position) {
+    
+  }
+
+  activateConduits() {
+    this.getAllPositions().forEach((position) => {
+      const block = this.getBlockAt(position);
+      if (block.blockType == "conduit"){
+
+        var prismarineCount = 0;
+
+        Position.getOrthogonalPositions(position).forEach((workingPosition) => {
+          const block = this.getBlockAt(workingPosition);
+          if (block.blockType == "prismarine") {
+            ++prismarineCount;
+          }
+        });
+    
+        if (prismarineCount == 4) {
+
+          this.levelModel.controller.levelView.playOpenConduitAnimation(position);
+        }
+      }
+    });
   }
 
 };

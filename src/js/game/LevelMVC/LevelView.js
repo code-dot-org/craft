@@ -427,7 +427,7 @@ module.exports = class LevelView {
       "magmaUnderwater": ["blocks", "Magma_Bubble_Boat0", -12, 0],
       "magmaDeep": ["blocks", "Magma_Bubble_Deep0", -12, 0],
       "bubbleColumn": ["blocks", "Bubble_Column0", -12, 0],
-      "conduit": ["blocks", "Conduit00", -12, 0],
+      "conduit": ["blocks", "Conduit00", -13, -10],
 
       "chest": ["blocks", "Chest0", -12, -20],
       "invisible": ["blocks", "Invisible", 0, 0],
