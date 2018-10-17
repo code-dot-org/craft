@@ -114,6 +114,7 @@ module.exports = class LevelBlock {
     if (blockType === "conduit") {
       this.isSolid = false;
       this.isEntity = true;
+      this.isWeaklyPowerable = false;
     }
 
     if (blockType === "water") {
@@ -295,6 +296,10 @@ module.exports = class LevelBlock {
 
   getIsDoor() {
     return this.blockType.startsWith("door");
+  }
+
+  getIsConduit() {
+    return this.blockType.startsWith("conduit");
   }
 
   getIsLiquid() {
