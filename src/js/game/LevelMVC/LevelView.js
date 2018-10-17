@@ -593,7 +593,7 @@ module.exports = class LevelView {
           yOffsetRange: 10
         });
       }
-    })
+    });
   }
 
   playPlayerAnimation(animationName, position, facing, isOnBlock = false, entity = this.player) {
