@@ -61,4 +61,9 @@ module.exports = class Cod extends BaseEntity {
     this.sprite.y = this.offset[1] + 40 * this.position.y;
   }
 
+  canMoveThrough() {
+    this.controller.levelEntity.destroyEntity(this.identifier);
+    return true;
+  }
+
 };
