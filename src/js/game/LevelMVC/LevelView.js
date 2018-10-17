@@ -1694,9 +1694,10 @@ module.exports = class LevelView {
       if (position) {
         const newBlock = this.controller.levelModel.actionPlane.getBlockAt(position);
 
-        // we don't want to refresh doors. They're not destroyable, and
+        // we don't want to refresh doors or conduits. They're not destroyable / placeable, and
         // refreshing will lead to bad animation states
-        if (newBlock && newBlock.getIsDoor()) {
+        if (newBlock && newBlock.getIsDoor()
+        || newBlock && newBlock.getIsConduit() ) {
           return;
         }
 
@@ -2289,8 +2290,6 @@ module.exports = class LevelView {
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
-        frameList = Phaser.Animation.generateFrameNames("Conduit", 0, 0, "", 2);
-        sprite.animations.add("idle", frameList, 5, true);
 
         frameList = Phaser.Animation.generateFrameNames("Conduit", 3, 10, "", 2);
         sprite.animations.add("open", frameList, 5, true);
@@ -2298,8 +2297,6 @@ module.exports = class LevelView {
         frameList = Phaser.Animation.generateFrameNames("Conduit", 0, 10, "", 2);
         sprite.animations.add("activation", frameList, 5, false);
 
-
-        this.playScaledSpeed(sprite.animations, "idle");
         break;
 
       case "prismarine":
