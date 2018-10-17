@@ -90,6 +90,7 @@ module.exports = class LevelView {
       hardenedClaySilver: "hardened_clay_stained_silver",
       hardenedClayWhite: "hardened_clay_stained_white",
       hardenedClayYellow: "hardened_clay_stained_yellow",
+      heartofthesea: "heartofthesea_closed",
       ingotIron: "iron_ingot",
       lapisLazuli: "lapis_lazuli",
       logAcacia: "log_acacia",
@@ -112,6 +113,7 @@ module.exports = class LevelView {
       potato: "potato",
       potion: "potion_bottle_drinkable",
       pressurePlateOak: "pressure_plate_oak",
+      prismarine: "prismarine",
       quartzOre: "quartz",
       railGolden: "rail_golden",
       railNormal: "rail_normal",
@@ -430,6 +432,13 @@ module.exports = class LevelView {
       "conduit": ["blocks", "Conduit00", -12, 0],
 
       "chest": ["blocks", "Chest0", -12, -20],
+
+      "chestboat": ["blocks", "Chest0", -12, -20],
+      "chestnautilus": ["blocks", "Chest0", -12, -20],
+      "chestprismarine": ["blocks", "Chest0", -12, -20],
+      "chestheartofthesea": ["blocks", "Chest0", -12, -20],
+
+
       "invisible": ["blocks", "Invisible", 0, 0],
     };
     this.actionPlaneBlocks = [];
@@ -573,7 +582,18 @@ module.exports = class LevelView {
   playOpenChestAnimation(position) {
     const blockIndex = (this.yToIndex(position[1])) + position[0];
     const block = this.actionPlaneBlocks[blockIndex];
-    this.playScaledSpeed(block.animations, "open");
+    const animation = this.playScaledSpeed(block.animations, "open");
+    this.onAnimationEnd(animation, () => {
+      let blockData = this.controller.levelModel.actionPlane.getBlockAt(position);
+      let treasure = this.controller.levelModel.actionPlane.getBlockAt(position).blockType.substring(5, blockData.blockType.length);
+      if (treasure) {
+        this.createMiniBlock(position[0], position[1], treasure, {
+          collectibleDistance: 1,
+          xOffsetRange: 10,
+          yOffsetRange: 10
+        });
+      }
+    })
   }
 
   playPlayerAnimation(animationName, position, facing, isOnBlock = false, entity = this.player) {
@@ -2033,7 +2053,7 @@ module.exports = class LevelView {
    * @param {Number} [overrides.yOffsetRange=40]
    */
   createMiniBlock(x, y, blockType, overrides = {}) {
-    const collectibleDistance = overrides.collectibleDistance || 2;
+    let collectibleDistance = overrides.collectibleDistance || 2;
     const xOffsetRange = overrides.xOffsetRange || 40;
     const yOffsetRange = overrides.yOffsetRange || 40;
 
@@ -2079,6 +2099,12 @@ module.exports = class LevelView {
       };
 
       const collectiblePosition = this.controller.levelModel.spritePositionToIndex(offset, new Position(sprite.x, sprite.y));
+
+      // Chests will put out a treasure, but not disappear, so you need to be able to pick up set item from further away than the normal 1 index
+      if (blockType === "heartofthesea" || blockType === "boat" || blockType === "prismarine" || blockType === "nautilus") {
+        collectibleDistance *= 2;
+      }
+
       this.collectibleItems.push([sprite, offset, blockType, collectibleDistance]);
       tween.onComplete.add(() => {
         if (this.controller.levelModel.usePlayer) {
@@ -2344,6 +2370,10 @@ module.exports = class LevelView {
         break;
 
       case "chest":
+      case "chestheartofthesea":
+      case "chestprismarine":
+      case "chestnautilus":
+      case "chestboat":
         atlas = this.blocks[blockType][0];
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
