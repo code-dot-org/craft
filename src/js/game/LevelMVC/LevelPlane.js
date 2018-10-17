@@ -770,8 +770,29 @@ module.exports = class LevelPlane {
     }
   }
 
-  getConduitRingPositions(position) {
-    
+  getConduitRingPositions(position, ringSize) {
+    // We could hard code this... but might as well have a method for variable ring sizes just in case.
+    let topLeft = new Position(position.x - ringSize, position.y - ringSize);
+    let bottomRight = new Position(position.x + ringSize, position.y + ringSize);
+    let positionList = [];
+
+    // if both corners are in bounds, then the whole ring ought to be in bounds
+    if (!this.inBounds(topLeft) || !this.inBounds(bottomRight)) {
+      return positionList;
+    }  
+
+    let sideLength = ringSize * 2 + 1;
+
+    for (let i = 0; i < sideLength; ++i) {
+      for (let j = 0; j < sideLength; ++j) {
+        if ((i == 0 || i == sideLength - 1) || (j == 0 || j == sideLength - 1)){
+          let newIndex = new Position(topLeft.x + i, topLeft.y + j);
+          positionList.push(newIndex);
+        }
+      }
+    }
+
+    return positionList;
   }
 
   activateConduits() {
@@ -780,16 +801,16 @@ module.exports = class LevelPlane {
       if (block.blockType == "conduit"){
 
         var prismarineCount = 0;
+        let ringSize = 2;
 
-        Position.getOrthogonalPositions(position).forEach((workingPosition) => {
+        this.getConduitRingPositions(position, ringSize).forEach((workingPosition) => {
           const block = this.getBlockAt(workingPosition);
           if (block.blockType == "prismarine") {
             ++prismarineCount;
           }
         });
     
-        if (prismarineCount == 4) {
-
+        if (prismarineCount == (8 * ringSize)) {
           this.levelModel.controller.levelView.playOpenConduitAnimation(position);
         }
       }
