@@ -37,7 +37,7 @@ module.exports.levels = Object.assign({
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
-      "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
+      "grass", "grass", "grass", "grass", "grass", "magmaUnderwater", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "water", "water", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",
       "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass",

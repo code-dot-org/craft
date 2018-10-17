@@ -304,6 +304,7 @@ module.exports = class LevelBlock {
 
   getIsLiquid() {
     return this.blockType === "water" ||
+        this.blockType === "magmaUnderwater" ||
         this.blockType === "lava";
   }
 

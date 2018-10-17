@@ -424,7 +424,7 @@ module.exports = class LevelView {
       "coralPlantRedDeep": ["blocks", "Coral_Plant_Red_Sand", -12, 0],
       "coralPlantYellow": ["blocks", "Coral_Plant_Yellow", -12, 0],
       "coralPlantYellowDeep": ["blocks", "Coral_Plant_Yellow_Sand", -12, 0],
-      "magmaUnderwater": ["blocks", "Magma_Bubble_Boat0", -12, 0],
+      "magmaUnderwater": ["blocks", "Magma_Bubble_Boat0", -12, 4],
       "magmaDeep": ["blocks", "Magma_Bubble_Deep0", -12, 0],
       "bubbleColumn": ["blocks", "Bubble_Column0", -12, 0],
       "conduit": ["blocks", "Conduit00", -12, 0],

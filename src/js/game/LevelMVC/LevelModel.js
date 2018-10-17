@@ -1108,7 +1108,7 @@ module.exports = class LevelModel {
         let atlas = 'AO';
         if (block.blockType === 'lava') {
           atlas = 'LavaGlow';
-        } else if (block.blockType === 'water') {
+        } else if (block.blockType === 'water' || block.blockType === 'magmaUnderwater') {
           atlas = 'WaterAO';
         }
 
