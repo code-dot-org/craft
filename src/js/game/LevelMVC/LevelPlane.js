@@ -779,13 +779,13 @@ module.exports = class LevelPlane {
     // if both corners are in bounds, then the whole ring ought to be in bounds
     if (!this.inBounds(topLeft) || !this.inBounds(bottomRight)) {
       return positionList;
-    }  
+    }
 
     let sideLength = ringSize * 2 + 1;
 
     for (let i = 0; i < sideLength; ++i) {
       for (let j = 0; j < sideLength; ++j) {
-        if ((i == 0 || i == sideLength - 1) || (j == 0 || j == sideLength - 1)){
+        if ((i === 0 || i === sideLength - 1) || (j === 0 || j === sideLength - 1)){
           let newIndex = new Position(topLeft.x + i, topLeft.y + j);
           positionList.push(newIndex);
         }
@@ -798,7 +798,7 @@ module.exports = class LevelPlane {
   resolveConduitState() {
     this.getAllPositions().forEach((position) => {
       const block = this.getBlockAt(position);
-      if (block.blockType == "conduit"){
+      if (block.blockType === "conduit"){
 
         var prismarineCount = 0;
         let ringSize = 2;
@@ -810,13 +810,13 @@ module.exports = class LevelPlane {
           }
         });
 
-        if (prismarineCount == (8 * ringSize) && !block.isActivatedConduit) {
+        if (prismarineCount === (8 * ringSize) && !block.isActivatedConduit) {
           this.getBlockAt(position).isActivatedConduit = true;
           if (this.levelModel) {
             this.levelModel.controller.levelView.playOpenConduitAnimation(position);
           }
         }
-        else if(prismarineCount < (8 * ringSize) && block.isActivatedConduit) {
+        else if (prismarineCount < (8 * ringSize) && block.isActivatedConduit) {
           this.getBlockAt(position).isActivatedConduit = false;
           if (this.levelModel) {
             this.levelModel.controller.levelView.playCloseConduitAnimation(position);
