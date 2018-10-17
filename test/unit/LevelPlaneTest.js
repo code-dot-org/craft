@@ -1057,3 +1057,73 @@ test('weak charge: destroy block', t => {
   t.end();
 });
 
+test('conduit activation success: place block', t => {
+  const data = [
+    '','prismarine','prismarine','prismarine','prismarine',
+    'prismarine','','','','prismarine',
+    'prismarine','','conduit','','prismarine',
+    'prismarine','','','','prismarine',
+    'prismarine','prismarine','prismarine','prismarine','prismarine',
+  ];
+  const plane = new LevelPlane(data, 5, 5, null, "actionPlane");
+
+  plane.setBlockAt(new Position(0, 0), new LevelBlock('prismarine'));
+
+  t.deepEqual(plane.getBlockAt(new Position(2, 2)).isActivatedConduit, true);
+
+  t.end();
+});
+
+test('conduit activation fail: place block', t => {
+  const data = [
+    '','prismarine','prismarine','prismarine','prismarine',
+    'prismarine','','','','prismarine',
+    'prismarine','','conduit','','prismarine',
+    'prismarine','','','','prismarine',
+    'prismarine','prismarine','prismarine','prismarine','prismarine',
+  ];
+  const plane = new LevelPlane(data, 5, 5, null, "actionPlane");
+
+  plane.setBlockAt(new Position(1, 1), new LevelBlock('prismarine'));
+
+  t.deepEqual(plane.getBlockAt(new Position(2, 2)).isActivatedConduit, false);
+
+  t.end();
+});
+
+test('conduit deactivation success: destroy block', t => {
+  const data = [
+    'prismarine','prismarine','prismarine','prismarine','prismarine',
+    'prismarine','','','','prismarine',
+    'prismarine','','conduit','','prismarine',
+    'prismarine','','','','prismarine',
+    'prismarine','prismarine','prismarine','prismarine','prismarine',
+  ];
+  const plane = new LevelPlane(data, 5, 5, null, "actionPlane");
+
+  // Calling this manually since it's normally done by the View
+  plane.resolveConduitState();
+  plane.setBlockAt(new Position(0, 0), new LevelBlock(''));
+
+  t.deepEqual(plane.getBlockAt(new Position(2, 2)).isActivatedConduit, false);
+
+  t.end();
+});
+
+test('conduit deactivation failure: destroy block', t => {
+  const data = [
+    'prismarine','prismarine','prismarine','prismarine','prismarine',
+    'prismarine','prismarine','','','prismarine',
+    'prismarine','','conduit','','prismarine',
+    'prismarine','','','','prismarine',
+    'prismarine','prismarine','prismarine','prismarine','prismarine',
+  ];
+  const plane = new LevelPlane(data, 5, 5, null, "actionPlane");
+
+  plane.resolveConduitState();
+  plane.setBlockAt(new Position(1, 1), new LevelBlock(''));
+
+  t.deepEqual(plane.getBlockAt(new Position(2, 2)).isActivatedConduit, true);
+
+  t.end();
+});

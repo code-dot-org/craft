@@ -570,6 +570,12 @@ module.exports = class LevelView {
     });
   }
 
+  playCloseConduitAnimation(position) {
+    const blockIndex = (this.yToIndex(position[1])) + position[0];
+    const block = this.actionPlaneBlocks[blockIndex];
+    const animation = this.playScaledSpeed(block.animations, "deactivation");
+  }
+
   playOpenChestAnimation(position) {
     const blockIndex = (this.yToIndex(position[1])) + position[0];
     const block = this.actionPlaneBlocks[blockIndex];
@@ -1652,6 +1658,11 @@ module.exports = class LevelView {
         }
       }
     }
+
+    // We might have some default states that should be updated now that hte actionPlane is set
+    this.controller.levelModel.actionPlane.refreshRedstone();
+    this.controller.levelModel.actionPlane.resolveConduitState();
+    this.refreshActionGroup(this.controller.levelModel.actionPlane.getAllPositions());
   }
 
   refreshGroundGroup() {
@@ -2296,6 +2307,7 @@ module.exports = class LevelView {
 
         frameList = Phaser.Animation.generateFrameNames("Conduit", 0, 10, "", 2);
         sprite.animations.add("activation", frameList, 5, false);
+        sprite.animations.add("deactivation", frameList.reverse(), 5, false);
 
         break;
 

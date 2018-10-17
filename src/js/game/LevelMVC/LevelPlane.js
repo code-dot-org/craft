@@ -187,7 +187,7 @@ module.exports = class LevelPlane {
       this.levelModel.controller.levelView.refreshGroundGroup();
     }
 
-    this.activateConduits();
+    this.resolveConduitState();
 
     return block;
   }
@@ -795,7 +795,7 @@ module.exports = class LevelPlane {
     return positionList;
   }
 
-  activateConduits() {
+  resolveConduitState() {
     this.getAllPositions().forEach((position) => {
       const block = this.getBlockAt(position);
       if (block.blockType == "conduit"){
@@ -809,9 +809,18 @@ module.exports = class LevelPlane {
             ++prismarineCount;
           }
         });
-    
-        if (prismarineCount == (8 * ringSize)) {
-          this.levelModel.controller.levelView.playOpenConduitAnimation(position);
+
+        if (prismarineCount == (8 * ringSize) && !block.isActivatedConduit) {
+          this.getBlockAt(position).isActivatedConduit = true;
+          if (this.levelModel) {
+            this.levelModel.controller.levelView.playOpenConduitAnimation(position);
+          }
+        }
+        else if(prismarineCount < (8 * ringSize) && block.isActivatedConduit) {
+          this.getBlockAt(position).isActivatedConduit = false;
+          if (this.levelModel) {
+            this.levelModel.controller.levelView.playCloseConduitAnimation(position);
+          }
         }
       }
     });
