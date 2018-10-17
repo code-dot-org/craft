@@ -805,7 +805,7 @@ module.exports = class LevelPlane {
 
         this.getConduitRingPositions(position, ringSize).forEach((workingPosition) => {
           const block = this.getBlockAt(workingPosition);
-          if (block.blockType == "prismarine") {
+          if (block.blockType === "prismarine") {
             ++prismarineCount;
           }
         });
@@ -815,8 +815,7 @@ module.exports = class LevelPlane {
           if (this.levelModel) {
             this.levelModel.controller.levelView.playOpenConduitAnimation(position);
           }
-        }
-        else if (prismarineCount < (8 * ringSize) && block.isActivatedConduit) {
+        } else if (prismarineCount < (8 * ringSize) && block.isActivatedConduit) {
           this.getBlockAt(position).isActivatedConduit = false;
           if (this.levelModel) {
             this.levelModel.controller.levelView.playCloseConduitAnimation(position);
