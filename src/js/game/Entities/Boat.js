@@ -43,9 +43,9 @@ module.exports = class Boat extends BaseEntity {
    */
   static addBobTween(game, sprite) {
     return game.add.tween(sprite).to(
-      { y: '-3' },
+      { y: '3' },
       1000,
-      Phaser.Easing.Quadratic.InOut,
+      Phaser.Easing.Sinusoidal.InOut,
       true, // autoStart
       0,    // delay
       -1,   // repeat (forever)
