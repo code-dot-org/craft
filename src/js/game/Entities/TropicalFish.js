@@ -4,7 +4,7 @@ const FacingDirection = require("../LevelMVC/FacingDirection");
 module.exports = class TropicalFish extends BaseEntity {
   constructor(controller, type, identifier, x, y, facing) {
     super(controller, type, identifier, x, y, facing);
-    this.offset = [0,0];
+    this.offset = [0,16];
     this.prepareSprite();
     this.sprite.sortOrder = this.controller.levelView.yToIndex(this.position.y);
   }
