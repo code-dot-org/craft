@@ -62,6 +62,22 @@ module.exports = {
     playerStartDirection: 0,
     verificationFunction: verificationAPI => verificationAPI.isEntityAt("Player", [6, 7]),
   },
+  aquatic08a: {
+    isAquaticLevel: true,
+    boat: true,
+    playerName: "SteveAquatic",
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteveAquatic'],
+      afterLoad: [],
+    },
+    groundPlane: ["water", "water", "magmaUnderwater", "magmaUnderwater", "magmaUnderwater", "magmaUnderwater", "magmaUnderwater", "magmaUnderwater", "dirt", "dirt", "water", "water", "water", "water", "water", "water", "water", "magmaUnderwater", "dirt", "dirt", "water", "water", "dirt", "water", "water", "dirt", "water", "magmaUnderwater", "magmaUnderwater", "dirt", "magmaUnderwater", "water", "water", "water", "water", "water", "water", "water", "water", "dirt", "magmaUnderwater", "water", "water", "water", "water", "water", "water", "blueDeadCoralBlock", "water", "dirt", "magmaUnderwater", "water", "dirt", "water", "water", "dirt", "water", "blueDeadCoralBlock", "water", "dirt", "magmaUnderwater", "water", "magmaUnderwater", "magmaUnderwater", "magmaUnderwater", "magmaUnderwater", "water", "blueDeadCoralBlock", "water", "dirt", "magmaUnderwater", "water", "magmaUnderwater", "redCoralBlock", "water", "water", "water", "water", "water", "dirt", "water", "water", "magmaUnderwater", "water", "water", "water", "magentaCoralBlock", "dirt", "dirt", "dirt", "water", "water", "blueDeadCoralBlock", "water", "magentaCoralBlock", "dirt", "dirt", "dirt", "dirt", "dirt"],
+    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+    actionPlane: ["dirt", "dirt", "", "", "", "", "", "", "magmaBlock", "lava", "dirt", "", "", "", "", "", "", "", "magmaBlock", "dirt", "magmaBlock", "", "dirt", "dirt", "dirt", "dirt", "", "", "", "magmaBlock", "", "", "dirt", "lava", "lava", "dirt", "", "", "", "dirt", "", "", "dirt", "lava", "lava", "dirt", "", "blueDeadCoralBlock", "", "dirt", "", "", "dirt", "magmaBlock", "magmaBlock", "dirt", "", "blueDeadCoralBlock", "turtleMiniblock", "dirt", "", "", "", "", "", "", "", "blueDeadCoralBlock", "", "dirt", "", "", "", "", "", "", "", "", "", "dirt", "", "", "", "", "", "", "", "dirt", "dirt", "dirt", "", "", "deadCoralBlock", "", "", "dirt", "dirt", "dirt", "magmaBlock", "magmaBlock"],
+    entities: [["tropicalFish", 5, 7, 3]],
+    playerStartPosition: [1, 8],
+    playerStartDirection: 0,
+    verificationFunction: verificationAPI => verificationAPI.isEntityAt("Player", [6, 7]),
+  },
   aquatic09: {
     isAquaticLevel: true,
     ocean: "warm",
