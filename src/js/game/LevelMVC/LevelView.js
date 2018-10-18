@@ -1938,6 +1938,10 @@ module.exports = class LevelView {
           this.audioPlayer.play("bump");
         });
       }
+
+      // Boat bobs up and down
+      this.game.add.tween(entity.animationRig)
+        .to({ y: '-3' }, 1000, Phaser.Easing.Quadratic.InOut, true, 0, -1, true);
     }
   }
 
