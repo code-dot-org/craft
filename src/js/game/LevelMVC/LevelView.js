@@ -574,7 +574,7 @@ module.exports = class LevelView {
   playCloseConduitAnimation(position) {
     const blockIndex = (this.yToIndex(position[1])) + position[0];
     const block = this.actionPlaneBlocks[blockIndex];
-    const animation = this.playScaledSpeed(block.animations, "deactivation");
+    this.playScaledSpeed(block.animations, "deactivation");
     this.controller.levelModel.actionPlane.getBlockAt(position).isEmissive = false;
   }
 

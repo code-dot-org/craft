@@ -1059,11 +1059,11 @@ test('weak charge: destroy block', t => {
 
 test('conduit activation/deactivation: placing and removing prismarine', t => {
   const data = [
-    '','','','','','',
-    '','','prismarine','prismarine','prismarine','',
-    'prismarine','','','','prismarine','',
-    'prismarine','','conduit','','prismarine','',
-    'prismarine','','','','prismarine','',
+    '',          '',          '',          '',          '',          '',
+    '',          '',          'prismarine','prismarine','prismarine','',
+    'prismarine','',          '',          '',          'prismarine','',
+    'prismarine','',          'conduit',   '',          'prismarine','',
+    'prismarine','',          '',          '',          'prismarine','',
     'prismarine','prismarine','prismarine','prismarine','prismarine','',
   ];
   const plane = new LevelPlane(data, 6, 6, null, "actionPlane");
