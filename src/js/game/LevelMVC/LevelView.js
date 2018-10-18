@@ -578,8 +578,7 @@ module.exports = class LevelView {
     const block = this.actionPlaneBlocks[blockIndex];
     const animation = this.playScaledSpeed(block.animations, "open");
     this.onAnimationEnd(animation, () => {
-      let blockData = this.controller.levelModel.actionPlane.getBlockAt(position);
-      let treasure = this.controller.levelModel.actionPlane.getBlockAt(position).blockType.substring(0, blockData.blockType.length - 5);
+      const treasure = this.getTreasureTypeFromChest(this.controller.levelModel.actionPlane.getBlockAt(position));
       if (treasure) {
         this.createMiniBlock(position[0], position[1], treasure, {
           collectibleDistance: 1,
@@ -588,6 +587,10 @@ module.exports = class LevelView {
         });
       }
     });
+  }
+
+  getTreasureTypeFromChest(blockData) {
+    return blockData.blockType.substring(0, blockData.blockType.length - 5);
   }
 
   playPlayerAnimation(animationName, position, facing, isOnBlock = false, entity = this.player) {
