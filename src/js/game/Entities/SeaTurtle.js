@@ -62,4 +62,14 @@ module.exports = class SeaTurtle extends BaseEntity {
     this.sprite.y = this.offset[1] + 40 * this.position.y;
   }
 
+  canMoveThrough() {
+    this.controller.levelView.createMiniBlock(this.position.x, this.position.y, "turtle", {
+      collectibleDistance: 1,
+      xOffsetRange: 10,
+      yOffsetRange: 10
+    });
+    this.controller.levelEntity.destroyEntity(this.identifier);
+    return true;
+  }
+
 };
