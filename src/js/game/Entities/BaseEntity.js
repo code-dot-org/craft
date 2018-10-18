@@ -73,6 +73,14 @@ module.exports = class BaseEntity {
     this.queue.begin();
   }
 
+  addAnimation(...args) {
+    return this.getAnimationManager().add(...args);
+  }
+
+  getAnimationManager() {
+    return this.animationRig ? this.animationRig.animations : this.sprite.animations;
+  }
+
   getWalkAnimation() {
     return "walk" + this.controller.levelView.getDirectionName(this.facing);
   }
