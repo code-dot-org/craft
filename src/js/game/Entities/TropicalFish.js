@@ -4,7 +4,7 @@ const FacingDirection = require("../LevelMVC/FacingDirection");
 module.exports = class TropicalFish extends BaseEntity {
   constructor(controller, type, identifier, x, y, facing) {
     super(controller, type, identifier, x, y, facing);
-    this.offset = [0,16];
+    this.offset = [0, 16];
     this.prepareSprite();
     this.sprite.sortOrder = this.controller.levelView.yToIndex(this.position.y);
   }
@@ -47,7 +47,7 @@ module.exports = class TropicalFish extends BaseEntity {
       [10, 13], // down
       [5, 8]]; // left
     }
-    for (var i = 0; i < 4; i++) {
+    for (let i = 0; i < 4; i++) {
       let facingName = this.controller.levelView.getDirectionName(i);
       let frameList = Phaser.Animation.generateFrameNames(frameBase, frameListPerDirection[i][0], frameListPerDirection[i][1], ".png", 2);
       this.sprite.animations.add("idle"+facingName, frameList, frameRate, false).onComplete.add(() => {

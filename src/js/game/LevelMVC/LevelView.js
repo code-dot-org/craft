@@ -2261,16 +2261,11 @@ module.exports = class LevelView {
         yOffset = this.blocks[blockType][3];
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Magma_Bubble_Boat", 0, 5, "", 0);
-        
-        // Randomizing the starting frame, so that not all bubbles are synchronized
-        let numberOfFrames = Math.floor(Math.random() * 6) % 6;
-        for (let i = 0; i < numberOfFrames; ++i) {
-          const frame = frameList.shift();
-          frameList.push(frame);
-        }
 
         sprite.animations.add("idle", frameList, 5, true);
-        this.playScaledSpeed(sprite.animations, "idle");
+        const animation = this.playScaledSpeed(sprite.animations, "idle");
+        // Randomizing the starting frame, so that not all bubbles are synchronized
+        animation.frame = Math.floor(Math.random() * animation.frameTotal);
         break;
 
       case "magmaDeep":
