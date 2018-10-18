@@ -279,7 +279,7 @@ module.exports = class LevelEntity {
         this.entityDeathCount.set(entity.type, 1);
       }
       entity.reset();
-      entity.sprite.animations.stop(null, true);
+      entity.getAnimationManager().stop(null, true);
       entity.sprite.destroy();
       this.entityMap.delete(identifier);
     } else if (this.controller.DEBUG) {
