@@ -30,6 +30,22 @@ module.exports = {
     playerStartDirection: 0,
     verificationFunction: verificationAPI => verificationAPI.isEntityAt("Player", [5, 1]),
   },
+  aquatic06: {
+    isAquaticLevel: true,
+    boat: true,
+    playerName: "SteveAquatic",
+    assetPacks: {
+      beforeLoad: ['allAssetsMinusPlayer', 'playerSteveAquatic'],
+      afterLoad: [],
+    },
+    groundPlane: ["snow", "snow", "snow", "snow", "snow", "water", "water", "water", "stoneBricks", "water", "snow", "snow", "snow", "snow", "snow", "ice", "water", "water", "water", "water", "snow", "snow", "snow", "snow", "ice", "ice", "water", "water", "stoneBricks", "stoneBricks", "snow", "snow", "snow", "water", "water", "water", "water", "water", "water", "water", "snow", "snow", "ice", "water", "ice", "ice", "water", "ice", "ice", "ice", "ice", "ice", "ice", "water", "ice", "ice", "water", "ice", "ice", "ice", "water", "water", "water", "water", "water", "water", "water", "ice", "ice", "ice", "water", "ice", "ice", "water", "ice", "ice", "ice", "ice", "water", "ice", "water", "ice", "ice", "water", "ice", "ice", "ice", "ice", "water", "ice", "water", "water", "water", "water", "ice", "ice", "ice", "water", "water", "water"],
+    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+    actionPlane: ["snow", "snow", "snow", "snow", "", "", "stoneBricks", "", "stoneBricks", "", "snow", "snow", "snow", "", "", "", "", "", "", "", "snow", "snow", "", "", "", "", "", "", "", "stoneBricks", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "ice", "ice", "", "", "ice", "", "", "", "", "", "ice", "ice", "", "ice", "ice", "", "", "", "", "", "", "", "", "", "", "", "", "ice", "ice", "", "", "", "", "", "", "ice", "", "ice", "", "", "ice", "ice", "", "ice", "", "ice", "", "", "", "", "ice", "", "", "", "", ""],
+    entities: [["seaTurtle", 6, 6, 3]],
+    playerStartPosition: [0, 9],
+    playerStartDirection: 0,
+    verificationFunction: verificationAPI => verificationAPI.isEntityAt("Player", [7, 2]),
+  },
   aquatic08: {
     isAquaticLevel: true,
     ocean: "warm",
