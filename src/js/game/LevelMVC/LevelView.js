@@ -565,6 +565,7 @@ module.exports = class LevelView {
     const blockIndex = (this.yToIndex(position[1])) + position[0];
     const block = this.actionPlaneBlocks[blockIndex];
     const animation = this.playScaledSpeed(block.animations, "activation");
+    this.controller.levelModel.actionPlane.getBlockAt(position).isEmissive = true;
     this.onAnimationEnd(animation, () => {
       this.playScaledSpeed(block.animations, "open");
     });
@@ -573,7 +574,8 @@ module.exports = class LevelView {
   playCloseConduitAnimation(position) {
     const blockIndex = (this.yToIndex(position[1])) + position[0];
     const block = this.actionPlaneBlocks[blockIndex];
-    this.playScaledSpeed(block.animations, "deactivation");
+    const animation = this.playScaledSpeed(block.animations, "deactivation");
+    this.controller.levelModel.actionPlane.getBlockAt(position).isEmissive = false;
   }
 
   playOpenChestAnimation(position) {
@@ -1708,7 +1710,7 @@ module.exports = class LevelView {
         // we don't want to refresh doors or conduits. They're not destroyable / placeable, and
         // refreshing will lead to bad animation states
         if (newBlock && newBlock.getIsDoor()
-        || newBlock && newBlock.getIsConduit() ) {
+        || newBlock && (newBlock.getIsConduit() && newBlock.isActivatedConduit)) {
           return;
         }
 
