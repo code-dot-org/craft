@@ -431,13 +431,7 @@ module.exports = class LevelView {
       "bubbleColumn": ["blocks", "Bubble_Column0", -12, 0],
       "conduit": ["blocks", "Conduit00", -12, 0],
 
-      "chest": ["blocks", "Chest0", -12, -20],
-
-      "chestboat": ["blocks", "Chest0", -12, -20],
-      "chestnautilus": ["blocks", "Chest0", -12, -20],
-      "chestprismarine": ["blocks", "Chest0", -12, -20],
-      "chestheartofthesea": ["blocks", "Chest0", -12, -20],
-
+      "Chest": ["blocks", "Chest0", -12, -20],
 
       "invisible": ["blocks", "Invisible", 0, 0],
     };
@@ -585,7 +579,7 @@ module.exports = class LevelView {
     const animation = this.playScaledSpeed(block.animations, "open");
     this.onAnimationEnd(animation, () => {
       let blockData = this.controller.levelModel.actionPlane.getBlockAt(position);
-      let treasure = this.controller.levelModel.actionPlane.getBlockAt(position).blockType.substring(5, blockData.blockType.length);
+      let treasure = this.controller.levelModel.actionPlane.getBlockAt(position).blockType.substring(0, blockData.blockType.length - 5);
       if (treasure) {
         this.createMiniBlock(position[0], position[1], treasure, {
           collectibleDistance: 1,
@@ -1206,7 +1200,12 @@ module.exports = class LevelView {
     } else {
       const group = block.shouldRenderOnGroundPlane() ? this.groundGroup : this.actionGroup;
       const offset = block.shouldRenderOnGroundPlane() ? -0.5 : 0;
-      sprite = this.createBlock(group, position[0], position[1] + offset, blockType);
+      if (block.getIsChestblock()){
+        // if this is a treasure chest, render a normal chest and blockType will be used later to determine treasure type
+        sprite = this.createBlock(group, position[0], position[1] + offset, "Chest");
+      } else {
+        sprite = this.createBlock(group, position[0], position[1] + offset, blockType);
+      }
     }
 
     if (sprite) {
@@ -2369,11 +2368,7 @@ module.exports = class LevelView {
         this.playScaledSpeed(sprite.animations, "idle", 0.5);
         break;
 
-      case "chest":
-      case "chestheartofthesea":
-      case "chestprismarine":
-      case "chestnautilus":
-      case "chestboat":
+      case "Chest":
         atlas = this.blocks[blockType][0];
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];
