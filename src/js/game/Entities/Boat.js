@@ -30,5 +30,8 @@ module.exports = class Boat extends BaseEntity {
     // Initialize.
     this.sprite.x = this.offset[0] + 40 * this.position.x;
     this.sprite.y = this.offset[1] + 40 * this.position.y;
+
+    const bob  = this.game.add.tween(this.sprite);
+    bob.to({ y: '-3' }, 1000, Phaser.Easing.Quadratic.InOut, true, 0, -1, true);
   }
 };
