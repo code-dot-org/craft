@@ -543,10 +543,8 @@ module.exports = class LevelView {
   }
 
   updatePlayerDirection(position, facing) {
-    let direction = this.getDirectionName(facing);
-
     this.setSelectionIndicatorPosition(position[0], position[1]);
-    this.playScaledSpeed(this.player.sprite.animations, "idle" + direction);
+    this.playPlayerAnimation('idle', position, facing);
   }
   // animations
 
@@ -1045,8 +1043,7 @@ module.exports = class LevelView {
     }
 
     if (!shouldJumpDown) {
-      const animationName = "walk";
-      this.playScaledSpeed(entity.sprite.animations, animationName + this.getDirectionName(facing));
+      this.playPlayerAnimation('walk', oldPosition, facing, isOnBlock, entity);
       tween = this.addResettableTween(entity.sprite).to(
         this.positionToScreen(position, isOnBlock, entity), 180, Phaser.Easing.Linear.None);
     } else {
