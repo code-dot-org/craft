@@ -801,21 +801,30 @@ module.exports = class LevelPlane {
       if (block.blockType === "conduit"){
 
         var prismarineCount = 0;
-        let ringSize = 2;
+        var airCount = 0;
+        let prismarineRingSize = 2;
+        let airRingSize = 1;
 
-        this.getConduitRingPositions(position, ringSize).forEach((workingPosition) => {
+        this.getConduitRingPositions(position, prismarineRingSize).forEach((workingPosition) => {
           const block = this.getBlockAt(workingPosition);
           if (block.blockType === "prismarine") {
             ++prismarineCount;
           }
         });
 
-        if (prismarineCount === (8 * ringSize) && !block.isActivatedConduit) {
+        this.getConduitRingPositions(position, airRingSize).forEach((workingPosition) => {
+          const block = this.getBlockAt(workingPosition);
+          if (block.isEmpty) {
+            ++airCount;
+          }
+        });
+
+        if (prismarineCount === this.getRingRequirement(prismarineRingSize) && airCount === this.getRingRequirement(airRingSize) && !block.isActivatedConduit) {
           this.getBlockAt(position).isActivatedConduit = true;
           if (this.levelModel) {
             this.levelModel.controller.levelView.playOpenConduitAnimation(position);
           }
-        } else if (prismarineCount < (8 * ringSize) && block.isActivatedConduit) {
+        } else if ((prismarineCount < this.getRingRequirement(prismarineRingSize) || airCount < this.getRingRequirement(airRingSize)) && block.isActivatedConduit) {
           this.getBlockAt(position).isActivatedConduit = false;
           if (this.levelModel) {
             this.levelModel.controller.levelView.playCloseConduitAnimation(position);
@@ -823,6 +832,12 @@ module.exports = class LevelPlane {
         }
       }
     });
+  }
+
+  getRingRequirement(ringSize){
+    // a ring size of 1 (away from the block itself) would correlate to all
+    // orthogonal and diagonal adjacent blocks. 3x3 - 1 (the center) = 8
+    return 8 * ringSize;
   }
 
 };
