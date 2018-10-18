@@ -3,6 +3,7 @@ const FacingDirection = require("./FacingDirection.js");
 const Position = require("./Position.js");
 const createEvent = require("../../utils").createEvent;
 const randomInt = require("./Utils").randomInt;
+const addBobTween = require("../Entities/Boat").addBobTween;
 
 // Hack: `PIXI.canUseNewCanvasBlendModes()` sometimes erroneously returns false.
 // It's supported in all browsers we support.
@@ -457,7 +458,7 @@ module.exports = class LevelView {
 
   resetEntity(entity) {
     this.preparePlayerSprite(entity.name, entity);
-    entity.sprite.animations.stop();
+    entity.getAnimationManager().stop();
     this.setPlayerPosition(entity.position, entity.isOnBlock, entity);
     if (entity.shouldUpdateSelectionIndicator()) {
       this.setSelectionIndicatorPosition(entity.position[0], entity.position[1]);
@@ -543,10 +544,8 @@ module.exports = class LevelView {
   }
 
   updatePlayerDirection(position, facing) {
-    let direction = this.getDirectionName(facing);
-
     this.setSelectionIndicatorPosition(position[0], position[1]);
-    this.playScaledSpeed(this.player.sprite.animations, "idle" + direction);
+    this.playPlayerAnimation('idle', position, facing);
   }
   // animations
 
@@ -581,7 +580,7 @@ module.exports = class LevelView {
     entity.sprite.sortOrder = this.yToIndex(position[1]) + entity.getSortOrderOffset();
 
     let animName = animationName + direction;
-    return this.playScaledSpeed(entity.sprite.animations, animName);
+    return this.playScaledSpeed(entity.getAnimationManager(), animName);
   }
 
   playIdleAnimation(position, facing, isOnBlock, entity = this.player) {
@@ -1054,8 +1053,7 @@ module.exports = class LevelView {
     }
 
     if (!shouldJumpDown) {
-      const animationName = "walk";
-      this.playScaledSpeed(entity.sprite.animations, animationName + this.getDirectionName(facing));
+      this.playPlayerAnimation('walk', oldPosition, facing, isOnBlock, entity);
       tween = this.addResettableTween(entity.sprite).to(
         this.positionToScreen(position, isOnBlock, entity), 180, Phaser.Easing.Linear.None);
     } else {
@@ -1794,7 +1792,7 @@ module.exports = class LevelView {
     }
 
     animationName += facingName;
-    this.playScaledSpeed(entity.sprite.animations, animationName);
+    this.playScaledSpeed(entity.getAnimationManager(), animationName);
   }
 
   generatePlayerCelebrateFrames() {
@@ -1856,7 +1854,10 @@ module.exports = class LevelView {
 
   preparePlayerSprite(playerName, entity = this.player) {
 
-    entity.sprite = this.actionGroup.create(0, 0, `player${playerName}`, 'Player_121');
+    entity.sprite = this.actionGroup.create(0, 0);
+    entity.animationRig = this.actionGroup.create(0, 0, `player${playerName}`, 'Player_121');
+    entity.sprite.addChild(entity.animationRig);
+
     if (this.controller.followingPlayer() && entity === this.player) {
       this.game.camera.follow(entity.sprite);
     }
@@ -1876,60 +1877,60 @@ module.exports = class LevelView {
 
     frameList = this.generateFramesWithEndDelay("Player_", 263, 262, "Player_262", 3, 5);
     frameList.push("Player_263");
-    entity.sprite.animations.add('lookAtCam_down', frameList, idleFrameRate, false).onComplete.add(() => {
-      this.playScaledSpeed(entity.sprite.animations, "idlePause_down");
+    entity.addAnimation('lookAtCam_down', frameList, idleFrameRate, false).onComplete.add(() => {
+      this.playScaledSpeed(entity.getAnimationManager(), "idlePause_down");
     });
 
     frameList = this.generateFramesWithEndDelay("Player_", 270, 269, "Player_269", 3, 5);
     frameList.push("Player_270");
-    entity.sprite.animations.add('lookAtCam_right', frameList, idleFrameRate, false).onComplete.add(() => {
-      this.playScaledSpeed(entity.sprite.animations, "idlePause_right");
+    entity.addAnimation('lookAtCam_right', frameList, idleFrameRate, false).onComplete.add(() => {
+      this.playScaledSpeed(entity.getAnimationManager(), "idlePause_right");
     });
 
     frameList = this.generateFramesWithEndDelay("Player_", 277, 276, "Player_276", 3, 5);
     frameList.push("Player_277");
-    entity.sprite.animations.add('lookAtCam_up', frameList, idleFrameRate, false).onComplete.add(() => {
-      this.playScaledSpeed(entity.sprite.animations, "idlePause_up");
+    entity.addAnimation('lookAtCam_up', frameList, idleFrameRate, false).onComplete.add(() => {
+      this.playScaledSpeed(entity.getAnimationManager(), "idlePause_up");
     });
 
     frameList = this.generateFramesWithEndDelay("Player_", 284, 283, "Player_283", 3, 5);
     frameList.push("Player_284");
-    entity.sprite.animations.add('lookAtCam_left', frameList, idleFrameRate, false).onComplete.add(() => {
-      this.playScaledSpeed(entity.sprite.animations, "idlePause_left");
+    entity.addAnimation('lookAtCam_left', frameList, idleFrameRate, false).onComplete.add(() => {
+      this.playScaledSpeed(entity.getAnimationManager(), "idlePause_left");
     });
 
-    entity.sprite.animations.add('mine_down', Phaser.Animation.generateFrameNames("Player_", 241, 244, "", 3), frameRate, true);
-    entity.sprite.animations.add('mine_right', Phaser.Animation.generateFrameNames("Player_", 245, 248, "", 3), frameRate, true);
-    entity.sprite.animations.add('mine_up', Phaser.Animation.generateFrameNames("Player_", 249, 252, "", 3), frameRate, true);
-    entity.sprite.animations.add('mine_left', Phaser.Animation.generateFrameNames("Player_", 253, 256, "", 3), frameRate, true);
+    entity.addAnimation('mine_down', Phaser.Animation.generateFrameNames("Player_", 241, 244, "", 3), frameRate, true);
+    entity.addAnimation('mine_right', Phaser.Animation.generateFrameNames("Player_", 245, 248, "", 3), frameRate, true);
+    entity.addAnimation('mine_up', Phaser.Animation.generateFrameNames("Player_", 249, 252, "", 3), frameRate, true);
+    entity.addAnimation('mine_left', Phaser.Animation.generateFrameNames("Player_", 253, 256, "", 3), frameRate, true);
 
-    entity.sprite.animations.add('mineCart_down', Phaser.Animation.generateFrameNames("Minecart_", 5, 5, "", 2), frameRate, false);
-    entity.sprite.animations.add('mineCart_turnleft_down', Phaser.Animation.generateFrameNames("Minecart_", 6, 6, "", 2), frameRate, false);
-    entity.sprite.animations.add('mineCart_turnright_down', Phaser.Animation.generateFrameNames("Minecart_", 12, 12, "", 2), frameRate, false);
+    entity.addAnimation('mineCart_down', Phaser.Animation.generateFrameNames("Minecart_", 5, 5, "", 2), frameRate, false);
+    entity.addAnimation('mineCart_turnleft_down', Phaser.Animation.generateFrameNames("Minecart_", 6, 6, "", 2), frameRate, false);
+    entity.addAnimation('mineCart_turnright_down', Phaser.Animation.generateFrameNames("Minecart_", 12, 12, "", 2), frameRate, false);
 
-    entity.sprite.animations.add('mineCart_right', Phaser.Animation.generateFrameNames("Minecart_", 7, 7, "", 2), frameRate, false);
-    entity.sprite.animations.add('mineCart_left', Phaser.Animation.generateFrameNames("Minecart_", 11, 11, "", 2), frameRate, false);
+    entity.addAnimation('mineCart_right', Phaser.Animation.generateFrameNames("Minecart_", 7, 7, "", 2), frameRate, false);
+    entity.addAnimation('mineCart_left', Phaser.Animation.generateFrameNames("Minecart_", 11, 11, "", 2), frameRate, false);
 
-    entity.sprite.animations.add('mineCart_up', Phaser.Animation.generateFrameNames("Minecart_", 9, 9, "", 2), frameRate, false);
-    entity.sprite.animations.add('mineCart_turnleft_up', Phaser.Animation.generateFrameNames("Minecart_", 10, 10, "", 2), frameRate, false);
-    entity.sprite.animations.add('mineCart_turnright_up', Phaser.Animation.generateFrameNames("Minecart_", 8, 8, "", 2), frameRate, false);
+    entity.addAnimation('mineCart_up', Phaser.Animation.generateFrameNames("Minecart_", 9, 9, "", 2), frameRate, false);
+    entity.addAnimation('mineCart_turnleft_up', Phaser.Animation.generateFrameNames("Minecart_", 10, 10, "", 2), frameRate, false);
+    entity.addAnimation('mineCart_turnright_up', Phaser.Animation.generateFrameNames("Minecart_", 8, 8, "", 2), frameRate, false);
 
     if (this.controller.levelModel.isUnderwater()) {
       let frameRate = 10;
 
       for (let [direction, offset] of [["down", 299], ["left", 306], ["up", 313], ["right", 320]]) {
-        entity.sprite.animations.add("idle_" + direction, Phaser.Animation.generateFrameNames("Player_", offset, offset, "", 3), frameRate, true);
-        entity.sprite.animations.add("walk_" + direction, Phaser.Animation.generateFrameNames("Player_", offset + 1, offset + 4, "", 3), frameRate / 2, true);
+        entity.addAnimation("idle_" + direction, Phaser.Animation.generateFrameNames("Player_", offset, offset, "", 3), frameRate, true);
+        entity.addAnimation("walk_" + direction, Phaser.Animation.generateFrameNames("Player_", offset + 1, offset + 4, "", 3), frameRate / 2, true);
       }
 
       for (let [direction, offset] of [["down", 327], ["left", 333], ["up", 345], ["right", 339]]) {
-        entity.sprite.animations.add("bump_" + direction, Phaser.Animation.generateFrameNames("Player_", offset, offset + 5, "", 3), frameRate, false).onStart.add(() => {
+        entity.addAnimation("bump_" + direction, Phaser.Animation.generateFrameNames("Player_", offset, offset + 5, "", 3), frameRate, false).onStart.add(() => {
           this.audioPlayer.play("bump");
         });
       }
 
       for (let [direction, offset] of [["down", 351], ["left", 354], ["up", 360], ["right", 357]]) {
-        entity.sprite.animations.add("punch_" + direction, Phaser.Animation.generateFrameNames("Player_", offset, offset + 2, "", 3), frameRate, false).onComplete.add(() => {
+        entity.addAnimation("punch_" + direction, Phaser.Animation.generateFrameNames("Player_", offset, offset + 2, "", 3), frameRate, false).onComplete.add(() => {
           this.audioPlayer.play("punch");
         });
       }
@@ -1937,18 +1938,20 @@ module.exports = class LevelView {
 
     if (this.controller.levelModel.isInBoat()) {
       let frameRate = 10;
-
       for (let [direction, offset] of [["down", 9], ["left", 15], ["up", 21], ["right", 27]]) {
-        entity.sprite.animations.add("idle_" + direction, Phaser.Animation.generateFrameNames("Boat_", offset, offset, "", 2), frameRate, true);
-        entity.sprite.animations.add("walk_" + direction, Phaser.Animation.generateFrameNames("Boat_", offset, offset + 4, "", 2), frameRate, true);
-        entity.sprite.animations.add("celebrate_" + direction, ["Boat_49", "Boat_50", "Boat_49", "Boat_50", "Boat_49"], frameRate / 2, false);
+        entity.addAnimation("idle_" + direction, Phaser.Animation.generateFrameNames("Boat_", offset, offset, "", 2), frameRate, true);
+        entity.addAnimation("walk_" + direction, Phaser.Animation.generateFrameNames("Boat_", offset, offset + 4, "", 2), frameRate, true);
+        entity.addAnimation("celebrate_" + direction, ["Boat_49", "Boat_50", "Boat_49", "Boat_50", "Boat_49"], frameRate / 2, false);
       }
 
       for (let [direction, offset] of [["down", 51], ["left", 63], ["up", 69], ["right", 57]]) {
-        entity.sprite.animations.add("bump_" + direction, Phaser.Animation.generateFrameNames("Boat_", offset, offset + 5, "", 2), frameRate, false).onStart.add(() => {
+        entity.addAnimation("bump_" + direction, Phaser.Animation.generateFrameNames("Boat_", offset, offset + 5, "", 2), frameRate, false).onStart.add(() => {
           this.audioPlayer.play("bump");
         });
       }
+
+      // Boat bobs up and down
+      addBobTween(this.game, entity.animationRig);
     }
   }
 
@@ -1979,44 +1982,44 @@ module.exports = class LevelView {
       frameList.push(this.playerFrameName(offset + 1));
     }
 
-    entity.sprite.animations.add('idle' + direction, frameList, frameRate / 3, false).onComplete.add(() => {
+    entity.addAnimation('idle' + direction, frameList, frameRate / 3, false).onComplete.add(() => {
       this.playRandomPlayerIdle(facing, entity);
     });
     frameList = this.generateFramesWithEndDelay("Player_", offset + 6, offset + 5, this.playerFrameName(offset + 5), 3, 5);
     frameList.push(this.playerFrameName(offset + 6));
-    entity.sprite.animations.add('lookLeft' + direction, frameList, idleFrameRate, false).onComplete.add(() => {
-      this.playScaledSpeed(entity.sprite.animations, "idlePause" + direction);
+    entity.addAnimation('lookLeft' + direction, frameList, idleFrameRate, false).onComplete.add(() => {
+      this.playScaledSpeed(entity.getAnimationManager(), "idlePause" + direction);
     });
     frameList = this.generateFramesWithEndDelay("Player_", offset + 12, offset + 11, this.playerFrameName(offset + 11), 3, 5);
     frameList.push(this.playerFrameName(offset + 12));
-    entity.sprite.animations.add('lookRight' + direction, frameList, idleFrameRate, false).onComplete.add(() => {
-      this.playScaledSpeed(entity.sprite.animations, "idlePause" + direction);
+    entity.addAnimation('lookRight' + direction, frameList, idleFrameRate, false).onComplete.add(() => {
+      this.playScaledSpeed(entity.getAnimationManager(), "idlePause" + direction);
     });
     frameList = [];
     for (let i = 0; i < 13; ++i) {
       frameList.push(this.playerFrameName(offset + 1));
     }
-    entity.sprite.animations.add('idlePause' + direction, frameList, frameRate / 3, false).onComplete.add(() => {
+    entity.addAnimation('idlePause' + direction, frameList, frameRate / 3, false).onComplete.add(() => {
       this.playRandomPlayerIdle(facing, entity);
     });
 
-    entity.sprite.animations.add('walk' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 13, offset + 20, "", 3), frameRate, true);
+    entity.addAnimation('walk' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 13, offset + 20, "", 3), frameRate, true);
     let singlePunch = Phaser.Animation.generateFrameNames("Player_", offset + 21, offset + 24, "", 3);
-    entity.sprite.animations.add('punch' + direction, singlePunch, frameRate, false).onComplete.add(() => {
+    entity.addAnimation('punch' + direction, singlePunch, frameRate, false).onComplete.add(() => {
       this.audioPlayer.play("punch");
     });
-    entity.sprite.animations.add('punchDestroy' + direction, singlePunch.concat(singlePunch).concat(singlePunch), frameRate, false);
-    entity.sprite.animations.add('hurt' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 25, offset + 28, "", 3), frameRate, false).onComplete.add(() => {
-      this.playScaledSpeed(entity.sprite.animations, "idlePause" + direction);
+    entity.addAnimation('punchDestroy' + direction, singlePunch.concat(singlePunch).concat(singlePunch), frameRate, false);
+    entity.addAnimation('hurt' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 25, offset + 28, "", 3), frameRate, false).onComplete.add(() => {
+      this.playScaledSpeed(entity.getAnimationManager(), "idlePause" + direction);
     });
-    entity.sprite.animations.add('crouch' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 29, offset + 32, "", 3), frameRate, true);
-    entity.sprite.animations.add('jumpUp' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 33, offset + 36, "", 3), frameRate / 2, true);
-    entity.sprite.animations.add('fail' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 45, offset + 48, "", 3), frameRate, false);
-    entity.sprite.animations.add('celebrate' + direction, this.generatePlayerCelebrateFrames(), frameRate / 2, false);
-    entity.sprite.animations.add('bump' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 49, offset + 54, "", 3), frameRate, false).onStart.add(() => {
+    entity.addAnimation('crouch' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 29, offset + 32, "", 3), frameRate, true);
+    entity.addAnimation('jumpUp' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 33, offset + 36, "", 3), frameRate / 2, true);
+    entity.addAnimation('fail' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 45, offset + 48, "", 3), frameRate, false);
+    entity.addAnimation('celebrate' + direction, this.generatePlayerCelebrateFrames(), frameRate / 2, false);
+    entity.addAnimation('bump' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 49, offset + 54, "", 3), frameRate, false).onStart.add(() => {
       this.audioPlayer.play("bump");
     });
-    entity.sprite.animations.add('jumpDown' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 55, offset + 60, "", 3), frameRate, true);
+    entity.addAnimation('jumpDown' + direction, Phaser.Animation.generateFrameNames("Player_", offset + 55, offset + 60, "", 3), frameRate, true);
   }
 
   /**

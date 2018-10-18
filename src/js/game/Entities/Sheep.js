@@ -295,7 +295,7 @@ module.exports = class Sheep extends BaseEntity {
         this.controller.levelView.onAnimationEnd(this.controller.levelView.playScaledSpeed(this.sprite.animations, this.getNakedSuffix() + "attack" + facingName), () => {
             let frontEntity = this.controller.levelEntity.getEntityAt(this.controller.levelModel.getMoveForwardPosition(this));
             if (frontEntity !== null) {
-                this.controller.levelView.onAnimationEnd(this.controller.levelView.playScaledSpeed(frontEntity.sprite.animations, this.getNakedSuffix() + "hurt" + facingName), () => {
+                this.controller.levelView.onAnimationEnd(this.controller.levelView.playScaledSpeed(frontEntity.getAnimationManager(), this.getNakedSuffix() + "hurt" + facingName), () => {
                     this.controller.events.forEach(e => e({ eventType: EventType.WhenAttacked, targetType: this.type, eventSenderIdentifier: this.identifier, targetIdentifier: frontEntity.identifier }));
                 });
             }
