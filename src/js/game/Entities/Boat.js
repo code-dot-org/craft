@@ -31,7 +31,25 @@ module.exports = class Boat extends BaseEntity {
     this.sprite.x = this.offset[0] + 40 * this.position.x;
     this.sprite.y = this.offset[1] + 40 * this.position.y;
 
-    const bob  = this.game.add.tween(this.sprite);
-    bob.to({ y: '-3' }, 1000, Phaser.Easing.Quadratic.InOut, true, 0, -1, true);
+    Boat.addBobTween(this.game, this.sprite);
+  }
+
+  /**
+   * Apply a "bob up and down in the water" animation to the sprite,
+   * which runs forever.
+   * @param {Phaser.Game} game
+   * @param {Phaser.Sprite} sprite
+   * @returns {Phaser.Tween}
+   */
+  static addBobTween(game, sprite) {
+    return game.add.tween(sprite).to(
+      { y: '-3' },
+      1000,
+      Phaser.Easing.Quadratic.InOut,
+      true, // autoStart
+      0,    // delay
+      -1,   // repeat (forever)
+      true  // yoyo
+    );
   }
 };

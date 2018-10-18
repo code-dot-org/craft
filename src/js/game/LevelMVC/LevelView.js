@@ -3,6 +3,7 @@ const FacingDirection = require("./FacingDirection.js");
 const Position = require("./Position.js");
 const createEvent = require("../../utils").createEvent;
 const randomInt = require("./Utils").randomInt;
+const addBobTween = require("../Entities/Boat").addBobTween;
 
 // Hack: `PIXI.canUseNewCanvasBlendModes()` sometimes erroneously returns false.
 // It's supported in all browsers we support.
@@ -1940,8 +1941,7 @@ module.exports = class LevelView {
       }
 
       // Boat bobs up and down
-      this.game.add.tween(entity.animationRig)
-        .to({ y: '-3' }, 1000, Phaser.Easing.Quadratic.InOut, true, 0, -1, true);
+      addBobTween(this.game, entity.animationRig);
     }
   }
 
