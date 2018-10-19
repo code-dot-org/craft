@@ -432,7 +432,7 @@ module.exports = class LevelView {
       "conduit": ["blocks", "Conduit00", -12, 0],
 
       "Chest": ["blocks", "Chest0", -12, -20],
-
+      "chest": ["blocks", "Chest0", -12, -20], // compat
       "invisible": ["blocks", "Invisible", 0, 0],
     };
     this.actionPlaneBlocks = [];
