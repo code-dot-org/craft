@@ -63,6 +63,10 @@ module.exports = class SeaTurtle extends BaseEntity {
   }
 
   canMoveThrough() {
+    if (this.controller.specialLevelType === "freeplay") {
+      return false;
+    }
+
     this.controller.levelView.createMiniBlock(this.position.x, this.position.y, "turtle", {
       collectibleDistance: 1,
       xOffsetRange: 10,
