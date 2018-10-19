@@ -431,7 +431,7 @@ module.exports = class LevelView {
       "magmaUnderwater": ["blocks", "Magma_Bubble_Boat0", -12, 4],
       "magmaDeep": ["blocks", "Magma_Bubble_Deep0", -12, 0],
       "bubbleColumn": ["blocks", "Bubble_Column0", -12, 0],
-      "conduit": ["blocks", "Conduit00", -12, 0],
+      "conduit": ["blocks", "Conduit00", -13, -10],
 
       "Chest": ["blocks", "Chest0", -12, -20],
       "chest": ["blocks", "Chest0", -12, -20], // compat
@@ -596,7 +596,21 @@ module.exports = class LevelView {
     const block = this.actionPlaneBlocks[blockIndex];
     const animation = this.playScaledSpeed(block.animations, "activation");
     this.onAnimationEnd(animation, () => {
+      this.controller.levelModel.actionPlane.getBlockAt(position).isEmissive = true;
+      this.controller.updateShadingPlane();
+      this.controller.updateFowPlane();
       this.playScaledSpeed(block.animations, "open");
+    });
+  }
+
+  playCloseConduitAnimation(position) {
+    const blockIndex = (this.yToIndex(position[1])) + position[0];
+    const block = this.actionPlaneBlocks[blockIndex];
+    const animation = this.playScaledSpeed(block.animations, "deactivation");
+    this.onAnimationEnd(animation, () => {
+      this.controller.levelModel.actionPlane.getBlockAt(position).isEmissive = false;
+      this.controller.updateShadingPlane();
+      this.controller.updateFowPlane();
     });
   }
 
@@ -1701,6 +1715,11 @@ module.exports = class LevelView {
         }
       }
     }
+
+    // We might have some default states that should be updated now that the actionPlane is set
+    this.controller.levelModel.actionPlane.refreshRedstone();
+    this.controller.levelModel.actionPlane.resolveConduitState();
+    this.refreshActionGroup(this.controller.levelModel.actionPlane.getAllPositions());
   }
 
   refreshGroundGroup() {
@@ -1746,7 +1765,7 @@ module.exports = class LevelView {
         // we don't want to refresh doors or conduits. They're not destroyable / placeable, and
         // refreshing will lead to bad animation states
         if (newBlock && newBlock.getIsDoor()
-        || newBlock && newBlock.getIsConduit() ) {
+        || newBlock && (newBlock.getIsConduit() && newBlock.isActivatedConduit)) {
           return;
         }
 
@@ -2365,8 +2384,9 @@ module.exports = class LevelView {
         frameList = Phaser.Animation.generateFrameNames("Conduit", 3, 10, "", 2);
         sprite.animations.add("open", frameList, 5, true);
 
-        frameList = Phaser.Animation.generateFrameNames("Conduit", 0, 10, "", 2);
+        frameList = Phaser.Animation.generateFrameNames("Conduit", 0, 2, "", 2);
         sprite.animations.add("activation", frameList, 5, false);
+        sprite.animations.add("deactivation", frameList.reverse(), 5, false);
 
         break;
 

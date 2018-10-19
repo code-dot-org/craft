@@ -27,6 +27,7 @@ module.exports = class LevelBlock {
     this.isSolid = true;
     this.isWeaklyPowerable = true;
     this.isStickable = true;
+    this.isActivatedConduit = false;
 
     if (blockType === "") {
       this.isWalkable = true;
@@ -114,7 +115,6 @@ module.exports = class LevelBlock {
     if (blockType === "conduit") {
       this.isSolid = false;
       this.isEntity = true;
-      this.isWeaklyPowerable = false;
     }
 
     if (blockType === "water") {

@@ -1057,3 +1057,40 @@ test('weak charge: destroy block', t => {
   t.end();
 });
 
+test('conduit activation/deactivation: placing and removing prismarine', t => {
+  const data = [
+    '',          '',          '',          '',          '',          '',
+    '',          '',          'prismarine','prismarine','prismarine','',
+    'prismarine','',          '',          '',          'prismarine','',
+    'prismarine','',          'conduit',   '',          'prismarine','',
+    'prismarine','',          '',          '',          'prismarine','',
+    'prismarine','prismarine','prismarine','prismarine','prismarine','',
+  ];
+  const plane = new LevelPlane(data, 6, 6, null, "actionPlane");
+
+  // Add prismarine to a valid activation index, but fail to complete the ring
+  plane.setBlockAt(new Position(1, 1), new LevelBlock('prismarine'));
+  t.deepEqual(plane.getBlockAt(new Position(2, 3)).isActivatedConduit, false);
+
+  // Add prismarine, so we have the right amount, but not in the proper configuration
+  plane.setBlockAt(new Position(1, 0), new LevelBlock('prismarine'));
+  t.deepEqual(plane.getBlockAt(new Position(2, 3)).isActivatedConduit, false);
+
+  // Complete the prismarine ring
+  plane.setBlockAt(new Position(0, 1), new LevelBlock('prismarine'));
+  t.deepEqual(plane.getBlockAt(new Position(2, 3)).isActivatedConduit, true);
+
+  // Disrupt ring of air around prismarine
+  plane.setBlockAt(new Position(1, 2), new LevelBlock('prismarine'));
+  t.deepEqual(plane.getBlockAt(new Position(2, 3)).isActivatedConduit, false);
+
+  // Reactivate by removing disruptive block
+  plane.setBlockAt(new Position(1, 2), new LevelBlock(''));
+  t.deepEqual(plane.getBlockAt(new Position(2, 3)).isActivatedConduit, true);
+
+  // Break ring of prismarine
+  plane.setBlockAt(new Position(0, 1), new LevelBlock(''));
+  t.deepEqual(plane.getBlockAt(new Position(2, 3)).isActivatedConduit, false);
+
+  t.end();
+});

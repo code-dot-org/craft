@@ -187,6 +187,8 @@ module.exports = class LevelPlane {
       this.levelModel.controller.levelView.refreshGroundGroup();
     }
 
+    this.resolveConduitState();
+
     return block;
   }
 
@@ -766,6 +768,76 @@ module.exports = class LevelPlane {
         }
       });
     }
+  }
+
+  getConduitRingPositions(position, ringSize) {
+    // We could hard code this... but might as well have a method for variable ring sizes just in case.
+    let topLeft = new Position(position.x - ringSize, position.y - ringSize);
+    let bottomRight = new Position(position.x + ringSize, position.y + ringSize);
+    let positionList = [];
+
+    // if both corners are in bounds, then the whole ring ought to be in bounds
+    if (!this.inBounds(topLeft) || !this.inBounds(bottomRight)) {
+      return positionList;
+    }
+
+    let sideLength = ringSize * 2 + 1;
+
+    for (let i = 0; i < sideLength; ++i) {
+      for (let j = 0; j < sideLength; ++j) {
+        if ((i === 0 || i === sideLength - 1) || (j === 0 || j === sideLength - 1)){
+          let newIndex = new Position(topLeft.x + i, topLeft.y + j);
+          positionList.push(newIndex);
+        }
+      }
+    }
+
+    return positionList;
+  }
+
+  resolveConduitState() {
+    this.getAllPositions().forEach((position) => {
+      const block = this.getBlockAt(position);
+      if (block.blockType === "conduit"){
+
+        var prismarineCount = 0;
+        var airCount = 0;
+        let prismarineRingSize = 2;
+        let airRingSize = 1;
+
+        this.getConduitRingPositions(position, prismarineRingSize).forEach((workingPosition) => {
+          const block = this.getBlockAt(workingPosition);
+          if (block.blockType === "prismarine") {
+            ++prismarineCount;
+          }
+        });
+
+        this.getConduitRingPositions(position, airRingSize).forEach((workingPosition) => {
+          const block = this.getBlockAt(workingPosition);
+          if (block.isEmpty) {
+            ++airCount;
+          }
+        });
+
+        if (prismarineCount === this.getRingRequirement(prismarineRingSize) && airCount === this.getRingRequirement(airRingSize) && !block.isActivatedConduit) {
+          this.getBlockAt(position).isActivatedConduit = true;
+          if (this.levelModel) {
+            this.levelModel.controller.levelView.playOpenConduitAnimation(position);
+          }
+        } else if ((prismarineCount < this.getRingRequirement(prismarineRingSize) || airCount < this.getRingRequirement(airRingSize)) && block.isActivatedConduit) {
+          this.getBlockAt(position).isActivatedConduit = false;
+          if (this.levelModel) {
+            this.levelModel.controller.levelView.playCloseConduitAnimation(position);
+          }
+        }
+      }
+    });
+  }
+
+  getRingRequirement(ringSize){
+    // a ring size of 1 (away from the block itself) would correlate to all
+    // orthogonal and diagonal adjacent blocks. 3x3 - 1 (the center) = 8
+    return 8 * ringSize;
   }
 
 };
