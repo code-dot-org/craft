@@ -18,6 +18,7 @@ module.exports = class LevelView {
     this.game = controller.game;
 
     this.baseShading = null;
+    this.prismarinePhase = 0;
 
     this.player = null;
     this.agent = null;
@@ -450,6 +451,28 @@ module.exports = class LevelView {
     };
   }
 
+  initPrismarine() {
+    if (!this.prismarine) {
+      this.prismarine = this.controller.game.make.bitmapData(64, 64, 'prismarine');
+      this.prismarineFrames = [];
+
+      for (let i = 0; i < 6; i++) {
+        this.prismarineFrames[i] = this.controller.game.make.sprite(0, 0, 'blocks', 'Prismarine' + i);
+      }
+      this.prismarine.copy(this.prismarineFrames[0]);
+    }
+  }
+
+  updatePrismarine() {
+    const from = Math.floor(this.prismarinePhase);
+    const to = Math.ceil(this.prismarinePhase) % 6;
+    const blend = this.prismarinePhase - from;
+    this.prismarine.copy(this.prismarineFrames[from]);
+    if (blend > 0) {
+      this.prismarine.copy(this.prismarineFrames[to], null, null, null, null, null, null, null, null, null, null, null, null, null, blend);
+    }
+  }
+
   yToIndex(y) {
     return this.controller.levelModel.yToIndex(y);
   }
@@ -513,6 +536,11 @@ module.exports = class LevelView {
       this.toDestroy[i].destroy();
     }
     this.toDestroy = [];
+
+    if (this.prismarine) {
+      this.prismarinePhase = (this.prismarinePhase + this.controller.originalFpsToScaled(0.015)) % 6;
+      this.updatePrismarine();
+    }
   }
 
   render() {
@@ -2343,14 +2371,10 @@ module.exports = class LevelView {
         break;
 
       case "prismarine":
-        atlas = this.blocks[blockType][0];
-        frame = this.blocks[blockType][1];
+        this.initPrismarine();
         xOffset = this.blocks[blockType][2];
         yOffset = this.blocks[blockType][3];
-        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
-        frameList = Phaser.Animation.generateFrameNames("Prismarine", 0, 5, "", 0);
-        sprite.animations.add("idle", frameList, 5, true);
-        this.playScaledSpeed(sprite.animations, "idle", 0.1);
+        sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, this.prismarine);
         break;
 
       case "seaLantern":
