@@ -2121,6 +2121,7 @@ module.exports = class LevelView {
       frameList,
       atlas,
       frame,
+      animation,
       xOffset,
       yOffset;
 
@@ -2263,8 +2264,8 @@ module.exports = class LevelView {
         frameList = Phaser.Animation.generateFrameNames("Magma_Bubble_Boat", 0, 5, "", 0);
 
         sprite.animations.add("idle", frameList, 5, true);
-        const animation = this.playScaledSpeed(sprite.animations, "idle");
-        // Randomizing the starting frame, so that not all bubbles are synchronized
+        animation = this.playScaledSpeed(sprite.animations, "idle");
+        // Randomize the starting frame, so that not all bubbles are synchronized.
         animation.frame = Math.floor(Math.random() * animation.frameTotal);
         break;
 
