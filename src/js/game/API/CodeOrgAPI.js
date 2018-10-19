@@ -32,6 +32,8 @@ module.exports.get = function (controller) {
     startAttempt: function (onAttemptComplete) {
       return new Promise(resolve => {
         controller.OnCompleteCallback = (...args) => {
+          // Note: onAttemptComplete is unused in this repo, but it's
+          // part of a public API - it'll be a breaking change to remove it.
           onAttemptComplete && onAttemptComplete(...args);
           resolve(args[0]);
         };

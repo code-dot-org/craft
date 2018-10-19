@@ -20,7 +20,7 @@ test('Designer 1: Chicken Move (pass)', t => {
     const success = await api.startAttempt();
     t.assert(success);
     t.end();
-  });
+  }, 0.5);
 });
 
 test('Designer 2: Four Chicken Move', t => {
@@ -54,7 +54,7 @@ test('Designer 3: Four Chicken Random Move', t => {
     const success = await api.startAttempt();
     t.assert(success);
     t.end();
-  });
+  }, 0.5);
 });
 
 test('Designer 4: Move Player Inside House', t => {

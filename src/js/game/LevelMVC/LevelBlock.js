@@ -102,6 +102,21 @@ module.exports = class LevelBlock {
       this.isPlacable = true;
     }
 
+    if (blockType === "magmaUnderwater") {
+      this.isEmissive = true;
+    }
+
+    if (blockType === "bubbleColumn") {
+      this.isSolid = false;
+      this.isEntity = true;
+    }
+
+    if (blockType === "conduit") {
+      this.isSolid = false;
+      this.isEntity = true;
+      this.isWeaklyPowerable = false;
+    }
+
     if (blockType === "water") {
       this.isPlacable = true;
     }
@@ -202,7 +217,7 @@ module.exports = class LevelBlock {
       this.isWalkable = true;
     }
 
-    if (blockType === 'seaPickes' || blockType === 'seaLantern' || blockType === 'magmaBlock') {
+    if (blockType === 'seaPickles' || blockType === 'seaLantern' || blockType === 'magmaBlock') {
       this.isEmissive = true;
     }
   }
@@ -283,8 +298,13 @@ module.exports = class LevelBlock {
     return this.blockType.startsWith("door");
   }
 
+  getIsConduit() {
+    return this.blockType.startsWith("conduit");
+  }
+
   getIsLiquid() {
     return this.blockType === "water" ||
+        this.blockType === "magmaUnderwater" ||
         this.blockType === "lava";
   }
 
@@ -504,9 +524,6 @@ module.exports = class LevelBlock {
         break;
       case "grass":
         frame = "dirt";
-        break;
-      case "wool_orange":
-        frame = "wool";
         break;
       case "tnt":
         frame = "gunPowder";

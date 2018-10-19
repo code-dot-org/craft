@@ -5,6 +5,12 @@ const IronGolem = require("../Entities/IronGolem");
 const Creeper = require("../Entities/Creeper");
 const Cow = require("../Entities/Cow");
 const Chicken = require("../Entities/Chicken");
+const Dolphin = require("../Entities/Dolphin");
+const Cod = require("../Entities/Cod");
+const Salmon = require("../Entities/Salmon");
+const SeaTurtle = require("../Entities/SeaTurtle");
+const Squid = require("../Entities/Squid");
+const TropicalFish = require("../Entities/TropicalFish");
 const Ghast = require("../Entities/Ghast");
 const Boat = require("../Entities/Boat");
 
@@ -50,7 +56,9 @@ module.exports = class LevelEntity {
   }
 
   isFriendlyEntity(type) {
-    const friendlyEntityList = ['sheep', 'ironGolem', 'cow', 'chicken'];
+    const friendlyEntityList = ['sheep', 'ironGolem', 'cow', 'chicken','cod',
+    'dolphin','salmon','seaTurtle','seaTurtle',
+    'squid','tropicalFish'];
     for (var i = 0; i < friendlyEntityList.length; i++) {
       if (type === friendlyEntityList[i]) {
         return true;
@@ -81,11 +89,29 @@ module.exports = class LevelEntity {
         case 'chicken':
           entity = new Chicken(this.controller, type, identifier, x, y, facing);
           break;
+        case 'cod':
+          entity = new Cod(this.controller, type, identifier, x, y, facing);
+          break;
+        case 'dolphin':
+          entity = new Dolphin(this.controller, type, identifier, x, y, facing);
+          break;
         case 'ghast':
           entity = new Ghast(this.controller, type, identifier, x, y, facing, pattern);
           break;
         case 'boat':
           entity = new Boat(this.controller, type, identifier, x, y, facing);
+          break;
+        case 'salmon':
+          entity = new Salmon(this.controller, type, identifier, x, y, facing);
+          break;
+        case 'seaTurtle':
+          entity = new SeaTurtle(this.controller, type, identifier, x, y, facing);
+          break;
+        case 'squid':
+          entity = new Squid(this.controller, type, identifier, x, y, facing);
+          break;
+        case 'tropicalFish':
+          entity = new TropicalFish(this.controller, type, identifier, x, y, facing);
           break;
         default:
           entity = new BaseEntity(this.controller, type, identifier, x, y, facing);
@@ -253,7 +279,7 @@ module.exports = class LevelEntity {
         this.entityDeathCount.set(entity.type, 1);
       }
       entity.reset();
-      entity.sprite.animations.stop(null, true);
+      entity.getAnimationManager().stop(null, true);
       entity.sprite.destroy();
       this.entityMap.delete(identifier);
     } else if (this.controller.DEBUG) {
