@@ -581,9 +581,10 @@ module.exports = class LevelView {
       const treasure = this.getTreasureTypeFromChest(this.controller.levelModel.actionPlane.getBlockAt(position));
       if (treasure) {
         this.createMiniBlock(position[0], position[1], treasure, {
-          collectibleDistance: 1,
-          xOffsetRange: 10,
-          yOffsetRange: 10
+          collectibleDistance: -1,
+          xOffsetRange: 0,
+          yOffsetRange: 0,
+          isOnBlock: true,
         });
       }
     });
@@ -2055,9 +2056,16 @@ module.exports = class LevelView {
    * @param {Number} [overrides.yOffsetRange=40]
    */
   createMiniBlock(x, y, blockType, overrides = {}) {
-    let collectibleDistance = overrides.collectibleDistance || 2;
-    const xOffsetRange = overrides.xOffsetRange || 40;
-    const yOffsetRange = overrides.yOffsetRange || 40;
+    function valueOr(value, defaultValue) {
+      if (value === undefined) {
+        return defaultValue;
+      }
+      return value;
+    }
+
+    let collectibleDistance = valueOr(overrides.collectibleDistance, 2);
+    const xOffsetRange = valueOr(overrides.xOffsetRange, 40);
+    const yOffsetRange = valueOr(overrides.yOffsetRange, 40);
 
     const frame = LevelBlock.getMiniblockFrame(blockType);
     if (!(frame && this.miniBlocks[frame])) {
@@ -2069,7 +2077,8 @@ module.exports = class LevelView {
     const yOffset = 3 - (yOffsetRange / 2) + (Math.random() * yOffsetRange);
     const offset = new Position(xOffset, yOffset);
 
-    const sprite = this.actionGroup.create(xOffset + 40 * x, yOffset + 40 * y, atlas, "shadow.png");
+    const layer = overrides.isOnBlock ? -20 : 0;
+    const sprite = this.actionGroup.create(xOffset + 40 * x, yOffset + 40 * y + layer, atlas, "shadow.png");
     const item = this.actionGroup.create(0, 0, atlas, this.miniBlocks[frame] + ".png");
     sprite.addChild(item);
 
