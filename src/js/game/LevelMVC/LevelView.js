@@ -535,7 +535,7 @@ module.exports = class LevelView {
     this.toDestroy = [];
 
     if (this.prismarine) {
-      this.prismarinePhase = (this.prismarinePhase + this.controller.originalFpsToScaled(0.03)) % 6;
+      this.prismarinePhase = (this.prismarinePhase + this.controller.originalFpsToScaled(0.015)) % 6;
       this.updatePrismarine();
     }
   }
