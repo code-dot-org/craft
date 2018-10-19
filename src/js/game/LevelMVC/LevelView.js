@@ -632,16 +632,29 @@ module.exports = class LevelView {
     return animation;
   }
 
+  getOceanOverlayVertices(){
+    const gridDimensions = this.controller.levelData.gridDimensions;
+    if (gridDimensions[0] === 10 && gridDimensions[1] === 10) {
+      // This is a normal 10x10 map. Ocean Overlay will be tiled 4x
+      return [[0, 0], [200, 0], [0, 200], [200, 200]];
+    } else if (gridDimensions[0] === 20 && gridDimensions[1] === 20) {
+      // This is a freeplay 20x20 map. Ocean Overlay will be tiled 16x
+      return [[0, 0], [200, 0], [400, 0], [800, 0],
+      [0, 200], [200, 200], [400, 200], [800, 200],
+      [0, 400], [200, 400], [400, 400], [800, 400]
+      [0, 800], [200, 800], [400, 800], [800, 800]];
+    }
+  }
+
   addOceanOverlay(tint) {
-    for (let [x, y] of [[0, 0], [200, 0], [0, 200], [200, 200]]) {
+    this.getOceanOverlayVertices()
+    for (let [x, y] of this.getOceanOverlayVertices()) {
       const surface = this.fluffGroup.create(x, y, "underwaterOverlay", "water_still_grey00.png");
       const frameList = Phaser.Animation.generateFrameNames("water_still_grey", 0, 31, ".png", 2);
       surface.animations.add("idle", frameList, 5, true);
       this.playScaledSpeed(surface.animations, "idle");
 
-      [surface.scale.x, surface.scale.y] = this.controller.scaleFromOriginal();
-      surface.scale.x *= 400 / 32;
-      surface.scale.y *= 400 / 32;
+      [surface.scale.x, surface.scale.y] = [400 / 32, 400 / 32];
       surface.alpha = 1;
       surface.smoothed = false;
       surface.blendMode = PIXI.blendModes.OVERLAY;
