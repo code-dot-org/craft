@@ -565,8 +565,10 @@ module.exports = class LevelView {
     const blockIndex = (this.yToIndex(position[1])) + position[0];
     const block = this.actionPlaneBlocks[blockIndex];
     const animation = this.playScaledSpeed(block.animations, "activation");
-    this.controller.levelModel.actionPlane.getBlockAt(position).isEmissive = true;
     this.onAnimationEnd(animation, () => {
+      this.controller.levelModel.actionPlane.getBlockAt(position).isEmissive = true;
+      this.controller.updateShadingPlane();
+      this.controller.updateFowPlane();
       this.playScaledSpeed(block.animations, "open");
     });
   }
@@ -574,8 +576,12 @@ module.exports = class LevelView {
   playCloseConduitAnimation(position) {
     const blockIndex = (this.yToIndex(position[1])) + position[0];
     const block = this.actionPlaneBlocks[blockIndex];
-    this.playScaledSpeed(block.animations, "deactivation");
-    this.controller.levelModel.actionPlane.getBlockAt(position).isEmissive = false;
+    const animation = this.playScaledSpeed(block.animations, "deactivation");
+    this.onAnimationEnd(animation, () => {
+      this.controller.levelModel.actionPlane.getBlockAt(position).isEmissive = false;
+      this.controller.updateShadingPlane();
+      this.controller.updateFowPlane();
+    });
   }
 
   playOpenChestAnimation(position) {
@@ -1661,7 +1667,7 @@ module.exports = class LevelView {
       }
     }
 
-    // We might have some default states that should be updated now that hte actionPlane is set
+    // We might have some default states that should be updated now that the actionPlane is set
     this.controller.levelModel.actionPlane.refreshRedstone();
     this.controller.levelModel.actionPlane.resolveConduitState();
     this.refreshActionGroup(this.controller.levelModel.actionPlane.getAllPositions());
@@ -2307,7 +2313,7 @@ module.exports = class LevelView {
         frameList = Phaser.Animation.generateFrameNames("Conduit", 3, 10, "", 2);
         sprite.animations.add("open", frameList, 5, true);
 
-        frameList = Phaser.Animation.generateFrameNames("Conduit", 0, 10, "", 2);
+        frameList = Phaser.Animation.generateFrameNames("Conduit", 0, 2, "", 2);
         sprite.animations.add("activation", frameList, 5, false);
         sprite.animations.add("deactivation", frameList.reverse(), 5, false);
 
