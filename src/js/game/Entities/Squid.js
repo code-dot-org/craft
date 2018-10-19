@@ -62,7 +62,7 @@ module.exports = class Squid extends BaseEntity {
     if (this.controller.specialLevelType === "freeplay") {
       return false;
     }
-    
+
     this.controller.levelEntity.destroyEntity(this.identifier);
     return true;
   }

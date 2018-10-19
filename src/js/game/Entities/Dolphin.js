@@ -65,7 +65,7 @@ module.exports = class Dolphin extends BaseEntity {
     if (this.controller.specialLevelType === "freeplay") {
       return false;
     }
-    
+
     this.controller.levelEntity.destroyEntity(this.identifier);
     return true;
   }
