@@ -91,6 +91,7 @@ module.exports = class LevelView {
       hardenedClaySilver: "hardened_clay_stained_silver",
       hardenedClayWhite: "hardened_clay_stained_white",
       hardenedClayYellow: "hardened_clay_stained_yellow",
+      heartofthesea: "heartofthesea_closed",
       ingotIron: "iron_ingot",
       lapisLazuli: "lapis_lazuli",
       logAcacia: "log_acacia",
@@ -113,6 +114,7 @@ module.exports = class LevelView {
       potato: "potato",
       potion: "potion_bottle_drinkable",
       pressurePlateOak: "pressure_plate_oak",
+      prismarine: "prismarine",
       quartzOre: "quartz",
       railGolden: "rail_golden",
       railNormal: "rail_normal",
@@ -430,7 +432,8 @@ module.exports = class LevelView {
       "bubbleColumn": ["blocks", "Bubble_Column0", -12, 0],
       "conduit": ["blocks", "Conduit00", -12, 0],
 
-      "chest": ["blocks", "Chest0", -12, -20],
+      "Chest": ["blocks", "Chest0", -12, -20],
+      "chest": ["blocks", "Chest0", -12, -20], // compat
       "invisible": ["blocks", "Invisible", 0, 0],
     };
     this.actionPlaneBlocks = [];
@@ -572,7 +575,22 @@ module.exports = class LevelView {
   playOpenChestAnimation(position) {
     const blockIndex = (this.yToIndex(position[1])) + position[0];
     const block = this.actionPlaneBlocks[blockIndex];
-    this.playScaledSpeed(block.animations, "open");
+    const animation = this.playScaledSpeed(block.animations, "open");
+    this.onAnimationEnd(animation, () => {
+      const treasure = this.getTreasureTypeFromChest(this.controller.levelModel.actionPlane.getBlockAt(position));
+      if (treasure) {
+        this.createMiniBlock(position[0], position[1], treasure, {
+          collectibleDistance: -1,
+          xOffsetRange: 0,
+          yOffsetRange: 0,
+          isOnBlock: true,
+        });
+      }
+    });
+  }
+
+  getTreasureTypeFromChest(blockData) {
+    return blockData.blockType.substring(0, blockData.blockType.length - 5);
   }
 
   playPlayerAnimation(animationName, position, facing, isOnBlock = false, entity = this.player) {
@@ -1184,7 +1202,12 @@ module.exports = class LevelView {
     } else {
       const group = block.shouldRenderOnGroundPlane() ? this.groundGroup : this.actionGroup;
       const offset = block.shouldRenderOnGroundPlane() ? -0.5 : 0;
-      sprite = this.createBlock(group, position[0], position[1] + offset, blockType);
+      if (block.getIsChestblock()){
+        // if this is a treasure chest, render a normal chest and blockType will be used later to determine treasure type
+        sprite = this.createBlock(group, position[0], position[1] + offset, "Chest");
+      } else {
+        sprite = this.createBlock(group, position[0], position[1] + offset, blockType);
+      }
     }
 
     if (sprite) {
@@ -2036,9 +2059,16 @@ module.exports = class LevelView {
    * @param {Number} [overrides.yOffsetRange=40]
    */
   createMiniBlock(x, y, blockType, overrides = {}) {
-    const collectibleDistance = overrides.collectibleDistance || 2;
-    const xOffsetRange = overrides.xOffsetRange || 40;
-    const yOffsetRange = overrides.yOffsetRange || 40;
+    function valueOr(value, defaultValue) {
+      if (value === undefined) {
+        return defaultValue;
+      }
+      return value;
+    }
+
+    let collectibleDistance = valueOr(overrides.collectibleDistance, 2);
+    const xOffsetRange = valueOr(overrides.xOffsetRange, 40);
+    const yOffsetRange = valueOr(overrides.yOffsetRange, 40);
 
     const frame = LevelBlock.getMiniblockFrame(blockType);
     if (!(frame && this.miniBlocks[frame])) {
@@ -2046,11 +2076,12 @@ module.exports = class LevelView {
     }
 
     const atlas = "miniBlocks";
-    const xOffset = 9 - (xOffsetRange / 2) + (Math.random() * xOffsetRange);
+    const xOffset = 7 - (xOffsetRange / 2) + (Math.random() * xOffsetRange);
     const yOffset = 3 - (yOffsetRange / 2) + (Math.random() * yOffsetRange);
     const offset = new Position(xOffset, yOffset);
 
-    const sprite = this.actionGroup.create(xOffset + 40 * x, yOffset + 40 * y, atlas, "shadow.png");
+    const layer = overrides.isOnBlock ? -20 : 0;
+    const sprite = this.actionGroup.create(xOffset + 40 * x, yOffset + 40 * y + layer, atlas, "shadow.png");
     const item = this.actionGroup.create(0, 0, atlas, this.miniBlocks[frame] + ".png");
     sprite.addChild(item);
 
@@ -2082,6 +2113,7 @@ module.exports = class LevelView {
       };
 
       const collectiblePosition = this.controller.levelModel.spritePositionToIndex(offset, new Position(sprite.x, sprite.y));
+
       this.collectibleItems.push([sprite, offset, blockType, collectibleDistance]);
       tween.onComplete.add(() => {
         if (this.controller.levelModel.usePlayer) {
@@ -2354,7 +2386,7 @@ module.exports = class LevelView {
         this.playScaledSpeed(sprite.animations, "idle", 0.5);
         break;
 
-      case "chest":
+      case "Chest":
         atlas = this.blocks[blockType][0];
         frame = this.blocks[blockType][1];
         xOffset = this.blocks[blockType][2];

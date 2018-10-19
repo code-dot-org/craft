@@ -103,7 +103,7 @@ test('playerCanOpenTreasureChest', t => {
 
   const data = [
     '', '', '', '',
-    '', '', '', 'chest',
+    '', '', '', 'Chest',
     '', '', '', '',
   ];
   const actionPlane = new LevelPlane(data, 4, 3, null, "actionPlane");

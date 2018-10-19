@@ -290,6 +290,14 @@ module.exports = class LevelBlock {
     return LevelBlock.isMiniblock(this.blockType);
   }
 
+  /**
+   * @see {LevelBlock.isChestBlock}
+   * @return {boolean}
+   */
+  getIsChestblock() {
+    return LevelBlock.isChestblock(this.blockType);
+  }
+
   getIsTree() {
     return !!this.blockType.match(/^tree/);
   }
@@ -426,6 +434,18 @@ module.exports = class LevelBlock {
    */
   static isMiniblock(blockType) {
     return blockType.endsWith("Miniblock");
+  }
+
+  /**
+   * Does the given block type represent a chest that reveals a miniblock?
+   * TODO @hamms: remove this method once all calling methods have been updated
+   *      to operate on actual LevelBlocks rather than blockType strings
+   *
+   * @param {String} blockType
+   * @return {boolean}
+   */
+  static isChestblock(blockType) {
+    return blockType.endsWith("Chest");
   }
 
   /**
