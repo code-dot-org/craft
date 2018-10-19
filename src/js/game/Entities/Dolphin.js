@@ -4,7 +4,7 @@ const FacingDirection = require("../LevelMVC/FacingDirection");
 module.exports = class Dolphin extends BaseEntity {
   constructor(controller, type, identifier, x, y, facing) {
     super(controller, type, identifier, x, y, facing);
-    this.offset = this.controller.levelModel.isUnderwater() ? [-8, -8] : [-40, -16];
+    this.offset = this.controller.levelModel.isUnderwater() ? [-8, -8] : [-40, 0];
     this.prepareSprite();
     this.sprite.sortOrder = this.controller.levelView.yToIndex(this.position.y);
   }
