@@ -4,7 +4,7 @@ const FacingDirection = require("../LevelMVC/FacingDirection");
 module.exports = class SeaTurtle extends BaseEntity {
   constructor(controller, type, identifier, x, y, facing) {
     super(controller, type, identifier, x, y, facing);
-    this.offset = this.controller.levelModel.isUnderwater() ? [-16,-16] : [-8, 0];
+    this.offset = this.controller.levelModel.isUnderwater() ? [-95,-100] : [-95, -90];
     this.prepareSprite();
     this.sprite.sortOrder = this.controller.levelView.yToIndex(this.position.y);
   }
