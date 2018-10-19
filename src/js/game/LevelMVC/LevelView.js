@@ -2167,6 +2167,9 @@ module.exports = class LevelView {
       return sprite;
     };
 
+    // For any blocks that need their animations de-synch'd
+    let numberOfFramesForAnimationOffset = 0;
+
     switch (blockType) {
       case "treeAcacia": //0,7
         buildTree(this, [0, 7]);
@@ -2261,9 +2264,9 @@ module.exports = class LevelView {
         yOffset = this.blocks[blockType][3];
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Magma_Bubble_Boat", 0, 5, "", 0);
-        
+
         // Randomizing the starting frame, so that not all bubbles are synchronized
-        let numberOfFrames = Math.floor(Math.random() * 6) % 6;
+        numberOfFramesForAnimationOffset = Math.floor(Math.random() * 6) % 6;
         for (let i = 0; i < numberOfFrames; ++i) {
           const frame = frameList.shift();
           frameList.push(frame);
