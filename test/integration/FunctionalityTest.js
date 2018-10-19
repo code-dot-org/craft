@@ -85,3 +85,45 @@ test('Pressure Plate: Moving On to Rail', t => {
   });
 });
 
+test('Aquatic Mobs: Can walk through Aquatic Mobs', t => {
+  attempt('functionality04', async (api, levelModel) => {
+    api.moveDirection(null, 'Player', 1);
+    api.moveDirection(null, 'Player', 2);
+    api.moveDirection(null, 'Player', 2);
+    api.moveDirection(null, 'Player', 2);
+    api.moveDirection(null, 'Player', 2);
+    api.moveDirection(null, 'Player', 2);
+    api.moveDirection(null, 'Player', 2);
+
+    // Check the solutions
+    const success = await api.startAttempt();
+
+    t.true(Position.equals(levelModel.player.position, new Position(0, 6)));
+    t.assert(success);
+    t.end();
+  }, 1);
+});
+
+test('Aquatic Mobs: Cant walk through Aquatic Mobs on freeplay level', t => {
+  attempt('functionality05', async (api, levelModel) => {
+    api.moveDirection(null, 'Player', 1);
+    api.moveDirection(null, 'Player', 2);
+    api.moveDirection(null, 'Player', 1);
+    api.moveDirection(null, 'Player', 2);
+    api.moveDirection(null, 'Player', 1);
+    api.moveDirection(null, 'Player', 2);
+    api.moveDirection(null, 'Player', 1);
+    api.moveDirection(null, 'Player', 2);
+    api.moveDirection(null, 'Player', 1);
+    api.moveDirection(null, 'Player', 2);
+    api.moveDirection(null, 'Player', 1);
+
+    // Check the solutions
+    const success = await api.startAttempt();
+
+    t.true(Position.equals(levelModel.player.position, new Position(0, 5)));
+    t.assert(success);
+    t.end();
+  }, 1);
+});
+
