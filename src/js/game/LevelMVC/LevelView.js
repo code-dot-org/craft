@@ -2277,7 +2277,9 @@ module.exports = class LevelView {
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Magma_Bubble_Deep", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
-        this.playScaledSpeed(sprite.animations, "idle");
+        animation = this.playScaledSpeed(sprite.animations, "idle");
+        // Randomize the starting frame, so that not all bubbles are synchronized.
+        animation.frame = Math.floor(Math.random() * animation.frameTotal);
         break;
 
       case "bubbleColumn":
@@ -2288,7 +2290,9 @@ module.exports = class LevelView {
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Bubble_Column", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
-        this.playScaledSpeed(sprite.animations, "idle");
+        animation = this.playScaledSpeed(sprite.animations, "idle");
+        // Randomize the starting frame, so that not all bubbles are synchronized.
+        animation.frame = Math.floor(Math.random() * animation.frameTotal);
         break;
 
       case "conduit":
