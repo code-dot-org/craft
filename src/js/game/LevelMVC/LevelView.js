@@ -2073,7 +2073,7 @@ module.exports = class LevelView {
     }
 
     const atlas = "miniBlocks";
-    const xOffset = 9 - (xOffsetRange / 2) + (Math.random() * xOffsetRange);
+    const xOffset = 7 - (xOffsetRange / 2) + (Math.random() * xOffsetRange);
     const yOffset = 3 - (yOffsetRange / 2) + (Math.random() * yOffsetRange);
     const offset = new Position(xOffset, yOffset);
 
@@ -2110,11 +2110,6 @@ module.exports = class LevelView {
       };
 
       const collectiblePosition = this.controller.levelModel.spritePositionToIndex(offset, new Position(sprite.x, sprite.y));
-
-      // Chests will put out a treasure, but not disappear, so you need to be able to pick up set item from further away than the normal 1 index
-      if (blockType === "heartofthesea" || blockType === "boat" || blockType === "prismarine" || blockType === "nautilus") {
-        collectibleDistance *= 2;
-      }
 
       this.collectibleItems.push([sprite, offset, blockType, collectibleDistance]);
       tween.onComplete.add(() => {
