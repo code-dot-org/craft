@@ -641,13 +641,12 @@ module.exports = class LevelView {
       // This is a freeplay 20x20 map. Ocean Overlay will be tiled 16x
       return [[0, 0], [200, 0], [400, 0], [800, 0],
       [0, 200], [200, 200], [400, 200], [800, 200],
-      [0, 400], [200, 400], [400, 400], [800, 400]
+      [0, 400], [200, 400], [400, 400], [800, 400],
       [0, 800], [200, 800], [400, 800], [800, 800]];
     }
   }
 
   addOceanOverlay(tint) {
-    this.getOceanOverlayVertices()
     for (let [x, y] of this.getOceanOverlayVertices()) {
       const surface = this.fluffGroup.create(x, y, "underwaterOverlay", "water_still_grey00.png");
       const frameList = Phaser.Animation.generateFrameNames("water_still_grey", 0, 31, ".png", 2);
