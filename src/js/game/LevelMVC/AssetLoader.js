@@ -820,6 +820,7 @@ module.exports = class AssetLoader {
         'AO',
         'LavaGlow',
         'WaterAO',
+        'lavaPop',
         'blockShadows',
         'undergroundFow',
         'blocks',
