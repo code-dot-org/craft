@@ -1083,8 +1083,10 @@ module.exports = class LevelView {
    * @return {Phaser.Tween}
    */
   playPlayerJumpDownVerticalAnimation(facing, position, oldPosition = position) {
-    var animName = "jumpDown" + this.getDirectionName(facing);
-    this.playScaledSpeed(this.player.sprite.animations, animName);
+    if (!this.controller.levelModel.isUnderwater()) {
+      const animName = "jumpDown" + this.getDirectionName(facing);
+      this.playScaledSpeed(this.player.sprite.animations, animName);
+    }
 
     const start = this.positionToScreen(oldPosition);
     const end = this.positionToScreen(position);
@@ -1103,7 +1105,6 @@ module.exports = class LevelView {
   }
 
   playPlaceBlockAnimation(position, facing, blockType, blockTypeAtPosition, entity, completionHandler) {
-    var jumpAnimName;
     let blockIndex = this.yToIndex(position[1]) + position[0];
 
     if (entity.shouldUpdateSelectionIndicator()) {
@@ -1120,14 +1121,14 @@ module.exports = class LevelView {
 
       let direction = this.getDirectionName(facing);
 
-      jumpAnimName = "jumpUp" + direction;
-
       if (blockTypeAtPosition !== "") {
         this.playExplosionAnimation(position, facing, position, blockTypeAtPosition, (() => {
         }), false);
       }
 
-      this.playScaledSpeed(this.player.sprite.animations, jumpAnimName);
+      if (!this.controller.levelModel.isUnderwater()) {
+        this.playScaledSpeed(this.player.sprite.animations, "jumpUp" + direction);
+      }
       var placementTween = this.addResettableTween(this.player.sprite).to({
         y: (-55 + 40 * position[1])
       }, 125, Phaser.Easing.Cubic.EaseOut);
@@ -1935,7 +1936,7 @@ module.exports = class LevelView {
           this.audioPlayer.play("punch");
         });
 
-        entity.sprite.animations.add("punchDestroy_" + direction, singlePunch.concat(singlePunch).concat(singlePunch), frameRate, false);
+        entity.addAnimation("punchDestroy_" + direction, singlePunch.concat(singlePunch).concat(singlePunch), frameRate, false);
       }
     }
 
