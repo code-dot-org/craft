@@ -1155,8 +1155,10 @@ module.exports = class LevelView {
    * @return {Phaser.Tween}
    */
   playPlayerJumpDownVerticalAnimation(facing, position, oldPosition = position) {
-    var animName = "jumpDown" + this.getDirectionName(facing);
-    this.playScaledSpeed(this.player.sprite.animations, animName);
+    if (!this.controller.levelModel.isUnderwater()) {
+      const animName = "jumpDown" + this.getDirectionName(facing);
+      this.playScaledSpeed(this.player.sprite.animations, animName);
+    }
 
     const start = this.positionToScreen(oldPosition);
     const end = this.positionToScreen(position);
@@ -1175,7 +1177,6 @@ module.exports = class LevelView {
   }
 
   playPlaceBlockAnimation(position, facing, blockType, blockTypeAtPosition, entity, completionHandler) {
-    var jumpAnimName;
     let blockIndex = this.yToIndex(position[1]) + position[0];
 
     if (entity.shouldUpdateSelectionIndicator()) {
@@ -1192,14 +1193,14 @@ module.exports = class LevelView {
 
       let direction = this.getDirectionName(facing);
 
-      jumpAnimName = "jumpUp" + direction;
-
       if (blockTypeAtPosition !== "") {
         this.playExplosionAnimation(position, facing, position, blockTypeAtPosition, (() => {
         }), false);
       }
 
-      this.playScaledSpeed(this.player.sprite.animations, jumpAnimName);
+      if (!this.controller.levelModel.isUnderwater()) {
+        this.playScaledSpeed(this.player.sprite.animations, "jumpUp" + direction);
+      }
       var placementTween = this.addResettableTween(this.player.sprite).to({
         y: (-55 + 40 * position[1])
       }, 125, Phaser.Easing.Cubic.EaseOut);
@@ -1329,7 +1330,7 @@ module.exports = class LevelView {
     }
 
     var playerAnimation = undefined;
-    if (entity === this.agent) {
+    if (entity === this.agent || this.controller.levelModel.isUnderwater()) {
       playerAnimation = "punchDestroy";
     } else {
       playerAnimation = blockType.match(/(ore|stone|clay|bricks|bedrock)/) ? "mine" : "punchDestroy";
@@ -2012,9 +2013,12 @@ module.exports = class LevelView {
       }
 
       for (let [direction, offset] of [["down", 351], ["left", 354], ["up", 360], ["right", 357]]) {
-        entity.addAnimation("punch_" + direction, Phaser.Animation.generateFrameNames("Player_", offset, offset + 2, "", 3), frameRate, false).onComplete.add(() => {
+        const singlePunch = Phaser.Animation.generateFrameNames("Player_", offset, offset + 2, "", 3);
+        entity.addAnimation("punch_" + direction, singlePunch, frameRate, false).onComplete.add(() => {
           this.audioPlayer.play("punch");
         });
+
+        entity.addAnimation("punchDestroy_" + direction, singlePunch.concat(singlePunch).concat(singlePunch), frameRate, false);
       }
     }
 
@@ -2162,11 +2166,10 @@ module.exports = class LevelView {
     const tween = this.addResettableTween(item).to({y: -8}, 350, bounce);
 
     if (overrides.onComplete) {
+      // Player will auto-acquire the dropped miniblock before moving on.
       tween.onComplete.add(overrides.onComplete);
-    }
-
-    // If direct player control, we have stuff to do to manage miniblock pick up
-    if (this.controller.getIsDirectPlayerControl() || this.controller.levelData.isAquaticLevel) {
+    } else {
+      // If not auto-acquiring, add the miniblock to the list of collectible items.
       const distanceBetween = function (position, position2) {
         return Math.sqrt(Math.pow(position.x - position2.x, 2) + Math.pow(position.y - position2.y, 2));
       };
