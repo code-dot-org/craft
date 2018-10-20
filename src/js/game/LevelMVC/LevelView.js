@@ -2076,11 +2076,10 @@ module.exports = class LevelView {
     const tween = this.addResettableTween(item).to({y: -8}, 350, bounce);
 
     if (overrides.onComplete) {
+      // Player will auto-acquire the dropped miniblock before moving on.
       tween.onComplete.add(overrides.onComplete);
-    }
-
-    // If direct player control, we have stuff to do to manage miniblock pick up
-    if (this.controller.getIsDirectPlayerControl() || this.controller.levelData.isAquaticLevel) {
+    } else {
+      // If not auto-acquiring, add the miniblock to the list of collectible items.
       const distanceBetween = function (position, position2) {
         return Math.sqrt(Math.pow(position.x - position2.x, 2) + Math.pow(position.y - position2.y, 2));
       };
