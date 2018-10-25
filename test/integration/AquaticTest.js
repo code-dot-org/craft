@@ -6,7 +6,6 @@ test('Aquatic 1: chest (pass)', t => {
   attempt('aquatic01', async (api, levelModel) => {
     t.plan(1);
     const moveForward = () => new Promise(r => api.moveForward(null, 'Player', r));
-
     await moveForward();
     await moveForward();
 
@@ -108,7 +107,6 @@ test('Aquatic 7: Move to Chest (pass)', t => {
     t.plan(1);
     const moveForward = () => new Promise(r => api.moveForward(null, 'Player', r));
     const turnRight = () => new Promise(r => api.turnRight(null, 'Player', r));
-    const turnLeft = () => new Promise(r => api.turnLeft(null, 'Player', r));
 
     await moveForward();
     await moveForward();
@@ -285,8 +283,8 @@ test('Aquatic 11: Activate Conduit (pass)', t => {
       api.placeBlock(null, "prismarine", "Player");
     }
 
-    for(let i = 0; i < 4; ++i){
-      for(let j = 0; j < 4; ++j) {
+    for (let i = 0; i < 4; ++i){
+      for (let j = 0; j < 4; ++j) {
         await placePrismarine();
         await moveForward();
       }
