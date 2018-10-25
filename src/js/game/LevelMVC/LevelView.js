@@ -20,6 +20,27 @@ module.exports = class LevelView {
     this.baseShading = null;
     this.prismarinePhase = 0;
 
+    this.uniforms = {
+      time: {type: '1f', value: 0},
+      surface: {type: 'sampler2D', value: null},
+    };
+    this.waveShader = new Phaser.Filter(this.game, this.uniforms, [`
+      precision lowp float;
+      varying vec2 vTextureCoord;
+      uniform sampler2D uSampler;
+      uniform sampler2D surface;
+      uniform float time;
+
+      void main(void) {
+        float offsetA = sin(vTextureCoord.y * 31.0 + time / 18.0) * 0.0012;
+        float offsetB = sin(vTextureCoord.y * 57.0 + time / 18.0) * 0.0006;
+        vec4 tint = vec4(67.0 / 255.0, 213.0 / 255.0, 238.0 / 255.0, 1.0);
+        vec4 base = texture2D(uSampler, vTextureCoord + vec2(offsetA + offsetB, 0.0));
+        vec4 surface = texture2D(surface, vTextureCoord + vec2(0, sin(time / 57.0) * 0.01 + sin(time / 31.0) * 0.005));
+        gl_FragColor = mix(1.0 - 2.0 * (1.0 - surface.r * 0.7) * (1.0 - base), tint, 0.15);
+      }
+    `]);
+
     this.player = null;
     this.agent = null;
     this.selectionIndicator = null;
@@ -480,6 +501,10 @@ module.exports = class LevelView {
   create(levelModel) {
     this.createGroups();
     this.reset(levelModel);
+
+    const underwaterOverlay = this.game.add.sprite(0, 0, 'underwaterOverlay');
+    underwaterOverlay.visible = false;
+    this.uniforms.surface.value = underwaterOverlay.texture;
   }
 
   resetEntity(entity) {
@@ -514,8 +539,10 @@ module.exports = class LevelView {
       }
     }
 
-    if (levelModel.isUnderwater()) {
-      this.addOceanOverlay(levelModel.getOceanType() === 'warm' ? 0x43d5ee : 0x3938c9);
+    if (levelModel.isUnderwater() || true) {
+      //this.addOceanOverlay(levelModel.getOceanType() === 'warm' ? 0x43d5ee : 0x3938c9);
+
+      this.game.world.filters = [this.waveShader];
     }
 
     this.updateShadingGroup(levelModel.shadingPlane);
@@ -532,6 +559,8 @@ module.exports = class LevelView {
   }
 
   update() {
+    this.uniforms.time.value++;
+
     for (let i = 0; i < this.toDestroy.length; ++i) {
       this.toDestroy[i].destroy();
     }
