@@ -275,22 +275,24 @@ test('Aquatic 10: Move to Squid (pass)', t => {
     t.deepEqual(levelModel.player.position, new Position(6, 3));
   });
 });
-test.only('Aquatic 11: Move to Chest (pass)', t => {
+test('Aquatic 11: Activate Conduit (pass)', t => {
   attempt('aquatic11', async (api, levelModel) => {
     t.plan(1);
     const moveForward = () => new Promise(r => api.moveForward(null, 'Player', r));
     const turnRight = () => new Promise(r => api.turnRight(null, 'Player', r));
-    const placeBlock = (direction) => new Promise(r => api.place(null, 'prismarine', direction, r));
+
+    function placePrismarine() {
+      api.placeBlock(null, "prismarine", "Player");
+    }
 
     for(let i = 0; i < 4; ++i){
       for(let j = 0; j < 4; ++j) {
+        await placePrismarine();
         await moveForward();
-        await placeBlock(i + 2 % 4);
       }
       await turnRight();
     }
 
-    //ignore for now
-    t.deepEqual(levelModel.player.position, new Position(6, 3));
+    t.true(levelModel.actionPlane.getBlockAt(new Position(5, 3)).isActivatedConduit);
   });
 });
