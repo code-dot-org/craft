@@ -2183,8 +2183,8 @@ module.exports = class LevelView {
     return sprite;
   }
 
-  playAnimationWithRandomOffset(sprite, animationName) {
-    const animation = this.playScaledSpeed(sprite.animations, animationName);
+  playAnimationWithRandomOffset(animations, animationName) {
+    const animation = this.playScaledSpeed(animations, animationName);
     // Randomize the starting frame, so that not all bubbles/lavaPops are synchronized.
     animation.frame = Math.trunc(Math.random() * animation.frameTotal);
   }
@@ -2471,7 +2471,7 @@ module.exports = class LevelView {
           frameList.push("LavaPop01");
         }
         sprite.animations.add("idle", frameList, 5, true);
-        this.playAnimationWithRandomOffset(sprite, "idle");
+        this.playAnimationWithRandomOffset(sprite.animations, "idle");
         break;
 
       case "fire":
