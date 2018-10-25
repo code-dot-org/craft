@@ -179,7 +179,14 @@ module.exports.get = function (controller) {
       controller.addCommand(new PlaceBlockCommand(controller, highlightCallback, blockType, targetEntity), targetEntity);
     },
 
-    placeDirection: function (highlightCallback, blockType, targetEntity, direction) {
+    place: function (highlightCallback, blockType, direction, onFinish) {
+      const callbackCommand = new CallbackCommand(controller, highlightCallback, () => {
+        controller.placeBlockDirection(callbackCommand, blockType, direction);
+      }, onFinish);
+      controller.addCommand(callbackCommand);
+    },
+
+    placeDirection: function (highlightCallback, blockType, targetEntity, direction, onFinish) {
       controller.addCommand(new PlaceDirectionCommand(controller, highlightCallback, blockType, targetEntity, direction), targetEntity, direction);
     },
 
