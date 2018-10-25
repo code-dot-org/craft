@@ -98,13 +98,13 @@ module.exports = class BaseEntity {
     // stepping sound
     levelView.playBlockSound(groundType);
     // play walk animation
-    levelView.playScaledSpeed(this.sprite.animations, this.getWalkAnimation());
+    levelView.playScaledSpeed(this.getAnimationManager(), this.getWalkAnimation());
     setTimeout(() => {
       tween = this.controller.levelView.addResettableTween(this.sprite).to({
         x: (this.offset[0] + 40 * position[0]), y: (this.offset[1] + 40 * position[1])
       }, 300, Phaser.Easing.Linear.None);
       tween.onComplete.add(() => {
-        levelView.playScaledSpeed(this.sprite.animations, this.getIdleAnimation());
+        levelView.playScaledSpeed(this.getAnimationManager(), this.getIdleAnimation());
         commandQueueItem.succeeded();
       });
 
@@ -212,7 +212,7 @@ module.exports = class BaseEntity {
     bump(commandQueueItem) {
         var animName = "bump";
         var facingName = this.controller.levelView.getDirectionName(this.facing);
-        this.controller.levelView.playScaledSpeed(this.sprite.animations, animName + facingName);
+        this.controller.levelView.playScaledSpeed(this.getAnimationManager(), animName + facingName);
         let forwardPosition = this.controller.levelModel.getMoveForwardPosition(this);
         let forwardEntity = this.controller.levelEntity.getEntityAt(forwardPosition);
         if (forwardEntity !== null) {
@@ -484,7 +484,7 @@ module.exports = class BaseEntity {
     use(commandQueueItem, userEntity) {
         // default behavior for use ?
         var animationName = "lookAtCam" + this.controller.levelView.getDirectionName(this.facing);
-        this.controller.levelView.playScaledSpeed(this.sprite.animations, animationName);
+        this.controller.levelView.playScaledSpeed(this.getAnimationManager(), animationName);
         this.queue.startPushHighPriorityCommands();
         this.controller.events.forEach(e => e({ eventType: EventType.WhenUsed, targetType: this.type, eventSenderIdentifier: userEntity.identifier, targetIdentifier: this.identifier }));
         this.queue.endPushHighPriorityCommands();
@@ -508,7 +508,7 @@ module.exports = class BaseEntity {
     attack(commandQueueItem) {
         this.controller.addCommandRecord("attack", this.type, commandQueueItem.repeat);
         let facingName = this.controller.levelView.getDirectionName(this.facing);
-        this.controller.levelView.playScaledSpeed(this.sprite.animations, "attack" + facingName);
+        this.controller.levelView.playScaledSpeed(this.getAnimationManager(), "attack" + facingName);
         setTimeout((entity) => {
             let frontEntity = entity.controller.levelEntity.getEntityAt(entity.controller.levelModel.getMoveForwardPosition(entity));
             if (frontEntity) {
@@ -558,15 +558,15 @@ module.exports = class BaseEntity {
         let levelView = this.controller.levelView;
         let facingName = levelView.getDirectionName(this.facing);
         if (this.healthPoint > 1) {
-            levelView.playScaledSpeed(this.sprite.animations, "hurt" + facingName);
+            levelView.playScaledSpeed(this.getAnimationManager(), "hurt" + facingName);
             setTimeout(() => {
                 this.healthPoint--;
                 callbackCommand.succeeded();
             }, 1500 / this.controller.tweenTimeScale);
         } else {
             this.healthPoint--;
-            this.sprite.animations.stop(null, true);
-            this.controller.levelView.playScaledSpeed(this.sprite.animations, "die" + facingName);
+            this.getAnimationManager().stop(null, true);
+            this.controller.levelView.playScaledSpeed(this.getAnimationManager(), "die" + facingName);
             setTimeout(() => {
                 var tween = this.controller.levelView.addResettableTween(this.sprite).to({
                     alpha: 0
@@ -606,12 +606,12 @@ module.exports = class BaseEntity {
         }
 
         animationName += facingName;
-        this.controller.levelView.playScaledSpeed(this.sprite.animations, animationName);
+        this.controller.levelView.playScaledSpeed(this.getAnimationManager(), animationName);
     }
 
     updateAnimationDirection() {
         let facingName = this.controller.levelView.getDirectionName(this.facing);
-        this.controller.levelView.playScaledSpeed(this.sprite.animations, "idle" + facingName);
+        this.controller.levelView.playScaledSpeed(this.getAnimationManager(), "idle" + facingName);
     }
 
     getDistance(entity) {

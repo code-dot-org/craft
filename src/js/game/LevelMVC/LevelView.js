@@ -574,12 +574,6 @@ module.exports = class LevelView {
     return "_" + FacingDirection.directionToRelative(facing).toLowerCase();
   }
 
-  updatePlayerDirection(position, facing) {
-    this.setSelectionIndicatorPosition(position[0], position[1]);
-    this.playPlayerAnimation('idle', position, facing);
-  }
-  // animations
-
   playDoorAnimation(position, open, completionHandler) {
     let blockIndex = (this.yToIndex(position[1])) + position[0];
     let block = this.actionPlaneBlocks[blockIndex];
@@ -1157,7 +1151,7 @@ module.exports = class LevelView {
   playPlayerJumpDownVerticalAnimation(facing, position, oldPosition = position) {
     if (!this.controller.levelModel.isUnderwater()) {
       const animName = "jumpDown" + this.getDirectionName(facing);
-      this.playScaledSpeed(this.player.sprite.animations, animName);
+      this.playScaledSpeed(this.player.getAnimationManager(), animName);
     }
 
     const start = this.positionToScreen(oldPosition);
@@ -1199,7 +1193,7 @@ module.exports = class LevelView {
       }
 
       if (!this.controller.levelModel.isUnderwater()) {
-        this.playScaledSpeed(this.player.sprite.animations, "jumpUp" + direction);
+        this.playScaledSpeed(this.player.getAnimationManager(), "jumpUp" + direction);
       }
       var placementTween = this.addResettableTween(this.player.sprite).to({
         y: (-55 + 40 * position[1])
@@ -1936,7 +1930,6 @@ module.exports = class LevelView {
   }
 
   preparePlayerSprite(playerName, entity = this.player) {
-
     entity.sprite = this.actionGroup.create(0, 0);
     entity.animationRig = this.actionGroup.create(0, 0, `player${playerName}`, 'Player_121');
     entity.sprite.addChild(entity.animationRig);
