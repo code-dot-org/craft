@@ -2183,9 +2183,10 @@ module.exports = class LevelView {
     return sprite;
   }
 
-  playAnimationWithOffset(sprite, animationName, animationFrameTotal, startFrame) {
-    var rand = Math.trunc(Math.random() * animationFrameTotal) + startFrame;
-    this.playScaledSpeed(sprite.animations, animationName).setFrame(rand, true);
+  playAnimationWithRandomOffset(sprite, animationName) {
+    const animation = this.playScaledSpeed(sprite.animations, animationName);
+    // Randomize the starting frame, so that not all bubbles/lavaPops are synchronized.
+    animation.frame = Math.trunc(Math.random() * animation.frameTotal);
   }
 
   psuedoRandomTint(group, sprite, x, y) {
@@ -2208,7 +2209,6 @@ module.exports = class LevelView {
       frameList,
       atlas,
       frame,
-      animation,
       xOffset,
       yOffset;
 
@@ -2241,7 +2241,6 @@ module.exports = class LevelView {
         frameList.push(`${type}0`);
       }
       frameList = frameList.concat(animationFramesIron);
-
       sprite.animations.add("open", frameList);
 
       frameList = [];
@@ -2351,9 +2350,7 @@ module.exports = class LevelView {
         frameList = Phaser.Animation.generateFrameNames("Magma_Bubble_Boat", 0, 5, "", 0);
 
         sprite.animations.add("idle", frameList, 5, true);
-        animation = this.playScaledSpeed(sprite.animations, "idle");
-        // Randomize the starting frame, so that not all bubbles are synchronized.
-        animation.frame = Math.floor(Math.random() * animation.frameTotal);
+        this.playAnimationWithRandomOffset(sprite.animations, "idle");
         break;
 
       case "magmaDeep":
@@ -2364,9 +2361,7 @@ module.exports = class LevelView {
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Magma_Bubble_Deep", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
-        animation = this.playScaledSpeed(sprite.animations, "idle");
-        // Randomize the starting frame, so that not all bubbles are synchronized.
-        animation.frame = Math.floor(Math.random() * animation.frameTotal);
+        this.playAnimationWithRandomOffset(sprite.animations, "idle");
         break;
 
       case "bubbleColumn":
@@ -2377,9 +2372,7 @@ module.exports = class LevelView {
         sprite = group.create(xOffset + 40 * x, yOffset + group.yOffset + 40 * y, atlas, frame);
         frameList = Phaser.Animation.generateFrameNames("Bubble_Column", 0, 5, "", 0);
         sprite.animations.add("idle", frameList, 5, true);
-        animation = this.playScaledSpeed(sprite.animations, "idle");
-        // Randomize the starting frame, so that not all bubbles are synchronized.
-        animation.frame = Math.floor(Math.random() * animation.frameTotal);
+        this.playAnimationWithRandomOffset(sprite.animations, "idle");
         break;
 
       case "conduit":
@@ -2478,7 +2471,7 @@ module.exports = class LevelView {
           frameList.push("LavaPop01");
         }
         sprite.animations.add("idle", frameList, 5, true);
-        this.playAnimationWithOffset(sprite, "idle", 29, 1);
+        this.playAnimationWithRandomOffset(sprite, "idle");
         break;
 
       case "fire":
