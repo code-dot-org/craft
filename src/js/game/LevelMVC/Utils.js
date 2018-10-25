@@ -17,7 +17,7 @@ module.exports.convertActionPlaneEntitiesToConfig = function (levelConfig) {
     for (let i = 0; i < plane.length; i++) {
       const x = i % width;
       const y = Math.floor(i / height);
-      const entity = convertNameToEntity(plane[i], x, y);
+      const entity = module.exports.convertNameToEntity(plane[i], x, y);
 
       if (entity) {
         levelConfig.entities = levelConfig.entities || [];
@@ -39,7 +39,7 @@ const suffixToDirection = {
   Right: FacingDirection.East,
 };
 
-function convertNameToEntity(item, x, y) {
+module.exports.convertNameToEntity = function (item, x, y) {
   if (item.match(/^(sheep|zombie|ironGolem|creeper|cod|cow|chicken|dolphin|ghast|boat|salmon|squid|tropicalFish|seaTurtle)(Right|Left|Up|Down|$)/)) {
     const directionMatch = item.match(/(.*)(Right|Left|Up|Down)/);
     const directionToUse = directionMatch ?
@@ -47,4 +47,4 @@ function convertNameToEntity(item, x, y) {
     const entityToUse = directionMatch ? directionMatch[1] : item;
     return [entityToUse, x, y, directionToUse];
   }
-}
+};

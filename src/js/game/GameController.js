@@ -9,6 +9,7 @@ const LevelModel = require("./LevelMVC/LevelModel.js");
 const LevelView = require("./LevelMVC/LevelView.js");
 const LevelEntity = require("./LevelMVC/LevelEntity.js");
 const AssetLoader = require("./LevelMVC/AssetLoader.js");
+const convertNameToEntity = require("./LevelMVC/Utils.js").convertNameToEntity;
 
 const CodeOrgAPI = require("./API/CodeOrgAPI.js");
 
@@ -1101,9 +1102,14 @@ class GameController {
           }
         }
         this.levelView.playPlaceBlockAnimation(player.position, player.facing, blockType, blockTypeAtPosition, player, () => {
-          this.levelModel.placeBlock(blockType, player);
-          this.updateFowPlane();
-          this.updateShadingPlane();
+          const entity = convertNameToEntity(blockType, position.x, position.y);
+          if (entity) {
+            this.levelEntity.spawnEntityAt(...entity);
+          } else {
+            this.levelModel.placeBlock(blockType, player);
+            this.updateFowPlane();
+            this.updateShadingPlane();
+          }
           this.delayBy(200, () => {
             this.levelView.playIdleAnimation(player.position, player.facing, false, player);
           });
