@@ -243,11 +243,11 @@ module.exports = class Player extends BaseEntity {
     this.healthPoint--;
     // still alive
     if (this.healthPoint > 0) {
-      this.controller.levelView.playScaledSpeed(this.sprite.animations, "hurt" + facingName);
+      this.controller.levelView.playScaledSpeed(this.getAnimationManager(), "hurt" + facingName);
       callbackCommand.succeeded();
       // report failure since player died
     } else {
-      this.sprite.animations.stop(null, true);
+      this.getAnimationManager().stop(null, true);
       this.controller.levelView.playFailureAnimation(this.position, this.facing, this.isOnBlock, () => {
         callbackCommand.failed();
         this.controller.handleEndState(false);
