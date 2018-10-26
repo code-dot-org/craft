@@ -1342,7 +1342,7 @@ class GameController {
   }
 
   isPathAhead(blockType) {
-    return this.levelModel.isForwardBlockOfType(blockType);
+    return this.player.isOnBlock ? true : this.levelModel.isForwardBlockOfType(blockType);
   }
 
   addCommand(commandQueueItem) {
