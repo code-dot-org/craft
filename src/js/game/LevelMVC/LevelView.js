@@ -40,12 +40,12 @@ module.exports = class LevelView {
       }
 
       void main(void) {
-        float offsetA = 0.0; // sin(vTextureCoord.y * 31.0 + time / 18.0) * 0.0012;
-        float offsetB = 0.0; // sin(vTextureCoord.y * 57.0 + time / 18.0) * 0.0006;
+        float offsetA = sin(vTextureCoord.y * 31.0 + time / 18.0) * 0.0012;
+        float offsetB = sin(vTextureCoord.y * 57.0 + time / 18.0) * 0.0006;
         vec4 tint = vec4(67.0 / 255.0, 213.0 / 255.0, 238.0 / 255.0, 1.0);
-        vec4 base = texture2D(uSampler, vTextureCoord + vec2(offsetA + offsetB, 0.0));
+        vec4 base = texture2D(uSampler, vTextureCoord + vec2(0.0, offsetA + offsetB));
         float frame = mod(floor(time / 5.0), 31.0);
-        float surfaceOffset = 0.0; // sin(time / 57.0) * 0.02 + sin(time / 31.0) * 0.01;
+        float surfaceOffset = sin(time / 57.0) * 0.02 + sin(time / 31.0) * 0.01;
         vec4 surface = texture2D(
           surface,
           vec2(mod(vTextureCoord.x * 2.0, 1.0),
