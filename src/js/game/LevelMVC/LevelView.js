@@ -530,7 +530,7 @@ module.exports = class LevelView {
       this.setSelectionIndicatorPosition(entity.position[0], entity.position[1]);
       this.selectionIndicator.visible = true;
     }
-    this.playIdleAnimation(entity.position, entity.facing, entity.isOnBlock, entity);
+    this.initWithIdleAnimation(entity.position, entity.facing, entity.isOnBlock, entity);
   }
 
   reset(levelModel) {
@@ -682,6 +682,10 @@ module.exports = class LevelView {
   playIdleAnimation(position, facing, isOnBlock, entity = this.player) {
     const animationName = this.controller.levelModel.isUnderwater() ? "walk" : "idle";
     this.playPlayerAnimation(animationName, position, facing, isOnBlock, entity);
+  }
+
+  initWithIdleAnimation(position, facing, isOnBlock, entity = this.player){
+    this.playPlayerAnimation("idle", position, facing, isOnBlock, entity);
   }
 
   playSuccessAnimation(position, facing, isOnBlock, completionHandler, entity = this.player) {
@@ -2004,7 +2008,6 @@ module.exports = class LevelView {
       let frameRate = 10;
 
       for (let [direction, offset] of [["down", 299], ["left", 306], ["up", 313], ["right", 320]]) {
-        entity.addAnimation("idle_" + direction, Phaser.Animation.generateFrameNames("Player_", offset, offset, "", 3), frameRate, true);
         entity.addAnimation("walk_" + direction, Phaser.Animation.generateFrameNames("Player_", offset + 1, offset + 4, "", 3), frameRate / 2, true);
       }
 
