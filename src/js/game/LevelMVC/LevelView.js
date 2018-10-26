@@ -51,7 +51,7 @@ module.exports = class LevelView {
           vec2(mod(vTextureCoord.x * 2.0, 1.0),
           mod((vTextureCoord.y * 2.0 + frame + surfaceOffset) / 32.0, 1.0))
         );
-        gl_FragColor = overlay(base, surface) * mix(vec4(1.0, 1.0, 1.0, 1.0), tint, 0.3);
+        gl_FragColor = mix(overlay(base, surface), tint, 0.3);
       }
     `]);
 
