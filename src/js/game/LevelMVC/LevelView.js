@@ -40,18 +40,18 @@ module.exports = class LevelView {
       }
 
       void main(void) {
-        float offsetA = sin(vTextureCoord.y * 31.0 + time / 18.0) * 0.0012;
-        float offsetB = sin(vTextureCoord.y * 57.0 + time / 18.0) * 0.0006;
+        float offsetA = sin(vTextureCoord.y * 31.0 + time / 18.0) * 0.0014;
+        float offsetB = sin(vTextureCoord.y * 57.0 + time / 18.0) * 0.0007;
         vec4 tint = vec4(67.0 / 255.0, 213.0 / 255.0, 238.0 / 255.0, 1.0);
         vec4 base = texture2D(uSampler, vTextureCoord + vec2(0.0, offsetA + offsetB));
         float frame = mod(floor(time / 5.0), 31.0);
-        float surfaceOffset = sin(time / 57.0) * 0.02 + sin(time / 31.0) * 0.01;
+        float surfaceOffset = 0.0; //sin(time / 57.0) * 0.01 + sin(time / 31.0) * 0.005;
         vec4 surface = texture2D(
           surface,
           vec2(mod(vTextureCoord.x * 2.0, 1.0),
-          mod((vTextureCoord.y * 2.0 + frame + surfaceOffset) / 32.0, 1.0))
+          mod((-vTextureCoord.y * 2.0 + frame + surfaceOffset) / 32.0, 1.0))
         );
-        gl_FragColor = mix(overlay(base, surface), tint, 0.3);
+        gl_FragColor = mix(mix(overlay(surface, base), base, 0.5), tint, 0.3);
       }
     `]);
 
