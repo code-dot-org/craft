@@ -103,12 +103,13 @@ module.exports = class LevelBlock {
       this.isPlacable = true;
     }
 
-    if (blockType === "magmaUnderwater") {
+    if (blockType === "magmaUnderwater" || blockType === "magmaDeep") {
       this.isEmissive = true;
     }
 
     if (blockType === "bubbleColumn") {
       this.isSolid = false;
+      this.isTransparent = true;
       this.isEntity = true;
     }
 
