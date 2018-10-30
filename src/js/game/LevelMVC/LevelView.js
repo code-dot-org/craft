@@ -24,6 +24,8 @@ module.exports = class LevelView {
       time: {type: '1f', value: 0},
       surface: {type: 'sampler2D', value: null},
       tint: {type: '4fv', value: [67 / 255, 213 / 255, 238 / 255, 1]},
+      x: {type: '1f', value: 0},
+      y: {type: '1f', value: 0},
     };
     this.waveShader = new Phaser.Filter(this.game, this.uniforms, [`
       precision lowp float;
@@ -31,6 +33,8 @@ module.exports = class LevelView {
       uniform sampler2D uSampler;
       uniform sampler2D surface;
       uniform float time;
+      uniform float x;
+      uniform float y;
       uniform vec4 tint;
 
       float overlay(float source, float dest) {
@@ -42,15 +46,16 @@ module.exports = class LevelView {
       }
 
       void main(void) {
-        float offsetA = sin(vTextureCoord.y * 31.0 + time / 18.0) * 0.0014;
-        float offsetB = sin(vTextureCoord.y * 57.0 + time / 18.0) * 0.0007;
+        vec2 relativeCoord = vTextureCoord + vec2(x * 0.5, -y * 0.5);
+        float offsetA = sin(relativeCoord.y * 31.0 + time / 18.0) * 0.0014;
+        float offsetB = sin(relativeCoord.y * 57.0 + time / 18.0) * 0.0007;
         vec4 base = texture2D(uSampler, vTextureCoord + vec2(0.0, offsetA + offsetB));
         float frame = mod(floor(time / 5.0), 31.0);
         float surfaceOffset = 0.0; //sin(time / 57.0) * 0.01 + sin(time / 31.0) * 0.005;
         vec4 surface = texture2D(
           surface,
-          vec2(mod(vTextureCoord.x * 2.0, 1.0),
-          mod((-vTextureCoord.y * 2.0 + frame + surfaceOffset) / 32.0, 1.0))
+          vec2(mod(relativeCoord.x * 2.0, 1.0),
+          mod((-relativeCoord.y * 2.0 + frame + surfaceOffset) / 32.0, 1.0))
         );
         gl_FragColor = mix(mix(overlay(surface, base), base, 0.5), tint, 0.3);
       }
@@ -576,8 +581,6 @@ module.exports = class LevelView {
   }
 
   update() {
-    this.uniforms.time.value++;
-
     for (let i = 0; i < this.toDestroy.length; ++i) {
       this.toDestroy[i].destroy();
     }
@@ -592,6 +595,11 @@ module.exports = class LevelView {
   render() {
     this.actionGroup.sort('sortOrder');
     this.fluffGroup.sort('z');
+
+    const view = this.game.camera.view;
+    this.uniforms.x.value = view.x / view.width;
+    this.uniforms.y.value = view.y / view.height;
+    this.uniforms.time.value++;
   }
 
   scaleShowWholeWorld(completionHandler) {
