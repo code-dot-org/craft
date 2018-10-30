@@ -23,6 +23,7 @@ module.exports = class LevelView {
     this.uniforms = {
       time: {type: '1f', value: 0},
       surface: {type: 'sampler2D', value: null},
+      tint: {type: '4fv', value: [67 / 255, 213 / 255, 238 / 255, 1]},
     };
     this.waveShader = new Phaser.Filter(this.game, this.uniforms, [`
       precision lowp float;
@@ -30,6 +31,7 @@ module.exports = class LevelView {
       uniform sampler2D uSampler;
       uniform sampler2D surface;
       uniform float time;
+      uniform vec4 tint;
 
       float overlay(float source, float dest) {
         return dest > 0.5 ? (2.0 * dest * source) : (1.0 - 2.0 * (1.0 - dest) * (1.0 - source));
@@ -42,7 +44,6 @@ module.exports = class LevelView {
       void main(void) {
         float offsetA = sin(vTextureCoord.y * 31.0 + time / 18.0) * 0.0014;
         float offsetB = sin(vTextureCoord.y * 57.0 + time / 18.0) * 0.0007;
-        vec4 tint = vec4(67.0 / 255.0, 213.0 / 255.0, 238.0 / 255.0, 1.0);
         vec4 base = texture2D(uSampler, vTextureCoord + vec2(0.0, offsetA + offsetB));
         float frame = mod(floor(time / 5.0), 31.0);
         float surfaceOffset = 0.0; //sin(time / 57.0) * 0.01 + sin(time / 31.0) * 0.005;
@@ -555,6 +556,9 @@ module.exports = class LevelView {
     }
 
     if (levelModel.isUnderwater()) {
+      if (levelModel.getOceanType() === 'cold') {
+        this.uniforms.tint.value = [57 / 255, 56 / 255, 201 / 255, 1];
+      }
       this.game.world.filters = [this.waveShader];
     }
 
