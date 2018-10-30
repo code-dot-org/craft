@@ -216,6 +216,7 @@ module.exports = class LevelBlock {
       blockType === 'seaPickles'
     ) {
       this.isWalkable = true;
+      this.isEntity = true; // Don't show shadows or AO -- we should rename this option.
     }
 
     if (blockType === 'seaPickles' || blockType === 'seaLantern' || blockType === 'magmaBlock') {

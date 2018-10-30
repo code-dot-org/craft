@@ -165,6 +165,7 @@ module.exports = class LevelView {
       reeds: "reeds",
       sand: "sand",
       sandstone: "sandstone",
+      seaPickles: "sea_pickle",
       seedsWheat: "seeds_wheat",
       snow: "snow",
       snowBall: "snowball",
@@ -458,7 +459,6 @@ module.exports = class LevelView {
       "coralFanMagentaRight": ["blocks", "Coral_Fan_Magenta_Right", -12, 0],
       "coralFanRedRight": ["blocks", "Coral_Fan_Red_Right", -12, 0],
       "coralFanYellowFanRight": ["blocks", "Coral_Fan_Yellow_Right", -12, 0],
-      "seaPickles": ["blocks", "SeaPickle", -12, 0],
       "coralPlantBlue": ["blocks", "Coral_Plant_Blue", -12, 0],
       "coralPlantBlueDeep": ["blocks", "Coral_Plant_Blue_Sand", -12, 0],
       "coralPlantPink": ["blocks", "Coral_Plant_Pink", -12, 0],
@@ -474,6 +474,7 @@ module.exports = class LevelView {
       "bubbleColumn": ["blocks", "Bubble_Column0", -12, 0],
       "conduit": ["blocks", "Conduit00", -13, -10],
 
+      "seaPickles": ["blocks", "SeaPickle", -10, -30],
       "Chest": ["blocks", "Chest0", -12, -20],
       "chest": ["blocks", "Chest0", -12, -20], // compat
       "invisible": ["blocks", "Invisible", 0, 0],
