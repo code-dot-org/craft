@@ -522,10 +522,12 @@ module.exports = class LevelView {
     this.createGroups();
     this.reset(levelModel);
 
-    const underwaterOverlay = this.game.add.sprite(0, 0, 'underwaterOverlay');
-    underwaterOverlay.visible = false;
-    underwaterOverlay.smoothed = false;
-    this.uniforms.surface.value = underwaterOverlay.texture;
+    if (levelModel.isUnderwater()) {
+      const underwaterOverlay = this.game.add.sprite(0, 0, 'underwaterOverlay');
+      underwaterOverlay.visible = false;
+      underwaterOverlay.smoothed = false;
+      this.uniforms.surface.value = underwaterOverlay.texture;
+    }
   }
 
   resetEntity(entity) {
