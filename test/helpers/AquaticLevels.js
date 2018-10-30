@@ -157,6 +157,7 @@ module.exports = {
   },
   aquatic10: {
     isAquaticLevel: true,
+    isDaytime: false,
     ocean: "warm",
     playerName: "SteveAquatic",
     assetPacks: {
@@ -173,6 +174,7 @@ module.exports = {
   },
   aquatic11: {
     isAquaticLevel: true,
+    isDaytime: false,
     ocean: "cold",
     playerName: "SteveAquatic",
     assetPacks: {
@@ -201,6 +203,7 @@ module.exports = {
   },
   aquatic12: {
     isAquaticLevel: true,
+    isDaytime: false,
     ocean: "cold",
     playerName: "SteveAquatic",
     assetPacks: {
