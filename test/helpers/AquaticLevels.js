@@ -3,12 +3,12 @@ module.exports = {
     isAquaticLevel: true,
     playerName: "SteveAquatic",
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteveAquatic'],
+      beforeLoad: ['aquaticAllAssetsMinusPlayer', 'playerSteveAquatic'],
       afterLoad: [],
     },
     groundPlane: ["water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "sand", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "sand", "sand", "water", "water", "water", "water", "water", "water", "sand", "sand", "sand", "sand", "planksOak", "planksOak", "water", "water", "water", "sand", "sand", "sand", "sand", "sand", "water", "water", "water", "water", "water", "sand", "sand", "sand", "sand", "sand", "sand", "water", "water", "water", "water", "sand", "sand", "sand", "sand", "sand", "sand", "water", "water", "water", "water", "water", "sand", "sand", "sand", "sand", "sand", "water", "water", "water", "water", "water", "water", "sand", "sand", "sand", "water", "water", "water", "water", "stone", "water", "water", "water", "water", "water", "water", "water", "stone", "water", "water"],
-    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-    actionPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "boatChest", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "tallGrass", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "tallGrass", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+    actionPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "treeJungle", "", "boatChest", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
     playerStartPosition: [4, 7],
     playerStartDirection: 0,
     verificationFunction: verificationAPI => verificationAPI.isEntityAt("Player", [4, 5]),
@@ -17,7 +17,7 @@ module.exports = {
     isAquaticLevel: true,
     playerName: "SteveAquatic",
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteveAquatic'],
+      beforeLoad: ['aquaticAllAssetsMinusPlayer', 'playerSteveAquatic'],
       afterLoad: [],
     },
     groundPlane: ["water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "sand", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "sand", "sand", "water", "water", "water", "water", "water", "water", "sand", "sand", "sand", "sand", "planksOak", "planksOak", "planksOak", "water", "water", "sand", "sand", "sand", "sand", "sand", "water", "water", "water", "water", "water", "sand", "sand", "sand", "sand", "sand", "sand", "water", "water", "water", "water", "sand", "sand", "sand", "sand", "sand", "sand", "water", "water", "water", "water", "water", "sand", "sand", "sand", "sand", "sand", "water", "water", "water", "water", "water", "water", "sand", "sand", "sand", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water"],
@@ -33,7 +33,7 @@ module.exports = {
     boat: true,
     playerName: "SteveAquatic",
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteveAquatic'],
+      beforeLoad: ['aquaticAllAssetsMinusPlayer', 'playerSteveAquatic'],
       afterLoad: [],
     },
     groundPlane: ["stone", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "sand", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "sand", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "sand", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "sand", "sand", "water", "water", "water", "water", "water", "water", "water", "sand", "sand", "sand", "planksOak", "planksOak", "water", "water", "water", "water", "water", "sand", "sand", "sand", "water", "water", "water", "water", "water", "water", "water"],
@@ -49,7 +49,7 @@ module.exports = {
     boat: true,
     playerName: "SteveAquatic",
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteveAquatic'],
+      beforeLoad: ['aquaticAllAssetsMinusPlayer', 'playerSteveAquatic'],
       afterLoad: [],
     },
     groundPlane: ["water", "water", "water", "water", "water", "water", "sand", "sand", "water", "water", "stone", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "stone", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "stone", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "sand"],    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
@@ -64,7 +64,7 @@ module.exports = {
     ocean: "warm",
     playerName: "SteveAquatic",
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteveAquatic'],
+      beforeLoad: ['aquaticAllAssetsMinusPlayer', 'playerSteveAquatic'],
       afterLoad: [],
     },
     groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
@@ -80,7 +80,7 @@ module.exports = {
     boat: true,
     playerName: "SteveAquatic",
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteveAquatic'],
+      beforeLoad: ['aquaticAllAssetsMinusPlayer', 'playerSteveAquatic'],
       afterLoad: [],
     },
     groundPlane: ["snow", "snow", "snow", "snow", "snow", "water", "water", "water", "stoneBricks", "water", "snow", "snow", "snow", "snow", "snow", "ice", "water", "water", "water", "water", "snow", "snow", "snow", "snow", "ice", "ice", "water", "water", "stoneBricks", "stoneBricks", "snow", "snow", "snow", "water", "water", "water", "water", "water", "water", "water", "snow", "snow", "ice", "water", "ice", "ice", "water", "ice", "ice", "ice", "ice", "ice", "ice", "water", "ice", "ice", "water", "ice", "ice", "ice", "water", "water", "water", "water", "water", "water", "water", "ice", "ice", "ice", "water", "ice", "ice", "water", "ice", "ice", "ice", "ice", "water", "ice", "water", "ice", "ice", "water", "ice", "ice", "ice", "ice", "water", "ice", "water", "water", "water", "water", "ice", "ice", "ice", "water", "water", "water"],
@@ -96,7 +96,7 @@ module.exports = {
     ocean: "warm",
     playerName: "SteveAquatic",
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteveAquatic'],
+      beforeLoad: ['aquaticAllAssetsMinusPlayer', 'playerSteveAquatic'],
       afterLoad: [],
     },
     groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
@@ -112,7 +112,7 @@ module.exports = {
     ocean: "warm",
     playerName: "SteveAquatic",
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteveAquatic'],
+      beforeLoad: ['aquaticAllAssetsMinusPlayer', 'playerSteveAquatic'],
       afterLoad: [],
     },
     groundPlane: ["dirt", "dirt", "magmaUnderwater", "magmaUnderwater", "magmaUnderwater", "magmaUnderwater", "magmaUnderwater", "magmaUnderwater", "dirt", "lava", "dirt", "water", "water", "water", "water", "water", "water", "magmaUnderwater", "magmaBlock", "dirt", "magmaBlock", "water", "dirt", "dirt", "dirt", "dirt", "water", "magmaUnderwater", "magmaUnderwater", "dirt", "magmaUnderwater", "water", "dirt", "lava", "lava", "dirt", "water", "water", "water", "dirt", "magmaUnderwater", "water", "dirt", "lava", "lava", "dirt", "water", "blueDeadCoralBlock", "water", "dirt", "magmaUnderwater", "water", "dirt", "magmaBlock", "magmaBlock", "dirt", "water", "blueDeadCoralBlock", "water", "dirt", "magmaUnderwater", "water", "magmaUnderwater", "magmaUnderwater", "magmaUnderwater", "magmaUnderwater", "water", "blueDeadCoralBlock", "water", "dirt", "magmaUnderwater", "water", "magmaUnderwater", "redCoralBlock", "water", "water", "water", "water", "water", "dirt", "water", "water", "magmaUnderwater", "water", "water", "water", "magentaCoralBlock", "dirt", "dirt", "dirt", "water", "water", "blueDeadCoralBlock", "water", "magentaCoralBlock", "blueCoralBlock", "blueCoralBlock", "dirt", "dirt", "dirt"],
@@ -128,7 +128,7 @@ module.exports = {
     boat: true,
     playerName: "SteveAquatic",
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteveAquatic'],
+      beforeLoad: ['aquaticAllAssetsMinusPlayer', 'playerSteveAquatic'],
       afterLoad: [],
     },
     groundPlane: ["water", "water", "sand", "sand", "sand", "sand", "sand", "sand", "dirt", "dirt", "water", "water", "water", "water", "water", "water", "water", "sand", "dirt", "dirt", "water", "water", "dirt", "water", "water", "dirt", "water", "sand", "sand", "dirt", "sand", "water", "water", "water", "water", "water", "water", "water", "water", "dirt", "sand", "water", "water", "water", "water", "water", "water", "blueDeadCoralBlock", "water", "dirt", "sand", "water", "dirt", "water", "water", "dirt", "water", "blueDeadCoralBlock", "water", "dirt", "sand", "water", "sand", "sand", "sand", "sand", "water", "blueDeadCoralBlock", "water", "dirt", "sand", "water", "sand", "redCoralBlock", "water", "water", "water", "water", "water", "dirt", "water", "water", "sand", "water", "water", "water", "magentaCoralBlock", "dirt", "dirt", "dirt", "water", "water", "blueDeadCoralBlock", "water", "magentaCoralBlock", "dirt", "dirt", "dirt", "dirt", "dirt"],
@@ -144,7 +144,7 @@ module.exports = {
     ocean: "warm",
     playerName: "SteveAquatic",
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteveAquatic'],
+      beforeLoad: ['aquaticAllAssetsMinusPlayer', 'playerSteveAquatic'],
       afterLoad: [],
     },
     groundPlane: ["yellowCoralBlock", "yellowCoralBlock", "sand", "sand", "pinkCoralBlock", "sand", "pinkCoralBlock", "sand", "yellowCoralBlock", "yellowCoralBlock", "yellowCoralBlock", "blueCoralBlock", "sand", "sand", "sand", "blueCoralBlock", "sand", "sand", "sand", "yellowCoralBlock", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "pinkCoralBlock", "sand", "sand", "sand", "sand", "magentaCoralBlock", "planksOak", "sand", "blueCoralBlock", "sand", "pinkCoralBlock", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "yellowCoralBlock", "magentaCoralBlock", "sand", "magentaCoralBlock", "sand", "sand", "redCoralBlock", "sand", "planksOak", "blueCoralBlock", "sand", "sand", "sand", "magentaCoralBlock", "sand", "magentaCoralBlock", "magentaCoralBlock", "sand", "magentaCoralBlock", "redCoralBlock", "blueCoralBlock", "pinkCoralBlock", "sand", "magentaCoralBlock", "sand", "sand", "sand", "yellowCoralBlock", "magentaCoralBlock", "magentaCoralBlock", "sand", "sand", "sand", "pinkCoralBlock", "blueCoralBlock", "sand", "sand", "sand", "sand", "sand", "blueCoralBlock", "sand", "pinkCoralBlock", "pinkCoralBlock", "sand", "sand", "yellowCoralBlock", "yellowCoralBlock", "sand", "sand", "sand"],
@@ -160,7 +160,7 @@ module.exports = {
     ocean: "warm",
     playerName: "SteveAquatic",
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteveAquatic'],
+      beforeLoad: ['aquaticAllAssetsMinusPlayer', 'playerSteveAquatic'],
       afterLoad: [],
     },
     groundPlane: ["sand", "sand", "prismarine", "darkPrismarine", "prismarine", "prismarine", "darkPrismarine", "prismarine", "sand", "sand", "sand", "seaLantern", "prismarine", "prismarine", "prismarine", "prismarine", "prismarine", "prismarine", "seaLantern", "sand", "prismarine", "prismarine", "prismarine", "darkPrismarine", "darkPrismarine", "darkPrismarine", "prismarine", "prismarine", "prismarine", "prismarine", "prismarine", "prismarine", "prismarine", "seaLantern", "redCoralBlock", "darkPrismarine", "darkPrismarine", "prismarine", "prismarine", "sand", "sand", "prismarine", "prismarine", "darkPrismarine", "darkPrismarine", "darkPrismarine", "prismarine", "prismarine", "prismarine", "prismarine", "sand", "prismarine", "prismarine", "seaLantern", "darkPrismarine", "darkPrismarine", "blueCoralBlock", "darkPrismarine", "seaLantern", "prismarine", "sand", "prismarine", "prismarine", "darkPrismarine", "darkPrismarine", "darkPrismarine", "darkPrismarine", "darkPrismarine", "prismarine", "prismarine", "prismarine", "prismarine", "prismarine", "prismarine", "darkPrismarine", "darkPrismarine", "darkPrismarine", "prismarine", "prismarine", "prismarine", "prismarine", "prismarine", "prismarine", "prismarine", "redCoralBlock", "sand", "redCoralBlock", "prismarine", "prismarine", "sand", "sand", "prismarine", "prismarine", "prismarine", "sand", "sand", "blueCoralBlock", "sand", "sand", "sand"],
@@ -176,7 +176,7 @@ module.exports = {
     ocean: "cold",
     playerName: "SteveAquatic",
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteveAquatic'],
+      beforeLoad: ['aquaticAllAssetsMinusPlayer', 'playerSteveAquatic'],
       afterLoad: [],
     },
     groundPlane: ["gravel", "gravel", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "gravel", "gravel", "gravel", "sand", "seaLantern", "darkPrismarine", "darkPrismarine", "darkPrismarine", "seaLantern", "sand", "gravel", "magmaDeep", "gravel", "sand", "darkPrismarine", "blackConcrete", "blackConcrete", "blackConcrete", "darkPrismarine", "sand", "magmaDeep", "gravel", "gravel", "sand", "darkPrismarine", "blackConcrete", "blackConcrete", "blackConcrete", "darkPrismarine", "sand", "gravel", "gravel", "gravel", "sand", "darkPrismarine", "blackConcrete", "blackConcrete", "blackConcrete", "darkPrismarine", "sand", "gravel", "gravel", "gravel", "sand", "seaLantern", "darkPrismarine", "darkPrismarine", "darkPrismarine", "seaLantern", "sand", "magmaBlock", "gravel", "gravel", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "gravel", "magmaDeep", "gravel", "gravel", "gravel", "gravel", "gravel", "gravel", "gravel", "magmaBlock", "magmaDeep", "gravel", "magmaBlock", "magmaDeep", "gravel", "gravel", "gravel", "gravel", "gravel", "gravel", "gravel", "gravel", "gravel", "magmaBlock", "gravel", "gravel", "magmaBlock", "gravel", "magmaBlock", "gravel", "gravel"],
@@ -204,7 +204,7 @@ module.exports = {
     ocean: "cold",
     playerName: "SteveAquatic",
     assetPacks: {
-      beforeLoad: ['allAssetsMinusPlayer', 'playerSteveAquatic'],
+      beforeLoad: ['aquaticAllAssetsMinusPlayer', 'playerSteveAquatic'],
       afterLoad: [],
     },
     gridDimensions: [20, 20],
