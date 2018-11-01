@@ -257,7 +257,7 @@ module.exports = class LevelView {
       "cropWheat": ["blocks", "Wheat0", -13, 0],
       "torch": ["torch", "Torch0", -13, 0],
 
-      "tallGrass": ["tallGrass", "", -13, 0],
+      "tallGrass": ["blocks", "TallGrass", -13, 0],
 
       "lavaPop": ["lavaPop", "LavaPop01", -13, 0],
       "redstoneSparkle": ["redstoneSparkle", "redstone_sparkle1.png", 7, 23],
