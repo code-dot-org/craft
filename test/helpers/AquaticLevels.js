@@ -3,7 +3,7 @@ module.exports = {
     isAquaticLevel: true,
     playerName: "SteveAquatic",
     assetPacks: {
-      beforeLoad: ['aquaticAllAssetsMinusPlayer', 'playerSteveAquatic'],
+      beforeLoad: ['aquaticIslandAssets', 'playerSteveAquatic'],
       afterLoad: [],
     },
     groundPlane: ["water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "sand", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "sand", "sand", "water", "water", "water", "water", "water", "water", "sand", "sand", "sand", "sand", "planksOak", "planksOak", "water", "water", "water", "sand", "sand", "sand", "sand", "sand", "water", "water", "water", "water", "water", "sand", "sand", "sand", "sand", "sand", "sand", "water", "water", "water", "water", "sand", "sand", "sand", "sand", "sand", "sand", "water", "water", "water", "water", "water", "sand", "sand", "sand", "sand", "sand", "water", "water", "water", "water", "water", "water", "sand", "sand", "sand", "water", "water", "water", "water", "stone", "water", "water", "water", "water", "water", "water", "water", "stone", "water", "water"],
@@ -17,7 +17,7 @@ module.exports = {
     isAquaticLevel: true,
     playerName: "SteveAquatic",
     assetPacks: {
-      beforeLoad: ['aquaticAllAssetsMinusPlayer', 'playerSteveAquatic'],
+      beforeLoad: ['aquaticIslandAssets', 'playerSteveAquatic'],
       afterLoad: [],
     },
     groundPlane: ["water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "sand", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "sand", "sand", "water", "water", "water", "water", "water", "water", "sand", "sand", "sand", "sand", "planksOak", "planksOak", "planksOak", "water", "water", "sand", "sand", "sand", "sand", "sand", "water", "water", "water", "water", "water", "sand", "sand", "sand", "sand", "sand", "sand", "water", "water", "water", "water", "sand", "sand", "sand", "sand", "sand", "sand", "water", "water", "water", "water", "water", "sand", "sand", "sand", "sand", "sand", "water", "water", "water", "water", "water", "water", "sand", "sand", "sand", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water"],
@@ -33,7 +33,7 @@ module.exports = {
     boat: true,
     playerName: "SteveAquatic",
     assetPacks: {
-      beforeLoad: ['aquaticAllAssetsMinusPlayer', 'playerSteveAquatic'],
+      beforeLoad: ['aquaticLevelThreeAndFourAssets', 'playerSteveAquatic'],
       afterLoad: [],
     },
     groundPlane: ["stone", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "sand", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "sand", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "sand", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "sand", "sand", "water", "water", "water", "water", "water", "water", "water", "sand", "sand", "sand", "planksOak", "planksOak", "water", "water", "water", "water", "water", "sand", "sand", "sand", "water", "water", "water", "water", "water", "water", "water"],
@@ -49,7 +49,7 @@ module.exports = {
     boat: true,
     playerName: "SteveAquatic",
     assetPacks: {
-      beforeLoad: ['aquaticAllAssetsMinusPlayer', 'playerSteveAquatic'],
+      beforeLoad: ['aquaticLevelThreeAndFourAssets', 'playerSteveAquatic'],
       afterLoad: [],
     },
     groundPlane: ["water", "water", "water", "water", "water", "water", "sand", "sand", "water", "water", "stone", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "stone", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "stone", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "water", "water", "water", "water", "water", "water", "water", "water", "sand", "sand"],    groundDecorationPlane: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],

@@ -538,6 +538,34 @@ module.exports = class AssetLoader {
       'success',
     ].concat(ALL_SOUND_ASSETS);
 
+    const ISLAND_LEVEL_ASSETS = [
+      'entityShadow',
+      'selectionIndicator',
+      'finishOverlay',
+      'AO',
+      'WaterAO',
+      'blockShadows',
+      'blocks',
+      'leavesJungle',
+      'destroyOverlay',
+      'blockExplode',
+      'miningParticles',
+      'miniBlocks',
+      'bubbles',
+      'dig_wood1',
+      'stepGrass',
+      'stepWood',
+      'stepStone',
+      'stepGravel',
+      'failure',
+      'success',
+      'fall',
+      'placeBlock',
+      'collectedBlock',
+      'bump',
+      'punch',
+    ];
+
     this.assetPacks = {
       adventurerLevelOneAssets: [
         'entityShadow',
@@ -800,6 +828,8 @@ module.exports = class AssetLoader {
         'moan6',
         'moan7',
       ],
+      aquaticIslandAssets: ISLAND_LEVEL_ASSETS,
+      aquaticLevelThreeAndFourAssets: ISLAND_LEVEL_ASSETS.concat('cod', 'dolphin'),
       aquaticAllAssetsMinusPlayer: [
         'entityShadow',
         'selectionIndicator',
