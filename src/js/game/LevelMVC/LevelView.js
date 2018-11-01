@@ -1858,14 +1858,6 @@ module.exports = class LevelView {
         fx = -40 + 40 * fowItem.x;
         fy = -40 + 40 * fowItem.y;
 
-        switch (fowItem.type) {
-          case "FogOfWar_Center":
-            break;
-
-          default:
-            break;
-        }
-
         var sprite = this.fowGroup.create(fx, fy, atlas, fowItem.type);
         sprite.alpha = 0.8;
       }

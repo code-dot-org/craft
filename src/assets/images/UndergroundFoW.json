@@ -103,6 +103,22 @@
 	"trimmed": true,
 	"spriteSourceSize": {"x":40,"y":40,"w":40,"h":40},
 	"sourceSize": {"w":120,"h":120}
+},
+"FogOfWar_BottomLeftTopRight":
+{
+	"frame": {"x":160,"y":40,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":40,"y":40,"w":40,"h":40},
+	"sourceSize": {"w":120,"h":120}
+},
+"FogOfWar_TopLeftBottomRight":
+{
+	"frame": {"x":160,"y":80,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":40,"y":40,"w":40,"h":40},
+	"sourceSize": {"w":120,"h":120}
 }},
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",

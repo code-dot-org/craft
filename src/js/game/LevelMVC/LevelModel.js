@@ -899,10 +899,15 @@ module.exports = class LevelModel {
       this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Bottom", precedence: 1 });
     }
 
-    if ((botRightQuad && topLeftQuad) || (botLeftQuad && topRightQuad) || leftQuad && rightQuad || topQuad && botQuad || (rightQuad && botQuad && topLeftQuad) ||
-      (botQuad && topRightQuad && topLeftQuad) || (topQuad && botRightQuad && botLeftQuad) || (leftQuad && topRightQuad && botRightQuad) || (leftQuad && botQuad && topRightQuad)) {
+    if (leftQuad && rightQuad || topQuad && botQuad || (rightQuad && botQuad && topLeftQuad) ||
+      (botQuad && topRightQuad && topLeftQuad) || (topQuad && botRightQuad && botLeftQuad) ||
+      (leftQuad && topRightQuad && botRightQuad) || (leftQuad && botQuad && topRightQuad)) {
       //fully lit
       this.fowPlane[index] = "";
+    } else if (topLeftQuad && botRightQuad) {
+      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_TopLeftBottomRight", precedence: 2 });
+    } else if (botLeftQuad && topRightQuad) {
+      this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_BottomLeftTopRight", precedence: 2 });
     } else if ((botQuad && leftQuad) || (botQuad && topLeftQuad) || (leftQuad && botRightQuad)) {
       // darkend botleft corner
       this.pushIfHigherPrecedence(index, { x: x, y: y, type: "FogOfWar_Bottom_Left", precedence: 2 });
