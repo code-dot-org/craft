@@ -257,7 +257,7 @@ module.exports = class LevelView {
       "cropWheat": ["blocks", "Wheat0", -13, 0],
       "torch": ["torch", "Torch0", -13, 0],
 
-      "tallGrass": ["tallGrass", "", -13, 0],
+      "tallGrass": ["blocks", "TallGrass", -13, 0],
 
       "lavaPop": ["lavaPop", "LavaPop01", -13, 0],
       "redstoneSparkle": ["redstoneSparkle", "redstone_sparkle1.png", 7, 23],
@@ -369,7 +369,7 @@ module.exports = class LevelView {
 
       "sandDeep": ["blocks", "Sand_Deep", -13, 0],
       "gravelDeep": ["blocks", "Gravel_Deep", -13, 0],
-
+      "reeds": ["blocks", "Reeds", -13, -18],
       "Nether_Portal": ["blocks", "NetherPortal1", 0, -58],
 
       //hooking up all old blocks that we had assets for but never used in previous years

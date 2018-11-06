@@ -14,10 +14,6 @@ module.exports = class AssetLoader {
         type: 'image',
         path: `${this.assetRoot}images/Selection_Indicator.png`
       },
-      tallGrass: {
-        type: 'image',
-        path: `${this.assetRoot}images/TallGrass.png`
-      },
       finishOverlay: {
         type: 'image',
         path: `${this.assetRoot}images/WhiteRect.png`
@@ -535,13 +531,40 @@ module.exports = class AssetLoader {
       'selectionIndicator',
       'AO',
       'blockShadows',
-      'tallGrass',
       'blocks',
       'miniBlocks',
       'stepGrass',
       'failure',
       'success',
     ].concat(ALL_SOUND_ASSETS);
+
+    const ISLAND_LEVEL_ASSETS = [
+      'entityShadow',
+      'selectionIndicator',
+      'finishOverlay',
+      'AO',
+      'WaterAO',
+      'blockShadows',
+      'blocks',
+      'leavesJungle',
+      'destroyOverlay',
+      'blockExplode',
+      'miningParticles',
+      'miniBlocks',
+      'bubbles',
+      'dig_wood1',
+      'stepGrass',
+      'stepWood',
+      'stepStone',
+      'stepGravel',
+      'failure',
+      'success',
+      'fall',
+      'placeBlock',
+      'collectedBlock',
+      'bump',
+      'punch',
+    ];
 
     this.assetPacks = {
       adventurerLevelOneAssets: [
@@ -551,7 +574,6 @@ module.exports = class AssetLoader {
         'blockShadows',
         'leavesOak',
         'leavesBirch',
-        'tallGrass',
         'blocks',
         'sheep',
         'bump',
@@ -565,7 +587,6 @@ module.exports = class AssetLoader {
         'AO',
         'blockShadows',
         'leavesSpruce',
-        'tallGrass',
         'blocks',
         'sheep',
         'bump',
@@ -587,7 +608,6 @@ module.exports = class AssetLoader {
         'AO',
         'blockShadows',
         'leavesOak',
-        'tallGrass',
         'blocks',
         'sheep',
         'bump',
@@ -607,7 +627,6 @@ module.exports = class AssetLoader {
       adventurerAllAssetsMinusPlayer: [
         'entityShadow',
         'selectionIndicator',
-        'tallGrass',
         'finishOverlay',
         'bed',
         'AO',
@@ -662,7 +681,6 @@ module.exports = class AssetLoader {
       designerAllAssetsMinusPlayer: [
         'entityShadow',
         'selectionIndicator',
-        'tallGrass',
         'finishOverlay',
         'bed',
         'AO',
@@ -733,7 +751,6 @@ module.exports = class AssetLoader {
       heroAllAssetsMinusPlayer: [
         'entityShadow',
         'selectionIndicator',
-        'tallGrass',
         'finishOverlay',
         'bed',
         'AO',
@@ -811,10 +828,11 @@ module.exports = class AssetLoader {
         'moan6',
         'moan7',
       ],
+      aquaticIslandAssets: ISLAND_LEVEL_ASSETS,
+      aquaticLevelThreeAndFourAssets: ISLAND_LEVEL_ASSETS.concat('cod', 'dolphin'),
       aquaticAllAssetsMinusPlayer: [
         'entityShadow',
         'selectionIndicator',
-        'tallGrass',
         'finishOverlay',
         'underwaterOverlay',
         'AO',
@@ -854,7 +872,6 @@ module.exports = class AssetLoader {
       allAssetsMinusPlayer: [
         'entityShadow',
         'selectionIndicator',
-        'tallGrass',
         'finishOverlay',
         'underwaterOverlay',
         'bed',
@@ -963,9 +980,6 @@ module.exports = class AssetLoader {
       playerAlexAquatic: [
         'playerAlexAquatic'
       ],
-      grass: [
-        'tallGrass'
-      ]
     };
   }
 

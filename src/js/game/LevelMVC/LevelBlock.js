@@ -494,6 +494,10 @@ module.exports = class LevelBlock {
       return "railNormal";
     }
 
+    if (blockType.endsWith("Chest")) {
+      return "chest";
+    }
+
     if (blockType.startsWith("glass") || blockType.startsWith("ice")) {
       return undefined;
     }
