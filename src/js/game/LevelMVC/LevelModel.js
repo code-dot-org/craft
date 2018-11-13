@@ -985,7 +985,7 @@ module.exports = class LevelModel {
           }
 
           //we want unique copies so we use a map.
-          blocksTouchedByEmissives[yIndex.toString() + xIndex.toString()] = position;
+          blocksTouchedByEmissives[`${yIndex}_${xIndex}`] = position;
         }
       }
     }
