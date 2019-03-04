@@ -289,6 +289,7 @@ class GameController {
         }
         this.player.updateMovement();
       });
+      this.game.input.keyboard.removeKeyCapture(key);
     });
   }
 
