@@ -277,18 +277,29 @@ class GameController {
       [Phaser.Keyboard.SPACEBAR]: -2
     };
 
+    const editableElementSelected = function () {
+      return !(document.activeElement === document.body || document.activeElement === null);
+    };
+
     Object.keys(keysToMovementState).forEach((key) => {
       const movementState = keysToMovementState[key];
       this.game.input.keyboard.addKey(key).onDown.add(() => {
+        if (editableElementSelected()) {
+          return;
+        }
         this.player.movementState = movementState;
         this.player.updateMovement();
       });
       this.game.input.keyboard.addKey(key).onUp.add(() => {
+        if (editableElementSelected()) {
+          return;
+        }
         if (this.player.movementState === movementState) {
           this.player.movementState = -1;
         }
         this.player.updateMovement();
       });
+      this.game.input.keyboard.removeKeyCapture(key);
     });
   }
 
