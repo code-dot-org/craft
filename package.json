@@ -1,6 +1,6 @@
 {
   "name": "@code-dot-org/craft",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Top-down 2D game engine for the Craft app type. See NOTICE for restrictions on use.",
   "main": "dist/main.js",
   "files": [
