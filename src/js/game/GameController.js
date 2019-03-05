@@ -1,3 +1,4 @@
+const $ = require('jquery');
 const CommandQueue = require("./CommandQueue/CommandQueue.js");
 const CallbackCommand = require("./CommandQueue/CallbackCommand.js");
 
@@ -277,13 +278,32 @@ class GameController {
       [Phaser.Keyboard.SPACEBAR]: -2
     };
 
+    const letterKeys = [
+      String(Phaser.Keyboard.W),
+      String(Phaser.Keyboard.D),
+      String(Phaser.Keyboard.S),
+      String(Phaser.Keyboard.A),
+      String(Phaser.Keyboard.SPACEBAR)
+    ];
+
+    const shouldIgnoreKeyPress = function(key) {
+      // Ignore WASD keys and Spacebar when project is being renamed
+      return letterKeys.includes(key) && $('.project_save').length > 0;
+    }
+
     Object.keys(keysToMovementState).forEach((key) => {
       const movementState = keysToMovementState[key];
       this.game.input.keyboard.addKey(key).onDown.add(() => {
+        if (shouldIgnoreKeyPress(key)) {
+          return;
+        }
         this.player.movementState = movementState;
         this.player.updateMovement();
       });
       this.game.input.keyboard.addKey(key).onUp.add(() => {
+        if (shouldIgnoreKeyPress(key)) {
+          return;
+        }
         if (this.player.movementState === movementState) {
           this.player.movementState = -1;
         }
