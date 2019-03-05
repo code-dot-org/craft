@@ -278,7 +278,7 @@ class GameController {
       [Phaser.Keyboard.SPACEBAR]: -2
     };
 
-    const shouldIgnoreKeyPress = function (key) {
+    const shouldIgnoreKeyPress = function () {
       // Ignore keyboard input when project is being renamed
       return $('.project_save').length > 0;
     };
@@ -286,14 +286,14 @@ class GameController {
     Object.keys(keysToMovementState).forEach((key) => {
       const movementState = keysToMovementState[key];
       this.game.input.keyboard.addKey(key).onDown.add(() => {
-        if (shouldIgnoreKeyPress(key)) {
+        if (shouldIgnoreKeyPress()) {
           return;
         }
         this.player.movementState = movementState;
         this.player.updateMovement();
       });
       this.game.input.keyboard.addKey(key).onUp.add(() => {
-        if (shouldIgnoreKeyPress(key)) {
+        if (shouldIgnoreKeyPress()) {
           return;
         }
         if (this.player.movementState === movementState) {
