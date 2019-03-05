@@ -1,4 +1,3 @@
-const $ = require('jquery');
 const CommandQueue = require("./CommandQueue/CommandQueue.js");
 const CallbackCommand = require("./CommandQueue/CallbackCommand.js");
 
@@ -278,22 +277,21 @@ class GameController {
       [Phaser.Keyboard.SPACEBAR]: -2
     };
 
-    const shouldIgnoreKeyPress = function () {
-      // Ignore keyboard input when project is being renamed
-      return $('.project_save').length > 0;
+    const editableElementSelected = function () {
+      return !(document.activeElement === document.body || document.activeElement === null);
     };
 
     Object.keys(keysToMovementState).forEach((key) => {
       const movementState = keysToMovementState[key];
       this.game.input.keyboard.addKey(key).onDown.add(() => {
-        if (shouldIgnoreKeyPress()) {
+        if (editableElementSelected()) {
           return;
         }
         this.player.movementState = movementState;
         this.player.updateMovement();
       });
       this.game.input.keyboard.addKey(key).onUp.add(() => {
-        if (shouldIgnoreKeyPress()) {
+        if (editableElementSelected()) {
           return;
         }
         if (this.player.movementState === movementState) {
