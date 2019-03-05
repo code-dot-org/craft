@@ -278,17 +278,9 @@ class GameController {
       [Phaser.Keyboard.SPACEBAR]: -2
     };
 
-    const letterKeys = [
-      String(Phaser.Keyboard.W),
-      String(Phaser.Keyboard.D),
-      String(Phaser.Keyboard.S),
-      String(Phaser.Keyboard.A),
-      String(Phaser.Keyboard.SPACEBAR)
-    ];
-
     const shouldIgnoreKeyPress = function (key) {
-      // Ignore WASD keys and Spacebar when project is being renamed
-      return letterKeys.includes(key) && $('.project_save').length > 0;
+      // Ignore keyboard input when project is being renamed
+      return $('.project_save').length > 0;
     };
 
     Object.keys(keysToMovementState).forEach((key) => {
