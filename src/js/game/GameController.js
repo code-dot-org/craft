@@ -278,7 +278,9 @@ class GameController {
     };
 
     const editableElementSelected = function () {
-      return !(document.activeElement === document.body || document.activeElement === null);
+      const editableHtmlTags = ["INPUT", "TEXTAREA"];
+      return document.activeElement !== null &&
+             editableHtmlTags.includes(document.activeElement.tagName);
     };
 
     Object.keys(keysToMovementState).forEach((key) => {
