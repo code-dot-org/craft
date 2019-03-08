@@ -279,7 +279,7 @@ class GameController {
 
     const editableElementSelected = function () {
       const editableHtmlTags = ["INPUT", "TEXTAREA"];
-      return document.activeElement != null &&
+      return document.activeElement !== null &&
              editableHtmlTags.includes(document.activeElement.tagName);
     };
 
