@@ -567,7 +567,8 @@ module.exports = class LevelView {
       if (levelModel.getOceanType() === 'cold') {
         this.uniforms.tint.value = [57 / 255, 56 / 255, 201 / 255, 1];
       }
-      this.game.world.filters = [this.waveShader];
+      //this.game.world.filters = [this.waveShader];
+      this.addOceanOverlay(levelModel.getOceanType() === 'warm' ? 0x204b50 : 0x1b1b4b);
     }
 
     this.updateShadingGroup(levelModel.shadingPlane);
@@ -727,6 +728,39 @@ module.exports = class LevelView {
       this.playIdleAnimation(position, facing, isOnBlock, entity);
     });
     return animation;
+  }
+
+  getOceanOverlayVertices(){
+    const gridDimensions = this.controller.levelData.gridDimensions;
+    if (gridDimensions[0] === 10 && gridDimensions[1] === 10) {
+      // This is a normal 10x10 map. Ocean Overlay will be tiled 4x
+      return [[0, 0], [200, 0], [0, 200], [200, 200]];
+    } else if (gridDimensions[0] === 20 && gridDimensions[1] === 20) {
+      // This is a freeplay 20x20 map. Ocean Overlay will be tiled 16x
+      return [[0, 0], [200, 0], [400, 0], [800, 0],
+        [0, 200], [200, 200], [400, 200], [800, 200],
+        [0, 400], [200, 400], [400, 400], [800, 400],
+        [0, 800], [200, 800], [400, 800], [800, 800]];
+    }
+  }
+
+  addOceanOverlay(tint) {
+    for (let [x, y] of this.getOceanOverlayVertices()) {
+      const surface = this.fluffGroup.create(x, y, "underwaterOverlay", "water_still_grey00.png");
+      const frameList = Phaser.Animation.generateFrameNames("water_still_grey", 0, 31, ".png", 2);
+      surface.animations.add("idle", frameList, 5, true);
+      this.playScaledSpeed(surface.animations, "idle");
+
+      [surface.scale.x, surface.scale.y] = [400 / 32, 400 / 32];
+      surface.alpha = 0.8;
+      surface.smoothed = false;
+      surface.blendMode = PIXI.blendModes.MULTIPLY;
+    }
+
+    const sprite = this.fluffGroup.create(0, 0, "finishOverlay");
+    [sprite.scale.x, sprite.scale.y] = this.controller.scaleFromOriginal();
+    sprite.tint = tint;
+    sprite.blendMode = PIXI.blendModes.ADD;
   }
 
   playDrownFailureAnimation(position, facing, isOnBlock, completionHandler) {
