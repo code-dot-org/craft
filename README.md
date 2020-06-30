@@ -1,4 +1,4 @@
-[![travis-ci](https://travis-ci.org/code-dot-org/craft.svg?branch=master)](https://travis-ci.org/code-dot-org/craft/builds) [![codecov](https://codecov.io/gh/code-dot-org/craft/branch/master/graph/badge.svg)](https://codecov.io/gh/code-dot-org/craft)
+[![travis-ci](https://travis-ci.org/code-dot-org/craft.svg?branch=main)](https://travis-ci.org/code-dot-org/craft/builds) [![codecov](https://codecov.io/gh/code-dot-org/craft/branch/main/graph/badge.svg)](https://codecov.io/gh/code-dot-org/craft)
 
 _Note: proprietary materials fall under different rules, per the [LICENSE](https://github.com/code-dot-org/code-dot-org/blob/staging/LICENSE)._
 
