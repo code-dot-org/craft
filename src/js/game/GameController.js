@@ -101,6 +101,7 @@ class GameController {
       preload: () => {
         // don't let state change stomp essential asset downloads in progress
         this.game.load.resetLocked = true;
+        this.game.load.crossOrigin="anonymous"
         this.assetLoader.loadPacks(this.earlyLoadAssetPacks);
       },
       create: () => {
@@ -193,6 +194,7 @@ class GameController {
   }
 
   preload() {
+    this.game.load.crossOrigin="anonymous";
     this.game.load.resetLocked = true;
     this.game.time.advancedTiming = this.DEBUG;
     this.game.stage.disableVisibilityChange = true;
