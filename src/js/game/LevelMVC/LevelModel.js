@@ -583,7 +583,8 @@ module.exports = class LevelModel {
       // blocks, let them drown.
       const blockTypeAtPosition = this.groundPlane.getBlockAt(position).blockType;
       const frontEntity = this.getEntityAt(position);
-      if (['water', 'lava'].includes(blockTypeAtPosition)) {
+      const isWalkable = this.actionPlane.getBlockAt(position).isWalkable;
+      if (['water', 'lava'].includes(blockTypeAtPosition) && isWalkable) {
         if (this.controller.getIsDirectPlayerControl()) {
           result.push(blockTypeAtPosition);
         } else if (frontEntity === undefined || frontEntity.canMoveThrough()) {
