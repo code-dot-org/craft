@@ -1,3 +1,5 @@
+import 'babel-polyfill';
+
 const GameController = require("./js/game/GameController");
 const FacingDirection = require("./js/game/LevelMVC/FacingDirection");
 const EventType = require("./js/game/Event/EventType");

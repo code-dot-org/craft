@@ -31,7 +31,7 @@ var gameController = new GameController({
   debug: true,
   earlyLoadAssetPacks: testLevelToLoad.earlyLoadAssetPacks,
   earlyLoadNiceToHaveAssetPacks: testLevelToLoad.earlyLoadNiceToHaveAssetPacks,
-  afterAssetsLoaded: () => {
+  afterAssetsLoaded: function () {
     gameController.codeOrgAPI.startAttempt();
   },
 });
@@ -39,12 +39,12 @@ var gameController = new GameController({
 gameController.loadLevel(testLevelToLoad);
 
 var $levelselect = $('#level-load');
-Object.keys(levels).forEach(key => {
+Object.keys(levels).forEach(function (key) {
   $levelselect.append($('<option/>', {text: key, selected: key === levelParam}));
 });
 
-$levelselect.on('change', () => {
-  location.search = `level=${$levelselect.val()}`;
+$levelselect.on('change', function () {
+  location.search = 'level=' + $levelselect.val();
 });
 
 $('input[type=range]').on('input', function () {
@@ -61,7 +61,7 @@ if (!gameController.levelData.isAgentLevel) {
   $('#entity-select').hide();
 }
 
-window.addEventListener('keydown', e => {
+window.addEventListener('keydown', function (e) {
   if (e.target !== document.body) {
     e.preventDefault();
   }
